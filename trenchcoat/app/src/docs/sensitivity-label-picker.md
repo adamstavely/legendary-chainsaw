@@ -64,8 +64,8 @@ Use `description` to say who a label is for. Set `level` so higher means more se
 <tc-sensitivity-label-picker id="label" file-name="Q3 audit.pdf" value="internal"></tc-sensitivity-label-picker>
 
 <script type="module">
-  import "trenchcoat/sensitivity-label-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/sensitivity-label-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#label").addEventListener("tc-value-change", (e) => console.log(e.detail.value, e.detail.reason));
 </script>
@@ -73,8 +73,8 @@ Use `description` to say who a label is for. Set `level` so higher means more se
 
 ```tsx
 import { useState } from "react";
-import { SensitivityLabelPicker } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SensitivityLabelPicker } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function FileLabel() {
   const [value, setValue] = useState<string | null>("internal");

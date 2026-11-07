@@ -10,12 +10,12 @@ import {
   type PricingLimit,
   type PricingPlan,
   type PricingPlansProps as BaseProps,
-} from "trenchcoat/react";
+} from "@adamstavely/trenchcoat/react";
 
 /*
  * Pricing Plans – a pricing section with a monthly / yearly switch and three plan cards. Each card shows its limits,
- * a call to action and collapsible details. It is the <tc-pricing-plans> element through `trenchcoat/react` (install
- * `trenchcoat` instead of copying files); every framework gets the same element. Limit icons may be React nodes.
+ * a call to action and collapsible details. It is the <tc-pricing-plans> element through `@adamstavely/trenchcoat/react` (install
+ * `@adamstavely/trenchcoat` instead of copying files); every framework gets the same element. Limit icons may be React nodes.
  */
 
 export type Billing = PricingBilling;

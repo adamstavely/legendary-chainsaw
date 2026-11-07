@@ -53,7 +53,7 @@
   {
    "tag": "tc-tooltip",
    "className": "TcTooltip",
-   "module": "trenchcoat/tooltip",
+   "module": "@adamstavely/trenchcoat/tooltip",
    "data": [],
    "attributes": [
     {

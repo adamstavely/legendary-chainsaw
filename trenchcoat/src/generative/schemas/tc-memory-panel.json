@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-memory-panel.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-memory-panel.json",
   "title": "tc-memory-panel",
   "description": "What an assistant remembers – grouped memories with filters, search, in-place editing, pause, forget with Undo, and\na master switch.",
   "type": "object",

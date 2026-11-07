@@ -82,8 +82,8 @@ reduced-motion setting) draws everything at once.
 <tc-waterfall-chart heading="Grant budget" description="Year one, in thousands" unit="k" end-total="Remaining"></tc-waterfall-chart>
 
 <script type="module">
-  import "trenchcoat/waterfall-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/waterfall-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-waterfall-chart").data = [
     { label: "Awarded", value: 480 },
     { label: "Staff", value: -190 },
@@ -93,8 +93,8 @@ reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { WaterfallChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { WaterfallChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Awarded", value: 480 },

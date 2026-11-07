@@ -84,8 +84,8 @@ selected”), and the first Backspace says which chip it marked (“Bug – pres
 <tc-combobox id="assignees" name="assignees"></tc-combobox>
 
 <script type="module">
-  import "trenchcoat/combobox";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/combobox";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const field = document.querySelector("#assignees");
   field.options = [
@@ -99,8 +99,8 @@ selected”), and the first Backspace says which chip it marked (“Bug – pres
 
 ```tsx
 import { useState } from "react";
-import { Combobox, type ComboboxOption } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Combobox, type ComboboxOption } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const people: ComboboxOption[] = [
   { value: "maya", label: "Maya Chen", hint: "Design lead", avatar: true, group: "Design" },

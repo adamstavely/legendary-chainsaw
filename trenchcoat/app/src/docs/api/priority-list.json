@@ -309,7 +309,7 @@
   {
    "tag": "tc-priority-list",
    "className": "TcPriorityList",
-   "module": "trenchcoat/priority-list",
+   "module": "@adamstavely/trenchcoat/priority-list",
    "data": [
     "items",
     "tiers",

@@ -1,11 +1,11 @@
-// Charts as data for the CLI and the MCP server: the package's trenchcoat/charts entry (dist/charts.js), loaded on
+// Charts as data for the CLI and the MCP server: the package's @adamstavely/trenchcoat/charts entry (dist/charts.js), loaded on
 // first use with Lit's minimal DOM, and tokens.css to resolve the design tokens in SVG output.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DIST } from "./registry.mjs";
 
 let loaded;
-/** The trenchcoat/charts module */
+/** The @adamstavely/trenchcoat/charts module */
 export async function charts() {
   if (loaded) return loaded;
   const file = join(DIST, "charts.js");

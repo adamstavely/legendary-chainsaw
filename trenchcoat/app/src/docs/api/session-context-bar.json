@@ -245,7 +245,7 @@
   {
    "tag": "tc-session-context-bar",
    "className": "TcSessionContextBar",
-   "module": "trenchcoat/session-context-bar",
+   "module": "@adamstavely/trenchcoat/session-context-bar",
    "data": [
     "terms",
     "termLabels"

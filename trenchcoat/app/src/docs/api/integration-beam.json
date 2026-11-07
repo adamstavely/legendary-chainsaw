@@ -136,7 +136,7 @@
   {
    "tag": "tc-integration-beam",
    "className": "TcIntegrationBeam",
-   "module": "trenchcoat/integration-beam",
+   "module": "@adamstavely/trenchcoat/integration-beam",
    "data": [
     "left",
     "right",

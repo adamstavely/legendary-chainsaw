@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-knowledge-source-manager.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-knowledge-source-manager.json",
   "title": "tc-knowledge-source-manager",
   "description": "The sources a knowledge base answers from – ingestion state and progress, documents and chunks, last sync and\nschedule, stale and duplicate warnings – with add, resync, pause, remove and a handoff to chunk review.",
   "type": "object",

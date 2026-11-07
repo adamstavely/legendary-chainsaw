@@ -60,14 +60,14 @@ Say when it resets and what people can do now: "Your team's 500 runs reset on 1 
 <tc-limit-reached></tc-limit-reached>
 
 <script type="module">
-  import "trenchcoat/limit-reached";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/limit-reached";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { LimitReached } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LimitReached } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <LimitReached />;

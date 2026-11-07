@@ -98,7 +98,7 @@
   {
    "tag": "tc-model-wheel",
    "className": "TcModelWheel",
-   "module": "trenchcoat/model-wheel",
+   "module": "@adamstavely/trenchcoat/model-wheel",
    "data": [
     "models"
    ],

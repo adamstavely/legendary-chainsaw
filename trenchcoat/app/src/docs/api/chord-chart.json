@@ -146,7 +146,7 @@
   {
    "tag": "tc-chord-chart",
    "className": "TcChordChart",
-   "module": "trenchcoat/chord-chart",
+   "module": "@adamstavely/trenchcoat/chord-chart",
    "data": [
     "source",
     "target",

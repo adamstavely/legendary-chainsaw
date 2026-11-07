@@ -248,7 +248,7 @@
   {
    "tag": "tc-review-conflict",
    "className": "TcReviewConflict",
-   "module": "trenchcoat/review-conflict",
+   "module": "@adamstavely/trenchcoat/review-conflict",
    "data": [
     "reviews",
     "resolution"

@@ -27,15 +27,15 @@ describe("trenchcoat lint", () => {
     return { status: out.status, stderr: out.stderr, problems: JSON.parse(out.stdout || "[]") };
   };
   const rules = (found) => found.problems.map((p) => p.rule);
-  const SETUP = `<script type="module">import "trenchcoat/tokens.css"; import "trenchcoat/button"; import "trenchcoat/share-panel";</script>`;
+  const SETUP = `<script type="module">import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/button"; import "@adamstavely/trenchcoat/share-panel";</script>`;
 
   test("correct use across frameworks is quiet", () => {
     const pages = {
       "a.html": `${SETUP}<tc-button variant="primary" label="Go" id="a" class="b" aria-label="Go" data-x="1" slot="s" onclick="f()"></tc-button>`,
-      "b.vue": `<script setup>import "trenchcoat/tokens.css"; import "trenchcoat/share-panel";</script><template><tc-share-panel :directory="d" :resource-name="n" v-if="x" @tc-share="f" /></template>`,
-      "c.svelte": `<script>import "trenchcoat/tokens.css"; import "trenchcoat/share-panel";</script><tc-share-panel directory={d} {...rest} on:tc-share={f}></tc-share-panel>`,
-      "d.ts": `import "trenchcoat/tokens.css"; import "trenchcoat/share-panel"; const t = html\`<tc-share-panel .directory=\${d} ?sending=\${s} @tc-share=\${f}></tc-share-panel>\`; const a = \`<tc-share-panel [directory]="d" [(ngModel)]="v" *ngIf="x" (tc-share)="f()"></tc-share-panel>\`;`,
-      "e.tsx": `import "trenchcoat/tokens.css"; import { SharePanel as P } from "trenchcoat/react"; const x = <P directory={d} onTcShare={f} />;`,
+      "b.vue": `<script setup>import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/share-panel";</script><template><tc-share-panel :directory="d" :resource-name="n" v-if="x" @tc-share="f" /></template>`,
+      "c.svelte": `<script>import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/share-panel";</script><tc-share-panel directory={d} {...rest} on:tc-share={f}></tc-share-panel>`,
+      "d.ts": `import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/share-panel"; const t = html\`<tc-share-panel .directory=\${d} ?sending=\${s} @tc-share=\${f}></tc-share-panel>\`; const a = \`<tc-share-panel [directory]="d" [(ngModel)]="v" *ngIf="x" (tc-share)="f()"></tc-share-panel>\`;`,
+      "e.tsx": `import "@adamstavely/trenchcoat/tokens.css"; import { SharePanel as P } from "@adamstavely/trenchcoat/react"; const x = <P directory={d} onTcShare={f} />;`,
     };
     for (const [name, code] of Object.entries(pages)) assert.deepEqual(lint(name, code).problems, [], name);
   });
@@ -48,7 +48,7 @@ describe("trenchcoat lint", () => {
 <tc-share-panel resouce-name="x" directory="[]" sending="false" resourceName="y" @tc-shar="f"></tc-share-panel>
 <tc-button variant="nope" style="color:#fff"></tc-button>
 <style>tc-button { background: #123; color: var(--tc-nope, #fff); --tc-hal-swatchh: 1px; }</style>
-<script type="module">import "trenchcoat/share-pannel"; el.addEventListener("tc-nothing", f);</script>`,
+<script type="module">import "@adamstavely/trenchcoat/share-pannel"; el.addEventListener("tc-nothing", f);</script>`,
     );
     assert.equal(found.status, 1);
     assert.deepEqual(rules(found).sort(), [
@@ -63,9 +63,9 @@ describe("trenchcoat lint", () => {
   });
 
   test("a value in an expression and a fixed colour in a var() fallback are left alone", () => {
-    const code = `import "trenchcoat/tokens.css"; import "trenchcoat/button"; const a = <tc-button variant={v} />; const b = html\`<tc-button variant="\${v}"></tc-button>\`;`;
+    const code = `import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/button"; const a = <tc-button variant={v} />; const b = html\`<tc-button variant="\${v}"></tc-button>\`;`;
     assert.deepEqual(lint("a.tsx", code).problems, []);
-    assert.deepEqual(lint("a.css", `@import "trenchcoat/tokens.css"; tc-button { color: var(--tc-hal-swatch, #fff); }`).problems, []);
+    assert.deepEqual(lint("a.css", `@import "@adamstavely/trenchcoat/tokens.css"; tc-button { color: var(--tc-hal-swatch, #fff); }`).problems, []);
   });
 
   test("comments, own elements and disable lines are respected", () => {

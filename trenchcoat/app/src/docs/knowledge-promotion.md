@@ -86,8 +86,8 @@ live region says “Promoted to team knowledge.” and “Dispute raised.”; an
 <tc-knowledge-promotion id="promote" scope="Acme lease review" threshold="0.8"></tc-knowledge-promotion>
 
 <script type="module">
-  import "trenchcoat/knowledge-promotion";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/knowledge-promotion";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#promote");
   card.fact = { text: "The notice period is 90 days.", by: "Ana Ruiz", at: "12 Oct", confidence: 0.88 };
@@ -107,8 +107,8 @@ live region says “Promoted to team knowledge.” and “Dispute raised.”; an
 
 ```tsx
 import { useState } from "react";
-import { KnowledgePromotion, type KnowledgeStatus } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { KnowledgePromotion, type KnowledgeStatus } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PromoteFact() {
   const [status, setStatus] = useState<KnowledgeStatus>("candidate");

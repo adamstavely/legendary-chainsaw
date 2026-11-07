@@ -331,7 +331,7 @@
   {
    "tag": "tc-agent-plan",
    "className": "TcAgentPlan",
-   "module": "trenchcoat/agent-plan",
+   "module": "@adamstavely/trenchcoat/agent-plan",
    "data": [
     "steps",
     "runner",

@@ -70,8 +70,8 @@ flag, and keeps its value until someone picks again, so your data isn't changed 
 <tc-team-flag-picker id="flag" file-name="Q3 audit.pdf" value="review"></tc-team-flag-picker>
 
 <script type="module">
-  import "trenchcoat/team-flag-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/team-flag-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const picker = document.querySelector("#flag");
   picker.flags = [{ id: "review", label: "Needs review", meaning: "A second auditor should read this.", color: "#CA8A04" }];
@@ -81,8 +81,8 @@ flag, and keeps its value until someone picks again, so your data isn't changed 
 
 ```tsx
 import { useState } from "react";
-import { TeamFlagPicker, type TeamFlag } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TeamFlagPicker, type TeamFlag } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const flags: TeamFlag[] = [{ id: "review", label: "Needs review", meaning: "A second auditor should read this.", color: "#CA8A04" }];
 

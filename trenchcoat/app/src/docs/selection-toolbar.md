@@ -92,8 +92,8 @@ Anchor it with `selectionRect()` after a selection is finished (on pointer-up or
 <tc-selection-toolbar id="bar"></tc-selection-toolbar>
 
 <script type="module">
-  import { selectionRect } from "trenchcoat/selection-toolbar";
-  import "trenchcoat/tokens.css";
+  import { selectionRect } from "@adamstavely/trenchcoat/selection-toolbar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const memo = document.querySelector("#memo");
   const bar = document.querySelector("#bar");
@@ -120,8 +120,8 @@ Anchor it with `selectionRect()` after a selection is finished (on pointer-up or
 
 ```tsx
 import { useRef, useState } from "react";
-import { SelectionToolbar, selectionRect } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SelectionToolbar, selectionRect } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Memo() {
   const editor = useRef<HTMLDivElement>(null);

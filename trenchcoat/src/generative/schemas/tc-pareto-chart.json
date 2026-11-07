@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-pareto-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-pareto-chart.json",
   "title": "tc-pareto-chart",
   "description": "Items from the largest down with their running share as a line and a threshold, the few that reach it emphasised,\nand a table view.",
   "type": "object",

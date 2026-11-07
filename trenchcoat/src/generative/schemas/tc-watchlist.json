@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-watchlist.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-watchlist.json",
   "title": "tc-watchlist",
   "description": "A watchlist of people, accounts or entities – avatar, name, reference, group and a risk badge – most at risk first,\nwith a count, filters by risk and a View all action.",
   "type": "object",

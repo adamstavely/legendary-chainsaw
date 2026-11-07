@@ -85,8 +85,8 @@ repeats what's on screen. While closed, everything but the head is inert.
 <tc-project-card id="project" heading="Onboarding revamp" due="Nov 14" status="progress" action-label="Open project"></tc-project-card>
 
 <script type="module">
-  import "trenchcoat/project-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/project-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#project");
   card.members = [{ name: "Maya Chen" }, { name: "Jonas Weber" }];
@@ -100,8 +100,8 @@ repeats what's on screen. While closed, everything but the head is inert.
 
 ```tsx
 import { useState } from "react";
-import { ProjectCard, type ProjectTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProjectCard, type ProjectTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const members = [{ name: "Maya Chen" }, { name: "Jonas Weber" }];
 

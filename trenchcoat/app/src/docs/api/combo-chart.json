@@ -219,7 +219,7 @@
   {
    "tag": "tc-combo-chart",
    "className": "TcComboChart",
-   "module": "trenchcoat/combo-chart",
+   "module": "@adamstavely/trenchcoat/combo-chart",
    "data": [
     "x",
     "bars",

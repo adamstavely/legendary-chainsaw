@@ -95,7 +95,7 @@ shows the shapes of what's coming.
 ```
 
 ```tsx
-import { PersonHovercard, type HovercardPerson } from "trenchcoat/react";
+import { PersonHovercard, type HovercardPerson } from "@adamstavely/trenchcoat/react";
 
 export function Name({ person }: { person: HovercardPerson }) {
   return (

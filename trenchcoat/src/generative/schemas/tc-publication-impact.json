@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-publication-impact.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-publication-impact.json",
   "title": "tc-publication-impact",
   "description": "One paper's impact – venue, topic, grade and authors; downloads, views, citations and attention with a reads\nsparkline; mentions; who is reading; and feedback quotes filtered by kind, each with a sentiment.",
   "type": "object",

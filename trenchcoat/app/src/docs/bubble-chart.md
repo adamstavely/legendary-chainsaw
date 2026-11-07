@@ -91,8 +91,8 @@ reduced-motion setting) draws everything at once.
 <tc-bubble-chart heading="Labs by size and output" x-label="Staff" y-label="Papers"></tc-bubble-chart>
 
 <script type="module">
-  import "trenchcoat/bubble-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/bubble-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-bubble-chart");
   chart.x = "staff";
   chart.y = "papers";
@@ -106,8 +106,8 @@ reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { BubbleChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BubbleChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", staff: 24, papers: 41, grants: 3.2 },

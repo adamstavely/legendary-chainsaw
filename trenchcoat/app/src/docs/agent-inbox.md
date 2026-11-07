@@ -84,8 +84,8 @@ again”. After Approve, Reject or Retry, focus moves to the card and stays on i
 <tc-agent-inbox id="inbox" heading="Agent tasks" openable></tc-agent-inbox>
 
 <script type="module">
-  import "trenchcoat/agent-inbox";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-inbox";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const inbox = document.querySelector("#inbox");
   inbox.tasks = [
@@ -98,8 +98,8 @@ again”. After Approve, Reject or Retry, focus moves to the card and stays on i
 ```
 
 ```tsx
-import { AgentInbox, type AgentTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentInbox, type AgentTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const tasks: AgentTask[] = [
   { id: "refund", title: "Refund duplicate charge for Acme Corp", agent: "Opus 5.5", status: "waiting", startedAt: Date.now() - 240000 },

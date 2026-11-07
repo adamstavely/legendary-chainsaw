@@ -43,8 +43,8 @@ is a heading of that level. Reduced motion shows the finished gradient with no s
 </h1>
 
 <script type="module">
-  import "trenchcoat/gradient-text";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/gradient-text";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const word = document.querySelector("#hero");
   word.colors = ["#7c3aed", "#db2777", "#f59e0b", "#06b6d4"];
@@ -53,8 +53,8 @@ is a heading of that level. Reduced motion shows the finished gradient with no s
 ```
 
 ```tsx
-import { GradientText } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GradientText } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Hero() {
   return (

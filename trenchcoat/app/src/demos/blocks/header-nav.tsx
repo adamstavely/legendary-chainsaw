@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import type * as UI from "@blocks/header-nav";
-import type { AppPickerApp, NotificationItem, NotificationsChange } from "trenchcoat/react";
+import type { AppPickerApp, NotificationItem, NotificationsChange } from "@adamstavely/trenchcoat/react";
 import { caption } from "../../demo-kit";
 
 /* A product's header: the logo and a search field on the left, the Header Nav block on the right – notifications,

@@ -124,7 +124,7 @@
   {
    "tag": "tc-area-chart",
    "className": "TcAreaChart",
-   "module": "trenchcoat/area-chart",
+   "module": "@adamstavely/trenchcoat/area-chart",
    "data": [],
    "attributes": [
     {

@@ -132,7 +132,7 @@
   {
    "tag": "tc-released",
    "className": "TcReleased",
-   "module": "trenchcoat/released",
+   "module": "@adamstavely/trenchcoat/released",
    "data": [],
    "attributes": [
     {

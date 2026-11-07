@@ -88,8 +88,8 @@ has `aria-busy` while the app saves, and the status region says â€œRating sentâ€
 <tc-feedback-rubric id="rubric"></tc-feedback-rubric>
 
 <script type="module">
-  import "trenchcoat/feedback-rubric";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/feedback-rubric";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const rubric = document.querySelector("#rubric");
   rubric.answer = "You can return it to any store for a full refund and a $15 voucher.";
@@ -99,8 +99,8 @@ has `aria-busy` while the app saves, and the status region says â€œRating sentâ€
 ```
 
 ```tsx
-import { FeedbackRubric, type FeedbackRubricSubmit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FeedbackRubric, type FeedbackRubricSubmit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ReviewItem({ answer, onSave }: { answer: string; onSave: (rating: FeedbackRubricSubmit) => void }) {
   return (

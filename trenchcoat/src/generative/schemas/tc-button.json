@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-button.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-button.json",
   "title": "tc-button",
   "description": "A button: primary, secondary, ghost or destructive, in three sizes, with a loading state.",
   "type": "object",

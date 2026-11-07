@@ -319,7 +319,7 @@
   {
    "tag": "tc-capability-notice",
    "className": "TcCapabilityNotice",
-   "module": "trenchcoat/capability-notice",
+   "module": "@adamstavely/trenchcoat/capability-notice",
    "data": [],
    "attributes": [
     {

@@ -85,8 +85,8 @@ confirmed in a polite status message, “2 events, Payment”.
 <tc-entity-timeline id="tl" heading="Account timeline"></tc-entity-timeline>
 
 <script type="module">
-  import "trenchcoat/entity-timeline";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/entity-timeline";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tl = document.querySelector("#tl");
   tl.categories = [{ id: "payment", label: "Payment", tone: "warning" }, { id: "account", label: "Account", tone: "info" }];
@@ -100,8 +100,8 @@ confirmed in a polite status message, “2 events, Payment”.
 
 ```tsx
 import { useState } from "react";
-import { EntityTimeline, type TimelineCategory, type TimelineEvent } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EntityTimeline, type TimelineCategory, type TimelineEvent } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const categories: TimelineCategory[] = [{ id: "payment", label: "Payment", tone: "warning" }];
 const events: TimelineEvent[] = [

@@ -329,7 +329,7 @@
   {
    "tag": "tc-branch-switcher",
    "className": "TcBranchSwitcher",
-   "module": "trenchcoat/branch-switcher",
+   "module": "@adamstavely/trenchcoat/branch-switcher",
    "data": [
     "branches",
     "labels"

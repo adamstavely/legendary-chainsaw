@@ -69,8 +69,8 @@ Give each row's value in a few words, such as "14 to reconnect" or "4 running". 
 <tc-session-panel id="panel" outputs="51" background="4 running" connectors="3 to reconnect" context="0.17"></tc-session-panel>
 
 <script type="module">
-  import "trenchcoat/session-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/session-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#panel");
   panel.environment = [{ id: "repo", kind: "repo", label: "institute/sample-tracker" }];
@@ -79,8 +79,8 @@ Give each row's value in a few words, such as "14 to reconnect" or "4 running". 
 ```
 
 ```tsx
-import { SessionPanel } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SessionPanel } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Side({ onOpen }: { onOpen: (section: string) => void }) {
   return (

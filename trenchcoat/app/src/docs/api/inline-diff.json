@@ -336,7 +336,7 @@
   {
    "tag": "tc-inline-diff",
    "className": "TcInlineDiff",
-   "module": "trenchcoat/inline-diff",
+   "module": "@adamstavely/trenchcoat/inline-diff",
    "data": [
     "changes",
     "decisions"

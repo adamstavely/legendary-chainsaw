@@ -329,7 +329,7 @@
   {
    "tag": "tc-score-survey",
    "className": "TcScoreSurvey",
-   "module": "trenchcoat/score-survey",
+   "module": "@adamstavely/trenchcoat/score-survey",
    "data": [
     "followUps",
     "labels"

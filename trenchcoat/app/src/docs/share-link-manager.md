@@ -65,8 +65,8 @@ Give `label`, so people recognise a link without reading its address. `password`
 <tc-share-link-manager id="links" creatable></tc-share-link-manager>
 
 <script type="module">
-  import "trenchcoat/share-link-manager";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/share-link-manager";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const manager = document.querySelector("#links");
   manager.now = Date.now();
@@ -76,8 +76,8 @@ Give `label`, so people recognise a link without reading its address. `password`
 ```
 
 ```tsx
-import { ShareLinkManager, type ShareLink } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ShareLinkManager, type ShareLink } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const links: ShareLink[] = [{ id: "a", url: "https://example.org/l/8f2a", createdBy: "Noor Haddad", createdAt: 1793000000000, access: "Can view" }];
 

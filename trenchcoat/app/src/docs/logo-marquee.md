@@ -75,8 +75,8 @@ The strip is a `region` named by `label`. Only the first set is read and reachab
 <tc-logo-marquee id="logos" label="Customers" labels="beside"></tc-logo-marquee>
 
 <script type="module">
-  import "trenchcoat/logo-marquee";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/logo-marquee";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const svg = (d) => {
     const t = document.createElement("template");
@@ -91,8 +91,8 @@ The strip is a `region` named by `label`. Only the first set is read and reachab
 ```
 
 ```tsx
-import { LogoMarquee, type MarqueeLogo } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LogoMarquee, type MarqueeLogo } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const logos: MarqueeLogo[] = [
   { name: "Northwind", color: "#2f6bff", svg: <svg viewBox="0 0 32 32" fill="currentColor"><path d="M4 26 16 4l12 22h-6l-6-11-6 11z" /></svg> },

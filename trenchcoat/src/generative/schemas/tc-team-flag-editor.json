@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-team-flag-editor.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-team-flag-editor.json",
   "title": "tc-team-flag-editor",
   "description": "Lets a team set each flag's colour, name, meaning and order.",
   "type": "object",

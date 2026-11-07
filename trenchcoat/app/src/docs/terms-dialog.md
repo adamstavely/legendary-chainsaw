@@ -108,8 +108,8 @@ While saving, the dialog is `aria-busy`.
   require-scroll downloadable></tc-terms-dialog>
 
 <script type="module">
-  import "trenchcoat/terms-dialog";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/terms-dialog";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const terms = document.querySelector("#terms");
   terms.sections = [
@@ -131,8 +131,8 @@ While saving, the dialog is `aria-busy`.
 
 ```tsx
 import { useState } from "react";
-import { TermsDialog, type TermsAcceptDetail, type TermsDialogSection } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TermsDialog, type TermsAcceptDetail, type TermsDialogSection } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sections: TermsDialogSection[] = [
   { id: "review", heading: "Allowed with human review", changed: true, body: <p>Some uses need a person to check the output first.</p> },

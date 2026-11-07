@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-fan-out-grid.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-fan-out-grid.json",
   "title": "tc-fan-out-grid",
   "description": "A big job fanned out to many workers: one cell per task, live.",
   "type": "object",

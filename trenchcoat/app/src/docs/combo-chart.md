@@ -83,8 +83,8 @@ a bar. `still` (or the system's reduced-motion setting) draws everything at once
 <tc-combo-chart heading="Samples and turnaround" line-unit=" h" y-label="Samples" y2-label="Hours"></tc-combo-chart>
 
 <script type="module">
-  import "trenchcoat/combo-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/combo-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-combo-chart");
   chart.x = "month";
   chart.bars = ["samples"];
@@ -99,8 +99,8 @@ a bar. `still` (or the system's reduced-motion setting) draws everything at once
 ```
 
 ```tsx
-import { ComboChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ComboChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { month: "2026-01", samples: 278, hours: 41 },

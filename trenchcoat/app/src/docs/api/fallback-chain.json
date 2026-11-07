@@ -193,7 +193,7 @@
   {
    "tag": "tc-fallback-chain",
    "className": "TcFallbackChain",
-   "module": "trenchcoat/fallback-chain",
+   "module": "@adamstavely/trenchcoat/fallback-chain",
    "data": [
     "attempts",
     "labels"

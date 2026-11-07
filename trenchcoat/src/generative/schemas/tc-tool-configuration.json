@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-tool-configuration.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tool-configuration.json",
   "title": "tc-tool-configuration",
   "description": "A tool as its API reference entry: the name as the title, the signature and description, a doc table of the\nparameters edited in place, an example call, the JSON Schema on request, a validation strip and the approval a\ncall needs.",
   "type": "object",

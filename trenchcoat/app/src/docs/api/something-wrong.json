@@ -120,7 +120,7 @@
   {
    "tag": "tc-something-wrong",
    "className": "TcSomethingWrong",
-   "module": "trenchcoat/something-wrong",
+   "module": "@adamstavely/trenchcoat/something-wrong",
    "data": [],
    "attributes": [
     {

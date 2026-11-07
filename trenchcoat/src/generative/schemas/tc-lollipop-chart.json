@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-lollipop-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-lollipop-chart.json",
   "title": "tc-lollipop-chart",
   "description": "One value per item as a stem and a dot, ordered from the largest, the largest emphasised, with values past the dots\nand a table view.",
   "type": "object",

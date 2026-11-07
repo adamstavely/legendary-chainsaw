@@ -87,8 +87,8 @@ with each new state. The canvas is hidden from assistive tech.
 <tc-voice-orb id="orb" pressable></tc-voice-orb>
 
 <script type="module">
-  import "trenchcoat/voice-orb";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/voice-orb";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const orb = document.querySelector("#orb");
   orb.label = { idle: "Ask anything" };
@@ -100,8 +100,8 @@ with each new state. The canvas is hidden from assistive tech.
 
 ```tsx
 import { useState } from "react";
-import { VoiceOrb, type VoiceOrbState } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { VoiceOrb, type VoiceOrbState } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function VoiceButton() {
   const [state, setState] = useState<VoiceOrbState>("idle");

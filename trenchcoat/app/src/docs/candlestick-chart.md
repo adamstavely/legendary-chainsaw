@@ -93,8 +93,8 @@ draws everything at once.
 <tc-candlestick-chart heading="Freezer B" description="October, daily temperature" unit=" °C"></tc-candlestick-chart>
 
 <script type="module">
-  import "trenchcoat/candlestick-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/candlestick-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const el = document.querySelector("tc-candlestick-chart");
   el.ma = [5];
   el.data = [
@@ -106,8 +106,8 @@ draws everything at once.
 ```
 
 ```tsx
-import { CandlestickChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CandlestickChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { date: "2026-10-01", open: -80.1, high: -79.2, low: -80.4, close: -79.4 },

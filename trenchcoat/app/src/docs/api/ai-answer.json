@@ -350,7 +350,7 @@
   {
    "tag": "tc-ai-answer",
    "className": "TcAiAnswer",
-   "module": "trenchcoat/ai-answer",
+   "module": "@adamstavely/trenchcoat/ai-answer",
    "data": [
     "sources",
     "animated",

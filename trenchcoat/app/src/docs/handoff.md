@@ -87,8 +87,8 @@ control, Hand back is described by “2 still open – Scout will see which” (
 <tc-handoff id="handoff" ask="sign in to TAP Air" blocker="Sign-in required" step="Step 4 of 7"></tc-handoff>
 
 <script type="module">
-  import "trenchcoat/handoff";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/handoff";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#handoff");
   card.agent = { name: "Scout", model: "Claude Sonnet" };
@@ -100,8 +100,8 @@ control, Hand back is described by “2 still open – Scout will see which” (
 ```
 
 ```tsx
-import { Handoff, type HandoffItem, type HandoffReturn } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Handoff, type HandoffItem, type HandoffReturn } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const needs: HandoffItem[] = [{ id: "signin", label: "Sign in with the code sent to •• 42" }];
 

@@ -161,7 +161,7 @@
   {
    "tag": "tc-treemap",
    "className": "TcTreemap",
-   "module": "trenchcoat/treemap",
+   "module": "@adamstavely/trenchcoat/treemap",
    "data": [
     "label",
     "value",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-session-panel.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-session-panel.json",
   "title": "tc-session-panel",
   "description": "The side panel of a working session: tools, environment, context, connectors, outputs, changes and background tasks.",
   "type": "object",

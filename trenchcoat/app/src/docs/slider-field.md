@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { SliderField } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SliderField } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <SliderField label="Temperature" defaultValue={0.7} min={0} max={2} step={0.01} />; }
 ```

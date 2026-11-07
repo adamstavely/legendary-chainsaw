@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-text-to-speech.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-text-to-speech.json",
   "title": "tc-text-to-speech",
   "description": "Reads a passage aloud – the sentence and word being spoken marked in the text, with play, pause, stop, sentence\nskips, a voice picker, speed and pitch.",
   "type": "object",

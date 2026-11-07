@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-no-access.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-no-access.json",
   "title": "tc-no-access",
   "description": "A folder held shut by a padlock, for when someone isn't entitled to see what they opened.",
   "type": "object",

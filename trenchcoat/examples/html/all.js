@@ -1,6 +1,6 @@
-import "trenchcoat";
-import "trenchcoat/tokens.css";
-import manifest from "trenchcoat/custom-elements.json";
+import "@adamstavely/trenchcoat";
+import "@adamstavely/trenchcoat/tokens.css";
+import manifest from "@adamstavely/trenchcoat/custom-elements.json";
 
 const tags = manifest.modules.flatMap((m) => (m.declarations ?? []).map((d) => d.tagName).filter(Boolean));
 const main = document.querySelector("#all");

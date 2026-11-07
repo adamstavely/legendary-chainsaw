@@ -87,8 +87,8 @@ over the window” when the level changes. The meter itself is hidden; Undo carr
 <tc-context-tray id="context" limit="200000" reserved="46000"></tc-context-tray>
 
 <script type="module">
-  import "trenchcoat/context-tray";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/context-tray";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tray = document.querySelector("#context");
   tray.items = [
@@ -101,8 +101,8 @@ over the window” when the level changes. The meter itself is hidden; Undo carr
 
 ```tsx
 import { useState } from "react";
-import { ContextTray, type ContextTrayEntry } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ContextTray, type ContextTrayEntry } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Attached() {
   const [items, setItems] = useState<ContextTrayEntry[]>([

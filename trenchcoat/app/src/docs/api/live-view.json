@@ -385,7 +385,7 @@
   {
    "tag": "tc-live-view",
    "className": "TcLiveView",
-   "module": "trenchcoat/live-view",
+   "module": "@adamstavely/trenchcoat/live-view",
    "data": [
     "actions",
     "source"

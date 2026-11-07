@@ -97,8 +97,8 @@ problem. Sending, cancelling and the status line are announced politely: "Reques
 <tc-access-request id="ask"></tc-access-request>
 
 <script type="module">
-  import "trenchcoat/access-request";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/access-request";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ask = document.querySelector("#ask");
   ask.resource = { name: "Field station sensor readings 2024", type: "dataset", owner: "Field Data team", classification: "internal", current: "No access" };
@@ -109,8 +109,8 @@ problem. Sending, cancelling and the status line are announced politely: "Reques
 
 ```tsx
 import { useState } from "react";
-import { AccessRequest, type AccessStatus } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AccessRequest, type AccessStatus } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AskForData() {
   const [status, setStatus] = useState<AccessStatus>("draft");

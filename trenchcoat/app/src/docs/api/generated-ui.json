@@ -137,7 +137,7 @@
   {
    "tag": "tc-generated-ui",
    "className": "TcGeneratedUi",
-   "module": "trenchcoat/generated-ui",
+   "module": "@adamstavely/trenchcoat/generated-ui",
    "data": [
     "spec",
     "allowedOrigins"

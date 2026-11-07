@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-alert-feed.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-alert-feed.json",
   "title": "tc-alert-feed",
   "description": "A live feed of alerts – category, severity, title, subject and a fresh relative time, with actions per alert,\ncounts in the header, Pause feed, and polite announcements of new alerts.",
   "type": "object",

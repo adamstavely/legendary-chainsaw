@@ -81,8 +81,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 <tc-bar-chart heading="Samples processed" description="This week, by lab"></tc-bar-chart>
 
 <script type="module">
-  import "trenchcoat/bar-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/bar-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-bar-chart").data = [
     { x: "Genomics", y: 182 },
     { x: "Imaging", y: 96 },
@@ -92,8 +92,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 ```
 
 ```tsx
-import { BarChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BarChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { x: "Genomics", y: 182 },

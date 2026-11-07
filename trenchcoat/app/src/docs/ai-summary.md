@@ -100,8 +100,8 @@ is a disclosure (`aria-expanded`) over a list labelled “Sources”. Copy confi
 <tc-ai-summary id="sum" heading="Thread summary" subject="#launch-q3" model="Claude Sonnet"></tc-ai-summary>
 
 <script type="module">
-  import "trenchcoat/ai-summary";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ai-summary";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const sum = document.querySelector("#sum");
   sum.sources = [
@@ -122,8 +122,8 @@ is a disclosure (`aria-expanded`) over a list labelled “Sources”. Copy confi
 
 ```tsx
 import { useState } from "react";
-import { AiSummary, type AiSummarySource, type AiSummaryStatus } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AiSummary, type AiSummarySource, type AiSummaryStatus } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sources: AiSummarySource[] = [
   { id: "m1", label: "Priya in #launch-q3", kind: "message" },

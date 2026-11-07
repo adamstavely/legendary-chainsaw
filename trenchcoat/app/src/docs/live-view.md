@@ -90,8 +90,8 @@ again.” and, at the end, “Finished.” followed by the last caption.
 <tc-live-view id="live" frame-width="960" frame-height="600" agent="Operator" step="4" steps="8"></tc-live-view>
 
 <script type="module">
-  import "trenchcoat/live-view";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/live-view";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const view = document.querySelector("#live");
   view.heading = "Book a table for 4 at Lupa, Friday 7 PM";
@@ -104,8 +104,8 @@ again.” and, at the end, “Finished.” followed by the last caption.
 
 ```tsx
 import { useState } from "react";
-import { LiveView, type LiveViewAction, type LiveViewControl } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LiveView, type LiveViewAction, type LiveViewControl } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AgentScreen({ frame, actions }: { frame: string; actions: LiveViewAction[] }) {
   const [paused, setPaused] = useState(false);

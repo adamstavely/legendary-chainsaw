@@ -53,14 +53,14 @@ Use `format` for currency, percentages and units. Up is only a direction, so swa
 <tc-number-change value="128"></tc-number-change>
 
 <script type="module">
-  import "trenchcoat/number-change";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/number-change";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { NumberChange } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NumberChange } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Total({ value }: { value: number }) {
   return <NumberChange value={value} format={{ style: "currency", currency: "USD" }} />;

@@ -90,7 +90,7 @@ A page can set `--tc-fct-thumb` (the range thumbs' size).
 
 ```tsx
 import { useState } from "react";
-import { FacetSidebar, type Facet, type FacetValues } from "trenchcoat/react";
+import { FacetSidebar, type Facet, type FacetValues } from "@adamstavely/trenchcoat/react";
 
 const FACETS: Facet[] = [{ id: "pages", label: "Length", type: "range", min: 1, max: 200, unit: "pages" }];
 

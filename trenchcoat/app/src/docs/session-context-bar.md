@@ -89,8 +89,8 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 <tc-session-context-bar id="terms" sticky-top="56"></tc-session-context-bar>
 
 <script type="module">
-  import "trenchcoat/session-context-bar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/session-context-bar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const bar = document.querySelector("#terms");
   bar.terms = [
@@ -106,8 +106,8 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 
 ```tsx
 import { useState } from "react";
-import { SessionContextBar, type SessionTerm } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SessionContextBar, type SessionTerm } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SessionHeader({ initial }: { initial: SessionTerm[] }) {
   const [terms, setTerms] = useState(initial);

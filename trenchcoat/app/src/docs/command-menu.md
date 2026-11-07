@@ -87,8 +87,8 @@ run “Write an email”” (or “Couldn't ask the assistant”).
 <tc-command-menu id="menu" placeholder="Search or run a command…"></tc-command-menu>
 
 <script type="module">
-  import "trenchcoat/command-menu";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/command-menu";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const menu = document.querySelector("#menu");
   menu.groups = [
@@ -101,8 +101,8 @@ run “Write an email”” (or “Couldn't ask the assistant”).
 ```
 
 ```tsx
-import { CommandMenu, type CommandGroup } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CommandMenu, type CommandGroup } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const groups: CommandGroup[] = [
   { id: "suggestions", label: "Suggestions", commands: [{ id: "email", label: "Write an email", hint: "Gmail" }] },

@@ -120,8 +120,8 @@ open.” Gate suites and Open findings are sections named by their headings; eac
 <tc-configuration-release-control id="release" candidate="v14" required-approvals="2"></tc-configuration-release-control>
 
 <script type="module">
-  import "trenchcoat/configuration-release-control";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/configuration-release-control";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const release = document.querySelector("#release");
   release.versions = [
@@ -149,8 +149,8 @@ open.” Gate suites and Open findings are sections named by their headings; eac
 ```
 
 ```tsx
-import { ConfigurationReleaseControl, type ReleaseStage, type ReleaseVersion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ConfigurationReleaseControl, type ReleaseStage, type ReleaseVersion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Release({ stages, versions, promote }: { stages: ReleaseStage[]; versions: ReleaseVersion[]; promote: (version: string, stage: string) => Promise<void> }) {
   return (

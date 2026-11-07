@@ -120,7 +120,7 @@ A page can set `--tc-jsv-body-h` (how tall the body, or each pane, grows before 
 
 ```tsx
 import { useState } from "react";
-import { JsonViewer, type JsonFlag } from "trenchcoat/react";
+import { JsonViewer, type JsonFlag } from "@adamstavely/trenchcoat/react";
 
 export function InvoiceReview({ extraction }: { extraction: Record<string, unknown> }) {
   const [flags, setFlags] = useState<JsonFlag[]>([]);

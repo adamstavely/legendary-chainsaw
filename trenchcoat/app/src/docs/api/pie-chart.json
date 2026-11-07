@@ -111,7 +111,7 @@
   {
    "tag": "tc-pie-chart",
    "className": "TcPieChart",
-   "module": "trenchcoat/pie-chart",
+   "module": "@adamstavely/trenchcoat/pie-chart",
    "data": [],
    "attributes": [
     {

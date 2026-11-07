@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-activity-calendar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-activity-calendar.json",
   "title": "tc-activity-calendar",
   "description": "A year of activity, a square per day in a column per week, shaded by how much happened – with month and weekday\nnames, a total, and the day's value on hover or focus.",
   "type": "object",

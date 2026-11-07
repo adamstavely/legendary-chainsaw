@@ -81,8 +81,8 @@ off”). Blocker links read the blocker and where it is.
 <tc-publish-readiness id="release" subject="Weekly digest" version="v1.3" description="Summarises the week's tickets"></tc-publish-readiness>
 
 <script type="module">
-  import "trenchcoat/publish-readiness";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/publish-readiness";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const release = document.querySelector("#release");
   release.checks = [
@@ -98,8 +98,8 @@ off”). Blocker links read the blocker and where it is.
 
 ```tsx
 import { useState } from "react";
-import { PublishReadiness, type ReadinessCheck } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PublishReadiness, type ReadinessCheck } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const checks: ReadinessCheck[] = [
   { id: "spec", label: "Spec is valid", state: "passed" },

@@ -179,7 +179,7 @@
   {
    "tag": "tc-icon-rail",
    "className": "TcIconRail",
-   "module": "trenchcoat/icon-rail",
+   "module": "@adamstavely/trenchcoat/icon-rail",
    "data": [
     "items",
     "moreItems"

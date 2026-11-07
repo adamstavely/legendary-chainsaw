@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-budget-guard.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-budget-guard.json",
   "title": "tc-budget-guard",
   "description": "Spend and token limits for a live run: progress against the cap, a warning near it, a hard stop at it, and raising\nthe cap from the warning.",
   "type": "object",

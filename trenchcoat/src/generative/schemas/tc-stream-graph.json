@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-stream-graph.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-stream-graph.json",
   "title": "tc-stream-graph",
   "description": "Several series flowing over time as a streamgraph – one emphasised against shades of the quiet ink – with names\nbeside the layers' ends, every series read at the nearest x, and a table view.",
   "type": "object",

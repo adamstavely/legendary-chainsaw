@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-review-conflict.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-review-conflict.json",
   "title": "tc-review-conflict",
   "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
   "type": "object",

@@ -89,8 +89,8 @@ show (“September 2026 – October 2026”) and the pick: “Start Oct 1, 2026 
 <tc-date-range-picker id="period" name="period" week-starts-on="1"></tc-date-range-picker>
 
 <script type="module">
-  import "trenchcoat/date-range-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/date-range-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const picker = document.querySelector("#period");
   picker.value = { start: new Date(2026, 9, 1), end: new Date(2026, 9, 14) };
@@ -101,8 +101,8 @@ show (“September 2026 – October 2026”) and the pick: “Start Oct 1, 2026 
 
 ```tsx
 import { useState } from "react";
-import { DateRangePicker, formatRange, type DateRange } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DateRangePicker, formatRange, type DateRange } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ReportPeriod() {
   const [range, setRange] = useState<DateRange>({ start: new Date(2026, 9, 1), end: new Date(2026, 9, 14) });

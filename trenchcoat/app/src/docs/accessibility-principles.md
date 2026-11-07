@@ -69,14 +69,14 @@ the text beside it already says the same, and it's left out of the accessibility
 <tc-accessibility-principles caption="Built for every ability"></tc-accessibility-principles>
 
 <script type="module">
-  import "trenchcoat/accessibility-principles";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/accessibility-principles";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { AccessibilityPrinciples } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AccessibilityPrinciples } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Statement() {
   return <AccessibilityPrinciples caption="Built for every ability" />;

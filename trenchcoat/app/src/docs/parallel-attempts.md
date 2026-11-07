@@ -83,8 +83,8 @@ of 4 done, best: Attempt A. Using Attempt A.”
 <tc-parallel-attempts id="race" task="Fix the flaky checkout test"></tc-parallel-attempts>
 
 <script type="module">
-  import "trenchcoat/parallel-attempts";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/parallel-attempts";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const race = document.querySelector("#race");
   race.attempts = [
@@ -114,8 +114,8 @@ of 4 done, best: Attempt A. Using Attempt A.”
 ```
 
 ```tsx
-import { ParallelAttempts, type Attempt } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ParallelAttempts, type Attempt } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function FixRace({ attempts, apply }: { attempts: Attempt[]; apply: (id: string) => void }) {
   return (

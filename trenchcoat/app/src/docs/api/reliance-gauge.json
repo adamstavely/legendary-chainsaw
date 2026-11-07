@@ -401,7 +401,7 @@
   {
    "tag": "tc-reliance-gauge",
    "className": "TcRelianceGauge",
-   "module": "trenchcoat/reliance-gauge",
+   "module": "@adamstavely/trenchcoat/reliance-gauge",
    "data": [
     "trend",
     "signals",

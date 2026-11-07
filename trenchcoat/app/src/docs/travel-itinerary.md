@@ -81,8 +81,8 @@ in words (“99% confidence, high”), the source and grade, and each flag's wor
 <tc-travel-itinerary id="trips" heading="Travel this quarter" grouped></tc-travel-itinerary>
 
 <script type="module">
-  import "trenchcoat/travel-itinerary";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/travel-itinerary";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const trips = document.querySelector("#trips");
   trips.legs = [
@@ -94,8 +94,8 @@ in words (“99% confidence, high”), the source and grade, and each flag's wor
 ```
 
 ```tsx
-import { TravelItinerary, type TravelLeg } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TravelItinerary, type TravelLeg } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const legs: TravelLeg[] = [
   { id: "l1", date: Date.parse("2026-05-28T09:00"), from: "LYS", to: "IST", mode: "air", carrier: "TK1814", confidence: 0.99 },

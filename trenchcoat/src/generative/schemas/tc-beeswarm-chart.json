@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-beeswarm-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-beeswarm-chart.json",
   "title": "tc-beeswarm-chart",
   "description": "A distribution point by point – every value a dot, in one row or a row per group with its median – that switches to\na canvas for thousands of points.",
   "type": "object",

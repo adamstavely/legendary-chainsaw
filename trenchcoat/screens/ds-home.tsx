@@ -7,7 +7,7 @@
  * Sits in the Trenchcoat App Shell. Searching calls `onSearch`; a section card or quick link calls `onNavigate`.
  * className, other DOM props and `ref` go to the App Shell's root.
  * Imports: App Shell (app-shell.tsx) from Trenchcoat screens; Collection Card and Preview Card from
- * `trenchcoat/react`; spot illustrations from `trenchcoat/illustrations/spot` (your bundler's asset handling); icons
+ * `@adamstavely/trenchcoat/react`; spot illustrations from `@adamstavely/trenchcoat/illustrations/spot` (your bundler's asset handling); icons
  * from lucide-react 1.55.0.
  */
 
@@ -24,24 +24,24 @@ import {
   RocketIcon,
   TagIcon,
 } from "lucide-react";
-import { CollectionCard, PreviewCard } from "trenchcoat/react";
+import { CollectionCard, PreviewCard } from "@adamstavely/trenchcoat/react";
 import { AppShell, SearchField, SectionHead, type AppShellProps, type ShellGroup, type ShellNavItem } from "@/components/ui/app-shell";
-import compassRose from "trenchcoat/illustrations/spot/site/compass-rose.svg";
-import colors from "trenchcoat/illustrations/spot/foundations/colors.svg";
-import typography from "trenchcoat/illustrations/spot/foundations/typography.svg";
-import spacing from "trenchcoat/illustrations/spot/foundations/spacing.svg";
-import componentButton from "trenchcoat/illustrations/spot/foundations/component-button.svg";
-import componentComposition from "trenchcoat/illustrations/spot/foundations/component-composition.svg";
-import componentTesting from "trenchcoat/illustrations/spot/foundations/component-testing.svg";
-import patternOverview from "trenchcoat/illustrations/spot/patterns/pattern-overview.svg";
-import emptyLoading from "trenchcoat/illustrations/spot/patterns/empty-loading-states.svg";
-import errorHandling from "trenchcoat/illustrations/spot/patterns/error-handling.svg";
-import iconLibrary from "trenchcoat/illustrations/spot/foundations/icon-library.svg";
-import illustrations from "trenchcoat/illustrations/spot/foundations/illustrations.svg";
-import designAssets from "trenchcoat/illustrations/spot/foundations/design-assets.svg";
-import gettingStarted from "trenchcoat/illustrations/spot/site/getting-started.svg";
-import contribute from "trenchcoat/illustrations/spot/site/contribute.svg";
-import getInTouch from "trenchcoat/illustrations/spot/site/get-in-touch.svg";
+import compassRose from "@adamstavely/trenchcoat/illustrations/spot/site/compass-rose.svg";
+import colors from "@adamstavely/trenchcoat/illustrations/spot/foundations/colors.svg";
+import typography from "@adamstavely/trenchcoat/illustrations/spot/foundations/typography.svg";
+import spacing from "@adamstavely/trenchcoat/illustrations/spot/foundations/spacing.svg";
+import componentButton from "@adamstavely/trenchcoat/illustrations/spot/foundations/component-button.svg";
+import componentComposition from "@adamstavely/trenchcoat/illustrations/spot/foundations/component-composition.svg";
+import componentTesting from "@adamstavely/trenchcoat/illustrations/spot/foundations/component-testing.svg";
+import patternOverview from "@adamstavely/trenchcoat/illustrations/spot/patterns/pattern-overview.svg";
+import emptyLoading from "@adamstavely/trenchcoat/illustrations/spot/patterns/empty-loading-states.svg";
+import errorHandling from "@adamstavely/trenchcoat/illustrations/spot/patterns/error-handling.svg";
+import iconLibrary from "@adamstavely/trenchcoat/illustrations/spot/foundations/icon-library.svg";
+import illustrations from "@adamstavely/trenchcoat/illustrations/spot/foundations/illustrations.svg";
+import designAssets from "@adamstavely/trenchcoat/illustrations/spot/foundations/design-assets.svg";
+import gettingStarted from "@adamstavely/trenchcoat/illustrations/spot/site/getting-started.svg";
+import contribute from "@adamstavely/trenchcoat/illustrations/spot/site/contribute.svg";
+import getInTouch from "@adamstavely/trenchcoat/illustrations/spot/site/get-in-touch.svg";
 
 /** The design system's menu – shared by its screens */
 const nav: ShellNavItem[] = [

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-chat-minimap.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-chat-minimap.json",
   "title": "tc-chat-minimap",
   "description": "A rail of ticks beside a long chat, one per message the person sent – the one in view lit, the message on hover, a\nclick to jump – that follows the chat's scrolling.",
   "type": "object",

@@ -76,7 +76,7 @@ The format to prompt the model with:
 | `form` | `id`, `title`, `submitLabel`, `fields`: `{ name, label, kind, required, placeholder, hint, value, options, min, max }` |
 | `callout` | `tone`: "info", "success", "warning" or "danger", `title`, `text`, `children`, `actions` |
 | `group` | `title`, `layout`: "column", "row" or "grid", `children`, `actions` |
-| `component` | `tag`: any tag in `trenchcoat/generative`'s catalogue, `props`: the component's properties as JSON |
+| `component` | `tag`: any tag in `@adamstavely/trenchcoat/generative`'s catalogue, `props`: the component's properties as JSON |
 
 A spec is `{ blocks: [...] }`, a list of blocks, or one block. Field kinds are "text", "email", "number", "url",
 "date", "textarea", "select" (a native select) and "choice" (stepper-form's cards). Actions are `{ id, label,
@@ -86,7 +86,7 @@ primary }`. Blocks nest inside callouts and groups up to six levels.
 - Keep `text` short and specific; let metrics and tables carry the numbers.
 - Write action labels as what happens (“Cap daily spend”), and give each a stable `id` your app handles.
 - Title forms by what they do (“Send this as a weekly report”) and their submit button with the verb.
-- For a `component` block, put `catalogPrompt()` from `trenchcoat/generative` in the system prompt – a line per
+- For a `component` block, put `catalogPrompt()` from `@adamstavely/trenchcoat/generative` in the system prompt – a line per
   component, or only the few your assistant needs. The props are checked against the component's schema before
   anything is set: what doesn't fit is left out and listed in `tc-spec-check`, and links must be http(s), mailto, tel
   or relative. Set `allowedOrigins` to hold the components' images to your own origins. See Foundations → Generative
@@ -113,8 +113,8 @@ primary }`. Blocks nest inside callouts and groups up to six levels.
 <tc-generated-ui id="answer"></tc-generated-ui>
 
 <script type="module">
-  import "trenchcoat/generated-ui";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/generated-ui";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const answer = document.querySelector("#answer");
   answer.spec = {
@@ -128,8 +128,8 @@ primary }`. Blocks nest inside callouts and groups up to six levels.
 ```
 
 ```tsx
-import { GeneratedUi, type GeneratedUiActionDetail } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GeneratedUi, type GeneratedUiActionDetail } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Answer({ text, streaming }: { text: string; streaming: boolean }) {
   const onAction = (a: GeneratedUiActionDetail) => {

@@ -184,7 +184,7 @@
   {
    "tag": "tc-diff-viewer",
    "className": "TcDiffViewer",
-   "module": "trenchcoat/diff-viewer",
+   "module": "@adamstavely/trenchcoat/diff-viewer",
    "data": [
     "files",
     "expanded",

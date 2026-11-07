@@ -250,7 +250,7 @@
   {
    "tag": "tc-pr-link",
    "className": "TcPrLink",
-   "module": "trenchcoat/pr-link",
+   "module": "@adamstavely/trenchcoat/pr-link",
    "data": [
     "labels"
    ],

@@ -73,14 +73,14 @@ the room between the logo and the search form. `defaultAtomicDesignLabels` has t
 <tc-atomic-design stage="molecule"></tc-atomic-design>
 
 <script type="module">
-  import "trenchcoat/atomic-design";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/atomic-design";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { AtomicDesign } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AtomicDesign } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Stage() {
   return <AtomicDesign stage="molecule" />;

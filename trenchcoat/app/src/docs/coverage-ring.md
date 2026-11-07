@@ -82,8 +82,8 @@ count and share, “Uncovered: 1 topics, 8%”. The readout under the bar repeat
 <tc-coverage-ring id="cov" heading="Gap coverage" description="Share of open gaps with active work assigned." value="0.61" unit="topics" unit-one="topic"></tc-coverage-ring>
 
 <script type="module">
-  import "trenchcoat/coverage-ring";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/coverage-ring";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const cov = document.querySelector("#cov");
   cov.segments = [
@@ -96,8 +96,8 @@ count and share, “Uncovered: 1 topics, 8%”. The readout under the bar repeat
 ```
 
 ```tsx
-import { CoverageRing, type CoverageSegment } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CoverageRing, type CoverageSegment } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const segments: CoverageSegment[] = [
   { id: "strong", label: "Well covered", count: 5, tone: "success" },

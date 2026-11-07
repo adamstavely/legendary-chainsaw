@@ -85,8 +85,8 @@ active”, or “No filters”. `disabled` marks every option `aria-disabled`.
 <tc-filter-menu id="filters" heading="Filter leads" name="f"></tc-filter-menu>
 
 <script type="module">
-  import "trenchcoat/filter-menu";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/filter-menu";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const menu = document.querySelector("#filters");
   menu.groups = [
@@ -100,8 +100,8 @@ active”, or “No filters”. `disabled` marks every option `aria-disabled`.
 
 ```tsx
 import { useState } from "react";
-import { FilterMenu, type FilterGroup, type FilterValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FilterMenu, type FilterGroup, type FilterValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const groups: FilterGroup[] = [
   { id: "status", label: "Status", options: [{ id: "new", label: "New" }, { id: "won", label: "Won" }] },

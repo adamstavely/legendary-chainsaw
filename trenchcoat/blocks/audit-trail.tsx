@@ -1,8 +1,8 @@
 "use client";
 
-export { AuditTrail, type AuditTrailProps } from "trenchcoat/react";
+export { AuditTrail, type AuditTrailProps } from "@adamstavely/trenchcoat/react";
 
 /*
- * The block is the <tc-audit-trail> element through `trenchcoat/react`. The look follows the nearest <LookProvider>, or the
+ * The block is the <tc-audit-trail> element through `@adamstavely/trenchcoat/react`. The look follows the nearest <LookProvider>, or the
  * `look` prop.
  */

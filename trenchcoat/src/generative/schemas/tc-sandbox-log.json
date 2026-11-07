@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-sandbox-log.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sandbox-log.json",
   "title": "tc-sandbox-log",
   "description": "Command output from an agent's sandbox: a collapsible block per step with the command, exit code, duration and\nthe output in colour; search and copy; windowed for long logs.",
   "type": "object",

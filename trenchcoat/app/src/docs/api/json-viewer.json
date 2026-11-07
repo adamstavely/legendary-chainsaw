@@ -475,7 +475,7 @@
   {
    "tag": "tc-json-viewer",
    "className": "TcJsonViewer",
-   "module": "trenchcoat/json-viewer",
+   "module": "@adamstavely/trenchcoat/json-viewer",
    "data": [
     "value",
     "flags"

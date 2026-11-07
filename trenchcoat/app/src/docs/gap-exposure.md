@@ -89,8 +89,8 @@ switch. Each group is a region named by its tier or severity.
 <tc-gap-exposure id="gaps" heading="Gaps & coverage"></tc-gap-exposure>
 
 <script type="module">
-  import "trenchcoat/gap-exposure";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/gap-exposure";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gaps = document.querySelector("#gaps");
   gaps.gaps = [
@@ -102,8 +102,8 @@ switch. Each group is a region named by its tier or severity.
 ```
 
 ```tsx
-import { GapExposure, type ExposureGap } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GapExposure, type ExposureGap } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const gaps: ExposureGap[] = [
   { id: "g1", text: "No coupled flood–grid failure dataset exists.", severity: "critical", item: "Climate Resilience Modeling", priority: 2, work: 0, owner: "Arjun Mehta" },

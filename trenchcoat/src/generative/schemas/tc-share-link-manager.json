@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-share-link-manager.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-share-link-manager.json",
   "title": "tc-share-link-manager",
   "description": "The links that already share something, with status in words, Copy, Change expiry and Revoke.",
   "type": "object",

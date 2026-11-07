@@ -315,7 +315,7 @@
   {
    "tag": "tc-publication-impact",
    "className": "TcPublicationImpact",
-   "module": "trenchcoat/publication-impact",
+   "module": "@adamstavely/trenchcoat/publication-impact",
    "data": [
     "topic",
     "grade",

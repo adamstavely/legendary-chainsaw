@@ -211,7 +211,7 @@
   {
    "tag": "tc-prioritisation-matrix",
    "className": "TcPrioritisationMatrix",
-   "module": "trenchcoat/prioritisation-matrix",
+   "module": "@adamstavely/trenchcoat/prioritisation-matrix",
    "data": [
     "items",
     "labels"

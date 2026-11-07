@@ -219,7 +219,7 @@
   {
    "tag": "tc-bubble-chart",
    "className": "TcBubbleChart",
-   "module": "trenchcoat/bubble-chart",
+   "module": "@adamstavely/trenchcoat/bubble-chart",
    "data": [
     "x",
     "y",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-lead-sourcing.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-lead-sourcing.json",
   "title": "tc-lead-sourcing",
   "description": "A small card illustration: three connected app tiles with a shine running along the line.",
   "type": "object",

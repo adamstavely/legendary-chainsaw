@@ -155,7 +155,7 @@
   {
    "tag": "tc-content-shield",
    "className": "TcContentShield",
-   "module": "trenchcoat/content-shield",
+   "module": "@adamstavely/trenchcoat/content-shield",
    "data": [
     "labels"
    ],

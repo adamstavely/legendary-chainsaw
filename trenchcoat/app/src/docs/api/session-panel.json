@@ -235,7 +235,7 @@
   {
    "tag": "tc-session-panel",
    "className": "TcSessionPanel",
-   "module": "trenchcoat/session-panel",
+   "module": "@adamstavely/trenchcoat/session-panel",
    "data": [
     "tools",
     "moreTools",

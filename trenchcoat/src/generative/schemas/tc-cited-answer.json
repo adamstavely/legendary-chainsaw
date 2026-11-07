@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-cited-answer.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-cited-answer.json",
   "title": "tc-cited-answer",
   "description": "An AI answer with numbered source markers, source chips and an in-place source preview.",
   "type": "object",

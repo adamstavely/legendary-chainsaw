@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-steering.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-steering.json",
   "title": "tc-agent-steering",
   "description": "Steer an agent while it works: the run, its plan, the queued notes and a field to add one.",
   "type": "object",

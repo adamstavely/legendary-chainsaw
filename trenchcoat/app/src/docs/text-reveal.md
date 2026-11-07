@@ -59,8 +59,8 @@ shown at once, without the blur or the rise.
 <tc-text-reveal id="headline" as="h2" by="char"></tc-text-reveal>
 
 <script type="module">
-  import "trenchcoat/text-reveal";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/text-reveal";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const headline = document.querySelector("#headline");
   headline.text = "Meet your new teammate.";
@@ -69,8 +69,8 @@ shown at once, without the blur or the rise.
 ```
 
 ```tsx
-import { TextReveal } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TextReveal } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Hero() {
   return (

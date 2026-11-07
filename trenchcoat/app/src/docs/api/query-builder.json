@@ -265,7 +265,7 @@
   {
    "tag": "tc-query-builder",
    "className": "TcQueryBuilder",
-   "module": "trenchcoat/query-builder",
+   "module": "@adamstavely/trenchcoat/query-builder",
    "data": [
     "fields",
     "value",

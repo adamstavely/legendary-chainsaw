@@ -246,7 +246,7 @@
   {
    "tag": "tc-saved-search-alerts",
    "className": "TcSavedSearchAlerts",
-   "module": "trenchcoat/saved-search-alerts",
+   "module": "@adamstavely/trenchcoat/saved-search-alerts",
    "data": [
     "alerts",
     "channels"

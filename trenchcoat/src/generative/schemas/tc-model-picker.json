@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-model-picker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-model-picker.json",
   "title": "tc-model-picker",
   "description": "The model menu of an AI chat: models with strength bars, extended thinking with its effort, and web search.",
   "type": "object",

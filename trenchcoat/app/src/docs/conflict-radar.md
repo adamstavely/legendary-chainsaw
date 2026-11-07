@@ -69,8 +69,8 @@ Give `lines` wherever you know them, because only crossing line ranges count as 
 <tc-conflict-radar id="radar"></tc-conflict-radar>
 
 <script type="module">
-  import "trenchcoat/conflict-radar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/conflict-radar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const radar = document.querySelector("#radar");
   radar.agents = [{ id: "a", name: "Schema agent", branch: "schema-v3" }, { id: "b", name: "Import agent" }];
@@ -79,8 +79,8 @@ Give `lines` wherever you know them, because only crossing line ranges count as 
 ```
 
 ```tsx
-import { ConflictRadar, type ConflictAgent, type ConflictFile } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ConflictRadar, type ConflictAgent, type ConflictFile } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const agents: ConflictAgent[] = [{ id: "a", name: "Schema agent" }, { id: "b", name: "Import agent" }];
 const files: ConflictFile[] = [{ path: "src/schema.ts", edits: [{ agent: "a", lines: [12, 60] }, { agent: "b", lines: [48, 75] }] }];

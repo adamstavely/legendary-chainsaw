@@ -92,8 +92,8 @@ also announced. The models are a list headed “Models the endpoint reports”.
 <tc-provider-connection id="conn" description="Support assistant"></tc-provider-connection>
 
 <script type="module">
-  import "trenchcoat/provider-connection";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/provider-connection";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const conn = document.querySelector("#conn");
   conn.providers = [{ id: "azure", label: "Azure OpenAI", deploymentLabel: "Deployment" }];
@@ -108,8 +108,8 @@ also announced. The models are a list headed “Models the endpoint reports”.
 
 ```tsx
 import { useState } from "react";
-import { ProviderConnection, type ProviderConnectionCheck, type ProviderConnectionValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProviderConnection, type ProviderConnectionCheck, type ProviderConnectionValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ModelConnection({ start, test }: { start: ProviderConnectionValue; test: (v: ProviderConnectionValue, signal: AbortSignal) => Promise<ProviderConnectionCheck> }) {
   const [value, setValue] = useState(start);

@@ -361,7 +361,7 @@
   {
    "tag": "tc-data-table",
    "className": "TcDataTable",
-   "module": "trenchcoat/data-table",
+   "module": "@adamstavely/trenchcoat/data-table",
    "data": [
     "icon",
     "columns",

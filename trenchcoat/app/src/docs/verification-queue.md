@@ -107,8 +107,8 @@ is described by the gate's message.
 <tc-verification-queue id="queue" export-label="Export brief"></tc-verification-queue>
 
 <script type="module">
-  import "trenchcoat/verification-queue";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/verification-queue";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const queue = document.querySelector("#queue");
   queue.sources = [{ id: "quote", site: "Freight quote", title: "Carrier quote", quote: "Per-order cost: $6.42 against $6.17." }];
@@ -131,8 +131,8 @@ is described by the gate's message.
 
 ```tsx
 import { useState } from "react";
-import { VerificationQueue, type VerificationClaim, type VerificationVerdict } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { VerificationQueue, type VerificationClaim, type VerificationVerdict } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const verdicts: { transcript: VerificationVerdict[] } = {
   transcript: [

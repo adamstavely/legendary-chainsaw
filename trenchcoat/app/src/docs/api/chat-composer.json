@@ -700,7 +700,7 @@
   {
    "tag": "tc-chat-composer",
    "className": "TcChatComposer",
-   "module": "trenchcoat/chat-composer",
+   "module": "@adamstavely/trenchcoat/chat-composer",
    "data": [
     "models",
     "onDictate",

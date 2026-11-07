@@ -341,7 +341,7 @@
   {
    "tag": "tc-comments-panel",
    "className": "TcCommentsPanel",
-   "module": "trenchcoat/comments-panel",
+   "module": "@adamstavely/trenchcoat/comments-panel",
    "data": [
     "comments",
     "currentUser",

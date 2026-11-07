@@ -89,8 +89,8 @@ confirmed in a polite status message.
 <tc-search-history id="history"></tc-search-history>
 
 <script type="module">
-  import "trenchcoat/search-history";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/search-history";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const history = document.querySelector("#history");
   history.searches = [
@@ -103,8 +103,8 @@ confirmed in a polite status message.
 
 ```tsx
 import { useState } from "react";
-import { SearchHistory, type SearchHistoryEntry } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SearchHistory, type SearchHistoryEntry } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function History({ initial }: { initial: SearchHistoryEntry[] }) {
   const [searches, setSearches] = useState(initial);

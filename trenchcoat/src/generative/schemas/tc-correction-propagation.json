@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-correction-propagation.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-correction-propagation.json",
   "title": "tc-correction-propagation",
   "description": "How far a correction reaches: every artifact and released package that cites the corrected claim, each sent for\nreview – nothing rewritten automatically.",
   "type": "object",

@@ -82,8 +82,8 @@ failed with a way to retry. `labels` renames every word, including the time phra
 </div>
 
 <script type="module">
-  import "trenchcoat/message-status";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/message-status";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const status = document.querySelector("#status");
   status.time = new Date();
@@ -95,8 +95,8 @@ failed with a way to retry. `labels` renames every word, including the time phra
 ```
 
 ```tsx
-import { MessageStatus, type MessageReceipt } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MessageStatus, type MessageReceipt } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Sent({ text, sentAt, receipt, resend }: { text: string; sentAt: number; receipt: MessageReceipt; resend: () => Promise<void> }) {
   return (

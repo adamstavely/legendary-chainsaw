@@ -132,7 +132,7 @@
   {
    "tag": "tc-pending-release",
    "className": "TcPendingRelease",
-   "module": "trenchcoat/pending-release",
+   "module": "@adamstavely/trenchcoat/pending-release",
    "data": [],
    "attributes": [
     {

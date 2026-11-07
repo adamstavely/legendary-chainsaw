@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-comment-thread.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-comment-thread.json",
   "title": "tc-comment-thread",
   "description": "One comment with its replies, an assistant's status lines and a reply field.",
   "type": "object",

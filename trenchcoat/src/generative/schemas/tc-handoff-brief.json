@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-handoff-brief.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-handoff-brief.json",
   "title": "tc-handoff-brief",
   "description": "Work passing from one person to another: summary, open items and commitments, each acknowledged by the receiver,\nblocked when they lack access.",
   "type": "object",

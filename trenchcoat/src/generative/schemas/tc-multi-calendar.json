@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-multi-calendar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-multi-calendar.json",
   "title": "tc-multi-calendar",
   "description": "A calendar of calendars – many people's events from many accounts in one Day, Week, Month, Agenda or People view,\nwith show/hide per calendar, conflicts across a person's calendars, and create, edit, move and delete.",
   "type": "object",

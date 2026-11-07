@@ -371,7 +371,7 @@
   {
    "tag": "tc-heatmap",
    "className": "TcHeatmap",
-   "module": "trenchcoat/heatmap",
+   "module": "@adamstavely/trenchcoat/heatmap",
    "data": [
     "rows",
     "columns",

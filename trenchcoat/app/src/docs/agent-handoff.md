@@ -70,8 +70,8 @@ Write `carried` and `lost` as things a person would recognise, such as "The note
 <tc-agent-handoff id="chain"></tc-agent-handoff>
 
 <script type="module">
-  import "trenchcoat/agent-handoff";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-handoff";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const chain = document.querySelector("#chain");
   chain.steps = [
@@ -83,8 +83,8 @@ Write `carried` and `lost` as things a person would recognise, such as "The note
 ```
 
 ```tsx
-import { AgentHandoff, type AgentHandoffLink, type AgentHandoffStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentHandoff, type AgentHandoffLink, type AgentHandoffStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const steps: AgentHandoffStep[] = [
   { id: "a", agent: "Scout", status: "done" },

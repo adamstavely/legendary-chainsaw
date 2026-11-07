@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-atomic-design.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-atomic-design.json",
   "title": "tc-atomic-design",
   "description": "Atomic design, one stage at a time – from the five stages in a row to atoms, a molecule, an organism, a template and a page.",
   "type": "object",

@@ -138,7 +138,7 @@
   {
    "tag": "tc-upload-failed",
    "className": "TcUploadFailed",
-   "module": "trenchcoat/upload-failed",
+   "module": "@adamstavely/trenchcoat/upload-failed",
    "data": [],
    "attributes": [
     {

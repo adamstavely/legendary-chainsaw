@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-team-invite.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-team-invite.json",
   "title": "tc-team-invite",
   "description": "A third teammate is dragged into the empty slot and joins the team.",
   "type": "object",

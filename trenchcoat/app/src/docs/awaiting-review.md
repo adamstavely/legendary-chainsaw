@@ -60,14 +60,14 @@ what happens next – a notification, the item going live – so people don't se
 <tc-awaiting-review></tc-awaiting-review>
 
 <script type="module">
-  import "trenchcoat/awaiting-review";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/awaiting-review";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { AwaitingReview } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AwaitingReview } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <AwaitingReview />;

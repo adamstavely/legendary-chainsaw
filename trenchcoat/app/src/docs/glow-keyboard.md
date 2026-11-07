@@ -52,8 +52,8 @@ are hidden. Reduced motion keeps the scene still and skips the self-typing; typi
 <tc-glow-keyboard id="hero" placeholder="Ask AI anything..."></tc-glow-keyboard>
 
 <script type="module">
-  import "trenchcoat/glow-keyboard";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/glow-keyboard";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const scene = document.querySelector("#hero");
   scene.prompts = ["Summarise this week's support tickets", "Draft a reply to Maya"];
@@ -62,8 +62,8 @@ are hidden. Reduced motion keeps the scene still and skips the self-typing; typi
 ```
 
 ```tsx
-import { GlowKeyboard } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GlowKeyboard } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Hero() {
   return (

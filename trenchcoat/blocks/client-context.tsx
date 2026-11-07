@@ -1,13 +1,13 @@
 "use client";
 
 import type { Ref } from "react";
-import { ClientContext as ClientContextElement, type ClientContextProps as ElementProps } from "trenchcoat/react";
+import { ClientContext as ClientContextElement, type ClientContextProps as ElementProps } from "@adamstavely/trenchcoat/react";
 
 /*
  * Client Context – one client's numbers, reports and shared context. Switch or create clients, refresh the sync, open
  * a metric, regenerate a report, and keep a timeline of notes and files the whole team writes into: search it, filter
  * it, mention reports with "@" and attach files.
- * Built on the Trenchcoat element <tc-client-context> through `trenchcoat/react` (install `trenchcoat` instead of
+ * Built on the Trenchcoat element <tc-client-context> through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` instead of
  * copying components); it follows the nearest <LookProvider>, or takes a `look` prop. This file keeps the block's
  * props and types, so code written against the React version keeps working.
  *
@@ -16,7 +16,7 @@ import { ClientContext as ClientContextElement, type ClientContextProps as Eleme
  * moves to the nearest stable control. Sync results and mention suggestions are announced in narrow status regions.
  */
 
-export type { ContextClient, ContextEntry, ContextFile, ContextKpi, ContextPerson, ContextReport } from "trenchcoat/react";
+export type { ContextClient, ContextEntry, ContextFile, ContextKpi, ContextPerson, ContextReport } from "@adamstavely/trenchcoat/react";
 
 export type ClientContextProps = Omit<ElementProps, "ref"> & {
   className?: string;

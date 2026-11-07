@@ -178,7 +178,7 @@
   {
    "tag": "tc-box-plot",
    "className": "TcBoxPlot",
-   "module": "trenchcoat/box-plot",
+   "module": "@adamstavely/trenchcoat/box-plot",
    "data": [
     "group",
     "value",

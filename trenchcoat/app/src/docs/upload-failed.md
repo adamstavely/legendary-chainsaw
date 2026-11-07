@@ -62,14 +62,14 @@ file, give the limit it broke, and offer Try again when the problem was the conn
 <tc-upload-failed></tc-upload-failed>
 
 <script type="module">
-  import "trenchcoat/upload-failed";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/upload-failed";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { UploadFailed } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { UploadFailed } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <UploadFailed />;

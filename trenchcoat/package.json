@@ -1,9 +1,16 @@
 {
-  "name": "trenchcoat",
+  "name": "@adamstavely/trenchcoat",
   "version": "0.1.0",
-  "private": true,
   "description": "Trenchcoat – Lit web components for AI-native products",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamstavely/legendary-chainsaw.git",
+    "directory": "trenchcoat"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "type": "module",
   "exports": {
     ".": {

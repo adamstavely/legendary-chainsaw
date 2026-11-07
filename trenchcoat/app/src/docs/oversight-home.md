@@ -80,8 +80,8 @@ is a word in the table, never only a colour.
 <tc-oversight-home id="home" role-id="reviewer"></tc-oversight-home>
 
 <script type="module">
-  import "trenchcoat/oversight-home";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/oversight-home";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const home = document.querySelector("#home");
   home.roles = [
@@ -101,8 +101,8 @@ is a word in the table, never only a colour.
 
 ```tsx
 import { useState } from "react";
-import { OversightHome, type OversightRole } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { OversightHome, type OversightRole } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const roles: OversightRole[] = [
   {

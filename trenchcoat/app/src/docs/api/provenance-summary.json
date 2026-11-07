@@ -200,7 +200,7 @@
   {
    "tag": "tc-provenance-summary",
    "className": "TcProvenanceSummary",
-   "module": "trenchcoat/provenance-summary",
+   "module": "@adamstavely/trenchcoat/provenance-summary",
    "data": [
     "sections",
     "kindLabels"

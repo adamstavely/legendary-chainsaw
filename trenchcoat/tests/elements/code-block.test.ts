@@ -69,9 +69,9 @@ describe("tc-code-block: tokenizer", () => {
   });
 
   test("JSON keys are properties, values strings and literals", () => {
-    const code = `{ "name": "trenchcoat", "private": true, "size": 12.5 }`;
+    const code = `{ "name": "@adamstavely/trenchcoat", "private": true, "size": 12.5 }`;
     expect(typeOf(code, "json", `"name"`)).toBe("property");
-    expect(typeOf(code, "json", `"trenchcoat"`)).toBe("string");
+    expect(typeOf(code, "json", `"@adamstavely/trenchcoat"`)).toBe("string");
     expect(typeOf(code, "json", "true")).toBe("number");
     expect(typeOf(code, "json", "12.5")).toBe("number");
   });

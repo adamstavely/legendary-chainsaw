@@ -266,7 +266,7 @@
   {
    "tag": "tc-kpi-chart",
    "className": "TcKpiChart",
-   "module": "trenchcoat/kpi-chart",
+   "module": "@adamstavely/trenchcoat/kpi-chart",
    "data": [
     "deltaFormat",
     "labels",

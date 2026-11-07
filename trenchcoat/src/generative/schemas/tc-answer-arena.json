@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-answer-arena.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-answer-arena.json",
   "title": "tc-answer-arena",
   "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
   "type": "object",

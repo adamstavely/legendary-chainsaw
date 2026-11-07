@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-work-item.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-work-item.json",
   "title": "tc-work-item",
   "description": "A work item card – title, status, a note, progress, due date, people, what it delivers, spent against budget and\neffort – that opens as a link or a button.",
   "type": "object",

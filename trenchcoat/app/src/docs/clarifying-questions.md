@@ -84,8 +84,8 @@ the reply, a `group` named “Answers sent” listing each prompt and answer.
 <tc-clarifying-questions id="ask" intro="I'll draft the deck from the Q3 planning docs once I know these."></tc-clarifying-questions>
 
 <script type="module">
-  import "trenchcoat/clarifying-questions";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/clarifying-questions";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ask = document.querySelector("#ask");
   ask.questions = [
@@ -99,8 +99,8 @@ the reply, a `group` named “Answers sent” listing each prompt and answer.
 
 ```tsx
 import { useState } from "react";
-import { ClarifyingQuestions, type ClarifyingAnswers, type ClarifyingQuestion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ClarifyingQuestions, type ClarifyingAnswers, type ClarifyingQuestion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AskFirst({ questions, reply }: { questions: ClarifyingQuestion[]; reply: (answers: ClarifyingAnswers) => void }) {
   const [answers, setAnswers] = useState<ClarifyingAnswers>({});

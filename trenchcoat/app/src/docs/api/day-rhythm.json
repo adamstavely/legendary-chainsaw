@@ -162,7 +162,7 @@
   {
    "tag": "tc-day-rhythm",
    "className": "TcDayRhythm",
-   "module": "trenchcoat/day-rhythm",
+   "module": "@adamstavely/trenchcoat/day-rhythm",
    "data": [
     "kinds",
     "rows"

@@ -307,7 +307,7 @@
   {
    "tag": "tc-gap-exposure",
    "className": "TcGapExposure",
-   "module": "trenchcoat/gap-exposure",
+   "module": "@adamstavely/trenchcoat/gap-exposure",
    "data": [
     "gaps",
     "exposureSeverities",

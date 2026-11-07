@@ -80,8 +80,8 @@ A Git status is read as a word. `role="status"` says how many files match the fi
 <tc-file-tree id="files"></tc-file-tree>
 
 <script type="module">
-  import { fileTreeFromPaths } from "trenchcoat/file-tree";
-  import "trenchcoat/tokens.css";
+  import { fileTreeFromPaths } from "@adamstavely/trenchcoat/file-tree";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tree = document.querySelector("#files");
   tree.nodes = fileTreeFromPaths(["src/index.ts", "src/a.ts", "README.md"]);
@@ -90,8 +90,8 @@ A Git status is read as a word. `role="status"` says how many files match the fi
 ```
 
 ```tsx
-import { FileTree, fileTreeFromPaths } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FileTree, fileTreeFromPaths } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const nodes = fileTreeFromPaths(["src/index.ts", "src/a.ts", "README.md"]);
 

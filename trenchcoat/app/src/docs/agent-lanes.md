@@ -88,8 +88,8 @@ moves.
 <tc-agent-lanes id="lanes" heading="Release crew"></tc-agent-lanes>
 
 <script type="module">
-  import "trenchcoat/agent-lanes";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-lanes";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const lanes = document.querySelector("#lanes");
   const now = Date.now();
@@ -122,8 +122,8 @@ moves.
 ```
 
 ```tsx
-import { AgentLanes, type LaneAgent, type LaneTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentLanes, type LaneAgent, type LaneTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const agents: LaneAgent[] = [
   { id: "code", name: "Coder", model: "Sonnet 5" },

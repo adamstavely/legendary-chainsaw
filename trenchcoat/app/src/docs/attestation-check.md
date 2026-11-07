@@ -84,8 +84,8 @@ A verify that throws shows an alert, “Couldn't check this package.”, with Tr
 <tc-attestation-check id="check"></tc-attestation-check>
 
 <script type="module">
-  import "trenchcoat/attestation-check";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/attestation-check";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const check = document.querySelector("#check");
   check.verify = async (input) => {
@@ -98,8 +98,8 @@ A verify that throws shows an alert, “Couldn't check this package.”, with Tr
 ```
 
 ```tsx
-import { AttestationCheck, type AttestationResult } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AttestationCheck, type AttestationResult } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 async function verify(input: string | File): Promise<AttestationResult> {
   const data = typeof input === "string" ? new TextEncoder().encode(input) : await input.arrayBuffer();

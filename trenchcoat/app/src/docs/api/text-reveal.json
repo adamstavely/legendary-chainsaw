@@ -246,7 +246,7 @@
   {
    "tag": "tc-text-reveal",
    "className": "TcTextReveal",
-   "module": "trenchcoat/text-reveal",
+   "module": "@adamstavely/trenchcoat/text-reveal",
    "data": [],
    "attributes": [
     {

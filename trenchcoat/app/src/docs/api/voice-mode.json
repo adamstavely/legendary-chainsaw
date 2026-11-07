@@ -304,7 +304,7 @@
   {
    "tag": "tc-voice-mode",
    "className": "TcVoiceMode",
-   "module": "trenchcoat/voice-mode",
+   "module": "@adamstavely/trenchcoat/voice-mode",
    "data": [
     "turns",
     "captions",

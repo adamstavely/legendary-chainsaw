@@ -248,7 +248,7 @@
   {
    "tag": "tc-conversation-branches",
    "className": "TcConversationBranches",
-   "module": "trenchcoat/conversation-branches",
+   "module": "@adamstavely/trenchcoat/conversation-branches",
    "data": [
     "messages",
     "selected",

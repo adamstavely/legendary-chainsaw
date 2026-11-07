@@ -35,10 +35,10 @@ Standard when there's none. Changing the provider's `look` restyles everything i
 </tc-look-provider>
 
 <script type="module">
-  import "trenchcoat/look-provider";
-  import "trenchcoat/combobox";
-  import "trenchcoat/button";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/look-provider";
+  import "@adamstavely/trenchcoat/combobox";
+  import "@adamstavely/trenchcoat/button";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   // Switch every element inside at once (except the one with its own look)
   document.querySelector("tc-look-provider").look = "standard";
@@ -47,8 +47,8 @@ Standard when there's none. Changing the provider's `look` restyles everything i
 
 ```tsx
 import { useState } from "react";
-import { Button, LookProvider, type Look } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Button, LookProvider, type Look } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function App() {
   const [look, setLook] = useState<Look>("clean");

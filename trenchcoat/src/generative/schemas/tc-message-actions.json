@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-message-actions.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-message-actions.json",
   "title": "tc-message-actions",
   "description": "The action bar under an AI chat message: copy, regenerate with a version switcher, thumbs with a feedback row, and\nread aloud.",
   "type": "object",

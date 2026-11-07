@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-status-tracker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-status-tracker.json",
   "title": "tc-status-tracker",
   "description": "A status tracker – a fixed sequence of steps on a line, each cleared, pending, blocked or not reached, with the line\nfilling as steps clear, the current step marked, a legend, and a step's record on click or Enter.",
   "type": "object",

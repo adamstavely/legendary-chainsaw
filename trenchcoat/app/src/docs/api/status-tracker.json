@@ -263,7 +263,7 @@
   {
    "tag": "tc-status-tracker",
    "className": "TcStatusTracker",
-   "module": "trenchcoat/status-tracker",
+   "module": "@adamstavely/trenchcoat/status-tracker",
    "data": [
     "steps",
     "statuses",

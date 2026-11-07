@@ -87,8 +87,8 @@ try again” when the action's promise rejects; while it runs the action button 
 <tc-experiment-card id="test" heading="Checkout redesign" note="Day 9 of 14"></tc-experiment-card>
 
 <script type="module">
-  import "trenchcoat/experiment-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/experiment-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#test");
   card.status = { label: "Running", tone: "green" };
@@ -104,8 +104,8 @@ try again” when the action's promise rejects; while it runs the action button 
 
 ```tsx
 import { useState } from "react";
-import { ExperimentCard, type ExperimentMetric, type ExperimentVariant } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ExperimentCard, type ExperimentMetric, type ExperimentVariant } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const metrics: ExperimentMetric[] = [{ id: "conversion", label: "Conversion", format: (n) => `${n.toFixed(2)}%` }];
 const variants: ExperimentVariant[] = [

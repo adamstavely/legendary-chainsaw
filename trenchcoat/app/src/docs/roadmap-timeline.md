@@ -102,7 +102,7 @@ A page can set `--tc-rdm-lane-w` (the lane column, 168px), `--tc-rdm-row` (a lan
 ```
 
 ```tsx
-import { RoadmapTimeline } from "trenchcoat/react";
+import { RoadmapTimeline } from "@adamstavely/trenchcoat/react";
 
 export function Plan() {
   return (

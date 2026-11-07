@@ -84,8 +84,8 @@ count, “Critical 2”.
 <tc-watchlist id="watch" heading="Watchlist" filters></tc-watchlist>
 
 <script type="module">
-  import "trenchcoat/watchlist";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/watchlist";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const watch = document.querySelector("#watch");
   watch.items = [
@@ -99,8 +99,8 @@ count, “Critical 2”.
 
 ```tsx
 import { useState } from "react";
-import { Watchlist, type WatchFilter, type WatchItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Watchlist, type WatchFilter, type WatchItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: WatchItem[] = [
   { id: "m-4471", name: "Northwind Traders", ref: "MER-4471-K", group: "Case 22-1187", risk: "critical", shape: "square" },

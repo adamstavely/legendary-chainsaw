@@ -90,8 +90,8 @@ step.
 <tc-model-settings id="settings" name="generation"></tc-model-settings>
 
 <script type="module">
-  import "trenchcoat/model-settings";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/model-settings";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const settings = document.querySelector("#settings");
   settings.heading = "Reply drafts";
@@ -103,8 +103,8 @@ step.
 
 ```tsx
 import { useState } from "react";
-import { ModelSettings, type ModelSettingsModel, type ModelSettingsValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ModelSettings, type ModelSettingsModel, type ModelSettingsValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const model: ModelSettingsModel = { id: "atlas-2", label: "Atlas 2", supports: ["temperature", "topP", "maxOutputTokens"] };
 

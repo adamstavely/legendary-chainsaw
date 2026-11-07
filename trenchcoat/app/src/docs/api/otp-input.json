@@ -325,7 +325,7 @@
   {
    "tag": "tc-otp-input",
    "className": "TcOtpInput",
-   "module": "trenchcoat/otp-input",
+   "module": "@adamstavely/trenchcoat/otp-input",
    "data": [
     "onComplete"
    ],

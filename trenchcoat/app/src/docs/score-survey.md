@@ -85,8 +85,8 @@ submitted. The dismiss button is named “Dismiss”.
 <tc-score-survey id="survey" kind="nps" question="How likely are you to recommend the Riverside Library app?" dismissible></tc-score-survey>
 
 <script type="module">
-  import "trenchcoat/score-survey";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/score-survey";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const survey = document.querySelector("#survey");
   survey.followUps = { detractor: "What would make it more useful?", promoter: "What do you like most?" };
@@ -96,8 +96,8 @@ submitted. The dismiss button is named “Dismiss”.
 ```
 
 ```tsx
-import { ScoreSurvey, type ScoreSurveySubmit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ScoreSurvey, type ScoreSurveySubmit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function VisitSurvey({ onSave }: { onSave: (answer: ScoreSurveySubmit) => void }) {
   return <ScoreSurvey kind="csat" question="How satisfied were you with booking a study room?" followUp="Tell us more" onSubmit={onSave} />;

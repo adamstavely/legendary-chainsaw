@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-run-checkpoints.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-checkpoints.json",
   "title": "tc-run-checkpoints",
   "description": "An agent run's restore points: pick a step, see what it captured and what going back discards, and go back.",
   "type": "object",

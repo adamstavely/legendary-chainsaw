@@ -132,7 +132,7 @@
   {
    "tag": "tc-awaiting-review",
    "className": "TcAwaitingReview",
-   "module": "trenchcoat/awaiting-review",
+   "module": "@adamstavely/trenchcoat/awaiting-review",
    "data": [],
    "attributes": [
     {

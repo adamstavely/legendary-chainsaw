@@ -109,8 +109,8 @@ stays, marked unavailable. Pictures take their `alt`; sparklines are hidden.
 <tc-stories id="updates" replyable></tc-stories>
 
 <script type="module">
-  import "trenchcoat/stories";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/stories";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const updates = document.querySelector("#updates");
   updates.entries = [
@@ -137,8 +137,8 @@ stays, marked unavailable. Pictures take their `alt`; sparklines are hidden.
 
 ```tsx
 import { useState } from "react";
-import { Stories, type StoryEntry, type StorySeen } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Stories, type StoryEntry, type StorySeen } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function WhatChanged({ entries, markSeen }: { entries: StoryEntry[]; markSeen: (ids: string[]) => void }) {
   const [seen, setSeen] = useState<StorySeen>(new Set());

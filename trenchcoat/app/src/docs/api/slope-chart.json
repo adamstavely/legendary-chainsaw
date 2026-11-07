@@ -191,7 +191,7 @@
   {
    "tag": "tc-slope-chart",
    "className": "TcSlopeChart",
-   "module": "trenchcoat/slope-chart",
+   "module": "@adamstavely/trenchcoat/slope-chart",
    "data": [
     "label",
     "x",

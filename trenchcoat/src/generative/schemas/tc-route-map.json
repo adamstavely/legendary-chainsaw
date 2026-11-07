@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-route-map.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-route-map.json",
   "title": "tc-route-map",
   "description": "An app's routes as an indented list, with status, load time and last visit, filterable by status; pressing one opens it.",
   "type": "object",

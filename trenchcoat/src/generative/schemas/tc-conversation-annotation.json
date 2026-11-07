@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-conversation-annotation.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-conversation-annotation.json",
   "title": "tc-conversation-annotation",
   "description": "A conversation transcript to annotate: label spans, redact, rate turns, correct answers and send the example on.",
   "type": "object",

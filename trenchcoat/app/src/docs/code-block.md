@@ -88,8 +88,8 @@ status says “Copied”, or “Couldn't copy” if the clipboard refused.
 <tc-code-block id="fix" filename="src/auth/session.ts" language="ts" applyable max-height="340"></tc-code-block>
 
 <script type="module">
-  import "trenchcoat/code-block";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/code-block";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const block = document.querySelector("#fix");
   block.current = await fetch("/api/files/src/auth/session.ts").then((r) => r.text());
@@ -103,8 +103,8 @@ status says “Copied”, or “Couldn't copy” if the clipboard refused.
 
 ```tsx
 import { useState } from "react";
-import { CodeBlock } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CodeBlock } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SuggestedFix({ code, current, streaming }: { code: string; current: string; streaming: boolean }) {
   const [applied, setApplied] = useState(false);

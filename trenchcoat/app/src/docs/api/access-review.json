@@ -217,7 +217,7 @@
   {
    "tag": "tc-access-review",
    "className": "TcAccessReview",
-   "module": "trenchcoat/access-review",
+   "module": "@adamstavely/trenchcoat/access-review",
    "data": [
     "items",
     "decisions",

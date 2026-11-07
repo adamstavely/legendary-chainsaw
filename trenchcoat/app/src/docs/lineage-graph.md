@@ -90,8 +90,8 @@ in them reads “, weak link: 4 of 11 rows fit”. The close button is “Close 
 <tc-lineage-graph id="lineage" heading="Vendor risk memo"></tc-lineage-graph>
 
 <script type="module">
-  import "trenchcoat/lineage-graph";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/lineage-graph";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const graph = document.querySelector("#lineage");
   graph.nodes = [
@@ -111,8 +111,8 @@ in them reads “, weak link: 4 of 11 rows fit”. The close button is “Close 
 
 ```tsx
 import { useState } from "react";
-import { LineageGraph, type LineageEdge, type LineageNode } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LineageGraph, type LineageEdge, type LineageNode } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const nodes: LineageNode[] = [
   { id: "run", column: "run", label: "Vendor risk review", at: 0 },

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-list-motion.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-list-motion.json",
   "title": "tc-list-motion",
   "description": "Makes a list's rows glide when they're reordered, added or removed.",
   "type": "object",

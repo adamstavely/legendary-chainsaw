@@ -88,8 +88,8 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 </tc-ai-side-pane>
 
 <script type="module">
-  import "trenchcoat/ai-side-pane";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ai-side-pane";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const pane = document.querySelector("#assistant");
   pane.pageContext = { title: "Q3 report", connected: true, count: 4 };
@@ -102,8 +102,8 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 
 ```tsx
 import { useState } from "react";
-import { AiSidePane, type SidePaneMessage } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AiSidePane, type SidePaneMessage } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Report() {
   const [messages, setMessages] = useState<SidePaneMessage[]>([]);

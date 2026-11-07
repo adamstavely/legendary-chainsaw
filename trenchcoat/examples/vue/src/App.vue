@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { ComboboxOption, DataColumn, DataRow } from "trenchcoat";
+import type { ComboboxOption, DataColumn, DataRow } from "@adamstavely/trenchcoat";
 
 const people: ComboboxOption[] = [
   { value: "ana", label: "Ana Lima", group: "People" },

@@ -1,13 +1,13 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, Ref } from "react";
-import { AgentGallery as AgentGalleryElement } from "trenchcoat/react";
+import { AgentGallery as AgentGalleryElement } from "@adamstavely/trenchcoat/react";
 
 /*
  * Agent Gallery – a showcase block: slim vertical panels side by side, each with the same soft gradient artwork in
  * its own colours. The panel in the middle is open and shows a product screen; pick a side panel (or use the arrows)
  * and it glides open in the middle while the current one folds into a slim panel at the side.
- * Built on the Trenchcoat element <tc-agent-gallery> through `trenchcoat/react` (install `trenchcoat` and import its
+ * Built on the Trenchcoat element <tc-agent-gallery> through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` and import its
  * tokens.css); this file keeps the block's React API: `index` / `defaultIndex` / `onIndexChange`, `className`, DOM
  * props and a `ref` on the root.
  */

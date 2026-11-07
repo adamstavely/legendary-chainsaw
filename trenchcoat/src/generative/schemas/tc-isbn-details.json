@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-isbn-details.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-isbn-details.json",
   "title": "tc-isbn-details",
   "description": "ISBN numbers in text, validated and marked: hover or focus one for the book's details.",
   "type": "object",

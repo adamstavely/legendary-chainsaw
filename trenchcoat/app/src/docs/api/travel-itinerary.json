@@ -203,7 +203,7 @@
   {
    "tag": "tc-travel-itinerary",
    "className": "TcTravelItinerary",
-   "module": "trenchcoat/travel-itinerary",
+   "module": "@adamstavely/trenchcoat/travel-itinerary",
    "data": [
     "legs",
     "flags"

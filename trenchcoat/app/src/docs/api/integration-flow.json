@@ -230,7 +230,7 @@
   {
    "tag": "tc-integration-flow",
    "className": "TcIntegrationFlow",
-   "module": "trenchcoat/integration-flow",
+   "module": "@adamstavely/trenchcoat/integration-flow",
    "data": [
     "items"
    ],

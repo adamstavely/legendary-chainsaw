@@ -32,8 +32,8 @@ export default {
           for (const d of mod.declarations ?? []) if (d.events) d.events = d.events.filter((e) => e.name !== "name");
       },
     },
-    // Typed bindings for Vue (GlobalComponents) and Svelte (svelteHTML), from the same metadata – trenchcoat/vue and
-    // trenchcoat/svelte in package.json
+    // Typed bindings for Vue (GlobalComponents) and Svelte (svelteHTML), from the same metadata – @adamstavely/trenchcoat/vue and
+    // @adamstavely/trenchcoat/svelte in package.json
     customElementVuejsPlugin({ outdir: "dist/types", fileName: "vue.d.ts", globalTypePath: "./elements/index.js" }),
     customElementSveltePlugin({ outdir: "dist/types", fileName: "svelte.d.ts", globalTypePath: "./elements/index.js" }),
   ],

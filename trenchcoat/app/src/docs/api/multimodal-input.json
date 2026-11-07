@@ -322,7 +322,7 @@
   {
    "tag": "tc-multimodal-input",
    "className": "TcMultimodalInput",
-   "module": "trenchcoat/multimodal-input",
+   "module": "@adamstavely/trenchcoat/multimodal-input",
    "data": [
     "value",
     "accept",

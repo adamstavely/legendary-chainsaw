@@ -88,8 +88,8 @@ loading. The Copy buttons are "Copy ISBN-13" and "Copy ISBN-10". A polite status
 <tc-isbn-details id="reading"></tc-isbn-details>
 
 <script type="module">
-  import "trenchcoat/isbn-details";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/isbn-details";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const reading = document.querySelector("#reading");
   reading.text = "Start with ISBN 978-0-306-40615-7, then the field guide 0-8044-2957-X.";
@@ -102,8 +102,8 @@ loading. The Copy buttons are "Copy ISBN-13" and "Copy ISBN-10". A polite status
 ```
 
 ```tsx
-import { IsbnDetails, type IsbnBook } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IsbnDetails, type IsbnBook } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const books: Record<string, IsbnBook> = {
   "9780306406157": { title: "Quiet Interfaces", authors: ["Ines Okafor"], publisher: "Harbour Lane Books", year: 2021, pages: 312 },

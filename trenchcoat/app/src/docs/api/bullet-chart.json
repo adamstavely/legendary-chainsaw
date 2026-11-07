@@ -208,7 +208,7 @@
   {
    "tag": "tc-bullet-chart",
    "className": "TcBulletChart",
-   "module": "trenchcoat/bullet-chart",
+   "module": "@adamstavely/trenchcoat/bullet-chart",
    "data": [
     "label",
     "value",

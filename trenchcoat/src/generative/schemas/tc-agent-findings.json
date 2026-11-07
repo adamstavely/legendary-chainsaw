@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-findings.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-findings.json",
   "title": "tc-agent-findings",
   "description": "A group of agents checking something: one row per agent, beside a feed of what they've found.",
   "type": "object",

@@ -6,11 +6,11 @@
  * search.
  * className, other DOM props and `ref` go to the App Shell's root.
  * Imports: App Shell (app-shell.tsx) from Trenchcoat screens; AI Search, Facet Sidebar, Results List and Nothing Found
- * from `trenchcoat/react`.
+ * from `@adamstavely/trenchcoat/react`.
  */
 
 import { useMemo, useState, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
-import { AiSearch, FacetSidebar, NothingFound, ResultsList, type Facet, type FacetValues, type SearchResult } from "trenchcoat/react";
+import { AiSearch, FacetSidebar, NothingFound, ResultsList, type Facet, type FacetValues, type SearchResult } from "@adamstavely/trenchcoat/react";
 import { AppShell, type AppShellProps } from "@/components/ui/app-shell";
 
 const RESULTS: SearchResult[] = [

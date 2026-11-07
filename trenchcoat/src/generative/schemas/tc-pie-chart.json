@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-pie-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-pie-chart.json",
   "title": "tc-pie-chart",
   "description": "A few shares of a whole as slices, each in its own ink or one emphasised, with the shares beside them and a table\nview.",
   "type": "object",

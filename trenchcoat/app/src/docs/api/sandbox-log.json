@@ -332,7 +332,7 @@
   {
    "tag": "tc-sandbox-log",
    "className": "TcSandboxLog",
-   "module": "trenchcoat/sandbox-log",
+   "module": "@adamstavely/trenchcoat/sandbox-log",
    "data": [
     "steps",
     "open"

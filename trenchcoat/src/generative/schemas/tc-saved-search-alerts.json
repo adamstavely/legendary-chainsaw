@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-saved-search-alerts.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-saved-search-alerts.json",
   "title": "tc-saved-search-alerts",
   "description": "Saved searches that tell you about new matches – the new count, how often and where each checks, pause, Run now,\nremove with Undo, and Add alert.",
   "type": "object",

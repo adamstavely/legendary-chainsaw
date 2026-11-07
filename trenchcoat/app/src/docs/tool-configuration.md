@@ -106,8 +106,8 @@ example, “2 problems to fix · 1 suggestion”; each link starts “Problem:�
 <tc-tool-configuration id="tool" name="tool"></tc-tool-configuration>
 
 <script type="module">
-  import "trenchcoat/tool-configuration";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tool-configuration";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tool = document.querySelector("#tool");
   tool.value = {
@@ -123,8 +123,8 @@ example, “2 problems to fix · 1 suggestion”; each link starts “Problem:�
 
 ```tsx
 import { useState } from "react";
-import { ToolConfiguration, toolExampleCall, toolInputSchema, type ToolConfigurationValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ToolConfiguration, toolExampleCall, toolInputSchema, type ToolConfigurationValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ToolEditor({ start, lastCall, save }: { start: ToolConfigurationValue; lastCall?: Record<string, unknown>; save: (v: ToolConfigurationValue, schema: Record<string, unknown>) => void }) {
   const [value, setValue] = useState(start);

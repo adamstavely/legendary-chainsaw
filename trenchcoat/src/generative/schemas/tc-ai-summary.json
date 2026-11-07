@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-ai-summary.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ai-summary.json",
   "title": "tc-ai-summary",
   "description": "An AI summary of a set of sources – a thread, a meeting, documents, a ticket's history – with a TL;DR, key points\nciting their sources, open questions, a note when the sources have moved on, feedback, Copy and Regenerate.",
   "type": "object",

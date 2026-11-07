@@ -95,8 +95,8 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 <tc-ai-answer id="answer" question="Can I work from abroad for a few weeks?"></tc-ai-answer>
 
 <script type="module">
-  import "trenchcoat/ai-answer";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ai-answer";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const answer = document.querySelector("#answer");
   answer.sources = [
@@ -114,8 +114,8 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 ```
 
 ```tsx
-import { AIAnswer, type AnswerSource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AIAnswer, type AnswerSource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sources: AnswerSource[] = [
   {

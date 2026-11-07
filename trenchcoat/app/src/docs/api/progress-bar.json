@@ -95,7 +95,7 @@
   {
    "tag": "tc-progress-bar",
    "className": "TcProgressBar",
-   "module": "trenchcoat/progress-bar",
+   "module": "@adamstavely/trenchcoat/progress-bar",
    "data": [],
    "attributes": [
     {

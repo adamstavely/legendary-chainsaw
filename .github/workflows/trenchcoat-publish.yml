@@ -1,0 +1,47 @@
+name: Trenchcoat publish
+
+# Publishes @adamstavely/trenchcoat to GitHub Packages when a tag trenchcoat-v<version> is pushed. The tag must match
+# package.json's version; the full CI suite runs first, so a broken package is never published
+on:
+  push:
+    tags:
+      - "trenchcoat-v*"
+
+concurrency:
+  group: trenchcoat-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        working-directory: trenchcoat
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: trenchcoat/package-lock.json
+          registry-url: https://npm.pkg.github.com
+          scope: "@adamstavely"
+      - name: Tag matches package.json
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "trenchcoat-v${version}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} doesn't match package.json version ${version}"
+            exit 1
+          fi
+      - run: npm ci
+      # npm run ci runs the element tests in real browsers
+      - name: Playwright browsers
+        run: npx playwright install --with-deps
+      - run: npm run ci
+      - run: npm run build:package
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

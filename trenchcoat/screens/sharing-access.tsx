@@ -5,11 +5,11 @@
  * record of what happened, under three tabs. Sample data; replace it with your own.
  * className, other DOM props and `ref` go to the App Shell's root.
  * Imports: App Shell (app-shell.tsx) from Trenchcoat screens; Team Flag Editor, Access Review and Audit Trail from
- * `trenchcoat/react`.
+ * `@adamstavely/trenchcoat/react`.
  */
 
 import { useState, type ComponentPropsWithoutRef, type Ref } from "react";
-import { AccessReview, AuditTrail, TeamFlagEditor, type AccessReviewItem, type AuditEvent, type TeamFlag } from "trenchcoat/react";
+import { AccessReview, AuditTrail, TeamFlagEditor, type AccessReviewItem, type AuditEvent, type TeamFlag } from "@adamstavely/trenchcoat/react";
 import { AppShell, Tabs, type AppShellProps } from "@/components/ui/app-shell";
 
 export type SharingAccessTab = "flags" | "review" | "audit";

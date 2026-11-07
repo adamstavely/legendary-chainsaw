@@ -89,8 +89,8 @@ ready” and “Couldn't write a reply”.
 <tc-conversation-branches id="thread" label="Release note"></tc-conversation-branches>
 
 <script type="module">
-  import "trenchcoat/conversation-branches";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/conversation-branches";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const thread = document.querySelector("#thread");
   thread.messages = [
@@ -105,8 +105,8 @@ ready” and “Couldn't write a reply”.
 ```
 
 ```tsx
-import { ConversationBranches, type BranchMessage } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ConversationBranches, type BranchMessage } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const start: BranchMessage[] = [
   { id: "u1", role: "user", text: "Write the release note for v2.4." },

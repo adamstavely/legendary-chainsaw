@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-mcp-connection-manager.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-mcp-connection-manager.json",
   "title": "tc-mcp-connection-manager",
   "description": "MCP servers and their status: add one (transport, auth, test), inspect the tools, resources and prompts it exposes,\nconnect, disconnect, retry and remove – the app does the connecting.",
   "type": "object",

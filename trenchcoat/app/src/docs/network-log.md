@@ -88,8 +88,8 @@ are hidden from screen readers, since the time column says the same. A `role="st
 <tc-network-log id="network"></tc-network-log>
 
 <script type="module">
-  import "trenchcoat/network-log";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/network-log";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const log = document.querySelector("#network");
   log.requests = [
@@ -101,8 +101,8 @@ are hidden from screen readers, since the time column says the same. A `role="st
 ```
 
 ```tsx
-import { NetworkLog, type NetworkRequest } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NetworkLog, type NetworkRequest } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PageNetwork({ requests }: { requests: NetworkRequest[] }) {
   return <NetworkLog requests={requests} defaultTypes={["fetch"]} onSelectedChange={(id) => console.log(id)} />;

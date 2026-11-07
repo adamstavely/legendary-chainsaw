@@ -110,8 +110,8 @@ recording that fails to load is announced as an alert with Try again.
 <tc-transcript-review id="call" heading="Customer call" original-label="Spanish" translation-label="English (machine)"></tc-transcript-review>
 
 <script type="module">
-  import "trenchcoat/transcript-review";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/transcript-review";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const call = document.querySelector("#call");
   call.src = "/recordings/call-4471.mp3";
@@ -130,8 +130,8 @@ recording that fails to load is announced as an alert with Try again.
 
 ```tsx
 import { useState } from "react";
-import { TranscriptReview, type TranscriptSegment } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TranscriptReview, type TranscriptSegment } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function CallReview({ src, peaks, segments }: { src: string; peaks: number[]; segments: TranscriptSegment[] }) {
   const [sent, setSent] = useState<string[]>([]);

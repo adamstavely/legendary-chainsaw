@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-awaiting-review.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-awaiting-review.json",
   "title": "tc-awaiting-review",
   "description": "A document with an hourglass on it, for content that's held until someone approves it.",
   "type": "object",

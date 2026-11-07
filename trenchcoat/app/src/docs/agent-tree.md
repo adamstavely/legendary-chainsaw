@@ -86,8 +86,8 @@ needs attention – “1 agent needs you, 1 failed”, or “No agent running”
 <tc-agent-tree id="run" heading="Annual billing run" selectable></tc-agent-tree>
 
 <script type="module">
-  import "trenchcoat/agent-tree";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-tree";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tree = document.querySelector("#run");
   tree.root = {
@@ -103,8 +103,8 @@ needs attention – “1 agent needs you, 1 failed”, or “No agent running”
 ```
 
 ```tsx
-import { AgentTree, type TreeAgent } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentTree, type TreeAgent } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const root: TreeAgent = {
   id: "root",

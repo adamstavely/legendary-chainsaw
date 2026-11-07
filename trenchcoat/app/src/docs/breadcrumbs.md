@@ -81,8 +81,8 @@ page is `aria-current="page"`. Separators are hidden. “…” is named “Show
 <tc-breadcrumbs copy-path></tc-breadcrumbs>
 
 <script type="module">
-  import "trenchcoat/breadcrumbs";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/breadcrumbs";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const trail = document.querySelector("tc-breadcrumbs");
   trail.items = [
@@ -95,8 +95,8 @@ page is `aria-current="page"`. Separators are hidden. “…” is named “Show
 ```
 
 ```tsx
-import { Breadcrumbs, type BreadcrumbItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Breadcrumbs, type BreadcrumbItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const trail: BreadcrumbItem[] = [
   { label: "Library", href: "/", icon: "home" },

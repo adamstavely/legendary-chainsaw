@@ -379,7 +379,7 @@
   {
    "tag": "tc-policy-simulator",
    "className": "TcPolicySimulator",
-   "module": "trenchcoat/policy-simulator",
+   "module": "@adamstavely/trenchcoat/policy-simulator",
    "data": [
     "ruleClasses",
     "examples",

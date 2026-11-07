@@ -92,7 +92,7 @@
   {
    "tag": "tc-nothing-found",
    "className": "TcNothingFound",
-   "module": "trenchcoat/nothing-found",
+   "module": "@adamstavely/trenchcoat/nothing-found",
    "data": [],
    "attributes": [
     {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-tool-call-group.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tool-call-group.json",
   "title": "tc-tool-call-group",
   "description": "Several tool calls folded into one line: \"Used 3 tools · 2.4s\". The cards go in a `slot=\"list\"` child (see above).",
   "type": "object",

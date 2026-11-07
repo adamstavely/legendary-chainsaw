@@ -293,7 +293,7 @@
   {
    "tag": "tc-conflict-radar",
    "className": "TcConflictRadar",
-   "module": "trenchcoat/conflict-radar",
+   "module": "@adamstavely/trenchcoat/conflict-radar",
    "data": [
     "agents",
     "files",

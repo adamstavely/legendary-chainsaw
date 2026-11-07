@@ -275,7 +275,7 @@
   {
    "tag": "tc-radar-chart",
    "className": "TcRadarChart",
-   "module": "trenchcoat/radar-chart",
+   "module": "@adamstavely/trenchcoat/radar-chart",
    "data": [
     "axes",
     "series",

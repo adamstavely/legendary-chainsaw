@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-grade-distribution.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-grade-distribution.json",
   "title": "tc-grade-distribution",
   "description": "Assessment grades as counts, with how many were assessed, an optional bar in proportion and a grade picked as a\nfilter.",
   "type": "object",

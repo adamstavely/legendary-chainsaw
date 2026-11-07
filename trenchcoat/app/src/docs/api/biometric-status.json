@@ -210,7 +210,7 @@
   {
    "tag": "tc-biometric-status",
    "className": "TcBiometricStatus",
-   "module": "trenchcoat/biometric-status",
+   "module": "@adamstavely/trenchcoat/biometric-status",
    "data": [
     "modalities",
     "match",

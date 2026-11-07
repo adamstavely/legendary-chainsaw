@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-digest.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-digest.json",
   "title": "tc-digest",
   "description": "A one-minute digest: what matters, what to do, what changed and what's safe to ignore, with a reading-time\nestimate, checkable actions and cited sources.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-icon-rail.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-icon-rail.json",
   "title": "tc-icon-rail",
   "description": "A row of icon buttons for a panel: one chosen, each with a tooltip, and an optional More menu.",
   "type": "object",

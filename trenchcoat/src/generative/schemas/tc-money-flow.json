@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-money-flow.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-money-flow.json",
   "title": "tc-money-flow",
   "description": "How money moved between entities – a left-to-right flow of entities in columns and transfers as bands sized by\namount, each labelled with its amount and an optional flag, an entity's or a transfer's flows lit on hover or focus,\na readout in words, and a table of every transfer.",
   "type": "object",

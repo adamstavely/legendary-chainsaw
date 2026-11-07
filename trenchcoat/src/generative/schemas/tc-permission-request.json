@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-permission-request.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-permission-request.json",
   "title": "tc-permission-request",
   "description": "An agent asks for one specific right: what will happen, for how long, Allow or Deny – then one line with a countdown.",
   "type": "object",

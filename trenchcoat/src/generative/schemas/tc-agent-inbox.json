@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-inbox.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-inbox.json",
   "title": "tc-agent-inbox",
   "description": "Background agent tasks as a board (or list): Needs you, Running, Done.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-content-hidden.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-content-hidden.json",
   "title": "tc-content-hidden",
   "description": "A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.",
   "type": "object",

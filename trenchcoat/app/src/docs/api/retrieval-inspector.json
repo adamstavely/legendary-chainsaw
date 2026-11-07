@@ -347,7 +347,7 @@
   {
    "tag": "tc-retrieval-inspector",
    "className": "TcRetrievalInspector",
-   "module": "trenchcoat/retrieval-inspector",
+   "module": "@adamstavely/trenchcoat/retrieval-inspector",
    "data": [
     "chunks",
     "misses",

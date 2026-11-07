@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-gauge.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-gauge.json",
   "title": "tc-gauge",
   "description": "One value against its range – a dial, a half dial or a bar – with the band it's in, the bands round it, a target\nand the change since last time; optionally a slider.",
   "type": "object",

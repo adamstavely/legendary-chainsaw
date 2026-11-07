@@ -75,8 +75,8 @@ shows them. Counts come from `count` and `files`, or write `meta` yourself.
   description="Self-contained pieces – agent views, charts, inputs and feedback."></tc-collection-card>
 
 <script type="module">
-  import "trenchcoat/collection-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/collection-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#card");
   card.items = ["Agent Cursors", "Agent Findings", "Agent Graph", "Approval Card"];
@@ -85,8 +85,8 @@ shows them. Counts come from `count` and `files`, or write `meta` yourself.
 ```
 
 ```tsx
-import { CollectionCard } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CollectionCard } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Library() {
   return (

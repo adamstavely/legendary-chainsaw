@@ -409,7 +409,7 @@
   {
    "tag": "tc-experiment-card",
    "className": "TcExperimentCard",
-   "module": "trenchcoat/experiment-card",
+   "module": "@adamstavely/trenchcoat/experiment-card",
    "data": [
     "variants",
     "metrics",

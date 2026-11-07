@@ -149,7 +149,7 @@
   {
    "tag": "tc-dialog",
    "className": "TcDialog",
-   "module": "trenchcoat/dialog",
+   "module": "@adamstavely/trenchcoat/dialog",
    "data": [
     "content",
     "actions"

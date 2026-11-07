@@ -89,8 +89,8 @@ region, so the first invoice and the phase total are read out after each change.
 </form>
 
 <script type="module">
-  import "trenchcoat/billing-schedule";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/billing-schedule";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const schedule = document.querySelector("#schedule");
   schedule.catalog = [
@@ -105,8 +105,8 @@ region, so the first invoice and the phase total are read out after each change.
 
 ```tsx
 import { useState } from "react";
-import { BillingSchedule, type CatalogItem, type ScheduleLine } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BillingSchedule, type CatalogItem, type ScheduleLine } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const catalog: CatalogItem[] = [
   { name: "Implementation fee", repeat: "once", price: 7500 },

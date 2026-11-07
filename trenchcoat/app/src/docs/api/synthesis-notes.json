@@ -238,7 +238,7 @@
   {
    "tag": "tc-synthesis-notes",
    "className": "TcSynthesisNotes",
-   "module": "trenchcoat/synthesis-notes",
+   "module": "@adamstavely/trenchcoat/synthesis-notes",
    "data": [
     "notes",
     "sections"

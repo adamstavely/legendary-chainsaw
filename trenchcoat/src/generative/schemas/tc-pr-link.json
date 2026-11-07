@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-pr-link.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-pr-link.json",
   "title": "tc-pr-link",
   "description": "A pull request in running text – its state's mark and owner/repo#number · title as a link, with a card of its state,\nauthor, lines changed and files on hover or focus.",
   "type": "object",

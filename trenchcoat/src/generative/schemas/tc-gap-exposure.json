@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-gap-exposure.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-gap-exposure.json",
   "title": "tc-gap-exposure",
   "description": "Gaps or risks and whether anyone is working on them – severity, the item and its priority, coverage, owner and\nwhat's invested – with the severe uncovered ones called out, groups by priority or severity, and an uncovered-only\nfilter.",
   "type": "object",

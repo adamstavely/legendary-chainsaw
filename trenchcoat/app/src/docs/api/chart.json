@@ -81,7 +81,7 @@
   {
    "tag": "tc-chart",
    "className": "TcChart",
-   "module": "trenchcoat/chart",
+   "module": "@adamstavely/trenchcoat/chart",
    "data": [
     "spec"
    ],

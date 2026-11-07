@@ -6,11 +6,11 @@ builds, serves and checks every one in Chromium.
 
 | App | Framework | How it uses the elements |
 |---|---|---|
-| `react/` | React 19 + Vite | `trenchcoat/react` wrappers, controlled `value` |
+| `react/` | React 19 + Vite | `@adamstavely/trenchcoat/react` wrappers, controlled `value` |
 | `next/` | Next.js (App Router) | the React wrappers in a client component, loaded client-only (decision L10) |
 | `vue/` | Vue 3 + Vite | the elements directly; `:value` + `@tc-value-change` |
 | `nuxt/` | Nuxt | the elements directly inside `<ClientOnly>` |
-| `angular/` | Angular 21 (22 needs Node 24.15+) | `trenchcoat/angular` directives, no schema; `[value]` + `(tc-value-change)`, and `[(ngModel)]` through `trenchcoat/angular/forms` |
+| `angular/` | Angular 21 (22 needs Node 24.15+) | `@adamstavely/trenchcoat/angular` directives, no schema; `[value]` + `(tc-value-change)`, and `[(ngModel)]` through `@adamstavely/trenchcoat/angular/forms` |
 | `svelte/` | Svelte 5 + Vite | the elements directly |
 | `html/` | no framework (Vite) | the elements and plain DOM events |
 

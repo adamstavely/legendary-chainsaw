@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-color-picker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-color-picker.json",
   "title": "tc-color-picker",
   "description": "Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an eyedropper,\nswatches and Copy.",
   "type": "object",

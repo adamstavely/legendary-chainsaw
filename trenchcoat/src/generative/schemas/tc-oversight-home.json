@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-oversight-home.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-oversight-home.json",
   "title": "tc-oversight-home",
   "description": "A role's home for overseeing AI work: what needs doing, the one thing first, the numbers the role watches against\nlast week, and the state of the services behind them – switch roles at the top.",
   "type": "object",

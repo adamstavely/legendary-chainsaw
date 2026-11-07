@@ -183,7 +183,7 @@
   {
    "tag": "tc-citation-badge",
    "className": "TcCitationBadge",
-   "module": "trenchcoat/citation-badge",
+   "module": "@adamstavely/trenchcoat/citation-badge",
    "data": [
     "counts",
     "rows",

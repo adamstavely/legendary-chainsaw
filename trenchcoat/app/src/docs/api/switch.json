@@ -132,7 +132,7 @@
   {
    "tag": "tc-switch",
    "className": "TcSwitch",
-   "module": "trenchcoat/switch",
+   "module": "@adamstavely/trenchcoat/switch",
    "data": [
     "value"
    ],

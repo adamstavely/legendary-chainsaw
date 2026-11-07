@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-fingerprint-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-fingerprint-card.json",
   "title": "tc-fingerprint-card",
   "description": "A ten-print card: each finger's print and status – captured with its NFIQ quality, poor, not captured, unable to\nprint or bandaged – the count on file, and a finger's detail on Enter or click.",
   "type": "object",

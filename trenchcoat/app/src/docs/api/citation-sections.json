@@ -190,7 +190,7 @@
   {
    "tag": "tc-citation-sections",
    "className": "TcCitationSections",
-   "module": "trenchcoat/citation-sections",
+   "module": "@adamstavely/trenchcoat/citation-sections",
    "data": [
     "counts",
     "sections",

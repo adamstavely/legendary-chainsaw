@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-network-log.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-network-log.json",
   "title": "tc-network-log",
   "description": "The requests a web page made: status, method, name, type, size, time and a waterfall, with type chips and a detail of headers and response.",
   "type": "object",

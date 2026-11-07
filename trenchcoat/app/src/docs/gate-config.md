@@ -94,8 +94,8 @@ a form, a gate without any action is invalid (“Allow at least one action.”).
 </form>
 
 <script type="module">
-  import "trenchcoat/gate-config";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/gate-config";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gate = document.querySelector("#gate");
   gate.heading = "Before a refund goes out";
@@ -112,8 +112,8 @@ a form, a gate without any action is invalid (“Allow at least one action.”).
 
 ```tsx
 import { useState } from "react";
-import { GateConfig, type GateConfigValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GateConfig, type GateConfigValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function RefundGate() {
   const [value, setValue] = useState<GateConfigValue>({

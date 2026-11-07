@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-funnel-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-funnel-chart.json",
   "title": "tc-funnel-chart",
   "description": "Steps of a process as centred bars narrowing down the page, with each step's conversion rate and the biggest drop\nemphasised, and a table view.",
   "type": "object",

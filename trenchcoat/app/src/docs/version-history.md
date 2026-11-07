@@ -99,8 +99,8 @@ changes.”, “Couldn't compare v1.2 with v1.3.”, “Restore of v1.1 requeste
 <tc-version-history id="history" heading="Briefing agent"></tc-version-history>
 
 <script type="module">
-  import "trenchcoat/version-history";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/version-history";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const history = document.querySelector("#history");
   history.versions = [
@@ -117,8 +117,8 @@ changes.”, “Couldn't compare v1.2 with v1.3.”, “Restore of v1.1 requeste
 
 ```tsx
 import { useState } from "react";
-import { VersionHistory, type VersionEntry } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { VersionHistory, type VersionEntry } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AgentVersions({ initial }: { initial: VersionEntry[] }) {
   const [versions, setVersions] = useState(initial);

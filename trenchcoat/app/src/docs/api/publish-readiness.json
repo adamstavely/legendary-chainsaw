@@ -300,7 +300,7 @@
   {
    "tag": "tc-publish-readiness",
    "className": "TcPublishReadiness",
-   "module": "trenchcoat/publish-readiness",
+   "module": "@adamstavely/trenchcoat/publish-readiness",
    "data": [
     "checks",
     "confirmed"

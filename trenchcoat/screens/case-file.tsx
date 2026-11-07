@@ -4,11 +4,11 @@
  * Case File – one case as a full app page: the Case Review block, with Donovan's read beside the evidence, and the case's
  * main file with its flag and entitlement-checked sharing below. Sample data; replace it with your own.
  * className, other DOM props and `ref` go to the App Shell's root.
- * Imports: App Shell (app-shell.tsx) from Trenchcoat screens; Case Review and File Details from `trenchcoat/react`.
+ * Imports: App Shell (app-shell.tsx) from Trenchcoat screens; Case Review and File Details from `@adamstavely/trenchcoat/react`.
  */
 
 import { type ComponentPropsWithoutRef, type Ref } from "react";
-import { CaseReview, FileDetails, type CaseDecision, type CaseRead, type FactSection, type ShareEntitlementCheck, type ShareRecipient, type TeamFlag, type TimelineCategory, type TimelineEvent } from "trenchcoat/react";
+import { CaseReview, FileDetails, type CaseDecision, type CaseRead, type FactSection, type ShareEntitlementCheck, type ShareRecipient, type TeamFlag, type TimelineCategory, type TimelineEvent } from "@adamstavely/trenchcoat/react";
 import { AppShell, type AppShellProps } from "@/components/ui/app-shell";
 
 const at = (day: number, hour: number) => Date.UTC(2026, 9, day, hour);

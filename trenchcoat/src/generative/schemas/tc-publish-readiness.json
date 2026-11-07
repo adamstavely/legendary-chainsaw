@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-publish-readiness.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-publish-readiness.json",
   "title": "tc-publish-readiness",
   "description": "What must pass before something is released: a summary card with one tick per check that opens a dialog of the\nchecks, the blockers behind failing ones and the publish action, held back while anything blocks.",
   "type": "object",

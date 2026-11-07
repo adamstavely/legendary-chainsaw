@@ -440,7 +440,7 @@
   {
    "tag": "tc-kpi-board",
    "className": "TcKpiBoard",
-   "module": "trenchcoat/kpi-board",
+   "module": "@adamstavely/trenchcoat/kpi-board",
    "data": [
     "data",
     "ranges",

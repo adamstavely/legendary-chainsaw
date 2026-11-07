@@ -231,7 +231,7 @@
   {
    "tag": "tc-money-flow",
    "className": "TcMoneyFlow",
-   "module": "trenchcoat/money-flow",
+   "module": "@adamstavely/trenchcoat/money-flow",
    "data": [
     "nodes",
     "transfers",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-waffle-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-waffle-chart.json",
   "title": "tc-waffle-chart",
   "description": "Shares of a whole as a grid of cells, one category emphasised with its share written large beside it, the rest in\nthe chart inks, with a table view.",
   "type": "object",

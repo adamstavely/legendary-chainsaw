@@ -120,7 +120,7 @@
   {
    "tag": "tc-no-access",
    "className": "TcNoAccess",
-   "module": "trenchcoat/no-access",
+   "module": "@adamstavely/trenchcoat/no-access",
    "data": [],
    "attributes": [
     {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-environment-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-environment-list.json",
   "title": "tc-environment-list",
   "description": "Where a session runs, as rows of machine, folders, repository and branch, each with an optional small action or a switch.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-candlestick-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-candlestick-chart.json",
   "title": "tc-candlestick-chart",
   "description": "A reading's open, high, low and close per period as candles – hollow when it rose, solid when it fell – with moving\naverages, volume, the latest close tagged on the axis, and a table view.",
   "type": "object",

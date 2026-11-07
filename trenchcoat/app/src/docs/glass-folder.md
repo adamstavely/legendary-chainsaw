@@ -72,8 +72,8 @@ the text beside it already says what it means.
 </div>
 
 <script type="module">
-  import "trenchcoat/glass-folder";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/glass-folder";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const folder = document.querySelector("#folder");
   const target = document.querySelector("#upload");
@@ -84,8 +84,8 @@ the text beside it already says what it means.
 
 ```tsx
 import { useState } from "react";
-import { GlassFolder } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GlassFolder } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function EmptyFiles() {
   const [dragging, setDragging] = useState(false);

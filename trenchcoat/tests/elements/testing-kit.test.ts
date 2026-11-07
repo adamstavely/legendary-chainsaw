@@ -13,7 +13,7 @@ import { cleanup, fixture } from "./helpers";
 
 afterEach(cleanup);
 
-describe("trenchcoat/testing", () => {
+describe("@adamstavely/trenchcoat/testing", () => {
   test("pickFlag picks and clears, and names what's there when it can't", async () => {
     const el = await fixture<TcTeamFlagPicker>(html`<tc-team-flag-picker .flags=${fixtures.flags}></tc-team-flag-picker>`);
     await pickFlag(el, "Legal hold");
@@ -74,7 +74,7 @@ describe("trenchcoat/testing", () => {
   });
 });
 
-describe("trenchcoat/headless", () => {
+describe("@adamstavely/trenchcoat/headless", () => {
   test("exports working behaviour", async () => {
     expect(typeof PopoverController).toBe("function");
     expect(typeof ListMotionController).toBe("function");

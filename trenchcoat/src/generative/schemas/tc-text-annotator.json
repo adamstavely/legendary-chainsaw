@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-text-annotator.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-text-annotator.json",
   "title": "tc-text-annotator",
   "description": "A document to highlight and comment on: marks in the text, notes in a margin rail, a toolbar on the selection.",
   "type": "object",

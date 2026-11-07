@@ -50,8 +50,8 @@ announced – if the change matters, say it in a live region of your own.
 <tc-blur-crossfade id="status" swap-key="saved" morph="both"><div>Saved</div></tc-blur-crossfade>
 
 <script type="module">
-  import "trenchcoat/blur-crossfade";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/blur-crossfade";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const box = document.querySelector("#status");
   const next = document.createElement("div");
@@ -63,8 +63,8 @@ announced – if the change matters, say it in a live region of your own.
 ```
 
 ```tsx
-import { BlurCrossfade } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BlurCrossfade } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SyncStatus({ state }: { state: "saved" | "uploading" | "paused" }) {
   return (

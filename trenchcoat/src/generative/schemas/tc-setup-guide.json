@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-setup-guide.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-setup-guide.json",
   "title": "tc-setup-guide",
   "description": "An onboarding panel: a progress bar and collapsible groups of tasks that unlock one after another.",
   "type": "object",

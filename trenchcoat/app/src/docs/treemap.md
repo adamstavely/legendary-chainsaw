@@ -85,8 +85,8 @@ ink. `still` (or the system's reduced-motion setting) draws everything at once.
 <tc-treemap heading="GPU hours" description="This quarter, by division and lab" unit=" h"></tc-treemap>
 
 <script type="module">
-  import "trenchcoat/treemap";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/treemap";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-treemap");
   chart.group = "group";
   chart.data = [
@@ -98,8 +98,8 @@ ink. `still` (or the system's reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { Treemap } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Treemap } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { group: "Life sciences", label: "Genomics", value: 1840 },

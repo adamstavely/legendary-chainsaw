@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-segmented-bar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-segmented-bar.json",
   "title": "tc-segmented-bar",
   "description": "Shares of one whole as a single bar cut into parts, the largest emphasised, with a list of names, values and shares\nand a table view.",
   "type": "object",

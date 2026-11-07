@@ -208,7 +208,7 @@
   {
    "tag": "tc-reasoning-flags",
    "className": "TcReasoningFlags",
-   "module": "trenchcoat/reasoning-flags",
+   "module": "@adamstavely/trenchcoat/reasoning-flags",
    "data": [
     "flags",
     "kinds"

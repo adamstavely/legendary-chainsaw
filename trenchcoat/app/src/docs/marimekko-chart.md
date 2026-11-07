@@ -83,8 +83,8 @@ system's reduced-motion setting) draws everything at once.
 <tc-marimekko-chart heading="Spend by lab" description="This year, k€"></tc-marimekko-chart>
 
 <script type="module">
-  import "trenchcoat/marimekko-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/marimekko-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-marimekko-chart").data = [
     { x: "Genomics", series: "Staff", value: 820 },
     { x: "Genomics", series: "Instruments", value: 540 },
@@ -95,8 +95,8 @@ system's reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { MarimekkoChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MarimekkoChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { x: "Genomics", series: "Staff", value: 820 },

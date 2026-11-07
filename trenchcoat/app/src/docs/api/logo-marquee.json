@@ -294,7 +294,7 @@
   {
    "tag": "tc-logo-marquee",
    "className": "TcLogoMarquee",
-   "module": "trenchcoat/logo-marquee",
+   "module": "@adamstavely/trenchcoat/logo-marquee",
    "data": [
     "logos",
     "buttonLabels"

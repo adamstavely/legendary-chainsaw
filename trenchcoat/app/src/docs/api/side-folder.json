@@ -63,7 +63,7 @@
   {
    "tag": "tc-side-folder",
    "className": "TcSideFolder",
-   "module": "trenchcoat/side-folder",
+   "module": "@adamstavely/trenchcoat/side-folder",
    "data": [],
    "attributes": [
     {

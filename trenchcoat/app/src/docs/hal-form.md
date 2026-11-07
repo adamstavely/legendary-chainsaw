@@ -94,8 +94,8 @@ and an empty number is `null`. In form encoding, several choices repeat the name
 <tc-hal-form id="task" src="/rels/create-task"></tc-hal-form>
 
 <script type="module">
-  import "trenchcoat/hal-form";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/hal-form";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const form = document.querySelector("#task");
   form.fetcher = (url, init) => fetch(url, { ...init, credentials: "include" });
@@ -106,8 +106,8 @@ and an empty number is `null`. In form encoding, several choices repeat the name
 ```
 
 ```tsx
-import { HalForm, type HalFormsDocument } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { HalForm, type HalFormsDocument } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const doc: HalFormsDocument = {
   _links: { self: { href: "https://api.example.org/tasks" } },
@@ -128,4 +128,4 @@ export function NewTask({ onDone }: { onDone: () => void }) {
 }
 ```
 
-HAL forms are application-owned and excluded from `trenchcoat/generative`: supply templates and request targets from trusted application code.
+HAL forms are application-owned and excluded from `@adamstavely/trenchcoat/generative`: supply templates and request targets from trusted application code.

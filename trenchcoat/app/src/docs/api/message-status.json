@@ -257,7 +257,7 @@
   {
    "tag": "tc-message-status",
    "className": "TcMessageStatus",
-   "module": "trenchcoat/message-status",
+   "module": "@adamstavely/trenchcoat/message-status",
    "data": [
     "time",
     "actions",

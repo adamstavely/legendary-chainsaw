@@ -200,7 +200,7 @@
   {
    "tag": "tc-share-link-manager",
    "className": "TcShareLinkManager",
-   "module": "trenchcoat/share-link-manager",
+   "module": "@adamstavely/trenchcoat/share-link-manager",
    "data": [
     "links",
     "labels"

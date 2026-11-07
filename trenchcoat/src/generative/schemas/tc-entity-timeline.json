@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-entity-timeline.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-entity-timeline.json",
   "title": "tc-entity-timeline",
   "description": "A dated record of events grouped by month – each with a category, its source and grade, an optional flag and an\ninline detail – filtered by category.",
   "type": "object",

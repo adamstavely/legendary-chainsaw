@@ -247,7 +247,7 @@
   {
    "tag": "tc-cited-answer",
    "className": "TcCitedAnswer",
-   "module": "trenchcoat/cited-answer",
+   "module": "@adamstavely/trenchcoat/cited-answer",
    "data": [
     "segments",
     "sources",

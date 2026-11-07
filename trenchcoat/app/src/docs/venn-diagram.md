@@ -84,8 +84,8 @@ row; `bare` drops both. Circles take `--tc-plot-ink-1` to `-3` at `--tc-vnn-fill
 <tc-venn-diagram heading="Researchers by lab" description="This year"></tc-venn-diagram>
 
 <script type="module">
-  import "trenchcoat/venn-diagram";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/venn-diagram";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-venn-diagram").data = [
     { sets: ["Genomics"], size: 64 },
     { sets: ["Imaging"], size: 48 },
@@ -95,8 +95,8 @@ row; `bare` drops both. Circles take `--tc-plot-ink-1` to `-3` at `--tc-vnn-fill
 ```
 
 ```tsx
-import { VennDiagram } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { VennDiagram } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { sets: ["Genomics"], size: 64 },

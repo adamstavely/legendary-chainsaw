@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-treemap.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-treemap.json",
   "title": "tc-treemap",
   "description": "Parts of a whole as tiles sized by value – nested in their groups, the largest emphasised, names and shares on\nchips in the tiles big enough to hold them – with a table view.",
   "type": "object",

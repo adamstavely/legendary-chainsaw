@@ -7,14 +7,14 @@ import {
   type AiWorkspaceMessage,
   type AiWorkspaceProject,
   type AiWorkspaceProps as ElementProps,
-} from "trenchcoat/react";
+} from "@adamstavely/trenchcoat/react";
 
 /*
  * AI Workspace – a complete assistant app: sidebar, new-chat welcome, conversations that stream in, and a projects
  * overview. Search chats, pin and rename projects, create new ones, collapse the sidebar. Replace `respond` with your
  * model call.
- * Built on the Trenchcoat element <tc-ai-workspace> (and its Chat Composer) through `trenchcoat/react` – install
- * `trenchcoat` instead of copying components; it follows the nearest <LookProvider>, or takes a `look` prop. This file
+ * Built on the Trenchcoat element <tc-ai-workspace> (and its Chat Composer) through `@adamstavely/trenchcoat/react` – install
+ * `@adamstavely/trenchcoat` instead of copying components; it follows the nearest <LookProvider>, or takes a `look` prop. This file
  * keeps the block's props and types, so code written against the React version keeps working.
  *
  * Keyboard: menus follow the menu pattern (focus moves in, arrows / Home / End, Esc and choosing return to the trigger,

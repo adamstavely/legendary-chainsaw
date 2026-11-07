@@ -307,7 +307,7 @@
   {
    "tag": "tc-kill-switch",
    "className": "TcKillSwitch",
-   "module": "trenchcoat/kill-switch",
+   "module": "@adamstavely/trenchcoat/kill-switch",
    "data": [
     "running",
     "stops",

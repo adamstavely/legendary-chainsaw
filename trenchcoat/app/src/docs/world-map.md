@@ -71,8 +71,8 @@ region: the new name reaches screen readers through the trigger when focus retur
 <tc-world-map id="map" continent="asia"></tc-world-map>
 
 <script type="module">
-  import "trenchcoat/world-map";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/world-map";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const map = document.querySelector("#map");
   map.label = (continent) => `Customers in ${continent.replace("-", " ")}`;
@@ -82,8 +82,8 @@ region: the new name reaches screen readers through the trigger when focus retur
 
 ```tsx
 import { useState } from "react";
-import { WorldMap, type Continent } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { WorldMap, type Continent } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Regions() {
   const [continent, setContinent] = useState<Continent>("asia");

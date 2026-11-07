@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-limit-reached.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-limit-reached.json",
   "title": "tc-limit-reached",
   "description": "A gauge at the end of its range with a clock beside it, for work that's stopped until a quota or rate limit resets.",
   "type": "object",

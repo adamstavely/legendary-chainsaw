@@ -275,7 +275,7 @@
   {
    "tag": "tc-attestation-check",
    "className": "TcAttestationCheck",
-   "module": "trenchcoat/attestation-check",
+   "module": "@adamstavely/trenchcoat/attestation-check",
    "data": [
     "verify",
     "result",

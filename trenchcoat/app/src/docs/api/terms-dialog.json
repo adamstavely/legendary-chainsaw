@@ -504,7 +504,7 @@
   {
    "tag": "tc-terms-dialog",
    "className": "TcTermsDialog",
-   "module": "trenchcoat/terms-dialog",
+   "module": "@adamstavely/trenchcoat/terms-dialog",
    "data": [
     "changes",
     "sections",

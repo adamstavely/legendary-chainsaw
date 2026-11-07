@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-gate-config.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-gate-config.json",
   "title": "tc-gate-config",
   "description": "When a person decides: the conditions that pause a run, who reviews, what they see, what they may do and why.",
   "type": "object",

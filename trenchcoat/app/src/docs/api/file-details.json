@@ -232,7 +232,7 @@
   {
    "tag": "tc-file-details",
    "className": "TcFileDetails",
-   "module": "trenchcoat/file-details",
+   "module": "@adamstavely/trenchcoat/file-details",
    "data": [
     "file",
     "flags",

@@ -86,8 +86,8 @@ line, the tag and the strength – “Priya Natarajan, Co-signer · CUS-40377, M
 <tc-person-links id="links" network-label="View network" max="4"></tc-person-links>
 
 <script type="module">
-  import "trenchcoat/person-links";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/person-links";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const links = document.querySelector("#links");
   links.people = [
@@ -101,8 +101,8 @@ line, the tag and the strength – “Priya Natarajan, Co-signer · CUS-40377, M
 
 ```tsx
 import { useState } from "react";
-import { PersonLinks, type LinkedPerson } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PersonLinks, type LinkedPerson } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const people: LinkedPerson[] = [
   { id: "p1", name: "Dana Whitfield", role: "Director", detail: "CUS-40218", strength: "strong" },

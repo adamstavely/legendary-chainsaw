@@ -217,7 +217,7 @@
   {
    "tag": "tc-answer-arena",
    "className": "TcAnswerArena",
-   "module": "trenchcoat/answer-arena",
+   "module": "@adamstavely/trenchcoat/answer-arena",
    "data": [
     "answers",
     "value",

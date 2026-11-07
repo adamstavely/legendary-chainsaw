@@ -426,7 +426,7 @@
   {
    "tag": "tc-access-request",
    "className": "TcAccessRequest",
-   "module": "trenchcoat/access-request",
+   "module": "@adamstavely/trenchcoat/access-request",
    "data": [
     "resource",
     "classifications",

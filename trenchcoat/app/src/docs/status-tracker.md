@@ -92,8 +92,8 @@ record”. The markers, badge and line are hidden – the words say the same.
 <tc-status-tracker id="gates" heading="Programme authorization pipeline" noun="Gate"></tc-status-tracker>
 
 <script type="module">
-  import "trenchcoat/status-tracker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/status-tracker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gates = document.querySelector("#gates");
   gates.hint = "click any gate for its evidence record";
@@ -108,8 +108,8 @@ record”. The markers, badge and line are hidden – the words say the same.
 
 ```tsx
 import { useState } from "react";
-import { StatusTracker, type StatusTrackerStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { StatusTracker, type StatusTrackerStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const steps: StatusTrackerStep[] = [
   { id: "scope", label: "Pre-registration & scope", status: "cleared", date: Date.parse("2025-10-12T12:00") },

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-task-board.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-task-board.json",
   "title": "tc-task-board",
   "description": "A kanban board: columns per status, cards to drag, a detail panel to edit a card, search, a label filter and a\ncompact view.",
   "type": "object",

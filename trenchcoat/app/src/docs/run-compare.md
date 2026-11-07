@@ -85,8 +85,8 @@ with the run: “Use this: Prompt v4”.
 <tc-run-compare id="compare" heading="Refund reply" can-pick></tc-run-compare>
 
 <script type="module">
-  import "trenchcoat/run-compare";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/run-compare";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const compare = document.querySelector("#compare");
   compare.baseline = { id: "v3", label: "Prompt v3", output: "I've started a refund of $89.00.", duration: 5200, cost: 0.031 };
@@ -96,8 +96,8 @@ with the run: “Use this: Prompt v4”.
 ```
 
 ```tsx
-import { RunCompare, type RunCompareRun } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RunCompare, type RunCompareRun } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const v3: RunCompareRun = { id: "v3", label: "Prompt v3", output: "I've started a refund of $89.00.", duration: 5200, cost: 0.031 };
 const v4: RunCompareRun = { id: "v4", label: "Prompt v4", output: "Your refund of $89.00 is on its way.", duration: 4300, cost: 0.024 };

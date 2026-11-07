@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-calendar-heatmap.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-calendar-heatmap.json",
   "title": "tc-calendar-heatmap",
   "description": "An amount per day on a grid of weeks – each day shaded by its value, the busiest outlined, a year per row over\nseveral years, a canvas for very long ranges, and a table view.",
   "type": "object",

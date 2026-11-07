@@ -172,7 +172,7 @@
   {
    "tag": "tc-ridgeline-chart",
    "className": "TcRidgelineChart",
-   "module": "trenchcoat/ridgeline-chart",
+   "module": "@adamstavely/trenchcoat/ridgeline-chart",
    "data": [
     "group",
     "value",

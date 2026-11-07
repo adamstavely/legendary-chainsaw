@@ -246,7 +246,7 @@
   {
    "tag": "tc-activity-calendar",
    "className": "TcActivityCalendar",
-   "module": "trenchcoat/activity-calendar",
+   "module": "@adamstavely/trenchcoat/activity-calendar",
    "data": [
     "days",
     "format",

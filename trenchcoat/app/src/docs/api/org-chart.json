@@ -297,7 +297,7 @@
   {
    "tag": "tc-org-chart",
    "className": "TcOrgChart",
-   "module": "trenchcoat/org-chart",
+   "module": "@adamstavely/trenchcoat/org-chart",
    "data": [
     "people",
     "expanded"

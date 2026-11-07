@@ -76,8 +76,8 @@ named "Device".
 <tc-web-vitals id="vitals" description="/grants · last 28 days" device="mobile"></tc-web-vitals>
 
 <script type="module">
-  import "trenchcoat/web-vitals";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/web-vitals";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#vitals");
   el.metrics = [
@@ -91,8 +91,8 @@ named "Device".
 
 ```tsx
 import { useState } from "react";
-import { WebVitals, type WebVital, type WebVitalDevice } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { WebVitals, type WebVital, type WebVitalDevice } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Vitals({ byDevice }: { byDevice: Record<WebVitalDevice, WebVital[]> }) {
   const [device, setDevice] = useState<WebVitalDevice>("mobile");

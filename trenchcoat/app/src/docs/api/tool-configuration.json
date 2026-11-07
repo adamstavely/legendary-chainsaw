@@ -307,7 +307,7 @@
   {
    "tag": "tc-tool-configuration",
    "className": "TcToolConfiguration",
-   "module": "trenchcoat/tool-configuration",
+   "module": "@adamstavely/trenchcoat/tool-configuration",
    "data": [
     "value",
     "approvals",

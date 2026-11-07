@@ -81,8 +81,8 @@ discount… Edited 3 cells in Pricing”), and a failure as
 <tc-comment-thread id="thread" heading="Pricing table" closable></tc-comment-thread>
 
 <script type="module">
-  import "trenchcoat/comment-thread";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/comment-thread";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const thread = document.querySelector("#thread");
   const assistant = { name: "Assistant", assistant: true };
@@ -101,8 +101,8 @@ discount… Edited 3 cells in Pricing”), and a failure as
 
 ```tsx
 import { useState } from "react";
-import { CommentThread, AssistantMark, type ThreadAuthor, type ThreadMessage } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CommentThread, AssistantMark, type ThreadAuthor, type ThreadMessage } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const assistant: ThreadAuthor = { name: "Assistant", assistant: true, avatar: <AssistantMark /> };
 const you: ThreadAuthor = { name: "Jordan Lee" };

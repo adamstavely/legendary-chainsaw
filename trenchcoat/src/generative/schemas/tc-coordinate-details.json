@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-coordinate-details.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-coordinate-details.json",
   "title": "tc-coordinate-details",
   "description": "Coordinates in text, checked and marked: hover, focus or right-click one for the place, both notations, mapping links and a map.",
   "type": "object",

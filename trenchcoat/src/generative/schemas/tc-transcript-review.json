@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-transcript-review.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-transcript-review.json",
   "title": "tc-transcript-review",
   "description": "A recording with a transcript that follows playback: timestamps, speakers, recognition and translation confidence,\nlow-confidence segments marked, search, and \"Send to verification\".",
   "type": "object",

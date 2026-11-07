@@ -164,8 +164,8 @@ the token's tint is hidden from screen readers.
 <tc-chat-composer id="composer" placeholder="Ask anything…"></tc-chat-composer>
 
 <script type="module">
-  import "trenchcoat/chat-composer";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/chat-composer";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const composer = document.querySelector("#composer");
   composer.onSend = (message, { model }) => fetch("/api/chat", { method: "POST", body: JSON.stringify({ message, model }) });
@@ -195,8 +195,8 @@ the token's tint is hidden from screen readers.
 
 ```tsx
 import { useState } from "react";
-import { ChatComposer, defaultModels, type ChatPageContext, type ChatSkill } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChatComposer, defaultModels, type ChatPageContext, type ChatSkill } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const skills: ChatSkill[] = [
   { id: "translate", name: "translate", description: "Translate the answer", source: "Built-in", argumentHint: "<language>" },

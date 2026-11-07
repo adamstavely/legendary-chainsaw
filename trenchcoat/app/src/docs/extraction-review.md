@@ -92,8 +92,8 @@ assistive technology – the grid carries the same information.
 <tc-extraction-review id="invoice" heading="Invoice INV-2041" source="inv-2041.pdf" confirm-label="Send to accounts"></tc-extraction-review>
 
 <script type="module">
-  import "trenchcoat/extraction-review";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/extraction-review";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#invoice");
   review.pages = [{ src: "/scans/inv-2041-1.png", width: 1700, height: 2200 }];
@@ -107,8 +107,8 @@ assistive technology – the grid carries the same information.
 
 ```tsx
 import { useState } from "react";
-import { ExtractionReview, type ExtractionField, type ExtractionPage } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ExtractionReview, type ExtractionField, type ExtractionPage } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function InvoiceCheck({ pages, extracted, save }: { pages: ExtractionPage[]; extracted: ExtractionField[]; save: (fields: ExtractionField[]) => void }) {
   const [fields, setFields] = useState(extracted);

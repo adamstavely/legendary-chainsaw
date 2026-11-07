@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-diff-viewer.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-diff-viewer.json",
   "title": "tc-diff-viewer",
   "description": "The changes to a set of files: a row per file with its status and line counts, opening to a line diff.",
   "type": "object",

@@ -284,7 +284,7 @@
   {
    "tag": "tc-skeleton",
    "className": "TcSkeleton",
-   "module": "trenchcoat/shimmer-loader",
+   "module": "@adamstavely/trenchcoat/shimmer-loader",
    "data": [],
    "attributes": [
     {
@@ -312,7 +312,7 @@
   {
    "tag": "tc-shimmer-text",
    "className": "TcShimmerText",
-   "module": "trenchcoat/shimmer-loader",
+   "module": "@adamstavely/trenchcoat/shimmer-loader",
    "data": [
     "content"
    ],

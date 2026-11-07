@@ -333,7 +333,7 @@
   {
    "tag": "tc-metrics-dashboard",
    "className": "TcMetricsDashboard",
-   "module": "trenchcoat/metrics-dashboard",
+   "module": "@adamstavely/trenchcoat/metrics-dashboard",
    "data": [
     "onExport"
    ],

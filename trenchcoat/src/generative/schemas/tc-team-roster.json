@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-team-roster.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-team-roster.json",
   "title": "tc-team-roster",
   "description": "A team directory with everyone's local time – status, role and team, how far ahead or behind you they are, whether\nthey're working, skills – grouped and filtered, as a list or a grid, with the team's best hour to meet.",
   "type": "object",

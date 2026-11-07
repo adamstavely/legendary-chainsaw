@@ -162,7 +162,7 @@
   {
    "tag": "tc-stream-graph",
    "className": "TcStreamGraph",
-   "module": "trenchcoat/stream-graph",
+   "module": "@adamstavely/trenchcoat/stream-graph",
    "data": [
     "x",
     "y",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-response-selection.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-response-selection.json",
   "title": "tc-response-selection",
   "description": "Select part of a model's answer and act on it: reply quoting it, ask why, or request an edit that comes back as a\nword diff to accept or reject.",
   "type": "object",

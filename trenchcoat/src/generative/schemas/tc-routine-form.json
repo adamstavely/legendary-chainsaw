@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-routine-form.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-routine-form.json",
   "title": "tc-routine-form",
   "description": "A form that creates or edits a routine – name, frequency and start time in a time zone with the next run worked out,\nfirst run now or on schedule, email notifications and instructions, with Dismiss and Create routine.",
   "type": "object",

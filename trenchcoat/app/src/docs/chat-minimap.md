@@ -77,8 +77,8 @@ The ticks and the hover bubble repeat that, so they're hidden.
 </div>
 
 <script type="module">
-  import "trenchcoat/chat-minimap";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/chat-minimap";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const rail = document.querySelector("#rail");
   rail.scrollRoot = document.querySelector("#chat");
@@ -91,8 +91,8 @@ The ticks and the hover bubble repeat that, so they're hidden.
 
 ```tsx
 import { useState } from "react";
-import { ChatMinimap } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChatMinimap } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function QuestionRail({ chat }: { chat: HTMLElement | null }) {
   const [current, setCurrent] = useState<string | null>(null);

@@ -79,8 +79,8 @@ a kind announces the new reading. The chart reads as it does on its own.
 <tc-uncertainty-mix id="mix" subtitle="Will the new checkout lift conversion next quarter?"></tc-uncertainty-mix>
 
 <script type="module">
-  import "trenchcoat/uncertainty-mix";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/uncertainty-mix";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const mix = document.querySelector("#mix");
   mix.sources = [
@@ -94,8 +94,8 @@ a kind announces the new reading. The chart reads as it does on its own.
 
 ```tsx
 import { useState } from "react";
-import { UncertaintyMix, type UncertaintySource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { UncertaintyMix, type UncertaintySource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sources: UncertaintySource[] = [
   { part: "Baseline", kind: "gap", amount: 6 },

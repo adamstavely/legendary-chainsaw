@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-tool-permissions.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tool-permissions.json",
   "title": "tc-tool-permissions",
   "description": "A matrix of which agent may use which tools and scopes – Allow, Ask or Deny per cell – with presets and a summary of\nwhat changed.",
   "type": "object",

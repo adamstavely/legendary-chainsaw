@@ -328,7 +328,7 @@
   {
    "tag": "tc-lineage-graph",
    "className": "TcLineageGraph",
-   "module": "trenchcoat/lineage-graph",
+   "module": "@adamstavely/trenchcoat/lineage-graph",
    "data": [
     "columns",
     "nodes",

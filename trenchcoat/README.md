@@ -23,6 +23,13 @@ npm run dev          # gallery at http://localhost:5199
 npm run ci           # everything CI runs: typecheck, lint, prefix + ratchet checks, tests
 ```
 
+## Publishing
+
+The package is `@adamstavely/trenchcoat` on GitHub Packages (private). To release, bump `version`, then push a tag
+`trenchcoat-v<version>`: `.github/workflows/trenchcoat-publish.yml` runs `npm run ci` and `npm run build:package`, then
+`npm publish`. Apps install it with the `@adamstavely` scope pointed at `https://npm.pkg.github.com` in their `.npmrc`
+and a token that has `read:packages` (see Getting started in the gallery).
+
 ## How a component is built
 
 Edit `src/components/<name>.tsx`. There's no build step: the gallery and the tests load the source directly, and the `look` prop (`"standard"`, the default, or `"clean"`) picks the look; the root renders `data-look`. Components read their values from `tokens/tokens.css`. The components are being ported to Lit web components and packaged (`audit/remediation-plan.md`, Part 2; `audit/lit-port-plan.md`).
@@ -39,7 +46,7 @@ Edit `src/components/<name>.tsx`. There's no build step: the gallery and the tes
 
 ## Tools
 
-**CLI.** `npx trenchcoat list share` finds things, `npx trenchcoat info share-panel` shows how to import one in each framework,
+**CLI.** With the package installed, `npx trenchcoat list share` finds things, `npx trenchcoat info share-panel` shows how to import one in each framework,
 and `npx trenchcoat add case-file` copies a React block or screen into `components/ui`, with the files it needs. It never replaces
 a file unless you pass `--overwrite`.
 
@@ -51,7 +58,7 @@ line. It reads text only: values in expressions are skipped, and React props are
 
 **Charts from data.** `npx trenchcoat chart types` lists the chart types a JSON spec can draw; `chart validate spec.json` checks a
 spec; `chart render spec.json --out chart.svg` draws it as a standalone SVG, the tokens resolved for `--look` and `--theme`; and
-`chart suggest data.csv` proposes charts for a table, each with a spec. In code, `trenchcoat/charts` does the same (in Node, call
+`chart suggest data.csv` proposes charts for a table, each with a spec. In code, `@adamstavely/trenchcoat/charts` does the same (in Node, call
 `installDomShim()` first), and `<tc-chart>` draws a spec as a live chart.
 
 **For AI coding tools.** `trenchcoat-mcp` is an MCP server over stdio, with `search_components`, `get_component`, `get_usage` and `lint_code`,
@@ -59,12 +66,12 @@ and for charts `list_chart_types`, `validate_chart_spec`, `render_chart` and `su
 package's own files; a chart's data is given inline. Add it to your tool's MCP settings:
 
 ```json
-{ "mcpServers": { "trenchcoat": { "command": "npx", "args": ["trenchcoat-mcp"] } } }
+{ "mcpServers": { "trenchcoat": { "command": "npx", "args": ["-y", "-p", "@adamstavely/trenchcoat", "trenchcoat-mcp"] } } }
 ```
 
-**Build your own.** `trenchcoat/headless` is the behaviour inside the elements, with no markup or styles: popovers and focus, list
+**Build your own.** `@adamstavely/trenchcoat/headless` is the behaviour inside the elements, with no markup or styles: popovers and focus, list
 motion, text selection, and link safety. The controllers plug into Lit; the plain functions need only the DOM.
 
-**Test your app.** `trenchcoat/testing` has drivers that act as a person does, such as `pickFlag`, `addRecipient` and `decideCase`,
+**Test your app.** `@adamstavely/trenchcoat/testing` has drivers that act as a person does, such as `pickFlag`, `addRecipient` and `decideCase`,
 with `settled`, `waitFor`, `mockEntitlement` and `fixtures`. It works with any test runner and throws clear errors.
 

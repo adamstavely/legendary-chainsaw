@@ -86,8 +86,8 @@ the limit” or “at the limit”; an unlimited one is an image named like “P
 <tc-usage-meter id="usage" plan="Pro plan" total="10000"></tc-usage-meter>
 
 <script type="module">
-  import "trenchcoat/usage-meter";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/usage-meter";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const meter = document.querySelector("#usage");
   meter.used = [
@@ -103,8 +103,8 @@ the limit” or “at the limit”; an unlimited one is an image named like “P
 
 ```tsx
 import { useState } from "react";
-import { UsageMeter, type UsageItem, type UsagePeriod } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { UsageMeter, type UsageItem, type UsagePeriod } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const periods: UsagePeriod[] = [
   { id: "current", label: "This month" },

@@ -302,7 +302,7 @@
   {
    "tag": "tc-session-list",
    "className": "TcSessionList",
-   "module": "trenchcoat/session-list",
+   "module": "@adamstavely/trenchcoat/session-list",
    "data": [
     "sessions",
     "actions",

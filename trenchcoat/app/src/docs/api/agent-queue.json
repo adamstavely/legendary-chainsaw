@@ -598,7 +598,7 @@
   {
    "tag": "tc-agent-queue",
    "className": "TcAgentQueue",
-   "module": "trenchcoat/agent-queue",
+   "module": "@adamstavely/trenchcoat/agent-queue",
    "data": [
     "jobs",
     "workers",

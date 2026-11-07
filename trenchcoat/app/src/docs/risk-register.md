@@ -92,7 +92,7 @@ the grid sits above the register; narrower still, the register's rows become car
 
 ```tsx
 import { useState } from "react";
-import { RiskRegister, type Risk } from "trenchcoat/react";
+import { RiskRegister, type Risk } from "@adamstavely/trenchcoat/react";
 
 export function FieldRisks() {
   const [risks, setRisks] = useState<Risk[]>([{ id: "storm", title: "Storm season damages nursery frames", likelihood: 4, impact: 4 }]);

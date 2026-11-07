@@ -178,7 +178,7 @@
   {
    "tag": "tc-calendar-heatmap",
    "className": "TcCalendarHeatmap",
-   "module": "trenchcoat/calendar-heatmap",
+   "module": "@adamstavely/trenchcoat/calendar-heatmap",
    "data": [
     "date",
     "value"

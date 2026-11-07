@@ -83,8 +83,8 @@ inks beside the dots, never on them. `still` (or the system's reduced-motion set
 <tc-dumbbell-chart heading="Safety audit score" start-label="Spring" end-label="Autumn"></tc-dumbbell-chart>
 
 <script type="module">
-  import "trenchcoat/dumbbell-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/dumbbell-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-dumbbell-chart").data = [
     { label: "Genomics", start: 62, end: 81 },
     { label: "Imaging", start: 74, end: 79 },
@@ -94,8 +94,8 @@ inks beside the dots, never on them. `still` (or the system's reduced-motion set
 ```
 
 ```tsx
-import { DumbbellChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DumbbellChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", start: 62, end: 81 },

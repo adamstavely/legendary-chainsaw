@@ -70,8 +70,8 @@ animated, so content of any size works.
 </tc-panel-card>
 
 <script type="module">
-  import "trenchcoat/panel-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/panel-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#reports").addEventListener("tc-expanded-change", (e) => {
     console.log(e.detail.expanded);
@@ -80,8 +80,8 @@ animated, so content of any size works.
 ```
 
 ```tsx
-import { PanelCard } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PanelCard } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Reports({ onOpen }: { onOpen: () => void }) {
   return (

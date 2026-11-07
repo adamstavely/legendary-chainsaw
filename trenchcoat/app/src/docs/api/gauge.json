@@ -320,7 +320,7 @@
   {
    "tag": "tc-gauge",
    "className": "TcGauge",
-   "module": "trenchcoat/gauge",
+   "module": "@adamstavely/trenchcoat/gauge",
    "data": [
     "bands",
     "format"

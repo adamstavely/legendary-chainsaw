@@ -252,7 +252,7 @@
   {
    "tag": "tc-selection-translate",
    "className": "TcSelectionTranslate",
-   "module": "trenchcoat/selection-translate",
+   "module": "@adamstavely/trenchcoat/selection-translate",
    "data": [
     "languages",
     "resolveTranslate"

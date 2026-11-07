@@ -93,8 +93,8 @@ A tile is a link named by the app's name, described by its `description`; the cu
 <tc-app-picker id="apps" current="mail" pinnable footer-href="/apps" footer-label="All apps"></tc-app-picker>
 
 <script type="module">
-  import "trenchcoat/app-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/app-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const apps = document.querySelector("#apps");
   apps.apps = [
@@ -112,8 +112,8 @@ A tile is a link named by the app's name, described by its `description`; the cu
 
 ```tsx
 import { useState } from "react";
-import { AppPicker, type AppPickerApp } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AppPicker, type AppPickerApp } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const APPS: AppPickerApp[] = [
   { id: "mail", name: "Mail", href: "/mail", description: "Your inbox and shared mailboxes" },

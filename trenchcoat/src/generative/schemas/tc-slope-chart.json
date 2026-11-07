@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-slope-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-slope-chart.json",
   "title": "tc-slope-chart",
   "description": "How each item changed between two moments, as lines from the first value to the last, the biggest rise\nemphasised, names and values on both sides and a table view.",
   "type": "object",

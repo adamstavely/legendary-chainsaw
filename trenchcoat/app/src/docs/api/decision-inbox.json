@@ -184,7 +184,7 @@
   {
    "tag": "tc-decision-inbox",
    "className": "TcDecisionInbox",
-   "module": "trenchcoat/decision-inbox",
+   "module": "@adamstavely/trenchcoat/decision-inbox",
    "data": [
     "decisions",
     "answers",

@@ -1,11 +1,11 @@
 "use client";
 
-import { HeaderNav as Base, headerNavInitials, type HeaderNavPanel, type HeaderNavPresence, type HeaderNavProps as BaseProps, type HeaderNavTone, type HeaderNavUser } from "trenchcoat/react";
+import { HeaderNav as Base, headerNavInitials, type HeaderNavPanel, type HeaderNavPresence, type HeaderNavProps as BaseProps, type HeaderNavTone, type HeaderNavUser } from "@adamstavely/trenchcoat/react";
 
 /*
  * Header Nav – the right end of an app header: the notifications bell, the app picker and the signed-in person's
  * avatar, in that order, with a hairline before the avatar. It is the <tc-header-nav> element through
- * `trenchcoat/react` (install `trenchcoat` instead of copying files); every framework gets the same element.
+ * `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` instead of copying files); every framework gets the same element.
  *   · `notifications` – every prop of <Notifications> (items, handlers, settings link…); leave it unset to hide the bell
  *   · `apps` – every prop of <AppPicker> (apps, pinned, current, onSelect…); leave it unset to hide the picker
  *   · the avatar – a round button (the person's image, or their initials on a tone) with an optional presence dot. It

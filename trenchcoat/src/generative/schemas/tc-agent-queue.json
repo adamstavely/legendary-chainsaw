@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-queue.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-queue.json",
   "title": "tc-agent-queue",
   "description": "The work waiting for your agents, and how fast it moves: the queue, the workers, Done and Failed, and a depth chart.",
   "type": "object",

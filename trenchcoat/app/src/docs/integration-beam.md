@@ -73,8 +73,8 @@ says what a click did: “Slack paused. 5 of 6 connected.” The beams, pulses a
 <tc-integration-beam id="beam"></tc-integration-beam>
 
 <script type="module">
-  import "trenchcoat/integration-beam";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/integration-beam";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const logo = (src) => Object.assign(new Image(28, 28), { src, alt: "" });
   const beam = document.querySelector("#beam");
@@ -89,8 +89,8 @@ says what a click did: “Slack paused. 5 of 6 connected.” The beams, pulses a
 ```
 
 ```tsx
-import { IntegrationBeam, type BeamTool } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IntegrationBeam, type BeamTool } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const logo = (src: string) => <img src={src} alt="" width={28} height={28} />;
 

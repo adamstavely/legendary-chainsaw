@@ -138,7 +138,7 @@
   {
    "tag": "tc-radio-group",
    "className": "TcRadioGroup",
-   "module": "trenchcoat/radio-group",
+   "module": "@adamstavely/trenchcoat/radio-group",
    "data": [
     "options",
     "value"

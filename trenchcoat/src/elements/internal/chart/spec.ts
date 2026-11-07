@@ -5,7 +5,7 @@
  * what's wrong with one without drawing it. ztd's own option names are accepted where ours differ (showRates: false is
  * hide-rates, animate: false is still), so its specs draw here as they are.
  *
- * Every chart's properties are also checked by its generative-UI schema (trenchcoat/generative) before they're set.
+ * Every chart's properties are also checked by its generative-UI schema (@adamstavely/trenchcoat/generative) before they're set.
  */
 import { toNumber, uniq } from "./accessor";
 import { normalizeData, parseCSV } from "./parse";

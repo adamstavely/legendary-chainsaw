@@ -88,8 +88,8 @@ that's pressed while its health is shown. With `grouped`, each group is a region
 <tc-priority-list id="topics" heading="Priorities" grouped></tc-priority-list>
 
 <script type="module">
-  import "trenchcoat/priority-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/priority-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const topics = document.querySelector("#topics");
   topics.items = [
@@ -102,8 +102,8 @@ that's pressed while its health is shown. With `grouped`, each group is a region
 
 ```tsx
 import { useState } from "react";
-import { PriorityList, type PriorityFilter, type PriorityItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PriorityList, type PriorityFilter, type PriorityItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: PriorityItem[] = [
   { id: "neuro", name: "Neuromorphic Computing", owner: "Marcus Okonkwo", team: "Cognitive Systems", priority: 1, health: "at-risk", trend: [7, 6.9, 6.6, 6.3], change: -0.08, coverage: 0.42, open: 4, work: 4 },

@@ -84,8 +84,8 @@ cleared”. The column names and bars repeat what the options say, so they're hi
 <tc-investment-balance id="balance" item-label="topics"></tc-investment-balance>
 
 <script type="module">
-  import "trenchcoat/investment-balance";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/investment-balance";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const balance = document.querySelector("#balance");
   balance.tiers = [
@@ -99,8 +99,8 @@ cleared”. The column names and bars repeat what the options say, so they're hi
 
 ```tsx
 import { useState } from "react";
-import { InvestmentBalance, type InvestmentTier } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InvestmentBalance, type InvestmentTier } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const tiers: InvestmentTier[] = [
   { id: "p1", badge: "1", label: "Top priority", items: 18, budget: 14200000, people: 38 },

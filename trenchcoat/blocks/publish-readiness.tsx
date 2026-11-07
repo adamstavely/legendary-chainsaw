@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
-import { PublishReadiness as TcPublishReadiness, type Look, type ReadinessBlocker, type ReadinessCheck } from "trenchcoat/react";
+import { PublishReadiness as TcPublishReadiness, type Look, type ReadinessBlocker, type ReadinessCheck } from "@adamstavely/trenchcoat/react";
 
 /*
  * Publish Readiness – what must pass before something is released. A summary card says how close the release is
@@ -9,11 +9,11 @@ import { PublishReadiness as TcPublishReadiness, type Look, type ReadinessBlocke
  * (sign-offs tick by hand, automated checks are read-only rows), each failing check with the blockers behind it, every
  * blocker a link the app opens, checks still to run and who approves – and the publish action, held back while
  * anything blocks.
- * The block is the <tc-publish-readiness> element through `trenchcoat/react` – the same component Angular, Vue and
+ * The block is the <tc-publish-readiness> element through `@adamstavely/trenchcoat/react` – the same component Angular, Vue and
  * plain HTML get – kept here with its original props. The look follows the nearest <LookProvider>, or the `look` prop.
  */
 
-export type { ReadinessBlocker, ReadinessCheck, ReadinessState } from "trenchcoat/react";
+export type { ReadinessBlocker, ReadinessCheck, ReadinessState } from "@adamstavely/trenchcoat/react";
 
 type OwnProps = {
   /** What is being released, e.g. "Daily briefing" */

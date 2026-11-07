@@ -101,8 +101,8 @@ A polite status region says what happened:
 <tc-text-annotator id="review" heading="Post-mortem review" author="Jo Park"></tc-text-annotator>
 
 <script type="module">
-  import "trenchcoat/text-annotator";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/text-annotator";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#review");
   review.text = "Why the welcome emails stopped\n\nFor nine days in March, new customers didn't get their welcome email.";
@@ -114,8 +114,8 @@ A polite status region says what happened:
 
 ```tsx
 import { useState } from "react";
-import { TextAnnotator, type TextAnnotation } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TextAnnotator, type TextAnnotation } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const text = "Why the welcome emails stopped\n\nFor nine days in March, new customers didn't get their welcome email.";
 

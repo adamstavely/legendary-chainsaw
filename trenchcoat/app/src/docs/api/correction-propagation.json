@@ -301,7 +301,7 @@
   {
    "tag": "tc-correction-propagation",
    "className": "TcCorrectionPropagation",
-   "module": "trenchcoat/correction-propagation",
+   "module": "@adamstavely/trenchcoat/correction-propagation",
    "data": [
     "candidates",
     "states"

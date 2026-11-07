@@ -81,8 +81,8 @@ legible whatever the inks are. `still` (or the system's reduced-motion setting) 
 <tc-radial-bar-chart heading="Grant milestones" description="Deliverables met, of target"></tc-radial-bar-chart>
 
 <script type="module">
-  import "trenchcoat/radial-bar-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/radial-bar-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-radial-bar-chart").data = [
     { label: "Genomics", value: 82 },
     { label: "Imaging", value: 64 },
@@ -92,8 +92,8 @@ legible whatever the inks are. `still` (or the system's reduced-motion setting) 
 ```
 
 ```tsx
-import { RadialBarChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RadialBarChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", value: 82 },

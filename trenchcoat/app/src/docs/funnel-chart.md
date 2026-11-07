@@ -82,8 +82,8 @@ setting) draws everything at once.
 <tc-funnel-chart heading="Grant proposals" description="This year's round"></tc-funnel-chart>
 
 <script type="module">
-  import "trenchcoat/funnel-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/funnel-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-funnel-chart").data = [
     { label: "Drafted", value: 148 },
     { label: "Submitted", value: 104 },
@@ -94,8 +94,8 @@ setting) draws everything at once.
 ```
 
 ```tsx
-import { FunnelChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FunnelChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Drafted", value: 148 },

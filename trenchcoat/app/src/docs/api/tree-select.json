@@ -303,7 +303,7 @@
   {
    "tag": "tc-tree-select",
    "className": "TcTreeSelect",
-   "module": "trenchcoat/tree-select",
+   "module": "@adamstavely/trenchcoat/tree-select",
    "data": [
     "options",
     "value"

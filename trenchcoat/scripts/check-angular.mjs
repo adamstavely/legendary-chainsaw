@@ -34,10 +34,10 @@ const tsconfig = {
     outDir: "out",
     baseUrl: ROOT,
     paths: {
-      "trenchcoat/angular": ["dist/angular/index.d.ts"],
-      "trenchcoat/angular/forms": ["dist/angular/forms.d.ts"],
-      "trenchcoat/look-provider": ["dist/types/elements/internal/look.d.ts"],
-      "trenchcoat/*": ["dist/types/elements/*"],
+      "@adamstavely/trenchcoat/angular": ["dist/angular/index.d.ts"],
+      "@adamstavely/trenchcoat/angular/forms": ["dist/angular/forms.d.ts"],
+      "@adamstavely/trenchcoat/look-provider": ["dist/types/elements/internal/look.d.ts"],
+      "@adamstavely/trenchcoat/*": ["dist/types/elements/*"],
     },
     types: [],
   },
@@ -55,9 +55,9 @@ function compile(name, imports, template, members = "") {
     join(dir, "app.ts"),
     `import { Component } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ${imports} } from "trenchcoat/angular";
-import { TRENCHCOAT_FORMS } from "trenchcoat/angular/forms";
-import type { ComboboxOption } from "trenchcoat/combobox";
+import { ${imports} } from "@adamstavely/trenchcoat/angular";
+import { TRENCHCOAT_FORMS } from "@adamstavely/trenchcoat/angular/forms";
+import type { ComboboxOption } from "@adamstavely/trenchcoat/combobox";
 
 @Component({
   selector: "app-root",
@@ -126,7 +126,7 @@ const imports = run(
     const failed = [];
     const mods = [...readdirSync("dist").filter((f) => f.endsWith(".js")).map((f) => "./dist/" + f),
       ...readdirSync("dist/angular").filter((f) => f.endsWith(".js")).map((f) => "./dist/angular/" + f)].filter((f) => !/ [0-9]+[.]js$/.test(f));
-    for (const m of [...mods, "trenchcoat", "trenchcoat/react", "trenchcoat/angular", "trenchcoat/angular/forms", "trenchcoat/generative"]) {
+    for (const m of [...mods, "@adamstavely/trenchcoat", "@adamstavely/trenchcoat/react", "@adamstavely/trenchcoat/angular", "@adamstavely/trenchcoat/angular/forms", "@adamstavely/trenchcoat/generative"]) {
       try { await import(m); } catch (e) { failed.push(m + ": " + String(e.message).split("\\n")[0]); }
     }
     console.log(JSON.stringify({ count: mods.length, failed }));

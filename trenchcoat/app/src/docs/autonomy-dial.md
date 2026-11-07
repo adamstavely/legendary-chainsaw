@@ -83,8 +83,8 @@ stays on its lock.
 <tc-autonomy-dial id="dial" heading="Support agent" level="1"></tc-autonomy-dial>
 
 <script type="module">
-  import "trenchcoat/autonomy-dial";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/autonomy-dial";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const dial = document.querySelector("#dial");
   dial.actions = [
@@ -99,8 +99,8 @@ stays on its lock.
 
 ```tsx
 import { useState } from "react";
-import { AutonomyDial, type AgentAction, type AutonomyLevel } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AutonomyDial, type AgentAction, type AutonomyLevel } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const actions: AgentAction[] = [
   { id: "read", label: "Read tickets", detail: "Zendesk · all queues", risk: "safe" },

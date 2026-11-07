@@ -159,7 +159,7 @@
   {
    "tag": "tc-voice-orb",
    "className": "TcVoiceOrb",
-   "module": "trenchcoat/voice-orb",
+   "module": "@adamstavely/trenchcoat/voice-orb",
    "data": [
     "label",
     "interactive"

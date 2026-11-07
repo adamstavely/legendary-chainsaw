@@ -93,8 +93,8 @@ with its outcome (“Fail, v4”). Words only the expected answer has are `<del>
 <tc-eval-scorecard id="evals" heading="Support replies"></tc-eval-scorecard>
 
 <script type="module">
-  import "trenchcoat/eval-scorecard";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/eval-scorecard";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const evals = document.querySelector("#evals");
   evals.versions = [{ id: "v3", label: "v3" }, { id: "v4", label: "v4", detail: "Opus" }];
@@ -112,8 +112,8 @@ with its outcome (“Fail, v4”). Words only the expected answer has are `<del>
 ```
 
 ```tsx
-import { EvalScorecard, type EvalCase, type EvalVersion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EvalScorecard, type EvalCase, type EvalVersion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const versions: EvalVersion[] = [{ id: "v3", label: "v3" }, { id: "v4", label: "v4", detail: "Opus" }];
 

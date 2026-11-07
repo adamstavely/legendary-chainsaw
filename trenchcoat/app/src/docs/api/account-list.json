@@ -229,7 +229,7 @@
   {
    "tag": "tc-account-list",
    "className": "TcAccountList",
-   "module": "trenchcoat/account-list",
+   "module": "@adamstavely/trenchcoat/account-list",
    "data": [
     "accounts",
     "stats",

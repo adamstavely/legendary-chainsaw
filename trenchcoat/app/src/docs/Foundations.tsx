@@ -105,7 +105,7 @@ function Tokens() {
         </p>
         <p className="docs-lede">
           For design tools, the same tokens ship in the Design Tokens Community Group format (DTCG 2025.10), in{" "}
-          <code>trenchcoat/tokens/dtcg/</code>:
+          <code>@adamstavely/trenchcoat/tokens/dtcg/</code>:
         </p>
         <ul className="docs-lede">
           <li>

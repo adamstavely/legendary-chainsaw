@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-ghosted-chat.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ghosted-chat.json",
   "title": "tc-ghosted-chat",
   "description": "Unanswered chat messages – an illustration for being ghosted.",
   "type": "object",

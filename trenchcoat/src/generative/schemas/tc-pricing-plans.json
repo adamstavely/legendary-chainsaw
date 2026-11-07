@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-pricing-plans.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-pricing-plans.json",
   "title": "tc-pricing-plans",
   "description": "A pricing section: a Monthly / Yearly switch and a card per plan with limits, a call to action and collapsible details.",
   "type": "object",

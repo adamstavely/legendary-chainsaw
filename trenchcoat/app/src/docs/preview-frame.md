@@ -91,8 +91,8 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 <tc-preview-frame id="preview" src="http://localhost:5173/" viewport="phone"></tc-preview-frame>
 
 <script type="module">
-  import "trenchcoat/preview-frame";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/preview-frame";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#preview");
   el.consoleCount = { errors: 0, warnings: 2 };
@@ -105,8 +105,8 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 ```
 
 ```tsx
-import { PreviewFrame } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PreviewFrame } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Preview({ running, onStart }: { running: boolean; onStart: () => void }) {
   return (

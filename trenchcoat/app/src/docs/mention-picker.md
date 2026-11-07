@@ -101,8 +101,8 @@ readers – the status says the note. The picker gives back the field's own attr
 <tc-mention-picker id="mentions" for="message"></tc-mention-picker>
 
 <script type="module">
-  import "trenchcoat/mention-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/mention-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const picker = document.querySelector("#mentions");
   const people = [{ id: "maya", label: "Maya Chen", hint: "Design", avatar: true }];
@@ -120,8 +120,8 @@ readers – the status says the note. The picker gives back the field's own attr
 
 ```tsx
 import { useRef } from "react";
-import { MentionPicker, type MentionTrigger } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MentionPicker, type MentionTrigger } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const triggers: MentionTrigger[] = [
   {

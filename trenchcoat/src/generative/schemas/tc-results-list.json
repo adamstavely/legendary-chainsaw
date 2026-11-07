@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-results-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-results-list.json",
   "title": "tc-results-list",
   "description": "Search results to read and open – kind, title, a snippet with the query's words marked, source and date; grouped by\nkind, sorted by relevance or date, \"Did you mean\", Show more and loading rows.",
   "type": "object",

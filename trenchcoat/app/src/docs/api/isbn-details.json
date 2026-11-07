@@ -214,7 +214,7 @@
   {
    "tag": "tc-isbn-details",
    "className": "TcIsbnDetails",
-   "module": "trenchcoat/isbn-details",
+   "module": "@adamstavely/trenchcoat/isbn-details",
    "data": [
     "resolve"
    ],

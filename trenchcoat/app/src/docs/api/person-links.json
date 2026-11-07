@@ -246,7 +246,7 @@
   {
    "tag": "tc-person-links",
    "className": "TcPersonLinks",
-   "module": "trenchcoat/person-links",
+   "module": "@adamstavely/trenchcoat/person-links",
    "data": [
     "people",
     "strengthLabels"

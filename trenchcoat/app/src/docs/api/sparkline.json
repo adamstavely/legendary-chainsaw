@@ -259,7 +259,7 @@
   {
    "tag": "tc-sparkline",
    "className": "TcSparkline",
-   "module": "trenchcoat/sparkline",
+   "module": "@adamstavely/trenchcoat/sparkline",
    "data": [
     "values",
     "labels",

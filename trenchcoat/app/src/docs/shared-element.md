@@ -63,14 +63,14 @@ Use real buttons as toggles. Give the detail a heading that repeats the summary'
 </tc-shared-element>
 
 <script type="module">
-  import "trenchcoat/shared-element";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/shared-element";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { SharedElement } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SharedElement } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Row() {
   return (

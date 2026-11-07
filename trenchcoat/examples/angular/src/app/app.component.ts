@@ -1,8 +1,8 @@
 import { Component, signal } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { Button, Combobox, DataTable, LookProvider, Switch } from "trenchcoat/angular";
-import { ComboboxValueAccessor, SwitchValueAccessor } from "trenchcoat/angular/forms";
-import type { ComboboxOption, DataColumn, DataRow } from "trenchcoat";
+import { Button, Combobox, DataTable, LookProvider, Switch } from "@adamstavely/trenchcoat/angular";
+import { ComboboxValueAccessor, SwitchValueAccessor } from "@adamstavely/trenchcoat/angular/forms";
+import type { ComboboxOption, DataColumn, DataRow } from "@adamstavely/trenchcoat";
 
 @Component({
   selector: "app-root",

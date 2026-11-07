@@ -70,8 +70,8 @@ hidden, so the “Calendar”, “EMPTY” and “Join meeting” text in it is 
 </div>
 
 <script type="module">
-  import "trenchcoat/empty-calendar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/empty-calendar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const art = document.querySelector("#empty");
   // Only when the picture carries meaning the text doesn't
@@ -80,8 +80,8 @@ hidden, so the “Calendar”, “EMPTY” and “Join meeting” text in it is 
 ```
 
 ```tsx
-import { EmptyCalendar } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EmptyCalendar } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function NoMeetings() {
   return (

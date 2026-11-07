@@ -42,8 +42,8 @@ something more specific.
 <tc-integration-flow id="flow" label="Your CRM, inbox and calendar feeding one analysis hub"></tc-integration-flow>
 
 <script type="module">
-  import "trenchcoat/integration-flow";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/integration-flow";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const flow = document.querySelector("#flow");
   const logo = (src) => Object.assign(document.createElement("img"), { src, alt: "" });
@@ -58,8 +58,8 @@ something more specific.
 ```
 
 ```tsx
-import { IntegrationFlow } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IntegrationFlow } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Hero() {
   return (

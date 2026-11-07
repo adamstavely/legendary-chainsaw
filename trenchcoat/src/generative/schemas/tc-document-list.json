@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-document-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-document-list.json",
   "title": "tc-document-list",
   "description": "Identity and record documents with masked numbers, expiry and a status each – Active, Verified, Expired, Flagged,\nFraudulent or your own – counted in the header, with View per row.",
   "type": "object",

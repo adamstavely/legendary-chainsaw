@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-panel-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-panel-card.json",
   "title": "tc-panel-card",
   "description": "A compact card for one section of a side panel, which folds or opens something else.",
   "type": "object",

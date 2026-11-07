@@ -308,7 +308,7 @@
   {
    "tag": "tc-artifact-panel",
    "className": "TcArtifactPanel",
-   "module": "trenchcoat/artifact-panel",
+   "module": "@adamstavely/trenchcoat/artifact-panel",
    "data": [
     "artifacts"
    ],

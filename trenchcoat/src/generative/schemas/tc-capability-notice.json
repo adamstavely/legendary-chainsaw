@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-capability-notice.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-capability-notice.json",
   "title": "tc-capability-notice",
   "description": "An advisory with an answer: the request falls where the AI is only partly proven (amber) or not proven (red) – the\ntask area, a capped confidence, who was notified, and a folded distance-from-usual score.",
   "type": "object",

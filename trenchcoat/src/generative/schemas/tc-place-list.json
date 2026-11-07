@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-place-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-place-list.json",
   "title": "tc-place-list",
   "description": "Places on record – type with an icon, whether each is confirmed, the address, coordinates and when it applies –\nwith a place picked for a map.",
   "type": "object",

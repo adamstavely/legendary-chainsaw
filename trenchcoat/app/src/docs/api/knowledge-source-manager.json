@@ -366,7 +366,7 @@
   {
    "tag": "tc-knowledge-source-manager",
    "className": "TcKnowledgeSourceManager",
-   "module": "trenchcoat/knowledge-source-manager",
+   "module": "@adamstavely/trenchcoat/knowledge-source-manager",
    "data": [
     "sources",
     "schedules"

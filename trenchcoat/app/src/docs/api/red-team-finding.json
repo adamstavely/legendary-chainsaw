@@ -358,7 +358,7 @@
   {
    "tag": "tc-red-team-finding",
    "className": "TcRedTeamFinding",
-   "module": "trenchcoat/red-team-finding",
+   "module": "@adamstavely/trenchcoat/red-team-finding",
    "data": [
     "findings",
     "onUndo",

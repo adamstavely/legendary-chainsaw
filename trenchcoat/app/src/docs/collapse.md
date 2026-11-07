@@ -54,13 +54,13 @@ Give it one child. Padding belongs on that child's content, so the shut height i
 <tc-collapse open><div>The rest of it.</div></tc-collapse>
 
 <script type="module">
-  import "trenchcoat/collapse";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/collapse";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { Collapse } from "trenchcoat/react";
+import { Collapse } from "@adamstavely/trenchcoat/react";
 
 export function More({ open }: { open: boolean }) {
   return <Collapse open={open}><div>The rest of it.</div></Collapse>;

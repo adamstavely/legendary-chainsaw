@@ -60,14 +60,14 @@ Say where it is and link to it: "Live on the institute's site". Give the date it
 <tc-released></tc-released>
 
 <script type="module">
-  import "trenchcoat/released";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/released";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { Released } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Released } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <Released />;

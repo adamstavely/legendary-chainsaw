@@ -38,7 +38,7 @@ import { structuredOutputParse } from "./structured-output";
  *            kind: "text" (default) | "email" | "number" | "url" | "date" | "textarea" | "select" | "choice"
  *   callout  { type: "callout", tone?: "info" | "success" | "warning" | "danger", title?, text?, children?, actions? }
  *   group    { type: "group", title?, layout?: "column" | "row" | "grid", children, actions? }
- *   component { type: "component", tag, props? }   any generatable Trenchcoat component (trenchcoat/generative's
+ *   component { type: "component", tag, props? }   any generatable Trenchcoat component (@adamstavely/trenchcoat/generative's
  *            catalogue): props are checked against its schema – what doesn't fit is left out and reported in
  *            tc-spec-check – and its events come back as tc-component-event
  *   actions  [{ id, label, primary? }] on a callout or a group – buttons that fire tc-action
@@ -72,7 +72,7 @@ export type GeneratedUiForm = { type: "form"; id: string; title?: string; submit
 export type GeneratedUiTone = "info" | "success" | "warning" | "danger";
 export type GeneratedUiCallout = { type: "callout"; tone?: GeneratedUiTone; title?: string; text?: string; children?: GeneratedUiBlock[]; actions?: GeneratedUiAction[] };
 export type GeneratedUiGroup = { type: "group"; title?: string; layout?: "column" | "row" | "grid"; children: GeneratedUiBlock[]; actions?: GeneratedUiAction[] };
-/** Any component from trenchcoat/generative's catalogue; props are checked against its schema before they're set */
+/** Any component from @adamstavely/trenchcoat/generative's catalogue; props are checked against its schema before they're set */
 export type GeneratedUiComponent = { type: "component"; tag: string; props?: Record<string, unknown> };
 /** One block of a spec */
 export type GeneratedUiBlock = GeneratedUiText | GeneratedUiMetric | GeneratedUiTable | GeneratedUiChart | GeneratedUiForm | GeneratedUiCallout | GeneratedUiGroup | GeneratedUiComponent;

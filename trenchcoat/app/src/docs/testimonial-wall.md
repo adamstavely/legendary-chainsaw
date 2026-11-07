@@ -74,8 +74,8 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 <tc-testimonial-wall id="wall" label="Customer testimonials"></tc-testimonial-wall>
 
 <script type="module">
-  import "trenchcoat/testimonial-wall";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/testimonial-wall";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#wall").items = [
     { quote: "Fast.", name: "Leo Brandt", role: "Staff Engineer", company: "Northwind", rating: 5 },
@@ -85,8 +85,8 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 ```
 
 ```tsx
-import { TestimonialWall, type Testimonial } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TestimonialWall, type Testimonial } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: Testimonial[] = [
   { quote: "Fast.", name: "Leo Brandt", role: "Staff Engineer", company: "Northwind", rating: 5 },

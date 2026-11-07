@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-marimekko-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-marimekko-chart.json",
   "title": "tc-marimekko-chart",
   "description": "Columns as wide as their share of the whole, each stacked to 100% by series – two shares in one picture – with one\nseries emphasised, a legend and a table view.",
   "type": "object",

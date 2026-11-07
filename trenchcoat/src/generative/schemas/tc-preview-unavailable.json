@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-preview-unavailable.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-preview-unavailable.json",
   "title": "tc-preview-unavailable",
   "description": "A file whose contents have faded to a dashed outline, with a question mark, for a file type the viewer can't show.",
   "type": "object",

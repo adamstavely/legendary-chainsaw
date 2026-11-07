@@ -80,8 +80,8 @@ the usual range, up to 0.45”.
 <tc-capability-notice id="notice" level="partial" area="Tax calculations outside the UK" cap="Medium"></tc-capability-notice>
 
 <script type="module">
-  import "trenchcoat/capability-notice";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/capability-notice";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const notice = document.querySelector("#notice");
   notice.distance = 0.72;
@@ -91,8 +91,8 @@ the usual range, up to 0.45”.
 ```
 
 ```tsx
-import { CapabilityNotice } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CapabilityNotice } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ValuationNotice({ distance }: { distance: number }) {
   return (

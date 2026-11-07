@@ -199,7 +199,7 @@
   {
    "tag": "tc-fact-sheet",
    "className": "TcFactSheet",
-   "module": "trenchcoat/fact-sheet",
+   "module": "@adamstavely/trenchcoat/fact-sheet",
    "data": [
     "sections"
    ],

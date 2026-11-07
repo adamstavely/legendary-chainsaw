@@ -75,8 +75,8 @@ and the checks in words. More is named for its row, says it opens a menu and whe
 <tc-change-list id="changes"></tc-change-list>
 
 <script type="module">
-  import "trenchcoat/change-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/change-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#changes");
   el.items = [{ id: "1", title: "Add freezer locations", repo: "institute/sample-tracker", number: 214, state: "open", additions: 120, deletions: 30 }];
@@ -86,8 +86,8 @@ and the checks in words. More is named for its row, says it opens a menu and whe
 ```
 
 ```tsx
-import { ChangeList, type ChangeItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChangeList, type ChangeItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: ChangeItem[] = [{ id: "1", title: "Add freezer locations", repo: "institute/sample-tracker", number: 214, state: "open", additions: 120, deletions: 30 }];
 

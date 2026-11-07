@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-identifier-details.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-identifier-details.json",
   "title": "tc-identifier-details",
   "description": "DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, marked: hover, focus or right-click one for what it is, Copy and what the app knows.",
   "type": "object",

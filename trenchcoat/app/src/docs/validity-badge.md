@@ -107,8 +107,8 @@ observed 5 months ago, contested”. The tooltip repeats this for sighted people
 </div>
 
 <script type="module">
-  import "trenchcoat/validity-badge";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/validity-badge";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#price").observed = "2026-09-30";
   document.querySelector("#rates").observed = "2026-10-12";
@@ -122,8 +122,8 @@ observed 5 months ago, contested”. The tooltip repeats this for sighted people
 ```
 
 ```tsx
-import { ValidityBadge, type ValidityInfo } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ValidityBadge, type ValidityInfo } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const paragraphs: ValidityInfo[] = [
   { observed: "2026-10-19", label: "Shipping costs" },

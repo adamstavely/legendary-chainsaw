@@ -154,7 +154,7 @@
   {
    "tag": "tc-number-field",
    "className": "TcNumberField",
-   "module": "trenchcoat/number-field",
+   "module": "@adamstavely/trenchcoat/number-field",
    "data": [
     "value"
    ],

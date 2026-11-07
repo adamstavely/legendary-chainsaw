@@ -84,8 +84,8 @@ mode, the note “A conflict exists. …” is a `note`, and the other reviewer'
 <tc-review-conflict id="conflict" item="Northwind's revenue grew 18% in 2025." resolver="Dana Lee"></tc-review-conflict>
 
 <script type="module">
-  import "trenchcoat/review-conflict";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/review-conflict";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const conflict = document.querySelector("#conflict");
   conflict.reviews = [
@@ -98,8 +98,8 @@ mode, the note “A conflict exists. …” is a `note`, and the other reviewer'
 
 ```tsx
 import { useState } from "react";
-import { ReviewConflict, type ReviewResolution, type ReviewVerdict } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ReviewConflict, type ReviewResolution, type ReviewVerdict } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ClaimConflict({ reviews, blindFor }: { reviews: ReviewVerdict[]; blindFor?: string }) {
   const [resolution, setResolution] = useState<ReviewResolution | null>(null);

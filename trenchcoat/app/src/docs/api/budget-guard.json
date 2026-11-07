@@ -254,7 +254,7 @@
   {
    "tag": "tc-budget-guard",
    "className": "TcBudgetGuard",
-   "module": "trenchcoat/budget-guard",
+   "module": "@adamstavely/trenchcoat/budget-guard",
    "data": [
     "limits"
    ],

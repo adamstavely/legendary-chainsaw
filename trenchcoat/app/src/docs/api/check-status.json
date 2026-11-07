@@ -175,7 +175,7 @@
   {
    "tag": "tc-check-status",
    "className": "TcCheckStatus",
-   "module": "trenchcoat/check-status",
+   "module": "@adamstavely/trenchcoat/check-status",
    "data": [
     "checks",
     "counts",

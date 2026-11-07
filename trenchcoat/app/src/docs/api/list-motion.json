@@ -63,7 +63,7 @@
   {
    "tag": "tc-list-motion",
    "className": "TcListMotion",
-   "module": "trenchcoat/list-motion",
+   "module": "@adamstavely/trenchcoat/list-motion",
    "data": [],
    "attributes": [
     {

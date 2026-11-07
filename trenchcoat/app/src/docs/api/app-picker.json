@@ -439,7 +439,7 @@
   {
    "tag": "tc-app-picker",
    "className": "TcAppPicker",
-   "module": "trenchcoat/app-picker",
+   "module": "@adamstavely/trenchcoat/app-picker",
    "data": [
     "apps",
     "pinned",

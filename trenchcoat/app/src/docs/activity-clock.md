@@ -91,8 +91,8 @@ say, so they're hidden from screen readers.
 <tc-activity-clock id="clock" heading="Agent runs by hour" unit="runs"></tc-activity-clock>
 
 <script type="module">
-  import "trenchcoat/activity-clock";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/activity-clock";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const clock = document.querySelector("#clock");
   clock.days = [
@@ -105,8 +105,8 @@ say, so they're hidden from screen readers.
 
 ```tsx
 import { useState } from "react";
-import { ActivityClock, type ActivityDay, type ActivityHourRef } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ActivityClock, type ActivityDay, type ActivityHourRef } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const days: ActivityDay[] = [
   { date: Date.parse("2026-10-26T12:00"), values: [0, 0, 0, 0, 0, 1, 3, 8, 20, 31, 42, 38, 22, 25, 33, 36, 30, 18, 9, 6, 4, 2, 1, 0] },

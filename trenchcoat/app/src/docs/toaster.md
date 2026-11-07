@@ -81,8 +81,8 @@ Esc – focus goes to the next toast, to where it was before the hotkey, or to t
 <tc-toaster position="bottom-right"></tc-toaster>
 
 <script type="module">
-  import { toast } from "trenchcoat/toaster";
-  import "trenchcoat/tokens.css";
+  import { toast } from "@adamstavely/trenchcoat/toaster";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("tc-toaster").duration = 5000;
   toast.success("Invoice sent", { description: "INV-2041 · $1,280.00 to Northwind Ltd." });
@@ -94,8 +94,8 @@ Esc – focus goes to the next toast, to where it was before the hotkey, or to t
 ```
 
 ```tsx
-import { Toaster, toast } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Toaster, toast } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 function deploy() {
   return new Promise<string>((resolve) => setTimeout(() => resolve("v2.14.0"), 2000));

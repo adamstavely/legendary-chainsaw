@@ -59,14 +59,14 @@ Give the child a visible handle when it also holds text people might select or s
 <tc-drag-lift><div><span data-drag-handle>⠿</span> A card</div></tc-drag-lift>
 
 <script type="module">
-  import "trenchcoat/drag-lift";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/drag-lift";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { DragLift } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DragLift } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Card() {
   return (
