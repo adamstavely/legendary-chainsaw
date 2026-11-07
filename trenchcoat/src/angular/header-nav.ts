@@ -49,7 +49,7 @@ export class HeaderNav {
    */
   @Output("tc-panel-change") readonly tcPanelChange = new EventEmitter<CustomEvent<HeaderNavPanelChange>>();
   /**
-   * An account action was picked ({ id }: HeaderNavAccountSelect); cancelable – prevented, the card stays open
+   * An account action was picked ({ id, checked? }: HeaderNavAccountSelect); cancelable – prevented, the card stays open. A switch item (`checked` set) keeps the card open either way, with `checked` its new state
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-account-select") readonly tcAccountSelect = new EventEmitter<CustomEvent<HeaderNavAccountSelect>>();

@@ -72,7 +72,7 @@
     {
      "name": "tc-account-select",
      "detail": "",
-     "description": "An account action was picked ({ id }: HeaderNavAccountSelect); cancelable – prevented, the card stays open",
+     "description": "An account action was picked ({ id, checked? }: HeaderNavAccountSelect); cancelable – prevented, the card stays open. A switch item (`checked` set) keeps the card open either way, with `checked` its new state",
      "cancelable": true
     },
     {
@@ -203,9 +203,9 @@
     },
     {
      "name": "onAccountSelect",
-     "type": "(id: string) => void",
+     "type": "(id: string, checked?: boolean) => void",
      "optional": true,
-     "description": "An account action was picked (the popover closes and focus returns to the avatar)"
+     "description": "An account action was picked (the popover closes and focus returns to the avatar); for a switch item, `checked` is its new state and the popover stays open"
     },
     {
      "name": "setup",
@@ -269,9 +269,9 @@
     },
     {
      "name": "onAccountSelect",
-     "type": "(id: string) => void",
+     "type": "(id: string, checked?: boolean) => void",
      "optional": true,
-     "description": "An account action was picked (the popover closes and focus returns to the avatar)"
+     "description": "An account action was picked (the popover closes and focus returns to the avatar); for a switch item, `checked` is its new state and the popover stays open"
     },
     {
      "name": "setup",
@@ -677,7 +677,7 @@
   "windowed": false
  },
  "size": {
-  "min": 48442,
-  "gzip": 14190
+  "min": 50152,
+  "gzip": 14673
  }
 }

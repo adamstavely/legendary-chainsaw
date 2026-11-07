@@ -29,8 +29,8 @@ export type HeaderNavOwnProps = {
   apps?: Omit<AppPickerProps, "open" | "defaultOpen" | "layout">;
   /** The account card's actions; unset shows Settings, Language, Docs and Sign out. Icons may be React nodes */
   accountItems?: ProfileMenuItem[];
-  /** An account action was picked (the popover closes and focus returns to the avatar) */
-  onAccountSelect?: (id: string) => void;
+  /** An account action was picked (the popover closes and focus returns to the avatar); for a switch item, `checked` is its new state and the popover stays open */
+  onAccountSelect?: (id: string, checked?: boolean) => void;
   /** Profile setup progress in the account card – unset hides it */
   setup?: ProfileSetup;
   /** The setup's next step was picked */
@@ -87,7 +87,7 @@ export function HeaderNav({ notifications, apps, accountItems, onAccountSelect, 
           if (controlled) e.preventDefault();
           set(e.detail.panel);
         },
-        onTcAccountSelect: (e: CustomEvent<HeaderNavAccountSelect>) => onAccountSelect?.(e.detail.id),
+        onTcAccountSelect: (e: CustomEvent<HeaderNavAccountSelect>) => onAccountSelect?.(e.detail.id, e.detail.checked),
         onTcSetupContinue: (e: CustomEvent<HeaderNavSetupContinue>) => onSetupContinue?.(e.detail.next),
       },
       notifications &&

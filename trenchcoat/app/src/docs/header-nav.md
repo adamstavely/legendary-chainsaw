@@ -63,6 +63,8 @@ open. The face and the presence dot are hidden from screen readers – the butto
 - `user.name` is the full name: the initials, the avatar's name and the card's heading come from it.
 - Give `user.avatar` a photo URL, or leave it out for initials. A photo that fails to load falls back to initials.
 - `accountItems` replaces Settings, Language, Docs and Sign out; keep the list short and put Sign out last.
+- An account item with `checked` is a switch, such as “Dark mode”. Picking it fires `tc-account-select` with `checked`
+  as its new state and leaves the card open; set the item's `checked` to it.
 - Rename “Account” with `account-label` in other languages.
 
 ## Do

@@ -180,6 +180,75 @@ describe("tc-header-nav", () => {
     expect(leaked).toBe(0);
   });
 
+  test("a switch item in the account card reports its new state and keeps the card open; the page sets it", async () => {
+    const el = await make();
+    let dark = false;
+    const items = () => [
+      { id: "dark", label: "Dark mode", checked: dark },
+      { id: "sign-out", label: "Sign out" },
+    ];
+    el.accountItems = items();
+    const picked: HeaderNavAccountSelect[] = [];
+    el.addEventListener("tc-account-select", (e) => {
+      const d = (e as CustomEvent<HeaderNavAccountSelect>).detail;
+      picked.push(d);
+      if (d.checked !== undefined) {
+        dark = d.checked;
+        el.accountItems = items();
+      }
+    });
+    avatar(el).click();
+    await settle();
+    const toggle = () => pop(el)?.querySelector<HTMLButtonElement>('[role="switch"]');
+    await expect.poll(() => !!toggle()).toBe(true);
+    expect(toggle()!.getAttribute("aria-checked")).toBe("false");
+    toggle()!.focus();
+    await userEvent.keyboard("{Enter}");
+    await settle();
+    expect(picked).toEqual([{ id: "dark", checked: true }]);
+    expect(pop(el)).not.toBeNull();
+    expect(toggle()!.getAttribute("aria-checked")).toBe("true");
+    expect(document.activeElement).toBe(toggle());
+    toggle()!.click();
+    await settle();
+    expect(picked.at(-1)).toEqual({ id: "dark", checked: false });
+    expect(pop(el)).not.toBeNull();
+    // A plain action still closes it, with no checked in its detail
+    [...pop(el)!.querySelectorAll<HTMLButtonElement>("button")].find((b) => b.textContent?.includes("Sign out"))!.click();
+    await settle();
+    expect(picked.at(-1)).toEqual({ id: "sign-out" });
+    expect(pop(el)).toBeNull();
+  });
+
+  test("React: onAccountSelect gets a switch item's new state", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const calls: [string, boolean | undefined][] = [];
+    function App() {
+      const [dark, setDark] = React.useState(false);
+      return React.createElement(HeaderNav, {
+        user: USER,
+        defaultOpen: "account",
+        accountItems: [{ id: "dark", label: "Dark mode", checked: dark }],
+        onAccountSelect: (id: string, checked?: boolean) => {
+          calls.push([id, checked]);
+          if (checked !== undefined) setDark(checked);
+        },
+      });
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const toggle = () => host.querySelector<HTMLButtonElement>('.ui-hn__pop [role="switch"]');
+    await expect.poll(() => !!toggle()).toBe(true);
+    await act(async () => toggle()!.click());
+    await settle();
+    expect(calls).toEqual([["dark", true]]);
+    expect(toggle()!.getAttribute("aria-checked")).toBe("true");
+    await act(async () => root.unmount());
+    host.remove();
+  });
+
   test("a photo, falling back to initials when it fails to load; an unsafe URL is never used", async () => {
     const PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
     const el = await fixture<TcHeaderNav>(html`<tc-header-nav .user=${{ ...USER, avatar: PIXEL }}></tc-header-nav>`);

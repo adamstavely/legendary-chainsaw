@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcProfileMenu, type ProfileMenuItem as ElementItem, type ProfileSetup } from "../profile-menu";
+import { TcProfileMenu, type ProfileMenuItem as ElementItem, type ProfileMenuItemSelect, type ProfileSetup } from "../profile-menu";
 import { h, isNode, useStaged } from "./internal";
 
-export type { ProfileSetup } from "../profile-menu";
+export type { ProfileMenuItemSelect, ProfileSetup } from "../profile-menu";
 
 /** An action; its icon may be a React node */
 export type ProfileMenuItem = Omit<ElementItem, "icon"> & { icon?: React.ReactNode };
@@ -13,7 +13,7 @@ const RawProfileMenu = createComponent({
   elementClass: TcProfileMenu,
   react: React,
   events: {
-    onTcItemSelect: "tc-item-select" as EventName<CustomEvent<{ id: string }>>,
+    onTcItemSelect: "tc-item-select" as EventName<CustomEvent<ProfileMenuItemSelect>>,
     onTcSetupContinue: "tc-setup-continue" as EventName<CustomEvent<{ next: string }>>,
   },
 });
@@ -71,3 +71,5 @@ export const AppsIcon = () =>
     p("M17.5 3v7M14 6.5h7"),
   );
 export const LogoutIcon = () => h(Svg, null, p("M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"));
+export const MoonIcon = () => h(Svg, null, p("M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"));
+export const SunIcon = () => h(Svg, null, h("circle", { cx: "12", cy: "12", r: "4" }), p("M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"));

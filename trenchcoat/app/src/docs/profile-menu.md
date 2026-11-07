@@ -11,6 +11,11 @@ Logout, or your own – and, if you want, how far they've got with setting up th
 next step. It puts the few things people look for in an account menu in one predictable place, and nudges them to
 finish setup without a separate checklist. The card is the content; open it from your own avatar button or popover.
 
+An action with `checked` is an on/off switch – “Dark mode”, say – with a small switch at the end of its row. Picking
+it fires `tc-item-select` with `checked` as it should become; the card doesn't flip it itself, so set the item's
+`checked` to that, as you set every other property. `profileMenuIcon("moon")` and `"sun"` (or `MoonIcon` and
+`SunIcon` in React) show which way it's set.
+
 ## When to use
 
 - The account menu behind the avatar in an app's header or sidebar.
@@ -28,8 +33,9 @@ finish setup without a separate checklist. The card is the content; open it from
 1. **User** `.ui-pm__user` – the avatar, name and email of the signed-in person
 2. **Actions** `.ui-pm__items` – the account actions, one button each
 3. **Badge** `.ui-pm__badge` – a small pill on an action, such as “New”
-4. **Setup** `.ui-pm__setup` – profile setup progress, with `setup`
-5. **Next step** `.ui-pm__next` – a shortcut to the next open setup step
+4. **Switch** `.ui-pm__switch` – the on/off switch at the end of an action with `checked`
+5. **Setup** `.ui-pm__setup` – profile setup progress, with `setup`
+6. **Next step** `.ui-pm__next` – a shortcut to the next open setup step
 
 ## Looks
 
@@ -44,11 +50,13 @@ the setup progress as its last row under a hairline.
 | Tab | Moves through the actions, then to the setup's next step |
 | ↓ / ↑ | Moves to the next or previous action, wrapping around |
 | Home / End | Moves to the first or last action |
-| Enter / Space | Picks the focused action or the next step |
+| Enter / Space | Picks the focused action or the next step; on a switch, turns it on or off |
 
 ## Screen readers
 
-The actions are plain buttons in a group named “Account” – it's always visible, so it isn't an ARIA menu. The setup
+The actions are plain buttons in a group named “Account” – it's always visible, so it isn't an ARIA menu. An action
+with `checked` is a button with `role="switch"` and `aria-checked`, so it reads “Dark mode, switch, off”; its drawn
+switch is hidden. The setup
 bar is a `progressbar` named “Profile setup” with its value as text (“2 of 5 steps done”), and the next step button
 reads “Next: Verify your email”. The default avatar is hidden; give your own avatar a text alternative only if it
 adds something the name doesn't.
@@ -59,6 +67,7 @@ adds something the name doesn't.
 - Write action labels as one or two words: “Settings”, “Language”, “Log out”.
 - Keep setup steps as short tasks starting with a verb: “Verify your email”, “Invite a teammate”.
 - Use a badge for something new or needing attention, not as decoration on every row.
+- Name a switch for what's on when it's on: “Dark mode”, not “Toggle theme”.
 
 ## Do
 

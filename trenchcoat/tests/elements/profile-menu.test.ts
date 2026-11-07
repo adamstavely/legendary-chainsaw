@@ -5,8 +5,9 @@ import { html } from "lit";
 import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/profile-menu";
-import { profileMenuIcon, type ProfileMenuItem, type TcProfileMenu } from "../../src/elements/profile-menu";
-import { cleanup, fixture, settle } from "./helpers";
+import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type TcProfileMenu } from "../../src/elements/profile-menu";
+import { userEvent } from "vitest/browser";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -132,11 +133,83 @@ describe("tc-profile-menu", () => {
     expect(el.querySelector(".ui-pm__setup")).toBeNull();
   });
 
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: an item with checked is a switch – role and state, a switch at the end, and the new state on pick`, async () => {
+      let dark = false;
+      const switchItems = () => [
+        { id: "dark", label: "Dark mode", icon: profileMenuIcon(dark ? "moon" : "sun"), checked: dark },
+        { id: "logout", label: "Log out" },
+      ];
+      const el = await fixture<TcProfileMenu>(html`<tc-profile-menu look=${look} name="Ada" email="ada@example.com" .items=${switchItems()}></tc-profile-menu>`);
+      const picked: ProfileMenuItemSelect[] = [];
+      el.addEventListener("tc-item-select", (e) => {
+        picked.push((e as CustomEvent<ProfileMenuItemSelect>).detail);
+        // Controlled: the page sets the new state
+        dark = (e as CustomEvent<ProfileMenuItemSelect>).detail.checked ?? dark;
+        el.items = switchItems();
+      });
+      const toggle = el.querySelector<HTMLButtonElement>('[role="switch"]')!;
+      expect(toggle.textContent!.trim()).toBe("Dark mode");
+      expect(toggle.getAttribute("aria-checked")).toBe("false");
+      expect(toggle.querySelector(".ui-pm__switch")!.getAttribute("aria-hidden")).toBe("true");
+      // The switch sits at the row's end
+      expect(toggle.querySelector(".ui-pm__switch")!.getBoundingClientRect().right).toBeGreaterThan(toggle.querySelector(".ui-pm__label")!.getBoundingClientRect().right);
+      // Only the switch item has the role; plain actions keep none
+      expect(el.querySelectorAll('[role="switch"]')).toHaveLength(1);
+      expect([...el.querySelectorAll("button")].at(-1)!.hasAttribute("aria-checked")).toBe(false);
+      const offTrack = getComputedStyle(toggle.querySelector(".ui-pm__switch")!).backgroundColor;
+
+      toggle.click();
+      await settle();
+      expect(picked).toEqual([{ id: "dark", checked: true }]);
+      expect(toggle.getAttribute("aria-checked")).toBe("true");
+      await finish(el);
+      expect(getComputedStyle(toggle.querySelector(".ui-pm__switch")!).backgroundColor).not.toBe(offTrack);
+
+      // Enter and Space toggle it too, from the keyboard; the same button keeps focus
+      toggle.focus();
+      await userEvent.keyboard("{Enter}");
+      await settle();
+      expect(picked.at(-1)).toEqual({ id: "dark", checked: false });
+      expect(el.querySelector('[role="switch"]')!.getAttribute("aria-checked")).toBe("false");
+      await userEvent.keyboard(" ");
+      await settle();
+      expect(picked.at(-1)).toEqual({ id: "dark", checked: true });
+      expect(document.activeElement).toBe(el.querySelector('[role="switch"]'));
+
+      // A plain action's detail has no checked
+      [...el.querySelectorAll<HTMLButtonElement>("button")].at(-1)!.click();
+      expect(picked.at(-1)).toEqual({ id: "logout" });
+    });
+  }
+
+  test("the element doesn't flip checked itself: the page sets it", async () => {
+    const el = await fixture<TcProfileMenu>(html`<tc-profile-menu name="Ada" email="ada@example.com" .items=${[{ id: "dark", label: "Dark mode", checked: true }]}></tc-profile-menu>`);
+    const detail: ProfileMenuItemSelect[] = [];
+    el.addEventListener("tc-item-select", (e) => detail.push((e as CustomEvent<ProfileMenuItemSelect>).detail));
+    el.querySelector<HTMLButtonElement>('[role="switch"]')!.click();
+    await settle();
+    expect(detail).toEqual([{ id: "dark", checked: false }]);
+    expect(el.querySelector('[role="switch"]')!.getAttribute("aria-checked")).toBe("true");
+    expect(el.items![0].checked).toBe(true);
+  });
+
+  test("moon and sun are built-in icons", () => {
+    for (const name of ["moon", "sun"] as const) {
+      const icon = profileMenuIcon(name);
+      expect(icon.tagName.toLowerCase()).toBe("svg");
+      expect(icon.querySelector("path")).toBeTruthy();
+    }
+  });
+
   test("axe: no violations in either look", async () => {
     const wrap = await fixture(html`<div>
       <tc-profile-menu name="Ada" email="ada@example.com" .setup=${{ done: 3, total: 5, next: "Invite a teammate" }}></tc-profile-menu>
       <tc-profile-menu look="clean" name="Ada" email="ada@example.com" .setup=${{ done: 3, total: 5, next: "Invite a teammate" }}></tc-profile-menu>
+      <tc-profile-menu name="Ada" email="ada@example.com" .items=${[{ id: "dark", label: "Dark mode", icon: profileMenuIcon("moon"), checked: true }, { id: "x", label: "Log out" }]}></tc-profile-menu>
+      <tc-profile-menu look="clean" name="Ada" email="ada@example.com" .items=${[{ id: "dark", label: "Dark mode", icon: profileMenuIcon("sun"), checked: false }]}></tc-profile-menu>
     </div>`);
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

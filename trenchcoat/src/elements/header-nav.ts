@@ -5,7 +5,7 @@ import { TcElement } from "./internal/base";
 import { PopoverController } from "./internal/popover";
 import { safeMediaUrl } from "./internal/safe-media";
 import "./profile-menu";
-import { profileMenuIcon, type ProfileMenuItem, type ProfileSetup, type TcProfileMenu } from "./profile-menu";
+import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type ProfileSetup, type TcProfileMenu } from "./profile-menu";
 
 /*
  * <tc-header-nav> – the right end of an app header (the Lit port of blocks/header-nav): the notifications bell, the
@@ -50,7 +50,11 @@ export type HeaderNavUser = {
 export type HeaderNavPanel = "notifications" | "apps" | "account";
 
 export type HeaderNavPanelChange = { panel: HeaderNavPanel | null };
-export type HeaderNavAccountSelect = { id: string };
+export type HeaderNavAccountSelect = {
+  id: string;
+  /** For a switch item: its state after this pick; set the item's `checked` to it */
+  checked?: boolean;
+};
 export type HeaderNavSetupContinue = { next: string };
 
 const PRESENCE: Record<HeaderNavPresence, string> = { online: "Online", away: "Away", busy: "Busy", offline: "Offline" };
@@ -85,7 +89,7 @@ let instances = 0;
  * @tag tc-header-nav
  * @slot - The page's <tc-notifications> and <tc-app-picker>, in that order
  * @fires tc-panel-change - A popover is opening or closing ({ panel }: HeaderNavPanelChange, null when none); cancelable – prevented, `panel` stays as it is (controlled use)
- * @fires tc-account-select - An account action was picked ({ id }: HeaderNavAccountSelect); cancelable – prevented, the card stays open
+ * @fires tc-account-select - An account action was picked ({ id, checked? }: HeaderNavAccountSelect); cancelable – prevented, the card stays open. A switch item (`checked` set) keeps the card open either way, with `checked` its new state
  * @fires tc-setup-continue - The setup's next step was picked in the account card ({ next }: HeaderNavSetupContinue); cancelable – prevented, the card stays open
  */
 export class TcHeaderNav extends TcElement {
@@ -213,7 +217,9 @@ export class TcHeaderNav extends TcElement {
   private onItem = (e: Event) => {
     if (!(e.target as Element).closest?.(".ui-hn__pop")) return;
     e.stopPropagation();
-    if (this.emit<HeaderNavAccountSelect>("tc-account-select", { id: (e as CustomEvent<{ id: string }>).detail.id }, { cancelable: true })) this.closeAccount();
+    const { id, checked } = (e as CustomEvent<ProfileMenuItemSelect>).detail;
+    // A switch item flips in place: the card stays open to show it
+    if (this.emit<HeaderNavAccountSelect>("tc-account-select", checked === undefined ? { id } : { id, checked }, { cancelable: true }) && checked === undefined) this.closeAccount();
   };
   private onSetup = (e: Event) => {
     if (!(e.target as Element).closest?.(".ui-hn__pop")) return;

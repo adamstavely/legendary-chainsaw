@@ -24,14 +24,17 @@ const Avatar = () => (
 );
 
 export default function Demo({ ui }: { ui: typeof UI }) {
-  const { ProfileMenu, SettingsIcon, LanguageIcon, DocsIcon, AppsIcon, LogoutIcon } = ui;
+  const { ProfileMenu, SettingsIcon, LanguageIcon, DocsIcon, AppsIcon, LogoutIcon, MoonIcon, SunIcon } = ui;
   const [done, setDone] = useState(2);
+  // The demo only records the choice; a real app would switch its theme here
+  const [dark, setDark] = useState(false);
   const [last, setLast] = useState("Pick an action, or continue the setup");
 
   const pick = (label: string) => () => setLast(`Selected “${label}”`);
   const items: UI.ProfileMenuItem[] = [
     { id: "settings", label: "Settings", icon: <SettingsIcon />, onSelect: pick("Settings") },
     { id: "language", label: "Language", icon: <LanguageIcon />, onSelect: pick("Language") },
+    { id: "dark", label: "Dark mode", icon: dark ? <MoonIcon /> : <SunIcon />, checked: dark },
     { id: "docs", label: "Docs", icon: <DocsIcon />, onSelect: pick("Docs") },
     { id: "apps", label: "Apps", icon: <AppsIcon />, badge: "New", onSelect: pick("Apps") },
     { id: "logout", label: "Log out", icon: <LogoutIcon />, onSelect: pick("Log out") },
@@ -45,6 +48,11 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           email="maya@northwind.studio"
           avatar={<Avatar />}
           items={items}
+          onTcItemSelect={(e) => {
+            if (e.detail.checked === undefined) return;
+            setDark(e.detail.checked);
+            setLast(`Dark mode ${e.detail.checked ? "on" : "off"}`);
+          }}
           setup={{
             done,
             total: STEPS.length,

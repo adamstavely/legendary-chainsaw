@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0 – Switches in the account card
+
+- **Profile Menu:** an item with `checked` is an on/off switch – a button with `role="switch"` and `aria-checked`,
+  with a small switch (the switch tokens, as on `tc-switch`) at the end of its row. Picking it by click, Enter or
+  Space fires `tc-item-select` with `{ id, checked }`, `checked` being its new state; the page sets the item's
+  `checked` (controlled). The detail type is exported as `ProfileMenuItemSelect`.
+- **Profile Menu:** `"moon"` and `"sun"` built-in icons (Lucide), and `MoonIcon` and `SunIcon` in React.
+- **Header Nav:** a switch item in the account card fires `tc-account-select` with `checked` and keeps the card open;
+  other actions still close it. React's `onAccountSelect` gets `checked` as a second argument.
+
 ## 0.6.0 – Priority list: columns of the page's own, rows without a tier
 
 - **Priority List:** `figures` – more columns after Work, each `{ id, label, unit? }`, filled from each row's

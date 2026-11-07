@@ -112,6 +112,10 @@
         "badge": {
           "type": "string",
           "description": "Small pill on the right, e.g. \"New\""
+        },
+        "checked": {
+          "type": "boolean",
+          "description": "Makes the item an on/off switch, showing this state; the page sets it from the event's `checked`"
         }
       },
       "required": [
