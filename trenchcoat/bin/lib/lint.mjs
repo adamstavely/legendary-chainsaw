@@ -269,7 +269,8 @@ function lintOne(source, data, facts) {
         report("property-as-attribute", attr.offset, `HTML reads this as "${attr.name.toLowerCase()}", so it never reaches ${prop.name}. Write ${prop.attribute}.`);
         continue;
       }
-      if (/^boolean\b/.test(prop.type ?? "") && attr.value === "false") {
+      // A boolean that defaults to true can only be turned off from an attribute through a converter that reads "false"
+      if (/^boolean\b/.test(prop.type ?? "") && attr.value === "false" && prop.default !== "true") {
         report("boolean-attribute", attr.offset, `${prop.attribute}="false" on <${tag}> turns it on: any value does. Leave the attribute off.`);
         continue;
       }
