@@ -341,7 +341,7 @@
   {
    "tag": "tc-output-schema-builder",
    "className": "TcOutputSchemaBuilder",
-   "module": "trenchcoat/output-schema-builder",
+   "module": "@adamstavely/trenchcoat/output-schema-builder",
    "data": [
     "value"
    ],

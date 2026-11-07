@@ -158,7 +158,7 @@
   {
    "tag": "tc-glass-folder",
    "className": "TcGlassFolder",
-   "module": "trenchcoat/glass-folder",
+   "module": "@adamstavely/trenchcoat/glass-folder",
    "data": [],
    "attributes": [
     {

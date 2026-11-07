@@ -86,8 +86,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 <tc-area-chart heading="Storage by tier" unit=" TB"></tc-area-chart>
 
 <script type="module">
-  import "trenchcoat/area-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/area-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-area-chart");
   chart.x = "month";
   chart.y = ["hot", "warm", "archive"];
@@ -99,8 +99,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 ```
 
 ```tsx
-import { AreaChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AreaChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const rows = [
   { month: "2026-01", hot: 120, warm: 340, archive: 610 },

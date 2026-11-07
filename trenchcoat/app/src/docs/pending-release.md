@@ -60,14 +60,14 @@ Give the date if you have one: "Goes out with Thursday's release". Say whether i
 <tc-pending-release></tc-pending-release>
 
 <script type="module">
-  import "trenchcoat/pending-release";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/pending-release";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { PendingRelease } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PendingRelease } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <PendingRelease />;

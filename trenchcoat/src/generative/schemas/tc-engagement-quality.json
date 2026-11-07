@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-engagement-quality.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-engagement-quality.json",
   "title": "tc-engagement-quality",
   "description": "Whether reviews are genuine: an index with its band and trend, the signals it is built from – each with its value,\nwhat was observed, an explanation and an example – and an optional note on who else sees it.",
   "type": "object",

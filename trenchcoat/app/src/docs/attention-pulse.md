@@ -53,13 +53,13 @@ Set `--tc-attention-pulse-radius` to match what it wraps.
 <tc-attention-pulse pulse-key="1"><p>1 person isn't authorized.</p></tc-attention-pulse>
 
 <script type="module">
-  import "trenchcoat/attention-pulse";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/attention-pulse";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { AttentionPulse } from "trenchcoat/react";
+import { AttentionPulse } from "@adamstavely/trenchcoat/react";
 
 export function Notice({ id, text }: { id: string; text: string }) {
   return <AttentionPulse pulseKey={id}><p>{text}</p></AttentionPulse>;

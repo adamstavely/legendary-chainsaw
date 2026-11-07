@@ -86,8 +86,8 @@ whiskers and outliers `--tc-plot-line-rest`. The median's ink is a component tok
 <tc-box-plot heading="Assay turnaround" description="This quarter, days by lab" unit=" d"></tc-box-plot>
 
 <script type="module">
-  import "trenchcoat/box-plot";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/box-plot";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-box-plot").data = [
     { group: "Genomics", value: 4.1 },
     { group: "Genomics", value: 3.6 },
@@ -98,8 +98,8 @@ whiskers and outliers `--tc-plot-line-rest`. The median's ink is a component tok
 ```
 
 ```tsx
-import { BoxPlot } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BoxPlot } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { group: "Genomics", value: 4.1 },

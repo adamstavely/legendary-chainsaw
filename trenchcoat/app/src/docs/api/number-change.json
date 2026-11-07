@@ -101,7 +101,7 @@
   {
    "tag": "tc-number-change",
    "className": "TcNumberChange",
-   "module": "trenchcoat/number-change",
+   "module": "@adamstavely/trenchcoat/number-change",
    "data": [
     "format",
     "labels"

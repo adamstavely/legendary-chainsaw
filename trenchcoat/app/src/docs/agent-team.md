@@ -56,8 +56,8 @@ typing and the agents themselves are hidden, so the name is read once and the an
 <tc-agent-team id="team"></tc-agent-team>
 
 <script type="module">
-  import "trenchcoat/agent-team";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-team";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const team = document.querySelector("#team");
   team.prompt = "Build a team to work my inbound pipeline";
@@ -70,8 +70,8 @@ typing and the agents themselves are hidden, so the name is read once and the an
 ```
 
 ```tsx
-import { AgentTeam } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentTeam } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function TeamHero() {
   return (

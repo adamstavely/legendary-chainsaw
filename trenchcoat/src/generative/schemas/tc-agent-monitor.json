@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-monitor.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-monitor.json",
   "title": "tc-agent-monitor",
   "description": "One agent at work: its current step, a clock, the cost so far, a strip of its steps and the finished ones.",
   "type": "object",

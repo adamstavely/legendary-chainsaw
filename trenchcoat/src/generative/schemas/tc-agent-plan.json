@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-plan.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-plan.json",
   "title": "tc-agent-plan",
   "description": "A step-by-step plan from an agent: reviewed and edited as a draft, then shown while it runs.",
   "type": "object",

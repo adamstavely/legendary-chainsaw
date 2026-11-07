@@ -164,7 +164,7 @@
   {
    "tag": "tc-redaction-review",
    "className": "TcRedactionReview",
-   "module": "trenchcoat/redaction-review",
+   "module": "@adamstavely/trenchcoat/redaction-review",
    "data": [
     "blocks",
     "redactions",

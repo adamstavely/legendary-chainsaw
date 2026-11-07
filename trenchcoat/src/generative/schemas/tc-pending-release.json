@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-pending-release.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-pending-release.json",
   "title": "tc-pending-release",
   "description": "A document with an arrow ready to go up on it, for content approved and waiting for its release.",
   "type": "object",

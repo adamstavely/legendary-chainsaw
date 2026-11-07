@@ -256,7 +256,7 @@
   {
    "tag": "tc-selection-toolbar",
    "className": "TcSelectionToolbar",
-   "module": "trenchcoat/selection-toolbar",
+   "module": "@adamstavely/trenchcoat/selection-toolbar",
    "data": [
     "items",
     "pressed",

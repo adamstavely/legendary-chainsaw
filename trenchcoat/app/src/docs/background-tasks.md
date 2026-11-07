@@ -92,8 +92,8 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 <tc-background-tasks id="jobs"></tc-background-tasks>
 
 <script type="module">
-  import "trenchcoat/background-tasks";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/background-tasks";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const jobs = document.querySelector("#jobs");
   jobs.tasks = [
@@ -109,8 +109,8 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 
 ```tsx
 import { useState } from "react";
-import { BackgroundTasks, type BackgroundTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BackgroundTasks, type BackgroundTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Header() {
   const [tasks, setTasks] = useState<BackgroundTask[]>([

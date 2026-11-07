@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-ledger.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-ledger.json",
   "title": "tc-agent-ledger",
   "description": "Everything an agent changed, newest first, each change with an Undo that takes what builds on it along.",
   "type": "object",

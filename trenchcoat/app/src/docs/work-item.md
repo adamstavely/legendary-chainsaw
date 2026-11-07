@@ -90,8 +90,8 @@ is always in words.
 <tc-work-item id="work" heading="NeuroBench-E harness" status="active" href="/work/neurobench" effort="1.5 FTE"></tc-work-item>
 
 <script type="module">
-  import "trenchcoat/work-item";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/work-item";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const work = document.querySelector("#work");
   work.progress = 0.6;
@@ -104,8 +104,8 @@ is always in words.
 ```
 
 ```tsx
-import { WorkItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { WorkItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Harness() {
   return (

@@ -86,8 +86,8 @@ timed out after 1.5s (ETIMEDOUT)”. Inside a group the cards stay quiet and the
 <tc-tool-call-card id="search" name="search_web" status="running"></tc-tool-call-card>
 
 <script type="module">
-  import "trenchcoat/tool-call-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tool-call-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#search");
   card.summary = "Searched the web for “CRM pricing 2026”";
@@ -103,8 +103,8 @@ timed out after 1.5s (ETIMEDOUT)”. Inside a group the cards stay quiet and the
 ```
 
 ```tsx
-import { ToolCallCard, ToolCallGroup } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ToolCallCard, ToolCallGroup } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Calls({ retry }: { retry: () => Promise<void> }) {
   return (

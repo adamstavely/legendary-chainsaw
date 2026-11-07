@@ -282,7 +282,7 @@
   {
    "tag": "tc-process-list",
    "className": "TcProcessList",
-   "module": "trenchcoat/process-list",
+   "module": "@adamstavely/trenchcoat/process-list",
    "data": [
     "processes",
     "actions",

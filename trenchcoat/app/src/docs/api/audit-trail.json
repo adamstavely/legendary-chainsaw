@@ -183,7 +183,7 @@
   {
    "tag": "tc-audit-trail",
    "className": "TcAuditTrail",
-   "module": "trenchcoat/audit-trail",
+   "module": "@adamstavely/trenchcoat/audit-trail",
    "data": [
     "events",
     "labels"

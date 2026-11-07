@@ -226,7 +226,7 @@
   {
    "tag": "tc-thinking-loader",
    "className": "TcThinkingLoader",
-   "module": "trenchcoat/thinking-loader",
+   "module": "@adamstavely/trenchcoat/thinking-loader",
    "data": [
     "phases",
     "doneLabel"

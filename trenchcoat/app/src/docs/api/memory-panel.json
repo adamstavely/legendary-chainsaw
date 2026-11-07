@@ -326,7 +326,7 @@
   {
    "tag": "tc-memory-panel",
    "className": "TcMemoryPanel",
-   "module": "trenchcoat/memory-panel",
+   "module": "@adamstavely/trenchcoat/memory-panel",
    "data": [
     "memories",
     "categories",

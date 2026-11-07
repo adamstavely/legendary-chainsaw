@@ -224,7 +224,7 @@
   {
    "tag": "tc-budget-burn",
    "className": "TcBudgetBurn",
-   "module": "trenchcoat/budget-burn",
+   "module": "@adamstavely/trenchcoat/budget-burn",
    "data": [
     "items"
    ],

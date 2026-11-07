@@ -81,8 +81,8 @@ are a description list.
 <tc-budget-burn id="burn" period="0.45"></tc-budget-burn>
 
 <script type="module">
-  import "trenchcoat/budget-burn";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/budget-burn";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const burn = document.querySelector("#burn");
   burn.items = [
@@ -94,8 +94,8 @@ are a description list.
 ```
 
 ```tsx
-import { BudgetBurn, type BurnItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BudgetBurn, type BurnItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: BurnItem[] = [
   { id: "nc", priority: "1", label: "Neuromorphic Computing", owner: "Marcus Okonkwo", budget: 3800000, spent: 1900000, people: 2, team: ["Marcus Okonkwo", "Jonah Tran"] },

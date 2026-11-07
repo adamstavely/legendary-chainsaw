@@ -370,7 +370,7 @@
   {
    "tag": "tc-version-history",
    "className": "TcVersionHistory",
-   "module": "trenchcoat/version-history",
+   "module": "@adamstavely/trenchcoat/version-history",
    "data": [
     "versions",
     "resolveCompare",

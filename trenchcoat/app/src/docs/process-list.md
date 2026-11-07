@@ -84,8 +84,8 @@ icons show. Stop, Start, Restart and Stop all are announced through a polite sta
 <tc-process-list id="procs" description="~/institute/sample-tracker"></tc-process-list>
 
 <script type="module">
-  import "trenchcoat/process-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/process-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#procs");
   el.processes = [
@@ -98,8 +98,8 @@ icons show. Stop, Start, Restart and Stop all are announced through a polite sta
 ```
 
 ```tsx
-import { ProcessList, type ProcessItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProcessList, type ProcessItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const processes: ProcessItem[] = [
   { id: "web", name: "web", command: "vite --port 5173", status: "running", port: 5173 },

@@ -59,14 +59,14 @@ Say why if you can, beside it: "Flagged as graphic violence". Keep the wording f
 <tc-content-hidden></tc-content-hidden>
 
 <script type="module">
-  import "trenchcoat/content-hidden";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/content-hidden";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { ContentHidden } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ContentHidden } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <ContentHidden />;

@@ -52,13 +52,13 @@ export function usageFor(entry) {
   if (entry.tag) {
     const component = entry.className?.replace(/^Tc/, "");
     const tag = `<${entry.tag}></${entry.tag}>`;
-    const plain = `import "trenchcoat/${entry.slug}";\nimport "trenchcoat/tokens.css";`;
+    const plain = `import "@adamstavely/trenchcoat/${entry.slug}";\nimport "@adamstavely/trenchcoat/tokens.css";`;
     usage.html = `${tag}\n\n<script type="module">\n  ${plain.replace("\n", "\n  ")}\n</script>`;
     usage.vue = `<script setup>\n${plain}\n</script>\n\n<template>${tag}</template>`;
     usage.svelte = `<script>\n  ${plain.replace("\n", "\n  ")}\n</script>\n\n${tag}`;
     if (component) {
-      usage.react = `import { ${component} } from "trenchcoat/react";\nimport "trenchcoat/tokens.css";\n\n<${component} />`;
-      usage.angular = `import { ${component} } from "trenchcoat/angular";\n// add ${component} to the component's imports, then:\n// ${tag}`;
+      usage.react = `import { ${component} } from "@adamstavely/trenchcoat/react";\nimport "@adamstavely/trenchcoat/tokens.css";\n\n<${component} />`;
+      usage.angular = `import { ${component} } from "@adamstavely/trenchcoat/angular";\n// add ${component} to the component's imports, then:\n// ${tag}`;
     }
   }
   return usage;

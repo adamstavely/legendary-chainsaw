@@ -68,7 +68,7 @@ and `aria-selected` on the one shown.
 <tc-region-dach id="map" region="dach"></tc-region-dach>
 
 <script type="module">
-  import "trenchcoat/region-dach";
+  import "@adamstavely/trenchcoat/region-dach";
 
   const map = document.querySelector("#map");
   map.label = (region) =>
@@ -81,7 +81,7 @@ and `aria-selected` on the one shown.
 
 ```tsx
 import { useState } from "react";
-import { RegionDach, type Region } from "trenchcoat/react";
+import { RegionDach, type Region } from "@adamstavely/trenchcoat/react";
 
 export function MarketMap() {
   const [region, setRegion] = useState<Region>("dach");

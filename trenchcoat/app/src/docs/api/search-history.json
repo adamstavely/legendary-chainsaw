@@ -271,7 +271,7 @@
   {
    "tag": "tc-search-history",
    "className": "TcSearchHistory",
-   "module": "trenchcoat/search-history",
+   "module": "@adamstavely/trenchcoat/search-history",
    "data": [
     "searches"
    ],

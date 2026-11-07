@@ -197,7 +197,7 @@
   {
    "tag": "tc-web-vitals",
    "className": "TcWebVitals",
-   "module": "trenchcoat/web-vitals",
+   "module": "@adamstavely/trenchcoat/web-vitals",
    "data": [
     "metrics",
     "labels"

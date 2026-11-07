@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-audience-mix.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-audience-mix.json",
   "title": "tc-audience-mix",
   "description": "Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share,\nand a readout of the row under the pointer or focus.",
   "type": "object",

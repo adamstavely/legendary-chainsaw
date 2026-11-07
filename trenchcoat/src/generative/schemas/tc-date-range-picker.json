@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-date-range-picker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-date-range-picker.json",
   "title": "tc-date-range-picker",
   "description": "Pick a date range from presets or two calendars, optionally compared with the period before or a year back.",
   "type": "object",

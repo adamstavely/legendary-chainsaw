@@ -84,8 +84,8 @@ can set `--tc-bpo-w` (the panel's width) and `--tc-bpo-ruler-h`.
 ```html
 <tc-breakpoint-overlay corner="bottom-right"></tc-breakpoint-overlay>
 <script type="module">
-  import "trenchcoat/breakpoint-overlay";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/breakpoint-overlay";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-breakpoint-overlay").breakpoints = [
     { id: "mobile", label: "Mobile", max: 767 },
     { id: "tablet", label: "Tablet", min: 768, max: 1023 },
@@ -95,8 +95,8 @@ can set `--tc-bpo-w` (the panel's width) and `--tc-bpo-ruler-h`.
 ```
 
 ```tsx
-import { BreakpointOverlay } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BreakpointOverlay } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function DevTools() {
   if (process.env.NODE_ENV === "production") return null;

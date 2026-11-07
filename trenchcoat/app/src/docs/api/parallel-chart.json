@@ -180,7 +180,7 @@
   {
    "tag": "tc-parallel-chart",
    "className": "TcParallelChart",
-   "module": "trenchcoat/parallel-chart",
+   "module": "@adamstavely/trenchcoat/parallel-chart",
    "data": [
     "dimensions",
     "dimensionLabels",

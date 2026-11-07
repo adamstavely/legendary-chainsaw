@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-offline.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-offline.json",
   "title": "tc-offline",
   "description": "A cloud and a device with the dashed link between them broken, for a page that can't reach the server right now.",
   "type": "object",

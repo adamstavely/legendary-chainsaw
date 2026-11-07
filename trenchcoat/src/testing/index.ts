@@ -1,5 +1,5 @@
 /*
- * trenchcoat/testing – for testing apps built with Trenchcoat, in a real browser or jsdom, with any test runner. The drivers
+ * @adamstavely/trenchcoat/testing – for testing apps built with Trenchcoat, in a real browser or jsdom, with any test runner. The drivers
  * act the way a person does: they click what's on the page and throw a clear error if it isn't there. Import the elements
  * you test yourself: nothing here loads one.
  */

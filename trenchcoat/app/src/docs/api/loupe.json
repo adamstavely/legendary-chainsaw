@@ -368,7 +368,7 @@
   {
    "tag": "tc-loupe",
    "className": "TcLoupe",
-   "module": "trenchcoat/loupe",
+   "module": "@adamstavely/trenchcoat/loupe",
    "data": [
     "hotkey",
     "root",

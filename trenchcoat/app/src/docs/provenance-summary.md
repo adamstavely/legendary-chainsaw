@@ -87,8 +87,8 @@ a list named “In total”.
 <tc-provenance-summary id="made-of" scope="EV charging market brief · 3,100 words"></tc-provenance-summary>
 
 <script type="module">
-  import "trenchcoat/provenance-summary";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/provenance-summary";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const summary = document.querySelector("#made-of");
   summary.sections = [
@@ -100,8 +100,8 @@ a list named “In total”.
 ```
 
 ```tsx
-import { ProvenanceSummary, type ProvenanceSection } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProvenanceSummary, type ProvenanceSection } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sections: ProvenanceSection[] = [
   { id: "summary", title: "Executive summary", sourced: 40, synthesis: 240, original: 260 },

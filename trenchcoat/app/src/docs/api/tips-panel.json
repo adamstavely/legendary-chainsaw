@@ -218,7 +218,7 @@
   {
    "tag": "tc-tips-panel",
    "className": "TcTipsPanel",
-   "module": "trenchcoat/tips-panel",
+   "module": "@adamstavely/trenchcoat/tips-panel",
    "data": [
     "tips",
     "done"

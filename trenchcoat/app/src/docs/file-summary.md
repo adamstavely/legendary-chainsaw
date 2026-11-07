@@ -96,8 +96,8 @@ headed “Key points”, “People & organisations” and “Dates & amounts”.
 <tc-file-summary id="sum" status="idle" model="Claude Sonnet" href="/files/q3-report.pdf"></tc-file-summary>
 
 <script type="module">
-  import "trenchcoat/file-summary";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/file-summary";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const sum = document.querySelector("#sum");
   sum.file = { name: "Q3 report.pdf", kind: "pdf", size: 2516582, pages: 48 };
@@ -115,8 +115,8 @@ headed “Key points”, “People & organisations” and “Dates & amounts”.
 
 ```tsx
 import { useState } from "react";
-import { FileSummary, type FileSummaryStatus } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FileSummary, type FileSummaryStatus } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ReportSummary() {
   const [status, setStatus] = useState<FileSummaryStatus>("idle");

@@ -300,7 +300,7 @@
   {
    "tag": "tc-context-tray",
    "className": "TcContextTray",
-   "module": "trenchcoat/context-tray",
+   "module": "@adamstavely/trenchcoat/context-tray",
    "data": [
     "items"
    ],

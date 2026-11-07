@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-instruction-editor.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-instruction-editor.json",
   "title": "tc-instruction-editor",
   "description": "System and developer instructions with highlighted variables, missing and unused variable warnings, an\napp-supplied token count, a diff against a chosen version and Save as a new version.",
   "type": "object",

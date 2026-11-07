@@ -253,7 +253,7 @@
   {
    "tag": "tc-trigger-builder",
    "className": "TcTriggerBuilder",
-   "module": "trenchcoat/trigger-builder",
+   "module": "@adamstavely/trenchcoat/trigger-builder",
    "data": [
     "value",
     "events",

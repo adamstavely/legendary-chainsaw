@@ -224,7 +224,7 @@
   {
    "tag": "tc-breakpoint-overlay",
    "className": "TcBreakpointOverlay",
-   "module": "trenchcoat/breakpoint-overlay",
+   "module": "@adamstavely/trenchcoat/breakpoint-overlay",
    "data": [
     "breakpoints",
     "hotkey",

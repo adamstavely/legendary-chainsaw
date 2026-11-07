@@ -27,7 +27,7 @@ Set it once for a whole app with a provider at the root, and override single com
 </tc-look-provider>
 ```
 
-In React: `<LookProvider look="clean">…</LookProvider>` from `trenchcoat/react`.
+In React: `<LookProvider look="clean">…</LookProvider>` from `@adamstavely/trenchcoat/react`.
 
 Illustrations and motion pieces have one look; they don't change the look of what you put inside them.
 

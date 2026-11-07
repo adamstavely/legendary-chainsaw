@@ -237,7 +237,7 @@
   {
    "tag": "tc-coverage-matrix",
    "className": "TcCoverageMatrix",
-   "module": "trenchcoat/coverage-matrix",
+   "module": "@adamstavely/trenchcoat/coverage-matrix",
    "data": [
     "checks",
     "parts",

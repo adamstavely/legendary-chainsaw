@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-plan-vs-actual.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-plan-vs-actual.json",
   "title": "tc-plan-vs-actual",
   "description": "An agent's plan against what really happens, as a live Gantt chart. Clean look only.",
   "type": "object",

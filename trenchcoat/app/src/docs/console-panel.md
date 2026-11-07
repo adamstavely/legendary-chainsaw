@@ -89,8 +89,8 @@ read properties of undefined", and a repeat badge as "4 times". The level chips 
 <tc-console-panel id="console"></tc-console-panel>
 
 <script type="module">
-  import "trenchcoat/console-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/console-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#console");
   panel.entries = [
@@ -102,8 +102,8 @@ read properties of undefined", and a repeat badge as "4 times". The level chips 
 ```
 
 ```tsx
-import { ConsolePanel, type ConsoleEntry } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ConsolePanel, type ConsoleEntry } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PageConsole({ entries, clear }: { entries: ConsoleEntry[]; clear: () => void }) {
   return <ConsolePanel entries={entries} defaultLevels={["error", "warn"]} onTcClear={(e) => { e.preventDefault(); clear(); }} />;

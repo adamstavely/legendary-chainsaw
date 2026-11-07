@@ -107,8 +107,8 @@ rating (“Clause summariser 412 answers, rated 0.91”).
 <tc-reliance-gauge id="trust" scope="Last 30 days · 412 outputs" reliance="0.9" accuracy="0.74" review-level="routine" browsable></tc-reliance-gauge>
 
 <script type="module">
-  import "trenchcoat/reliance-gauge";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/reliance-gauge";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gauge = document.querySelector("#trust");
   gauge.trend = [
@@ -136,8 +136,8 @@ rating (“Clause summariser 412 answers, rated 0.91”).
 
 ```tsx
 import { useState } from "react";
-import { RelianceGauge, type RelianceReviewLevel } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RelianceGauge, type RelianceReviewLevel } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function TrustPanel() {
   const [level, setLevel] = useState<RelianceReviewLevel>("routine");

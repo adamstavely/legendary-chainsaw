@@ -84,8 +84,8 @@ setting) draws everything at once.
 <tc-lollipop-chart heading="GPU hours" description="This month, by lab" unit=" h"></tc-lollipop-chart>
 
 <script type="module">
-  import "trenchcoat/lollipop-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/lollipop-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-lollipop-chart").data = [
     { label: "Genomics", value: 412 },
     { label: "Imaging", value: 236 },
@@ -95,8 +95,8 @@ setting) draws everything at once.
 ```
 
 ```tsx
-import { LollipopChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LollipopChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", value: 412 },

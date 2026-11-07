@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type * as UI from "@blocks/ai-side-pane";
 import type { SidePaneMessage } from "@blocks/ai-side-pane";
-import type { ChatConversation, ChatPageContext, PromptStarter, PromptTemplate } from "trenchcoat/react";
+import type { ChatConversation, ChatPageContext, PromptStarter, PromptTemplate } from "@adamstavely/trenchcoat/react";
 import { caption } from "../../demo-kit";
 
 /* A mock quarterly report with the assistant docked on the right. Sending fakes a model: the answer streams in word

@@ -126,7 +126,7 @@
   {
    "tag": "tc-all-done",
    "className": "TcAllDone",
-   "module": "trenchcoat/all-done",
+   "module": "@adamstavely/trenchcoat/all-done",
    "data": [],
    "attributes": [
     {

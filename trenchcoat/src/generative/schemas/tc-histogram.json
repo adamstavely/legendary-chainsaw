@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-histogram.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-histogram.json",
   "title": "tc-histogram",
   "description": "How raw numbers spread, as touching bars on round bin edges – counts or a running total, a density curve and mean\nand median lines if wanted – with the tallest bin emphasised and a table view.",
   "type": "object",

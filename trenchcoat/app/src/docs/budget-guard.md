@@ -84,8 +84,8 @@ on.”).
 <tc-budget-guard id="budget" task="Research agent · competitor pricing"></tc-budget-guard>
 
 <script type="module">
-  import "trenchcoat/budget-guard";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/budget-guard";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const guard = document.querySelector("#budget");
   guard.limits = [
@@ -99,8 +99,8 @@ on.”).
 
 ```tsx
 import { useState } from "react";
-import { BudgetGuard, type BudgetLimit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BudgetGuard, type BudgetLimit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const start: BudgetLimit[] = [
   { id: "spend", label: "Spend", kind: "currency", used: 3.62, cap: 5, rate: 0.42 },

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-uncertainty-mix.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-uncertainty-mix.json",
   "title": "tc-uncertainty-mix",
   "description": "Where an answer's uncertainty comes from: the mix of kinds with their shares and meanings and a reading of what to\ndo, beside a breakdown chart of the same mix per part of the answer.",
   "type": "object",

@@ -88,8 +88,8 @@ A period change isn't announced on its own – the newly checked radio is.
 <tc-compact-breakdown id="revenue" heading="Revenue by channel" total-label="Total revenue"></tc-compact-breakdown>
 
 <script type="module">
-  import "trenchcoat/compact-breakdown";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/compact-breakdown";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const data = {
     "7d": [{ id: "organic", label: "Organic search", value: 18420 }, { id: "paid", label: "Paid ads", value: 9310 }],
@@ -105,8 +105,8 @@ A period change isn't announced on its own – the newly checked radio is.
 
 ```tsx
 import { useState } from "react";
-import { CompactBreakdown, type BreakdownItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CompactBreakdown, type BreakdownItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data: Record<string, BreakdownItem[]> = {
   "7d": [{ id: "organic", label: "Organic search", value: 18420 }, { id: "paid", label: "Paid ads", value: 9310 }],

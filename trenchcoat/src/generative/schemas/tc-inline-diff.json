@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-inline-diff.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-inline-diff.json",
   "title": "tc-inline-diff",
   "description": "Review an AI's word-level edits to prose: accept or reject each change in place.",
   "type": "object",

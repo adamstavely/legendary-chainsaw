@@ -294,7 +294,7 @@
   {
    "tag": "tc-agent-inbox",
    "className": "TcAgentInbox",
-   "module": "trenchcoat/agent-inbox",
+   "module": "@adamstavely/trenchcoat/agent-inbox",
    "data": [
     "tasks",
     "action",

@@ -70,8 +70,8 @@ who it names, or `label` for one name in every state. Changes stay silent unless
 <tc-agent-face id="donovan" state="thinking" size="64"></tc-agent-face>
 
 <script type="module">
-  import "trenchcoat/agent-face";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-face";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const face = document.querySelector("#donovan");
   face.state = "speaking";
@@ -80,8 +80,8 @@ who it names, or `label` for one name in every state. Changes stay silent unless
 ```
 
 ```tsx
-import { AgentFace } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentFace } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Status({ busy }: { busy: boolean }) {
   return <AgentFace state={busy ? "thinking" : "idle"} size={26} />;

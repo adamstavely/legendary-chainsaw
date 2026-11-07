@@ -7,12 +7,12 @@ import {
   type TaskLabel,
   type TaskPerson,
   type TaskStatus,
-} from "trenchcoat/react";
+} from "@adamstavely/trenchcoat/react";
 
 /*
  * Task Board – a kanban board for a sprint. Drag cards between columns and reorder them, add cards per column, open a
  * card to change its status, priority, labels and title, search, filter by label and switch to a compact view.
- * Built on the <tc-task-board> element through `trenchcoat/react` (install `trenchcoat` and import its tokens.css):
+ * Built on the <tc-task-board> element through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` and import its tokens.css):
  * the element holds the layout, styles, drag and drop and keyboard model, so the same board is available to Angular,
  * Vue and plain HTML. It follows the nearest <LookProvider>, or takes a `look` prop.
  *

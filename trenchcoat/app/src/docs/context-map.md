@@ -85,8 +85,8 @@ of `aria-pressed` buttons. `status` is read out through a status region that's t
 <tc-context-map id="context" limit="200000" model="Sonnet 5"></tc-context-map>
 
 <script type="module">
-  import "trenchcoat/context-map";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/context-map";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const map = document.querySelector("#context");
   map.blocks = [
@@ -100,8 +100,8 @@ of `aria-pressed` buttons. `status` is read out through a status region that's t
 ```
 
 ```tsx
-import { ContextMap, type ContextBlock } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ContextMap, type ContextBlock } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const blocks: ContextBlock[] = [
   { id: "sys", label: "System prompt", kind: "system", tokens: 3200 },

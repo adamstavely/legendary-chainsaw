@@ -197,7 +197,7 @@
   {
    "tag": "tc-year-list",
    "className": "TcYearList",
-   "module": "trenchcoat/year-list",
+   "module": "@adamstavely/trenchcoat/year-list",
    "data": [
     "years",
     "counts"

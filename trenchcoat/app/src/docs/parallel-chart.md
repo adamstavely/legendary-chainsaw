@@ -88,8 +88,8 @@ tokens. `still` (or the system's reduced-motion setting) draws everything at onc
 <tc-parallel-chart heading="Shared instruments" description="This quarter"></tc-parallel-chart>
 
 <script type="module">
-  import "trenchcoat/parallel-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/parallel-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-parallel-chart");
   chart.invert = ["queue"];
   chart.data = [
@@ -101,8 +101,8 @@ tokens. `still` (or the system's reduced-motion setting) draws everything at onc
 ```
 
 ```tsx
-import { ParallelChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ParallelChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Cryo-EM", uptime: 97, cost: 410, queue: 6 },

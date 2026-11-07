@@ -87,8 +87,8 @@ with exit code 1”), how many matches a search found (“12 matches”, “No m
 <tc-sandbox-log id="log" heading="Sandbox" environment="ubuntu-24.04 · node 22.11"></tc-sandbox-log>
 
 <script type="module">
-  import "trenchcoat/sandbox-log";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/sandbox-log";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const log = document.querySelector("#log");
   log.steps = [
@@ -100,8 +100,8 @@ with exit code 1”), how many matches a search found (“12 matches”, “No m
 ```
 
 ```tsx
-import { SandboxLog, type SandboxLogStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SandboxLog, type SandboxLogStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function RunOutput({ output, exitCode }: { output: string; exitCode?: number }) {
   const steps: SandboxLogStep[] = [

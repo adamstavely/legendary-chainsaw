@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-line-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-line-chart.json",
   "title": "tc-line-chart",
   "description": "Values over time or along x as lines – one emphasised or each in its own ink – with names at their ends, reference\nlines, the nearest point read across series, and a table view.",
   "type": "object",

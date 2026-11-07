@@ -71,8 +71,8 @@ array of paths. Use `moreItems` for what's used least.
 <tc-icon-rail id="rail" label="Panel views" selected="details"></tc-icon-rail>
 
 <script type="module">
-  import "trenchcoat/icon-rail";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/icon-rail";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const rail = document.querySelector("#rail");
   rail.items = [
@@ -85,8 +85,8 @@ array of paths. Use `moreItems` for what's used least.
 
 ```tsx
 import { useState } from "react";
-import { IconRail } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IconRail } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Views() {
   const [selected, setSelected] = useState<string | null>("details");

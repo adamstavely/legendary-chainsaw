@@ -69,8 +69,8 @@ Name tasks by what they do. `planRuns` is exported, so the server can plan the s
 <tc-scheduled-runs id="runs"></tc-scheduled-runs>
 
 <script type="module">
-  import "trenchcoat/scheduled-runs";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/scheduled-runs";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const runs = document.querySelector("#runs");
   runs.sessions = [{ id: "mon", label: "Morning", day: "Monday", time: "07:00", limit: 100 }];
@@ -79,8 +79,8 @@ Name tasks by what they do. `planRuns` is exported, so the server can plan the s
 ```
 
 ```tsx
-import { ScheduledRuns, type ScheduledSession, type ScheduledTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ScheduledRuns, type ScheduledSession, type ScheduledTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sessions: ScheduledSession[] = [{ id: "mon", label: "Session 1", limit: 100 }];
 const tasks: ScheduledTask[] = [{ id: "reindex", name: "Reindex the archive", cost: 40 }];

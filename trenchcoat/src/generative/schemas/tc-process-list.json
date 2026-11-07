@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-process-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-process-list.json",
   "title": "tc-process-list",
   "description": "The dev servers and background jobs of a session, with status, port, uptime, load and last output, and Stop, Start, Restart and View output.",
   "type": "object",

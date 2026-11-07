@@ -84,8 +84,8 @@ component tokens on the element: `--tc-plot-accent` for the emphasised line, `--
 <tc-slope-chart heading="Grant success rate" start="y2024" end="y2025" start-label="2024" end-label="2025" unit="%"></tc-slope-chart>
 
 <script type="module">
-  import "trenchcoat/slope-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/slope-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-slope-chart").data = [
     { label: "Genomics", y2024: 31, y2025: 38 },
     { label: "Imaging", y2024: 27, y2025: 22 },
@@ -95,8 +95,8 @@ component tokens on the element: `--tc-plot-accent` for the emphasised line, `--
 ```
 
 ```tsx
-import { SlopeChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SlopeChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", y2024: 31, y2025: 38 },

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-access-review.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-access-review.json",
   "title": "tc-access-review",
   "description": "A periodic check of who can see what: keep or remove each one, with a reason for keeping anyone flagged.",
   "type": "object",

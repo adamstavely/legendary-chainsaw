@@ -147,7 +147,7 @@
   {
    "tag": "tc-radial-bar-chart",
    "className": "TcRadialBarChart",
-   "module": "trenchcoat/radial-bar-chart",
+   "module": "@adamstavely/trenchcoat/radial-bar-chart",
    "data": [
     "label",
     "value"

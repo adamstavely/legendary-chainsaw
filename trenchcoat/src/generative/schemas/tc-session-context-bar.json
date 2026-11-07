@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-session-context-bar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-session-context-bar.json",
   "title": "tc-session-context-bar",
   "description": "The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and\nbudget – as labelled chips, with \"+N more\" for the rest.",
   "type": "object",

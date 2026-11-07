@@ -75,8 +75,8 @@ count and name, “3 Outstanding”; picked, its toggle button is pressed. The b
 <tc-grade-distribution id="grades" heading="Paper grades" bar selectable></tc-grade-distribution>
 
 <script type="module">
-  import "trenchcoat/grade-distribution";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/grade-distribution";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const grades = document.querySelector("#grades");
   grades.grades = [
@@ -91,8 +91,8 @@ count and name, “3 Outstanding”; picked, its toggle button is pressed. The b
 
 ```tsx
 import { useState } from "react";
-import { GradeDistribution, type Grade } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GradeDistribution, type Grade } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const grades: Grade[] = [
   { id: "outstanding", label: "Outstanding", count: 1, tone: "success" },

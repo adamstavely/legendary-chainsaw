@@ -641,7 +641,7 @@
   {
    "tag": "tc-review-center",
    "className": "TcReviewCenter",
-   "module": "trenchcoat/review-center",
+   "module": "@adamstavely/trenchcoat/review-center",
    "data": [
     "items",
     "onDecide",

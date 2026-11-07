@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-processing.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-processing.json",
   "title": "tc-processing",
   "description": "A document with a progress ring on it, for a long job that's still running.",
   "type": "object",

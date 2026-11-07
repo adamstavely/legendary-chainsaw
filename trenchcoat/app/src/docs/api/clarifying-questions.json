@@ -335,7 +335,7 @@
   {
    "tag": "tc-clarifying-questions",
    "className": "TcClarifyingQuestions",
-   "module": "trenchcoat/clarifying-questions",
+   "module": "@adamstavely/trenchcoat/clarifying-questions",
    "data": [
     "questions",
     "value"

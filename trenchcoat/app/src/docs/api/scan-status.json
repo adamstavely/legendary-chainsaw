@@ -166,7 +166,7 @@
   {
    "tag": "tc-scan-status",
    "className": "TcScanStatus",
-   "module": "trenchcoat/scan-status",
+   "module": "@adamstavely/trenchcoat/scan-status",
    "data": [
     "labels"
    ],

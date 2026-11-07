@@ -52,14 +52,14 @@ Each direct child is one item. Children added later arrive without the stagger.
 <tc-staggered-reveal><div>One</div><div>Two</div></tc-staggered-reveal>
 
 <script type="module">
-  import "trenchcoat/staggered-reveal";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/staggered-reveal";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { StaggeredReveal } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { StaggeredReveal } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Cards({ names }: { names: string[] }) {
   return <StaggeredReveal>{names.map((n) => <div key={n}>{n}</div>)}</StaggeredReveal>;

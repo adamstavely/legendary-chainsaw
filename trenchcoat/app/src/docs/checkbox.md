@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { Checkbox } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Checkbox } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <Checkbox label="Include citations" defaultValue />; }
 ```

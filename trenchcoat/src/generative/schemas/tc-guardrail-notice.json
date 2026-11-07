@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-guardrail-notice.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-guardrail-notice.json",
   "title": "tc-guardrail-notice",
   "description": "Content a policy blocked, redacted or rewrote: which policy, why, what changed – personal data masked – and Request review.",
   "type": "object",

@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { Switch } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Switch } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <Switch label="Enable caching" defaultValue />; }
 ```

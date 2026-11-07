@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-facet-sidebar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-facet-sidebar.json",
   "title": "tc-facet-sidebar",
   "description": "Search filters with counts – checkbox, radio, range and date facets that fold, the filters in use as removable\nchips with Clear all, Show more, and a search box in long facets.",
   "type": "object",

@@ -60,14 +60,14 @@ Say which languages and when: "French and German versions, usually within a week
 <tc-in-translation></tc-in-translation>
 
 <script type="module">
-  import "trenchcoat/in-translation";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/in-translation";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { InTranslation } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InTranslation } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <InTranslation />;

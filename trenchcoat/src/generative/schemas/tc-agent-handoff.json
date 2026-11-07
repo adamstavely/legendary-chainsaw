@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-handoff.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-handoff.json",
   "title": "tc-agent-handoff",
   "description": "A task passed along a chain of agents, with what carried over and what got lost at each handoff.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-kill-switch.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-kill-switch.json",
   "title": "tc-kill-switch",
   "description": "System posture and the emergency stop: what's running, a confirmed Stop that names what it halts, and the active\nstops with Resume.",
   "type": "object",

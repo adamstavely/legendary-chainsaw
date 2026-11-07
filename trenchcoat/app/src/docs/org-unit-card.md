@@ -92,8 +92,8 @@ momentum, “Down 8%”. The marks, arrows and bars are hidden; their meaning is
 <tc-org-unit-card id="unit" code="CIS" heading="Intelligent Systems"></tc-org-unit-card>
 
 <script type="module">
-  import "trenchcoat/org-unit-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/org-unit-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const unit = document.querySelector("#unit");
   unit.lead = { name: "Marcus Okonkwo", title: "Principal Investigator" };
@@ -118,8 +118,8 @@ momentum, “Down 8%”. The marks, arrows and bars are hidden; their meaning is
 
 ```tsx
 import { useState } from "react";
-import { OrgUnitCard, type OrgTeam } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { OrgUnitCard, type OrgTeam } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const teams: OrgTeam[] = [
   {

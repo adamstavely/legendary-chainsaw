@@ -151,12 +151,12 @@ for (const app of apps) {
   let server;
   try {
     // A new tarball has a new checksum: drop the old install and its lockfile entry
-    rmSync(join(dir, "node_modules", "trenchcoat"), { recursive: true, force: true });
+    rmSync(join(dir, "node_modules", "@adamstavely/trenchcoat"), { recursive: true, force: true });
     rmSync(join(dir, "package-lock.json"), { force: true });
     out("install");
     sh("npm install --no-audit --no-fund --loglevel=error", dir);
     // The installed package, as a server render (SSR) or a webpack/Karma build resolves it: strict ESM, no DOM
-    if (app === "angular") sh(`node --input-type=module -e 'await import("@angular/compiler"); for (const m of ["trenchcoat", "trenchcoat/angular", "trenchcoat/angular/forms", "trenchcoat/command-menu"]) await import(m);'`, dir);
+    if (app === "angular") sh(`node --input-type=module -e 'await import("@angular/compiler"); for (const m of ["@adamstavely/trenchcoat", "@adamstavely/trenchcoat/angular", "@adamstavely/trenchcoat/angular/forms", "@adamstavely/trenchcoat/command-menu"]) await import(m);'`, dir);
     out("build");
     sh("npm run -s build", dir);
     port += 1;

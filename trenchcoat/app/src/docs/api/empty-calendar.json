@@ -128,7 +128,7 @@
   {
    "tag": "tc-empty-calendar",
    "className": "TcEmptyCalendar",
-   "module": "trenchcoat/empty-calendar",
+   "module": "@adamstavely/trenchcoat/empty-calendar",
    "data": [],
    "attributes": [
     {

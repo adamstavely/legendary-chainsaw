@@ -130,13 +130,13 @@ export function FrameworkTabs({ id, long = false, children }: { id: string; long
 // ── Header: install and import, per framework ─────────────────────────────────────────────────────────────────────
 export function Imports({ slug, api }: { slug: string; api: ApiPage }) {
   const wrappers = api.react.filter((r) => r.exported).map((r) => r.component);
-  const mod = `import "trenchcoat/${slug}";`;
+  const mod = `import "@adamstavely/trenchcoat/${slug}";`;
   const rows: [string, ReactNode][] = [
-    ["Install", <><code>npm install trenchcoat-0.1.0.tgz</code> <a className="docs-link" href="#/foundations/getting-started">packed from the repository</a>, then <code>import "trenchcoat/tokens.css"</code> once</>],
+    ["Install", <><code>npm install @adamstavely/trenchcoat</code> <a className="docs-link" href="#/foundations/getting-started">from GitHub Packages</a>, then <code>import "@adamstavely/trenchcoat/tokens.css"</code> once</>],
     ["HTML", <code>{mod}</code>],
-    ["React / Next.js", wrappers.length ? <><code>{`import { ${wrappers.join(", ")} } from "trenchcoat/react";`}</code> <span className="muted">· in a client component in Next.js</span></> : <><code>{mod}</code> <span className="muted">· no wrapper: use the tag</span></>],
+    ["React / Next.js", wrappers.length ? <><code>{`import { ${wrappers.join(", ")} } from "@adamstavely/trenchcoat/react";`}</code> <span className="muted">· in a client component in Next.js</span></> : <><code>{mod}</code> <span className="muted">· no wrapper: use the tag</span></>],
     ["Vue / Nuxt", <><code>{mod}</code> <span className="muted">· tags starting with tc- are custom elements</span></>],
-    ["Angular", <><code>{`import { ${api.elements.map(angularName).join(", ")} } from "trenchcoat/angular";`}</code> <span className="muted">· standalone directives, no schema</span></>],
+    ["Angular", <><code>{`import { ${api.elements.map(angularName).join(", ")} } from "@adamstavely/trenchcoat/angular";`}</code> <span className="muted">· standalone directives, no schema</span></>],
     ["Svelte", <code>{mod}</code>],
   ];
   return (
@@ -153,10 +153,10 @@ export function Imports({ slug, api }: { slug: string; api: ApiPage }) {
 
 // ── Frameworks ───────────────────────────────────────────────────────────────────────────────────────────────────
 const SETUP: Record<Framework, ReactNode> = {
-  html: <>Import the module once – it registers the tag – and load <code>trenchcoat/tokens.css</code>. Nothing else to set up.</>,
-  react: <>The wrappers in <code>trenchcoat/react</code> take React props and callbacks. In Next.js (App Router) they render on the client only: use them from a <code>"use client"</code> file.</>,
+  html: <>Import the module once – it registers the tag – and load <code>@adamstavely/trenchcoat/tokens.css</code>. Nothing else to set up.</>,
+  react: <>The wrappers in <code>@adamstavely/trenchcoat/react</code> take React props and callbacks. In Next.js (App Router) they render on the client only: use them from a <code>"use client"</code> file.</>,
   vue: <>Tell the template compiler that <code>tc-</code> tags are custom elements: <code>compilerOptions.isCustomElement</code> in the Vue plugin, or <code>vue.compilerOptions</code> in <code>nuxt.config.ts</code>.</>,
-  angular: <>Import the element's directive from <code>trenchcoat/angular</code> into the component's <code>imports</code> – no <code>CUSTOM_ELEMENTS_SCHEMA</code>. The directive registers the tag, and strict templates check every binding and event.</>,
+  angular: <>Import the element's directive from <code>@adamstavely/trenchcoat/angular</code> into the component's <code>imports</code> – no <code>CUSTOM_ELEMENTS_SCHEMA</code>. The directive registers the tag, and strict templates check every binding and event.</>,
   svelte: <>Import the module in the component's script. Svelte sets a property when the element has one, so lists and objects pass as they are.</>,
 };
 const SSR: Record<Framework, ReactNode> = {
@@ -173,13 +173,13 @@ function typing(fw: Framework, f: FrameworkFacts, react?: ApiReact): ReactNode {
     case "html":
       return <>With TypeScript or <code>// @ts-check</code>, <code>document.querySelector("{f.tag}")</code> returns a <code>{f.className}</code> (the module adds the tag to <code>HTMLElementTagNameMap</code>). The class: {el}</>;
     case "react":
-      return react?.exported ? <>Props: <code>{`import type { ${react.component}Props } from "trenchcoat/react";`}</code> – or <code>{`ComponentProps<typeof ${react.component}>`}</code>. The element class, for refs: {el}</> : <>The element class: {el}</>;
+      return react?.exported ? <>Props: <code>{`import type { ${react.component}Props } from "@adamstavely/trenchcoat/react";`}</code> – or <code>{`ComponentProps<typeof ${react.component}>`}</code>. The element class, for refs: {el}</> : <>The element class: {el}</>;
     case "vue":
-      return <>Add <code>import type {"{}"} from "trenchcoat/vue";</code> to a <code>.d.ts</code> file: <code>vue-tsc</code> then checks the tag's props and <code>@tc-…</code> events in templates. A property's type: <code>{`${f.className}["${f.data[0] ?? f.attributes[0]?.name ?? "look"}"]`}</code> with {el}</>;
+      return <>Add <code>import type {"{}"} from "@adamstavely/trenchcoat/vue";</code> to a <code>.d.ts</code> file: <code>vue-tsc</code> then checks the tag's props and <code>@tc-…</code> events in templates. A property's type: <code>{`${f.className}["${f.data[0] ?? f.attributes[0]?.name ?? "look"}"]`}</code> with {el}</>;
     case "angular":
       return <>The directive types the template: <code>[{f.data[0] ?? f.attributes[0]?.name ?? "look"}]</code> takes <code>{`${f.className}["${f.data[0] ?? f.attributes[0]?.name ?? "look"}"]`}</code>, and <code>$event</code> is the event's <code>CustomEvent&lt;…&gt;</code>, so a misspelt input or a wrong type fails the build. For the element itself, <code>#ref</code> with <code>exportAs</code> gives the directive and its <code>element</code>. {el}</>;
     case "svelte":
-      return <>Add <code>import type {"{}"} from "trenchcoat/svelte";</code> to a <code>.d.ts</code> file: <code>svelte-check</code> then knows the tag's props. Type <code>bind:this</code> with {el}</>;
+      return <>Add <code>import type {"{}"} from "@adamstavely/trenchcoat/svelte";</code> to a <code>.d.ts</code> file: <code>svelte-check</code> then knows the tag's props. Type <code>bind:this</code> with {el}</>;
   }
 }
 
@@ -187,7 +187,7 @@ const TWO_WAY_NOTE: Record<Framework, ReactNode> = {
   html: <>Listen for the change and keep your copy; set the property when your copy changes.</>,
   react: <>Pass the value and its callback. Leave the value out to let the element keep it, starting at the <code>default…</code> prop.</>,
   vue: <><code>v-model</code> doesn't apply: on an element it listens for <code>input</code> and reads <code>value</code>, while Trenchcoat reports changes with <code>tc-value-change</code>. Bind the value and take it back from the event:</>,
-  angular: <>With Angular forms, an element that holds a <code>value</code> takes <code>[(ngModel)]</code>, <code>[formControl]</code> or <code>formControlName</code> through its accessor in <code>trenchcoat/angular/forms</code>. Without forms, bind the value and take it back from the event:</>,
+  angular: <>With Angular forms, an element that holds a <code>value</code> takes <code>[(ngModel)]</code>, <code>[formControl]</code> or <code>formControlName</code> through its accessor in <code>@adamstavely/trenchcoat/angular/forms</code>. Without forms, bind the value and take it back from the event:</>,
   svelte: <><code>bind:value</code> doesn't apply to a custom element's events. Pass the value and take it back from the event:</>,
 };
 

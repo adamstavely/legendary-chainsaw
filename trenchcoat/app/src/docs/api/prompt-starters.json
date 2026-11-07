@@ -247,7 +247,7 @@
   {
    "tag": "tc-prompt-starters",
    "className": "TcPromptStarters",
-   "module": "trenchcoat/prompt-starters",
+   "module": "@adamstavely/trenchcoat/prompt-starters",
    "data": [
     "groups",
     "items"

@@ -81,8 +81,8 @@ for <line>". A status region, there from the start, announces "Issued"; an error
 <tc-invoice-credit id="doc" invoice-no="INV-2041" currency="€" currency-code="EUR"></tc-invoice-credit>
 
 <script type="module">
-  import "trenchcoat/invoice-credit";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/invoice-credit";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const doc = document.querySelector("#doc");
   doc.lines = [
@@ -96,8 +96,8 @@ for <line>". A status region, there from the start, announces "Issued"; an error
 
 ```tsx
 import { useState } from "react";
-import { InvoiceCredit, type InvoiceView } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InvoiceCredit, type InvoiceView } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Invoice() {
   const [view, setView] = useState<InvoiceView>("invoice");

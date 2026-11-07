@@ -328,7 +328,7 @@
   {
    "tag": "tc-header-nav",
    "className": "TcHeaderNav",
-   "module": "trenchcoat/header-nav",
+   "module": "@adamstavely/trenchcoat/header-nav",
    "data": [
     "user",
     "accountItems",

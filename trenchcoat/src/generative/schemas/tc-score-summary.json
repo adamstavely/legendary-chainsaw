@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-score-summary.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-score-summary.json",
   "title": "tc-score-summary",
   "description": "NPS or CSAT results: the score, the bands, the answers per score, the change and the target.",
   "type": "object",

@@ -180,7 +180,7 @@
   {
    "tag": "tc-meter-row",
    "className": "TcMeterRow",
-   "module": "trenchcoat/meter-row",
+   "module": "@adamstavely/trenchcoat/meter-row",
    "data": [
     "labels"
    ],

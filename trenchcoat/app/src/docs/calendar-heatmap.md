@@ -94,8 +94,8 @@ system's reduced-motion setting) draws everything at once.
 <tc-calendar-heatmap heading="Samples logged" description="January to June, by day" unit=" samples"></tc-calendar-heatmap>
 
 <script type="module">
-  import "trenchcoat/calendar-heatmap";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/calendar-heatmap";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-calendar-heatmap").data = [
     { date: "2026-03-02", value: 14 },
     { date: "2026-03-03", value: 19 },
@@ -105,8 +105,8 @@ system's reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { CalendarHeatmap } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CalendarHeatmap } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { date: "2026-03-02", value: 14 },

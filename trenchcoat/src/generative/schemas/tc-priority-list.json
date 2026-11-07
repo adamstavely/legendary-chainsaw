@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-priority-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-priority-list.json",
   "title": "tc-priority-list",
   "description": "Topics or projects by priority – a priority badge, name, owner and team, momentum, coverage, what's open and the\nwork in flight – with health filters and optional groups per priority.",
   "type": "object",

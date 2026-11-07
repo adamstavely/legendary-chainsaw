@@ -20,7 +20,7 @@ const STEPS = [
   { id: "g3", label: "Launch", status: "not-reached" },
 ];
 
-describe("trenchcoat/generative", () => {
+describe("@adamstavely/trenchcoat/generative", () => {
   test("the catalogue and schemas: every catalogued tag has a schema; app-controlled elements aren't in it", async () => {
     expect(catalog.length).toBeGreaterThan(150);
     expect(isGeneratable("tc-status-tracker")).toBe(true);
@@ -95,7 +95,7 @@ describe("trenchcoat/generative", () => {
 });
 
 /* The props are untrusted model output: what someone could write to get a script, another site or a crash past the check */
-describe("trenchcoat/generative: untrusted props", () => {
+describe("@adamstavely/trenchcoat/generative: untrusted props", () => {
   const XSS = "javascript:alert(1)";
 
   test("__proto__ can't carry props past the check, or stand in for a required field", async () => {

@@ -285,7 +285,7 @@
   {
    "tag": "tc-disagreement-banner",
    "className": "TcDisagreementBanner",
-   "module": "trenchcoat/disagreement-banner",
+   "module": "@adamstavely/trenchcoat/disagreement-banner",
    "data": [
     "earlier",
     "current"

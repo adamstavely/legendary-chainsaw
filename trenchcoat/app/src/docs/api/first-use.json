@@ -112,7 +112,7 @@
   {
    "tag": "tc-first-use",
    "className": "TcFirstUse",
-   "module": "trenchcoat/first-use",
+   "module": "@adamstavely/trenchcoat/first-use",
    "data": [],
    "attributes": [
     {

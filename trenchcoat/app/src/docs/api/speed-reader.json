@@ -333,7 +333,7 @@
   {
    "tag": "tc-speed-reader",
    "className": "TcSpeedReader",
-   "module": "trenchcoat/speed-reader",
+   "module": "@adamstavely/trenchcoat/speed-reader",
    "data": [
     "scheduler"
    ],

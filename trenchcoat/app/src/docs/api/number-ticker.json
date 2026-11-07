@@ -185,7 +185,7 @@
   {
    "tag": "tc-number-ticker",
    "className": "TcNumberTicker",
-   "module": "trenchcoat/number-ticker",
+   "module": "@adamstavely/trenchcoat/number-ticker",
    "data": [
     "format"
    ],

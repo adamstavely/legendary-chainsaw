@@ -54,13 +54,13 @@ Each direct child is a row. Give rows stable identity in your framework (a React
 <tc-list-motion id="rows"><div>One</div><div>Two</div></tc-list-motion>
 
 <script type="module">
-  import "trenchcoat/list-motion";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/list-motion";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { ListMotion } from "trenchcoat/react";
+import { ListMotion } from "@adamstavely/trenchcoat/react";
 
 export function Rows({ rows }: { rows: { id: string; name: string }[] }) {
   return <ListMotion>{rows.map((r) => <div key={r.id}>{r.name}</div>)}</ListMotion>;

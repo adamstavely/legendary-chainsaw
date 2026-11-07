@@ -202,7 +202,7 @@
   {
    "tag": "tc-world-map",
    "className": "TcWorldMap",
-   "module": "trenchcoat/world-map",
+   "module": "@adamstavely/trenchcoat/world-map",
    "data": [
     "label"
    ],

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-change-summary.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-change-summary.json",
   "title": "tc-change-summary",
   "description": "What changed since last time, one metric per row, each with a trend mark.",
   "type": "object",

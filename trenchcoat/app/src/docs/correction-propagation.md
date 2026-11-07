@@ -87,8 +87,8 @@ says what happened: “Marked superseded: Q3 vendor risk report. 3 still pending
 ></tc-correction-propagation>
 
 <script type="module">
-  import "trenchcoat/correction-propagation";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/correction-propagation";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const reach = document.querySelector("#reach");
   reach.candidates = [
@@ -101,8 +101,8 @@ says what happened: “Marked superseded: Q3 vendor risk report. 3 still pending
 
 ```tsx
 import { useState } from "react";
-import { CorrectionPropagation, type CorrectionCandidate, type CorrectionState } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CorrectionPropagation, type CorrectionCandidate, type CorrectionState } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const candidates: CorrectionCandidate[] = [
   { id: "p1", kind: "package", title: "Q3 vendor risk report", version: "v2.1", detail: "Sent to the board" },

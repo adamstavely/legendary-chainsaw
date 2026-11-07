@@ -81,8 +81,8 @@ each action is a button with the action's text. A status region announces each a
 <tc-tips-panel id="tips" heading="Tips for getting started" closable></tc-tips-panel>
 
 <script type="module">
-  import "trenchcoat/tips-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tips-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#tips");
   panel.tips = [
@@ -109,8 +109,8 @@ each action is a button with the action's text. A status region announces each a
 
 ```tsx
 import { useState } from "react";
-import { Kbd, TipsPanel, type Tip } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Kbd, TipsPanel, type Tip } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function GettingStarted({ openPalette }: { openPalette: () => void }) {
   const [done, setDone] = useState<string[]>([]);

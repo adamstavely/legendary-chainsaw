@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-activity-clock.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-activity-clock.json",
   "title": "tc-activity-clock",
   "description": "Activity by hour, a clock per day: an AM ring and a PM ring of hour segments shaded by how busy each hour was, with\nthe day in the middle and an hour's value there on hover or focus.",
   "type": "object",

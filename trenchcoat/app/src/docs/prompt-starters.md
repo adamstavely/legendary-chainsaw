@@ -87,8 +87,8 @@ pencil are hidden from screen readers; → does the same.
 <tc-chat-composer id="composer"></tc-chat-composer>
 
 <script type="module">
-  import "trenchcoat/prompt-starters";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/prompt-starters";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const starters = document.querySelector("#starters");
   const composer = document.querySelector("#composer");
@@ -103,8 +103,8 @@ pencil are hidden from screen readers; → does the same.
 
 ```tsx
 import { useState } from "react";
-import { ChatComposer, PromptStarters, type PromptStarter } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChatComposer, PromptStarters, type PromptStarter } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const followUps: PromptStarter[] = [
   { id: "q4", text: "Show the same view for Q4" },

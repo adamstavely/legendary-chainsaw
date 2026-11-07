@@ -67,8 +67,8 @@ Name actions with a plain verb. Say `confirm` on anything hard to undo. Set `und
 <tc-bulk-action-bar id="bar" count="3" total="40"></tc-bulk-action-bar>
 
 <script type="module">
-  import "trenchcoat/bulk-action-bar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/bulk-action-bar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const bar = document.querySelector("#bar");
   bar.actions = [{ id: "flag", label: "Flag" }, { id: "remove", label: "Remove", danger: true, confirm: true }];
@@ -77,8 +77,8 @@ Name actions with a plain verb. Say `confirm` on anything hard to undo. Set `und
 ```
 
 ```tsx
-import { BulkActionBar, type BulkAction } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BulkActionBar, type BulkAction } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const actions: BulkAction[] = [{ id: "flag", label: "Flag" }];
 

@@ -81,8 +81,8 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 <tc-answer-arena id="arena" prompt="Explain RAG to a product manager in under 80 words." blind></tc-answer-arena>
 
 <script type="module">
-  import "trenchcoat/answer-arena";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/answer-arena";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const arena = document.querySelector("#arena");
   arena.answers = [
@@ -95,8 +95,8 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 
 ```tsx
 import { useState } from "react";
-import { AnswerArena, type ArenaVote } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AnswerArena, type ArenaVote } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Compare({ a, b, streaming }: { a: string; b: string; streaming: boolean }) {
   const [vote, setVote] = useState<ArenaVote | null>(null);

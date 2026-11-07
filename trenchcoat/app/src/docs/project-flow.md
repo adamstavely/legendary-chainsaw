@@ -53,8 +53,8 @@ scene is off screen or the tab is hidden.
 <tc-project-flow id="scene"></tc-project-flow>
 
 <script type="module">
-  import "trenchcoat/project-flow";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/project-flow";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const scene = document.querySelector("#scene");
   scene.label = "A task with subtasks, client notes, assigned roles and its tech stack";
@@ -63,8 +63,8 @@ scene is off screen or the tab is hidden.
 ```
 
 ```tsx
-import { ProjectFlow } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProjectFlow } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PlanningHero() {
   return <ProjectFlow label="A task with subtasks, client notes, assigned roles and its tech stack" />;

@@ -69,8 +69,8 @@ outside 0 to `max` are held to the ends, and anything that isn't a number counts
 <tc-meter-row id="storage" label="Sample storage" value="0.17" interactive></tc-meter-row>
 
 <script type="module">
-  import "trenchcoat/meter-row";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/meter-row";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#storage").addEventListener("tc-open", () => {
     console.log("open the details");
@@ -79,8 +79,8 @@ outside 0 to `max` are held to the ends, and anything that isn't a number counts
 ```
 
 ```tsx
-import { MeterRow } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MeterRow } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Storage({ onOpen }: { onOpen: () => void }) {
   return <MeterRow label="Sample storage" value={812} max={1000} valueText="812 of 1,000" interactive onTcOpen={onOpen} />;

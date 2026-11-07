@@ -84,8 +84,8 @@ everything at once.
 <tc-beeswarm-chart heading="Assay turnaround" description="This month, by lab" unit=" h"></tc-beeswarm-chart>
 
 <script type="module">
-  import "trenchcoat/beeswarm-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/beeswarm-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-beeswarm-chart");
   chart.value = "hours";
   chart.group = "lab";
@@ -99,8 +99,8 @@ everything at once.
 ```
 
 ```tsx
-import { BeeswarmChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BeeswarmChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { lab: "Genomics", hours: 4.2 },

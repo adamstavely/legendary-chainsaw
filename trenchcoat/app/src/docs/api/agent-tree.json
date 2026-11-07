@@ -330,7 +330,7 @@
   {
    "tag": "tc-agent-tree",
    "className": "TcAgentTree",
-   "module": "trenchcoat/agent-tree",
+   "module": "@adamstavely/trenchcoat/agent-tree",
    "data": [
     "root",
     "collapsed",

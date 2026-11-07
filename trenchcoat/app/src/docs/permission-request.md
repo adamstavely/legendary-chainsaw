@@ -111,8 +111,8 @@ Review due by Fri 31 Oct”. The time left is on screen, not announced, as with 
 <tc-permission-request id="push" action="push to main" target="acme/web" risk="risky" duration="60"></tc-permission-request>
 
 <script type="module">
-  import "trenchcoat/permission-request";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/permission-request";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const request = document.querySelector("#push");
   request.agent = { name: "Coder", model: "Claude Sonnet" };
@@ -134,8 +134,8 @@ Review due by Fri 31 Oct”. The time left is on screen, not announced, as with 
 ```
 
 ```tsx
-import { PermissionRequest, type PermissionDecision, type PermissionEmergencyRequest } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PermissionRequest, type PermissionDecision, type PermissionEmergencyRequest } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PushRequest({
   onDecide,

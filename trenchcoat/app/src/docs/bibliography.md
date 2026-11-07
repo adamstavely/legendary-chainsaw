@@ -87,7 +87,7 @@ the hanging indent with `--tc-bib-indent`.
 ```
 
 ```tsx
-import { Bibliography, type Reference } from "trenchcoat/react";
+import { Bibliography, type Reference } from "@adamstavely/trenchcoat/react";
 
 export function ReadingList({ references }: { references: Reference[] }) {
   return <Bibliography title="Reading list" references={references} defaultCitationStyle="apa" onExport={(d) => console.log(d.format, d.ids)} />;

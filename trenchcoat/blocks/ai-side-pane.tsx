@@ -1,6 +1,6 @@
 "use client";
 
-import { AiSidePane as AiSidePaneElement, type AiSidePaneProps as ElementProps, type SidePaneMessage } from "trenchcoat/react";
+import { AiSidePane as AiSidePaneElement, type AiSidePaneProps as ElementProps, type SidePaneMessage } from "@adamstavely/trenchcoat/react";
 
 /*
  * AI Side Pane – an assistant docked beside a page, holding a conversation about what's on it: ai-answer and
@@ -10,7 +10,7 @@ import { AiSidePane as AiSidePaneElement, type AiSidePaneProps as ElementProps, 
  * and "Request approval" show only when their handler (`onConnectApps`, `onSelectProject`, `onRequestApproval`) is
  * passed.
  *
- * Built on the <tc-ai-side-pane> element through `trenchcoat/react` (install `trenchcoat` and import its tokens.css):
+ * Built on the <tc-ai-side-pane> element through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` and import its tokens.css):
  * the element holds the layout, focus handling, resizing and shortcut, so the same pane is available to Angular, Vue
  * and plain HTML. It follows the nearest <LookProvider>, or takes a `look` prop.
  *

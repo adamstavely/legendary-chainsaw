@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-usage-meter.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-usage-meter.json",
   "title": "tc-usage-meter",
   "description": "A usage card: a credits meter split into categories, a daily sparkline, plan limits and an upgrade button.",
   "type": "object",

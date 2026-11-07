@@ -90,8 +90,8 @@ alert. One status region, there from the start, announces each change: "Slack co
 <tc-app-directory id="apps" heading="Integrations"></tc-app-directory>
 
 <script type="module">
-  import "trenchcoat/app-directory";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/app-directory";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const apps = document.querySelector("#apps");
   apps.onToggle = (app, on) => fetch(`/api/integrations/${app.id}`, { method: on ? "POST" : "DELETE" }).then((r) => {
@@ -103,8 +103,8 @@ alert. One status region, there from the start, announces each change: "Slack co
 
 ```tsx
 import { useState } from "react";
-import { AppDirectory } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AppDirectory } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Integrations() {
   const [connected, setConnected] = useState<string[]>(["slack"]);

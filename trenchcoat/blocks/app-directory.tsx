@@ -1,12 +1,12 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
-import { AppDirectory as AppDirectoryElement } from "trenchcoat/react";
+import { AppDirectory as AppDirectoryElement } from "@adamstavely/trenchcoat/react";
 
 /*
  * App Directory – browse, search and connect integrations: categories on the left, a grid of app cards on the right,
  * a search field and a filter menu; connecting shows a short progress state, or waits for the promise `onToggle`
- * returns. Built on the Trenchcoat element <tc-app-directory> through `trenchcoat/react` (install `trenchcoat`
+ * returns. Built on the Trenchcoat element <tc-app-directory> through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat`
  * and import its tokens.css); this file keeps the block's React API: logos and icons as React nodes, `connected` /
  * `defaultConnected` / `onConnectedChange`, `className`, DOM props and a `ref` on the root.
  */

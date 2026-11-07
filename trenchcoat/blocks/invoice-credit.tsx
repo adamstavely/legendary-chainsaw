@@ -1,13 +1,13 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, Ref } from "react";
-import { InvoiceCredit as InvoiceCreditElement } from "trenchcoat/react";
+import { InvoiceCredit as InvoiceCreditElement } from "@adamstavely/trenchcoat/react";
 
 /*
  * Invoice & Credit Note – two billing documents in one block. The invoice and its credit note sit on top of each other
  * like sheets of paper; switch between them, or press “Credit invoice” to bring the credit note forward. Pick which
  * lines to credit, adjust the amounts, and the subtotal, tax and adjustment update as you type; then issue it.
- * Built on the Trenchcoat element <tc-invoice-credit> through `trenchcoat/react` (install `trenchcoat` and import its
+ * Built on the Trenchcoat element <tc-invoice-credit> through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` and import its
  * tokens.css); this file keeps the block's React API: `view` / `defaultView` / `onViewChange`, `onIssue`,
  * `className`, DOM props and a `ref` on the root.
  */

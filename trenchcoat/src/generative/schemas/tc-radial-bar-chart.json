@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-radial-bar-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-radial-bar-chart.json",
   "title": "tc-radial-bar-chart",
   "description": "A few ratios as rings round a centre – progress towards a target – the largest emphasised, each named with its\nvalue beside where it starts, and a table view.",
   "type": "object",

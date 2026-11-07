@@ -78,8 +78,8 @@ in a `title`.
 <tc-change-summary id="changes" period="This week"></tc-change-summary>
 
 <script type="module">
-  import "trenchcoat/change-summary";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/change-summary";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const summary = document.querySelector("#changes");
   summary.changes = [
@@ -93,8 +93,8 @@ in a `title`.
 ```
 
 ```tsx
-import { ChangeSummary, type MetricChange } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChangeSummary, type MetricChange } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const changes: MetricChange[] = [
   { label: "Active users", change: "Up 6.1% to 18.2K", tone: "good" },

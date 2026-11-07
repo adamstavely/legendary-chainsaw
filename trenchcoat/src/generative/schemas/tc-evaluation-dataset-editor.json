@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-evaluation-dataset-editor.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-evaluation-dataset-editor.json",
   "title": "tc-evaluation-dataset-editor",
   "description": "An evaluation set's cases – input, expected output, checks, tags and split – in a windowed table with a case editor,\nsplit counts and a comparison with an earlier version.",
   "type": "object",

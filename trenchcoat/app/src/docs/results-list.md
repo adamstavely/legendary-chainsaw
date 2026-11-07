@@ -84,7 +84,7 @@ A page can set `--tc-rsl-snippet-lines`.
 ```
 
 ```tsx
-import { ResultsList, type SearchResult } from "trenchcoat/react";
+import { ResultsList, type SearchResult } from "@adamstavely/trenchcoat/react";
 
 export function Results({ query, results }: { query: string; results: SearchResult[] }) {
   return <ResultsList query={query} results={results} total={`About ${results.length} results`} onOpenResult={(r) => console.log(r.id)} />;

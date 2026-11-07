@@ -88,8 +88,8 @@ Icons in the React wrapper are `aria-hidden`.
 </tc-button>
 
 <script type="module">
-  import "trenchcoat/button";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/button";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const save = document.querySelector("#save");
   save.variant = "primary";
@@ -105,8 +105,8 @@ Icons in the React wrapper are `aria-hidden`.
 
 ```tsx
 import { useState } from "react";
-import { Button } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Button } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SaveButton() {
   const [saving, setSaving] = useState(false);

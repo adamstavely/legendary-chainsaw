@@ -549,7 +549,7 @@
   {
    "tag": "tc-approval-card",
    "className": "TcApprovalCard",
-   "module": "trenchcoat/approval-card",
+   "module": "@adamstavely/trenchcoat/approval-card",
    "data": [
     "description",
     "icon",

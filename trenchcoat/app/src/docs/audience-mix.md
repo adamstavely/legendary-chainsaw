@@ -76,8 +76,8 @@ the rows say, so they're hidden from screen readers.
 <tc-audience-mix id="mix"></tc-audience-mix>
 
 <script type="module">
-  import "trenchcoat/audience-mix";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/audience-mix";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const mix = document.querySelector("#mix");
   mix.sectors = [{ label: "Academic", value: 54 }, { label: "Industry", value: 23 }, { label: "Government", value: 14 }];
@@ -87,8 +87,8 @@ the rows say, so they're hidden from screen readers.
 ```
 
 ```tsx
-import { AudienceMix } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AudienceMix } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Readers() {
   return (

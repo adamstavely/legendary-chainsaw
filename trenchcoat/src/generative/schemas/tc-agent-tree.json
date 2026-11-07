@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-tree.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-tree.json",
   "title": "tc-agent-tree",
   "description": "Who started whom in a run of agents: cards joined by connectors, with costs, times and folding.",
   "type": "object",

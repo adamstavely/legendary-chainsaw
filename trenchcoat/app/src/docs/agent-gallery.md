@@ -79,8 +79,8 @@ The arrows are named "Previous agent" and "Next agent".
 <tc-agent-gallery id="agents" heading="Agents that run your playbook"></tc-agent-gallery>
 
 <script type="module">
-  import "trenchcoat/agent-gallery";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-gallery";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gallery = document.querySelector("#agents");
   gallery.addEventListener("tc-index-change", (e) => console.log(e.detail.item.name));
@@ -89,8 +89,8 @@ The arrows are named "Previous agent" and "Next agent".
 
 ```tsx
 import { useState } from "react";
-import { AgentGallery } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentGallery } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Showcase() {
   const [index, setIndex] = useState(3);

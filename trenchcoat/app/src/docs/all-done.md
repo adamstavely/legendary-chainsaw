@@ -60,14 +60,14 @@ people for an empty list they didn't empty.
 <tc-all-done></tc-all-done>
 
 <script type="module">
-  import "trenchcoat/all-done";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/all-done";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { AllDone } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AllDone } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <AllDone />;

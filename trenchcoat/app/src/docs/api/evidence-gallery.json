@@ -145,7 +145,7 @@
   {
    "tag": "tc-evidence-gallery",
    "className": "TcEvidenceGallery",
-   "module": "trenchcoat/evidence-gallery",
+   "module": "@adamstavely/trenchcoat/evidence-gallery",
    "data": [
     "items",
     "attestationLabels"

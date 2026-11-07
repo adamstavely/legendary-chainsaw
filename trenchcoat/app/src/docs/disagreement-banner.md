@@ -80,8 +80,8 @@ to the page.
 <tc-disagreement-banner id="banner" question="Can we end the contract early?" dismissible can-open></tc-disagreement-banner>
 
 <script type="module">
-  import "trenchcoat/disagreement-banner";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/disagreement-banner";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const banner = document.querySelector("#banner");
   banner.earlier = { text: "Either side can end it with 30 days' notice.", when: "Oct 14", sessionId: "s-2291" };
@@ -91,8 +91,8 @@ to the page.
 ```
 
 ```tsx
-import { DisagreementBanner, type DisagreementAnswer } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DisagreementBanner, type DisagreementAnswer } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AnswerChanged({ earlier, current, onOpen }: { earlier: DisagreementAnswer; current: DisagreementAnswer; onOpen: (id?: string) => void }) {
   return <DisagreementBanner question="Can we end the contract early?" earlier={earlier} current={current} onOpenEarlier={(id) => onOpen(id)} onDismiss={() => undefined} />;

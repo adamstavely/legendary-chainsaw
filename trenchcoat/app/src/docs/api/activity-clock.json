@@ -212,7 +212,7 @@
   {
    "tag": "tc-activity-clock",
    "className": "TcActivityClock",
-   "module": "trenchcoat/activity-clock",
+   "module": "@adamstavely/trenchcoat/activity-clock",
    "data": [
     "days",
     "format",

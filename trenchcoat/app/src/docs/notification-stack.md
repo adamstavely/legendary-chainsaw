@@ -77,8 +77,8 @@ on Sunday”. A status line says what happened: “Dismissed Scheduled maintenan
 <tc-notification-stack id="notices"></tc-notification-stack>
 
 <script type="module">
-  import "trenchcoat/notification-stack";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/notification-stack";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const stack = document.querySelector("#notices");
   stack.notices = [
@@ -97,8 +97,8 @@ on Sunday”. A status line says what happened: “Dismissed Scheduled maintenan
 ```
 
 ```tsx
-import { NotificationStack, type Notice } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NotificationStack, type Notice } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const notices: Notice[] = [
   {

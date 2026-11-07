@@ -347,7 +347,7 @@
   {
    "tag": "tc-data-handling-policy",
    "className": "TcDataHandlingPolicy",
-   "module": "trenchcoat/data-handling-policy",
+   "module": "@adamstavely/trenchcoat/data-handling-policy",
    "data": [
     "value",
     "effective",

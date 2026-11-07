@@ -5,7 +5,7 @@ gates, a coverage ring or an activity calendar. The components are the same ones
 render as text and never as HTML, the model's props are checked before anything is set, and every interaction comes
 back to the app as an event.
 
-`trenchcoat/generative` holds what the model and the app need:
+`@adamstavely/trenchcoat/generative` holds what the model and the app need:
 
 - **`catalog` and `catalogPrompt(tags?)`.** One line per component the model can place: its tag, what it's for and
   its events. The whole catalogue is about 5,600 tokens. For a narrow assistant, pass the few tags it needs.
@@ -65,7 +65,7 @@ Give the model the components as tools, and render each call. On the server:
 
 ```ts
 import Anthropic from "@anthropic-ai/sdk";
-import { checkComponent, tagOfTool, toolDefinitions } from "trenchcoat/generative";
+import { checkComponent, tagOfTool, toolDefinitions } from "@adamstavely/trenchcoat/generative";
 
 const client = new Anthropic();
 const tools = (await toolDefinitions(["tc-status-tracker", "tc-coverage-ring", "tc-activity-calendar"])) as Anthropic.Beta.BetaTool[];

@@ -78,8 +78,8 @@ adds something the name doesn't.
 <tc-profile-menu id="account" name="Maya Rodriguez" email="maya@northwind.studio"></tc-profile-menu>
 
 <script type="module">
-  import { profileMenuIcon } from "trenchcoat/profile-menu";
-  import "trenchcoat/tokens.css";
+  import { profileMenuIcon } from "@adamstavely/trenchcoat/profile-menu";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const menu = document.querySelector("#account");
   menu.items = [
@@ -92,8 +92,8 @@ adds something the name doesn't.
 ```
 
 ```tsx
-import { ProfileMenu, SettingsIcon, LogoutIcon, type ProfileMenuItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProfileMenu, SettingsIcon, LogoutIcon, type ProfileMenuItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: ProfileMenuItem[] = [
   { id: "settings", label: "Settings", icon: <SettingsIcon /> },

@@ -268,7 +268,7 @@
   {
    "tag": "tc-model-routing",
    "className": "TcModelRouting",
-   "module": "trenchcoat/model-routing",
+   "module": "@adamstavely/trenchcoat/model-routing",
    "data": [
     "value",
     "targets",

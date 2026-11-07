@@ -93,8 +93,8 @@ readers.
 <tc-activity-calendar id="cal" heading="Code reviews" unit="reviews" week-start="1"></tc-activity-calendar>
 
 <script type="module">
-  import "trenchcoat/activity-calendar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/activity-calendar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const cal = document.querySelector("#cal");
   cal.end = Date.parse("2026-10-27T12:00");
@@ -109,8 +109,8 @@ readers.
 
 ```tsx
 import { useState } from "react";
-import { ActivityCalendar, type ActivityCalendarDay } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ActivityCalendar, type ActivityCalendarDay } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const days: ActivityCalendarDay[] = [
   { date: Date.parse("2026-10-26T12:00"), value: 7 },

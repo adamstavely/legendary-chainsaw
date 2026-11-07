@@ -92,8 +92,8 @@ pending; a failure is an alert: “Couldn't connect Linear – try again”. Wit
 <tc-integration-picker id="picker" app-name="Acme" back></tc-integration-picker>
 
 <script type="module">
-  import "trenchcoat/integration-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/integration-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const picker = document.querySelector("#picker");
   picker.integrations = [
@@ -107,8 +107,8 @@ pending; a failure is an alert: “Couldn't connect Linear – try again”. Wit
 ```
 
 ```tsx
-import { IntegrationPicker, defaultIntegrations } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IntegrationPicker, defaultIntegrations } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Integrations({ onBack }: { onBack: () => void }) {
   return (

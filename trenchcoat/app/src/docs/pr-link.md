@@ -77,14 +77,14 @@ pill are green for open, gray for a draft, violet for merged and red for closed.
 </p>
 
 <script type="module">
-  import "trenchcoat/pr-link";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/pr-link";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { PrLink } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PrLink } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Update() {
   return (

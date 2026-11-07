@@ -106,8 +106,8 @@ changed makes the control invalid.
 <tc-conversation-annotation id="review"></tc-conversation-annotation>
 
 <script type="module">
-  import "trenchcoat/conversation-annotation";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/conversation-annotation";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#review");
   review.heading = "Ticket 48213";
@@ -122,8 +122,8 @@ changed makes the control invalid.
 
 ```tsx
 import { useState } from "react";
-import { ConversationAnnotation, type AnnotationMessage, type ConversationAnnotationValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ConversationAnnotation, type AnnotationMessage, type ConversationAnnotationValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const messages: AnnotationMessage[] = [
   { id: "m1", role: "user", text: "Can I send my backpack back?" },

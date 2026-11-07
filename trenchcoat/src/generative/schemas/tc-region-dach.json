@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-region-dach.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-region-dach.json",
   "title": "tc-region-dach",
   "description": "A map of the DACH region (or another country) with a band along its border and a menu to switch it.",
   "type": "object",

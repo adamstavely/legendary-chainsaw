@@ -88,8 +88,8 @@ source; the query's words in its text are `<mark>` elements. The misses are a re
 <tc-retrieval-inspector id="retrieval" cutoff="0.5" open-handled></tc-retrieval-inspector>
 
 <script type="module">
-  import "trenchcoat/retrieval-inspector";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/retrieval-inspector";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const inspector = document.querySelector("#retrieval");
   inspector.query = "How long do customers have to return a damaged item?";
@@ -102,8 +102,8 @@ source; the query's words in its text are `<mark>` elements. The misses are a re
 ```
 
 ```tsx
-import { RetrievalInspector, type RetrievalChunk, type RetrievalMiss } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RetrievalInspector, type RetrievalChunk, type RetrievalMiss } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function RetrievalDebug({ query, chunks, misses }: { query: string; chunks: RetrievalChunk[]; misses: RetrievalMiss[] }) {
   return <RetrievalInspector query={query} chunks={chunks} misses={misses} cutoff={0.5} defaultShow="used" onOpenSource={(chunk) => console.log(chunk.id)} />;

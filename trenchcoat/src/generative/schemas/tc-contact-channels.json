@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-contact-channels.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-contact-channels.json",
   "title": "tc-contact-channels",
   "description": "The ways to reach a person or an account – email, phone, messaging and address – each masked until revealed, with\nits role, when it was last used and whether it's verified, Copy and the page's own actions.",
   "type": "object",

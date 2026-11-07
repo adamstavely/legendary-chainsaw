@@ -59,14 +59,14 @@ the band is hidden.
 <tc-shimmer-text id="status" text="Thinking…"></tc-shimmer-text>
 
 <script type="module">
-  import "trenchcoat/shimmer-loader";
+  import "@adamstavely/trenchcoat/shimmer-loader";
 
   document.querySelector("#status").duration = 2;
 </script>
 ```
 
 ```tsx
-import { ShimmerText, Skeleton } from "trenchcoat/react";
+import { ShimmerText, Skeleton } from "@adamstavely/trenchcoat/react";
 
 export function LoadingProfile() {
   return (

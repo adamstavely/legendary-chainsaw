@@ -60,14 +60,14 @@ Say who's involved and what they're agreeing: "The three partner labs are agreei
 <tc-in-coordination></tc-in-coordination>
 
 <script type="module">
-  import "trenchcoat/in-coordination";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/in-coordination";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { InCoordination } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InCoordination } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <InCoordination />;

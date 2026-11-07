@@ -80,8 +80,8 @@ label. The reading-time pill reads “~45 sec to read”, and the “1m” glyph
 <tc-digest id="digest" description="A week of launch updates."></tc-digest>
 
 <script type="module">
-  import "trenchcoat/digest";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/digest";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const digest = document.querySelector("#digest");
   digest.matters = [{ text: "The deadline moved up one day.", source: { label: "Kickoff notes", href: "/notes/kickoff" } }];
@@ -94,8 +94,8 @@ label. The reading-time pill reads “~45 sec to read”, and the “1m” glyph
 
 ```tsx
 import { useState } from "react";
-import { Digest } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Digest } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Week() {
   const [done, setDone] = useState<string[]>([]);

@@ -64,8 +64,8 @@ Give `size`, `owner` and `modified` where you have them, so people can tell they
 <tc-file-details id="file" flag="review"></tc-file-details>
 
 <script type="module">
-  import "trenchcoat/file-details";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/file-details";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const details = document.querySelector("#file");
   details.file = { name: "Trial 12 results.pdf", size: 2400000, owner: "Noor Haddad" };
@@ -77,8 +77,8 @@ Give `size`, `owner` and `modified` where you have them, so people can tell they
 ```
 
 ```tsx
-import { FileDetails } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FileDetails } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ResultsFile() {
   return (

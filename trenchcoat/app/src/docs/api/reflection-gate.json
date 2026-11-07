@@ -357,7 +357,7 @@
   {
    "tag": "tc-reflection-gate",
    "className": "TcReflectionGate",
-   "module": "trenchcoat/reflection-gate",
+   "module": "@adamstavely/trenchcoat/reflection-gate",
    "data": [
     "value",
     "claims",

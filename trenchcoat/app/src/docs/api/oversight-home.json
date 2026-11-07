@@ -194,7 +194,7 @@
   {
    "tag": "tc-oversight-home",
    "className": "TcOversightHome",
-   "module": "trenchcoat/oversight-home",
+   "module": "@adamstavely/trenchcoat/oversight-home",
    "data": [
     "roles",
     "stateLabels"

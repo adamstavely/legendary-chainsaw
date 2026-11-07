@@ -86,8 +86,8 @@ or why a file was refused (“video.mov: .mov files aren't supported”, “scan
 </form>
 
 <script type="module">
-  import "trenchcoat/dropzone";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/dropzone";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const zone = document.querySelector("#files");
   zone.accept = [".pdf", "image/*"];
@@ -103,8 +103,8 @@ or why a file was refused (“video.mov: .mov files aren't supported”, “scan
 
 ```tsx
 import { useState } from "react";
-import { Dropzone, type UploadItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Dropzone, type UploadItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 async function upload(file: File, onProgress: (p: number) => void, signal: AbortSignal) {
   const res = await fetch("/upload", { method: "POST", body: file, signal });

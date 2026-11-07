@@ -743,7 +743,7 @@
   {
    "tag": "tc-ai-side-pane",
    "className": "TcAiSidePane",
-   "module": "trenchcoat/ai-side-pane",
+   "module": "@adamstavely/trenchcoat/ai-side-pane",
    "data": [
     "messages",
     "starters",

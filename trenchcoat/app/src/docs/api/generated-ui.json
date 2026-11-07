@@ -137,7 +137,7 @@
   {
    "tag": "tc-generated-ui",
    "className": "TcGeneratedUi",
-   "module": "trenchcoat/generated-ui",
+   "module": "@adamstavely/trenchcoat/generated-ui",
    "data": [
     "spec",
     "allowedOrigins"
@@ -597,7 +597,7 @@
   "windowed": false
  },
  "size": {
-  "min": 9543931,
-  "gzip": 2373087
+  "min": 9563901,
+  "gzip": 2379917
  }
 }

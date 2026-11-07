@@ -108,8 +108,8 @@ items from “Summarize the Acme call” as context”, “Removed “…” fro
 <tc-chat-history id="chats" value="c2"></tc-chat-history>
 
 <script type="module">
-  import "trenchcoat/chat-history";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/chat-history";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const list = document.querySelector("#chats");
   list.folders = [{ id: "work", label: "Work" }];
@@ -133,8 +133,8 @@ items from “Summarize the Acme call” as context”, “Removed “…” fro
 
 ```tsx
 import { useState } from "react";
-import { ChatHistory, type ChatContextItem, type ChatConversation } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChatHistory, type ChatContextItem, type ChatConversation } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const start: ChatConversation[] = [
   {

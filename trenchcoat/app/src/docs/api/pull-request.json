@@ -418,7 +418,7 @@
   {
    "tag": "tc-pull-request",
    "className": "TcPullRequest",
-   "module": "trenchcoat/pull-request",
+   "module": "@adamstavely/trenchcoat/pull-request",
    "data": [
     "updatedAt",
     "reviewers",

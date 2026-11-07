@@ -131,7 +131,7 @@
   {
    "tag": "tc-preview-unavailable",
    "className": "TcPreviewUnavailable",
-   "module": "trenchcoat/preview-unavailable",
+   "module": "@adamstavely/trenchcoat/preview-unavailable",
    "data": [],
    "attributes": [
     {

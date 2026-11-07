@@ -233,7 +233,7 @@
   {
    "tag": "tc-element-inspector",
    "className": "TcElementInspector",
-   "module": "trenchcoat/element-inspector",
+   "module": "@adamstavely/trenchcoat/element-inspector",
    "data": [
     "nodes",
     "expanded",

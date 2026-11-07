@@ -315,7 +315,7 @@
   {
    "tag": "tc-run-checkpoints",
    "className": "TcRunCheckpoints",
-   "module": "trenchcoat/run-checkpoints",
+   "module": "@adamstavely/trenchcoat/run-checkpoints",
    "data": [
     "checkpoints",
     "restorer"

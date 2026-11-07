@@ -192,7 +192,7 @@
   {
    "tag": "tc-dumbbell-chart",
    "className": "TcDumbbellChart",
-   "module": "trenchcoat/dumbbell-chart",
+   "module": "@adamstavely/trenchcoat/dumbbell-chart",
    "data": [
     "label",
     "start",

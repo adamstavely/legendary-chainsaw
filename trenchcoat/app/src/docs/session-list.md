@@ -78,8 +78,8 @@ Pinning and archiving are announced through `role="status"`. The spinner is deco
 <tc-session-list id="sessions" group-by="project"></tc-session-list>
 
 <script type="module">
-  import "trenchcoat/session-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/session-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#sessions");
   el.sessions = [
@@ -92,8 +92,8 @@ Pinning and archiving are announced through `role="status"`. The spinner is deco
 
 ```tsx
 import { useState } from "react";
-import { SessionList, type SessionItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SessionList, type SessionItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sessions: SessionItem[] = [
   { id: "s1", title: "Booking calendar", status: "waiting", project: "sample-tracker" },

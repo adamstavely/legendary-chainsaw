@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-metrics-dashboard.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-metrics-dashboard.json",
   "title": "tc-metrics-dashboard",
   "description": "A compact sales overview: KPI tabs that pick the charted metric, a line or bar chart with an optional previous-period\ncomparison, and top products and channels.",
   "type": "object",

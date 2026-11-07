@@ -330,7 +330,7 @@
   {
    "tag": "tc-structured-output",
    "className": "TcStructuredOutput",
-   "module": "trenchcoat/structured-output",
+   "module": "@adamstavely/trenchcoat/structured-output",
    "data": [
     "schema",
     "collapsed"

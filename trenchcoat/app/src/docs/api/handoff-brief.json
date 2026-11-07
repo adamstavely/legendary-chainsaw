@@ -299,7 +299,7 @@
   {
    "tag": "tc-handoff-brief",
    "className": "TcHandoffBrief",
-   "module": "trenchcoat/handoff-brief",
+   "module": "@adamstavely/trenchcoat/handoff-brief",
    "data": [
     "from",
     "to",

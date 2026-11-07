@@ -70,8 +70,8 @@ when a file opens or closes.
 <tc-diff-viewer id="changes"></tc-diff-viewer>
 
 <script type="module">
-  import "trenchcoat/diff-viewer";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/diff-viewer";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#changes").files = [
     { path: "src/limit.ts", before: "export const LIMIT = 1;\n", after: "export const LIMIT = 2;\n" },
@@ -81,8 +81,8 @@ when a file opens or closes.
 ```
 
 ```tsx
-import { DiffViewer, type DiffFile } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DiffViewer, type DiffFile } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const files: DiffFile[] = [
   { path: "src/limit.ts", before: "export const LIMIT = 1;\n", after: "export const LIMIT = 2;\n" },

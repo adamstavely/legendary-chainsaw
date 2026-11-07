@@ -408,7 +408,7 @@
   {
    "tag": "tc-chat-history",
    "className": "TcChatHistory",
-   "module": "trenchcoat/chat-history",
+   "module": "@adamstavely/trenchcoat/chat-history",
    "data": [
     "conversations",
     "folders",

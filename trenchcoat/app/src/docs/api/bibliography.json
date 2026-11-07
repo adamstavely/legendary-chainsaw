@@ -330,7 +330,7 @@
   {
    "tag": "tc-bibliography",
    "className": "TcBibliography",
-   "module": "trenchcoat/bibliography",
+   "module": "@adamstavely/trenchcoat/bibliography",
    "data": [
     "references",
     "selected"

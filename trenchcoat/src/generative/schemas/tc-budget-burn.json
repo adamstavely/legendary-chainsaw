@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-budget-burn.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-budget-burn.json",
   "title": "tc-budget-burn",
   "description": "Budget burn: each item's spend against its budget, with a pace marker and words for ahead, on or behind pace, its\npeople and team, totals in the header and a sort by burn or budget.",
   "type": "object",

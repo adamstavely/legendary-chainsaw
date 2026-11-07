@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-approval-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-approval-card.json",
   "title": "tc-approval-card",
   "description": "An agent's request for approval, with Approve / Deny, an optional countdown, and a compact row once decided.",
   "type": "object",

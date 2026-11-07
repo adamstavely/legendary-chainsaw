@@ -139,7 +139,7 @@
   {
    "tag": "tc-bump-chart",
    "className": "TcBumpChart",
-   "module": "trenchcoat/bump-chart",
+   "module": "@adamstavely/trenchcoat/bump-chart",
    "data": [
     "x",
     "series",

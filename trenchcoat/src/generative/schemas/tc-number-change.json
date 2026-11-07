@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-number-change.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-number-change.json",
   "title": "tc-number-change",
   "description": "A number that briefly highlights when it changes.",
   "type": "object",

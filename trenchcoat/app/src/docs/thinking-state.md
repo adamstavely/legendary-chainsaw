@@ -83,8 +83,8 @@ readers. “+N more” is a button with `aria-expanded`.
 <tc-thinking-state id="thinking" done-label="Ready to answer"></tc-thinking-state>
 
 <script type="module">
-  import "trenchcoat/thinking-state";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/thinking-state";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#thinking");
   panel.steps = [
@@ -103,8 +103,8 @@ readers. “+N more” is a button with `aria-expanded`.
 ```
 
 ```tsx
-import { ThinkingState, type ThinkingStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ThinkingState, type ThinkingStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const steps: ThinkingStep[] = [
   { kind: "step", label: "Understanding the question" },

@@ -89,8 +89,8 @@ churn-report.md”, and a status region says “Downloading churn-report.md”. 
 <tc-artifact-panel id="outputs"></tc-artifact-panel>
 
 <script type="module">
-  import "trenchcoat/artifact-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/artifact-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#outputs");
   panel.artifacts = [
@@ -110,8 +110,8 @@ churn-report.md”, and a status region says “Downloading churn-report.md”. 
 ```
 
 ```tsx
-import { ArtifactPanel, type Artifact } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ArtifactPanel, type Artifact } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const artifacts: Artifact[] = [
   {

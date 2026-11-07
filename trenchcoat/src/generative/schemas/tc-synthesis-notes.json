@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-synthesis-notes.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-synthesis-notes.json",
   "title": "tc-synthesis-notes",
   "description": "The person's own conclusions, assumptions and things to verify – editable, reorderable from the keyboard,\nremovable with Undo, and exported with provenance.",
   "type": "object",

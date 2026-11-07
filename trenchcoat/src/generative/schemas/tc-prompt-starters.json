@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-prompt-starters.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-prompt-starters.json",
   "title": "tc-prompt-starters",
   "description": "Suggestions for an empty chat and follow-ups after an answer, as a list that fills the composer or sends.",
   "type": "object",

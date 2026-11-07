@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-investment-balance.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-investment-balance.json",
   "title": "tc-investment-balance",
   "description": "Investment against priority: each tier's share of the items, the budget and the people, with over- and\nunder-invested tiers marked and the biggest mismatch said in one line.",
   "type": "object",

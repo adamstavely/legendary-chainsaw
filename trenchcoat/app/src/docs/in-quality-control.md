@@ -60,14 +60,14 @@ Say what's being checked and by whom: "A second analyst checks the figures". If 
 <tc-in-quality-control></tc-in-quality-control>
 
 <script type="module">
-  import "trenchcoat/in-quality-control";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/in-quality-control";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { InQualityControl } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InQualityControl } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <InQualityControl />;

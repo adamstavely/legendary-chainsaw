@@ -23,7 +23,7 @@ reach anything else. `{ url }` data is fetched first. Specs written for ztd-char
 
 Specs also draw the library's own Gauge, Heatmap, Radar Chart and Sparkline: their rows are reshaped into those
 elements' properties (a heatmap's long rows into its matrix, say). The same specs draw as standalone SVG without a
-browser – `renderChartToSVG` in `trenchcoat/charts`, `trenchcoat chart render` on the command line, or `render_chart`
+browser – `renderChartToSVG` in `@adamstavely/trenchcoat/charts`, `trenchcoat chart render` on the command line, or `render_chart`
 in the MCP server – except those four, which are drawn in pages only. `suggestCharts` proposes specs for a table.
 
 ## When to use
@@ -77,8 +77,8 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 <tc-chart></tc-chart>
 
 <script type="module">
-  import "trenchcoat/chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-chart").spec = {
     type: "bar",
     title: "Samples processed",
@@ -89,8 +89,8 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 ```
 
 ```tsx
-import { Chart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Chart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const spec = { type: "bar", title: "Samples processed", data: [{ lab: "Genomics", samples: 182 }], encoding: { x: "lab", y: "samples" } };
 

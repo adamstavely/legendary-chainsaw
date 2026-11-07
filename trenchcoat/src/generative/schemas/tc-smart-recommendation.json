@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-smart-recommendation.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-smart-recommendation.json",
   "title": "tc-smart-recommendation",
   "description": "A suggestion with a confidence signal, alternatives and one-click accept and undo.",
   "type": "object",

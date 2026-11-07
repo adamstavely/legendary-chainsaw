@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-evidence-gallery.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-evidence-gallery.json",
   "title": "tc-evidence-gallery",
   "description": "The images behind a set of claims: a filter by attestation, an image grid with each image's attestation and linked\nclaims, and the same items in a sortable, read-only table.",
   "type": "object",

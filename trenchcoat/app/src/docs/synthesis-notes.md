@@ -91,8 +91,8 @@ to the next note in the list, the one before, or the list's Add button; Undo ret
 <tc-synthesis-notes id="notes" session-id="2291" author="Maya Chen"></tc-synthesis-notes>
 
 <script type="module">
-  import "trenchcoat/synthesis-notes";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/synthesis-notes";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const notes = document.querySelector("#notes");
   notes.notes = [{ id: "n1", kind: "verify", text: "Notice period – 30 or 60 days?" }];
@@ -101,9 +101,9 @@ to the next note in the list, the one before, or the list's Add button; Undo ret
 ```
 
 ```tsx
-import { SynthesisNotes, type SynthesisExport, type SynthesisNote } from "trenchcoat/react";
+import { SynthesisNotes, type SynthesisExport, type SynthesisNote } from "@adamstavely/trenchcoat/react";
 import { useState } from "react";
-import "trenchcoat/tokens.css";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SessionNotes({ sessionId, onExport }: { sessionId: string; onExport: (d: SynthesisExport) => void }) {
   const [notes, setNotes] = useState<SynthesisNote[]>([]);

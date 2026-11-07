@@ -145,7 +145,7 @@
   {
    "tag": "tc-lollipop-chart",
    "className": "TcLollipopChart",
-   "module": "trenchcoat/lollipop-chart",
+   "module": "@adamstavely/trenchcoat/lollipop-chart",
    "data": [
     "label",
     "value"

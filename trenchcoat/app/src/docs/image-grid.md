@@ -101,8 +101,8 @@ says how much of each image shows (“50% Variation 1, 50% Variation 2”).
 <tc-image-grid id="images" openable heading="Lighthouse at dusk" prompt="A lighthouse on a sea cliff at dusk, soft watercolor"></tc-image-grid>
 
 <script type="module">
-  import "trenchcoat/image-grid";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/image-grid";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const grid = document.querySelector("#images");
   grid.tiles = [
@@ -118,8 +118,8 @@ says how much of each image shows (“50% Variation 1, 50% Variation 2”).
 
 ```tsx
 import { useState } from "react";
-import { ImageGrid, type ImageGridTile } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ImageGrid, type ImageGridTile } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Variations({ start, regenerate, view }: { start: ImageGridTile[]; regenerate: (id: string) => void; view: (tile: ImageGridTile) => void }) {
   const [tiles, setTiles] = useState(start);

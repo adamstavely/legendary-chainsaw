@@ -92,8 +92,8 @@ The legend is a list labelled “Legend”; the marks are hidden, the words read
 <tc-coverage-matrix id="cov" heading="Red-team coverage"></tc-coverage-matrix>
 
 <script type="module">
-  import "trenchcoat/coverage-matrix";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/coverage-matrix";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const cov = document.querySelector("#cov");
   cov.checks = [{ id: "injection", label: "Prompt injection" }, { id: "pii", label: "Personal data" }];
@@ -108,8 +108,8 @@ The legend is a list labelled “Legend”; the marks are hidden, the words read
 
 ```tsx
 import { useState } from "react";
-import { CoverageMatrix, type CoverageCellRef, type CoverageMap } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CoverageMatrix, type CoverageCellRef, type CoverageMap } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const coverage: CoverageMap = {
   injection: { chat: "covered", email: { status: "partial", detail: "Attachments aren't tested." } },

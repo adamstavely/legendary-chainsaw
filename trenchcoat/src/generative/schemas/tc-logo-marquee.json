@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-logo-marquee.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-logo-marquee.json",
   "title": "tc-logo-marquee",
   "description": "The endless \"Trusted by\" strip: rows of logos that loop, ease to a stop on hover, scrub with inertia and pause for good.",
   "type": "object",

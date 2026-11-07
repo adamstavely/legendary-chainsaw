@@ -266,7 +266,7 @@
   {
    "tag": "tc-compact-breakdown",
    "className": "TcCompactBreakdown",
-   "module": "trenchcoat/compact-breakdown",
+   "module": "@adamstavely/trenchcoat/compact-breakdown",
    "data": [
     "items",
     "periods",

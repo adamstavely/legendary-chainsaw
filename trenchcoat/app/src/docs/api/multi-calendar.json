@@ -448,7 +448,7 @@
   {
    "tag": "tc-multi-calendar",
    "className": "TcMultiCalendar",
-   "module": "trenchcoat/multi-calendar",
+   "module": "@adamstavely/trenchcoat/multi-calendar",
    "data": [
     "calendars",
     "events",

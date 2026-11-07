@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-disagreement-banner.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-disagreement-banner.json",
   "title": "tc-disagreement-banner",
   "description": "Today's answer and an earlier answer to the same question side by side, the difference highlighted, with dismiss\nand open-the-earlier-session.",
   "type": "object",

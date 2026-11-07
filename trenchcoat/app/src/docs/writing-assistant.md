@@ -81,8 +81,8 @@ blocked.”, “Dictation isn't supported in this browser.” New chat moves foc
 <tc-writing-assistant id="quill" name="Quill" greeting="What should we write?"></tc-writing-assistant>
 
 <script type="module">
-  import "trenchcoat/writing-assistant";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/writing-assistant";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const quill = document.querySelector("#quill");
   quill.suggestions = ["Polish my email", "Make it shorter"];
@@ -93,8 +93,8 @@ blocked.”, “Dictation isn't supported in this browser.” New chat moves foc
 ```
 
 ```tsx
-import { WritingAssistant } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { WritingAssistant } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Quill({ write }: { write: (message: string, signal: AbortSignal) => Promise<string> }) {
   return (

@@ -415,7 +415,7 @@
   {
    "tag": "tc-search-results",
    "className": "TcSearchResults",
-   "module": "trenchcoat/search-results",
+   "module": "@adamstavely/trenchcoat/search-results",
    "data": [
     "options",
     "results",

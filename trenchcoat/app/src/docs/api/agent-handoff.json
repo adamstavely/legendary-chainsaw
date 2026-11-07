@@ -269,7 +269,7 @@
   {
    "tag": "tc-agent-handoff",
    "className": "TcAgentHandoff",
-   "module": "trenchcoat/agent-handoff",
+   "module": "@adamstavely/trenchcoat/agent-handoff",
    "data": [
     "steps",
     "handoffs",

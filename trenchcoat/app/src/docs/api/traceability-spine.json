@@ -263,7 +263,7 @@
   {
    "tag": "tc-traceability-spine",
    "className": "TcTraceabilitySpine",
-   "module": "trenchcoat/traceability-spine",
+   "module": "@adamstavely/trenchcoat/traceability-spine",
    "data": [
     "stages",
     "nodes",

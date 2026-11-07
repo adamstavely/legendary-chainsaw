@@ -68,8 +68,8 @@ reviewer can check in the evidence.
 <tc-case-review id="case" heading="Case 4812" severity="high"></tc-case-review>
 
 <script type="module">
-  import "trenchcoat/case-review";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/case-review";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#case");
   review.read = { summary: "Two payments of the same amount.", suggestion: "escalate" };
@@ -78,8 +78,8 @@ reviewer can check in the evidence.
 ```
 
 ```tsx
-import { CaseReview, type CaseRead } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CaseReview, type CaseRead } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const read: CaseRead = { summary: "Two payments of the same amount.", suggestion: "escalate" };
 

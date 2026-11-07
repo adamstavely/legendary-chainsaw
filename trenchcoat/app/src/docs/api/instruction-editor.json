@@ -339,7 +339,7 @@
   {
    "tag": "tc-instruction-editor",
    "className": "TcInstructionEditor",
-   "module": "trenchcoat/instruction-editor",
+   "module": "@adamstavely/trenchcoat/instruction-editor",
    "data": [
     "value",
     "roles",

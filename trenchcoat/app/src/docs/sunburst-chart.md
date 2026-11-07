@@ -86,8 +86,8 @@ are `--tc-plot-bg`, the card's own colour, so names are never text on an arc's i
 <tc-sunburst-chart heading="Grant spend" description="This year, k$ – division, lab, cost"></tc-sunburst-chart>
 
 <script type="module">
-  import "trenchcoat/sunburst-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/sunburst-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-sunburst-chart");
   chart.path = ["division", "lab"];
   chart.data = [
@@ -99,8 +99,8 @@ are `--tc-plot-bg`, the card's own colour, so names are never text on an arc's i
 ```
 
 ```tsx
-import { SunburstChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SunburstChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { division: "Life sciences", lab: "Genomics", label: "Reagents", value: 420 },

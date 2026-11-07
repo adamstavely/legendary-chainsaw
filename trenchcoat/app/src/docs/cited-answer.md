@@ -86,8 +86,8 @@ overflow button is “+2 more sources”.
 <tc-cited-answer id="answer" pages-read="14" action-label="Follow up"></tc-cited-answer>
 
 <script type="module">
-  import "trenchcoat/cited-answer";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/cited-answer";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const answer = document.querySelector("#answer");
   answer.sources = [
@@ -106,8 +106,8 @@ overflow button is “+2 more sources”.
 ```
 
 ```tsx
-import { CitedAnswer, type CitedSegment, type CitedSource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CitedAnswer, type CitedSegment, type CitedSource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sources: CitedSource[] = [
   {

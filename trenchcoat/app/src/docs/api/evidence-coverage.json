@@ -233,7 +233,7 @@
   {
    "tag": "tc-evidence-coverage",
    "className": "TcEvidenceCoverage",
-   "module": "trenchcoat/evidence-coverage",
+   "module": "@adamstavely/trenchcoat/evidence-coverage",
    "data": [
     "sources",
     "statusLabels",

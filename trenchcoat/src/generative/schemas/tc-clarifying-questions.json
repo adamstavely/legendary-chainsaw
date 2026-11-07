@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-clarifying-questions.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-clarifying-questions.json",
   "title": "tc-clarifying-questions",
   "description": "The agent asks before it starts: two or three questions – choices, a short answer, \"You decide\" – sent back as one reply.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-friction-profile.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-friction-profile.json",
   "title": "tc-friction-profile",
   "description": "A mode switch – standard, elevated, deadline – that previews how each safeguard changes (on, shortened, deferred,\ntightened or off) against the mode in force before it is applied.",
   "type": "object",

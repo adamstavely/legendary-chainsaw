@@ -99,8 +99,8 @@ named “Request deletion?”. A polite status message confirms “Deletion of c
 <tc-data-handling-policy id="policy" name="policy"></tc-data-handling-policy>
 
 <script type="module">
-  import "trenchcoat/data-handling-policy";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/data-handling-policy";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const policy = document.querySelector("#policy");
   policy.value = { retention: "30d", memory: "conversation", logging: "metadata", redact: ["personal"], training: false };
@@ -117,8 +117,8 @@ named “Request deletion?”. A polite status message confirms “Deletion of c
 
 ```tsx
 import { useState } from "react";
-import { DataHandlingPolicy, type DataHandlingPolicyValue, type DataPolicyDeletion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DataHandlingPolicy, type DataHandlingPolicyValue, type DataPolicyDeletion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function DataSettings({ applied, deletions, save }: { applied: DataHandlingPolicyValue; deletions: DataPolicyDeletion[]; save: (value: DataHandlingPolicyValue) => void }) {
   const [value, setValue] = useState(applied);

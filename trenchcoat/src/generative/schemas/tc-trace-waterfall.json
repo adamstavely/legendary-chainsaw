@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-trace-waterfall.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-trace-waterfall.json",
   "title": "tc-trace-waterfall",
   "description": "An agent run as a tree of spans next to a timeline: durations, costs, folding and a details window per span.",
   "type": "object",

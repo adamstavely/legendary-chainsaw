@@ -96,7 +96,7 @@ tone from the name, so the same person always looks the same.
 ```
 
 ```tsx
-import { TeamRoster, type RosterMember } from "trenchcoat/react";
+import { TeamRoster, type RosterMember } from "@adamstavely/trenchcoat/react";
 
 export function Team({ members }: { members: RosterMember[] }) {
   return <TeamRoster title="Reef resilience project" members={members} defaultGroupBy="timezone" onMessage={(m) => console.log("message", m.name)} />;

@@ -327,7 +327,7 @@
   {
    "tag": "tc-date-range-picker",
    "className": "TcDateRangePicker",
-   "module": "trenchcoat/date-range-picker",
+   "module": "@adamstavely/trenchcoat/date-range-picker",
    "data": [
     "value",
     "presets",

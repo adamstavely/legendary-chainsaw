@@ -284,7 +284,7 @@
   {
    "tag": "tc-run-manifest",
    "className": "TcRunManifest",
-   "module": "trenchcoat/run-manifest",
+   "module": "@adamstavely/trenchcoat/run-manifest",
    "data": [
     "modelIcon",
     "settings",

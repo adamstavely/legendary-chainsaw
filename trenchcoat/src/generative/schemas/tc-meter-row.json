@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-meter-row.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-meter-row.json",
   "title": "tc-meter-row",
   "description": "A label, a percentage and a tiny bar on one line, with a word and a mark when it's getting full.",
   "type": "object",

@@ -92,8 +92,8 @@ caption, the axes as row headers and the series as column headers.
 <tc-radar-chart id="activity" heading="Activity overview" description="Contributions in 2026" unit="%"></tc-radar-chart>
 
 <script type="module">
-  import "trenchcoat/radar-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/radar-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const chart = document.querySelector("#activity");
   chart.axes = ["Code review", "Issues", "Pull requests", "Commits"];
@@ -102,8 +102,8 @@ caption, the axes as row headers and the series as column headers.
 ```
 
 ```tsx
-import { RadarChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RadarChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function LabPractices() {
   return (

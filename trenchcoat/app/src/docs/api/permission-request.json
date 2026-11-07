@@ -422,7 +422,7 @@
   {
    "tag": "tc-permission-request",
    "className": "TcPermissionRequest",
-   "module": "trenchcoat/permission-request",
+   "module": "@adamstavely/trenchcoat/permission-request",
    "data": [
     "agent",
     "toolIcon",

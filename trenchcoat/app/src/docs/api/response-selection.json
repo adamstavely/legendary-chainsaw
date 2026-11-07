@@ -299,7 +299,7 @@
   {
    "tag": "tc-response-selection",
    "className": "TcResponseSelection",
-   "module": "trenchcoat/response-selection",
+   "module": "@adamstavely/trenchcoat/response-selection",
    "data": [
     "quotes",
     "edit",

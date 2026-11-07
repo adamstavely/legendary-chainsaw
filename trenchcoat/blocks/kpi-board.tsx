@@ -1,13 +1,13 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
-import { KpiBoard as KpiBoardElement } from "trenchcoat/react";
+import { KpiBoard as KpiBoardElement } from "@adamstavely/trenchcoat/react";
 
 /*
  * KPI Board – the top of a dashboard: one date range for everything, three small trend cards, one large overview chart
  * that compares this period with the last, and a focus card for one product or plan. Hover any chart for the day under
  * the pointer; switch the range and every number rolls while the lines draw in again.
- * Built on the Trenchcoat element <tc-kpi-board> through `trenchcoat/react` (install `trenchcoat` and import its
+ * Built on the Trenchcoat element <tc-kpi-board> through `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` and import its
  * tokens.css); this file keeps the block's React API: `range` / `defaultRange` / `onRangeChange`, the same for
  * `segment`, a React `icon`, `className`, DOM props and a `ref` on the root.
  */

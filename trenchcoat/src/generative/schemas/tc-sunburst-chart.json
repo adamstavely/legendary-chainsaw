@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-sunburst-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sunburst-chart.json",
   "title": "tc-sunburst-chart",
   "description": "A hierarchy as rings – the top level innermost – with the largest leaf and its path emphasised, the outer names\nbeside the circle and the inner ones on chips, and a table view.",
   "type": "object",

@@ -124,7 +124,7 @@
   {
    "tag": "tc-offline",
    "className": "TcOffline",
-   "module": "trenchcoat/offline",
+   "module": "@adamstavely/trenchcoat/offline",
    "data": [],
    "attributes": [
     {

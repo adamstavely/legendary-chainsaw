@@ -9,7 +9,7 @@ one pastel blue mark with a darker edge and ink, and a soft glow beneath. Each i
 - **As an image**: `<img src=".../laws/fitts-law.svg" alt="">` follows the system's light or dark setting.
 - **Inline**: paste the markup and it follows the page's theme – a `.dark` or `.light` class, `data-theme` or
   `data-tc-theme` on an ancestor, or the page's `color-scheme`. These below are inlined, so they follow this page.
-- **From the package**: `import url from "trenchcoat/illustrations/spot/laws/fitts-law.svg"`.
+- **From the package**: `import url from "@adamstavely/trenchcoat/illustrations/spot/laws/fitts-law.svg"`.
 - **In design tools**: every shape carries its light colours as plain attributes too, so Figma and Illustrator show
   the light version.
 

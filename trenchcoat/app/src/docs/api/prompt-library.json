@@ -291,7 +291,7 @@
   {
    "tag": "tc-prompt-library",
    "className": "TcPromptLibrary",
-   "module": "trenchcoat/prompt-library",
+   "module": "@adamstavely/trenchcoat/prompt-library",
    "data": [
     "templates",
     "values",

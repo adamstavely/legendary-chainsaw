@@ -358,7 +358,7 @@
   {
    "tag": "tc-problem-list",
    "className": "TcProblemList",
-   "module": "trenchcoat/problem-list",
+   "module": "@adamstavely/trenchcoat/problem-list",
    "data": [
     "problems",
     "expanded",

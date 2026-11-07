@@ -85,8 +85,8 @@ moves focus to the first. Creating says “Routine created” with the next run.
 <tc-routine-form id="routine" time-zone="America/Los_Angeles" routines-href="/routines"></tc-routine-form>
 
 <script type="module">
-  import "trenchcoat/routine-form";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/routine-form";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const form = document.querySelector("#routine");
   form.value = { ...form.value, name: "Coral bleaching study updates", weekday: 4, time: "13:45" };
@@ -97,8 +97,8 @@ moves focus to the first. Creating says “Routine created” with the next run.
 
 ```tsx
 import { useState } from "react";
-import { RoutineForm, emptyRoutine, type RoutineDraft } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RoutineForm, emptyRoutine, type RoutineDraft } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function NewRoutine({ onClose }: { onClose: () => void }) {
   const [value, setValue] = useState<RoutineDraft>({ ...emptyRoutine(), name: "Coral bleaching study updates" });

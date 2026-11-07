@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-preview-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-preview-card.json",
   "title": "tc-preview-card",
   "description": "A gallery tile: a large preview above a title and a short description, which opens what it previews.",
   "type": "object",

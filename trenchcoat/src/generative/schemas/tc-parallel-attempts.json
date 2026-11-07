@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-parallel-attempts.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-parallel-attempts.json",
   "title": "tc-parallel-attempts",
   "description": "Several attempts at one task, side by side like a race; the best finished one is marked and picked, and you can\npick another.",
   "type": "object",

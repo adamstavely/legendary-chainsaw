@@ -273,7 +273,7 @@
   {
    "tag": "tc-coordinate-details",
    "className": "TcCoordinateDetails",
-   "module": "trenchcoat/coordinate-details",
+   "module": "@adamstavely/trenchcoat/coordinate-details",
    "data": [
     "resolve",
     "providers"

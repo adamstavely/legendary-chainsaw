@@ -89,8 +89,8 @@ share and its count. The distribution is a `toolbar` named “Answers by score�
 <tc-score-summary id="nps" kind="nps" description="Riverside Library app · Q3" target="40"></tc-score-summary>
 
 <script type="module">
-  import "trenchcoat/score-summary";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/score-summary";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const nps = document.querySelector("#nps");
   nps.responses = [6, 3, 4, 5, 7, 11, 16, 38, 52, 74, 96];
@@ -100,8 +100,8 @@ share and its count. The distribution is a `toolbar` named “Answers by score�
 ```
 
 ```tsx
-import { ScoreSummary } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ScoreSummary } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SatisfactionCard({ counts, onFilter }: { counts: number[]; onFilter: (score: number | null) => void }) {
   return <ScoreSummary kind="csat" description="Study-room booking · Q3" responses={counts} previous={78} comparedTo="Q2" onScoreSelect={onFilter} />;

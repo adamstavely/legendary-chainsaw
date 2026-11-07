@@ -100,8 +100,8 @@ and “Notification dismissed” after those actions.
 <tc-notifications id="bell" settings-href="/settings/notifications" has-more></tc-notifications>
 
 <script type="module">
-  import "trenchcoat/notifications";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/notifications";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const bell = document.querySelector("#bell");
   bell.categories = [{ id: "mentions", label: "Mentions" }];
@@ -119,8 +119,8 @@ and “Notification dismissed” after those actions.
 
 ```tsx
 import { useState } from "react";
-import { Notifications, type NotificationItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Notifications, type NotificationItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function HeaderBell() {
   const [items, setItems] = useState<NotificationItem[]>([

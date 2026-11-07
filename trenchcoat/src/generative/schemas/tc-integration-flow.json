@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-integration-flow.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-integration-flow.json",
   "title": "tc-integration-flow",
   "description": "Integrations rotating past a data hub, each sending a beam into it.",
   "type": "object",

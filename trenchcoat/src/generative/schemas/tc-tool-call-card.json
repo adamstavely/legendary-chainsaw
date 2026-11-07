@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-tool-call-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tool-call-card.json",
   "title": "tc-tool-call-card",
   "description": "One tool call of an AI agent: name, summary, status with a live timer, arguments and result.",
   "type": "object",

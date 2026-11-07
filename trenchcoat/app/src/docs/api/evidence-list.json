@@ -245,7 +245,7 @@
   {
    "tag": "tc-evidence-list",
    "className": "TcEvidenceList",
-   "module": "trenchcoat/evidence-list",
+   "module": "@adamstavely/trenchcoat/evidence-list",
    "data": [
     "exhibits",
     "statuses"

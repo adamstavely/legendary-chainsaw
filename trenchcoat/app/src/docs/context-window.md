@@ -89,8 +89,8 @@ billing-spec.md”, “Context window is almost full” and “Context window is
 <tc-context-window id="ctx" limit="200000" model="Opus 5.5" action-label="New chat"></tc-context-window>
 
 <script type="module">
-  import "trenchcoat/context-window";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/context-window";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ctx = document.querySelector("#ctx");
   ctx.parts = [
@@ -107,8 +107,8 @@ billing-spec.md”, “Context window is almost full” and “Context window is
 
 ```tsx
 import { useState } from "react";
-import { ContextWindow, type ContextPart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ContextWindow, type ContextPart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Context() {
   const [parts, setParts] = useState<ContextPart[]>([

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-coverage-matrix.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-coverage-matrix.json",
   "title": "tc-coverage-matrix",
   "description": "A heatmap of checks × parts – covered, partial or gap – with totals, a legend with counts, and a cell's detail on\nEnter or click.",
   "type": "object",

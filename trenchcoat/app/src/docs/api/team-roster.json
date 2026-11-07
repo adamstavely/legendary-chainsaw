@@ -345,7 +345,7 @@
   {
    "tag": "tc-team-roster",
    "className": "TcTeamRoster",
-   "module": "trenchcoat/team-roster",
+   "module": "@adamstavely/trenchcoat/team-roster",
    "data": [
     "members"
    ],

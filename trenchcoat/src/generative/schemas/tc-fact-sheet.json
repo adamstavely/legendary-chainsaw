@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-fact-sheet.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-fact-sheet.json",
   "title": "tc-fact-sheet",
   "description": "Facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence –\nwith conflicting readings side by side, unknowns said plainly and an optional Copy per value.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-reasoning-flags.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-reasoning-flags.json",
   "title": "tc-reasoning-flags",
   "description": "Inline markers for weak reasoning in an answer, each opening a plain explanation.",
   "type": "object",

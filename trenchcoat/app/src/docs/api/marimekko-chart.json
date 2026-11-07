@@ -129,7 +129,7 @@
   {
    "tag": "tc-marimekko-chart",
    "className": "TcMarimekkoChart",
-   "module": "trenchcoat/marimekko-chart",
+   "module": "@adamstavely/trenchcoat/marimekko-chart",
    "data": [
     "x",
     "series",

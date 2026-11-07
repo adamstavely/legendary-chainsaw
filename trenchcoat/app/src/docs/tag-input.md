@@ -83,8 +83,8 @@ count (“Added Tides. 3 tags”), and a refused tag's reason is announced and l
 <tc-tag-input label="Keywords" name="keywords" max="8"></tc-tag-input>
 
 <script type="module">
-  import "trenchcoat/tag-input";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tag-input";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const field = document.querySelector("tc-tag-input");
   field.value = ["Harbours", "Tides"];
@@ -95,8 +95,8 @@ count (“Added Tides. 3 tags”), and a refused tag's reason is announced and l
 
 ```tsx
 import { useState } from "react";
-import { TagInput } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TagInput } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Keywords() {
   const [value, setValue] = useState(["Harbours", "Tides"]);

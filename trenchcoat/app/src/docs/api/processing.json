@@ -131,7 +131,7 @@
   {
    "tag": "tc-processing",
    "className": "TcProcessing",
-   "module": "trenchcoat/processing",
+   "module": "@adamstavely/trenchcoat/processing",
    "data": [],
    "attributes": [
     {

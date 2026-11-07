@@ -127,7 +127,7 @@
   {
    "tag": "tc-soup-cans",
    "className": "TcSoupCans",
-   "module": "trenchcoat/soup-cans",
+   "module": "@adamstavely/trenchcoat/soup-cans",
    "data": [],
    "attributes": [
     {

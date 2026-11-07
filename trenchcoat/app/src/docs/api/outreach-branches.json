@@ -109,7 +109,7 @@
   {
    "tag": "tc-outreach-branches",
    "className": "TcOutreachBranches",
-   "module": "trenchcoat/outreach-branches",
+   "module": "@adamstavely/trenchcoat/outreach-branches",
    "data": [],
    "attributes": [
     {

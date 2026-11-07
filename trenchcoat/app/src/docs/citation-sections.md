@@ -75,16 +75,16 @@ readers. The details link reads its text, “See more details”.
 <tc-citation-sections id="sections" href="/papers/42/citations"></tc-citation-sections>
 
 <script type="module">
-  import "trenchcoat/citation-sections";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/citation-sections";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#sections").counts = { intro: 107, methods: 13, results: 11, discussion: 114, other: 120 };
 </script>
 ```
 
 ```tsx
-import { CitationSections } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CitationSections } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Sections() {
   return <CitationSections href="/papers/42/citations" counts={{ intro: 107, methods: 13, results: 11, discussion: 114, other: 120 }} />;

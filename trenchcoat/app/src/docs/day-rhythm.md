@@ -85,8 +85,8 @@ readout repeat what the buttons say, so they're hidden from screen readers; the 
 <tc-day-rhythm id="day" heading="Daily rhythm" now="860"></tc-day-rhythm>
 
 <script type="module">
-  import "trenchcoat/day-rhythm";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/day-rhythm";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const day = document.querySelector("#day");
   day.kinds = [
@@ -110,8 +110,8 @@ readout repeat what the buttons say, so they're hidden from screen readers; the 
 ```
 
 ```tsx
-import { DayRhythm, type RhythmKind, type RhythmRow } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DayRhythm, type RhythmKind, type RhythmRow } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const kinds: RhythmKind[] = [
   { id: "home", label: "Home" },

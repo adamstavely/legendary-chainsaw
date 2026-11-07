@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-redaction-review.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-redaction-review.json",
   "title": "tc-redaction-review",
   "description": "Checking what's been redacted before a document's shared: reveal one at a time, approve or reject, then share.",
   "type": "object",

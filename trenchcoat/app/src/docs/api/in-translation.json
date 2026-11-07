@@ -132,7 +132,7 @@
   {
    "tag": "tc-in-translation",
    "className": "TcInTranslation",
-   "module": "trenchcoat/in-translation",
+   "module": "@adamstavely/trenchcoat/in-translation",
    "data": [],
    "attributes": [
     {

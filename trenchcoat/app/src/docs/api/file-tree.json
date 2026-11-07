@@ -305,7 +305,7 @@
   {
    "tag": "tc-file-tree",
    "className": "TcFileTree",
-   "module": "trenchcoat/file-tree",
+   "module": "@adamstavely/trenchcoat/file-tree",
    "data": [
     "nodes",
     "expanded",

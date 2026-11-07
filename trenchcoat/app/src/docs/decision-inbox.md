@@ -85,8 +85,8 @@ When nothing is left, the card says “Nothing waiting on you – new decisions 
 <tc-decision-inbox id="inbox"></tc-decision-inbox>
 
 <script type="module">
-  import "trenchcoat/decision-inbox";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/decision-inbox";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const inbox = document.querySelector("#inbox");
   inbox.decisions = [
@@ -99,8 +99,8 @@ When nothing is left, the card says “Nothing waiting on you – new decisions 
 ```
 
 ```tsx
-import { DecisionInbox, type InboxDecision } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DecisionInbox, type InboxDecision } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const decisions: InboxDecision[] = [
   { id: "d1", title: "Merge the pricing page redesign?", detail: "All checks passed · 2 approvals", primary: "Merge", secondary: "Hold" },

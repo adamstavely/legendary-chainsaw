@@ -63,14 +63,14 @@ Say what was found in `detail`, in plain words. Say suspicious or potential unle
 <tc-scan-status file-name="invoice.zip" state="scanning" progress="0.4"></tc-scan-status>
 
 <script type="module">
-  import "trenchcoat/scan-status";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/scan-status";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { ScanStatus } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ScanStatus } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Upload() {
   return <ScanStatus layout="card" fileName="invoice.zip" state="failed" onTcAction={(e) => console.log(e.detail.action)} />;

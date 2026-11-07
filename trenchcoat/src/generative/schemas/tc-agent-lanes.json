@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-lanes.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-lanes.json",
   "title": "tc-agent-lanes",
   "description": "Every agent as a lane on a live timeline, with decisions in place.",
   "type": "object",

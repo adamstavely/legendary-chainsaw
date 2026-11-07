@@ -207,7 +207,7 @@
   {
    "tag": "tc-change-list",
    "className": "TcChangeList",
-   "module": "trenchcoat/change-list",
+   "module": "@adamstavely/trenchcoat/change-list",
    "data": [
     "items",
     "rowActions",

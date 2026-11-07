@@ -229,7 +229,7 @@
   {
    "tag": "tc-thinking-state",
    "className": "TcThinkingState",
-   "module": "trenchcoat/thinking-state",
+   "module": "@adamstavely/trenchcoat/thinking-state",
    "data": [
     "steps",
     "done"

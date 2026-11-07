@@ -246,7 +246,7 @@
   {
    "tag": "tc-network-log",
    "className": "TcNetworkLog",
-   "module": "trenchcoat/network-log",
+   "module": "@adamstavely/trenchcoat/network-log",
    "data": [
     "requests",
     "types",

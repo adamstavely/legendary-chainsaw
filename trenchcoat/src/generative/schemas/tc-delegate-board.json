@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-delegate-board.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-delegate-board.json",
   "title": "tc-delegate-board",
   "description": "Hand work to agents by dragging it onto them – or by click and keyboard.",
   "type": "object",

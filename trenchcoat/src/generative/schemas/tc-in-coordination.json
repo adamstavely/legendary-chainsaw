@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-in-coordination.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-in-coordination.json",
   "title": "tc-in-coordination",
   "description": "A document with three linked points on it, for work being agreed between teams before it goes ahead.",
   "type": "object",

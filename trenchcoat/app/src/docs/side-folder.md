@@ -59,14 +59,14 @@ that label.
 <tc-side-folder label="Shared documents"></tc-side-folder>
 
 <script type="module">
-  import "trenchcoat/side-folder";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/side-folder";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { SideFolder } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SideFolder } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function NoSharedFiles() {
   return (

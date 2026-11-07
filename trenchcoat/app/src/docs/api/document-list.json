@@ -211,7 +211,7 @@
   {
    "tag": "tc-document-list",
    "className": "TcDocumentList",
-   "module": "trenchcoat/document-list",
+   "module": "@adamstavely/trenchcoat/document-list",
    "data": [
     "documents",
     "statuses",

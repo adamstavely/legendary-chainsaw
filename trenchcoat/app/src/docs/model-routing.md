@@ -88,8 +88,8 @@ verdict – “Long inputs matched, so it goes to Atlas 2.” – and the app's 
 <tc-model-routing id="routing"></tc-model-routing>
 
 <script type="module">
-  import "trenchcoat/model-routing";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/model-routing";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const routing = document.querySelector("#routing");
   routing.targets = [
@@ -106,8 +106,8 @@ verdict – “Long inputs matched, so it goes to Atlas 2.” – and the app's 
 
 ```tsx
 import { useState } from "react";
-import { ModelRouting, type ModelRoutingValue, type RouteTestResult } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ModelRouting, type ModelRoutingValue, type RouteTestResult } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const targets = [
   { id: "long", label: "Atlas Long", region: "EU" },

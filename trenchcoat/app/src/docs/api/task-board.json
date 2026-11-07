@@ -249,7 +249,7 @@
   {
    "tag": "tc-task-board",
    "className": "TcTaskBoard",
-   "module": "trenchcoat/task-board",
+   "module": "@adamstavely/trenchcoat/task-board",
    "data": [
     "tasks",
     "statuses",

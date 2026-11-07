@@ -87,8 +87,8 @@ polite status message, as is Copy. The query string is labelled â€œQuery stringâ
 <tc-query-builder id="qb" heading="Find files"></tc-query-builder>
 
 <script type="module">
-  import "trenchcoat/query-builder";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/query-builder";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const qb = document.querySelector("#qb");
   qb.fields = [
@@ -101,8 +101,8 @@ polite status message, as is Copy. The query string is labelled â€œQuery stringâ
 ```
 
 ```tsx
-import { QueryBuilder, type QueryField } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { QueryBuilder, type QueryField } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const fields: QueryField[] = [
   { id: "type", label: "Type", type: "enum", options: [{ value: "document", label: "Document" }, { value: "image", label: "Image" }] },

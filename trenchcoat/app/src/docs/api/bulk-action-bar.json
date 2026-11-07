@@ -141,7 +141,7 @@
   {
    "tag": "tc-bulk-action-bar",
    "className": "TcBulkActionBar",
-   "module": "trenchcoat/bulk-action-bar",
+   "module": "@adamstavely/trenchcoat/bulk-action-bar",
    "data": [
     "actions",
     "labels"

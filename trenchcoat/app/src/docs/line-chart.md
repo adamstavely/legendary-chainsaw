@@ -92,8 +92,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 <tc-line-chart heading="Median queue time" unit=" min"></tc-line-chart>
 
 <script type="module">
-  import "trenchcoat/line-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/line-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-line-chart").data = [
     { x: "2026-01", y: 42 },
     { x: "2026-02", y: 48 },
@@ -103,8 +103,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 ```
 
 ```tsx
-import { LineChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LineChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { x: "2026-01", y: 42 },

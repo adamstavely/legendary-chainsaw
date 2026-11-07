@@ -167,7 +167,7 @@
   {
    "tag": "tc-gradient-floor",
    "className": "TcGradientFloor",
-   "module": "trenchcoat/gradient-floor",
+   "module": "@adamstavely/trenchcoat/gradient-floor",
    "data": [
     "colors"
    ],

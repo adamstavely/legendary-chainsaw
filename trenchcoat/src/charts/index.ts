@@ -1,9 +1,9 @@
 /*
- * trenchcoat/charts – the charts as data, for pages, servers and agents: the chart types a spec can draw, checking a
+ * @adamstavely/trenchcoat/charts – the charts as data, for pages, servers and agents: the chart types a spec can draw, checking a
  * spec, turning one into a chart's tag and properties, fetching { url } data, suggesting charts for a table, and
  * drawing a spec as a standalone SVG string without a browser (in Node, call installDomShim() first).
  *
- *   import { renderChartToSVG } from "trenchcoat/charts";
+ *   import { renderChartToSVG } from "@adamstavely/trenchcoat/charts";
  *   const svg = await renderChartToSVG({ type: "bar", data: rows, encoding: { x: "lab", y: "samples" } }, { tokensCss });
  *
  * In a page, <tc-chart .spec=${…}> draws the same specs as live charts.

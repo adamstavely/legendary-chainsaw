@@ -462,7 +462,7 @@
   {
    "tag": "tc-message-actions",
    "className": "TcMessageActions",
-   "module": "trenchcoat/message-actions",
+   "module": "@adamstavely/trenchcoat/message-actions",
    "data": [
     "actions",
     "versions",
@@ -544,7 +544,7 @@
   {
    "tag": "tc-message-text",
    "className": "TcMessageText",
-   "module": "trenchcoat/message-actions",
+   "module": "@adamstavely/trenchcoat/message-actions",
    "data": [
     "content"
    ],

@@ -482,7 +482,7 @@
   {
    "tag": "tc-context-map",
    "className": "TcContextMap",
-   "module": "trenchcoat/context-map",
+   "module": "@adamstavely/trenchcoat/context-map",
    "data": [
     "blocks",
     "modelIcon",

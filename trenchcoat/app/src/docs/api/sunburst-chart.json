@@ -184,7 +184,7 @@
   {
    "tag": "tc-sunburst-chart",
    "className": "TcSunburstChart",
-   "module": "trenchcoat/sunburst-chart",
+   "module": "@adamstavely/trenchcoat/sunburst-chart",
    "data": [
     "label",
     "value",

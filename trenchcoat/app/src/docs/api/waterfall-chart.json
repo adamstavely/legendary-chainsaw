@@ -187,7 +187,7 @@
   {
    "tag": "tc-waterfall-chart",
    "className": "TcWaterfallChart",
-   "module": "trenchcoat/waterfall-chart",
+   "module": "@adamstavely/trenchcoat/waterfall-chart",
    "data": [
     "label",
     "value",

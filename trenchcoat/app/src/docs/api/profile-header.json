@@ -299,7 +299,7 @@
   {
    "tag": "tc-profile-header",
    "className": "TcProfileHeader",
-   "module": "trenchcoat/profile-header",
+   "module": "@adamstavely/trenchcoat/profile-header",
    "data": [
     "status",
     "tags",

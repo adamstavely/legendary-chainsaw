@@ -88,8 +88,8 @@ button reads “Insert {{company}} 1×, Trading name”. A status region announc
 <tc-instruction-editor id="prompt" token-count="412" token-limit="1000"></tc-instruction-editor>
 
 <script type="module">
-  import "trenchcoat/instruction-editor";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/instruction-editor";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const prompt = document.querySelector("#prompt");
   prompt.value = { role: "system", text: "You are the support assistant for {{company}}." };
@@ -101,8 +101,8 @@ button reads “Insert {{company}} 1×, Trading name”. A status region announc
 
 ```tsx
 import { useState } from "react";
-import { InstructionEditor, type InstructionEditorValue, type InstructionVersion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InstructionEditor, type InstructionEditorValue, type InstructionVersion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Prompt() {
   const [value, setValue] = useState<InstructionEditorValue>({ role: "system", text: "You are the support assistant for {{company}}." });

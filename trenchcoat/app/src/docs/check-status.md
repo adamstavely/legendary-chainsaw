@@ -73,8 +73,8 @@ summary, not "5/11". Pressing Re-run is announced through `role="status"`.
 <tc-check-status id="checks" retryable></tc-check-status>
 
 <script type="module">
-  import "trenchcoat/check-status";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/check-status";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#checks");
   el.checks = [
@@ -86,8 +86,8 @@ summary, not "5/11". Pressing Re-run is announced through `role="status"`.
 ```
 
 ```tsx
-import { CheckStatus, type CheckItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CheckStatus, type CheckItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const checks: CheckItem[] = [
   { id: "unit", name: "Unit tests", state: "failing", detail: "2 of 480 failed" },

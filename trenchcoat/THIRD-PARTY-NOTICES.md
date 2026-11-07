@@ -6,7 +6,7 @@ Trenchcoat includes code adapted from the projects below, under their licences.
 
 https://github.com/Junhan2/ztd-charts – the chart engine in `src/elements/internal/chart/` (scales, layouts, data
 parsing, text measuring, the spring motion engine, the brush, the chart spec and chart suggestions), the charts built
-on it (`tc-bar-chart` and the rest of the Charts section, and `tc-chart`), and `trenchcoat/charts`, ported from React
+on it (`tc-bar-chart` and the rest of the Charts section, and `tc-chart`), and `@adamstavely/trenchcoat/charts`, ported from React
 to Lit.
 
 ```

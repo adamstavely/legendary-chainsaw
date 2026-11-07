@@ -337,7 +337,7 @@
   {
    "tag": "tc-plan-vs-actual",
    "className": "TcPlanVsActual",
-   "module": "trenchcoat/plan-vs-actual",
+   "module": "@adamstavely/trenchcoat/plan-vs-actual",
    "data": [
     "steps",
     "now",

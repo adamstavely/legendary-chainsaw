@@ -252,7 +252,7 @@
   {
    "tag": "tc-agent-monitor",
    "className": "TcAgentMonitor",
-   "module": "trenchcoat/agent-monitor",
+   "module": "@adamstavely/trenchcoat/agent-monitor",
    "data": [
     "steps",
     "labels"

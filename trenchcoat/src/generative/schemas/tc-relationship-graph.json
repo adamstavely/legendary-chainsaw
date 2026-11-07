@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-relationship-graph.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-relationship-graph.json",
   "title": "tc-relationship-graph",
   "description": "Connections between people and organisations around one of them – direct and second-hand rings, relationships drawn\nby strength, re-centring on click, and a panel and keyboard list of the connections.",
   "type": "object",

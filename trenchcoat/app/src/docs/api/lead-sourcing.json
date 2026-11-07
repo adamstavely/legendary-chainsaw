@@ -96,7 +96,7 @@
   {
    "tag": "tc-lead-sourcing",
    "className": "TcLeadSourcing",
-   "module": "trenchcoat/lead-sourcing",
+   "module": "@adamstavely/trenchcoat/lead-sourcing",
    "data": [],
    "attributes": [
     {

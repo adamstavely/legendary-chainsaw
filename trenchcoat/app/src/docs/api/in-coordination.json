@@ -131,7 +131,7 @@
   {
    "tag": "tc-in-coordination",
    "className": "TcInCoordination",
-   "module": "trenchcoat/in-coordination",
+   "module": "@adamstavely/trenchcoat/in-coordination",
    "data": [],
    "attributes": [
     {

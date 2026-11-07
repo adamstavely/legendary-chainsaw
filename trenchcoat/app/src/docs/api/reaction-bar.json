@@ -138,7 +138,7 @@
   {
    "tag": "tc-reaction-bar",
    "className": "TcReactionBar",
-   "module": "trenchcoat/reaction-bar",
+   "module": "@adamstavely/trenchcoat/reaction-bar",
    "data": [
     "reactions",
     "actions"

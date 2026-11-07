@@ -75,8 +75,8 @@ counts of 1,000 or more also get a tooltip with the full number (â€œ1,299 likesâ
 <tc-reaction-bar id="reactions"></tc-reaction-bar>
 
 <script type="module">
-  import "trenchcoat/reaction-bar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/reaction-bar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const bar = document.querySelector("#reactions");
   bar.reactions = { like: { count: 1299 }, comment: { count: 86 }, share: { count: 41, active: true } };
@@ -87,8 +87,8 @@ counts of 1,000 or more also get a tooltip with the full number (â€œ1,299 likesâ
 
 ```tsx
 import { useState } from "react";
-import { ReactionBar, type ReactionKey, type ReactionState } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ReactionBar, type ReactionKey, type ReactionState } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PostReactions() {
   const [reactions, setReactions] = useState<Partial<Record<ReactionKey, ReactionState>>>({

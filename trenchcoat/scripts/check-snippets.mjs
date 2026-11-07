@@ -59,15 +59,15 @@ for (const f of ["vue.d.ts", "svelte.d.ts"]) cpSync(join(ROOT, "dist/types", f),
 writeFileSync(join(types, "tokens.css.d.ts"), "export {};\n");
 const trenchcoatPaths = {
   trenchcoat: [join(types, "elements/index.d.ts")],
-  "trenchcoat/react": [join(types, "elements/react.d.ts")],
-  "trenchcoat/vue": [join(types, "vue.d.ts")],
-  "trenchcoat/svelte": [join(types, "svelte.d.ts")],
-  "trenchcoat/tokens.css": [join(types, "tokens.css.d.ts")],
+  "@adamstavely/trenchcoat/react": [join(types, "elements/react.d.ts")],
+  "@adamstavely/trenchcoat/vue": [join(types, "vue.d.ts")],
+  "@adamstavely/trenchcoat/svelte": [join(types, "svelte.d.ts")],
+  "@adamstavely/trenchcoat/tokens.css": [join(types, "tokens.css.d.ts")],
   // The Angular directives from their generated sources, compiled with the snippets
-  "trenchcoat/angular": [join(ROOT, "src/angular/index.ts")],
-  "trenchcoat/angular/forms": [join(ROOT, "src/angular/forms.ts")],
-  "trenchcoat/look-provider": [join(types, "elements/internal/look.d.ts")],
-  "trenchcoat/*": [join(types, "elements/*.d.ts")],
+  "@adamstavely/trenchcoat/angular": [join(ROOT, "src/angular/index.ts")],
+  "@adamstavely/trenchcoat/angular/forms": [join(ROOT, "src/angular/forms.ts")],
+  "@adamstavely/trenchcoat/look-provider": [join(types, "elements/internal/look.d.ts")],
+  "@adamstavely/trenchcoat/*": [join(types, "elements/*.d.ts")],
 };
 
 // Every page's snippets
@@ -130,7 +130,7 @@ const t0 = Date.now();
     writeFileSync(join(dir, `${id(p.slug)}.vue`), p.quick.vue);
     if (p.controlled) writeFileSync(join(dir, `${id(p.slug)}.controlled.vue`), p.controlled.vue);
   }
-  writeFileSync(join(dir, "env.d.ts"), 'import type {} from "trenchcoat/vue";\n');
+  writeFileSync(join(dir, "env.d.ts"), 'import type {} from "@adamstavely/trenchcoat/vue";\n');
   writeFileSync(
     join(dir, "tsconfig.json"),
     JSON.stringify({
@@ -180,7 +180,7 @@ const t0 = Date.now();
       // The script, typed. bind:this assigns el before any effect runs – svelte-check knows that from the markup;
       // plain tsc is told with a definite-assignment mark
       const script = (code.match(/<script lang="ts">([\s\S]*?)<\/script>/)?.[1] ?? "").replace(/\blet el: /, "let el!: ");
-      writeFileSync(join(dir, `${name}.svelte.ts`), `/// <reference types="svelte" />\nimport type {} from "trenchcoat/svelte";\n${script}\nexport {};\n`);
+      writeFileSync(join(dir, `${name}.svelte.ts`), `/// <reference types="svelte" />\nimport type {} from "@adamstavely/trenchcoat/svelte";\n${script}\nexport {};\n`);
       scripts.push(`${name}.svelte.ts`);
     }
   writeFileSync(

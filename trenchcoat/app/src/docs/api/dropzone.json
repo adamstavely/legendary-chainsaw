@@ -387,7 +387,7 @@
   {
    "tag": "tc-dropzone",
    "className": "TcDropzone",
-   "module": "trenchcoat/dropzone",
+   "module": "@adamstavely/trenchcoat/dropzone",
    "data": [
     "accept",
     "onUpload",

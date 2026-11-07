@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-web-vitals.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-web-vitals.json",
   "title": "tc-web-vitals",
   "description": "Core Web Vitals for a page: a tile per measure with its value, a rating word, a three-zone track and earlier readings.",
   "type": "object",

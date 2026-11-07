@@ -205,7 +205,7 @@
   {
    "tag": "tc-place-list",
    "className": "TcPlaceList",
-   "module": "trenchcoat/place-list",
+   "module": "@adamstavely/trenchcoat/place-list",
    "data": [
     "places",
     "types",

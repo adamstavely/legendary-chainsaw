@@ -53,8 +53,8 @@ the pointer only. Reduced motion jumps straight to the chosen cover.
 <tc-cover-flow id="albums" label="Albums" item-width="180" item-height="270" selectable></tc-cover-flow>
 
 <script type="module">
-  import "trenchcoat/cover-flow";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/cover-flow";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const flow = document.querySelector("#albums");
   flow.items = [
@@ -67,8 +67,8 @@ the pointer only. Reduced motion jumps straight to the chosen cover.
 ```
 
 ```tsx
-import { CoverFlow, type CoverFlowItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CoverFlow, type CoverFlowItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const albums: CoverFlowItem[] = [
   { id: 1, title: "Northern Lights", subtitle: "Aurora Bay", image: "/covers/northern.jpg", alt: "Teal waves" },

@@ -324,7 +324,7 @@
   {
    "tag": "tc-mention-picker",
    "className": "TcMentionPicker",
-   "module": "trenchcoat/mention-picker",
+   "module": "@adamstavely/trenchcoat/mention-picker",
    "data": [
     "target",
     "triggers",

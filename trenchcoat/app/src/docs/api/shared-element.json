@@ -82,7 +82,7 @@
   {
    "tag": "tc-shared-element",
    "className": "TcSharedElement",
-   "module": "trenchcoat/shared-element",
+   "module": "@adamstavely/trenchcoat/shared-element",
    "data": [],
    "attributes": [
     {

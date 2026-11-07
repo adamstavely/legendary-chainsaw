@@ -91,7 +91,7 @@ function add(registry) {
   if (clashes.length && !flags.has("--overwrite")) fail(`already there, nothing copied: ${clashes.join(", ")}. Use --overwrite to replace them`);
   const npm = new Set();
   for (const [slug, entry] of files) {
-    for (const dep of entry.npmDependencies) if (dep !== "trenchcoat") npm.add(dep);
+    for (const dep of entry.npmDependencies) if (dep !== "@adamstavely/trenchcoat") npm.add(dep);
     const to = join(dir, `${slug}.tsx`);
     if (flags.has("--dry-run")) {
       console.log(`would copy ${to}`);
@@ -104,7 +104,7 @@ function add(registry) {
   if (!files.size) return;
   if (npm.size) console.log(`\nThese need: npm install ${[...npm].join(" ")}`);
   if (dir !== "components/ui") console.log(`\nThey import each other as @/components/ui/<name>: point that alias at ${dir}`);
-  console.log('\nAdd once, at your app\'s entry: import "trenchcoat/tokens.css";');
+  console.log('\nAdd once, at your app\'s entry: import "@adamstavely/trenchcoat/tokens.css";');
 }
 
 function init() {
@@ -116,10 +116,10 @@ function init() {
     // Not a package: the plain instructions still apply
   }
   const framework = ["next", "nuxt", "@angular/core", "svelte", "vue", "react"].find((d) => d in deps);
-  console.log(`Detected: ${framework ?? "no framework"}\n\n1. At your app's entry: import "trenchcoat/tokens.css";`);
-  if (framework === "next" || framework === "react") console.log('2. Use components from "trenchcoat/react", in a client component with Next.js.');
-  else if (framework === "@angular/core") console.log('2. Use the standalone directives from "trenchcoat/angular".');
-  else console.log('2. Import each element once, such as import "trenchcoat/share-panel"; then use its tag.');
+  console.log(`Detected: ${framework ?? "no framework"}\n\n1. At your app's entry: import "@adamstavely/trenchcoat/tokens.css";`);
+  if (framework === "next" || framework === "react") console.log('2. Use components from "@adamstavely/trenchcoat/react", in a client component with Next.js.');
+  else if (framework === "@angular/core") console.log('2. Use the standalone directives from "@adamstavely/trenchcoat/angular".');
+  else console.log('2. Import each element once, such as import "@adamstavely/trenchcoat/share-panel"; then use its tag.');
   console.log("3. Find components: trenchcoat list <words>");
   console.log("\nFor AI coding tools, add the MCP server: trenchcoat-mcp");
 }

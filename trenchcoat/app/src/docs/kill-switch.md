@@ -96,8 +96,8 @@ Billing agent”.
 <tc-kill-switch id="ks"></tc-kill-switch>
 
 <script type="module">
-  import "trenchcoat/kill-switch";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/kill-switch";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ks = document.querySelector("#ks");
   ks.running = [
@@ -113,8 +113,8 @@ Billing agent”.
 
 ```tsx
 import { useState } from "react";
-import { KillSwitch, type KillRunning, type KillStop } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { KillSwitch, type KillRunning, type KillStop } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Operations({ running, halt }: { running: KillRunning[]; halt: (stop: KillStop) => void }) {
   const [stops, setStops] = useState<KillStop[]>([]);

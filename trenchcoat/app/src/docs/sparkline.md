@@ -90,8 +90,8 @@ screen readers – the summary already ends on it.
 <p>Samples this week <tc-sparkline id="spark" label="Samples per day" unit="samples" good="up" markers="last max" show-value></tc-sparkline></p>
 
 <script type="module">
-  import "trenchcoat/sparkline";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/sparkline";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const spark = document.querySelector("#spark");
   spark.values = [112, 120, 98, 131, 152, 148];
@@ -100,8 +100,8 @@ screen readers – the summary already ends on it.
 ```
 
 ```tsx
-import { Sparkline } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Sparkline } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Throughput({ values, days }: { values: number[]; days: string[] }) {
   return (

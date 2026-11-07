@@ -92,8 +92,8 @@ a polite status message, “Passport number shown”. The counts are a list labe
 <tc-document-list id="docs" heading="Identity documents"></tc-document-list>
 
 <script type="module">
-  import "trenchcoat/document-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/document-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const docs = document.querySelector("#docs");
   docs.documents = [
@@ -106,8 +106,8 @@ a polite status message, “Passport number shown”. The counts are a list labe
 ```
 
 ```tsx
-import { DocumentList, type DocumentRecord } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DocumentList, type DocumentRecord } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const documents: DocumentRecord[] = [
   { id: "d1", type: "Passport", country: "Spain", number: "PAE481207", reference: "DOC-2270", status: "verified" },

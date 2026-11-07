@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-provenance-summary.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-provenance-summary.json",
   "title": "tc-provenance-summary",
   "description": "What a document is made of: the share from sources, AI synthesis and original writing, per section and in total,\nwith each segment opening its lineage.",
   "type": "object",

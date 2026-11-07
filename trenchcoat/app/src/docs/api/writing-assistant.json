@@ -290,7 +290,7 @@
   {
    "tag": "tc-writing-assistant",
    "className": "TcWritingAssistant",
-   "module": "trenchcoat/writing-assistant",
+   "module": "@adamstavely/trenchcoat/writing-assistant",
    "data": [
     "suggestions",
     "respond",

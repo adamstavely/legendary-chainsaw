@@ -124,7 +124,7 @@
   {
    "tag": "tc-link-expired",
    "className": "TcLinkExpired",
-   "module": "trenchcoat/link-expired",
+   "module": "@adamstavely/trenchcoat/link-expired",
    "data": [],
    "attributes": [
     {

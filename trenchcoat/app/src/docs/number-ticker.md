@@ -59,8 +59,8 @@ interrupt, and give people a way to pause the updates.
 <p>Revenue <tc-number-ticker id="revenue" value="128450" locale="en-US"></tc-number-ticker></p>
 
 <script type="module">
-  import "trenchcoat/number-ticker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/number-ticker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ticker = document.querySelector("#revenue");
   ticker.format = { style: "currency", currency: "USD", maximumFractionDigits: 0 };
@@ -69,8 +69,8 @@ interrupt, and give people a way to pause the updates.
 ```
 
 ```tsx
-import { NumberTicker } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NumberTicker } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Revenue({ amount }: { amount: number }) {
   return (

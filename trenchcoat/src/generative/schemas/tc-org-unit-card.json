@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-org-unit-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-org-unit-card.json",
   "title": "tc-org-unit-card",
   "description": "An organisational unit – code, name, lead, health, the page's stats and its teams as rows that fold open onto\ntheir items – with the page's actions in the header.",
   "type": "object",

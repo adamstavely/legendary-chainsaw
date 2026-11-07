@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-retrieval-inspector.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-retrieval-inspector.json",
   "title": "tc-retrieval-inspector",
   "description": "The chunks retrieved for an answer – score, source and place, freshness, whether the answer used them – and the\nmisses the app reports.",
   "type": "object",

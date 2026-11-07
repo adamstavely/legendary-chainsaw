@@ -37,7 +37,7 @@
   {
    "tag": "tc-look-provider",
    "className": "TcLookProvider",
-   "module": "trenchcoat/look-provider",
+   "module": "@adamstavely/trenchcoat/look-provider",
    "data": [],
    "attributes": [],
    "events": [],

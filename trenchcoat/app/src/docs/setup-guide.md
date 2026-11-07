@@ -81,8 +81,8 @@ groups and a minimised body are inert.
 <tc-setup-guide id="guide" heading="Setup guide" closable></tc-setup-guide>
 
 <script type="module">
-  import "trenchcoat/setup-guide";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/setup-guide";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const guide = document.querySelector("#guide");
   guide.groups = [
@@ -101,8 +101,8 @@ groups and a minimised body are inert.
 ```
 
 ```tsx
-import { SetupGuide, type SetupGroup } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SetupGuide, type SetupGroup } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const groups: SetupGroup[] = [
   {

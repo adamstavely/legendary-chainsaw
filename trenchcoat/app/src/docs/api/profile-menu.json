@@ -227,7 +227,7 @@
   {
    "tag": "tc-profile-menu",
    "className": "TcProfileMenu",
-   "module": "trenchcoat/profile-menu",
+   "module": "@adamstavely/trenchcoat/profile-menu",
    "data": [
     "avatar",
     "items",

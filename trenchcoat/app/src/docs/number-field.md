@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { NumberField } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NumberField } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <NumberField label="Worker limit" defaultValue={4} min={1} max={32} />; }
 ```

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-profile-header.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-profile-header.json",
   "title": "tc-profile-header",
   "description": "The top of a person's or an account's page: picture, name, status and tags, other names, a line of facts, the\npage's actions and an optional row of tabs.",
   "type": "object",

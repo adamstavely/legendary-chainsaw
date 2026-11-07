@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-red-team-finding.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-red-team-finding.json",
   "title": "tc-red-team-finding",
   "description": "What an adversarial test broke and the response: a findings listbox and the picked finding's invariants, scenario, evidence and undoable response timeline.",
   "type": "object",

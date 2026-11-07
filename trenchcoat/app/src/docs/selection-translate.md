@@ -95,8 +95,8 @@ target's `lang`, and the detected language reads “Detected: French”. Show or
 <tc-selection-translate id="note" lang="fr" target="en" editable></tc-selection-translate>
 
 <script type="module">
-  import "trenchcoat/selection-translate";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/selection-translate";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const note = document.querySelector("#note");
   note.text = "Le salon de Lyon a attiré plus de visiteurs que prévu.";
@@ -108,8 +108,8 @@ target's `lang`, and the detected language reads “Detected: French”. Show or
 
 ```tsx
 import { useState } from "react";
-import { SelectionTranslate, type SelectionTranslation } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SelectionTranslate, type SelectionTranslation } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 declare function translateWithYourService(text: string, target: string, signal: AbortSignal): Promise<SelectionTranslation>;
 

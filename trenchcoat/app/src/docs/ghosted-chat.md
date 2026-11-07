@@ -74,8 +74,8 @@ clearing `label` makes it decorative again.
 <p>No replies yet – try a follow-up in a few days.</p>
 
 <script type="module">
-  import "trenchcoat/ghosted-chat";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ghosted-chat";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   // Only when the picture means something the text beside it doesn't say
   document.querySelector("#ghosted").label = "Messages left on read";
@@ -83,8 +83,8 @@ clearing `label` makes it decorative again.
 ```
 
 ```tsx
-import { GhostedChat } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GhostedChat } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function NoReplies() {
   return (

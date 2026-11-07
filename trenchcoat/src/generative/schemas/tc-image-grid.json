@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-image-grid.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-image-grid.json",
   "title": "tc-image-grid",
   "description": "Generated images as a grid of variations: regenerate one, upscale, compare two, download, alt text for each.",
   "type": "object",

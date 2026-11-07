@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-check-status.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-check-status.json",
   "title": "tc-check-status",
   "description": "The automated checks on a change: a summary in words and a row for each, failing first, or just a mark and \"5/11\" for a list row.",
   "type": "object",

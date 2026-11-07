@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-data-handling-policy.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-data-handling-policy.json",
   "title": "tc-data-handling-policy",
   "description": "Organization-level data handling as a lifecycle – conversations, logs, memory, training, deletion – led by the policy\nin effect, each stage edited in place, locked stages marked, and deletion requests with their status.",
   "type": "object",

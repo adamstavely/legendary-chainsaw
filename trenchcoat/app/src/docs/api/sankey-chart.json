@@ -146,7 +146,7 @@
   {
    "tag": "tc-sankey-chart",
    "className": "TcSankeyChart",
-   "module": "trenchcoat/sankey-chart",
+   "module": "@adamstavely/trenchcoat/sankey-chart",
    "data": [
     "source",
     "target",

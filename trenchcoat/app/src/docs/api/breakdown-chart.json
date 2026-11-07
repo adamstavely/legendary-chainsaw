@@ -344,7 +344,7 @@
   {
    "tag": "tc-breakdown-chart",
    "className": "TcBreakdownChart",
-   "module": "trenchcoat/breakdown-chart",
+   "module": "@adamstavely/trenchcoat/breakdown-chart",
    "data": [
     "records",
     "dimensions",

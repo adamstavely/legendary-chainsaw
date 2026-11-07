@@ -59,14 +59,14 @@ Pair it with a short heading ("You don't have access to this") and one line on w
 <h2>You don't have access to this</h2>
 
 <script type="module">
-  import "trenchcoat/no-access";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/no-access";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { NoAccess } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NoAccess } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return (

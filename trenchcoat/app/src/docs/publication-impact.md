@@ -75,8 +75,8 @@ reads its kind, who and where, its sentiment in words, the quote and its date.
 <tc-publication-impact id="paper" heading="Self-Calibrating Coastal Sensors" venue="Journal of Applied Sensing"></tc-publication-impact>
 
 <script type="module">
-  import "trenchcoat/publication-impact";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/publication-impact";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const paper = document.querySelector("#paper");
   paper.grade = { label: "Outstanding", tone: "success" };
@@ -89,8 +89,8 @@ reads its kind, who and where, its sentiment in words, the quote and its date.
 
 ```tsx
 import { useState } from "react";
-import { PublicationImpact, type PublicationFeedbackFilter } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PublicationImpact, type PublicationFeedbackFilter } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Paper() {
   const [filter, setFilter] = useState<PublicationFeedbackFilter>("all");

@@ -1,4 +1,4 @@
-import "trenchcoat/tokens.css";
+import "@adamstavely/trenchcoat/tokens.css";
 import type { ReactNode } from "react";
 
 export const metadata = { title: "Trenchcoat · Next.js" };

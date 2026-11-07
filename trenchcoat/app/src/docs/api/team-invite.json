@@ -174,7 +174,7 @@
   {
    "tag": "tc-team-invite",
    "className": "TcTeamInvite",
-   "module": "trenchcoat/team-invite",
+   "module": "@adamstavely/trenchcoat/team-invite",
    "data": [
     "avatars"
    ],

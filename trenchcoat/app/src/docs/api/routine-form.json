@@ -287,7 +287,7 @@
   {
    "tag": "tc-routine-form",
    "className": "TcRoutineForm",
-   "module": "trenchcoat/routine-form",
+   "module": "@adamstavely/trenchcoat/routine-form",
    "data": [
     "value",
     "labels"

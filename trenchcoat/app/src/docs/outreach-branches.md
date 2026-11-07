@@ -38,16 +38,16 @@ name. Reduced motion leaves the pulses out and shows the still scene.
 <tc-outreach-branches id="art" style="width: 320px"></tc-outreach-branches>
 
 <script type="module">
-  import "trenchcoat/outreach-branches";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/outreach-branches";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#art").label = "Outreach across Gmail, Slack and Notion";
 </script>
 ```
 
 ```tsx
-import { OutreachBranches } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { OutreachBranches } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function OutreachCard() {
   return <OutreachBranches label="Outreach across Gmail, Slack and Notion" style={{ width: 320 }} />;

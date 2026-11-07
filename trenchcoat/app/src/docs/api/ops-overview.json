@@ -189,7 +189,7 @@
   {
    "tag": "tc-ops-overview",
    "className": "TcOpsOverview",
-   "module": "trenchcoat/ops-overview",
+   "module": "@adamstavely/trenchcoat/ops-overview",
    "data": [
     "healthLabels",
     "tiles"

@@ -59,14 +59,14 @@ Pair it with a short heading ("You're all caught up"). Use `name` to rename the 
 <h2>You're all caught up</h2>
 
 <script type="module">
-  import "trenchcoat/agent-scene";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-scene";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { AgentScene } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentScene } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Empty() {
   return (

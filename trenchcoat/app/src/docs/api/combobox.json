@@ -346,7 +346,7 @@
   {
    "tag": "tc-combobox",
    "className": "TcCombobox",
-   "module": "trenchcoat/combobox",
+   "module": "@adamstavely/trenchcoat/combobox",
    "data": [
     "options",
     "value",

@@ -78,8 +78,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 <tc-donut-chart heading="Open findings" center-label="Findings"></tc-donut-chart>
 
 <script type="module">
-  import "trenchcoat/donut-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/donut-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-donut-chart").data = [
     { label: "Critical", value: 3 },
     { label: "High", value: 9 },
@@ -89,8 +89,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 ```
 
 ```tsx
-import { DonutChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DonutChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Critical", value: 3 },

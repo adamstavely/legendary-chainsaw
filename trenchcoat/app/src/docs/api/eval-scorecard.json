@@ -321,7 +321,7 @@
   {
    "tag": "tc-eval-scorecard",
    "className": "TcEvalScorecard",
-   "module": "trenchcoat/eval-scorecard",
+   "module": "@adamstavely/trenchcoat/eval-scorecard",
    "data": [
     "versions",
     "cases",

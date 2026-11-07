@@ -259,7 +259,7 @@ for (const el of elements.filter((e) => e.props.length)) {
   delete schema.$schema;
   schemas.set(el.tag, {
     $schema: "http://json-schema.org/draft-07/schema#",
-    $id: `trenchcoat/generative/schemas/${el.tag}.json`,
+    $id: `@adamstavely/trenchcoat/generative/schemas/${el.tag}.json`,
     title: el.tag,
     description: el.description,
     ...schema,

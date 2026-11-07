@@ -84,8 +84,8 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 <tc-reasoning-flags id="answer" reconsider></tc-reasoning-flags>
 
 <script type="module">
-  import "trenchcoat/reasoning-flags";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/reasoning-flags";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const answer = document.querySelector("#answer");
   answer.text = "It's hard to say how much time it saves, but it will certainly finish before 6 a.m.";
@@ -95,8 +95,8 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 ```
 
 ```tsx
-import { ReasoningFlags, type ReasoningFlag } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ReasoningFlags, type ReasoningFlag } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const text = "It's hard to say how much time it saves, but it will certainly finish before 6 a.m.";
 const flags: ReasoningFlag[] = [{ id: "f1", start: 41, end: 83, kind: "hedge-then-certain", explanation: "It admits the saving is unknown, then promises a finish time anyway." }];

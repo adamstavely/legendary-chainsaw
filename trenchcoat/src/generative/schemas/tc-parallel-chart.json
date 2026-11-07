@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-parallel-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-parallel-chart.json",
   "title": "tc-parallel-chart",
   "description": "Parallel coordinates: rows as lines across a vertical axis per measure – each axis on its own scale, one row\nemphasised and named, gaps for missing values, a canvas for many rows, and a table view.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-version-history.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-version-history.json",
   "title": "tc-version-history",
   "description": "The versions of an agent, prompt or workflow on a timeline – draft, active or deprecated, who and when, and what\neach changed in behaviour – with compare, restore and a confirmed approve-and-activate.",
   "type": "object",

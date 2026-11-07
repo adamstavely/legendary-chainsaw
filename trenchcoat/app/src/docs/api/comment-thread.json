@@ -266,7 +266,7 @@
   {
    "tag": "tc-comment-thread",
    "className": "TcCommentThread",
-   "module": "trenchcoat/comment-thread",
+   "module": "@adamstavely/trenchcoat/comment-thread",
    "data": [
     "messages",
     "currentUser",

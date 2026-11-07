@@ -363,7 +363,7 @@
   {
    "tag": "tc-configuration-release-control",
    "className": "TcConfigurationReleaseControl",
-   "module": "trenchcoat/configuration-release-control",
+   "module": "@adamstavely/trenchcoat/configuration-release-control",
    "data": [
     "stages",
     "versions",

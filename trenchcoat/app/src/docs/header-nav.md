@@ -86,10 +86,10 @@ open. The face and the presence dot are hidden from screen readers – the butto
 </tc-header-nav>
 
 <script type="module">
-  import "trenchcoat/header-nav";
-  import "trenchcoat/notifications";
-  import "trenchcoat/app-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/header-nav";
+  import "@adamstavely/trenchcoat/notifications";
+  import "@adamstavely/trenchcoat/app-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const nav = document.querySelector("#nav");
   nav.user = { name: "Ada Lovelace", email: "ada@example.com", presence: "online" };
@@ -101,8 +101,8 @@ open. The face and the presence dot are hidden from screen readers – the butto
 
 ```tsx
 import { useState } from "react";
-import { HeaderNav, type HeaderNavPanel } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { HeaderNav, type HeaderNavPanel } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Header() {
   const [open, setOpen] = useState<HeaderNavPanel | null>(null);

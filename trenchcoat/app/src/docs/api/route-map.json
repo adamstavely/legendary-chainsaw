@@ -229,7 +229,7 @@
   {
    "tag": "tc-route-map",
    "className": "TcRouteMap",
-   "module": "trenchcoat/route-map",
+   "module": "@adamstavely/trenchcoat/route-map",
    "data": [
     "routes",
     "statuses",

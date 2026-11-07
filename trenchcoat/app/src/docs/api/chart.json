@@ -80,7 +80,7 @@
   {
    "tag": "tc-chart",
    "className": "TcChart",
-   "module": "trenchcoat/chart",
+   "module": "@adamstavely/trenchcoat/chart",
    "data": [
     "spec"
    ],
@@ -249,7 +249,7 @@
   "windowed": false
  },
  "size": {
-  "min": 409215,
-  "gzip": 129576
+  "min": 409454,
+  "gzip": 129682
  }
 }

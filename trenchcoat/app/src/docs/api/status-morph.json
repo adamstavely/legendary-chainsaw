@@ -80,7 +80,7 @@
   {
    "tag": "tc-status-morph",
    "className": "TcStatusMorph",
-   "module": "trenchcoat/status-morph",
+   "module": "@adamstavely/trenchcoat/status-morph",
    "data": [
     "labels"
    ],

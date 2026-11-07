@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-integration-picker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-integration-picker.json",
   "title": "tc-integration-picker",
   "description": "The integrations page of a command menu: search, a grouped list and the picked service's details with a switch.",
   "type": "object",

@@ -279,7 +279,7 @@
   {
    "tag": "tc-retrieval-settings",
    "className": "TcRetrievalSettings",
-   "module": "trenchcoat/retrieval-settings",
+   "module": "@adamstavely/trenchcoat/retrieval-settings",
    "data": [
     "value",
     "filterFields",

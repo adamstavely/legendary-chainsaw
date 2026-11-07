@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-account-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-account-list.json",
   "title": "tc-account-list",
   "description": "The financial accounts linked to a person or a company – institution, type, a masked identifier shown one at a time,\nan amount and a status each (Monitored, Flagged, Under review, Closed or your own), with the page's stats above.",
   "type": "object",

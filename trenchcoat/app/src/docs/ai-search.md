@@ -84,8 +84,8 @@ Files”. Searching, asking, switching mode and removing a scope are confirmed i
 <tc-ai-search id="search"></tc-ai-search>
 
 <script type="module">
-  import "trenchcoat/ai-search";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ai-search";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const search = document.querySelector("#search");
   search.suggestions = [{ label: "invoice 7741", kind: "recent" }, { label: "Board minutes 2026", kind: "suggested" }];
@@ -95,8 +95,8 @@ Files”. Searching, asking, switching mode and removing a scope are confirmed i
 ```
 
 ```tsx
-import { AiSearch } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AiSearch } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Search() {
   return (

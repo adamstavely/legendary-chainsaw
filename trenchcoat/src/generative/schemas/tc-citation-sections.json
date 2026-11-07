@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-citation-sections.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-citation-sections.json",
   "title": "tc-citation-sections",
   "description": "Where a work is cited – a donut of the counts by section (Intro, Methods, Results, Discussion, Other), a legend\nwith letter chips, and the section under the pointer or focus named with its count and share.",
   "type": "object",

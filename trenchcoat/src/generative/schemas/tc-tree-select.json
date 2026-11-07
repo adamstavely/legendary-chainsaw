@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-tree-select.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tree-select.json",
   "title": "tc-tree-select",
   "description": "Pick one or many options from a nested hierarchy, with type-to-filter and parent checkboxes.",
   "type": "object",

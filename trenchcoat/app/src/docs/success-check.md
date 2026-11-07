@@ -53,13 +53,13 @@ Pair it with a word or two, such as Shared.
 <tc-success-check></tc-success-check> Saved
 
 <script type="module">
-  import "trenchcoat/success-check";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/success-check";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { SuccessCheck } from "trenchcoat/react";
+import { SuccessCheck } from "@adamstavely/trenchcoat/react";
 
 export function Saved() {
   return <span><SuccessCheck /> Saved</span>;

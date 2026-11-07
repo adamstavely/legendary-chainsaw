@@ -200,7 +200,7 @@
   {
    "tag": "tc-capacity-bars",
    "className": "TcCapacityBars",
-   "module": "trenchcoat/capacity-bars",
+   "module": "@adamstavely/trenchcoat/capacity-bars",
    "data": [
     "people"
    ],

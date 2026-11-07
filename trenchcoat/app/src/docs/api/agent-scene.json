@@ -93,7 +93,7 @@
   {
    "tag": "tc-agent-scene",
    "className": "TcAgentScene",
-   "module": "trenchcoat/agent-scene",
+   "module": "@adamstavely/trenchcoat/agent-scene",
    "data": [],
    "attributes": [
     {

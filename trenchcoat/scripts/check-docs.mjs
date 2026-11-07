@@ -104,7 +104,7 @@ if (examples.length) {
     join(dir, "tsconfig.json"),
     JSON.stringify({
       extends: "../tsconfig.json",
-      compilerOptions: { noEmit: true, noUnusedLocals: false, baseUrl: "..", paths: { "trenchcoat/react": ["src/elements/react.ts"], "trenchcoat/tokens.css": ["tokens/tokens.css"], "trenchcoat": ["src/elements/index.ts"], "trenchcoat/*": ["src/elements/*"] } },
+      compilerOptions: { noEmit: true, noUnusedLocals: false, baseUrl: "..", paths: { "@adamstavely/trenchcoat/react": ["src/elements/react.ts"], "@adamstavely/trenchcoat/tokens.css": ["tokens/tokens.css"], "@adamstavely/trenchcoat": ["src/elements/index.ts"], "@adamstavely/trenchcoat/*": ["src/elements/*"] } },
       include: ["*.tsx", "css.d.ts"],
     }),
   );

@@ -132,7 +132,7 @@
   {
    "tag": "tc-line-chart",
    "className": "TcLineChart",
-   "module": "trenchcoat/line-chart",
+   "module": "@adamstavely/trenchcoat/line-chart",
    "data": [
     "dots"
    ],

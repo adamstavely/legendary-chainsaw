@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-sankey-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sankey-chart.json",
   "title": "tc-sankey-chart",
   "description": "Flows between stages as bands sized by value – nodes in columns, one node and its flows emphasised, names and values\nbeside the nodes, and a table view.",
   "type": "object",

@@ -82,8 +82,8 @@ reduced-motion setting) draws everything at once.
 <tc-bump-chart heading="Grant ranking" description="By funding won"></tc-bump-chart>
 
 <script type="module">
-  import "trenchcoat/bump-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/bump-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-bump-chart").data = [
     { x: "2025", series: "Genomics", rank: 1 },
     { x: "2025", series: "Imaging", rank: 2 },
@@ -94,8 +94,8 @@ reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { BumpChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BumpChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { x: "2025", series: "Genomics", rank: 1 },

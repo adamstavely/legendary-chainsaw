@@ -282,7 +282,7 @@
   {
    "tag": "tc-feedback-rubric",
    "className": "TcFeedbackRubric",
-   "module": "trenchcoat/feedback-rubric",
+   "module": "@adamstavely/trenchcoat/feedback-rubric",
    "data": [
     "criteria",
     "levels",

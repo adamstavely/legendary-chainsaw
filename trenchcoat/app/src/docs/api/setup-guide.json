@@ -298,7 +298,7 @@
   {
    "tag": "tc-setup-guide",
    "className": "TcSetupGuide",
-   "module": "trenchcoat/setup-guide",
+   "module": "@adamstavely/trenchcoat/setup-guide",
    "data": [
     "groups",
     "done",

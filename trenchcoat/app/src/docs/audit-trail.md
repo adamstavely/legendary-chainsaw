@@ -65,16 +65,16 @@ browser's own. Cells a spreadsheet would run as a formula are exported with a le
 <tc-audit-trail id="trail"></tc-audit-trail>
 
 <script type="module">
-  import "trenchcoat/audit-trail";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/audit-trail";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#trail").events = [{ id: "1", at: Date.UTC(2026, 9, 31), actor: "Noor Haddad", action: "shared", target: "Trial 12" }];
 </script>
 ```
 
 ```tsx
-import { AuditTrail, type AuditEvent } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AuditTrail, type AuditEvent } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const events: AuditEvent[] = [{ id: "1", at: Date.UTC(2026, 9, 31), actor: "Noor Haddad", action: "shared", target: "Trial 12" }];
 

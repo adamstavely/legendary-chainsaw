@@ -328,7 +328,7 @@
   {
    "tag": "tc-command-menu",
    "className": "TcCommandMenu",
-   "module": "trenchcoat/command-menu",
+   "module": "@adamstavely/trenchcoat/command-menu",
    "data": [
     "groups",
     "onRun",

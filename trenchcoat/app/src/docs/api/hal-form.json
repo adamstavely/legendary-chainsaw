@@ -242,7 +242,7 @@
   {
    "tag": "tc-hal-form",
    "className": "TcHalForm",
-   "module": "trenchcoat/hal-form",
+   "module": "@adamstavely/trenchcoat/hal-form",
    "data": [
     "resource",
     "values",

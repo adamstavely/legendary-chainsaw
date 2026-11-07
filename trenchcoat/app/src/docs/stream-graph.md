@@ -82,8 +82,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 <tc-stream-graph heading="GPU hours" description="Each week, by lab" unit=" h"></tc-stream-graph>
 
 <script type="module">
-  import "trenchcoat/stream-graph";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/stream-graph";
+  import "@adamstavely/trenchcoat/tokens.css";
   const el = document.querySelector("tc-stream-graph");
   el.x = "week";
   el.y = "hours";
@@ -98,8 +98,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 ```
 
 ```tsx
-import { StreamGraph } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { StreamGraph } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { week: "W1", lab: "Genomics", hours: 120 },

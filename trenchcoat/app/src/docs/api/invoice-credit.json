@@ -323,7 +323,7 @@
   {
    "tag": "tc-invoice-credit",
    "className": "TcInvoiceCredit",
-   "module": "trenchcoat/invoice-credit",
+   "module": "@adamstavely/trenchcoat/invoice-credit",
    "data": [
     "seller",
     "buyer",

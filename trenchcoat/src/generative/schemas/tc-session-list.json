@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-session-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-session-list.json",
   "title": "tc-session-list",
   "description": "The sessions in a sidebar: pinned first, then grouped by project or status, each with its status, title, unread dot, branch and time, plus Pin and Archive.",
   "type": "object",

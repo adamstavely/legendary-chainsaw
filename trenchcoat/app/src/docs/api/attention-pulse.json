@@ -75,7 +75,7 @@
   {
    "tag": "tc-attention-pulse",
    "className": "TcAttentionPulse",
-   "module": "trenchcoat/attention-pulse",
+   "module": "@adamstavely/trenchcoat/attention-pulse",
    "data": [],
    "attributes": [
     {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-conversation-branches.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-conversation-branches.json",
   "title": "tc-conversation-branches",
   "description": "A conversation that forks when a past message is edited: a \"‹ 2 / 3 ›\" switcher on each message with siblings, and\nthe picked branch's messages below it.",
   "type": "object",

@@ -85,8 +85,8 @@ message each (“Say why deadline mode is needed.”) and focus moves to the fir
 <tc-friction-profile id="profile" scope="This session" mode="standard"></tc-friction-profile>
 
 <script type="module">
-  import "trenchcoat/friction-profile";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/friction-profile";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const profile = document.querySelector("#profile");
   profile.safeguards = [
@@ -99,8 +99,8 @@ message each (“Say why deadline mode is needed.”) and focus moves to the fir
 
 ```tsx
 import { useState } from "react";
-import { FrictionProfile } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FrictionProfile } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SessionSafeguards() {
   const [mode, setMode] = useState("standard");

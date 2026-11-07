@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-chord-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-chord-chart.json",
   "title": "tc-chord-chart",
   "description": "Exchanges between groups as ribbons round a circle – each group an arc sized by what it sends and receives, one group\nand its ribbons emphasised, names outside the arcs, and a table view.",
   "type": "object",

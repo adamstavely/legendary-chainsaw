@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-file-details.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-file-details.json",
   "title": "tc-file-details",
   "description": "One file in one place: its details, the team's flag, a summary, its versions and who it's shared with.",
   "type": "object",

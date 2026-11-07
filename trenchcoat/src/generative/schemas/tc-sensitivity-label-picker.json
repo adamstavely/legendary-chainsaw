@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-sensitivity-label-picker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sensitivity-label-picker.json",
   "title": "tc-sensitivity-label-picker",
   "description": "Sets a file's classification, asking why before lowering it.",
   "type": "object",

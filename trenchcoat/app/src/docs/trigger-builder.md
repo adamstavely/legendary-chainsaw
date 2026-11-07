@@ -93,8 +93,8 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 </form>
 
 <script type="module">
-  import "trenchcoat/trigger-builder";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/trigger-builder";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const trigger = document.querySelector("#trigger");
   trigger.heading = "Run this automation";
@@ -114,8 +114,8 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 
 ```tsx
 import { useState } from "react";
-import { TriggerBuilder, type TriggerEvent, type TriggerValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TriggerBuilder, type TriggerEvent, type TriggerValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const events: TriggerEvent[] = [
   { id: "deal.stage", label: "Deal changes stage", phrase: "a deal changes stage", group: "Deals", fields: [{ id: "amount", label: "Amount", type: "number" }] },

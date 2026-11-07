@@ -237,7 +237,7 @@
   {
    "tag": "tc-filter-menu",
    "className": "TcFilterMenu",
-   "module": "trenchcoat/filter-menu",
+   "module": "@adamstavely/trenchcoat/filter-menu",
    "data": [
     "groups",
     "value",

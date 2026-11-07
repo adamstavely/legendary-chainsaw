@@ -330,7 +330,7 @@
   {
    "tag": "tc-color-picker",
    "className": "TcColorPicker",
-   "module": "trenchcoat/color-picker",
+   "module": "@adamstavely/trenchcoat/color-picker",
    "data": [
     "swatches",
     "labels"

@@ -232,7 +232,7 @@
   {
    "tag": "tc-parallel-attempts",
    "className": "TcParallelAttempts",
-   "module": "trenchcoat/parallel-attempts",
+   "module": "@adamstavely/trenchcoat/parallel-attempts",
    "data": [
     "attempts",
     "picked",

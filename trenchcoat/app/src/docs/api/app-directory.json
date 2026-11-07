@@ -336,7 +336,7 @@
   {
    "tag": "tc-app-directory",
    "className": "TcAppDirectory",
-   "module": "trenchcoat/app-directory",
+   "module": "@adamstavely/trenchcoat/app-directory",
    "data": [
     "apps",
     "categories",

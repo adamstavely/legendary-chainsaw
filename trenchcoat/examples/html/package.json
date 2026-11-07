@@ -7,7 +7,7 @@
     "serve": "vite preview --strictPort --port"
   },
   "dependencies": {
-    "trenchcoat": "file:../.packed/trenchcoat.tgz"
+    "@adamstavely/trenchcoat": "file:../.packed/trenchcoat.tgz"
   },
   "devDependencies": {
     "vite": "6.4.5"

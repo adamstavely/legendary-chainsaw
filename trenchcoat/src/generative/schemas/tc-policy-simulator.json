@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-policy-simulator.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-policy-simulator.json",
   "title": "tc-policy-simulator",
   "description": "A dry run of an action against a policy set: the decision, the rule that decided it, the reason and a step-by-step\nrule trace. Nothing executes.",
   "type": "object",

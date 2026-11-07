@@ -60,14 +60,14 @@ Say what still works and what will happen: "Your changes are saved on this devic
 <tc-offline></tc-offline>
 
 <script type="module">
-  import "trenchcoat/offline";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/offline";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { Offline } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Offline } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <Offline />;

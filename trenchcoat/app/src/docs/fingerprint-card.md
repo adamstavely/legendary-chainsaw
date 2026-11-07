@@ -90,8 +90,8 @@ detail”. The drawn prints, marks and quality bars are hidden; the words read.
 <tc-fingerprint-card id="prints" description="Badge enrolment, rolled prints."></tc-fingerprint-card>
 
 <script type="module">
-  import "trenchcoat/fingerprint-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/fingerprint-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#prints");
   card.prints = [
@@ -106,8 +106,8 @@ detail”. The drawn prints, marks and quality bars are hidden; the words read.
 
 ```tsx
 import { useState } from "react";
-import { FingerprintCard, type FingerPosition, type FingerPrint } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FingerprintCard, type FingerPosition, type FingerPrint } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const prints: FingerPrint[] = [
   { position: 1, status: "captured", quality: 1, pattern: "whorl" },

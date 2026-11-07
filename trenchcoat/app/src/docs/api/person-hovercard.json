@@ -270,7 +270,7 @@
   {
    "tag": "tc-person-hovercard",
    "className": "TcPersonHovercard",
-   "module": "trenchcoat/person-hovercard",
+   "module": "@adamstavely/trenchcoat/person-hovercard",
    "data": [
     "person",
     "resolve",

@@ -105,8 +105,8 @@ named after its quote. A polite status region says what happened:
 <tc-response-selection id="answer"></tc-response-selection>
 
 <script type="module">
-  import "trenchcoat/response-selection";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/response-selection";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const answer = document.querySelector("#answer");
   answer.text = "Yes – you can work from abroad for up to 30 days a year, as long as you tell your manager first.";
@@ -127,8 +127,8 @@ named after its quote. A polite status region says what happened:
 
 ```tsx
 import { useState } from "react";
-import { ResponseSelection, type ResponseEdit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ResponseSelection, type ResponseEdit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 declare function rewrite(passage: string, instruction: string, signal: AbortSignal): Promise<string>;
 

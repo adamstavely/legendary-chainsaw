@@ -245,7 +245,7 @@
   {
    "tag": "tc-case-review",
    "className": "TcCaseReview",
-   "module": "trenchcoat/case-review",
+   "module": "@adamstavely/trenchcoat/case-review",
    "data": [
     "read",
     "facts",

@@ -320,7 +320,7 @@
   {
    "tag": "tc-cover-flow",
    "className": "TcCoverFlow",
-   "module": "trenchcoat/cover-flow",
+   "module": "@adamstavely/trenchcoat/cover-flow",
    "data": [
     "items",
     "renderCaption"

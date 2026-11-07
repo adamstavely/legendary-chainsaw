@@ -249,7 +249,7 @@
   {
    "tag": "tc-friction-profile",
    "className": "TcFrictionProfile",
-   "module": "trenchcoat/friction-profile",
+   "module": "@adamstavely/trenchcoat/friction-profile",
    "data": [
     "modes",
     "safeguards",

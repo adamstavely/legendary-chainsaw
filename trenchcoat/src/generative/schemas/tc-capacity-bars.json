@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-capacity-bars.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-capacity-bars.json",
   "title": "tc-capacity-bars",
   "description": "People's capacity: each person's allocation, split by what they work on, against what they can take, with anyone\nover capacity marked and counted.",
   "type": "object",

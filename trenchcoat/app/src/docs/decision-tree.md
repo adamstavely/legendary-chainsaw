@@ -95,8 +95,8 @@ for a new line”, and is marked invalid with “Couldn't send – press Enter t
 <tc-decision-tree id="decisions" heading="Waiting on you"></tc-decision-tree>
 
 <script type="module">
-  import "trenchcoat/decision-tree";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/decision-tree";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tree = document.querySelector("#decisions");
   tree.decisions = [
@@ -117,8 +117,8 @@ for a new line”, and is marked invalid with “Couldn't send – press Enter t
 ```
 
 ```tsx
-import { DecisionTree, type Decision } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DecisionTree, type Decision } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const decisions: Decision[] = [
   {

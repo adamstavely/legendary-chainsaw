@@ -333,7 +333,7 @@
   {
    "tag": "tc-text-to-speech",
    "className": "TcTextToSpeech",
-   "module": "trenchcoat/text-to-speech",
+   "module": "@adamstavely/trenchcoat/text-to-speech",
    "data": [],
    "attributes": [
     {

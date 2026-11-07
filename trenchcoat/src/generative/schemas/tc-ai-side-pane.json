@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-ai-side-pane.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ai-side-pane.json",
   "title": "tc-ai-side-pane",
   "description": "An assistant docked beside a page: a conversation about what's on it, with history, starters, a reflection gate for\nhigh-stakes answers and the full chat composer. Resizable, collapses to a rail, a sheet on narrow screens.",
   "type": "object",

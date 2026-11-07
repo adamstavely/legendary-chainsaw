@@ -258,7 +258,7 @@
   {
    "tag": "tc-candlestick-chart",
    "className": "TcCandlestickChart",
-   "module": "trenchcoat/candlestick-chart",
+   "module": "@adamstavely/trenchcoat/candlestick-chart",
    "data": [
     "x",
     "open",

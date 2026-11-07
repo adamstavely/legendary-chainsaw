@@ -439,7 +439,7 @@
   {
    "tag": "tc-agent-graph",
    "className": "TcAgentGraph",
-   "module": "trenchcoat/agent-graph",
+   "module": "@adamstavely/trenchcoat/agent-graph",
    "data": [
     "nodes",
     "calls",

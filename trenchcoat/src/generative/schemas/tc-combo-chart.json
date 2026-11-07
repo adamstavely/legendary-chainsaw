@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-combo-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-combo-chart.json",
   "title": "tc-combo-chart",
   "description": "Bars and lines over one shared x – grouped or stacked bars, lines with dots – with an optional second axis at the\nright for the lines, a legend that tells bars from lines without colour, and a table view.",
   "type": "object",

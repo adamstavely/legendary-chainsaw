@@ -1,18 +1,18 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, Ref } from "react";
-import { OversightHome as TcOversightHome, type Look, type OversightRole, type ServiceState } from "trenchcoat/react";
+import { OversightHome as TcOversightHome, type Look, type OversightRole, type ServiceState } from "@adamstavely/trenchcoat/react";
 
 /*
  * Oversight Home – the first screen for someone who oversees AI work. Each role gets its own home; switch roles at
  * the top right. A home has the day and the role with a headline that says what needs doing, the one thing that needs
  * this person first, the library's KPI Chart for each number the role watches (this week against the last), and the
  * service posture in the library's Data Table with a filter by state.
- * The block is the <tc-oversight-home> element through `trenchcoat/react` – the same component Angular, Vue and plain
+ * The block is the <tc-oversight-home> element through `@adamstavely/trenchcoat/react` – the same component Angular, Vue and plain
  * HTML get – kept here with its original props. The look follows the nearest <LookProvider>, or the `look` prop.
  */
 
-export type { OversightKpi, OversightRole, OversightService, ServiceState } from "trenchcoat/react";
+export type { OversightKpi, OversightRole, OversightService, ServiceState } from "@adamstavely/trenchcoat/react";
 
 type OwnProps = {
   roles: OversightRole[];

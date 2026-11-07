@@ -108,7 +108,7 @@
   {
    "tag": "tc-tab-overload",
    "className": "TcTabOverload",
-   "module": "trenchcoat/tab-overload",
+   "module": "@adamstavely/trenchcoat/tab-overload",
    "data": [],
    "attributes": [
     {

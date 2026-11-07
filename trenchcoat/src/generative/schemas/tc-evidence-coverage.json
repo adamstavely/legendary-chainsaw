@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-evidence-coverage.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-evidence-coverage.json",
   "title": "tc-evidence-coverage",
   "description": "What an answer could and couldn't see: each source category current, stale or missing, with a request for coverage.",
   "type": "object",

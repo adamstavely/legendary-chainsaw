@@ -400,7 +400,7 @@
   {
    "tag": "tc-guardrail-notice",
    "className": "TcGuardrailNotice",
-   "module": "trenchcoat/guardrail-notice",
+   "module": "@adamstavely/trenchcoat/guardrail-notice",
    "data": [
     "original",
     "revised"

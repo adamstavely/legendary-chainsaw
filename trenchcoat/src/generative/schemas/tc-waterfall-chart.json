@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-waterfall-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-waterfall-chart.json",
   "title": "tc-waterfall-chart",
   "description": "Steps from a starting figure to an ending one – increases and decreases bridged by connectors, totals on the\nbaseline – with the steps `highlight` picks emphasised and a table view.",
   "type": "object",

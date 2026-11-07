@@ -506,7 +506,7 @@
   {
    "tag": "tc-transcript-review",
    "className": "TcTranscriptReview",
-   "module": "trenchcoat/transcript-review",
+   "module": "@adamstavely/trenchcoat/transcript-review",
    "data": [
     "segments",
     "speakers",

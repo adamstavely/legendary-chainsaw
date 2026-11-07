@@ -259,7 +259,7 @@
   {
    "tag": "tc-gate-config",
    "className": "TcGateConfig",
-   "module": "trenchcoat/gate-config",
+   "module": "@adamstavely/trenchcoat/gate-config",
    "data": [
     "value",
     "conditions",

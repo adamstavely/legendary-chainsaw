@@ -8,7 +8,7 @@
  * Accessibility the principles it serves and a checklist, Code an example and the properties.
  * Sits in the Trenchcoat App Shell.
  * Imports: App Shell (AppShell, Icon, Tabs) from Trenchcoat screens; Accessibility Principles, Atomic Design,
- * Breakpoint Overlay, Button, Code Block and Data Table from `trenchcoat/react`; icons from lucide-react 1.55.0.
+ * Breakpoint Overlay, Button, Code Block and Data Table from `@adamstavely/trenchcoat/react`; icons from lucide-react 1.55.0.
  */
 
 import { useCallback, useRef, useState, type ComponentPropsWithoutRef, type Ref } from "react";
@@ -40,7 +40,7 @@ import {
   type BreakpointOverlayBreakpoint,
   type DataColumn,
   type DataRow,
-} from "trenchcoat/react";
+} from "@adamstavely/trenchcoat/react";
 import { AppShell, Icon, Tabs, type AppShellProps, type ShellGroup, type ShellNavItem } from "@/components/ui/app-shell";
 
 /** Sample content – replace with your own data */
@@ -99,7 +99,7 @@ const checklist = [
   "Busy and done states announced in a polite status line.",
 ];
 
-const example = `import { Button } from "trenchcoat/react";
+const example = `import { Button } from "@adamstavely/trenchcoat/react";
 
 export function SaveBar({ saving, onSave, onCancel }) {
   return (

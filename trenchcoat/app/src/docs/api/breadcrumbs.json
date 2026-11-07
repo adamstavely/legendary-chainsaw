@@ -173,7 +173,7 @@
   {
    "tag": "tc-breadcrumbs",
    "className": "TcBreadcrumbs",
-   "module": "trenchcoat/breadcrumbs",
+   "module": "@adamstavely/trenchcoat/breadcrumbs",
    "data": [
     "items"
    ],

@@ -130,7 +130,7 @@
   {
    "tag": "tc-checkbox",
    "className": "TcCheckbox",
-   "module": "trenchcoat/checkbox",
+   "module": "@adamstavely/trenchcoat/checkbox",
    "data": [
     "value"
    ],

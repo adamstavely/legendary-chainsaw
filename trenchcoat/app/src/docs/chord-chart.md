@@ -88,8 +88,8 @@ radians. `still` (or the system's reduced-motion setting) draws everything at on
 <tc-chord-chart heading="Shared instrument time" description="Hours booked across labs" unit=" h"></tc-chord-chart>
 
 <script type="module">
-  import "trenchcoat/chord-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/chord-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-chord-chart").data = [
     { source: "Genomics", target: "Imaging", value: 40 },
     { source: "Imaging", target: "Genomics", value: 28 },
@@ -100,8 +100,8 @@ radians. `still` (or the system's reduced-motion setting) draws everything at on
 ```
 
 ```tsx
-import { ChordChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ChordChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { source: "Genomics", target: "Imaging", value: 40 },

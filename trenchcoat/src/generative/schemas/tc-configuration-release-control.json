@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-configuration-release-control.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-configuration-release-control.json",
   "title": "tc-configuration-release-control",
   "description": "A configuration version moving through environments: the pipeline, what changed, the evaluation evidence, the\napprovals, the rollout and the rollback target, with a gated, confirmed Promote and a confirmed Roll back.",
   "type": "object",

@@ -83,8 +83,8 @@ Opening, closing and copying are confirmed in a polite status message.
 <tc-evidence-list id="evl" note="Exhibits are kept in the evidence system; these are linked references."></tc-evidence-list>
 
 <script type="module">
-  import "trenchcoat/evidence-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/evidence-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const evl = document.querySelector("#evl");
   evl.exhibits = [
@@ -104,8 +104,8 @@ Opening, closing and copying are confirmed in a polite status message.
 
 ```tsx
 import { useState } from "react";
-import { EvidenceList, type Exhibit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EvidenceList, type Exhibit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const exhibits: Exhibit[] = [
   { id: "e101", ref: "E-101", title: "Signed supply agreement", type: "document", source: { label: "Client", grade: "A1" }, status: "sealed" },

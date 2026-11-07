@@ -90,8 +90,8 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 <tc-memory-panel id="memory" max-height="320" undo-for="8000"></tc-memory-panel>
 
 <script type="module">
-  import "trenchcoat/memory-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/memory-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#memory");
   panel.categories = ["Work", "Preferences"];
@@ -106,8 +106,8 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 
 ```tsx
 import { useState } from "react";
-import { MemoryPanel, type Memory } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MemoryPanel, type Memory } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Memories({ initial }: { initial: Memory[] }) {
   const [memories, setMemories] = useState(initial);

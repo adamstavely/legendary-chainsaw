@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-team-flag-picker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-team-flag-picker.json",
   "title": "tc-team-flag-picker",
   "description": "Picks one of a team's flags for a file.",
   "type": "object",

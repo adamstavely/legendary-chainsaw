@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-breadcrumbs.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-breadcrumbs.json",
   "title": "tc-breadcrumbs",
   "description": "A trail of links to the current page that folds its middle into \"…\" when it doesn't fit.",
   "type": "object",

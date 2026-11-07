@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { Tooltip } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Tooltip } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <Tooltip label="About sampling" text="Temperature changes sampling variability." />; }
 ```

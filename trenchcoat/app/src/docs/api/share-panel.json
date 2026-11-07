@@ -248,7 +248,7 @@
   {
    "tag": "tc-share-panel",
    "className": "TcSharePanel",
-   "module": "trenchcoat/share-panel",
+   "module": "@adamstavely/trenchcoat/share-panel",
    "data": [
     "directory",
     "search",

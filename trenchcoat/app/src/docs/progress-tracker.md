@@ -91,8 +91,8 @@ says the same.
 <tc-progress-tracker id="setup" heading="Getting started"></tc-progress-tracker>
 
 <script type="module">
-  import "trenchcoat/progress-tracker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/progress-tracker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tracker = document.querySelector("#setup");
   tracker.steps = [
@@ -116,8 +116,8 @@ says the same.
 
 ```tsx
 import { useState } from "react";
-import { ProgressTracker, type ProgressStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProgressTracker, type ProgressStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const steps: ProgressStep[] = [
   { id: "account", label: "Create your account" },
