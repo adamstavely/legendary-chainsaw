@@ -39,6 +39,10 @@ export class HeaderNav {
   @Input() set separator(v: TcHeaderNav["separator"] | "" | "true" | "false") {
     this.#el.separator = typeof v === "string" ? v !== "false" : v;
   }
+  /** On a dark bar: the triggers take the dark theme's colours whatever the page's theme; the popovers keep it. Set `--tc-hn-ring` to the bar's colour */
+  @Input() set inverse(v: TcHeaderNav["inverse"] | "" | "true" | "false") {
+    this.#el.inverse = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcHeaderNav["look"]) {
     this.#el.look = v;

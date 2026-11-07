@@ -54,6 +54,14 @@
      "readonly": false
     },
     {
+     "name": "inverse",
+     "attribute": "inverse",
+     "type": "boolean",
+     "default": "false",
+     "description": "On a dark bar: the triggers take the dark theme's colours whatever the page's theme; the popovers keep it. Set `--tc-hn-ring` to the bar's colour",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -346,6 +354,10 @@
     {
      "name": "separator",
      "attribute": "separator"
+    },
+    {
+     "name": "inverse",
+     "attribute": "inverse"
     }
    ],
    "events": [
@@ -551,6 +563,7 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
+     "itself",
      "profile-menu",
      "internal/base",
      "tokens.css"
@@ -677,7 +690,7 @@
   "windowed": false
  },
  "size": {
-  "min": 50228,
-  "gzip": 14680
+  "min": 50660,
+  "gzip": 14850
  }
 }

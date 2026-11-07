@@ -823,6 +823,10 @@ export class TcNotifications extends TcElement {
   line-height: var(--tc-line-height-none);
   font-variant-numeric: tabular-nums;
 }
+/* Inside an inverse tc-header-nav (a dark bar): the bell takes the dark theme's colours, the panel keeps the page's,
+   and the badge is ringed in the bar's colour */
+tc-header-nav[inverse] .ui-ntc__trigger { color-scheme: dark; }
+tc-header-nav[inverse] .ui-ntc__badge { box-shadow: 0 0 0 2px var(--tc-hn-ring, var(--tc-surface-raised)); }
 .ui-ntc__badge[data-dot] { min-width: 0; width: 8px; height: 8px; padding: 0; margin: var(--tc-space-1) var(--tc-space-1) 0 0; }
 /* New arrivals: one short pulse – a ring that grows and fades */
 .ui-ntc__badge-wrap[data-pulse] .ui-ntc__badge { animation: ui-ntc-pulse var(--tc-duration-slowest) var(--tc-ease-out); }

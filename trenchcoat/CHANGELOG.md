@@ -17,6 +17,10 @@
   rail's inner width, so the collapsed rail still centres it whole.
 - **Side Nav:** `--tc-snav-head-gap` – the space between the brand's row and the first item, open or folded into the
   rail. It defaults to `--tc-space-2`, as today, and leaves the space between the bar's other parts alone.
+- **Header Nav:** `inverse`, for a header bar that's dark in both themes. The bell, the app picker's button, the
+  avatar and the hairline take the dark theme's colours, hover fills and focus ring whatever the page's theme, while
+  the account card and the notifications and app picker panels keep the page's theme. The unread badge is ringed in
+  `--tc-hn-ring`, like the presence dot, so a page can set it to the bar's colour.
 
 ## 0.6.0 – Priority list: columns of the page's own, rows without a tier
 

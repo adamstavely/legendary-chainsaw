@@ -257,6 +257,14 @@
    "ui": "ntc",
    "cssProperties": [
     {
+     "name": "--tc-hn-ring",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-notifications-max-height",
      "value": "none",
      "looks": [
@@ -1125,7 +1133,7 @@
   "windowed": false
  },
  "size": {
-  "min": 60300,
-  "gzip": 17784
+  "min": 60641,
+  "gzip": 17902
  }
 }

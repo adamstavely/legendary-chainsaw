@@ -22,6 +22,9 @@ import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type
  * avatar; a pointer-down outside, or focus moving to anything else, closes it where focus is. Tab order is the visual
  * order: bell, picker, avatar, then the open popover.
  *
+ * `inverse` is for a dark header bar in either theme: the bell, the picker's button, the avatar and the hairline take
+ * the dark theme's colours (color-scheme: dark on those triggers only), while the popovers keep the page's theme.
+ *
  *   <tc-header-nav .user=${{ name: "Ada Lovelace", email: "ada@example.com", presence: "online" }}>
  *     <tc-notifications .items=${…}></tc-notifications>
  *     <tc-app-picker .apps=${…}></tc-app-picker>
@@ -107,6 +110,8 @@ export class TcHeaderNav extends TcElement {
   @property() accessor panel: HeaderNavPanel | null = null;
   /** The hairline before the avatar (default true; separator="false" hides it) */
   @property({ type: Boolean, converter: { fromAttribute: (v) => v !== "false" } }) accessor separator = true;
+  /** On a dark bar: the triggers take the dark theme's colours whatever the page's theme; the popovers keep it. Set `--tc-hn-ring` to the bar's colour */
+  @property({ type: Boolean, reflect: true }) accessor inverse = false;
 
   /** The photo that failed to load – initials show instead */
   @state() private accessor broken: string | null = null;
@@ -332,6 +337,9 @@ export class TcHeaderNav extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="hn"] > tc-notifications, [data-ui="hn"] > tc-app-picker { flex: none; }
+/* On a dark bar: every colour token is light-dark(), so the triggers resolve their dark values; the popovers, which
+   are their siblings, keep the page's theme. tc-notifications and tc-app-picker do the same for their own buttons */
+[data-ui="hn"][inverse] :is(.ui-hn__me, .ui-hn__sep) { color-scheme: dark; }
 .ui-hn__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* The hairline before the avatar */

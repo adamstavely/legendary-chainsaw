@@ -1,12 +1,13 @@
 import { useMemo, useRef, useState } from "react";
 import type * as UI from "@blocks/header-nav";
 import type { AppPickerApp, NotificationItem, NotificationsChange } from "@adamstavely/trenchcoat/react";
-import { caption } from "../../demo-kit";
+import { caption, textButton } from "../../demo-kit";
 
 /* A product's header: the logo and a search field on the left, the Header Nav block on the right – notifications,
    the app picker and Ada's avatar. Open any of the three: the others close. Read or dismiss notifications, approve
    the access request, switch apps or pick an account action; what happened shows under the header. Narrow the stage
-   (or view it at 320 px) and the search folds into an icon that opens it across the header. */
+   (or view it at 320 px) and the search folds into an icon that opens it across the header. "Dark bar" puts it on a
+   navy bar in either theme: the block's \`inverse\` keeps its buttons legible there, and its popovers follow the page. */
 
 // A fixed clock, so "6m" and the day groups read the same on every load
 const NOW = Date.UTC(2026, 9, 27, 9, 30);
@@ -67,6 +68,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [pinned, setPinned] = useState(["projects", "mail", "calendar"]);
   const [searching, setSearching] = useState(false);
   const [last, setLast] = useState("");
+  const [dark, setDark] = useState(false);
   const searchBtn = useRef<HTMLButtonElement>(null);
   const app = apps.find((a) => a.id === current);
 
@@ -74,7 +76,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     <div className="demo-hn">
       <style>{demoCss}</style>
       <div className="demo-hn__window">
-        <header className="demo-hn__bar" data-searching={searching || undefined}>
+        <header className="demo-hn__bar" data-searching={searching || undefined} data-dark={dark || undefined}>
           <a className="demo-hn__brand" href="#home" aria-label="Northwind home" onClick={(e) => e.preventDefault()}>
             <svg className="demo-hn__logo" viewBox="0 0 24 24" aria-hidden="true">
               <rect width="24" height="24" rx="7" fill="currentColor" />
@@ -120,6 +122,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
               <span className="demo-hn__spacer" />
               <HeaderNav
                 className="demo-hn__nav"
+                inverse={dark}
                 user={{ name: "Ada Lovelace", email: "ada.lovelace@northwind.co", presence: "online", tone: "violet" }}
                 notifications={{
                   items,
@@ -169,8 +172,11 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           </div>
         </main>
       </div>
-      <p style={{ ...caption, margin: 0, minHeight: 18 }} role="status">
-        {last}
+      <p style={{ ...caption, margin: 0, minHeight: 18 }}>
+        <span role="status">{last}</span>{" "}
+        <button type="button" style={textButton} aria-pressed={dark} onClick={() => setDark(!dark)}>
+          {dark ? "Light bar" : "Dark bar"}
+        </button>
       </p>
     </div>
   );
@@ -195,6 +201,12 @@ const demoCss = `
 .demo-hn__search input::-webkit-search-cancel-button { display: none; }
 .demo-hn__search kbd { flex: none; padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-sm); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); font-family: var(--tc-font-sans); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 .demo-hn__spacer { flex: 1; }
+/* A navy bar in either theme. Not color-scheme on the bar itself – the block's popovers live inside it and should keep
+   the page's theme – but on the bar's own pieces, as the block's inverse does for its buttons */
+.demo-hn__bar[data-dark] { background: #081d35; border-bottom-color: transparent; --tc-hn-ring: #081d35; }
+.demo-hn__bar[data-dark] :is(.demo-hn__brand, .demo-hn__search, .demo-hn__icon) { color-scheme: dark; }
+.demo-hn__bar[data-dark] .demo-hn__logo { color: #ffffff; }
+.demo-hn__bar[data-dark] .demo-hn__logo path { stroke: #081d35; }
 .demo-hn__icon { display: none; place-items: center; flex: none; width: var(--tc-control-h-md); height: var(--tc-control-h-md); margin: 0; padding: 0; border: 0; border-radius: var(--tc-radius-full); background: none; color: var(--tc-action-ghost-fg); cursor: pointer; }
 .demo-hn__icon:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .demo-hn__icon svg { width: 18px; height: 18px; }
