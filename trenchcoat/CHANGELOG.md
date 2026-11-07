@@ -12,6 +12,9 @@
 - **Tokens:** `--tc-font-sans` now starts with “Inter Variable”, the name `@fontsource-variable/inter` gives the face,
   so apps that self-host Inter that way get it instead of the system font. “Inter” and “InterVariable” still follow.
   Getting Started lists which ways of loading Inter it matches.
+- **Side Nav:** `--tc-snav-brand-size`, `--tc-snav-brand-weight` and `--tc-snav-logo-size` size the product's name and
+  logo from the page, defaulting to today's look (the bar's font size, semibold, 28px). The logo is capped at the
+  rail's inner width, so the collapsed rail still centres it whole.
 
 ## 0.6.0 – Priority list: columns of the page's own, rows without a tier
 
