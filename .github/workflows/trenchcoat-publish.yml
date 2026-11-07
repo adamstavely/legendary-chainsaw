@@ -1,9 +1,15 @@
 name: Trenchcoat publish
 
-# Publishes @adamstavely/trenchcoat to GitHub Packages when a tag trenchcoat-v<version> is pushed. The tag must match
-# package.json's version; the full CI suite runs first, so a broken package is never published
+# Publishes @adamstavely/trenchcoat to GitHub Packages with no manual steps: on a merge to main that touches
+# trenchcoat/, it publishes package.json's version if that version isn't on the registry yet, then tags the commit
+# trenchcoat-v<version>. Pushing a trenchcoat-v* tag by hand still works as a fallback (the tag must match the
+# version). The full CI suite runs first, so a broken package is never published
 on:
   push:
+    branches: [main]
+    paths:
+      - "trenchcoat/**"
+      - ".github/workflows/trenchcoat-publish.yml"
     tags:
       - "trenchcoat-v*"
 
@@ -15,11 +21,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     defaults:
       run:
         working-directory: trenchcoat
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -29,29 +37,61 @@ jobs:
           cache-dependency-path: trenchcoat/package-lock.json
           registry-url: https://npm.pkg.github.com
           scope: "@adamstavely"
-      - name: Tag matches package.json
+      # Decides whether to publish: the version must not be on the registry yet (a 404 means it isn't), and a
+      # hand-pushed tag must match it
+      - name: Version to publish
+        id: version
         run: |
           version="$(node -p "require('./package.json').version")"
-          if [ "${GITHUB_REF_NAME}" != "trenchcoat-v${version}" ]; then
-            echo "::error::tag ${GITHUB_REF_NAME} doesn't match package.json version ${version}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_REF_TYPE" = "tag" ] && [ "$GITHUB_REF_NAME" != "trenchcoat-v$version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME doesn't match package.json version $version"
             exit 1
           fi
-      - run: npm ci
+          if out="$(npm view "@adamstavely/trenchcoat@$version" version 2>&1)"; then
+            if [ "$out" = "$version" ]; then
+              echo "$version is already published; nothing to do"
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          elif echo "$out" | grep -q "E404"; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "$out"
+            echo "::error::couldn't check the registry for $version"
+            exit 1
+          fi
+      - if: steps.version.outputs.publish == 'true'
+        run: npm ci
       # npm run ci runs the element tests in real browsers
       - name: Playwright browsers
+        if: steps.version.outputs.publish == 'true'
         run: npx playwright install --with-deps
       # check:snippets (in npm run ci) type-checks the docs' snippets inside the example apps, which install the
       # packed tarball: build and pack first, as trenchcoat-ci.yml does
       - name: Build and pack for the examples
+        if: steps.version.outputs.publish == 'true'
         run: |
           npm run build:package
           rm -rf examples/.packed && mkdir -p examples/.packed
           npm pack --pack-destination examples/.packed
           mv examples/.packed/adamstavely-trenchcoat-*.tgz examples/.packed/trenchcoat.tgz
       - name: Framework examples
+        if: steps.version.outputs.publish == 'true'
         run: npm run examples -- --no-pack
-      - run: npm run ci
-      - run: npm run build:package
-      - run: npm publish
+      - if: steps.version.outputs.publish == 'true'
+        run: npm run ci
+      - if: steps.version.outputs.publish == 'true'
+        run: npm run build:package
+      - if: steps.version.outputs.publish == 'true'
+        run: npm publish
+      # The tag marks the commit that was published; it's moved if an earlier attempt left it elsewhere. A tag pushed
+      # with GITHUB_TOKEN doesn't start another run
+      - name: Tag the release
+        if: steps.version.outputs.publish == 'true' && github.ref_type == 'branch'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: trenchcoat-v${{ steps.version.outputs.version }}
+        run: |
+          git tag -f "$TAG" "$GITHUB_SHA"
+          git push -f origin "refs/tags/$TAG"

@@ -1,6 +1,7 @@
 name: Trenchcoat CI
 
-# Runs only for changes under trenchcoat/, the agent-face source it bundles (and to this file); nothing else in the repo triggers it
+# Runs on every PR so the required `ci-ok` check always reports; the `changes` job skips the heavy jobs unless
+# trenchcoat/, the agent-face source it bundles, or the Trenchcoat workflows changed
 on:
   push:
     branches: [main]
@@ -8,11 +9,8 @@ on:
       - "trenchcoat/**"
       - "agent-face/src/**"
       - ".github/workflows/trenchcoat-ci.yml"
+      - ".github/workflows/trenchcoat-publish.yml"
   pull_request:
-    paths:
-      - "trenchcoat/**"
-      - "agent-face/src/**"
-      - ".github/workflows/trenchcoat-ci.yml"
 
 # A newer push to the same branch cancels the run it replaces
 concurrency:
@@ -20,7 +18,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Whether this push or PR touches Trenchcoat; the jobs below run only if it does
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      trenchcoat: ${{ steps.diff.outputs.trenchcoat }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "trenchcoat=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          changed="$(git diff --name-only "$BASE" HEAD)"
+          echo "$changed"
+          if echo "$changed" | grep -qE '^(trenchcoat/|agent-face/src/|\.github/workflows/trenchcoat-(ci|publish)\.yml$)'; then
+            echo "trenchcoat=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "trenchcoat=false" >> "$GITHUB_OUTPUT"
+          fi
+
   check:
+    needs: changes
+    if: needs.changes.outputs.trenchcoat == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -100,6 +124,8 @@ jobs:
   # about two thirds of the way through on its own runner, once after 48 files of a third, and once in a sixth; its
   # files are split across eight runners
   elements:
+    needs: changes
+    if: needs.changes.outputs.trenchcoat == 'true'
     name: elements (${{ matrix.browser }}${{ matrix.shard != '1/1' && format(' {0}', matrix.shard) || '' }})
     runs-on: ubuntu-latest
     strategy:
@@ -145,3 +171,17 @@ jobs:
         if: steps.browser-cache.outputs.cache-hit == 'true'
       - name: Element tests
         run: npx vitest run --project elements --browser.name=${{ matrix.browser }} --shard=${{ matrix.shard }}
+
+  # The one required status check on main: passes when every job above succeeded or was skipped
+  ci-ok:
+    if: always()
+    needs: [changes, check, elements]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "results: $RESULTS"
+          for r in $RESULTS; do
+            case "$r" in success|skipped) ;; *) echo "::error::a required job ended as $r"; exit 1 ;; esac
+          done
