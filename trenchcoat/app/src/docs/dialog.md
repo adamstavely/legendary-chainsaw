@@ -37,6 +37,11 @@ Standard and Clean share the same white card on a dimmed page, with a hairline a
 the controls inside: a hosted `tc-button` follows its own look, and the built-in Close button uses the look's
 secondary or primary recipe.
 
+`size` sets how wide the panel may grow: `sm` (480px), `md` (640px, the default), `lg` (880px) or `xl` (1120px),
+never past 90% of the window. `sm` and `md` fit their content up to that width; `lg` and `xl` always take it, for
+reports with tables or side-by-side sections. The widths are tokens on `tc-dialog` a page can override:
+`--tc-dialog-w-sm`, `--tc-dialog-w-md`, `--tc-dialog-w-lg` and `--tc-dialog-w-xl`.
+
 ## Keyboard
 
 | Key | What it does |

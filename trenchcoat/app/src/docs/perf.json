@@ -13186,12 +13186,12 @@
    }
   },
   "dialog": {
-   "measuredAt": "2026-11-06",
-   "hash": "1edba7abf84877c2",
+   "measuredAt": "2026-11-07",
+   "hash": "7ad0bd6f3e89dcb0",
    "bundle": {
     "own": {
-     "min": 5774,
-     "gzip": 2548
+     "min": 6555,
+     "gzip": 2790
     },
     "shared": [
      {
@@ -13241,20 +13241,20 @@
      }
     ],
     "withoutLit": {
-     "min": 28705,
-     "gzip": 8048
+     "min": 29487,
+     "gzip": 8295
     },
     "withLit": {
-     "min": 48746,
-     "gzip": 14518
+     "min": 49528,
+     "gzip": 14761
     }
    },
    "render": {
     "tag": "tc-dialog",
     "source": "demo",
     "runs": 7,
-    "cold": 3.1,
-    "first": 0.2,
+    "cold": 7.7,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -17304,7 +17304,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-07",
-   "hash": "ad7f1d38f2f68388",
+   "hash": "3a26751587844974",
    "bundle": {
     "own": {
      "min": 34126,
@@ -17609,7 +17609,7 @@
      {
       "name": "stepper-form",
       "kind": "element",
-      "min": 79126
+      "min": 79978
      },
      {
       "name": "region-dach",
@@ -19247,6 +19247,11 @@
       "min": 4534
      },
      {
+      "name": "dialog",
+      "kind": "element",
+      "min": 4468
+     },
+     {
       "name": "processing",
       "kind": "element",
       "min": 4416
@@ -19295,11 +19300,6 @@
       "name": "first-use",
       "kind": "element",
       "min": 3811
-     },
-     {
-      "name": "dialog",
-      "kind": "element",
-      "min": 3675
      },
      {
       "name": "number-change",
@@ -21288,20 +21288,20 @@
      }
     ],
     "withoutLit": {
-     "min": 9646894,
-     "gzip": 2428978
+     "min": 9648540,
+     "gzip": 2429442
     },
     "withLit": {
-     "min": 9589220,
-     "gzip": 2405814
+     "min": 9590865,
+     "gzip": 2406296
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 10,
-    "first": 1.1,
+    "cold": 31.4,
+    "first": 0.6,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -33356,8 +33356,8 @@
    }
   },
   "publish-readiness": {
-   "measuredAt": "2026-10-29",
-   "hash": "e20006db0cc5c142",
+   "measuredAt": "2026-11-07",
+   "hash": "a29a5f10b37a9063",
    "bundle": {
     "own": {
      "min": 17917,
@@ -33422,7 +33422,7 @@
      {
       "name": "dialog",
       "kind": "element",
-      "min": 3529
+      "min": 4311
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -33431,21 +33431,21 @@
      }
     ],
     "withoutLit": {
-     "min": 81661,
-     "gzip": 21046
+     "min": 82443,
+     "gzip": 21261
     },
     "withLit": {
-     "min": 104433,
-     "gzip": 28676
+     "min": 105215,
+     "gzip": 28885
     }
    },
    "render": {
     "tag": "tc-publish-readiness",
     "source": "defaults",
     "runs": 7,
-    "cold": 12.3,
-    "first": 0.9,
-    "update": 0.2,
+    "cold": 35,
+    "first": 1,
+    "update": 0.3,
     "updateKind": "re-render with the same data",
     "nodes": 57,
     "scale": null,
@@ -40621,12 +40621,12 @@
    }
   },
   "stepper-form": {
-   "measuredAt": "2026-11-06",
-   "hash": "e6783b62326c4593",
+   "measuredAt": "2026-11-07",
+   "hash": "a12a48276449868f",
    "bundle": {
     "own": {
-     "min": 80966,
-     "gzip": 17522
+     "min": 81818,
+     "gzip": 17742
     },
     "shared": [
      {
@@ -40671,20 +40671,20 @@
      }
     ],
     "withoutLit": {
-     "min": 88840,
-     "gzip": 19831
+     "min": 89692,
+     "gzip": 20051
     },
     "withLit": {
-     "min": 111886,
-     "gzip": 27378
+     "min": 112738,
+     "gzip": 27597
     }
    },
    "render": {
     "tag": "tc-stepper-form",
     "source": "demo",
     "runs": 7,
-    "cold": 14,
-    "first": 1,
+    "cold": 31.2,
+    "first": 1.2,
     "update": 0.3,
     "updateKind": "one item of steps replaced",
     "nodes": 46,
@@ -40694,14 +40694,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.7,
+       "first": 7.8,
        "update": 0.5,
        "nodes": 622
       },
       {
        "items": 1000,
-       "first": 39.6,
-       "update": 5.8,
+       "first": 46.6,
+       "update": 6.3,
        "nodes": 6022
       }
      ]

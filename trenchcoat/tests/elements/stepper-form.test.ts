@@ -243,6 +243,47 @@ describe("tc-stepper-form", () => {
     await vi.waitFor(() => expect(el.querySelectorAll(".ui-sf__chip").length).toBe(0));
   });
 
+  for (const look of ["standard", "clean"]) {
+    test(`${look}: choice cards wrap onto more rows instead of shrinking below their minimum`, async () => {
+      const options = ["Solo", "Team", "Business", "Enterprise", "Research", "Nonprofit"].map((t) => ({ value: t.toLowerCase(), title: t, description: "For a few people" }));
+      const wrap = await fixture<HTMLDivElement>(html`<div data-look=${look} style="width: 600px"><tc-stepper-choices label="Plan" .options=${options.slice(0, 3)}></tc-stepper-choices></div>`);
+      const el = wrap.querySelector<HTMLElement & { options: unknown[] }>("tc-stepper-choices")!;
+      await settle();
+      const cards = () => [...el.querySelectorAll<HTMLElement>(".ui-sf__choice")].map((c) => c.getBoundingClientRect());
+      // Three fit: one row
+      expect(new Set(cards().map((r) => Math.round(r.top))).size).toBe(1);
+      el.options = options;
+      await settle();
+      const rects = cards();
+      expect(rects).toHaveLength(6);
+      expect(new Set(rects.map((r) => Math.round(r.top))).size).toBeGreaterThan(1);
+      for (const r of rects) expect(r.width).toBeGreaterThanOrEqual(167);
+    });
+
+    test(`${look}: a textarea in tc-stepper-input gets the field's styles and wiring, starts at its rows and resizes vertically`, async () => {
+      const wrap = await fixture<HTMLDivElement>(html`<div data-look=${look} style="width: 400px">
+        <tc-stepper-input control-id="notes" control-invalid><textarea rows="5" placeholder="Notes"></textarea></tc-stepper-input>
+        <tc-stepper-input control-id="one"><input /></tc-stepper-input>
+      </div>`);
+      await settle();
+      const [boxed, plain] = [...wrap.querySelectorAll<HTMLElement>("tc-stepper-input")];
+      const ta = boxed.querySelector("textarea")!;
+      expect(ta.id).toBe("notes");
+      expect(ta.getAttribute("aria-invalid")).toBe("true");
+      const cs = getComputedStyle(ta);
+      expect(cs.resize).toBe("vertical");
+      expect(cs.borderTopWidth).toBe("0px");
+      expect(cs.backgroundColor).toBe("rgba(0, 0, 0, 0)");
+      // The wrapper draws the field, as for an input
+      expect(getComputedStyle(boxed).boxShadow).not.toBe("none");
+      expect(getComputedStyle(boxed).backgroundColor).toBe(getComputedStyle(plain).backgroundColor);
+      // Five rows are taller than the one-line field, and the wrapper grows with it
+      const fieldH = plain.getBoundingClientRect().height;
+      expect(ta.getBoundingClientRect().height).toBeGreaterThan(fieldH * 2);
+      expect(boxed.getBoundingClientRect().height).toBeGreaterThanOrEqual(ta.getBoundingClientRect().height);
+    });
+  }
+
   test("review rows and success are elements too", async () => {
     const onEdit = vi.fn();
     const wrap = await fixture(html`<div data-look="standard">

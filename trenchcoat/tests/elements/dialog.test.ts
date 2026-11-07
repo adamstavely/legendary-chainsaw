@@ -94,6 +94,26 @@ describe("tc-dialog", () => {
     }
   });
 
+  test("size: sm and md fit their content up to 480 and 640px; lg and xl take 880 and 1120px, within 90% of the window", async () => {
+    const long = "A long line of report text that keeps going. ".repeat(40);
+    for (const [size, px, fills] of [["sm", 480, false], ["md", 640, false], ["lg", 880, true], ["xl", 1120, true]] as const) {
+      const el = await fixture<TcDialog>(html`<tc-dialog label="Brief" size=${size} .text=${fills ? "Short" : long} open></tc-dialog>`);
+      await settle();
+      expect(getComputedStyle(el).getPropertyValue("--tc-dialog-w").trim()).toBe(`${px}px`);
+      const cap = Math.min(px, window.innerWidth * 0.9);
+      const w = el.querySelector("dialog")!.getBoundingClientRect().width;
+      // Long text grows sm and md to their cap; lg and xl take it even with little content
+      expect(Math.abs(w - cap)).toBeLessThanOrEqual(1);
+      el.open = false;
+      await settle();
+      el.remove();
+    }
+    // md is the default, and the attribute reflects
+    const el = await fixture<TcDialog>(html`<tc-dialog label="Brief"></tc-dialog>`);
+    expect(el.size).toBe("md");
+    expect(el.getAttribute("size")).toBe("md");
+  });
+
   test("description names the dialog's purpose and describes it", async () => {
     const el = await fixture<TcDialog>(html`<tc-dialog label="Publish" description="Nothing goes live until every check passes." open></tc-dialog>`);
     const desc = el.querySelector("header p")!;

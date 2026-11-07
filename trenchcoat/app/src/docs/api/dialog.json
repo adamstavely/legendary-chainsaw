@@ -6,6 +6,14 @@
    "description": "Native modal dialog with content, focus containment, Escape and focus restoration.\nThe body and the actions are the app's: the dialog's own control styles don't reach into them, so a hosted\ntc-button or progress tracker renders as it does anywhere else.",
    "properties": [
     {
+     "name": "size",
+     "attribute": "size",
+     "type": "DialogSize",
+     "default": "\"md\"",
+     "description": "How wide the panel may grow: \"sm\" (480px), \"md\" (640px, the default), \"lg\" (880px) or \"xl\" (1120px), within 90% of the window. lg and xl always take that width.",
+     "readonly": false
+    },
+    {
      "name": "open",
      "attribute": "open",
      "type": "boolean",
@@ -155,6 +163,10 @@
     "actions"
    ],
    "attributes": [
+    {
+     "name": "size",
+     "attribute": "size"
+    },
     {
      "name": "open",
      "attribute": "open"
@@ -324,6 +336,7 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
+     "itself",
      "internal/base",
      "internal/settings",
      "tokens.css"
@@ -388,7 +401,7 @@
   "windowed": false
  },
  "size": {
-  "min": 28705,
-  "gzip": 8017
+  "min": 29487,
+  "gzip": 8263
  }
 }

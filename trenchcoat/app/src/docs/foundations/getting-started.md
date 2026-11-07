@@ -17,7 +17,7 @@ GitHub's registry in your app's `.npmrc`, with a token that has `read:packages`,
 ```
 
 ```sh
-npm install --save-exact @adamstavely/trenchcoat@0.3.0
+npm install --save-exact @adamstavely/trenchcoat@0.4.0
 ```
 
 To try a local change instead, build and pack it from the repository and install the tarball:
@@ -27,7 +27,7 @@ cd trenchcoat
 npm run build:package
 npm pack
 # in your app
-npm install ../trenchcoat/adamstavely-trenchcoat-0.3.0.tgz
+npm install ../trenchcoat/adamstavely-trenchcoat-0.4.0.tgz
 ```
 
 ## Load the tokens once
