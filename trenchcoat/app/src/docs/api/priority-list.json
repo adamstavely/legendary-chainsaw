@@ -30,11 +30,19 @@
      "readonly": false
     },
     {
+     "name": "figures",
+     "attribute": null,
+     "type": "PriorityFigureColumn[]",
+     "default": "[]",
+     "description": "More columns after Work, in order, filled from each row's `figures`",
+     "readonly": false
+    },
+    {
      "name": "grouped",
      "attribute": "grouped",
      "type": "boolean",
      "default": "false",
-     "description": "Puts the rows under a header per priority",
+     "description": "Puts the rows under a header per priority; rows without one come last, under no header",
      "readonly": false
     },
     {
@@ -162,7 +170,7 @@
    "cssProperties": [
     {
      "name": "--tc-prl-cols",
-     "value": "24px minmax(0, 1fr) 48px 60px",
+     "value": "minmax(0, 1fr) 108px 120px 72px 40px",
      "looks": [
       "both"
      ]
@@ -214,6 +222,9 @@
     "--tc-pill-h",
     "--tc-pill-px",
     "--tc-pill-radius",
+    "--tc-prl-fig-w",
+    "--tc-prl-lead",
+    "--tc-prl-n",
     "--tc-radius-full",
     "--tc-radius-md",
     "--tc-radius-sm",
@@ -312,6 +323,7 @@
    "module": "@adamstavely/trenchcoat/priority-list",
    "data": [
     "items",
+    "figures",
     "tiers",
     "healthLabels"
    ],
@@ -563,7 +575,7 @@
   "windowed": false
  },
  "size": {
-  "min": 30027,
-  "gzip": 9103
+  "min": 32575,
+  "gzip": 9698
  }
 }

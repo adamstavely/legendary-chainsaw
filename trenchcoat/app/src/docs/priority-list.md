@@ -10,13 +10,18 @@ A portfolio's topics or projects by priority, each on one dense row. A badge car
 the others are outlined – beside the name, the owner and team, and its health in words: at risk, watch or on track. The
 momentum is a small line over the last few periods with its change, green and ▲ when it's rising, red and ▼ when it's
 falling. Coverage is a slim bar with its share, red when it's low. A pill says what's open ("5 gaps") and a mono count
-says how much work is in flight ("3·wk"). Chips in the header count each health and filter by one; with `grouped`, rows
-fall under a header per priority that counts what's at risk.
+says how much work is in flight ("3·wk"). `figures` adds columns of the page's own after Work – papers published last
+month and this, say – each filled from the row's `figures` by the column's id. Chips in the header count each health and
+filter by one; with `grouped`, rows fall under a header per priority that counts what's at risk.
+
+A row with no `priority` shows its `badge` instead, a short code such as "CEC" in a neutral badge, so the same list can
+summarise things that have no tier: centres, teams, programmes. With `grouped`, those rows come last, under no header.
 
 ## When to use
 
 - A directorate's or a programme's portfolio, ranked so the most important and most at-risk items stand out.
 - A dashboard panel that leads into each topic's or project's page.
+- A summary of centres or teams that looks just like the priorities beside it, with codes for badges.
 - Comparing items by momentum and coverage at once, without opening each one.
 
 ## When not to use
@@ -32,18 +37,20 @@ fall under a header per priority that counts what's at risk.
 2. **Columns** `.ui-prl__columns` – the headings over the rows
 3. **Group header** `.ui-prl__group-head` – with `grouped`: the tier, how many it holds and how many are at risk
 4. **Row** `.ui-prl__row` – one topic or project; opens on Enter or a click
-5. **Priority** `.ui-prl__badge` – the tier's number: ink for the top tier, outlined for the rest
+5. **Priority** `.ui-prl__badge` – the tier's number: ink for the top tier, outlined for the rest; or the row's code,
+   on a gray fill
 6. **Health** `.ui-prl__health` – at risk, watch or on track, in words with a dot
 7. **Momentum** `.ui-prl__momentum` – the line and the change, with an arrow and a colour
 8. **Coverage** `.ui-prl__coverage` – the share covered over a slim bar
 9. **Open** `.ui-prl__open` – what's open, as a pill
 10. **Work** `.ui-prl__work` – how much work is in flight
+11. **Figure** `.ui-prl__fig` – a value in one of the page's `figures` columns
 
 ## Looks
 
 Standard is a white card on a gray tray, with the header and the filters on the tray above it. Clean is one white
 card with the header as its first row. The rows are the same in both. As the element narrows, the momentum line folds
-to just its change, then the work count goes, then the coverage bar and the open pill.
+to just its change, then the work count goes, then the figures, then the coverage bar and the open pill.
 
 ## Keyboard
 
@@ -59,13 +66,16 @@ The filters come first in the tab order, then the rows as one tab stop.
 ## Screen readers
 
 Each row is a button that reads the whole row: “Priority 1, Top priority. Neuromorphic Computing Marcus Okonkwo ·
-Cognitive Systems. At risk. Momentum down 8%. Coverage 42%. 4 gaps. 4 work items”. The line, arrows and bar are
+Cognitive Systems. At risk. Momentum down 8%. Coverage 42%. 4 gaps. 4 work items”, then each figure with its column's
+label: “2 Last mo.”. A row with a code reads it in place of the tier: “CEC. Energy & Climate …”. The line, arrows and bar are
 hidden; their meaning is in the words. The filters are a group labelled “Filter by health”, each a toggle button
 that's pressed while its health is shown. With `grouped`, each group is a region named by its tier and count.
 
 ## Content
 
-- Name items as people know them: “Neuromorphic Computing”, not a code.
+- Name items as people know them: “Neuromorphic Computing”, not a code. A code belongs in `badge`, for rows without a
+  tier.
+- Keep figure labels short – the column is narrow: “This mo.”, not “Published this month”.
 - Give `change` as a fraction of the period's start: -0.14 for a 14% fall.
 - Set `open-unit` and `open-unit-one` to what's open: “gaps” and “gap”, “risks” and “risk”.
 - Rename the tiers with `tiers` to match your own scale, keeping 1 as the top.

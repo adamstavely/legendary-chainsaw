@@ -27,7 +27,11 @@ export class PriorityList {
   @Input() set items(v: TcPriorityList["items"]) {
     this.#el.items = v;
   }
-  /** Puts the rows under a header per priority */
+  /** More columns after Work, in order, filled from each row's `figures` */
+  @Input() set figures(v: TcPriorityList["figures"]) {
+    this.#el.figures = v;
+  }
+  /** Puts the rows under a header per priority; rows without one come last, under no header */
   @Input() set grouped(v: TcPriorityList["grouped"] | "" | "true" | "false") {
     this.#el.grouped = typeof v === "string" ? v !== "false" : v;
   }

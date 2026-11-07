@@ -13,9 +13,10 @@ unit's name and one line about it, with the page's actions at the right. Below i
   marks.
 - **Stats.** A strip of the page's own figures. Each stat has a label, a value and a quiet line, and the budget can
   show a spent-of-allocated bar.
-- **Teams.** The unit's sub-units as rows that fold open. A row shows the team's lead, people, health, coverage,
-  open gaps and effort. Opening it lists the team's items: topics or programmes, each with a priority, a tag, what's
-  in work, coverage, what's open and its momentum.
+- **Teams.** The unit's sub-units as rows that fold open. A row shows the team's lead, people, health, coverage, open
+  gaps and effort, then any figures of the page's own (`figures`: a value, a quiet word under it and a tone). Opening
+  it lists the team's items: topics or programmes, each with a priority, a tag, what's in work, coverage, what's open
+  and its momentum.
 
 ## When to use
 
@@ -37,7 +38,8 @@ unit's name and one line about it, with the page's actions at the right. Below i
 3. **Lead** `.ui-orgu__lead` – who leads the unit, with their role
 4. **Health** `.ui-orgu__healths` – how many items are On track, on Watch and At risk
 5. **Stat** `.ui-orgu__stat` – a label, a value, an optional bar and a quiet line
-6. **Team** `.ui-orgu__team-row` – a sub-unit: lead, people, health, coverage, gaps and effort; opens onto its items
+6. **Team** `.ui-orgu__team-row` – a sub-unit: lead, people, health, coverage, gaps, effort and its own figures; opens
+   onto its items
 7. **Item** `.ui-orgu__item` – a team's topic: priority, tag, what's in work, coverage, what's open and momentum
 
 ## Looks

@@ -3,7 +3,7 @@ import * as React from "react";
 import { TcOrgUnitCard, type OrgActionEvent, type OrgExpandedChange, type OrgItem, type OrgOpen } from "../org-unit-card";
 import { h, useControlled } from "./internal";
 
-export type { OrgAction, OrgHealth, OrgHealthCounts, OrgItem, OrgPerson, OrgStat, OrgTeam } from "../org-unit-card";
+export type { OrgAction, OrgFigure, OrgHealth, OrgHealthCounts, OrgItem, OrgPerson, OrgStat, OrgTeam } from "../org-unit-card";
 export { defaultOrgHealthLabels } from "../org-unit-card";
 
 const RawOrgUnitCard = createComponent({

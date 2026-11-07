@@ -20,9 +20,16 @@
       },
       "description": "The topics or projects, in the order to show them (within a group when grouped)"
     },
+    "figures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PriorityFigureColumn"
+      },
+      "description": "More columns after Work, in order, filled from each row's `figures`"
+    },
     "grouped": {
       "type": "boolean",
-      "description": "Puts the rows under a header per priority"
+      "description": "Puts the rows under a header per priority; rows without one come last, under no header"
     },
     "filter": {
       "anyOf": [
@@ -118,7 +125,11 @@
         },
         "priority": {
           "type": "number",
-          "description": "Its tier, from 1 (the top) to 4; named by `tiers`"
+          "description": "Its tier, from 1 (the top) to 4; named by `tiers`. A row without one shows its `badge` instead"
+        },
+        "badge": {
+          "type": "string",
+          "description": "A short code shown in the badge when there's no priority, e.g. \"CEC\""
         },
         "health": {
           "$ref": "#/definitions/PriorityHealth"
@@ -145,12 +156,21 @@
         "work": {
           "type": "number",
           "description": "How many pieces of work are in flight"
+        },
+        "figures": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "description": "Values for the list's `figures` columns, by column id; a missing one leaves its cell empty"
         }
       },
       "required": [
         "id",
         "name",
-        "priority",
         "health"
       ],
       "additionalProperties": false
@@ -162,6 +182,28 @@
         "on-track",
         "watch"
       ]
+    },
+    "PriorityFigureColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The column's heading, and what screen readers say after a value, e.g. \"This mo.\""
+        },
+        "unit": {
+          "type": "string",
+          "description": "A short unit after each value, as the work count has: \"3·pp\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One more column after Work, filled from each row's `figures`"
     }
   }
 }

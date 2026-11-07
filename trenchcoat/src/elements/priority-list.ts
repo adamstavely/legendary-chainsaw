@@ -11,7 +11,10 @@ import { cardHead } from "./internal/card-head";
  * health – at risk, watch or on track – in words beside the owner; the chips above the list count each and filter by
  * one. With `grouped`, rows fall under a header per priority: "1 Top priority · 2 · 1 at risk".
  *   · the rows are one tab stop: ↑ / ↓ move between them, Home / End to the ends; Enter or a click fires tc-open
- *   · columns fold away as the element narrows: the momentum line first, then the work count, then the coverage bar
+ *   · `figures` adds columns of the page's own after Work, e.g. papers last month and this; each row's `figures` fills them
+ *   · a row with no `priority` shows its `badge`, a short code, in a neutral badge; `grouped` puts such rows last
+ *   · columns fold away as the element narrows: the momentum line first, then the work count, then the figures, then
+ *     the coverage bar
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-priority-list .items=${[{ id: "t1", name: "Neuromorphic Computing", priority: 1, health: "at-risk", coverage: 0.42 }]}></tc-priority-list>
@@ -29,8 +32,10 @@ export type PriorityItem = {
   owner?: string;
   /** The team or group it belongs to */
   team?: string;
-  /** Its tier, from 1 (the top) to 4; named by `tiers` */
-  priority: number;
+  /** Its tier, from 1 (the top) to 4; named by `tiers`. A row without one shows its `badge` instead */
+  priority?: number;
+  /** A short code shown in the badge when there's no priority, e.g. "CEC" */
+  badge?: string;
   health: PriorityHealth;
   /** Recent values for the momentum line, oldest first */
   trend?: number[];
@@ -42,6 +47,16 @@ export type PriorityItem = {
   open?: number;
   /** How many pieces of work are in flight */
   work?: number;
+  /** Values for the list's `figures` columns, by column id; a missing one leaves its cell empty */
+  figures?: Record<string, number | string>;
+};
+/** One more column after Work, filled from each row's `figures` */
+export type PriorityFigureColumn = {
+  id: string;
+  /** The column's heading, and what screen readers say after a value, e.g. "This mo." */
+  label: string;
+  /** A short unit after each value, as the work count has: "3·pp" */
+  unit?: string;
 };
 export type PriorityFilter = PriorityHealth | "all";
 
@@ -83,7 +98,9 @@ export class TcPriorityList extends TcElement {
   @property() accessor description: string | undefined = undefined;
   /** The topics or projects, in the order to show them (within a group when grouped) */
   @property({ attribute: false }) accessor items: PriorityItem[] = [];
-  /** Puts the rows under a header per priority */
+  /** More columns after Work, in order, filled from each row's `figures` */
+  @property({ attribute: false }) accessor figures: PriorityFigureColumn[] = [];
+  /** Puts the rows under a header per priority; rows without one come last, under no header */
   @property({ type: Boolean }) accessor grouped = false;
   /** The health shown. Changed by the user unless a tc-filter-change listener calls preventDefault() */
   @property() accessor filter: PriorityFilter = "all";
@@ -131,7 +148,7 @@ export class TcPriorityList extends TcElement {
   /** The rows shown, in display order */
   private get rows() {
     const list = this.items.filter((i) => this.filter === "all" || i.health === this.filter);
-    return this.grouped ? [...list].sort((a, b) => a.priority - b.priority) : list;
+    return this.grouped ? [...list].sort((a, b) => (a.priority ?? Infinity) - (b.priority ?? Infinity)) : list;
   }
   private setFilter(next: PriorityFilter) {
     if (next === this.filter) return;
@@ -169,6 +186,20 @@ export class TcPriorityList extends TcElement {
     return html`<span class="ui-prl__badge" data-priority=${n} title=${this.tier(n)} aria-hidden="true">${n}</span>`;
   }
 
+  private renderLead(item: PriorityItem) {
+    if (item.priority !== undefined) return html`${this.renderBadge(item.priority)}<span class="ui-prl__sr">Priority ${item.priority}, ${this.tier(item.priority)}. </span>`;
+    if (item.badge) return html`<span class="ui-prl__badge ui-prl__badge--code" aria-hidden="true">${item.badge}</span><span class="ui-prl__sr">${item.badge}. </span>`;
+    return nothing;
+  }
+
+  private renderFigure(col: PriorityFigureColumn, item: PriorityItem) {
+    const v = item.figures?.[col.id];
+    const shown = v === undefined || v === "" ? undefined : typeof v === "number" ? new Intl.NumberFormat(this.locale).format(v) : v;
+    return html`<span class="ui-prl__cell ui-prl__fig" data-fig=${col.id}>
+      ${shown === undefined ? nothing : html`<span class="ui-prl__sr">. ${shown} ${col.label}</span><span aria-hidden="true">${shown}${col.unit ? `·${col.unit}` : ""}</span>`}
+    </span>`;
+  }
+
   private renderRow(item: PriorityItem, stop: string) {
     const change = item.change;
     const dir = change === undefined || Math.abs(change) < 0.005 ? "flat" : change > 0 ? "up" : "down";
@@ -187,7 +218,7 @@ export class TcPriorityList extends TcElement {
           this.emit<PriorityOpen>("tc-open", { id: item.id, item });
         }}
       >
-        <span class="ui-prl__cell ui-prl__cell--badge">${this.renderBadge(item.priority)}<span class="ui-prl__sr">Priority ${item.priority}, ${this.tier(item.priority)}. </span></span>
+        <span class="ui-prl__cell ui-prl__cell--badge">${this.renderLead(item)}</span>
         <span class="ui-prl__cell ui-prl__who">
           <span class="ui-prl__name">${item.name}</span>
           <span class="ui-prl__meta">
@@ -213,6 +244,7 @@ export class TcPriorityList extends TcElement {
         <span class="ui-prl__cell ui-prl__work">
           ${item.work === undefined ? nothing : html`<span class="ui-prl__sr">. ${item.work} ${this.workLabel}</span><span aria-hidden="true">${item.work}·${this.workUnit}</span>`}
         </span>
+        ${this.figures.map((col) => this.renderFigure(col, item))}
       </button>
     </li>`;
   }
@@ -255,7 +287,9 @@ export class TcPriorityList extends TcElement {
     const id = this.uid;
     const rows = this.rows;
     const stop = rows.some((r) => r.id === this.activeId) ? this.activeId : (rows[0]?.id ?? "");
-    const tiers = [...new Set(rows.map((r) => r.priority))];
+    const tiers = [...new Set(rows.flatMap((r) => (r.priority === undefined ? [] : [r.priority])))];
+    const untiered = rows.filter((r) => r.priority === undefined);
+    const figs = this.figures.length;
     return html`
       ${cardHead({
         icon: flagIcon,
@@ -265,7 +299,7 @@ export class TcPriorityList extends TcElement {
         aside: !this.noFilters && this.items.length ? this.renderFilters() : nothing,
         keepAside: true,
       })}
-      <div class="ui-prl__card">
+      <div class="ui-prl__card" ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && i.badge)} style=${`--tc-prl-n: ${figs}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
@@ -273,12 +307,13 @@ export class TcPriorityList extends TcElement {
                 <span class="ui-prl__col ui-prl__col--coverage">Coverage</span>
                 <span class="ui-prl__col ui-prl__col--open">Open</span>
                 <span class="ui-prl__col ui-prl__col--work">Work</span>
+                ${this.figures.map((c) => html`<span class="ui-prl__col ui-prl__col--fig" data-fig=${c.id}>${c.label}</span>`)}
               </div>
               ${this.grouped
-                ? tiers.map((n) => {
+                ? html`${tiers.map((n) => {
                     const list = rows.filter((r) => r.priority === n);
                     return html`<section class="ui-prl__group" aria-label=${`${this.tier(n)}, ${list.length}`}>${this.renderGroupHead(n, list)}${this.renderList(list, stop)}</section>`;
-                  })
+                  })}${untiered.length ? html`<div class="ui-prl__group ui-prl__group--none">${this.renderList(untiered, stop)}</div>` : nothing}`
                 : this.renderList(rows, stop, this.heading)}`
           : html`<p class="ui-prl__empty">${this.empty}</p>`}
       </div>
@@ -320,8 +355,11 @@ export class TcPriorityList extends TcElement {
   text-align: left;
   -webkit-font-smoothing: antialiased;
 }
-/* The row's columns, shared by the column headings – the momentum, work and coverage fold away as it narrows */
-[data-ui="prl"] { --tc-prl-cols: 28px minmax(0, 1fr) 108px 120px 72px 40px; }
+/* The row's columns after the badge, shared by the column headings – the momentum, work, figures and coverage fold
+   away as it narrows. The badge's column widens for codes; the page's figures add a column each */
+[data-ui="prl"] { --tc-prl-cols: minmax(0, 1fr) 108px 120px 72px 40px; }
+.ui-prl__card { --tc-prl-lead: 28px; --tc-prl-fig-w: 56px; }
+.ui-prl__card[data-codes] { --tc-prl-lead: 40px; }
 [data-ui="prl"] *, [data-ui="prl"] *::before, [data-ui="prl"] *::after { box-sizing: border-box; }
 [data-ui="prl"] p { margin: 0; }
 [data-ui="prl"] ul { margin: 0; padding: 0; list-style: none; }
@@ -342,10 +380,12 @@ export class TcPriorityList extends TcElement {
 .ui-prl__dot[data-health="watch"] { background: var(--tc-status-warning-fg); }
 .ui-prl__dot[data-health="on-track"] { background: var(--tc-status-success-fg); }
 /* ----- The column headings ----- */
-.ui-prl__columns { display: grid; grid-template-columns: var(--tc-prl-cols); align-items: end; gap: var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-2); border-bottom: var(--tc-hairline) solid var(--tc-divider); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-prl__columns { display: grid; grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols); align-items: end; gap: var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-2); border-bottom: var(--tc-hairline) solid var(--tc-divider); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 :where([data-look="clean"], [data-look="clean"] *).ui-prl__columns { padding-top: var(--tc-space-1); }
+.ui-prl__col { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ui-prl__col--name { grid-column: 1 / 3; }
-.ui-prl__col--open, .ui-prl__col--work { text-align: right; }
+.ui-prl__col--open, .ui-prl__col--work, .ui-prl__col--fig { text-align: right; }
+.ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols) repeat(var(--tc-prl-n), var(--tc-prl-fig-w)); }
 /* ----- A group's header ----- */
 .ui-prl__group + .ui-prl__group { border-top: var(--tc-hairline) solid var(--tc-border-default); }
 .ui-prl__group-head { display: flex; align-items: center; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-1); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
@@ -356,13 +396,14 @@ export class TcPriorityList extends TcElement {
 /* ----- The rows ----- */
 .ui-prl__list { padding: var(--tc-space-1) var(--tc-space-1-5) !important; }
 .ui-prl__item + .ui-prl__item { border-top: var(--tc-hairline) solid var(--tc-divider); }
-.ui-prl__row { display: grid; grid-template-columns: var(--tc-prl-cols); align-items: center; gap: var(--tc-space-3); width: 100%; min-height: 56px; padding: var(--tc-space-2) var(--tc-space-2-5) !important; border-radius: var(--tc-radius-md); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-prl__row { display: grid; grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols); align-items: center; gap: var(--tc-space-3); width: 100%; min-height: 56px; padding: var(--tc-space-2) var(--tc-space-2-5) !important; border-radius: var(--tc-radius-md); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-prl__row:hover { background: var(--tc-fill-subtle); }
 [data-ui="prl"] .ui-prl__row:focus-visible { outline-offset: calc(-1 * var(--tc-focus-ring-width)); }
 .ui-prl__cell { min-width: 0; }
 /* The priority badge: the top tier in ink, the rest outlined */
 .ui-prl__badge { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: var(--tc-radius-sm); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-strong); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-none); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
 .ui-prl__badge[data-priority="1"] { background: var(--tc-surface-inverse); box-shadow: none; color: var(--tc-text-on-inverse); }
+.ui-prl__badge--code { width: auto; min-width: 22px; max-width: 100%; padding: 0 var(--tc-space-1); overflow: hidden; background: var(--tc-fill-default); box-shadow: none; font-size: var(--tc-font-size-2xs); letter-spacing: 0; text-overflow: clip; white-space: nowrap; }
 .ui-prl__badge[data-priority="2"] { box-shadow: inset 0 0 0 1.5px var(--tc-text-secondary); color: var(--tc-text-primary); }
 .ui-prl__who { display: grid; gap: var(--tc-space-0-5); }
 .ui-prl__name { overflow: hidden; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); color: var(--tc-text-primary); text-overflow: ellipsis; white-space: nowrap; }
@@ -394,18 +435,28 @@ export class TcPriorityList extends TcElement {
 .ui-prl__open-cell { justify-self: end; }
 .ui-prl__open { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-danger-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-status-danger-fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-prl__open[data-none] { background: var(--tc-fill-default); color: var(--tc-text-muted); }
-.ui-prl__work { justify-self: end; font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ui-prl__work, .ui-prl__fig { justify-self: end; font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-prl__empty { padding: var(--tc-space-6) var(--tc-space-4) !important; color: var(--tc-text-muted); text-align: center; }
 @container (max-width: 680px) {
-  [data-ui="prl"] { --tc-prl-cols: 28px minmax(0, 1fr) 56px 104px 64px 36px; }
+  .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 68px 104px 64px 36px; }
   [data-ui="prl"] .ui-prl__spark { display: none; }
 }
+/* With figures, the work count goes sooner to make room for them */
+@container (max-width: 600px) {
+  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 96px 60px; }
+  [data-figs] :is(.ui-prl__work, .ui-prl__col--work) { display: none; }
+}
 @container (max-width: 520px) {
-  [data-ui="prl"] { --tc-prl-cols: 28px minmax(0, 1fr) 52px 88px 60px; }
+  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px 60px; }
   .ui-prl__work, .ui-prl__col--work { display: none; }
 }
+@container (max-width: 480px) {
+  .ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols); }
+  .ui-prl__fig, .ui-prl__col--fig { display: none; }
+}
 @container (max-width: 400px) {
-  [data-ui="prl"] { --tc-prl-cols: 24px minmax(0, 1fr) 48px 60px; }
+  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 48px 60px; }
+  .ui-prl__card[data-codes] { --tc-prl-lead: 36px; }
   .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__open-cell, .ui-prl__col--open { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
