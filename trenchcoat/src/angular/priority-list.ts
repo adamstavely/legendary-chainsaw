@@ -27,6 +27,13 @@ export class PriorityList {
   @Input() set items(v: TcPriorityList["items"]) {
     this.#el.items = v;
   }
+  /**
+   * Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.
+   * `hide="coverage open work"`; the name and the other columns take the room
+   */
+  @Input() set hide(v: TcPriorityList["hide"]) {
+    this.#el.hide = v;
+  }
   /** More columns after Work, in order, filled from each row's `figures` */
   @Input() set figures(v: TcPriorityList["figures"]) {
     this.#el.figures = v;

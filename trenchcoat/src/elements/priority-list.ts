@@ -1,4 +1,5 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
@@ -50,6 +51,10 @@ export type PriorityItem = {
   /** Values for the list's `figures` columns, by column id; a missing one leaves its cell empty */
   figures?: Record<string, number | string>;
 };
+/** A built-in column `hide` can leave out */
+export type PriorityColumn = "momentum" | "coverage" | "open" | "work";
+const COLUMNS: readonly PriorityColumn[] = ["momentum", "coverage", "open", "work"];
+
 /** One more column after Work, filled from each row's `figures` */
 export type PriorityFigureColumn = {
   id: string;
@@ -98,6 +103,10 @@ export class TcPriorityList extends TcElement {
   @property() accessor description: string | undefined = undefined;
   /** The topics or projects, in the order to show them (within a group when grouped) */
   @property({ attribute: false }) accessor items: PriorityItem[] = [];
+  /** Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.
+   *  `hide="coverage open work"`; the name and the other columns take the room */
+  @property({ converter: { fromAttribute: (v: string | null) => (v ?? "").split(/\s+/).filter((c): c is PriorityColumn => (COLUMNS as readonly string[]).includes(c)) } })
+  accessor hide: PriorityColumn[] = [];
   /** More columns after Work, in order, filled from each row's `figures` */
   @property({ attribute: false }) accessor figures: PriorityFigureColumn[] = [];
   /** Puts the rows under a header per priority; rows without one come last, under no header */
@@ -226,24 +235,24 @@ export class TcPriorityList extends TcElement {
             <span class="ui-prl__health" data-health=${item.health}><span class="ui-prl__sr">. </span>${this.health(item.health)}</span>
           </span>
         </span>
-        <span class="ui-prl__cell ui-prl__momentum" data-dir=${dir}>
+        ${this.shows("momentum") ? html`<span class="ui-prl__cell ui-prl__momentum" data-dir=${dir}>
           ${item.trend && item.trend.length > 1 ? html`<svg class="ui-prl__spark" viewBox="0 0 64 20" aria-hidden="true">${spark(item.trend)}</svg>` : nothing}
           ${change === undefined
             ? nothing
             : html`<span class="ui-prl__change"><span class="ui-prl__sr">. Momentum ${sayChange}</span><span aria-hidden="true">${dir === "up" ? "▲" : dir === "down" ? "▼" : "–"}&#8202;${this.pct(Math.abs(change))}</span></span>`}
-        </span>
-        <span class="ui-prl__cell ui-prl__coverage">
+        </span>` : nothing}
+        ${this.shows("coverage") ? html`<span class="ui-prl__cell ui-prl__coverage">
           ${cov === undefined
             ? nothing
             : html`<span class="ui-prl__cov-head"><span class="ui-prl__cov-label" aria-hidden="true">Coverage</span><span class="ui-prl__sr">. Coverage </span><span class="ui-prl__cov-num" ?data-low=${cov < this.coverageWarn}>${this.pct(cov)}</span></span>
                 <span class="ui-prl__bar" aria-hidden="true"><span class="ui-prl__bar-fill" ?data-low=${cov < this.coverageWarn} style=${`inline-size: ${(cov * 100).toFixed(1)}%`}></span></span>`}
-        </span>
-        <span class="ui-prl__cell ui-prl__open-cell">
+        </span>` : nothing}
+        ${this.shows("open") ? html`<span class="ui-prl__cell ui-prl__open-cell">
           ${item.open === undefined ? nothing : html`<span class="ui-prl__open" ?data-none=${item.open === 0}><span class="ui-prl__sr">. </span>${this.openText(item.open)}</span>`}
-        </span>
-        <span class="ui-prl__cell ui-prl__work">
+        </span>` : nothing}
+        ${this.shows("work") ? html`<span class="ui-prl__cell ui-prl__work">
           ${item.work === undefined ? nothing : html`<span class="ui-prl__sr">. ${item.work} ${this.workLabel}</span><span aria-hidden="true">${item.work}·${this.workUnit}</span>`}
-        </span>
+        </span>` : nothing}
         ${this.figures.map((col) => this.renderFigure(col, item))}
       </button>
     </li>`;
@@ -283,6 +292,11 @@ export class TcPriorityList extends TcElement {
     </ul>`;
   }
 
+  /** Whether a built-in column shows – not left out by `hide` */
+  private shows(column: PriorityColumn) {
+    return !this.hide?.includes(column);
+  }
+
   protected override render() {
     const id = this.uid;
     const rows = this.rows;
@@ -290,6 +304,7 @@ export class TcPriorityList extends TcElement {
     const tiers = [...new Set(rows.flatMap((r) => (r.priority === undefined ? [] : [r.priority])))];
     const untiered = rows.filter((r) => r.priority === undefined);
     const figs = this.figures.length;
+    const hidden = COLUMNS.filter((c) => !this.shows(c)).join(" ");
     return html`
       ${cardHead({
         icon: flagIcon,
@@ -299,14 +314,14 @@ export class TcPriorityList extends TcElement {
         aside: !this.noFilters && this.items.length ? this.renderFilters() : nothing,
         keepAside: true,
       })}
-      <div class="ui-prl__card" ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && i.badge)} style=${`--tc-prl-n: ${figs}`}>
+      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && i.badge)} style=${`--tc-prl-n: ${figs}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
-                <span class="ui-prl__col ui-prl__col--momentum">Momentum</span>
-                <span class="ui-prl__col ui-prl__col--coverage">Coverage</span>
-                <span class="ui-prl__col ui-prl__col--open">Open</span>
-                <span class="ui-prl__col ui-prl__col--work">Work</span>
+                ${this.shows("momentum") ? html`<span class="ui-prl__col ui-prl__col--momentum">Momentum</span>` : nothing}
+                ${this.shows("coverage") ? html`<span class="ui-prl__col ui-prl__col--coverage">Coverage</span>` : nothing}
+                ${this.shows("open") ? html`<span class="ui-prl__col ui-prl__col--open">Open</span>` : nothing}
+                ${this.shows("work") ? html`<span class="ui-prl__col ui-prl__col--work">Work</span>` : nothing}
                 ${this.figures.map((c) => html`<span class="ui-prl__col ui-prl__col--fig" data-fig=${c.id}>${c.label}</span>`)}
               </div>
               ${this.grouped
@@ -358,7 +373,7 @@ export class TcPriorityList extends TcElement {
 /* The row's columns after the badge, shared by the column headings – the momentum, work, figures and coverage fold
    away as it narrows. The badge's column widens for codes; the page's figures add a column each */
 [data-ui="prl"] { --tc-prl-cols: minmax(0, 1fr) 108px 120px 72px 40px; }
-.ui-prl__card { --tc-prl-lead: 28px; --tc-prl-fig-w: 56px; }
+.ui-prl__card { --tc-prl-lead: 28px; --tc-prl-fig-w: 56px; --tc-prl-c-momentum: 108px; --tc-prl-c-coverage: 120px; --tc-prl-c-open: 72px; --tc-prl-c-work: 40px; }
 .ui-prl__card[data-codes] { --tc-prl-lead: 40px; }
 [data-ui="prl"] *, [data-ui="prl"] *::before, [data-ui="prl"] *::after { box-sizing: border-box; }
 [data-ui="prl"] p { margin: 0; }
@@ -440,16 +455,16 @@ export class TcPriorityList extends TcElement {
 /* The name keeps at least 140px from 300px up: each step folds columns away before it gets narrower */
 @container (max-width: 760px) {
   /* With figures (two, say), more goes sooner to make room for them: the line, the work count and the open pill */
-  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 96px; }
+  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 96px; --tc-prl-c-momentum: 64px; --tc-prl-c-coverage: 96px; --tc-prl-c-open: ; --tc-prl-c-work: ; }
   [data-figs] :is(.ui-prl__spark, .ui-prl__work, .ui-prl__col--work, .ui-prl__open-cell, .ui-prl__col--open) { display: none; }
 }
 @container (max-width: 680px) {
-  .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 68px 104px 64px 36px; }
+  .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 68px 104px 64px 36px; --tc-prl-c-momentum: 68px; --tc-prl-c-coverage: 104px; --tc-prl-c-open: 64px; --tc-prl-c-work: 36px; }
   [data-ui="prl"] .ui-prl__spark { display: none; }
 }
 @container (max-width: 560px) {
-  .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 64px 88px 60px; }
-  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px; }
+  .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 64px 88px 60px; --tc-prl-c-momentum: 64px; --tc-prl-c-coverage: 88px; --tc-prl-c-open: 60px; --tc-prl-c-work: ; }
+  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px; --tc-prl-c-open: ; }
   .ui-prl__work, .ui-prl__col--work { display: none; }
 }
 @container (max-width: 540px) {
@@ -457,16 +472,23 @@ export class TcPriorityList extends TcElement {
   .ui-prl__fig, .ui-prl__col--fig { display: none; }
 }
 @container (max-width: 480px) {
-  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px; }
+  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px; --tc-prl-c-momentum: 64px; --tc-prl-c-coverage: 88px; --tc-prl-c-open: ; --tc-prl-c-work: ; }
   .ui-prl__open-cell, .ui-prl__col--open { display: none; }
 }
 @container (max-width: 400px) {
-  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 60px; }
+  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 60px; --tc-prl-c-momentum: ; --tc-prl-c-coverage: 60px; --tc-prl-c-open: ; --tc-prl-c-work: ; }
   .ui-prl__card[data-codes] { --tc-prl-lead: 36px; }
   .ui-prl__momentum, .ui-prl__col--momentum { display: none; }
   .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
 }
+/* hide: the columns left out lose their tracks too, at every width, so the name and the rest take the room. Each
+   column's width follows the folding steps above (--tc-prl-c-*, empty when folded away); after them, so they win */
+.ui-prl__card[data-hide] { --tc-prl-cols: minmax(0, 1fr) var(--tc-prl-c-momentum) var(--tc-prl-c-coverage) var(--tc-prl-c-open) var(--tc-prl-c-work); }
+.ui-prl__card[data-hide~="momentum"] { --tc-prl-c-momentum: ; }
+.ui-prl__card[data-hide~="coverage"] { --tc-prl-c-coverage: ; }
+.ui-prl__card[data-hide~="open"] { --tc-prl-c-open: ; }
+.ui-prl__card[data-hide~="work"] { --tc-prl-c-work: ; }
 @media (forced-colors: active) {
   .ui-prl__bar-fill, .ui-prl__dot, .ui-prl__health::before { background: CanvasText; }
 }
