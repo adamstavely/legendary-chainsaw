@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/priority-list";
-import type { PriorityFilter, PriorityFilterChange, PriorityItem, PriorityOpen, TcPriorityList } from "../../src/elements/priority-list";
+import type { PriorityFigureColumn, PriorityFilter, PriorityFilterChange, PriorityItem, PriorityOpen, TcPriorityList } from "../../src/elements/priority-list";
 import { PriorityList } from "../../src/elements/react/priority-list";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -23,7 +23,23 @@ const ITEMS: PriorityItem[] = [
   { id: "edge", name: "Edge AI", priority: 4, health: "watch", change: 0, coverage: 0.58 },
 ];
 
+// Centres: no tier, a code in the badge, and papers last month and this
+const FIGURES: PriorityFigureColumn[] = [
+  { id: "last", label: "Last mo." },
+  { id: "this", label: "This mo.", unit: "pp" },
+];
+const CENTRES: PriorityItem[] = [
+  { id: "energy", name: "Energy & Climate", badge: "CEC", owner: "Sofia Almeida", health: "watch", coverage: 0.33, open: 6, work: 4, change: -0.02, figures: { last: 1, this: 0 } },
+  { id: "bio", name: "Biosciences", badge: "BIO", health: "on-track", coverage: 0.8, figures: { last: 1200 } },
+];
+
 const row = (el: Element, id: string) => el.querySelector<HTMLButtonElement>(`[data-row="${id}"]`)!;
+/** What a screen reader reads from a row: its text without the parts hidden from it */
+const said = (el: Element) => {
+  const copy = el.cloneNode(true) as Element;
+  copy.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+  return copy.textContent!.replace(/\s+/g, " ").replace(/ ([.,])/g, "$1").trim();
+};
 const ids = (el: Element) => [...el.querySelectorAll<HTMLElement>("[data-row]")].map((r) => r.dataset.row);
 const key = (target: Element, k: string) => target.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
 const make = (look: "standard" | "clean" = "standard", extra: Partial<TcPriorityList> = {}) =>
@@ -129,6 +145,91 @@ describe("tc-priority-list", () => {
     expect(el.querySelector(".ui-prl__empty")!.textContent).toBe("Nothing to show.");
   });
 
+  test("figures: one column each after Work, in order, right-aligned under their headings; missing values are empty", async () => {
+    const wrap = await fixture(html`<div style="width: 900px"><tc-priority-list locale="en" .items=${[...ITEMS, ...CENTRES]} .figures=${FIGURES}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    await finish(el);
+    const heads = [...el.querySelectorAll<HTMLElement>(".ui-prl__columns > *")];
+    expect(heads.map((h) => h.textContent!.trim())).toEqual(["Topic", "Momentum", "Coverage", "Open", "Work", "Last mo.", "This mo."]);
+    const cells = (id: string) => [...row(el, id).querySelectorAll<HTMLElement>(".ui-prl__fig")];
+    expect(cells("energy").map((c) => c.dataset.fig)).toEqual(["last", "this"]);
+    expect(cells("energy").map((c) => c.querySelector("[aria-hidden]")!.textContent)).toEqual(["1", "0·pp"]);
+    expect(cells("bio").map((c) => c.textContent!.trim())).toEqual([". 1,200 Last mo.1,200", ""]);
+    expect(cells("climate").map((c) => c.textContent!.trim())).toEqual(["", ""]);
+    expect(said(row(el, "energy"))).toMatch(/\. 4 work items\. 1 Last mo\.\. 0 This mo\.$/);
+    expect(said(row(el, "bio"))).toMatch(/Coverage 80%\. 1,200 Last mo\.$/);
+    // Header and every row share the same tracks: each heading's right edge is its cells' right edge
+    for (const [i, col] of FIGURES.entries()) {
+      const head = el.querySelector<HTMLElement>(`.ui-prl__col--fig[data-fig="${col.id}"]`)!.getBoundingClientRect();
+      for (const id of ["climate", "energy", "bio"]) {
+        const cell = cells(id)[i].getBoundingClientRect();
+        expect(Math.abs(cell.right - head.right), `${col.id} in ${id}`).toBeLessThanOrEqual(1);
+      }
+    }
+    expect(getComputedStyle(cells("energy")[0]).fontVariantNumeric).toContain("tabular-nums");
+    const work = row(el, "energy").querySelector(".ui-prl__work")!.getBoundingClientRect();
+    expect(cells("energy")[0].getBoundingClientRect().left).toBeGreaterThan(work.right);
+    expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+  });
+
+  test("a row with no priority shows its code in a neutral badge and reads it instead of a tier; filters count it", async () => {
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list heading="Centres" name-label="Centre" .items=${[...CENTRES, ITEMS[1]]}></tc-priority-list>`);
+    const badge = row(el, "energy").querySelector<HTMLElement>(".ui-prl__badge")!;
+    expect(badge.textContent).toBe("CEC");
+    expect(badge.hasAttribute("data-priority")).toBe(false);
+    expect(badge.getAttribute("aria-hidden")).toBe("true");
+    expect(said(row(el, "energy"))).toMatch(/^CEC\. Energy & Climate Sofia Almeida\. Watch/);
+    expect(said(row(el, "energy"))).not.toContain("Priority");
+    expect(row(el, "neuro").textContent).toContain("Priority 1, Top priority.");
+    expect(getComputedStyle(badge).backgroundColor).not.toBe(getComputedStyle(row(el, "neuro").querySelector(".ui-prl__badge")!).backgroundColor);
+    // The code fits its column, which every row and the headings share
+    const cell = row(el, "energy").querySelector<HTMLElement>(".ui-prl__cell--badge")!.getBoundingClientRect();
+    expect(badge.getBoundingClientRect().right).toBeLessThanOrEqual(cell.right + 0.5);
+    expect(row(el, "neuro").querySelector<HTMLElement>(".ui-prl__cell--badge")!.getBoundingClientRect().width).toBeCloseTo(cell.width, 0);
+    expect(el.querySelector(".ui-prl__col--name")!.getBoundingClientRect().left).toBeCloseTo(cell.left, 0);
+    expect(el.querySelector('[data-filter="watch"] .ui-prl__filter-count')!.textContent).toBe("1");
+    el.querySelector<HTMLButtonElement>('[data-filter="watch"]')!.click();
+    await settle();
+    expect(ids(el)).toEqual(["energy"]);
+  });
+
+  test("grouped with rows that have no priority: the tiers first, then those rows under no header, in one keyboard order", async () => {
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list grouped .items=${[CENTRES[0], ...ITEMS, CENTRES[1]]}></tc-priority-list>`);
+    const heads = [...el.querySelectorAll(".ui-prl__group-head")].map((h) => h.textContent!.replace(/\s+/g, " ").trim());
+    expect(heads).toEqual(["1 Top priority 2 1 at risk", "2 High 1 1 at risk", "4 Watching 1"]);
+    expect(ids(el)).toEqual(["neuro", "carbon", "climate", "edge", "energy", "bio"]);
+    const rest = el.querySelector(".ui-prl__group--none")!;
+    expect(rest.querySelector(".ui-prl__group-head")).toBeNull();
+    expect([...rest.querySelectorAll<HTMLElement>("[data-row]")].map((r) => r.dataset.row)).toEqual(["energy", "bio"]);
+    row(el, "neuro").focus();
+    key(row(el, "neuro"), "End");
+    await settle();
+    expect(document.activeElement).toBe(row(el, "bio"));
+    key(row(el, "bio"), "ArrowUp");
+    await settle();
+    expect(document.activeElement).toBe(row(el, "energy"));
+    key(row(el, "energy"), "ArrowUp");
+    await settle();
+    expect(document.activeElement).toBe(row(el, "edge"));
+  });
+
+  test("narrow with figures: the work count goes first, then the figures, and the row still fits", async () => {
+    const wrap = await fixture(html`<div style="width: 580px"><tc-priority-list .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    await settle();
+    const shown = (sel: string) => getComputedStyle(row(el, "energy").querySelector(sel)!).display !== "none";
+    expect(shown(".ui-prl__work")).toBe(false);
+    expect(shown(".ui-prl__fig")).toBe(true);
+    expect(shown(".ui-prl__bar")).toBe(true);
+    expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+    (wrap as HTMLElement).style.width = "440px";
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    expect(shown(".ui-prl__fig")).toBe(false);
+    expect(getComputedStyle(el.querySelector(".ui-prl__col--fig")!).display).toBe("none");
+    expect(shown(".ui-prl__bar")).toBe(true);
+    expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+  });
+
   test("narrow: the momentum line and work count fold away; the row stays one line per item", async () => {
     const wrap = await fixture(html`<div style="width: 360px"><tc-priority-list .items=${ITEMS}></tc-priority-list></div>`);
     const el = wrap.querySelector("tc-priority-list")!;
@@ -191,6 +292,7 @@ describe("tc-priority-list", () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
         <tc-priority-list description="This quarter." .items=${ITEMS}></tc-priority-list>
         <tc-priority-list look="clean" grouped .items=${ITEMS}></tc-priority-list>
+        <tc-priority-list heading="Centres" grouped .items=${[...ITEMS, ...CENTRES]} .figures=${FIGURES}></tc-priority-list>
       </div>`);
       await finish(wrap);
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });

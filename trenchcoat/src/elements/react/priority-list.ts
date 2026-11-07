@@ -3,7 +3,7 @@ import * as React from "react";
 import { TcPriorityList, type PriorityFilter, type PriorityFilterChange, type PriorityItem, type PriorityOpen } from "../priority-list";
 import { h, useControlled } from "./internal";
 
-export type { PriorityFilter, PriorityHealth, PriorityItem } from "../priority-list";
+export type { PriorityFigureColumn, PriorityFilter, PriorityHealth, PriorityItem } from "../priority-list";
 export { defaultPriorityHealthLabels, defaultPriorityTiers } from "../priority-list";
 
 const RawPriorityList = createComponent({
