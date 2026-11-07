@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 – Lint fixes for charts
+
+- **`trenchcoat lint`:** a chart's own properties inherited from the chart base – `heading`, `description`, `data`,
+  `highlight`, `format`, `unit`, `locale`, `height`, `still`, `easing`, `duration`, `hide-labels`, `hide-tooltip`,
+  `bare`, `view`, `labels` – are no longer reported as unknown. They're now in every chart's API docs too.
+- **`trenchcoat lint`:** `="false"` on a boolean that's on by default (`sort` and `list` on `tc-segmented-bar`,
+  `reviewable` on `tc-guardrail-notice`) is no longer a `boolean-attribute` error: those read "false" as off.
+
 ## 0.4.0 – Dialog sizes, choice cards that wrap, textareas in the stepper
 
 - **Dialog:** `size` – `"sm"` (480px), `"md"` (640px, the default and today's width), `"lg"` (880px) or `"xl"`

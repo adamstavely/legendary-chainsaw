@@ -394,6 +394,7 @@
   }
  ],
  "changelog": [
+  "**`trenchcoat lint`:** `=\"false\"` on a boolean that's on by default (`sort` and `list` on `tc-segmented-bar`, `reviewable` on `tc-guardrail-notice`) is no longer a `boolean-attribute` error: those read \"false\" as off.",
   "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
  ],
  "frameworks": [
