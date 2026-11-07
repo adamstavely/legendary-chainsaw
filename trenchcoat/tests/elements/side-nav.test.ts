@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/side-nav";
-import { sideNavGroups, type SideNavCollapsedChange, type SideNavItem, type SideNavNavigate, type TcSideNav } from "../../src/elements/side-nav";
+import { SIDE_NAV_BRAND_ID, sideNavGroups, type SideNavCollapsedChange, type SideNavItem, type SideNavNavigate, type TcSideNav } from "../../src/elements/side-nav";
 import { SideNav } from "../../src/elements/react/side-nav";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -88,6 +88,34 @@ describe("tc-side-nav", () => {
     ]);
     expect(seen[0].item.label).toBe("Overview");
     expect(location.hash).toBe(before);
+    expect(el.current).toBe("portfolio");
+  });
+
+  test("the linked brand fires tc-navigate as id \"brand\"; modifier clicks are the browser's; current stays", async () => {
+    const el = await make();
+    const seen: SideNavNavigate[] = [];
+    el.addEventListener("tc-navigate", (e) => {
+      seen.push((e as CustomEvent<SideNavNavigate>).detail);
+      e.preventDefault();
+    });
+    const before = location.hash;
+    const brand = el.querySelector<HTMLAnchorElement>("a.ui-snav__brand")!;
+    brand.click();
+    expect(seen).toEqual([{ id: SIDE_NAV_BRAND_ID, href: "#home", item: { id: "brand", label: "Halden Institute", href: "#home" }, brand: true }]);
+    expect(location.hash).toBe(before);
+    brand.addEventListener("click", (e) => e.preventDefault());
+    for (const mod of [{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }]) brand.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ...mod }));
+    expect(seen.length).toBe(1);
+    expect(el.current).toBe("portfolio");
+  });
+
+  test("not prevented, the brand leaves current alone", async () => {
+    const el = await make();
+    const brand = el.querySelector<HTMLAnchorElement>("a.ui-snav__brand")!;
+    // Keep the browser from following it; the element's own handler still sees an unprevented event first
+    el.addEventListener("click", (e) => e.preventDefault());
+    brand.click();
+    await settle();
     expect(el.current).toBe("portfolio");
   });
 
