@@ -887,7 +887,7 @@ export class TcAgentTree extends TcElement {
 .ui-agt__btn--primary:active { background: var(--tc-action-primary-bg-active); }
 /* ----- The tree ----- */
 .ui-agt__tree { position: relative; display: grid; justify-items: center; }
-.ui-agt__links { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
+.ui-agt__links { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agt__link { fill: none; stroke: var(--tc-agent-tree-link); stroke-width: 1.75; stroke-linecap: round; transition: stroke var(--tc-duration-moderate) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agt__link { fill: none; stroke: var(--tc-agent-tree-link); stroke-width: 1.5; stroke-linecap: round; transition: stroke var(--tc-duration-moderate) var(--tc-ease-standard); }
 .ui-agt__links [data-muted] .ui-agt__link { stroke: var(--tc-agent-tree-link-muted); }

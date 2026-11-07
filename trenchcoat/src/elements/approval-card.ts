@@ -23,7 +23,8 @@ import { safeUrl } from "./internal/safe-url";
  * Optional decision detail (all off unless set, so the card is unchanged without them): `why` – "Why you're seeing
  * this", one line; `consequences` – "If you approve / If you deny"; `editableDetails` – an "Edit arguments" mode that
  * turns the text details into fields (each change fires a cancelable tc-details-change); `evidence` – chips that open
- * the sources the request rests on.
+ * the sources the request rests on. Two more show what exactly would change: `diff` – a file change as a small unified
+ * diff (+ / −, and "Added:" / "Removed:" for screen readers) – and `args` – the call's arguments as a readable code block.
  */
 
 // The header icon: a shield with a check – a request to approve
@@ -50,6 +51,13 @@ export type ApprovalEvidence = {
   href?: string;
 };
 
+/** One line of a file change: unchanged context, an added line or a removed one */
+export type ApprovalDiffLine = { kind: "context" | "add" | "remove"; text: string };
+/** A file change shown as a small unified diff */
+export type ApprovalDiff = { path: string; lines: ApprovalDiffLine[] };
+/** The call's arguments – any JSON-like value, shown as a readable code block */
+export type ApprovalArgs = Record<string, unknown>;
+
 /** Details of the events */
 export type ApprovalStatusChange = { status: ApprovalStatus };
 export type ApprovalDeny = { reason: DenyReason };
@@ -74,6 +82,68 @@ function ago(t: number, now: number) {
 }
 /** Text as it is, an element cloned */
 const content = (v: string | Element | undefined) => (v === undefined ? nothing : typeof v === "string" ? v : v.cloneNode(true));
+/** One line of JSON with its keys, strings, numbers and true / false / null coloured */
+const JSON_TOKEN = /("(?:[^"\\]|\\.)*")(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g;
+function jsonLine(line: string) {
+  const out: unknown[] = [];
+  let at = 0;
+  for (const m of line.matchAll(JSON_TOKEN)) {
+    const i = m.index ?? 0;
+    if (i > at) out.push(line.slice(at, i));
+    const kind = m[1] ? (m[2] ? "p" : "s") : /^[tfn]/.test(m[0]) ? "k" : "n";
+    out.push(html`<span class="ui-ap__t-${kind}">${m[1] ?? m[0]}</span>`);
+    if (m[2]) out.push(m[2]);
+    at = i + m[0].length;
+  }
+  if (at < line.length) out.push(line.slice(at));
+  return out;
+}
+/** The arguments as indented JSON, or as text when they can't be (a cycle, a BigInt) */
+function argsText(args: ApprovalArgs) {
+  try {
+    return JSON.stringify(args, null, 2) ?? String(args);
+  } catch {
+    return String(args);
+  }
+}
+
+/**
+ * @internal A file change as a small unified diff: a heading with the path and the +/− counts, then the lines with a
+ * sign and screen-reader words – never colour alone. Shared with tc-approval-gates, which adopts this element's CSS
+ */
+export function renderApprovalDiff(diff: ApprovalDiff, label: string) {
+  const added = diff.lines.filter((l) => l.kind === "add").length;
+  const removed = diff.lines.filter((l) => l.kind === "remove").length;
+  return html`<div class="ui-ap__code-sec">
+    <div class="ui-ap__code-head">
+      <span class="ui-ap__code-label">${label}</span>
+      <code class="ui-ap__path">${diff.path}</code>
+      <span class="ui-ap__stat"><span aria-hidden="true"><span class="ui-ap__plus">+${added}</span> <span class="ui-ap__minus">−${removed}</span></span><span class="tc-sr-only">${added} added, ${removed} removed</span></span>
+    </div>
+    <div class="ui-ap__code" role="region" tabindex="0" aria-label=${`${label}: ${diff.path}`} data-kind="diff">
+      <div class="ui-ap__lines">${diff.lines.map(
+        (l) => html`<div class="ui-ap__line" data-kind=${l.kind}><span class="ui-ap__sign" aria-hidden="true">${l.kind === "add" ? "+" : l.kind === "remove" ? "−" : " "}</span><span class="ui-ap__lc">${l.kind === "add"
+          ? html`<span class="tc-sr-only">Added: </span>`
+          : l.kind === "remove"
+            ? html`<span class="tc-sr-only">Removed: </span>`
+            : nothing}${l.text}</span></div>`,
+      )}</div>
+    </div>
+  </div>`;
+}
+
+/** @internal The call's arguments as a readable code block. Shared with tc-approval-gates */
+export function renderApprovalArgs(args: ApprovalArgs, label: string) {
+  return html`<div class="ui-ap__code-sec">
+    <div class="ui-ap__code-head"><span class="ui-ap__code-label">${label}</span></div>
+    <div class="ui-ap__code" role="region" tabindex="0" aria-label=${label} data-kind="args">
+      <div class="ui-ap__lines">${argsText(args)
+        .split("\n")
+        .map((line) => html`<div class="ui-ap__line"><span class="ui-ap__lc">${jsonLine(line)}</span></div>`)}</div>
+    </div>
+  </div>`;
+}
+
 /** A boolean attribute that defaults to true: "false" turns it off */
 const onByDefault = { fromAttribute: (v: string | null) => v !== "false" };
 
@@ -169,6 +239,14 @@ export class TcApprovalCard extends TcElement {
   @property({ attribute: false }) accessor evidence: ApprovalEvidence[] | undefined = undefined;
   /** The heading of the evidence chips */
   @property({ attribute: "evidence-label" }) accessor evidenceLabel = "Evidence";
+  /** A file change the action would make, shown as a small unified diff: `{ path, lines: [{ kind, text }] }` */
+  @property({ attribute: false }) accessor diff: ApprovalDiff | undefined = undefined;
+  /** The heading of the diff */
+  @property({ attribute: "diff-label" }) accessor diffLabel = "Changes";
+  /** The call's arguments, shown as a readable code block */
+  @property({ attribute: false }) accessor args: ApprovalArgs | undefined = undefined;
+  /** The heading of the arguments */
+  @property({ attribute: "args-label" }) accessor argsLabel = "Arguments";
 
   /** @internal */ @state() accessor always = false;
   /** @internal */ @state() accessor busy = false;
@@ -568,11 +646,15 @@ export class TcApprovalCard extends TcElement {
           <p class="ui-ap__why-text" id=${ifDefined(leaving ? undefined : `${id}-why`)}>${this.why}</p>
         </div>`
       : nothing;
+    const diff = this.diff?.lines.length ? this.diff : undefined;
+    const args = this.args;
     const preview =
-      body || details?.length
+      body || details?.length || diff || args
         ? html`<div class="ui-ap__preview">
             ${body ? html`<div class="ui-ap__custom">${content(body)}</div>` : nothing}
             ${details?.length ? this.renderDetails(details, leaving) : nothing}
+            ${diff ? renderApprovalDiff(diff, this.diffLabel) : nothing}
+            ${args ? renderApprovalArgs(args, this.argsLabel) : nothing}
           </div>`
         : nothing;
     const outcomes = this.renderConsequences();
@@ -739,6 +821,8 @@ export class TcApprovalCard extends TcElement {
   /* The shortcut chip's text inside the ink primary button */
   --tc-approval-card-primary-kbd-fg: light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.6));
   --tc-approval-card-spin: 800ms;
+  /* The tallest a diff or the arguments get before they scroll */
+  --tc-approval-card-code-max: 220px;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -1332,6 +1416,98 @@ export class TcApprovalCard extends TcElement {
 .ui-ap__chip > svg { color: var(--tc-icon-muted); }
 .ui-ap__chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ui-ap__chip-detail { flex: none; color: var(--tc-text-muted); }
+/* Diff and arguments: mono lines in a quiet box that scrolls – white on Standard's gray preview, a soft fill in Clean */
+.ui-ap__code-sec {
+  display: grid;
+  gap: var(--tc-space-1-5);
+  min-width: 0;
+}
+.ui-ap__code-head {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  min-width: 0;
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-tight);
+}
+.ui-ap__code-label {
+  flex: none;
+  color: var(--tc-text-muted);
+}
+:where([data-look="standard"], [data-look="standard"] *).ui-ap__code-label { font-weight: var(--tc-font-weight-medium); }
+.ui-ap__path {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--tc-text-primary);
+  font-family: var(--tc-font-mono);
+  font-size: var(--tc-font-size-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ui-ap__stat {
+  flex: none;
+  margin-left: auto;
+  font-family: var(--tc-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.ui-ap__plus { color: var(--tc-status-success-fg); }
+.ui-ap__minus { color: var(--tc-status-danger-fg); }
+.ui-ap__code {
+  max-height: var(--tc-approval-card-code-max);
+  overflow: auto;
+  border-radius: var(--tc-radius-md);
+  color: var(--tc-syntax-text);
+  font-family: var(--tc-font-mono);
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-normal);
+  letter-spacing: 0;
+  tab-size: 2;
+  overscroll-behavior: contain;
+}
+:where([data-look="standard"], [data-look="standard"] *).ui-ap__code {
+  background: var(--tc-surface-on-tray);
+  box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default);
+}
+:where([data-look="clean"], [data-look="clean"] *).ui-ap__code { background: var(--tc-fill-subtle); }
+.ui-ap__code:focus-visible {
+  outline: var(--tc-focus-outline);
+  outline-offset: var(--tc-focus-ring-offset);
+}
+.ui-ap__lines {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+  padding: var(--tc-space-2) 0;
+}
+.ui-ap__line { display: flex; min-width: 0; }
+.ui-ap__sign {
+  flex: none;
+  width: 3ch;
+  color: var(--tc-text-muted);
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ui-ap__lc {
+  flex: 1;
+  min-height: var(--tc-line-height-normal);
+  padding: 0 var(--tc-space-3) 0 0;
+  white-space: pre;
+}
+.ui-ap__code[data-kind="args"] .ui-ap__lc { padding-left: var(--tc-space-3); }
+.ui-ap__line[data-kind="add"] { background: var(--tc-status-success-bg); }
+.ui-ap__line[data-kind="remove"] { background: var(--tc-status-danger-bg); }
+.ui-ap__line[data-kind="add"] .ui-ap__sign { color: var(--tc-status-success-fg); }
+.ui-ap__line[data-kind="remove"] .ui-ap__sign { color: var(--tc-status-danger-fg); }
+.ui-ap__t-p { color: var(--tc-syntax-property); }
+.ui-ap__t-s { color: var(--tc-syntax-string); }
+.ui-ap__t-n { color: var(--tc-syntax-number); }
+.ui-ap__t-k { color: var(--tc-syntax-keyword); }
+@media (forced-colors: active) {
+  .ui-ap__code { border: 1px solid CanvasText; }
+  .ui-ap__line[data-kind="add"] .ui-ap__sign,
+  .ui-ap__line[data-kind="remove"] .ui-ap__sign { color: CanvasText; }
+}
 /* Narrow: an edited row is marked with a dot, so its field keeps the width (the word stays for screen readers) */
 @container (max-width: 400px) {
   .ui-ap__edited { width: 6px; height: 6px; padding: 0; overflow: hidden; border-radius: 50%; background: var(--tc-accent); color: transparent; font-size: 0; }

@@ -34,7 +34,7 @@
      "attribute": "view",
      "type": "AgentInboxView",
      "default": "\"board\"",
-     "description": "The layout: \"board\" or \"list\"",
+     "description": "The layout: \"board\", \"list\" or \"recap\" (what changed since `since`)",
      "readonly": false
     },
     {
@@ -78,6 +78,38 @@
      "readonly": false
     },
     {
+     "name": "onUndo",
+     "attribute": null,
+     "type": "AgentTaskHandler | undefined",
+     "default": "undefined",
+     "description": "Called on Undo, after an uncanceled tc-undo; may return a promise",
+     "readonly": false
+    },
+    {
+     "name": "since",
+     "attribute": "since",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The start of the recap's period, in epoch ms – when you left. Set, Recap joins the layout switch",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, in epoch ms – the recap's period ends here and the clocks of waiting and running tasks hold at it; unset reads the clock",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for the recap's times of day",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -104,12 +136,34 @@
      "detail": "",
      "description": "Open was pressed on a running or done task; `detail` is the `AgentTask`",
      "cancelable": false
+    },
+    {
+     "name": "tc-undo",
+     "detail": "",
+     "description": "Undo was pressed on an undoable done task in the recap ({ task }: AgentInboxUndo); cancelable – preventDefault() skips `onUndo`",
+     "cancelable": true
     }
    ],
    "slots": [],
    "methods": [],
    "ui": "ai",
    "cssProperties": [
+    {
+     "name": "--tc-agent-inbox-curve",
+     "value": "var(--tc-text-disabled)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-inbox-area",
+     "value": "var(--tc-fill-subtle)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
     {
      "name": "--tc-agent-inbox-lane-bg",
      "value": "light-dark(#f4f4f5, #161618)",
@@ -133,6 +187,7 @@
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
+    "--tc-border-selected",
     "--tc-caption-color",
     "--tc-caption-font-size",
     "--tc-caption-font-weight",
@@ -158,12 +213,15 @@
     "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-fill-default",
+    "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-font-weight-semibold",
@@ -171,6 +229,7 @@
     "--tc-hairline",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
+    "--tc-line-height-tight",
     "--tc-pill-font-size",
     "--tc-pill-font-weight",
     "--tc-pill-h",
@@ -242,7 +301,7 @@
      "name": "view",
      "type": "AgentInboxView",
      "optional": true,
-     "description": "The layout. Controlled when defined; otherwise the component keeps it, starting from `defaultView`"
+     "description": "The layout – \"board\", \"list\", or \"recap\" (what changed since `since`). Controlled when defined; otherwise the component keeps it, starting from `defaultView`"
     },
     {
      "name": "defaultView",
@@ -285,7 +344,8 @@
    "events": {
     "tc-view-change": "onViewChange",
     "tc-expanded-change": null,
-    "tc-open": "onOpen"
+    "tc-open": "onOpen",
+    "tc-undo": "onTcUndo"
    }
   }
  ],
@@ -301,7 +361,8 @@
     "expanded",
     "onApprove",
     "onReject",
-    "onRetry"
+    "onRetry",
+    "onUndo"
    ],
    "attributes": [
     {
@@ -315,6 +376,18 @@
     {
      "name": "openable",
      "attribute": "openable"
+    },
+    {
+     "name": "since",
+     "attribute": "since"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
     }
    ],
    "events": [
@@ -329,6 +402,10 @@
     {
      "name": "tc-open",
      "cancelable": false
+    },
+    {
+     "name": "tc-undo",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -460,6 +537,22 @@
     ]
    },
    {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -566,7 +659,7 @@
   "windowed": false
  },
  "size": {
-  "min": 49346,
-  "gzip": 12426
+  "min": 60838,
+  "gzip": 15242
  }
 }

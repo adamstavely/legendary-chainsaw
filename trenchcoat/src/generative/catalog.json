@@ -69,6 +69,16 @@
     ]
   },
   {
+    "tag": "tc-agent-fleet",
+    "name": "AgentFleet",
+    "description": "Several top-level agents side by side – each card sums up its sub-agents; a click opens its tree beside it.",
+    "events": [
+      "tc-open-change",
+      "tc-answer",
+      "tc-resolve"
+    ]
+  },
+  {
     "tag": "tc-agent-gallery",
     "name": "AgentGallery",
     "description": "A showcase of agents as slim gradient panels, one open in the middle with its product screen.",
@@ -102,7 +112,8 @@
     "events": [
       "tc-view-change",
       "tc-expanded-change",
-      "tc-open"
+      "tc-open",
+      "tc-undo"
     ]
   },
   {
@@ -306,6 +317,16 @@
     "description": "Several people signing off in order, with who's next, who's overdue, and Approve, Decline and Delegate for the person it's waiting on.",
     "events": [
       "tc-steps-change"
+    ]
+  },
+  {
+    "tag": "tc-approval-gates",
+    "name": "ApprovalGates",
+    "description": "The approval requests of an agent run as a stack of cards – decide the top one, and it drops into the decided list.",
+    "events": [
+      "tc-decide",
+      "tc-gates-change",
+      "tc-expanded-change"
     ]
   },
   {
@@ -753,6 +774,15 @@
       "tc-copy",
       "tc-apply",
       "tc-view-change"
+    ]
+  },
+  {
+    "tag": "tc-collaboration-stream",
+    "name": "CollaborationStream",
+    "description": "What agents say to each other in a run: a quiet chat with who-to-whom, files, details and a composer.",
+    "events": [
+      "tc-filter-change",
+      "tc-send"
     ]
   },
   {
@@ -1561,6 +1591,12 @@
       "tc-text-change",
       "tc-done"
     ]
+  },
+  {
+    "tag": "tc-inspect-frame",
+    "name": "InspectFrame",
+    "description": "A component seen like a selection in a design tool – tilted back, with a selection frame, spacing numbers and a",
+    "events": []
   },
   {
     "tag": "tc-instruction-editor",
@@ -2560,6 +2596,14 @@
     ]
   },
   {
+    "tag": "tc-root-cause-tree",
+    "name": "RootCauseTree",
+    "description": "A fault tree of what an agent suspects caused a failure – hypotheses ruled out one by one, and the way from the",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
     "tag": "tc-rose-chart",
     "name": "RoseChart",
     "description": "Equal-angle wedges whose area shows each item's value – a polar area chart – stacked by series if wanted, with the",
@@ -2596,7 +2640,8 @@
     "description": "An agent run's restore points: pick a step, see what it captured and what going back discards, and go back.",
     "events": [
       "tc-selected-change",
-      "tc-restore"
+      "tc-restore",
+      "tc-branch-change"
     ]
   },
   {
@@ -3122,6 +3167,16 @@
     "events": [
       "tc-items-change",
       "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-tool-access-map",
+    "name": "ToolAccessMap",
+    "description": "One agent in the middle and every tool it can reach around it – used, failed, running, unused or off limits – with",
+    "events": [
+      "tc-selected-change",
+      "tc-agent-id-change",
+      "tc-replay"
     ]
   },
   {

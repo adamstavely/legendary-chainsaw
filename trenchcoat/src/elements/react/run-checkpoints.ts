@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcRunCheckpoints, type RunCheckpoint, type RunCheckpointsRestore, type RunCheckpointsSelectedChange } from "../run-checkpoints";
+import { TcRunCheckpoints, type RunCheckpoint, type RunCheckpointsBranchChange, type RunCheckpointsRestore, type RunCheckpointsSelectedChange } from "../run-checkpoints";
 import { h, useControlled } from "./internal";
 
-export type { RunCheckpoint, RunCheckpointCapture, RunCheckpointStatus, RunCheckpointsStatus } from "../run-checkpoints";
+export type { RunCheckpoint, RunCheckpointBranch, RunCheckpointCapture, RunCheckpointStatus, RunCheckpointsStatus } from "../run-checkpoints";
 
 const RawRunCheckpoints = createComponent({
   tagName: "tc-run-checkpoints",
@@ -12,10 +12,11 @@ const RawRunCheckpoints = createComponent({
   events: {
     onTcSelectedChange: "tc-selected-change" as EventName<CustomEvent<RunCheckpointsSelectedChange>>,
     onTcRestore: "tc-restore" as EventName<CustomEvent<RunCheckpointsRestore>>,
+    onTcBranchChange: "tc-branch-change" as EventName<CustomEvent<RunCheckpointsBranchChange>>,
   },
 });
 type RawRunCheckpointsProps = React.ComponentProps<typeof RawRunCheckpoints>;
-type Wrapped = "checkpoints" | "heading" | "selected" | "restorer" | "onTcSelectedChange" | "onTcRestore";
+type Wrapped = "checkpoints" | "heading" | "selected" | "restorer" | "branch" | "onTcSelectedChange" | "onTcRestore" | "onTcBranchChange";
 export type RunCheckpointsProps = Omit<RawRunCheckpointsProps, Wrapped> & {
   /** The checkpoints, oldest first – one before each step of the run */
   checkpoints: RunCheckpoint[];
@@ -31,18 +32,27 @@ export type RunCheckpointsProps = Omit<RawRunCheckpointsProps, Wrapped> & {
   /** "Go back to step N" pressed: the checkpoint, the note for the agent ("" when none) and the ids of the steps it
    *  discards. May return a promise – the button waits, and says so if it rejects */
   onRestore?: (checkpointId: string, instruction: string, discarded: string[]) => void | Promise<unknown>;
+  /** The attempt on show: a branch's id, "original" for the first attempt, null for the newest. Controlled when
+   *  defined; otherwise the component keeps it, starting at `defaultBranch` */
+  branch?: string | null;
+  /** The attempt on show at first when uncontrolled */
+  defaultBranch?: string | null;
+  /** Called with the attempt the user picked */
+  onBranchChange?: (branch: string | null) => void;
 };
 
-export function RunCheckpoints({ title, selected, defaultSelected = null, onSelectedChange, onRestore, ...props }: RunCheckpointsProps) {
+export function RunCheckpoints({ title, selected, defaultSelected = null, onSelectedChange, onRestore, branch, defaultBranch = null, onBranchChange, ...props }: RunCheckpointsProps) {
   const latest = React.useRef<RunCheckpoint | undefined>(undefined);
   const report = React.useCallback((id: string | null) => onSelectedChange?.(id, latest.current), [onSelectedChange]);
   const pick = useControlled<string | null>(selected, defaultSelected, report);
+  const attempt = useControlled<string | null>(branch, defaultBranch, onBranchChange);
   // The discarded ids come with the event; the restorer is what may return a promise
   const discarded = React.useRef<string[]>([]);
   return h(RawRunCheckpoints, {
     ...props,
     heading: title ?? "",
     selected: pick.value,
+    branch: attempt.value,
     restorer: onRestore ? (id: string, instruction: string) => onRestore(id, instruction, discarded.current) : undefined,
     onTcSelectedChange: (e: CustomEvent<RunCheckpointsSelectedChange>) => {
       latest.current = e.detail.checkpoint;
@@ -51,5 +61,6 @@ export function RunCheckpoints({ title, selected, defaultSelected = null, onSele
     onTcRestore: (e: CustomEvent<RunCheckpointsRestore>) => {
       discarded.current = e.detail.discarded;
     },
+    onTcBranchChange: (e: CustomEvent<RunCheckpointsBranchChange>) => attempt.handler(e.detail.branch, e),
   });
 }

@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-approval-gates.json",
+  "title": "tc-approval-gates",
+  "description": "The approval requests of an agent run as a stack of cards – decide the top one, and it drops into the decided list.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "run": {
+      "type": "string",
+      "description": "The run the requests come from, shown under the heading"
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApprovalGate"
+      },
+      "description": "The requests, in the order they should be decided"
+    },
+    "expanded": {
+      "type": "string",
+      "description": "The decided row folded open, by gate id"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for \"6m ago\", in epoch ms – unset shows the time of day instead"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for the time of day"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "waiting": {
+          "type": "string"
+        },
+        "decided": {
+          "type": "string"
+        },
+        "run": {
+          "type": "string"
+        },
+        "approve": {
+          "type": "string"
+        },
+        "reject": {
+          "type": "string"
+        },
+        "changes": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "touches": {
+          "type": "string"
+        },
+        "blocking": {
+          "type": "string"
+        },
+        "allDecided": {
+          "type": "string"
+        },
+        "nothingWaits": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "justNow": {
+          "type": "string"
+        },
+        "diff": {
+          "type": "string"
+        },
+        "args": {
+          "type": "string"
+        },
+        "holds": {
+          "type": "string"
+        },
+        "held": {
+          "type": "string"
+        },
+        "released": {
+          "type": "string"
+        },
+        "approved": {
+          "type": "string"
+        },
+        "rejected": {
+          "type": "string"
+        },
+        "changes-requested": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultApprovalGatesLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ApprovalGate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "The action in plain words, e.g. \"Move the embargo forward a week\""
+        },
+        "agent": {
+          "type": "string",
+          "description": "Who asks, e.g. \"Writer\""
+        },
+        "kind": {
+          "type": "string",
+          "description": "What kind of request, e.g. \"File change\", \"Command\", \"Message\""
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was asked, in epoch ms"
+        },
+        "reason": {
+          "type": "string",
+          "description": "What it changes or why it needs a person, one line"
+        },
+        "diff": {
+          "$ref": "#/definitions/ApprovalDiff",
+          "description": "A file change, shown as a small unified diff"
+        },
+        "args": {
+          "$ref": "#/definitions/ApprovalArgs",
+          "description": "The call's arguments, shown as a code block"
+        },
+        "status": {
+          "$ref": "#/definitions/GateStatus"
+        },
+        "decidedAt": {
+          "type": "number",
+          "description": "When it was decided, in epoch ms"
+        },
+        "note": {
+          "type": "string",
+          "description": "The note sent with \"Ask for changes\""
+        },
+        "holds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The steps of the run waiting behind this gate"
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "before": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "touches": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "description": "What happened before it and what it touches – shown under \"Full context\""
+        },
+        "blocking": {
+          "type": "boolean",
+          "description": "Marks a request that holds up the whole run"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "One approval request of the run"
+    },
+    "ApprovalDiff": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApprovalDiffLine"
+          }
+        }
+      },
+      "required": [
+        "path",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "description": "A file change shown as a small unified diff"
+    },
+    "ApprovalDiffLine": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "add",
+            "context",
+            "remove"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One line of a file change: unchanged context, an added line or a removed one"
+    },
+    "ApprovalArgs": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "The call's arguments – any JSON-like value, shown as a readable code block"
+    },
+    "GateStatus": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "changes-requested",
+        "open",
+        "rejected"
+      ]
+    }
+  }
+}

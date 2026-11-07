@@ -22,6 +22,11 @@ import { FocusRescueController, OffScreenController } from "./internal/controlle
  * `selected` is a value with a cancelable `tc-selected-change`; "Go back" fires `tc-restore` (and calls `restorer`,
  * which may return a promise – the button waits, and says so if it rejects). The run itself – its status, its
  * checkpoints, its elapsed time – is always the app's: the element reads no clock.
+ *
+ * After going back, the run branches: pass the new attempt in `branches` ({ id, from: the checkpoint it went back to,
+ * checkpoints }) and a small drawing of the attempts appears – the newest one solid, the ones it left faded and
+ * labelled "Earlier attempt", each forking out of its checkpoint. Pick an attempt (a radiogroup) to list its steps;
+ * `branch` is a value with a cancelable `tc-branch-change`, null following the newest attempt.
  */
 
 export type RunCheckpointStatus = "done" | "active" | "failed";
@@ -59,9 +64,62 @@ export type RunCheckpoint = {
 
 export type RunCheckpointsStatus = "running" | "paused" | "done" | "failed";
 
+/** Another attempt at the run: after going back to a checkpoint, the run branches out of it */
+export type RunCheckpointBranch = {
+  id: string;
+  /** The checkpoint it went back to – on the first attempt or on another branch */
+  from: string;
+  /** A short name, e.g. "With the staging database" – defaults to "Attempt 2", "Attempt 3" … */
+  label?: string;
+  /** How this attempt ended – the newest attempt uses the element's `status` */
+  status?: RunCheckpointsStatus;
+  /** Its checkpoints, oldest first, from the step it runs again; the steps before `from` are shared with the attempt
+   *  it left. `at` keeps counting from the start of the run */
+  checkpoints: RunCheckpoint[];
+};
+
 /** Details of the events */
 export type RunCheckpointsSelectedChange = { selected: string | null; checkpoint?: RunCheckpoint };
 export type RunCheckpointsRestore = { checkpointId: string; instruction: string; discarded: string[] };
+export type RunCheckpointsBranchChange = { branch: string | null };
+
+/** The first attempt's id in `branch` */
+export const FIRST_ATTEMPT = "original";
+
+/** An attempt as drawn: its own checkpoints, the steps it shares, where it forks */
+type Attempt = {
+  id: string;
+  label: string;
+  /** The attempt it branched from, and how many lanes up that is */
+  parent?: number;
+  /** The run time it forks at (its `from` checkpoint) */
+  forkAt?: number;
+  own: RunCheckpoint[];
+  /** Every step of the attempt: the shared ones, then its own */
+  path: RunCheckpoint[];
+  status?: RunCheckpointsStatus;
+};
+
+function attemptsOf(checkpoints: RunCheckpoint[], branches: RunCheckpointBranch[]) {
+  const list: Attempt[] = [{ id: FIRST_ATTEMPT, label: "First attempt", own: checkpoints, path: checkpoints }];
+  branches.forEach((b, k) => {
+    // The attempt that holds the checkpoint as its own step, else any that passes it, else the first
+    let p = list.findIndex((a) => a.own.some((c) => c.id === b.from));
+    if (p < 0) p = Math.max(0, list.findIndex((a) => a.path.some((c) => c.id === b.from)));
+    const parent = list[p];
+    const cut = parent.path.findIndex((c) => c.id === b.from);
+    list.push({
+      id: b.id,
+      label: b.label ?? `Attempt ${k + 2}`,
+      parent: p,
+      forkAt: cut >= 0 ? parent.path[cut].at : parent.path[parent.path.length - 1]?.at,
+      own: b.checkpoints,
+      path: [...(cut >= 0 ? parent.path.slice(0, cut) : parent.path), ...b.checkpoints],
+      status: b.status,
+    });
+  });
+  return list;
+}
 
 const STATUS_TEXT: Record<RunCheckpointsStatus, string> = { running: "Live", paused: "Paused", done: "Done", failed: "Failed" };
 const STEP_TEXT: Record<RunCheckpointStatus, string> = { done: "Done", active: "Running", failed: "Failed" };
@@ -128,6 +186,7 @@ const noteIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d=
  * @tag tc-run-checkpoints
  * @fires tc-selected-change - A step is picked or the pick is cleared (detail: { selected: string | null, checkpoint?: RunCheckpoint }); cancelable
  * @fires tc-restore - "Go back to step N" pressed (detail: { checkpointId: string, instruction: string, discarded: string[] })
+ * @fires tc-branch-change - Another attempt was picked (detail: { branch: string | null }); cancelable
  */
 export class TcRunCheckpoints extends TcElement {
   static override ui = "rcp";
@@ -138,6 +197,12 @@ export class TcRunCheckpoints extends TcElement {
   @property() accessor status: RunCheckpointsStatus = "done";
   /** The run's goal, shown as the heading */
   @property() accessor heading = "";
+  /** Later attempts at the run, oldest first – each branches out of the checkpoint it went back to; the last one is
+   *  the live attempt */
+  @property({ attribute: false }) accessor branches: RunCheckpointBranch[] = [];
+  /** The attempt on show: a branch's id, "original" for the first attempt, or null for the newest. Changes apply
+   *  unless a tc-branch-change listener calls preventDefault() */
+  @property() accessor branch: string | null = null;
   /** The picked checkpoint's id. Picks apply unless a tc-selected-change listener calls preventDefault() */
   @property() accessor selected: string | null = null;
   /** How long the run has gone on, in ms – the strip's length (defaults to the last checkpoint) */
@@ -165,11 +230,15 @@ export class TcRunCheckpoints extends TcElement {
   private panelFor: string | null = null;
   private focusOption: string | null = null;
   private focusNote = false;
+  private focusAttempt: string | null = null;
+  /** After a restore: follow the attempt that branches out of this checkpoint once it arrives */
+  private follow: string | null = null;
+  private memo?: { checkpoints: RunCheckpoint[]; branches: RunCheckpointBranch[]; attempts: Attempt[] };
 
   constructor() {
     super();
     // The spinner of a running step pauses while the card is scrolled away
-    new OffScreenController(this, () => this.checkpoints.some((c) => c.status === "active"));
+    new OffScreenController(this, () => this.path.some((c) => c.status === "active"));
     // The button leaves with the pick: focus goes to the picked row, else the list
     new FocusRescueController(this, () => this.querySelector<HTMLElement>('.ui-rcp__row[tabindex="0"]'));
   }
@@ -181,9 +250,29 @@ export class TcRunCheckpoints extends TcElement {
 
   /* ---------- State ---------- */
 
+  /** @internal Every attempt, the first one first */
+  private get attempts() {
+    const m = this.memo;
+    if (m && m.checkpoints === this.checkpoints && m.branches === this.branches) return m.attempts;
+    const attempts = attemptsOf(this.checkpoints, this.branches ?? []);
+    this.memo = { checkpoints: this.checkpoints, branches: this.branches, attempts };
+    return attempts;
+  }
+
+  /** @internal The attempt on show */
+  private get shown() {
+    const list = this.attempts;
+    return (this.branch !== null && list.find((a) => a.id === this.branch)) || list[list.length - 1];
+  }
+
+  /** @internal The steps on show: the attempt's whole path */
+  private get path() {
+    return this.shown.path;
+  }
+
   /** @internal */
   private get index() {
-    return this.selected === null ? -1 : this.checkpoints.findIndex((c) => c.id === this.selected);
+    return this.selected === null ? -1 : this.path.findIndex((c) => c.id === this.selected);
   }
 
   /** @internal */
@@ -198,24 +287,54 @@ export class TcRunCheckpoints extends TcElement {
 
   private pick(id: string | null) {
     if (id === this.selected) return;
-    const checkpoint = id === null ? undefined : this.checkpoints.find((c) => c.id === id);
+    const checkpoint = id === null ? undefined : this.path.find((c) => c.id === id);
     if (id !== null && (!checkpoint || !this.restorable(checkpoint))) return;
     if (!this.emit<RunCheckpointsSelectedChange>("tc-selected-change", { selected: id, checkpoint }, { cancelable: true })) return;
     this.selected = id;
     if (this.work === "error") this.work = null;
     if (checkpoint) {
-      const i = this.checkpoints.indexOf(checkpoint);
-      const d = discardsOf(this.checkpoints, i);
+      const i = this.path.indexOf(checkpoint);
+      const d = discardsOf(this.path, i);
       this.announce(`Step ${i + 1} picked. Going back discards ${plural(d.steps.length, "step")}${d.files.length ? ` and ${plural(d.files.length, "file change")}` : ""}.`);
     }
   }
 
+  private setBranch(id: string) {
+    const a = this.attempts.find((x) => x.id === id);
+    if (!a || a.id === this.shown.id) return;
+    if (!this.emit<RunCheckpointsBranchChange>("tc-branch-change", { branch: id }, { cancelable: true })) return;
+    this.branch = id;
+    const newest = a === this.attempts[this.attempts.length - 1];
+    this.announce(`Showing ${newest ? "the current attempt" : "an earlier attempt"}, ${a.label}: ${plural(a.path.length, "step")}.`);
+  }
+
+  private onAttemptsKey = (e: KeyboardEvent) => {
+    const list = this.attempts;
+    const at = list.indexOf(this.shown);
+    const n = list.length;
+    const to =
+      e.key === "ArrowDown" || e.key === "ArrowRight"
+        ? (at + 1) % n
+        : e.key === "ArrowUp" || e.key === "ArrowLeft"
+          ? (at - 1 + n) % n
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? n - 1
+              : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    this.setBranch(list[to].id);
+    this.focusAttempt = this.shown.id;
+    this.requestUpdate();
+  };
+
   private restore = () => {
     const i = this.index;
-    const cp = this.checkpoints[i];
+    const cp = this.path[i];
     if (!cp || this.work === "pending") return;
     const instruction = this.note.trim();
-    const discarded = discardsOf(this.checkpoints, i).steps.map((s) => s.id);
+    const discarded = discardsOf(this.path, i).steps.map((s) => s.id);
     this.emit<RunCheckpointsRestore>("tc-restore", { checkpointId: cp.id, instruction, discarded });
     const done = this.restorer?.(cp.id, instruction);
     const finish = () => {
@@ -224,6 +343,8 @@ export class TcRunCheckpoints extends TcElement {
       this.cursor = cp.id;
       this.focusOption = this.contains(document.activeElement) ? cp.id : null;
       this.announce(`Went back to step ${i + 1}${instruction ? " with your note" : ""}.`);
+      // The new attempt arrives as a branch: show it then, unless the newest is already followed
+      this.follow = this.branch !== null ? cp.id : null;
       this.pick(null);
     };
     if (!done || typeof (done as Promise<unknown>).then !== "function") {
@@ -246,7 +367,7 @@ export class TcRunCheckpoints extends TcElement {
   private onListKey = (e: KeyboardEvent) => {
     const row = (e.target as Element).closest<HTMLElement>(".ui-rcp__row");
     if (!row || e.altKey || e.ctrlKey || e.metaKey) return;
-    const list = this.checkpoints;
+    const list = this.path;
     const i = list.findIndex((c) => c.id === row.dataset.id);
     let next = -1;
     if (e.key === "ArrowDown") next = Math.min(list.length - 1, i + 1);
@@ -295,8 +416,8 @@ export class TcRunCheckpoints extends TcElement {
     super.willUpdate(changed);
     this.dataset.status = this.status;
     if (this.index >= 0) this.panelFor = this.selected;
-    else if (this.panelFor && !this.checkpoints.some((c) => c.id === this.panelFor)) this.panelFor = null;
-    if (this.cursor && !this.checkpoints.some((c) => c.id === this.cursor)) this.cursor = null;
+    else if (this.panelFor && !this.path.some((c) => c.id === this.panelFor)) this.panelFor = null;
+    if (this.cursor && !this.path.some((c) => c.id === this.cursor)) this.cursor = null;
     this.toggleAttribute("data-picked", this.index >= 0);
   }
 
@@ -308,6 +429,18 @@ export class TcRunCheckpoints extends TcElement {
       this.focusOption = null;
       el?.focus();
     }
+    if (this.focusAttempt) {
+      const el = this.querySelector<HTMLElement>(`.ui-rcp__attempt[data-id="${CSS.escape(this.focusAttempt)}"]`);
+      this.focusAttempt = null;
+      el?.focus();
+    }
+    if (this.follow && changed.has("branches")) {
+      const fresh = this.branches.find((b) => b.from === this.follow && b.id !== this.branch);
+      if (fresh) {
+        this.follow = null;
+        this.setBranch(fresh.id);
+      }
+    }
     if (this.focusNote) {
       this.focusNote = false;
       this.querySelector<HTMLInputElement>(".ui-rcp__note input")?.focus();
@@ -318,7 +451,7 @@ export class TcRunCheckpoints extends TcElement {
 
   /** The run as a line: solid up to the pick, hatched after it; one dot per checkpoint */
   private renderStrip(range: number) {
-    const list = this.checkpoints;
+    const list = this.path;
     const i = this.index;
     const cut = i >= 0 ? (list[i].at / range) * 100 : 100;
     const live = this.status === "running";
@@ -342,6 +475,50 @@ export class TcRunCheckpoints extends TcElement {
         ${live ? html`<span class="ui-rcp__now"></span>` : nothing}
       </div>
       <div class="ui-rcp__ticks"><span>${clock(0)}</span>${i >= 0 ? html`<span class="ui-rcp__at" style=${styleMap({ "--x": `${cut}%` })}>${clock(list[i].at)}</span>` : nothing}<span>${clock(range)}</span></div>
+    </div>`;
+  }
+
+  /** The attempts as lanes: each forks out of the checkpoint it went back to; the ones the run left are faded */
+  private renderAttempts(range: number) {
+    const list = this.attempts;
+    const newest = list[list.length - 1];
+    const shown = this.shown;
+    const pct = (ms: number) => `${(Math.min(range, Math.max(0, ms)) / range) * 100}%`;
+    return html`<div class="ui-rcp__attempts-scroll">
+      <div class="ui-rcp__attempts" role="radiogroup" aria-label="Attempts" @keydown=${this.onAttemptsKey}>
+        ${list.map((a, k) => {
+          const current = a === newest;
+          const start = a.forkAt ?? 0;
+          const end = Math.max(start, ...a.own.map((c) => c.at), current ? (this.elapsed ?? 0) : 0);
+          const ownStart = Math.max(start, a.own[0]?.at ?? start);
+          const status = current ? this.status : a.status;
+          const word = current ? "Current attempt" : "Earlier attempt";
+          return html`<button
+            type="button"
+            role="radio"
+            class="ui-rcp__attempt"
+            data-id=${a.id}
+            ?data-earlier=${!current}
+            aria-checked=${a === shown ? "true" : "false"}
+            tabindex=${a === shown ? 0 : -1}
+            @click=${() => this.setBranch(a.id)}
+          >
+            <span class="ui-rcp__attempt-name">
+              <span class="ui-rcp__attempt-label">${a.label}</span>
+              <span class="ui-rcp__attempt-word">${word}</span>
+            </span>
+            <span class="ui-rcp__sr">, ${plural(a.path.length, "step")}${status ? `, ${STATUS_TEXT[status].toLowerCase()}` : ""}${a.parent !== undefined ? `, went back to ${clock(start)} of ${list[a.parent].label}` : ""}</span>
+            <span class="ui-rcp__track" aria-hidden="true">
+              ${a.parent !== undefined
+                ? html`<span class="ui-rcp__fork" style=${styleMap({ "--from": pct(start), "--to": pct(ownStart), "--up": String(k - a.parent) })}></span>`
+                : nothing}
+              <span class="ui-rcp__track-line" style=${styleMap({ "--from": pct(ownStart), "--to": pct(end) })}></span>
+              ${a.own.map((c) => html`<span class="ui-rcp__track-dot" data-step=${c.status ?? "done"} style=${styleMap({ "--x": pct(c.at) })}></span>`)}
+              ${current && this.status === "running" ? html`<span class="ui-rcp__track-now" style=${styleMap({ "--x": pct(end) })}></span>` : nothing}
+            </span>
+          </button>`;
+        })}
+      </div>
     </div>`;
   }
 
@@ -381,7 +558,7 @@ export class TcRunCheckpoints extends TcElement {
   }
 
   private renderPanel() {
-    const list = this.checkpoints;
+    const list = this.path;
     const at = this.panelFor ? list.findIndex((c) => c.id === this.panelFor) : -1;
     const open = this.index >= 0;
     const cp = list[at];
@@ -439,13 +616,13 @@ export class TcRunCheckpoints extends TcElement {
 
   private renderFoot() {
     const i = this.index;
-    const cp = this.checkpoints[i];
+    const cp = this.path[i];
     const pending = this.work === "pending";
-    const quietHint = this.checkpoints.length ? "Pick a step to go back to it" : "The agent saves a checkpoint before each step";
+    const quietHint = this.path.length ? "Pick a step to go back to it" : "The agent saves a checkpoint before each step";
     let left: unknown;
     if (this.work === "error") left = html`<span class="ui-rcp__hint ui-rcp__hint--error" role="alert">Couldn't go back – try again</span>`;
     else if (cp) {
-      const d = discardsOf(this.checkpoints, i);
+      const d = discardsOf(this.path, i);
       left = html`<span class="ui-rcp__hint">Runs again from ${clock(cp.at)}<span class="ui-rcp__sep" aria-hidden="true">·</span>discards ${plural(d.steps.length, "step")}</span>`;
     } else left = html`<span class="ui-rcp__hint">${quietHint}</span>`;
     return html`<div class="ui-rcp__foot" data-phase=${cp ? "picked" : "idle"}>
@@ -465,10 +642,13 @@ export class TcRunCheckpoints extends TcElement {
   }
 
   protected override render() {
-    const list = this.checkpoints;
+    const list = this.path;
     const n = list.length;
     const clean = this.resolvedLook === "clean";
-    const range = Math.max(1, this.elapsed ?? 0, ...list.map((c) => c.at));
+    const attempts = this.attempts;
+    const branched = attempts.length > 1;
+    const range = Math.max(1, this.elapsed ?? 0, ...attempts.flatMap((a) => a.own.map((c) => c.at)));
+    const earlier = branched && this.shown !== attempts[attempts.length - 1];
     // One row takes Tab: the pick, else the row the keyboard was on, else the newest restorable one
     const tabbable =
       (this.index >= 0 ? this.selected : null) ??
@@ -481,7 +661,7 @@ export class TcRunCheckpoints extends TcElement {
     const head = cardHead({
       icon: flagIcon,
       title: this.heading || "Run checkpoints",
-      subtitle: html`<span class="ui-rcp__count">Checkpoints · ${n}</span>`,
+      subtitle: html`<span class="ui-rcp__count">Checkpoints · ${n}${branched ? html`<span aria-hidden="true"> · </span><span class="ui-rcp__sr">, </span>${plural(attempts.length, "attempt")}` : nothing}</span>`,
       id: `${this.uid}-title`,
       aside: html`<span class="ui-rcp__pill" data-status=${this.status}>${live ? html`<span class="ui-rcp__pulse" aria-hidden="true"></span>` : nothing}${STATUS_TEXT[this.status]}<span class="ui-rcp__sr"> run</span></span>`,
     });
@@ -490,6 +670,8 @@ export class TcRunCheckpoints extends TcElement {
       <div class="ui-rcp__card">
         ${clean ? head : nothing}
         ${n ? this.renderStrip(range) : nothing}
+        ${branched ? this.renderAttempts(range) : nothing}
+        ${earlier ? html`<p class="ui-rcp__earlier">Earlier attempt – the steps the run left behind. You can still go back to one of them.</p>` : nothing}
         ${n
           ? html`<ol class="ui-rcp__list" role="listbox" aria-label="Restore points" @keydown=${this.onListKey}>
               ${repeat(
@@ -517,6 +699,9 @@ export class TcRunCheckpoints extends TcElement {
   --tc-run-checkpoints-drop: light-dark(rgba(196, 50, 50, 0.32), rgba(255, 110, 110, 0.36));
   --tc-run-checkpoints-inset: var(--tc-space-3-5);
   --tc-run-checkpoints-marker: 20px;
+  /* Attempts: a lane's height, and the faded line of an attempt the run left */
+  --tc-run-checkpoints-lane: 36px;
+  --tc-run-checkpoints-earlier: var(--tc-border-strong);
   box-sizing: border-box;
   container-type: inline-size;
   position: relative;
@@ -539,6 +724,8 @@ export class TcRunCheckpoints extends TcElement {
   --tc-run-checkpoints-drop: light-dark(rgba(196, 50, 50, 0.26), rgba(255, 110, 110, 0.3));
   --tc-run-checkpoints-inset: var(--tc-space-2-5);
   --tc-run-checkpoints-marker: 20px;
+  --tc-run-checkpoints-lane: 36px;
+  --tc-run-checkpoints-earlier: var(--tc-border-strong);
   box-sizing: border-box;
   container-type: inline-size;
   position: relative;
@@ -560,7 +747,7 @@ export class TcRunCheckpoints extends TcElement {
 :where([data-ui="rcp"]) :is(ol, ul) { list-style: none; }
 .ui-rcp__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card: Standard sits on the gray tray, Clean is the whole component */
-.ui-rcp__card { position: relative; background: var(--tc-surface-raised); }
+.ui-rcp__card { position: relative; min-width: 0; background: var(--tc-surface-raised); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rcp__card { padding-top: var(--tc-space-2); border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rcp__card { border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
 .ui-rcp__count { font-variant-numeric: tabular-nums; }
@@ -721,6 +908,33 @@ export class TcRunCheckpoints extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-rcp__btn svg { width: 13px; height: 13px; stroke-width: 1.6; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rcp__btn svg { width: 16px; height: 16px; stroke-width: 1.2; }
 .ui-rcp__btn:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+/* ----- Attempts: the run's branches, one lane each, the ones it left faded ----- */
+.ui-rcp__attempts-scroll { overflow-x: auto; padding: var(--tc-space-1) var(--tc-space-1-5) var(--tc-space-1); }
+.ui-rcp__attempts { display: grid; min-width: 360px; }
+.ui-rcp__attempt { position: relative; display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: var(--tc-space-3); width: 100%; height: var(--tc-run-checkpoints-lane); padding: 0 var(--tc-space-3) 0 var(--tc-run-checkpoints-inset); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-rcp__attempt { border-radius: var(--tc-radius-lg); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rcp__attempt { border-radius: var(--tc-radius-sm); }
+.ui-rcp__attempt:hover { background: var(--tc-fill-hover); }
+.ui-rcp__attempt[aria-checked="true"], .ui-rcp__attempt[aria-checked="true"]:hover { background: var(--tc-fill-selected); box-shadow: inset var(--tc-focus-ring-width) 0 0 var(--tc-border-selected); }
+.ui-rcp__attempt:focus-visible { outline: none; box-shadow: inset 0 0 0 var(--tc-focus-ring-width) var(--tc-focus-ring); }
+@media (forced-colors: active) { .ui-rcp__attempt:focus-visible { outline: 2px solid Highlight; outline-offset: -2px; } }
+.ui-rcp__attempt-name { display: grid; min-width: 0; line-height: var(--tc-line-height-tight); }
+.ui-rcp__attempt-label { overflow: hidden; color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); text-overflow: ellipsis; white-space: nowrap; }
+.ui-rcp__attempt-word { color: var(--tc-text-muted); font-size: var(--tc-font-size-xs); white-space: nowrap; }
+.ui-rcp__attempt[data-earlier] .ui-rcp__attempt-label { color: var(--tc-text-secondary); font-weight: var(--tc-font-weight-regular); }
+.ui-rcp__track { position: relative; align-self: stretch; }
+.ui-rcp__track-line { position: absolute; top: calc(50% - 1.5px); left: var(--from); width: calc(var(--to) - var(--from)); height: 3px; border-radius: var(--tc-radius-full); background: var(--tc-meter-fill); }
+/* The fork: down from the checkpoint on the attempt it left, then along to where this attempt starts */
+.ui-rcp__fork { position: absolute; bottom: 50%; left: var(--from); width: calc(var(--to) - var(--from)); height: calc(var(--up) * var(--tc-run-checkpoints-lane)); border-bottom-left-radius: var(--tc-radius-md); border-left: 1.5px solid var(--tc-meter-fill); border-bottom: 1.5px solid var(--tc-meter-fill); }
+.ui-rcp__track-dot { position: absolute; top: calc(50% - 4px); left: calc(var(--x) - 4px); width: 8px; height: 8px; border-radius: 50%; background: var(--tc-surface-raised); box-shadow: inset 0 0 0 1.5px var(--tc-meter-fill); }
+.ui-rcp__track-dot[data-step="failed"] { box-shadow: inset 0 0 0 1.5px var(--tc-status-danger-solid); }
+.ui-rcp__track-dot[data-step="active"] { box-shadow: inset 0 0 0 1.5px var(--tc-accent-text); }
+.ui-rcp__track-now { position: absolute; top: calc(50% - 5px); left: calc(var(--x) - 1px); width: 2px; height: 10px; border-radius: var(--tc-radius-full); background: var(--tc-accent-text); animation: ui-rcp-blink var(--tc-duration-shimmer) var(--tc-ease-in-out) 3; }
+/* Earlier attempts step back in colour, not opacity – their words stay readable */
+.ui-rcp__attempt[data-earlier] .ui-rcp__track-line { background: var(--tc-run-checkpoints-earlier); }
+.ui-rcp__attempt[data-earlier] .ui-rcp__fork { border-color: var(--tc-run-checkpoints-earlier); border-style: dashed; }
+.ui-rcp__attempt[data-earlier] .ui-rcp__track-dot { box-shadow: inset 0 0 0 1.5px var(--tc-run-checkpoints-earlier); }
+.ui-rcp__earlier { margin: var(--tc-space-1) var(--tc-space-4) 0; padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 @keyframes ui-rcp-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 @keyframes ui-rcp-pop { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; } }
 @keyframes ui-rcp-ray { 0% { opacity: 1; } 100% { opacity: 0.18; } }
