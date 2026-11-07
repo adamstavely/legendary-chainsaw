@@ -206,6 +206,16 @@ describe("tc-side-nav", () => {
     expect(text(el.querySelector("[role=status]"))).toBe("Navigation collapsed");
   });
 
+  test("a large brand name isn't clipped: its line height follows its own size, not the bar's", async () => {
+    const el = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" brand-href="#home" .items=${ITEMS} style="line-height: 16px; --tc-snav-brand-size: 48px"></tc-side-nav>`);
+    const name = el.querySelector<HTMLElement>(".ui-snav__brand-name")!;
+    expect(parseFloat(getComputedStyle(name).fontSize)).toBeCloseTo(48, 0);
+    expect(parseFloat(getComputedStyle(name).lineHeight)).toBeCloseTo(48 * 1.2, 0);
+    expect(name.getBoundingClientRect().height).toBeGreaterThanOrEqual(48);
+    expect(name.scrollHeight).toBeLessThanOrEqual(name.clientHeight + 1);
+    expect(getComputedStyle(name).textOverflow).toBe("ellipsis");
+  });
+
   test("the page sizes the brand: name size and weight, logo box; defaults keep today's look; the rail centres a capped logo", async () => {
     const logo = () => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");

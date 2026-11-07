@@ -1492,6 +1492,14 @@
     ]
   },
   {
+    "tag": "tc-header-brand",
+    "name": "HeaderBrand",
+    "description": "The product's logo and name in an app header, as a link home or plain text.",
+    "events": [
+      "tc-navigate"
+    ]
+  },
+  {
     "tag": "tc-header-nav",
     "name": "HeaderNav",
     "description": "The right end of an app header: the page's bell and app picker, and the person's avatar with their account card.",

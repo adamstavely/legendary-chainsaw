@@ -148,6 +148,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **HAL Form** (`hal-form.tsx`) – A form the server describes – a HAL-FORMS document drawn as controls, every type and inline or linked options, checked by its rules and sent as its template asks, as JSON, form encoding or a query string
 - **Handoff Brief** (`handoff-brief.tsx`) – Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 - **Handoff** (`handoff.tsx`) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
+- **Header Brand** (`header-brand.tsx`) – The product's logo and name at the start of a full-width app header – a link home an app's router can take over, sized from the page, never clipped, with an inverse look for a dark bar
 - **Heatmap** (`heatmap.tsx`) – A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view
 - **Hexbin Chart** (`hexbin-chart.tsx`) – Thousands of points by x and y gathered into hexagons shaded by count, or the sum or mean of a value, with a ramp legend and the densest ringed.
 - **Histogram** (`histogram.tsx`) – How raw numbers spread, as touching bars on round bin edges, with the tallest bin emphasised, a running total, a density curve and mean and median lines if wanted.

@@ -1,0 +1,353 @@
+{
+ "elements": [
+  {
+   "tag": "tc-header-brand",
+   "className": "TcHeaderBrand",
+   "description": "The product's logo and name in an app header, as a link home or plain text.",
+   "properties": [
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The product's name",
+     "readonly": false
+    },
+    {
+     "name": "href",
+     "attribute": "href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where the brand links to; without it (or when it isn't a safe link) the brand is plain text",
+     "readonly": false
+    },
+    {
+     "name": "icon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "The logo – an SVG or img element, cloned before the name",
+     "readonly": false
+    },
+    {
+     "name": "inverse",
+     "attribute": "inverse",
+     "type": "boolean",
+     "default": "false",
+     "description": "On a dark header bar: draw the brand in the dark theme's colours whatever the page's theme",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-navigate",
+     "detail": "",
+     "description": "The linked brand was clicked ({ href }: HeaderBrandNavigate); cancelable – prevented, the link isn't followed",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "hb",
+   "cssProperties": [
+    {
+     "name": "--tc-hb-gap",
+     "value": "var(--tc-space-2)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hb-weight",
+     "value": "var(--tc-font-weight-semibold)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hb-name-size",
+     "value": "var(--tc-font-size-lg)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hb-line-height",
+     "value": "1.1",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hb-logo-size",
+     "value": "24px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-weight-semibold",
+    "--tc-radius-md",
+    "--tc-space-2",
+    "--tc-text-primary",
+    "--tc-tracking-snug"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "HeaderBrand",
+   "exported": true,
+   "props": [
+    {
+     "name": "icon",
+     "type": "React.ReactNode | Element",
+     "optional": true,
+     "description": "The logo – a React node or an element, cloned before the name"
+    },
+    {
+     "name": "onNavigate",
+     "type": "(href: string, event: CustomEvent<HeaderBrandNavigate>) => void",
+     "optional": true,
+     "description": "The linked brand was clicked; call `event.preventDefault()` to route it yourself instead of following the link"
+    }
+   ],
+   "hides": [
+    "icon"
+   ],
+   "events": {
+    "tc-navigate": "onNavigate"
+   }
+  }
+ ],
+ "changelog": [
+  "**Header Brand:** `tc-header-brand` (`@adamstavely/trenchcoat/header-brand`, React `HeaderBrand`, Angular `HeaderBrand` from `@adamstavely/trenchcoat/angular/header-brand`), the product's logo and name at the start of a full-width app header. - `name`; `href` makes it a link (through `safeUrl` – an unsafe link leaves plain text); `icon`, an SVG or img element cloned before the name; `inverse` draws it in the dark theme's colours on a dark bar, as `tc-header-nav inverse` does; and `look`. - A click on the link fires a cancelable `tc-navigate` (`{ href }`): prevented, the link isn't followed, so an app's router can take it. Clicks with a modifier key are left to the browser. - Sized from the page: `--tc-hb-name-size` (default `--tc-font-size-lg`), `--tc-hb-logo-size` (24px), `--tc-hb-weight` (semibold), `--tc-hb-gap` (`--tc-space-2`) and `--tc-hb-line-height` (1.1, relative to the name's size). The name is never truncated or clipped, and the brand is centred vertically, with a focus ring on the link."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-header-brand",
+   "className": "TcHeaderBrand",
+   "module": "@adamstavely/trenchcoat/header-brand",
+   "data": [
+    "icon"
+   ],
+   "attributes": [
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "href",
+     "attribute": "href"
+    },
+    {
+     "name": "inverse",
+     "attribute": "inverse"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-navigate",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 11970,
+  "gzip": 4666
+ }
+}
