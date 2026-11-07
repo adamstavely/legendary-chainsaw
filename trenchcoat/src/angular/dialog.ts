@@ -15,6 +15,10 @@ export class Dialog {
   get element(): TcDialog {
     return this.#el;
   }
+  /** How wide the panel may grow: "sm" (480px), "md" (640px, the default), "lg" (880px) or "xl" (1120px), within 90% of the window. lg and xl always take that width. */
+  @Input() set size(v: TcDialog["size"]) {
+    this.#el.size = v;
+  }
   /** Whether the modal is open. */
   @Input() set open(v: TcDialog["open"] | "" | "true" | "false") {
     this.#el.open = typeof v === "string" ? v !== "false" : v;

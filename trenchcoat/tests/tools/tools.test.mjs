@@ -62,6 +62,18 @@ describe("trenchcoat lint", () => {
     assert.match(found.problems.find((p) => p.rule === "invalid-value").message, /"primary"/);
   });
 
+  test("a chart's inherited properties and a default-true boolean set to false are allowed", () => {
+    const imports = `import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/segmented-bar";`;
+    const pages = {
+      "angular.ts": `${imports} const t = \`<tc-segmented-bar heading="x" unit="papers" sort="false" list="false" [data]="d" [highlight]="h"></tc-segmented-bar>\`;`,
+      "lit.ts": `${imports} const t = html\`<tc-segmented-bar heading="x" description="y" unit="papers" sort="false" .data=\${d} .highlight=\${h}></tc-segmented-bar>\`;`,
+    };
+    for (const [name, code] of Object.entries(pages)) assert.deepEqual(lint(name, code).problems, [], name);
+    // A boolean that defaults to false is still turned on by "false"
+    const off = lint("a.ts", `${imports} const t = html\`<tc-segmented-bar hide-labels="false"></tc-segmented-bar>\`;`);
+    assert.deepEqual(rules(off), ["boolean-attribute"]);
+  });
+
   test("a value in an expression and a fixed colour in a var() fallback are left alone", () => {
     const code = `import "@adamstavely/trenchcoat/tokens.css"; import "@adamstavely/trenchcoat/button"; const a = <tc-button variant={v} />; const b = html\`<tc-button variant="\${v}"></tc-button>\`;`;
     assert.deepEqual(lint("a.tsx", code).problems, []);

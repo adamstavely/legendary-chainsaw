@@ -294,15 +294,18 @@ describe("tc-client-context", () => {
     const el = await make();
     let fired = 0;
     el.addEventListener("tc-add-context", () => fired++);
-    button(el, /sync now$/).click();
     tab(el, "Reports").click();
     await settle(el);
     button(el, /Monthly P&L/).click();
     await settle(el);
-    el.querySelector<HTMLButtonElement>(".ui-cx__regen button")!.click();
-    await settle(el);
     const status = el.querySelector(".ui-cx__head [role='status']")!;
+    const regen = el.querySelector<HTMLButtonElement>(".ui-cx__regen button")!;
+    // Both start and the element leaves in the same task, so neither timer (900 and 1100 ms) can have run yet – however
+    // slow the runner. Awaiting anything between the clicks and remove() lets a slow one finish first
+    button(el, /sync now$/).click();
+    regen.click();
     el.remove();
+    expect(status.textContent).toBe("");
     await new Promise((r) => setTimeout(r, 1300));
     expect(status.textContent).toBe("");
     expect(fired).toBe(0);

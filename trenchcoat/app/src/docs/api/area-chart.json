@@ -14,6 +14,134 @@
      "readonly": false
     },
     {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading, and the chart's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "data",
+     "attribute": null,
+     "type": "readonly T[]",
+     "default": "[]",
+     "description": "The rows to draw",
+     "readonly": false
+    },
+    {
+     "name": "highlight",
+     "attribute": null,
+     "type": "Highlight<T> | undefined",
+     "default": "undefined",
+     "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "FormatSpec | undefined",
+     "default": "undefined",
+     "description": "How values are written: \"number\", \"integer\", \"percent\", \"compact\", \"currency\", Intl options, or a function",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The unit after each value: \"%\", \"ms\", \" runs\"",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and dates, e.g. \"de\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "height",
+     "attribute": "height",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The plot's height in px; by default the chart's own for its width",
+     "readonly": false
+    },
+    {
+     "name": "still",
+     "attribute": "still",
+     "type": "boolean",
+     "default": "false",
+     "description": "Draws everything at once: no entrance and no transitions",
+     "readonly": false
+    },
+    {
+     "name": "easing",
+     "attribute": "easing",
+     "type": "EasingName",
+     "default": "\"spring\"",
+     "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\"",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How long a move takes, in ms; by default the chart's own",
+     "readonly": false
+    },
+    {
+     "name": "hideLabels",
+     "attribute": "hide-labels",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leaves the values off the marks",
+     "readonly": false
+    },
+    {
+     "name": "hideTooltip",
+     "attribute": "hide-tooltip",
+     "type": "boolean",
+     "default": "false",
+     "description": "No tooltip on hover or focus",
+     "readonly": false
+    },
+    {
+     "name": "bare",
+     "attribute": "bare",
+     "type": "boolean",
+     "default": "false",
+     "description": "No card: just the plot, for a chart inside another component",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "ChartView",
+     "default": "\"chart\"",
+     "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ChartLabels>",
+     "default": "{}",
+     "description": "The words it shows and says, merged over defaultChartLabels",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -49,7 +177,20 @@
     }
    ],
    "slots": [],
-   "methods": [],
+   "methods": [
+    {
+     "name": "replay",
+     "params": "",
+     "returns": "void",
+     "description": "Plays the entrance again"
+    },
+    {
+     "name": "linkActive",
+     "params": "key: string | null",
+     "returns": "void",
+     "description": "Shows the mark with this event key (or none) as active, as an echo of another chart – drawn, but with no tooltip,\nannouncement or event – for charts that move together (tc-small-multiples). A mark the chart's own pointer or\nkeyboard is on wins"
+    }
+   ],
    "ui": "arc",
    "cssProperties": [],
    "tokens": []
@@ -125,11 +266,64 @@
    "tag": "tc-area-chart",
    "className": "TcAreaChart",
    "module": "@adamstavely/trenchcoat/area-chart",
-   "data": [],
+   "data": [
+    "data",
+    "highlight",
+    "format",
+    "labels"
+   ],
    "attributes": [
     {
      "name": "stack",
      "attribute": "stack"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "unit",
+     "attribute": "unit"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "height",
+     "attribute": "height"
+    },
+    {
+     "name": "still",
+     "attribute": "still"
+    },
+    {
+     "name": "easing",
+     "attribute": "easing"
+    },
+    {
+     "name": "duration",
+     "attribute": "duration"
+    },
+    {
+     "name": "hideLabels",
+     "attribute": "hide-labels"
+    },
+    {
+     "name": "hideTooltip",
+     "attribute": "hide-tooltip"
+    },
+    {
+     "name": "bare",
+     "attribute": "bare"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
     }
    ],
    "events": [
@@ -150,7 +344,12 @@
      "cancelable": false
     }
    ],
-   "controlled": [],
+   "controlled": [
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    }
+   ],
    "form": null,
    "slots": []
   }

@@ -99,7 +99,7 @@ export class StepperField {
 }
 
 /**
- * <tc-stepper-input> for Angular: A text field wired to its tc-stepper-field – label, message and aria come from there. Put a native <input> inside;
+ * <tc-stepper-input> for Angular: A text field wired to its tc-stepper-field – label, message and aria come from there. Put a native <input> or
  * 
  * imports: [StepperInput] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */

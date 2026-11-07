@@ -39,6 +39,11 @@ the bottom of the card. Clean is one white card with hairline shadows: a thin pr
 with a small capitalised label under it, and Back and Continue in a last row under a hairline. Both slide, shake and
 check off steps the same way, and the footer stays in view while a long step scrolls.
 
+Choice cards share one row while each is at least `--tc-sf-choice-min` (168px) wide; with more cards than fit they
+wrap onto more rows, and on a phone they stack as full-width rows. `tc-stepper-input` takes a `<textarea>` as well as
+an `<input>`: it gets the same field border, focus ring and invalid state, starts at its `rows` and resizes
+vertically.
+
 ## Keyboard
 
 | Key | What it does |

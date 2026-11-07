@@ -795,6 +795,25 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
 .ui-sf__input:focus-within, .ui-sf__tags:focus-within { box-shadow: var(--tc-field-shadow-focus); }
 .ui-sf__input[data-invalid], .ui-sf__tags[data-invalid] { box-shadow: var(--tc-field-shadow-invalid); }
 .ui-sf__input[data-invalid]:focus-within, .ui-sf__tags[data-invalid]:focus-within { box-shadow: var(--tc-field-shadow-invalid), 0 0 0 var(--tc-focus-ring-width) var(--tc-focus-ring); }
+/* A <textarea> inside: the wrapper grows with it; it resizes vertically and starts at its rows */
+.ui-sf__input:has(> textarea) { align-items: stretch; height: auto; cursor: text; }
+.ui-sf__input > textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--tc-field-h);
+  margin: 0;
+  padding: var(--tc-space-2) var(--tc-field-px);
+  border: 0;
+  /* The wrapper shows focus (:focus-within) */
+  outline: none;
+  background: none;
+  color: var(--tc-text-primary);
+  font: inherit;
+  font-size: var(--tc-field-font-size);
+  line-height: var(--tc-line-height-normal);
+  resize: vertical;
+}
+.ui-sf__input > textarea::placeholder { color: var(--tc-text-placeholder); }
 /* Focus never lands under the sticky footer (2.4.11) */
 .ui-sf__card :is(input, textarea, select, button) { scroll-margin: 16px 0 88px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__input input,
@@ -906,7 +925,8 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__tags-input { flex: 1 0 140px; height: 24px; padding: 0 var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__tags-input:first-child { padding-left: var(--tc-space-1-5); }
 /* Selectable cards with a ring that glides */
-.ui-sf__choices { position: relative; display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: var(--tc-space-2); }
+/* One row while every card keeps --tc-sf-choice-min; more cards wrap onto more rows instead of turning into slivers */
+.ui-sf__choices { --tc-sf-choice-min: 168px; position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--tc-sf-choice-min)), 1fr)); gap: var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__ring {
   position: absolute;
   top: 0;
@@ -1294,8 +1314,8 @@ export class TcStepperField extends TcStepperBlock {
 }
 
 /**
- * A text field wired to its tc-stepper-field – label, message and aria come from there. Put a native <input> inside;
- * every attribute you give it stays yours.
+ * A text field wired to its tc-stepper-field – label, message and aria come from there. Put a native <input> or
+ * <textarea> inside (a textarea starts at its `rows` and resizes vertically); every attribute you give it stays yours.
  * @tag tc-stepper-input
  */
 export class TcStepperInput extends TcStepperBlock {
@@ -1328,7 +1348,7 @@ export class TcStepperInput extends TcStepperBlock {
       if (this.firstChild !== this.prefixEl) this.insertBefore(this.prefixEl, this.firstChild);
     } else this.prefixEl?.remove();
     // The field's wiring wins, so its label and message stay attached; your own description is kept too
-    const input = this.querySelector("input");
+    const input = this.querySelector("input, textarea");
     if (!input) return;
     const id = field?.id ?? this.controlId;
     if (id) input.id = id;

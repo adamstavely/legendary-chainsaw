@@ -546,6 +546,7 @@
     "via": [
      "button",
      "internal/base",
+     "dialog",
      "internal/settings",
      "progress-tracker",
      "tokens.css"
@@ -678,7 +679,7 @@
   "windowed": false
  },
  "size": {
-  "min": 81661,
-  "gzip": 20990
+  "min": 82443,
+  "gzip": 21209
  }
 }
