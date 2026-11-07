@@ -17304,11 +17304,11 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-07",
-   "hash": "9df0aee82a2600cc",
+   "hash": "b3eb5cce81519af1",
    "bundle": {
     "own": {
      "min": 34126,
-     "gzip": 10892
+     "gzip": 10973
     },
     "shared": [
      {
@@ -18104,7 +18104,7 @@
      {
       "name": "comment-thread",
       "kind": "element",
-      "min": 29088
+      "min": 29096
      },
      {
       "name": "attestation-check",
@@ -18857,6 +18857,11 @@
       "min": 12332
      },
      {
+      "name": "side-nav",
+      "kind": "element",
+      "min": 12331
+     },
+     {
       "name": "audience-mix",
       "kind": "element",
       "min": 12314
@@ -19399,52 +19404,52 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 60012
+      "min": 60170
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
       "kind": "other",
-      "min": 14551
+      "min": 14564
      },
      {
       "name": "src/generative/schemas/tc-verification-queue.json",
       "kind": "other",
-      "min": 9363
+      "min": 9376
      },
      {
       "name": "src/generative/schemas/tc-claim-answer.json",
       "kind": "other",
-      "min": 9042
+      "min": 9055
      },
      {
       "name": "src/generative/schemas/tc-configuration-release-control.json",
       "kind": "other",
-      "min": 6442
+      "min": 6455
      },
      {
       "name": "src/generative/schemas/tc-multi-calendar.json",
       "kind": "other",
-      "min": 5965
+      "min": 5978
      },
      {
       "name": "src/generative/schemas/tc-line-chart.json",
       "kind": "other",
-      "min": 5837
+      "min": 5850
      },
      {
       "name": "src/generative/schemas/tc-area-chart.json",
       "kind": "other",
-      "min": 5805
+      "min": 5818
      },
      {
       "name": "src/generative/schemas/tc-playbook-canvas.json",
       "kind": "other",
-      "min": 5754
+      "min": 5767
      },
      {
       "name": "src/generative/schemas/tc-reliance-gauge.json",
       "kind": "other",
-      "min": 5738
+      "min": 5751
      },
      {
       "name": "src/generative/validate.ts",
@@ -19454,32 +19459,37 @@
      {
       "name": "src/generative/schemas/tc-hexbin-chart.json",
       "kind": "other",
-      "min": 5591
+      "min": 5604
      },
      {
       "name": "src/generative/schemas/tc-case-review.json",
       "kind": "other",
-      "min": 5568
+      "min": 5581
      },
      {
       "name": "src/generative/schemas/tc-combo-chart.json",
       "kind": "other",
-      "min": 5434
+      "min": 5447
      },
      {
       "name": "src/generative/schemas/tc-file-details.json",
       "kind": "other",
-      "min": 5432
+      "min": 5445
      },
      {
       "name": "src/generative/schemas/tc-bubble-chart.json",
       "kind": "other",
-      "min": 5265
+      "min": 5278
      },
      {
       "name": "src/generative/schemas/tc-network-graph.json",
       "kind": "other",
-      "min": 5188
+      "min": 5201
+     },
+     {
+      "name": "src/generative/schemas/tc-validity-badge.json",
+      "kind": "other",
+      "min": 5080
      },
      {
       "name": "src/vendor/agent-face/element/agent-face.ts",
@@ -19487,24 +19497,19 @@
       "min": 5071
      },
      {
-      "name": "src/generative/schemas/tc-validity-badge.json",
-      "kind": "other",
-      "min": 5067
-     },
-     {
       "name": "src/generative/schemas/tc-review-center.json",
       "kind": "other",
-      "min": 4941
+      "min": 4954
      },
      {
       "name": "src/generative/schemas/tc-candlestick-chart.json",
       "kind": "other",
-      "min": 4905
+      "min": 4918
      },
      {
       "name": "src/generative/schemas/tc-parallel-chart.json",
       "kind": "other",
-      "min": 4787
+      "min": 4800
      },
      {
       "name": "src/vendor/agent-face/engine/engine.ts",
@@ -19514,517 +19519,517 @@
      {
       "name": "src/generative/schemas/tc-data-handling-policy.json",
       "kind": "other",
-      "min": 4744
+      "min": 4757
      },
      {
       "name": "src/generative/schemas/tc-retrieval-inspector.json",
       "kind": "other",
-      "min": 4579
+      "min": 4592
      },
      {
       "name": "src/generative/schemas/tc-donut-chart.json",
       "kind": "other",
-      "min": 4552
+      "min": 4565
      },
      {
       "name": "src/generative/schemas/tc-org-unit-card.json",
       "kind": "other",
-      "min": 4537
+      "min": 4550
      },
      {
       "name": "src/generative/schemas/tc-session-panel.json",
       "kind": "other",
-      "min": 4535
+      "min": 4548
      },
      {
       "name": "src/generative/schemas/tc-pull-request.json",
       "kind": "other",
-      "min": 4505
+      "min": 4518
      },
      {
       "name": "src/generative/schemas/tc-publication-impact.json",
       "kind": "other",
-      "min": 4498
+      "min": 4511
      },
      {
       "name": "src/generative/schemas/tc-red-team-finding.json",
       "kind": "other",
-      "min": 4491
+      "min": 4504
      },
      {
       "name": "src/generative/schemas/tc-histogram.json",
       "kind": "other",
-      "min": 4464
+      "min": 4477
      },
      {
       "name": "src/generative/schemas/tc-stream-graph.json",
       "kind": "other",
-      "min": 4434
+      "min": 4447
      },
      {
       "name": "src/generative/schemas/tc-bar-chart.json",
       "kind": "other",
-      "min": 4403
+      "min": 4416
      },
      {
       "name": "src/generative/schemas/tc-mcp-connection-manager.json",
       "kind": "other",
-      "min": 4355
+      "min": 4368
      },
      {
       "name": "src/generative/schemas/tc-transcript-review.json",
       "kind": "other",
-      "min": 4321
+      "min": 4334
      },
      {
       "name": "src/generative/schemas/tc-waterfall-chart.json",
       "kind": "other",
-      "min": 4257
+      "min": 4270
      },
      {
       "name": "src/generative/schemas/tc-policy-simulator.json",
       "kind": "other",
-      "min": 4254
+      "min": 4267
      },
      {
       "name": "src/generative/schemas/tc-reflection-gate.json",
       "kind": "other",
-      "min": 4171
+      "min": 4184
      },
      {
       "name": "src/generative/schemas/tc-agent-queue.json",
       "kind": "other",
-      "min": 4159
+      "min": 4172
      },
      {
       "name": "src/generative/schemas/tc-treemap.json",
       "kind": "other",
-      "min": 4148
+      "min": 4161
      },
      {
       "name": "src/generative/schemas/tc-slope-chart.json",
       "kind": "other",
-      "min": 4089
+      "min": 4102
      },
      {
       "name": "src/generative/schemas/tc-box-plot.json",
       "kind": "other",
-      "min": 4084
+      "min": 4097
      },
      {
       "name": "src/generative/schemas/tc-conversation-annotation.json",
       "kind": "other",
-      "min": 4070
+      "min": 4083
      },
      {
       "name": "src/generative/schemas/tc-dumbbell-chart.json",
       "kind": "other",
-      "min": 4058
+      "min": 4071
      },
      {
       "name": "src/generative/schemas/tc-pareto-chart.json",
       "kind": "other",
-      "min": 4040
+      "min": 4053
      },
      {
       "name": "src/generative/schemas/tc-waffle-chart.json",
       "kind": "other",
-      "min": 4029
+      "min": 4042
      },
      {
       "name": "src/generative/schemas/tc-sunburst-chart.json",
       "kind": "other",
-      "min": 4026
+      "min": 4039
      },
      {
       "name": "src/generative/schemas/tc-rose-chart.json",
       "kind": "other",
-      "min": 4024
+      "min": 4037
      },
      {
       "name": "src/generative/schemas/tc-ridgeline-chart.json",
       "kind": "other",
-      "min": 4019
+      "min": 4032
      },
      {
       "name": "src/generative/schemas/tc-evaluation-dataset-editor.json",
       "kind": "other",
-      "min": 3963
+      "min": 3976
      },
      {
       "name": "src/generative/schemas/tc-bullet-chart.json",
       "kind": "other",
-      "min": 3960
+      "min": 3973
      },
      {
       "name": "src/generative/schemas/tc-segmented-bar.json",
       "kind": "other",
-      "min": 3952
+      "min": 3965
      },
      {
       "name": "src/generative/schemas/tc-approval-card.json",
       "kind": "other",
-      "min": 3933
+      "min": 3946
      },
      {
       "name": "src/generative/schemas/tc-pie-chart.json",
       "kind": "other",
-      "min": 3929
+      "min": 3942
      },
      {
       "name": "src/generative/schemas/tc-beeswarm-chart.json",
       "kind": "other",
-      "min": 3881
+      "min": 3894
      },
      {
       "name": "src/generative/schemas/tc-scheduled-runs.json",
       "kind": "other",
-      "min": 3862
+      "min": 3875
      },
      {
       "name": "src/generative/schemas/tc-provider-connection.json",
       "kind": "other",
-      "min": 3838
+      "min": 3851
      },
      {
       "name": "src/generative/schemas/tc-calendar-heatmap.json",
       "kind": "other",
-      "min": 3835
+      "min": 3848
      },
      {
       "name": "src/generative/schemas/tc-venn-diagram.json",
       "kind": "other",
-      "min": 3827
+      "min": 3840
      },
      {
       "name": "src/generative/schemas/tc-funnel-chart.json",
       "kind": "other",
-      "min": 3772
+      "min": 3785
      },
      {
       "name": "src/generative/schemas/tc-agent-handoff.json",
       "kind": "other",
-      "min": 3761
+      "min": 3774
      },
      {
       "name": "src/generative/schemas/tc-model-settings.json",
       "kind": "other",
-      "min": 3759
+      "min": 3772
      },
      {
       "name": "src/generative/schemas/tc-routine-form.json",
       "kind": "other",
-      "min": 3758
+      "min": 3771
      },
      {
       "name": "src/generative/schemas/tc-chord-chart.json",
       "kind": "other",
-      "min": 3752
+      "min": 3765
      },
      {
       "name": "src/generative/schemas/tc-sankey-chart.json",
       "kind": "other",
-      "min": 3734
+      "min": 3747
      },
      {
       "name": "src/generative/schemas/tc-retrieval-settings.json",
       "kind": "other",
-      "min": 3730
+      "min": 3743
      },
      {
       "name": "src/generative/schemas/tc-lollipop-chart.json",
       "kind": "other",
-      "min": 3726
+      "min": 3739
      },
      {
       "name": "src/generative/schemas/tc-profile-header.json",
       "kind": "other",
-      "min": 3720
+      "min": 3733
      },
      {
       "name": "src/generative/schemas/tc-kpi-board.json",
       "kind": "other",
-      "min": 3709
+      "min": 3722
      },
      {
       "name": "src/generative/schemas/tc-bump-chart.json",
       "kind": "other",
-      "min": 3688
+      "min": 3701
      },
      {
       "name": "src/generative/schemas/tc-radial-bar-chart.json",
       "kind": "other",
-      "min": 3672
+      "min": 3685
      },
      {
       "name": "src/generative/schemas/tc-selection-toolbar.json",
       "kind": "other",
-      "min": 3643
+      "min": 3656
      },
      {
       "name": "src/generative/schemas/tc-access-request.json",
       "kind": "other",
-      "min": 3629
+      "min": 3642
      },
      {
       "name": "src/generative/schemas/tc-trigger-builder.json",
       "kind": "other",
-      "min": 3623
+      "min": 3636
      },
      {
       "name": "src/generative/schemas/tc-marimekko-chart.json",
       "kind": "other",
-      "min": 3612
+      "min": 3625
      },
      {
       "name": "src/generative/schemas/tc-oversight-home.json",
       "kind": "other",
-      "min": 3593
+      "min": 3606
      },
      {
       "name": "src/generative/schemas/tc-search-results.json",
       "kind": "other",
-      "min": 3576
+      "min": 3589
      },
      {
       "name": "src/generative/schemas/tc-agent-findings.json",
       "kind": "other",
-      "min": 3528
+      "min": 3541
      },
      {
       "name": "src/generative/schemas/tc-evidence-list.json",
       "kind": "other",
-      "min": 3480
+      "min": 3493
      },
      {
       "name": "src/generative/schemas/tc-lineage-graph.json",
       "kind": "other",
-      "min": 3480
+      "min": 3493
      },
      {
       "name": "src/generative/schemas/tc-client-context.json",
       "kind": "other",
-      "min": 3478
+      "min": 3491
      },
      {
       "name": "src/generative/schemas/tc-permission-request.json",
       "kind": "other",
-      "min": 3437
+      "min": 3450
      },
      {
       "name": "src/generative/schemas/tc-small-multiples.json",
       "kind": "other",
-      "min": 3378
+      "min": 3391
      },
      {
       "name": "src/generative/schemas/tc-ai-summary.json",
       "kind": "other",
-      "min": 3366
+      "min": 3379
      },
      {
       "name": "src/generative/schemas/tc-app-directory.json",
       "kind": "other",
-      "min": 3307
+      "min": 3320
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
       "kind": "other",
-      "min": 3307
+      "min": 3320
      },
      {
       "name": "src/generative/schemas/tc-co-occurrence.json",
       "kind": "other",
-      "min": 3262
+      "min": 3275
      },
      {
       "name": "src/generative/schemas/tc-query-builder.json",
       "kind": "other",
-      "min": 3246
+      "min": 3259
      },
      {
       "name": "src/generative/schemas/tc-agent-graph.json",
       "kind": "other",
-      "min": 3227
+      "min": 3240
      },
      {
       "name": "src/generative/schemas/tc-structured-output.json",
       "kind": "other",
-      "min": 3207
+      "min": 3220
      },
      {
       "name": "src/generative/schemas/tc-model-routing.json",
       "kind": "other",
-      "min": 3166
+      "min": 3179
      },
      {
       "name": "src/generative/schemas/tc-engagement-quality.json",
       "kind": "other",
-      "min": 3154
+      "min": 3167
      },
      {
       "name": "src/generative/schemas/tc-priority-list.json",
       "kind": "other",
-      "min": 3146
+      "min": 3159
      },
      {
       "name": "src/generative/schemas/tc-travel-itinerary.json",
       "kind": "other",
-      "min": 3127
+      "min": 3140
      },
      {
       "name": "src/generative/schemas/tc-session-list.json",
       "kind": "other",
-      "min": 3123
+      "min": 3136
      },
      {
       "name": "src/generative/schemas/tc-account-list.json",
       "kind": "other",
-      "min": 3117
+      "min": 3130
      },
      {
       "name": "src/generative/schemas/tc-status-tracker.json",
       "kind": "other",
-      "min": 3109
+      "min": 3122
      },
      {
       "name": "src/generative/schemas/tc-conflict-radar.json",
       "kind": "other",
-      "min": 3099
+      "min": 3112
      },
      {
       "name": "src/generative/schemas/tc-version-history.json",
       "kind": "other",
-      "min": 3077
+      "min": 3090
      },
      {
       "name": "src/generative/schemas/tc-tool-permissions.json",
       "kind": "other",
-      "min": 3054
+      "min": 3067
      },
      {
       "name": "src/generative/schemas/tc-image-grid.json",
       "kind": "other",
-      "min": 3045
+      "min": 3058
      },
      {
       "name": "src/generative/schemas/tc-knowledge-source-manager.json",
       "kind": "other",
-      "min": 3037
+      "min": 3050
      },
      {
       "name": "src/generative/schemas/tc-network-log.json",
       "kind": "other",
-      "min": 3034
+      "min": 3047
      },
      {
       "name": "src/generative/schemas/tc-trace-waterfall.json",
       "kind": "other",
-      "min": 3014
+      "min": 3027
      },
      {
       "name": "src/generative/schemas/tc-problem-list.json",
       "kind": "other",
-      "min": 3008
+      "min": 3021
      },
      {
       "name": "src/generative/schemas/tc-usage-meter.json",
       "kind": "other",
-      "min": 3008
+      "min": 3021
      },
      {
       "name": "src/generative/schemas/tc-decision-tree.json",
       "kind": "other",
-      "min": 2972
+      "min": 2985
      },
      {
       "name": "src/generative/schemas/tc-preview-frame.json",
       "kind": "other",
-      "min": 2972
+      "min": 2985
      },
      {
       "name": "src/generative/schemas/tc-handoff-brief.json",
       "kind": "other",
-      "min": 2967
+      "min": 2980
      },
      {
       "name": "src/generative/schemas/tc-gate-config.json",
       "kind": "other",
-      "min": 2965
+      "min": 2978
      },
      {
       "name": "src/generative/schemas/tc-file-summary.json",
       "kind": "other",
-      "min": 2963
+      "min": 2976
      },
      {
       "name": "src/generative/schemas/tc-eval-scorecard.json",
       "kind": "other",
-      "min": 2960
+      "min": 2973
      },
      {
       "name": "src/generative/schemas/tc-confidence-brief.json",
       "kind": "other",
-      "min": 2950
+      "min": 2963
      },
      {
       "name": "src/generative/schemas/tc-chat-history.json",
       "kind": "other",
-      "min": 2945
+      "min": 2958
      },
      {
       "name": "src/generative/schemas/tc-instruction-editor.json",
       "kind": "other",
-      "min": 2944
+      "min": 2957
      },
      {
       "name": "src/generative/schemas/tc-contact-channels.json",
       "kind": "other",
-      "min": 2929
+      "min": 2942
      },
      {
       "name": "src/generative/schemas/tc-knowledge-promotion.json",
       "kind": "other",
-      "min": 2928
+      "min": 2941
      },
      {
       "name": "src/generative/schemas/tc-agent-lanes.json",
       "kind": "other",
-      "min": 2909
+      "min": 2922
      },
      {
       "name": "src/generative/schemas/tc-color-picker.json",
       "kind": "other",
-      "min": 2878
+      "min": 2891
      },
      {
       "name": "src/generative/schemas/tc-alert-feed.json",
       "kind": "other",
-      "min": 2870
+      "min": 2883
      },
      {
       "name": "src/generative/schemas/tc-session-state.json",
       "kind": "other",
-      "min": 2866
+      "min": 2879
      },
      {
       "name": "src/generative/schemas/tc-share-panel.json",
       "kind": "other",
-      "min": 2866
+      "min": 2879
      },
      {
       "name": "src/generative/schemas/tc-process-list.json",
       "kind": "other",
-      "min": 2865
+      "min": 2878
      },
      {
       "name": "src/generative/schemas/tc-json-viewer.json",
       "kind": "other",
-      "min": 2843
+      "min": 2856
      },
      {
       "name": "src/generative/schemas/tc-artifact-panel.json",
       "kind": "other",
-      "min": 2830
+      "min": 2843
      },
      {
       "name": "src/vendor/agent-face/draw/draw-face.ts",
@@ -20034,932 +20039,942 @@
      {
       "name": "src/generative/schemas/tc-extraction-review.json",
       "kind": "other",
-      "min": 2788
+      "min": 2801
      },
      {
       "name": "src/generative/schemas/tc-money-flow.json",
       "kind": "other",
-      "min": 2786
+      "min": 2799
      },
      {
       "name": "src/generative/schemas/tc-fact-sheet.json",
       "kind": "other",
-      "min": 2778
+      "min": 2791
      },
      {
       "name": "src/generative/schemas/tc-entity-timeline.json",
       "kind": "other",
-      "min": 2767
+      "min": 2780
      },
      {
       "name": "src/generative/schemas/tc-gauge.json",
       "kind": "other",
-      "min": 2765
+      "min": 2778
      },
      {
       "name": "src/generative/schemas/tc-fingerprint-card.json",
       "kind": "other",
-      "min": 2751
+      "min": 2764
      },
      {
       "name": "src/generative/schemas/tc-gap-exposure.json",
       "kind": "other",
-      "min": 2748
+      "min": 2761
      },
      {
       "name": "src/generative/schemas/tc-text-annotator.json",
       "kind": "other",
-      "min": 2742
+      "min": 2755
      },
      {
       "name": "src/generative/schemas/tc-kill-switch.json",
       "kind": "other",
-      "min": 2740
+      "min": 2753
      },
      {
       "name": "src/generative/schemas/tc-coverage-matrix.json",
       "kind": "other",
-      "min": 2712
+      "min": 2725
      },
      {
       "name": "src/generative/schemas/tc-clarifying-questions.json",
       "kind": "other",
-      "min": 2711
+      "min": 2724
      },
      {
       "name": "src/generative/schemas/tc-run-checkpoints.json",
       "kind": "other",
-      "min": 2699
+      "min": 2712
      },
      {
       "name": "src/generative/schemas/tc-session-context-bar.json",
       "kind": "other",
-      "min": 2694
+      "min": 2707
      },
      {
       "name": "src/generative/schemas/tc-branch-switcher.json",
       "kind": "other",
-      "min": 2681
+      "min": 2694
      },
      {
       "name": "src/generative/schemas/tc-biometric-status.json",
       "kind": "other",
-      "min": 2676
+      "min": 2689
      },
      {
       "name": "src/generative/schemas/tc-friction-profile.json",
       "kind": "other",
-      "min": 2676
+      "min": 2689
      },
      {
       "name": "src/generative/schemas/tc-access-review.json",
       "kind": "other",
-      "min": 2665
+      "min": 2678
      },
      {
       "name": "src/generative/schemas/tc-share-link-manager.json",
       "kind": "other",
-      "min": 2663
+      "min": 2676
      },
      {
       "name": "src/generative/schemas/tc-run-manifest.json",
       "kind": "other",
-      "min": 2658
+      "min": 2671
      },
      {
       "name": "src/generative/schemas/tc-heatmap.json",
       "kind": "other",
-      "min": 2646
+      "min": 2659
      },
      {
       "name": "src/generative/schemas/tc-tool-configuration.json",
       "kind": "other",
-      "min": 2645
+      "min": 2658
      },
      {
       "name": "src/generative/schemas/tc-place-list.json",
       "kind": "other",
-      "min": 2635
+      "min": 2648
      },
      {
       "name": "src/generative/schemas/tc-guardrail-notice.json",
       "kind": "other",
-      "min": 2628
+      "min": 2641
      },
      {
       "name": "src/generative/schemas/tc-roadmap-timeline.json",
       "kind": "other",
-      "min": 2623
+      "min": 2636
      },
      {
       "name": "src/generative/schemas/tc-agent-monitor.json",
       "kind": "other",
-      "min": 2622
+      "min": 2635
      },
      {
       "name": "src/generative/schemas/tc-risk-register.json",
       "kind": "other",
-      "min": 2620
+      "min": 2633
      },
      {
       "name": "src/generative/schemas/tc-element-inspector.json",
       "kind": "other",
-      "min": 2616
+      "min": 2629
      },
      {
       "name": "src/generative/schemas/tc-feedback-rubric.json",
       "kind": "other",
-      "min": 2616
+      "min": 2629
      },
      {
       "name": "src/generative/schemas/tc-message-actions.json",
       "kind": "other",
-      "min": 2601
+      "min": 2614
      },
      {
       "name": "src/generative/schemas/tc-legal-hold-manager.json",
       "kind": "other",
-      "min": 2594
+      "min": 2607
      },
      {
       "name": "src/generative/schemas/tc-results-list.json",
       "kind": "other",
-      "min": 2590
+      "min": 2603
      },
      {
       "name": "src/generative/schemas/tc-geo-location.json",
       "kind": "other",
-      "min": 2585
+      "min": 2598
      },
      {
       "name": "src/generative/schemas/tc-asset-list.json",
       "kind": "other",
-      "min": 2583
+      "min": 2596
      },
      {
       "name": "src/generative/schemas/tc-experiment-card.json",
       "kind": "other",
-      "min": 2567
+      "min": 2580
      },
      {
       "name": "src/generative/schemas/tc-file-tree.json",
       "kind": "other",
-      "min": 2564
+      "min": 2577
      },
      {
       "name": "src/generative/schemas/tc-breakdown-chart.json",
       "kind": "other",
-      "min": 2519
+      "min": 2532
      },
      {
       "name": "src/generative/schemas/tc-fan-out-grid.json",
       "kind": "other",
-      "min": 2516
+      "min": 2529
      },
      {
       "name": "src/generative/schemas/tc-delegate-board.json",
       "kind": "other",
-      "min": 2494
+      "min": 2507
      },
      {
       "name": "src/generative/schemas/tc-agent-steering.json",
       "kind": "other",
-      "min": 2476
+      "min": 2489
      },
      {
       "name": "src/generative/schemas/tc-approval-chain.json",
       "kind": "other",
-      "min": 2473
+      "min": 2486
      },
      {
       "name": "src/generative/schemas/tc-context-map.json",
       "kind": "other",
-      "min": 2473
+      "min": 2486
      },
      {
       "name": "src/generative/schemas/tc-review-conflict.json",
       "kind": "other",
-      "min": 2464
+      "min": 2477
      },
      {
       "name": "src/generative/schemas/tc-data-table.json",
       "kind": "other",
-      "min": 2455
+      "min": 2468
      },
      {
       "name": "src/generative/schemas/tc-logo-marquee.json",
       "kind": "other",
-      "min": 2429
+      "min": 2442
      },
      {
       "name": "src/generative/schemas/tc-bibliography.json",
       "kind": "other",
-      "min": 2426
+      "min": 2439
      },
      {
       "name": "src/generative/schemas/tc-change-list.json",
       "kind": "other",
-      "min": 2424
+      "min": 2437
      },
      {
       "name": "src/generative/schemas/tc-team-roster.json",
       "kind": "other",
-      "min": 2387
+      "min": 2400
      },
      {
       "name": "src/generative/schemas/tc-person-links.json",
       "kind": "other",
-      "min": 2364
+      "min": 2377
      },
      {
       "name": "src/generative/schemas/tc-pricing-plans.json",
       "kind": "other",
-      "min": 2361
+      "min": 2374
      },
      {
       "name": "src/generative/schemas/tc-digest.json",
       "kind": "other",
-      "min": 2347
+      "min": 2360
      },
      {
       "name": "src/generative/schemas/tc-watchlist.json",
       "kind": "other",
-      "min": 2344
+      "min": 2357
      },
      {
       "name": "src/generative/schemas/tc-correction-propagation.json",
       "kind": "other",
-      "min": 2331
+      "min": 2344
      },
      {
       "name": "src/generative/schemas/tc-agent-tree.json",
       "kind": "other",
-      "min": 2329
+      "min": 2342
      },
      {
       "name": "src/generative/schemas/tc-document-list.json",
       "kind": "other",
-      "min": 2316
+      "min": 2329
      },
      {
       "name": "src/generative/schemas/tc-evidence-coverage.json",
       "kind": "other",
-      "min": 2305
+      "min": 2318
      },
      {
       "name": "src/generative/schemas/tc-sparkline.json",
       "kind": "other",
-      "min": 2302
+      "min": 2315
      },
      {
       "name": "src/generative/schemas/tc-project-card.json",
       "kind": "other",
-      "min": 2300
+      "min": 2313
      },
      {
       "name": "src/generative/schemas/tc-handoff.json",
       "kind": "other",
-      "min": 2297
+      "min": 2310
      },
      {
       "name": "src/generative/schemas/tc-combobox.json",
       "kind": "other",
-      "min": 2279
+      "min": 2292
      },
      {
       "name": "src/generative/schemas/tc-traceability-spine.json",
       "kind": "other",
-      "min": 2278
+      "min": 2291
      },
      {
       "name": "src/generative/schemas/tc-output-schema-builder.json",
       "kind": "other",
-      "min": 2269
+      "min": 2282
      },
      {
       "name": "src/generative/schemas/tc-ops-overview.json",
       "kind": "other",
-      "min": 2266
+      "min": 2279
      },
      {
       "name": "src/generative/schemas/tc-score-summary.json",
       "kind": "other",
-      "min": 2261
+      "min": 2274
      },
      {
       "name": "src/generative/schemas/tc-task-board.json",
       "kind": "other",
-      "min": 2260
+      "min": 2273
      },
      {
       "name": "src/generative/schemas/tc-email-draft.json",
       "kind": "other",
-      "min": 2257
+      "min": 2270
      },
      {
       "name": "src/generative/schemas/tc-work-item.json",
       "kind": "other",
-      "min": 2253
+      "min": 2266
      },
      {
       "name": "src/generative/schemas/tc-tree-select.json",
       "kind": "other",
-      "min": 2243
+      "min": 2256
      },
      {
       "name": "src/generative/schemas/tc-publish-readiness.json",
       "kind": "other",
-      "min": 2235
+      "min": 2248
      },
      {
       "name": "src/generative/schemas/tc-cited-answer.json",
       "kind": "other",
-      "min": 2226
+      "min": 2239
      },
      {
       "name": "src/generative/schemas/tc-uncertainty-mix.json",
       "kind": "other",
-      "min": 2216
+      "min": 2229
      },
      {
       "name": "src/generative/schemas/tc-agent-inbox.json",
       "kind": "other",
-      "min": 2200
+      "min": 2213
      },
      {
       "name": "src/generative/schemas/tc-radar-chart.json",
       "kind": "other",
-      "min": 2192
+      "min": 2205
      },
      {
       "name": "src/generative/schemas/tc-kpi-chart.json",
       "kind": "other",
-      "min": 2191
+      "min": 2204
      },
      {
       "name": "src/generative/schemas/tc-thinking-state.json",
       "kind": "other",
-      "min": 2172
+      "min": 2185
      },
      {
       "name": "src/generative/schemas/tc-redaction-review.json",
       "kind": "other",
-      "min": 2162
+      "min": 2175
      },
      {
       "name": "src/generative/schemas/tc-diff-viewer.json",
       "kind": "other",
-      "min": 2158
+      "min": 2171
      },
      {
       "name": "src/generative/schemas/tc-budget-burn.json",
       "kind": "other",
-      "min": 2156
+      "min": 2169
      },
      {
       "name": "src/generative/schemas/tc-sandbox-log.json",
       "kind": "other",
-      "min": 2154
+      "min": 2167
      },
      {
       "name": "src/generative/schemas/tc-route-map.json",
       "kind": "other",
-      "min": 2153
+      "min": 2166
      },
      {
       "name": "src/generative/schemas/tc-message-status.json",
       "kind": "other",
-      "min": 2143
+      "min": 2156
      },
      {
       "name": "src/generative/schemas/tc-console-panel.json",
       "kind": "other",
-      "min": 2140
+      "min": 2153
      },
      {
       "name": "src/generative/schemas/tc-facet-sidebar.json",
       "kind": "other",
-      "min": 2134
+      "min": 2147
      },
      {
       "name": "src/generative/schemas/tc-progress-tracker.json",
       "kind": "other",
-      "min": 2123
+      "min": 2136
      },
      {
       "name": "src/generative/schemas/tc-billing-schedule.json",
       "kind": "other",
-      "min": 2119
+      "min": 2132
      },
      {
       "name": "src/generative/schemas/tc-integration-picker.json",
       "kind": "other",
-      "min": 2114
+      "min": 2127
      },
      {
       "name": "src/generative/schemas/tc-run-compare.json",
       "kind": "other",
-      "min": 2112
+      "min": 2125
      },
      {
       "name": "src/generative/schemas/tc-web-vitals.json",
       "kind": "other",
-      "min": 2111
+      "min": 2124
      },
      {
       "name": "src/generative/schemas/tc-segmented-control.json",
       "kind": "other",
-      "min": 2110
+      "min": 2123
      },
      {
       "name": "src/generative/schemas/tc-agreement-tracker.json",
       "kind": "other",
-      "min": 2099
+      "min": 2112
      },
      {
       "name": "src/generative/schemas/tc-person-hovercard.json",
       "kind": "other",
-      "min": 2097
+      "min": 2110
      },
      {
       "name": "src/generative/schemas/tc-response-selection.json",
       "kind": "other",
-      "min": 2079
+      "min": 2092
      },
      {
       "name": "src/generative/schemas/tc-context-window.json",
       "kind": "other",
-      "min": 2077
+      "min": 2090
      },
      {
       "name": "src/generative/schemas/tc-ai-answer.json",
       "kind": "other",
-      "min": 2063
+      "min": 2076
      },
      {
       "name": "src/generative/schemas/tc-citation-badge.json",
       "kind": "other",
-      "min": 2062
+      "min": 2075
      },
      {
       "name": "src/generative/schemas/tc-testimonial-wall.json",
       "kind": "other",
-      "min": 2061
+      "min": 2074
      },
      {
       "name": "src/generative/schemas/tc-prompt-library.json",
       "kind": "other",
-      "min": 2058
+      "min": 2071
      },
      {
       "name": "src/generative/schemas/tc-capability-notice.json",
       "kind": "other",
-      "min": 2045
+      "min": 2058
      },
      {
       "name": "src/generative/schemas/tc-collection-card.json",
       "kind": "other",
-      "min": 2038
+      "min": 2051
      },
      {
       "name": "src/generative/schemas/tc-relationship-graph.json",
       "kind": "other",
-      "min": 2037
+      "min": 2050
      },
      {
       "name": "src/generative/schemas/tc-plan-vs-actual.json",
       "kind": "other",
-      "min": 2035
+      "min": 2048
      },
      {
       "name": "src/generative/schemas/tc-saved-search-alerts.json",
       "kind": "other",
-      "min": 2034
+      "min": 2047
      },
      {
       "name": "src/generative/schemas/tc-capacity-bars.json",
       "kind": "other",
-      "min": 2029
+      "min": 2042
      },
      {
       "name": "src/generative/schemas/tc-atomic-design.json",
       "kind": "other",
-      "min": 2027
+      "min": 2040
      },
      {
       "name": "src/generative/schemas/tc-score-survey.json",
       "kind": "other",
-      "min": 2019
+      "min": 2032
      },
      {
       "name": "src/generative/schemas/tc-synthesis-notes.json",
       "kind": "other",
-      "min": 2017
+      "min": 2030
      },
      {
       "name": "src/generative/schemas/tc-pr-link.json",
       "kind": "other",
-      "min": 1999
+      "min": 2012
      },
      {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
-      "min": 1985
+      "min": 1998
      },
      {
       "name": "src/generative/schemas/tc-audit-trail.json",
       "kind": "other",
-      "min": 1975
+      "min": 1988
      },
      {
       "name": "src/generative/schemas/tc-budget-guard.json",
       "kind": "other",
-      "min": 1970
+      "min": 1983
      },
      {
       "name": "src/generative/schemas/tc-team-flag-editor.json",
       "kind": "other",
-      "min": 1962
+      "min": 1975
      },
      {
       "name": "src/generative/schemas/tc-agent-ledger.json",
       "kind": "other",
-      "min": 1955
+      "min": 1968
      },
      {
       "name": "src/generative/schemas/tc-audience-mix.json",
       "kind": "other",
-      "min": 1952
+      "min": 1965
      },
      {
       "name": "src/generative/schemas/tc-activity-calendar.json",
       "kind": "other",
-      "min": 1934
+      "min": 1947
      },
      {
       "name": "src/generative/schemas/tc-day-rhythm.json",
       "kind": "other",
-      "min": 1927
+      "min": 1940
      },
      {
       "name": "src/generative/schemas/tc-comment-thread.json",
       "kind": "other",
-      "min": 1914
+      "min": 1927
      },
      {
       "name": "src/generative/schemas/tc-parallel-attempts.json",
       "kind": "other",
-      "min": 1901
+      "min": 1914
      },
      {
       "name": "src/generative/schemas/tc-org-chart.json",
       "kind": "other",
-      "min": 1891
+      "min": 1904
      },
      {
       "name": "src/generative/schemas/tc-sla-status.json",
       "kind": "other",
-      "min": 1879
+      "min": 1892
      },
      {
       "name": "src/generative/schemas/tc-activity-clock.json",
       "kind": "other",
-      "min": 1868
+      "min": 1881
      },
      {
       "name": "src/generative/schemas/tc-invoice-credit.json",
       "kind": "other",
-      "min": 1866
+      "min": 1879
      },
      {
       "name": "src/generative/schemas/tc-memory-panel.json",
       "kind": "other",
-      "min": 1864
+      "min": 1877
      },
      {
       "name": "src/generative/schemas/tc-reasoning-flags.json",
       "kind": "other",
-      "min": 1862
+      "min": 1875
      },
      {
       "name": "src/generative/schemas/tc-conversation-branches.json",
       "kind": "other",
-      "min": 1858
+      "min": 1871
      },
      {
       "name": "src/generative/schemas/tc-header-nav.json",
       "kind": "other",
-      "min": 1851
+      "min": 1864
      },
      {
       "name": "src/generative/schemas/tc-model-picker.json",
       "kind": "other",
-      "min": 1831
+      "min": 1844
+     },
+     {
+      "name": "src/generative/schemas/tc-side-nav.json",
+      "kind": "other",
+      "min": 1842
      },
      {
       "name": "src/generative/schemas/tc-evidence-gallery.json",
       "kind": "other",
-      "min": 1817
+      "min": 1830
      },
      {
       "name": "src/generative/schemas/tc-attestation-check.json",
       "kind": "other",
-      "min": 1806
+      "min": 1819
      },
      {
       "name": "src/generative/schemas/tc-coverage-ring.json",
       "kind": "other",
-      "min": 1787
+      "min": 1800
      },
      {
       "name": "src/generative/schemas/tc-agent-plan.json",
       "kind": "other",
-      "min": 1774
+      "min": 1787
      },
      {
       "name": "src/generative/schemas/tc-writing-assistant.json",
       "kind": "other",
-      "min": 1772
+      "min": 1785
      },
      {
       "name": "src/generative/schemas/tc-search-history.json",
       "kind": "other",
-      "min": 1770
+      "min": 1783
      },
      {
       "name": "src/generative/schemas/tc-cover-flow.json",
       "kind": "other",
-      "min": 1746
+      "min": 1759
      },
      {
       "name": "src/generative/schemas/tc-fallback-chain.json",
       "kind": "other",
-      "min": 1743
+      "min": 1756
      },
      {
       "name": "src/generative/schemas/tc-code-block.json",
       "kind": "other",
-      "min": 1735
+      "min": 1748
      },
      {
       "name": "src/generative/schemas/tc-provenance-summary.json",
       "kind": "other",
-      "min": 1709
+      "min": 1722
      },
      {
       "name": "src/generative/schemas/tc-comments-panel.json",
       "kind": "other",
-      "min": 1696
+      "min": 1709
      },
      {
       "name": "src/generative/schemas/tc-check-status.json",
       "kind": "other",
-      "min": 1687
+      "min": 1700
      },
      {
       "name": "src/generative/schemas/tc-breakpoint-overlay.json",
       "kind": "other",
-      "min": 1683
+      "min": 1696
      },
      {
       "name": "src/generative/schemas/tc-answer-arena.json",
       "kind": "other",
-      "min": 1667
+      "min": 1680
      },
      {
       "name": "src/generative/schemas/tc-filter-menu.json",
       "kind": "other",
-      "min": 1667
+      "min": 1680
      },
      {
       "name": "src/generative/schemas/tc-coordinate-details.json",
       "kind": "other",
-      "min": 1664
+      "min": 1677
      },
      {
       "name": "src/generative/schemas/tc-tool-call-card.json",
       "kind": "other",
-      "min": 1659
+      "min": 1672
      },
      {
       "name": "src/generative/schemas/tc-ai-workspace.json",
       "kind": "other",
-      "min": 1641
+      "min": 1654
      },
      {
       "name": "src/generative/schemas/tc-agent-face.json",
       "kind": "other",
-      "min": 1625
+      "min": 1638
      },
      {
       "name": "src/generative/schemas/tc-disagreement-banner.json",
       "kind": "other",
-      "min": 1605
+      "min": 1618
      },
      {
       "name": "src/generative/schemas/tc-team-flag-picker.json",
       "kind": "other",
-      "min": 1601
+      "min": 1614
      },
      {
       "name": "src/generative/schemas/tc-inline-diff.json",
       "kind": "other",
-      "min": 1598
+      "min": 1611
      },
      {
       "name": "src/generative/schemas/tc-citation-sections.json",
       "kind": "other",
-      "min": 1592
+      "min": 1605
      },
      {
       "name": "src/generative/schemas/tc-environment-list.json",
       "kind": "other",
-      "min": 1591
+      "min": 1604
      },
      {
       "name": "src/generative/schemas/tc-identifier-details.json",
       "kind": "other",
-      "min": 1578
+      "min": 1591
      },
      {
       "name": "src/generative/schemas/tc-todo-list.json",
       "kind": "other",
-      "min": 1561
+      "min": 1574
      },
      {
       "name": "src/generative/schemas/tc-context-tray.json",
       "kind": "other",
-      "min": 1551
+      "min": 1564
      },
      {
       "name": "src/generative/schemas/tc-bulk-action-bar.json",
       "kind": "other",
-      "min": 1542
+      "min": 1555
      },
      {
       "name": "src/generative/schemas/tc-preview-card.json",
       "kind": "other",
-      "min": 1522
+      "min": 1535
      },
      {
       "name": "src/generative/schemas/tc-button.json",
       "kind": "other",
-      "min": 1503
+      "min": 1516
      },
      {
       "name": "src/generative/schemas/tc-number-change.json",
       "kind": "other",
-      "min": 1502
+      "min": 1515
      },
      {
       "name": "src/generative/schemas/tc-setup-guide.json",
       "kind": "other",
-      "min": 1498
+      "min": 1511
      },
      {
       "name": "src/generative/schemas/tc-compact-breakdown.json",
       "kind": "other",
-      "min": 1494
+      "min": 1507
      },
      {
       "name": "src/generative/schemas/tc-icon-rail.json",
       "kind": "other",
-      "min": 1483
+      "min": 1496
      },
      {
       "name": "src/generative/schemas/tc-date-range-picker.json",
       "kind": "other",
-      "min": 1453
+      "min": 1466
      },
      {
       "name": "src/generative/schemas/tc-sensitivity-label-picker.json",
       "kind": "other",
-      "min": 1448
+      "min": 1461
      },
      {
       "name": "src/generative/schemas/tc-terminal.json",
       "kind": "other",
-      "min": 1422
+      "min": 1435
      },
      {
       "name": "src/generative/schemas/tc-entity-details.json",
       "kind": "other",
-      "min": 1421
+      "min": 1434
      },
      {
       "name": "src/generative/schemas/tc-decision-inbox.json",
       "kind": "other",
-      "min": 1417
+      "min": 1430
      },
      {
       "name": "src/generative/schemas/tc-breadcrumbs.json",
       "kind": "other",
-      "min": 1411
+      "min": 1424
      },
      {
       "name": "src/generative/schemas/tc-tag-input.json",
       "kind": "other",
-      "min": 1386
+      "min": 1399
      },
      {
       "name": "src/generative/schemas/tc-text-to-speech.json",
       "kind": "other",
-      "min": 1383
+      "min": 1396
      },
      {
       "name": "src/generative/schemas/tc-agent-gallery.json",
       "kind": "other",
-      "min": 1367
+      "min": 1380
      },
      {
       "name": "src/generative/schemas/tc-chat-minimap.json",
       "kind": "other",
-      "min": 1340
+      "min": 1353
      },
      {
       "name": "src/generative/schemas/tc-integration-grid.json",
       "kind": "other",
-      "min": 1340
+      "min": 1353
      },
      {
       "name": "src/generative/schemas/tc-year-list.json",
       "kind": "other",
-      "min": 1335
+      "min": 1348
      },
      {
       "name": "src/generative/schemas/tc-prioritisation-matrix.json",
       "kind": "other",
-      "min": 1332
+      "min": 1345
      },
      {
       "name": "src/generative/schemas/tc-tips-panel.json",
       "kind": "other",
-      "min": 1320
+      "min": 1333
      },
      {
       "name": "src/generative/schemas/tc-chart.json",
       "kind": "other",
-      "min": 1318
+      "min": 1331
      },
      {
       "name": "src/generative/schemas/tc-scan-status.json",
       "kind": "other",
-      "min": 1316
+      "min": 1329
      },
      {
       "name": "src/generative/schemas/tc-meter-row.json",
       "kind": "other",
-      "min": 1279
+      "min": 1292
      },
      {
       "name": "src/generative/schemas/tc-accessibility-principles.json",
       "kind": "other",
-      "min": 1253
+      "min": 1266
      },
      {
       "name": "src/generative/schemas/tc-smart-recommendation.json",
       "kind": "other",
-      "min": 1250
+      "min": 1263
      },
      {
       "name": "src/generative/schemas/tc-autonomy-dial.json",
       "kind": "other",
-      "min": 1235
+      "min": 1248
      },
      {
       "name": "src/generative/schemas/tc-integration-settings.json",
       "kind": "other",
-      "min": 1231
+      "min": 1244
      },
      {
       "name": "src/generative/schemas/tc-grade-distribution.json",
       "kind": "other",
-      "min": 1220
+      "min": 1233
      },
      {
       "name": "src/generative/schemas/tc-stepper-form.json",
       "kind": "other",
-      "min": 1180
+      "min": 1193
      },
      {
       "name": "src/generative/schemas/tc-agent-team.json",
       "kind": "other",
-      "min": 1141
+      "min": 1154
      },
      {
       "name": "src/generative/schemas/tc-integration-flow.json",
       "kind": "other",
-      "min": 1135
+      "min": 1148
      },
      {
       "name": "src/generative/schemas/tc-radio-group.json",
       "kind": "other",
-      "min": 1107
+      "min": 1120
      },
      {
       "name": "src/generative/schemas/tc-speed-reader.json",
       "kind": "other",
-      "min": 1098
+      "min": 1111
+     },
+     {
+      "name": "src/generative/schemas/tc-change-summary.json",
+      "kind": "other",
+      "min": 1087
      },
      {
       "name": "src/vendor/agent-face/engine/states.ts",
@@ -20967,79 +20982,79 @@
       "min": 1086
      },
      {
-      "name": "src/generative/schemas/tc-change-summary.json",
-      "kind": "other",
-      "min": 1074
-     },
-     {
       "name": "src/generative/schemas/tc-metrics-dashboard.json",
       "kind": "other",
-      "min": 1051
+      "min": 1064
      },
      {
       "name": "src/generative/schemas/tc-model-wheel.json",
       "kind": "other",
-      "min": 1026
+      "min": 1039
      },
      {
       "name": "src/generative/schemas/tc-content-shield.json",
       "kind": "other",
-      "min": 1009
+      "min": 1022
      },
      {
       "name": "src/generative/schemas/tc-notification-stack.json",
       "kind": "other",
-      "min": 996
+      "min": 1009
      },
      {
       "name": "src/generative/schemas/tc-number-field.json",
       "kind": "other",
-      "min": 986
+      "min": 999
      },
      {
       "name": "src/generative/schemas/tc-slider-field.json",
       "kind": "other",
-      "min": 986
+      "min": 999
      },
      {
       "name": "src/generative/schemas/tc-reaction-bar.json",
       "kind": "other",
-      "min": 982
+      "min": 995
      },
      {
       "name": "src/generative/schemas/tc-team-invite.json",
       "kind": "other",
-      "min": 913
+      "min": 926
      },
      {
       "name": "src/generative/schemas/tc-status-morph.json",
       "kind": "other",
-      "min": 826
+      "min": 839
      },
      {
       "name": "src/generative/schemas/tc-tool-call-group.json",
       "kind": "other",
-      "min": 800
+      "min": 813
      },
      {
       "name": "src/generative/schemas/tc-panel-card.json",
       "kind": "other",
-      "min": 790
+      "min": 803
      },
      {
       "name": "src/generative/schemas/tc-checkbox.json",
       "kind": "other",
-      "min": 782
+      "min": 795
      },
      {
       "name": "src/generative/schemas/tc-switch.json",
       "kind": "other",
-      "min": 776
+      "min": 789
      },
      {
       "name": "src/generative/schemas/tc-isbn-details.json",
       "kind": "other",
-      "min": 717
+      "min": 730
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-scene.json",
+      "kind": "other",
+      "min": 693
      },
      {
       "name": "src/vendor/agent-face/draw/spear-tip.mjs",
@@ -21047,179 +21062,179 @@
       "min": 681
      },
      {
-      "name": "src/generative/schemas/tc-agent-scene.json",
-      "kind": "other",
-      "min": 680
-     },
-     {
       "name": "src/generative/schemas/tc-lead-sourcing.json",
       "kind": "other",
-      "min": 603
+      "min": 616
      },
      {
       "name": "src/generative/schemas/tc-project-flow.json",
       "kind": "other",
-      "min": 579
+      "min": 592
      },
      {
       "name": "src/generative/schemas/tc-staggered-reveal.json",
       "kind": "other",
-      "min": 573
+      "min": 586
      },
      {
       "name": "src/generative/schemas/tc-progress-bar.json",
       "kind": "other",
-      "min": 551
+      "min": 564
      },
      {
       "name": "src/generative/schemas/tc-preview-unavailable.json",
       "kind": "other",
-      "min": 548
+      "min": 561
      },
      {
       "name": "src/generative/schemas/tc-upload-failed.json",
       "kind": "other",
-      "min": 542
+      "min": 555
      },
      {
       "name": "src/generative/schemas/tc-limit-reached.json",
       "kind": "other",
-      "min": 537
+      "min": 550
      },
      {
       "name": "src/generative/schemas/tc-content-hidden.json",
       "kind": "other",
-      "min": 534
+      "min": 547
      },
      {
       "name": "src/generative/schemas/tc-in-quality-control.json",
       "kind": "other",
-      "min": 532
+      "min": 545
      },
      {
       "name": "src/generative/schemas/tc-malware-blocked.json",
       "kind": "other",
-      "min": 532
+      "min": 545
      },
      {
       "name": "src/generative/schemas/tc-soup-cans.json",
       "kind": "other",
-      "min": 527
+      "min": 540
      },
      {
       "name": "src/generative/schemas/tc-in-coordination.json",
       "kind": "other",
-      "min": 526
+      "min": 539
      },
      {
       "name": "src/generative/schemas/tc-enrichment-orbit.json",
       "kind": "other",
-      "min": 525
+      "min": 538
      },
      {
       "name": "src/generative/schemas/tc-first-use.json",
       "kind": "other",
-      "min": 523
+      "min": 536
      },
      {
       "name": "src/generative/schemas/tc-world-map.json",
       "kind": "other",
-      "min": 523
+      "min": 536
      },
      {
       "name": "src/generative/schemas/tc-offline.json",
       "kind": "other",
-      "min": 522
+      "min": 535
      },
      {
       "name": "src/generative/schemas/tc-pending-release.json",
       "kind": "other",
-      "min": 522
+      "min": 535
      },
      {
       "name": "src/generative/schemas/tc-list-motion.json",
       "kind": "other",
-      "min": 521
+      "min": 534
      },
      {
       "name": "src/generative/schemas/tc-link-expired.json",
       "kind": "other",
-      "min": 520
+      "min": 533
      },
      {
       "name": "src/generative/schemas/tc-in-translation.json",
       "kind": "other",
-      "min": 516
+      "min": 529
      },
      {
       "name": "src/generative/schemas/tc-awaiting-review.json",
       "kind": "other",
-      "min": 512
+      "min": 525
      },
      {
       "name": "src/generative/schemas/tc-region-dach.json",
       "kind": "other",
-      "min": 509
+      "min": 522
      },
      {
       "name": "src/generative/schemas/tc-released.json",
       "kind": "other",
-      "min": 499
+      "min": 512
      },
      {
       "name": "src/generative/schemas/tc-outreach-branches.json",
       "kind": "other",
-      "min": 493
+      "min": 506
      },
      {
       "name": "src/generative/schemas/tc-all-done.json",
       "kind": "other",
-      "min": 492
+      "min": 505
      },
      {
       "name": "src/generative/schemas/tc-processing.json",
       "kind": "other",
-      "min": 491
+      "min": 504
      },
      {
       "name": "src/generative/schemas/tc-success-check.json",
       "kind": "other",
-      "min": 481
+      "min": 494
      },
      {
       "name": "src/generative/schemas/tc-nothing-found.json",
       "kind": "other",
-      "min": 472
+      "min": 485
      },
      {
       "name": "src/generative/schemas/tc-something-wrong.json",
       "kind": "other",
-      "min": 469
+      "min": 482
      },
      {
       "name": "src/generative/schemas/tc-tab-overload.json",
       "kind": "other",
-      "min": 459
+      "min": 472
      },
      {
       "name": "src/generative/schemas/tc-no-access.json",
       "kind": "other",
-      "min": 457
+      "min": 470
      },
      {
       "name": "src/generative/schemas/tc-empty-calendar.json",
       "kind": "other",
-      "min": 452
+      "min": 465
      },
      {
       "name": "src/generative/schemas/tc-ghosted-chat.json",
       "kind": "other",
-      "min": 440
+      "min": 453
      },
      {
       "name": "src/generative/schemas/tc-shared-element.json",
       "kind": "other",
-      "min": 428
+      "min": 441
+     },
+     {
+      "name": "src/generative/schemas/tc-attention-pulse.json",
+      "kind": "other",
+      "min": 398
      },
      {
       "name": "src/vendor/agent-face/engine/spring.ts",
@@ -21227,19 +21242,14 @@
       "min": 389
      },
      {
-      "name": "src/generative/schemas/tc-attention-pulse.json",
-      "kind": "other",
-      "min": 385
-     },
-     {
       "name": "src/generative/schemas/tc-drag-lift.json",
       "kind": "other",
-      "min": 363
+      "min": 376
      },
      {
       "name": "src/generative/schemas/tc-collapse.json",
       "kind": "other",
-      "min": 343
+      "min": 356
      },
      {
       "name": "src/vendor/agent-face/element/loop.ts",
@@ -21278,21 +21288,21 @@
      }
     ],
     "withoutLit": {
-     "min": 9627354,
-     "gzip": 2399337
+     "min": 9646597,
+     "gzip": 2428951
     },
     "withLit": {
-     "min": 9569891,
-     "gzip": 2379174
+     "min": 9588923,
+     "gzip": 2405754
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 3,
-    "first": 0.6,
-    "update": 0.1,
+    "cold": 14,
+    "first": 1.9,
+    "update": 0.3,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -39027,6 +39037,109 @@
     "updateKind": "re-render with the same data",
     "nodes": 33,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "side-nav": {
+   "measuredAt": "2026-11-07",
+   "hash": "5ee5aec1b20d615d",
+   "bundle": {
+    "own": {
+     "min": 14383,
+     "gzip": 5018
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18956
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 329
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 21442,
+     "gzip": 6999
+    },
+    "withLit": {
+     "min": 41478,
+     "gzip": 13535
+    }
+   },
+   "render": {
+    "tag": "tc-side-nav",
+    "source": "demo",
+    "runs": 7,
+    "cold": 3.4,
+    "first": 1.4,
+    "update": 0.8,
+    "updateKind": "one item of items replaced",
+    "nodes": 81,
+    "scale": {
+     "property": "items",
+     "demoItems": 7,
+     "points": [
+      {
+       "items": 100,
+       "first": 7,
+       "update": 3.1,
+       "nodes": 957
+      },
+      {
+       "items": 1000,
+       "first": 38.3,
+       "update": 20.7,
+       "nodes": 9446
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

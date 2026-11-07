@@ -333,6 +333,7 @@ export * from "./share-panel";
 export * from "./shared-element";
 export * from "./shimmer-loader";
 export * from "./side-folder";
+export * from "./side-nav";
 export * from "./sla-status";
 export * from "./slider-field";
 export * from "./slope-chart";

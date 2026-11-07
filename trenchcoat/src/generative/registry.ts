@@ -303,6 +303,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-share-link-manager": { events: ["tc-links-change","tc-copy","tc-create"], load: () => import("../elements/share-link-manager"), schema: () => import("./schemas/tc-share-link-manager.json") },
   "tc-share-panel": { events: ["tc-share","tc-share-denied"], load: () => import("../elements/share-panel"), schema: () => import("./schemas/tc-share-panel.json") },
   "tc-shared-element": { events: ["tc-open-change"], load: () => import("../elements/shared-element"), schema: () => import("./schemas/tc-shared-element.json") },
+  "tc-side-nav": { events: ["tc-navigate","tc-collapsed-change"], load: () => import("../elements/side-nav"), schema: () => import("./schemas/tc-side-nav.json") },
   "tc-sla-status": { events: ["tc-period-change"], load: () => import("../elements/sla-status"), schema: () => import("./schemas/tc-sla-status.json") },
   "tc-slider-field": { events: ["tc-value-change"], load: () => import("../elements/slider-field"), schema: () => import("./schemas/tc-slider-field.json") },
   "tc-slope-chart": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/slope-chart"), schema: () => import("./schemas/tc-slope-chart.json") },

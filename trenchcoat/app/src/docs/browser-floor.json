@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 401
+   "elements": 402
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 401
+   "elements": 402
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 401
+   "elements": 402
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 401
+   "elements": 402
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 401
+   "elements": 402
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 401
+   "elements": 402
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 401
+   "elements": 402
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 400
+   "elements": 401
   },
   {
    "id": "container-size",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 401
+   "elements": 402
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 400
+   "elements": 401
   },
   {
    "id": "scrollbar-width",
