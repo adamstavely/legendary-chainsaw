@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 – Side Nav: the brand routes too
+
+- **Side Nav:** a plain click on the linked brand (`brand-href`) fires the cancelable `tc-navigate` as the items do,
+  with `{ id: "brand", href, item, brand: true }` (`SIDE_NAV_BRAND_ID`), so a single-page app can route it instead of
+  reloading. ⌘/Ctrl-, Shift- and middle clicks stay with the browser; `current` doesn't change.
+
 ## 0.2.0 – Side Nav
 
 - **Side Nav** (`tc-side-nav`): an app's main navigation down the side – the brand at the top, places with icons,

@@ -56,7 +56,7 @@ export class SideNav {
     this.#el.look = v;
   }
   /**
-   * An item was clicked ({ id, href, item }: SideNavNavigate); cancelable – prevented, a link isn't followed and `current` stays
+   * An item or the linked brand was clicked ({ id, href, item, brand }: SideNavNavigate); cancelable – prevented, a link isn't followed and `current` stays
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-navigate") readonly tcNavigate = new EventEmitter<CustomEvent<SideNavNavigate>>();

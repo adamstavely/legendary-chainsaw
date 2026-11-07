@@ -90,7 +90,7 @@
     {
      "name": "tc-navigate",
      "detail": "",
-     "description": "An item was clicked ({ id, href, item }: SideNavNavigate); cancelable – prevented, a link isn't followed and `current` stays",
+     "description": "An item or the linked brand was clicked ({ id, href, item, brand }: SideNavNavigate); cancelable – prevented, a link isn't followed and `current` stays",
      "cancelable": true
     },
     {
@@ -192,6 +192,11 @@
  ],
  "functions": [
   {
+   "name": "SIDE_NAV_BRAND_ID",
+   "signature": "SIDE_NAV_BRAND_ID: string",
+   "description": "The id tc-navigate carries for a click on the brand"
+  },
+  {
    "name": "sideNavGroups",
    "signature": "sideNavGroups(items: SideNavItem[]): void",
    "description": "Items in groups: a new group starts wherever the section changes"
@@ -218,7 +223,7 @@
      "name": "onNavigate",
      "type": "(id: string, href: string | undefined, event: CustomEvent<SideNavNavigate>) => void",
      "optional": true,
-     "description": "An item was clicked; call `event.preventDefault()` to route a link yourself instead of following it"
+     "description": "An item or the linked brand (id \"brand\", `event.detail.brand`) was clicked; call `event.preventDefault()` to route a link yourself instead of following it"
     },
     {
      "name": "collapsed",
@@ -465,7 +470,7 @@
   "windowed": false
  },
  "size": {
-  "min": 21442,
-  "gzip": 6972
+  "min": 21730,
+  "gzip": 7053
  }
 }

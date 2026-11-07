@@ -9,7 +9,8 @@ import { safeUrl } from "./internal/safe-url";
  * places in the app, one of them the current page, and room at the bottom for a card of the page's own (a reminder,
  * an upgrade, a setup guide). Items with `href` are real links – a middle-click or ⌘/Ctrl-click opens a new tab as
  * the browser would – and every plain click fires a cancelable `tc-navigate` ({ id, href, item }), so a single-page
- * app's router can take it instead. Unless it's prevented, the clicked item becomes `current`. Items can carry an
+ * app's router can take it instead. Unless it's prevented, the clicked item becomes `current`. A linked brand
+ * (`brand-href`) fires it too, with { id: "brand", brand: true }, and leaves `current` alone. Items can carry an
  * icon, a badge or count, and a section caption; disabled ones stay in place, dimmed.
  * `collapsible` adds a button that folds the bar into an icon-only rail (`collapsed`, changed through the cancelable
  * tc-collapsed-change); in the rail each label is still the item's name, shown as a tooltip.
@@ -39,7 +40,17 @@ export type SideNavItem = {
   /** A caption over a group of items; consecutive items with the same section share it */
   section?: string;
 };
-export type SideNavNavigate = { id: string; href?: string; item: SideNavItem };
+/** The id tc-navigate carries for a click on the brand */
+export const SIDE_NAV_BRAND_ID = "brand";
+export type SideNavNavigate = {
+  /** The item's id, or SIDE_NAV_BRAND_ID ("brand") for the brand */
+  id: string;
+  href?: string;
+  /** The item; for the brand, one made from it ({ id: "brand", label: brand, href }) */
+  item: SideNavItem;
+  /** True when the brand was clicked rather than an item */
+  brand?: boolean;
+};
 export type SideNavCollapsedChange = { collapsed: boolean };
 
 export type SideNavLabels = { collapse: string; expand: string };
@@ -64,7 +75,7 @@ let instances = 0;
 /**
  * An app's main navigation down the side: brand, places with icons and badges, the current page, a footer of your own.
  * @tag tc-side-nav
- * @fires tc-navigate - An item was clicked ({ id, href, item }: SideNavNavigate); cancelable – prevented, a link isn't followed and `current` stays
+ * @fires tc-navigate - An item or the linked brand was clicked ({ id, href, item, brand }: SideNavNavigate); cancelable – prevented, a link isn't followed and `current` stays
  * @fires tc-collapsed-change - The collapse button was pressed ({ collapsed }: SideNavCollapsedChange); cancelable – prevented, `collapsed` stays
  */
 export class TcSideNav extends TcElement {
@@ -130,6 +141,12 @@ export class TcSideNav extends TcElement {
     this.current = item.id;
   }
 
+  private navigateBrand(e: MouseEvent, href: string) {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    const item: SideNavItem = { id: SIDE_NAV_BRAND_ID, label: this.brand, href };
+    if (!this.emit<SideNavNavigate>("tc-navigate", { id: SIDE_NAV_BRAND_ID, href, item, brand: true }, { cancelable: true })) e.preventDefault();
+  }
+
   private toggle() {
     const collapsed = !this.collapsed;
     if (!this.emit<SideNavCollapsedChange>("tc-collapsed-change", { collapsed }, { cancelable: true })) return;
@@ -173,7 +190,7 @@ export class TcSideNav extends TcElement {
     const body = html`${this.icon(this.brandIcon, "ui-snav__logo")}<span class="ui-snav__brand-name">${this.brand}</span>`;
     const href = this.brandHref ? safeUrl(this.brandHref) : undefined;
     return href
-      ? html`<a class="ui-snav__brand" href=${href} title=${ifDefined(this.collapsed ? this.brand : undefined)}>${body}</a>`
+      ? html`<a class="ui-snav__brand" href=${href} title=${ifDefined(this.collapsed ? this.brand : undefined)} @click=${(e: MouseEvent) => this.navigateBrand(e, href)}>${body}</a>`
       : html`<div class="ui-snav__brand">${body}</div>`;
   }
 

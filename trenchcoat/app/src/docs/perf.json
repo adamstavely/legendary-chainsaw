@@ -17304,7 +17304,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-07",
-   "hash": "b3eb5cce81519af1",
+   "hash": "ad7f1d38f2f68388",
    "bundle": {
     "own": {
      "min": 34126,
@@ -18837,6 +18837,11 @@
       "min": 12726
      },
      {
+      "name": "side-nav",
+      "kind": "element",
+      "min": 12628
+     },
+     {
       "name": "share-link-manager",
       "kind": "element",
       "min": 12430
@@ -18855,11 +18860,6 @@
       "name": "redaction-review",
       "kind": "element",
       "min": 12332
-     },
-     {
-      "name": "side-nav",
-      "kind": "element",
-      "min": 12331
      },
      {
       "name": "audience-mix",
@@ -21288,21 +21288,21 @@
      }
     ],
     "withoutLit": {
-     "min": 9646597,
-     "gzip": 2428951
+     "min": 9646894,
+     "gzip": 2428978
     },
     "withLit": {
-     "min": 9588923,
-     "gzip": 2405754
+     "min": 9589220,
+     "gzip": 2405814
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 14,
-    "first": 1.9,
-    "update": 0.3,
+    "cold": 10,
+    "first": 1.1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -39056,11 +39056,11 @@
   },
   "side-nav": {
    "measuredAt": "2026-11-07",
-   "hash": "5ee5aec1b20d615d",
+   "hash": "8e60c845f8640362",
    "bundle": {
     "own": {
-     "min": 14383,
-     "gzip": 5018
+     "min": 14671,
+     "gzip": 5096
     },
     "shared": [
      {
@@ -39105,21 +39105,21 @@
      }
     ],
     "withoutLit": {
-     "min": 21442,
-     "gzip": 6999
+     "min": 21730,
+     "gzip": 7087
     },
     "withLit": {
-     "min": 41478,
-     "gzip": 13535
+     "min": 41766,
+     "gzip": 13619
     }
    },
    "render": {
     "tag": "tc-side-nav",
     "source": "demo",
     "runs": 7,
-    "cold": 3.4,
-    "first": 1.4,
-    "update": 0.8,
+    "cold": 4.8,
+    "first": 1.5,
+    "update": 0.9,
     "updateKind": "one item of items replaced",
     "nodes": 81,
     "scale": {
@@ -39128,14 +39128,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7,
-       "update": 3.1,
+       "first": 9,
+       "update": 2.6,
        "nodes": 957
       },
       {
        "items": 1000,
-       "first": 38.3,
-       "update": 20.7,
+       "first": 35.4,
+       "update": 21.3,
        "nodes": 9446
       }
      ]
