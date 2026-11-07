@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased – Fixes
+
+- **Image Grid:** a download still fetching its image when the grid leaves the page now lets go of the image's object
+  URL and saves nothing, instead of starting the download from a page that has moved on.
+
 ## 0.3.0 – Angular: one entry point per element
 
 - **Angular:** every directive has its own entry point, `@adamstavely/trenchcoat/angular/<name>` (typed by

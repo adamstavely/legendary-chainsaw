@@ -402,11 +402,29 @@ describe("tc-image-grid", () => {
     const el = await grid([{ id: "x", src: "/missing-image-for-test.png", alt: "Remote" }]);
     vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
     vi.spyOn(window, "fetch").mockResolvedValue(new Response(new Blob(["x"], { type: "image/png" })));
+    const create = vi.spyOn(URL, "createObjectURL");
     const revoke = vi.spyOn(URL, "revokeObjectURL");
     btn(el, "Download Variation 1").click();
-    await new Promise((r) => setTimeout(r, 20));
+    // Reading the fetched blob takes its own time (longer in Firefox): wait for the object URL, not a fixed delay
+    await expect.poll(() => create.mock.results.length).toBe(1);
     el.remove();
     expect(revoke).toHaveBeenCalledTimes(1);
+    expect(revoke).toHaveBeenCalledWith(create.mock.results[0].value);
+  });
+
+  test("a download still fetching when the grid goes away lets go of the image and saves nothing", async () => {
+    const el = await grid([{ id: "x", src: "/missing-image-for-test.png", alt: "Remote" }]);
+    const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    let respond = (_r: Response) => {};
+    vi.spyOn(window, "fetch").mockReturnValue(new Promise<Response>((r) => (respond = r)));
+    const create = vi.spyOn(URL, "createObjectURL");
+    const revoke = vi.spyOn(URL, "revokeObjectURL");
+    btn(el, "Download Variation 1").click();
+    el.remove();
+    respond(new Response(new Blob(["x"], { type: "image/png" })));
+    await expect.poll(() => revoke.mock.calls.length).toBe(1);
+    expect(revoke).toHaveBeenCalledWith(create.mock.results[0].value);
+    expect(click).not.toHaveBeenCalled();
   });
 
   test("React wrapper: title, uncontrolled tiles survive a parent re-render, callbacks fire", async () => {
