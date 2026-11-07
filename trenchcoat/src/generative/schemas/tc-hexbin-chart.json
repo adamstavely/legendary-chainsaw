@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-hexbin-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-hexbin-chart.json",
   "title": "tc-hexbin-chart",
   "description": "Many points by x and y gathered into hexagons shaded by count – or the sum or mean of a value – with a ramp legend,\nthe densest ringed, and a table view.",
   "type": "object",

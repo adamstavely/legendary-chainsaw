@@ -193,7 +193,7 @@
   {
    "tag": "tc-network-graph",
    "className": "TcNetworkGraph",
-   "module": "trenchcoat/network-graph",
+   "module": "@adamstavely/trenchcoat/network-graph",
    "data": [
     "nodes",
     "links",
@@ -489,7 +489,7 @@
   "windowed": false
  },
  "size": {
-  "min": 58462,
-  "gzip": 21064
+  "min": 58690,
+  "gzip": 21121
  }
 }

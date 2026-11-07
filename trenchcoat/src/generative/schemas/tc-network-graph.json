@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-network-graph.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-network-graph.json",
   "title": "tc-network-graph",
   "description": "Any nodes and links, laid out by force – clusters and bridges showing for themselves – with groups in their own inks,\nthe most-linked named, a node's neighbourhood lit on hover or focus, nodes that can be dragged into place, and a\ntable view.",
   "type": "object",

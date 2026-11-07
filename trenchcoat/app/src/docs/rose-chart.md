@@ -86,8 +86,8 @@ draws everything at once.
 <tc-rose-chart heading="Grant applications" description="By month, this year"></tc-rose-chart>
 
 <script type="module">
-  import "trenchcoat/rose-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/rose-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-rose-chart").data = [
     { label: "Jan", value: 35 },
     { label: "Feb", value: 42 },
@@ -98,8 +98,8 @@ draws everything at once.
 ```
 
 ```tsx
-import { RoseChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RoseChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Jan", series: "Council", value: 22 },

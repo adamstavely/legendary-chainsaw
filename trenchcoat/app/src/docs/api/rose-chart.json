@@ -151,7 +151,7 @@
   {
    "tag": "tc-rose-chart",
    "className": "TcRoseChart",
-   "module": "trenchcoat/rose-chart",
+   "module": "@adamstavely/trenchcoat/rose-chart",
    "data": [
     "label",
     "value",
