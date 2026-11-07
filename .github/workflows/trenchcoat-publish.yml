@@ -40,6 +40,16 @@ jobs:
       # npm run ci runs the element tests in real browsers
       - name: Playwright browsers
         run: npx playwright install --with-deps
+      # check:snippets (in npm run ci) type-checks the docs' snippets inside the example apps, which install the
+      # packed tarball: build and pack first, as trenchcoat-ci.yml does
+      - name: Build and pack for the examples
+        run: |
+          npm run build:package
+          rm -rf examples/.packed && mkdir -p examples/.packed
+          npm pack --pack-destination examples/.packed
+          mv examples/.packed/adamstavely-trenchcoat-*.tgz examples/.packed/trenchcoat.tgz
+      - name: Framework examples
+        run: npm run examples -- --no-pack
       - run: npm run ci
       - run: npm run build:package
       - run: npm publish
