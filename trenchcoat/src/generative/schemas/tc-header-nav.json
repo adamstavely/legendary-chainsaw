@@ -74,6 +74,10 @@
     "separator": {
       "type": "boolean",
       "description": "The hairline before the avatar (default true; separator=\"false\" hides it)"
+    },
+    "inverse": {
+      "type": "boolean",
+      "description": "On a dark bar: the triggers take the dark theme's colours whatever the page's theme; the popovers keep it. Set `--tc-hn-ring` to the bar's colour"
     }
   },
   "additionalProperties": false,
@@ -112,6 +116,10 @@
         "badge": {
           "type": "string",
           "description": "Small pill on the right, e.g. \"New\""
+        },
+        "checked": {
+          "type": "boolean",
+          "description": "Makes the item an on/off switch, showing this state; the page sets it from the event's `checked`"
         }
       },
       "required": [

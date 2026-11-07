@@ -483,7 +483,7 @@ export class TcPlanVsActual extends TcElement {
   background: var(--tc-surface-raised, light-dark(#ffffff, #1c1c1e));
   box-shadow: var(--tc-card-shadow, 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)));
   container: ui-pvac / inline-size;
-  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--tc-font-sans, "Inter Variable", "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   font-size: var(--tc-font-size-md, 13px);
   font-weight: var(--tc-font-weight-regular, 400);
   line-height: var(--tc-line-height-normal, 20px);

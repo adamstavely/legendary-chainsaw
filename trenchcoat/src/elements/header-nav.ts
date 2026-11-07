@@ -5,7 +5,7 @@ import { TcElement } from "./internal/base";
 import { PopoverController } from "./internal/popover";
 import { safeMediaUrl } from "./internal/safe-media";
 import "./profile-menu";
-import { profileMenuIcon, type ProfileMenuItem, type ProfileSetup, type TcProfileMenu } from "./profile-menu";
+import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type ProfileSetup, type TcProfileMenu } from "./profile-menu";
 
 /*
  * <tc-header-nav> – the right end of an app header (the Lit port of blocks/header-nav): the notifications bell, the
@@ -21,6 +21,9 @@ import { profileMenuIcon, type ProfileMenuItem, type ProfileSetup, type TcProfil
  * viewport. Opening it moves focus to its first action; Escape or picking an action closes it with focus back on the
  * avatar; a pointer-down outside, or focus moving to anything else, closes it where focus is. Tab order is the visual
  * order: bell, picker, avatar, then the open popover.
+ *
+ * `inverse` is for a dark header bar in either theme: the bell, the picker's button, the avatar and the hairline take
+ * the dark theme's colours (color-scheme: dark on those triggers only), while the popovers keep the page's theme.
  *
  *   <tc-header-nav .user=${{ name: "Ada Lovelace", email: "ada@example.com", presence: "online" }}>
  *     <tc-notifications .items=${…}></tc-notifications>
@@ -50,7 +53,11 @@ export type HeaderNavUser = {
 export type HeaderNavPanel = "notifications" | "apps" | "account";
 
 export type HeaderNavPanelChange = { panel: HeaderNavPanel | null };
-export type HeaderNavAccountSelect = { id: string };
+export type HeaderNavAccountSelect = {
+  id: string;
+  /** For a switch item: its state after this pick; set the item's `checked` to it */
+  checked?: boolean;
+};
 export type HeaderNavSetupContinue = { next: string };
 
 const PRESENCE: Record<HeaderNavPresence, string> = { online: "Online", away: "Away", busy: "Busy", offline: "Offline" };
@@ -85,7 +92,7 @@ let instances = 0;
  * @tag tc-header-nav
  * @slot - The page's <tc-notifications> and <tc-app-picker>, in that order
  * @fires tc-panel-change - A popover is opening or closing ({ panel }: HeaderNavPanelChange, null when none); cancelable – prevented, `panel` stays as it is (controlled use)
- * @fires tc-account-select - An account action was picked ({ id }: HeaderNavAccountSelect); cancelable – prevented, the card stays open
+ * @fires tc-account-select - An account action was picked ({ id, checked? }: HeaderNavAccountSelect); cancelable – prevented, the card stays open. A switch item (`checked` set) keeps the card open either way, with `checked` its new state
  * @fires tc-setup-continue - The setup's next step was picked in the account card ({ next }: HeaderNavSetupContinue); cancelable – prevented, the card stays open
  */
 export class TcHeaderNav extends TcElement {
@@ -103,6 +110,8 @@ export class TcHeaderNav extends TcElement {
   @property() accessor panel: HeaderNavPanel | null = null;
   /** The hairline before the avatar (default true; separator="false" hides it) */
   @property({ type: Boolean, converter: { fromAttribute: (v) => v !== "false" } }) accessor separator = true;
+  /** On a dark bar: the triggers take the dark theme's colours whatever the page's theme; the popovers keep it. Set `--tc-hn-ring` to the bar's colour */
+  @property({ type: Boolean, reflect: true }) accessor inverse = false;
 
   /** The photo that failed to load – initials show instead */
   @state() private accessor broken: string | null = null;
@@ -213,7 +222,9 @@ export class TcHeaderNav extends TcElement {
   private onItem = (e: Event) => {
     if (!(e.target as Element).closest?.(".ui-hn__pop")) return;
     e.stopPropagation();
-    if (this.emit<HeaderNavAccountSelect>("tc-account-select", { id: (e as CustomEvent<{ id: string }>).detail.id }, { cancelable: true })) this.closeAccount();
+    const { id, checked } = (e as CustomEvent<ProfileMenuItemSelect>).detail;
+    // A switch item flips in place: the card stays open to show it
+    if (this.emit<HeaderNavAccountSelect>("tc-account-select", checked === undefined ? { id } : { id, checked }, { cancelable: true }) && checked === undefined) this.closeAccount();
   };
   private onSetup = (e: Event) => {
     if (!(e.target as Element).closest?.(".ui-hn__pop")) return;
@@ -326,6 +337,9 @@ export class TcHeaderNav extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="hn"] > tc-notifications, [data-ui="hn"] > tc-app-picker { flex: none; }
+/* On a dark bar: every colour token is light-dark(), so the triggers resolve their dark values; the popovers, which
+   are their siblings, keep the page's theme. tc-notifications and tc-app-picker do the same for their own buttons */
+[data-ui="hn"][inverse] :is(.ui-hn__me, .ui-hn__sep) { color-scheme: dark; }
 .ui-hn__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* The hairline before the avatar */

@@ -45,7 +45,7 @@ const css = /* css */ `
   width: 100%;
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--tc-font-sans, "Inter Variable", "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
 }
 [data-ui="gc"] *, [data-ui="gc"] *::before, [data-ui="gc"] *::after { box-sizing: border-box; margin: 0; }
 

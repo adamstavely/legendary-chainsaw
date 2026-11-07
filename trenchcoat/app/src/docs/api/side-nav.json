@@ -140,6 +140,38 @@
       "standard",
       "clean"
      ]
+    },
+    {
+     "name": "--tc-snav-head-gap",
+     "value": "var(--tc-space-2)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-snav-brand-weight",
+     "value": "var(--tc-font-weight-semibold)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-snav-brand-size",
+     "value": "1em",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-snav-logo-size",
+     "value": "28px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
     }
    ],
    "tokens": [
@@ -392,6 +424,22 @@
     ]
    },
    {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -470,7 +518,7 @@
   "windowed": false
  },
  "size": {
-  "min": 21730,
-  "gzip": 7053
+  "min": 22369,
+  "gzip": 7303
  }
 }

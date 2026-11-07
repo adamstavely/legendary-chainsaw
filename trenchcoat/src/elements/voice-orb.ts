@@ -456,7 +456,7 @@ export class TcVoiceOrb extends TcElement {
   padding: 0;
   border: 0;
   background: none;
-  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--tc-font-sans, "Inter Variable", "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;

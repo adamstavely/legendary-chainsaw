@@ -722,6 +722,8 @@ export class TcAppPicker extends TcElement {
   color: var(--tc-action-ghost-fg);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }
+/* Inside an inverse tc-header-nav (a dark bar): the button takes the dark theme's colours, the panel keeps the page's */
+tc-header-nav[inverse] .ui-apk__trigger { color-scheme: dark; }
 .ui-apk__trigger:hover, .ui-apk__trigger[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-apk__waffle { width: 18px; height: 18px; transition: transform var(--tc-duration-fast) var(--tc-ease-move); }
 .ui-apk__trigger[aria-expanded="true"] .ui-apk__waffle { transform: scale(0.9); }

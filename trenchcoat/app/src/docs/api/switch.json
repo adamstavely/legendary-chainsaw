@@ -126,6 +126,7 @@
   }
  ],
  "changelog": [
+  "**Profile Menu:** an item with `checked` is an on/off switch – a button with `role=\"switch\"` and `aria-checked`, with a small switch (the switch tokens, as on `tc-switch`) at the end of its row. Picking it by click, Enter or Space fires `tc-item-select` with `{ id, checked }`, `checked` being its new state; the page sets the item's `checked` (controlled). The detail type is exported as `ProfileMenuItemSelect`.",
   "**`examples/angular`:** uses the directives with no schema, and checks two things in Chromium: a handler runs once per event, and `[(ngModel)]` drives `tc-switch`."
  ],
  "frameworks": [

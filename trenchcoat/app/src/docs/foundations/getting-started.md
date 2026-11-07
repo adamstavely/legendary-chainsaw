@@ -39,6 +39,11 @@ the app:
 import "@adamstavely/trenchcoat/tokens.css";
 ```
 
+The components are set in Inter, which you bring yourself; without it they fall back to the system font.
+`--tc-font-sans` matches the names the usual ways of loading it give the face: “Inter Variable” from
+`@fontsource-variable/inter`, “Inter” from `@fontsource/inter`, Google Fonts or Inter's own `inter.css`, and
+“InterVariable” from `rsms.me/inter`. Loaded under any other name, set `--tc-font-sans` to it.
+
 ## Use a component
 
 Import the element's module – it registers the tag – and use the tag. Import only the ones you use: each entry

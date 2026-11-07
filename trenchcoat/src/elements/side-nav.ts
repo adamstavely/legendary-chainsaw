@@ -255,11 +255,15 @@ export class TcSideNav extends TcElement {
 [data-ui="snav"] > [slot="brand"] { order: -1; }
 [data-ui="snav"][collapsed] > :not(.ui-snav__head, .ui-snav__nav, .tc-sr-only, [slot="brand"]) { display: none; }
 
-.ui-snav__head { display: flex; align-items: center; gap: var(--tc-space-1); min-height: var(--tc-control-h-md); padding: 0 var(--tc-space-1); }
+/* The space under the head is --tc-snav-head-gap: the host's gap plus whatever more (or less) the page asks for, so the
+   gap between the other children stays as it is */
+.ui-snav__head { display: flex; align-items: center; gap: var(--tc-space-1); min-height: var(--tc-control-h-md); margin-block-end: calc(var(--tc-snav-head-gap, var(--tc-space-2)) - var(--tc-space-2)); padding: 0 var(--tc-space-1); }
 [data-ui="snav"][collapsed] .ui-snav__head { flex-direction: column; padding: 0; }
-.ui-snav__brand { display: flex; flex: 1; align-items: center; gap: var(--tc-space-2); min-width: 0; color: var(--tc-text-primary); font-weight: var(--tc-font-weight-semibold); text-decoration: none; border-radius: var(--tc-radius-md); }
-.ui-snav__brand-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ui-snav__logo { display: grid; flex: none; place-items: center; width: 28px; height: 28px; }
+/* The brand's name and logo take their size from the page: --tc-snav-brand-size, --tc-snav-brand-weight and
+   --tc-snav-logo-size on tc-side-nav. The logo never grows past the rail's inner width, so the rail can centre it */
+.ui-snav__brand { display: flex; flex: 1; align-items: center; gap: var(--tc-space-2); min-width: 0; color: var(--tc-text-primary); font-weight: var(--tc-snav-brand-weight, var(--tc-font-weight-semibold)); text-decoration: none; border-radius: var(--tc-radius-md); }
+.ui-snav__brand-name { overflow: hidden; font-size: var(--tc-snav-brand-size, 1em); text-overflow: ellipsis; white-space: nowrap; }
+.ui-snav__logo { display: grid; flex: none; place-items: center; width: min(var(--tc-snav-logo-size, 28px), var(--tc-snav-rail) - 2 * var(--tc-space-2)); aspect-ratio: 1; }
 .ui-snav__logo > * { max-width: 100%; max-height: 100%; }
 .ui-snav__toggle { display: grid; flex: none; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-radius-md); color: var(--tc-icon-muted); }
 .ui-snav__toggle:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }

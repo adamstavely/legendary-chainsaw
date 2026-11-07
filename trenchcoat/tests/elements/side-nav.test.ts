@@ -206,6 +206,107 @@ describe("tc-side-nav", () => {
     expect(text(el.querySelector("[role=status]"))).toBe("Navigation collapsed");
   });
 
+  test("the page sizes the brand: name size and weight, logo box; defaults keep today's look; the rail centres a capped logo", async () => {
+    const logo = () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.innerHTML = '<rect width="24" height="24"></rect>';
+      return svg;
+    };
+    const box = (el: Element, sel: string) => el.querySelector(sel)!.getBoundingClientRect();
+    const plain = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" brand-href="#home" collapsible .brandIcon=${logo()} .items=${ITEMS}></tc-side-nav>`);
+    const name = (el: Element) => getComputedStyle(el.querySelector(".ui-snav__brand-name")!);
+    expect(name(plain).fontSize).toBe(getComputedStyle(plain).fontSize);
+    const weight = (token: string) => {
+      const probe = document.createElement("span");
+      probe.style.fontWeight = `var(${token})`;
+      plain.append(probe);
+      const w = getComputedStyle(probe).fontWeight;
+      probe.remove();
+      return w;
+    };
+    expect(name(plain).fontWeight).toBe(weight("--tc-font-weight-semibold"));
+    expect(box(plain, ".ui-snav__logo").width).toBeCloseTo(28, 0);
+    expect(box(plain, ".ui-snav__logo").height).toBeCloseTo(28, 0);
+
+    // What INTELLECT sets: an xl name and a 32px logo, beside the collapse button at the default width
+    const el = await fixture<TcSideNav>(html`<tc-side-nav
+      brand="Intellect"
+      brand-href="#home"
+      collapsible
+      .brandIcon=${logo()}
+      .items=${ITEMS}
+      style="--tc-snav-brand-size: var(--tc-font-size-xl); --tc-snav-brand-weight: var(--tc-font-weight-strong); --tc-snav-logo-size: 32px"
+    ></tc-side-nav>`);
+    const size = (token: string) => {
+      const probe = document.createElement("span");
+      probe.style.fontSize = `var(${token})`;
+      el.append(probe);
+      const v = getComputedStyle(probe).fontSize;
+      probe.remove();
+      return v;
+    };
+    expect(name(el).fontSize).toBe(size("--tc-font-size-xl"));
+    expect(name(el).fontWeight).toBe(weight("--tc-font-weight-strong"));
+    expect(box(el, ".ui-snav__logo").width).toBeCloseTo(32, 0);
+    expect(box(el, ".ui-snav__logo").height).toBeCloseTo(32, 0);
+    const brandName = el.querySelector<HTMLElement>(".ui-snav__brand-name")!;
+    expect(brandName.scrollWidth).toBeLessThanOrEqual(brandName.clientWidth);
+    expect(box(el, ".ui-snav__brand").right).toBeLessThanOrEqual(box(el, ".ui-snav__toggle").left);
+    expect(box(el, ".ui-snav__toggle").right).toBeLessThanOrEqual(el.getBoundingClientRect().right);
+
+    // Folded into the rail, the 32px logo is whole and centred; a logo bigger than the rail is capped at its inner width
+    el.collapsed = true;
+    await finish(el);
+    // The width animates to the rail; measure once it's there
+    await expect.poll(() => el.getBoundingClientRect().width).toBeCloseTo(parseFloat(getComputedStyle(el).getPropertyValue("--tc-snav-rail")), 0);
+    const rail = el.getBoundingClientRect();
+    const mark = box(el, ".ui-snav__logo");
+    expect(mark.width).toBeCloseTo(32, 0);
+    expect(Math.abs(mark.left + mark.width / 2 - (rail.left + rail.width / 2))).toBeLessThanOrEqual(1);
+    expect(mark.left).toBeGreaterThanOrEqual(rail.left);
+    expect(mark.right).toBeLessThanOrEqual(rail.right);
+    el.style.setProperty("--tc-snav-logo-size", "80px");
+    await settle();
+    const capped = box(el, ".ui-snav__logo");
+    const pad = parseFloat(getComputedStyle(el).paddingLeft) + parseFloat(getComputedStyle(el).paddingRight);
+    expect(capped.width).toBeCloseTo(rail.width - pad, 0);
+    expect(capped.height).toBeCloseTo(capped.width, 0);
+    expect(capped.left).toBeGreaterThanOrEqual(rail.left);
+    expect(capped.right).toBeLessThanOrEqual(rail.right);
+  });
+
+  test("--tc-snav-head-gap sets only the space under the head, open and as a rail; by default it's the bar's gap", async () => {
+    const space = (el: Element, token: string) => {
+      const probe = document.createElement("span");
+      probe.style.width = `var(${token})`;
+      probe.style.position = "absolute";
+      el.append(probe);
+      const w = probe.getBoundingClientRect().width;
+      probe.remove();
+      return w;
+    };
+    const under = (el: Element) => el.querySelector(".ui-snav__nav")!.getBoundingClientRect().top - el.querySelector(".ui-snav__head")!.getBoundingClientRect().bottom;
+    const between = (el: Element) => el.querySelector("p")!.getBoundingClientRect().top - el.querySelector(".ui-snav__nav")!.getBoundingClientRect().bottom;
+    const plain = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" collapsible .items=${ITEMS} style="height: 480px"><p>Footer</p></tc-side-nav>`);
+    expect(under(plain)).toBeCloseTo(space(plain, "--tc-space-2"), 0);
+    const gap = between(plain);
+
+    const el = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" collapsible .items=${ITEMS} style="height: 480px; --tc-snav-head-gap: var(--tc-space-6)"><p>Footer</p></tc-side-nav>`);
+    const six = space(el, "--tc-space-6");
+    expect(under(el)).toBeCloseTo(six, 0);
+    // The bar's other gaps stay as they were
+    expect(between(el)).toBeCloseTo(gap, 0);
+    // (The rail hides the page's children, so the token is measured above)
+    el.collapsed = true;
+    await finish(el);
+    expect(under(el)).toBeCloseTo(six, 0);
+    // Smaller than the bar's gap works too
+    el.style.setProperty("--tc-snav-head-gap", "0px");
+    await settle();
+    expect(under(el)).toBeCloseTo(0, 0);
+  });
+
   test("an item without an icon shows its first letter; no brand, no head content", async () => {
     const el = await fixture<TcSideNav>(html`<tc-side-nav .items=${[{ id: "a", label: "Archive" }]}></tc-side-nav>`);
     expect(text(el.querySelector(".ui-snav__initial"))).toBe("A");

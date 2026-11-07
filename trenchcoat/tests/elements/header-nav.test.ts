@@ -180,6 +180,130 @@ describe("tc-header-nav", () => {
     expect(leaked).toBe(0);
   });
 
+  test("a switch item in the account card reports its new state and keeps the card open; the page sets it", async () => {
+    const el = await make();
+    let dark = false;
+    const items = () => [
+      { id: "dark", label: "Dark mode", checked: dark },
+      { id: "sign-out", label: "Sign out" },
+    ];
+    el.accountItems = items();
+    const picked: HeaderNavAccountSelect[] = [];
+    el.addEventListener("tc-account-select", (e) => {
+      const d = (e as CustomEvent<HeaderNavAccountSelect>).detail;
+      picked.push(d);
+      if (d.checked !== undefined) {
+        dark = d.checked;
+        el.accountItems = items();
+      }
+    });
+    avatar(el).click();
+    await settle();
+    const toggle = () => pop(el)?.querySelector<HTMLButtonElement>('[role="switch"]');
+    await expect.poll(() => !!toggle()).toBe(true);
+    expect(toggle()!.getAttribute("aria-checked")).toBe("false");
+    toggle()!.focus();
+    await userEvent.keyboard("{Enter}");
+    await settle();
+    expect(picked).toEqual([{ id: "dark", checked: true }]);
+    expect(pop(el)).not.toBeNull();
+    expect(toggle()!.getAttribute("aria-checked")).toBe("true");
+    expect(document.activeElement).toBe(toggle());
+    toggle()!.click();
+    await settle();
+    expect(picked.at(-1)).toEqual({ id: "dark", checked: false });
+    expect(pop(el)).not.toBeNull();
+    // A plain action still closes it, with no checked in its detail
+    [...pop(el)!.querySelectorAll<HTMLButtonElement>("button")].find((b) => b.textContent?.includes("Sign out"))!.click();
+    await settle();
+    expect(picked.at(-1)).toEqual({ id: "sign-out" });
+    expect(pop(el)).toBeNull();
+  });
+
+  test("React: onAccountSelect gets a switch item's new state", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const calls: [string, boolean | undefined][] = [];
+    function App() {
+      const [dark, setDark] = React.useState(false);
+      return React.createElement(HeaderNav, {
+        user: USER,
+        defaultOpen: "account",
+        accountItems: [{ id: "dark", label: "Dark mode", checked: dark }],
+        onAccountSelect: (id: string, checked?: boolean) => {
+          calls.push([id, checked]);
+          if (checked !== undefined) setDark(checked);
+        },
+      });
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const toggle = () => host.querySelector<HTMLButtonElement>('.ui-hn__pop [role="switch"]');
+    await expect.poll(() => !!toggle()).toBe(true);
+    await act(async () => toggle()!.click());
+    await settle();
+    expect(calls).toEqual([["dark", true]]);
+    expect(toggle()!.getAttribute("aria-checked")).toBe("true");
+    await act(async () => root.unmount());
+    host.remove();
+  });
+
+  test("inverse: on a light page the triggers take dark colours for a dark bar; the popovers keep the page's light theme", async () => {
+    const wrap = await fixture(html`<div data-tc-theme="light" style="padding: 16px">
+      <div class="probe-light"><span class="fg" style="color: var(--tc-action-ghost-fg)"></span><span class="bg" style="background: var(--tc-surface-raised)"></span><span class="sep" style="background: var(--tc-border-default)"></span></div>
+      <div class="probe-dark" data-tc-theme="dark"><span class="fg" style="color: var(--tc-action-ghost-fg)"></span><span class="bg" style="background: var(--tc-surface-raised)"></span><span class="sep" style="background: var(--tc-border-default)"></span><span class="ring" style="outline: 2px solid var(--tc-focus-ring)"></span></div>
+      <div style="background: #081d35; padding: 8px">
+        <tc-header-nav inverse .user=${USER}>
+          <tc-notifications .now=${NOW} .items=${ITEMS}></tc-notifications>
+          <tc-app-picker current="mail" .apps=${APPS}></tc-app-picker>
+        </tc-header-nav>
+      </div>
+    </div>`);
+    const el = wrap.querySelector<TcHeaderNav>("tc-header-nav")!;
+    await settle();
+    expect(el.hasAttribute("inverse")).toBe(true);
+    const style = (sel: string, root: Element = wrap) => getComputedStyle(root.querySelector(sel)!);
+    const light = { fg: style(".probe-light .fg").color, bg: style(".probe-light .bg").backgroundColor, sep: style(".probe-light .sep").backgroundColor };
+    const dark = { fg: style(".probe-dark .fg").color, bg: style(".probe-dark .bg").backgroundColor, sep: style(".probe-dark .sep").backgroundColor, ring: style(".probe-dark .ring").outlineColor };
+    expect(dark.fg).not.toBe(light.fg);
+    // Every trigger resolves the dark theme's colours, with the page still light
+    for (const sel of [".ui-ntc__trigger", ".ui-apk__trigger", ".ui-hn__me"]) expect(style(sel, el).color, sel).toBe(dark.fg);
+    expect(style(".ui-hn__sep", el).backgroundColor).toBe(dark.sep);
+    // The focus ring is the dark theme's, made for dark surfaces
+    const probe = document.createElement("span");
+    probe.style.outline = "2px solid var(--tc-focus-ring)";
+    el.querySelector(".ui-hn__me")!.append(probe);
+    expect(getComputedStyle(probe).outlineColor).toBe(dark.ring);
+    probe.remove();
+    // The unread badge is ringed in --tc-hn-ring, which the page can set to the bar's colour
+    el.style.setProperty("--tc-hn-ring", "#081d35");
+    expect(style(".ui-ntc__badge", el).boxShadow).toContain("rgb(8, 29, 53)");
+
+    // The popovers keep the page's light theme
+    el.panel = "account";
+    await settle();
+    await expect.poll(() => !!el.querySelector(".ui-hn__pop tc-profile-menu .ui-pm__card")).toBe(true);
+    expect(style(".ui-hn__pop .ui-pm__card", el).backgroundColor).not.toBe(dark.bg);
+    expect(getComputedStyle(el.querySelector(".ui-hn__pop")!).colorScheme).not.toBe("dark");
+    el.panel = "notifications";
+    await settle();
+    await expect.poll(() => !!el.querySelector(".ui-ntc__pop")).toBe(true);
+    expect(getComputedStyle(el.querySelector(".ui-ntc__pop")!).colorScheme).toBe("light");
+    expect(style(".ui-ntc__pop", el).backgroundColor).not.toBe(dark.bg);
+    el.panel = "apps";
+    await settle();
+    await expect.poll(() => !!el.querySelector(".ui-apk__pop")).toBe(true);
+    expect(getComputedStyle(el.querySelector(".ui-apk__pop")!).colorScheme).toBe("light");
+
+    // Without inverse the triggers are the page's own again
+    el.panel = null;
+    el.inverse = false;
+    await settle();
+    expect(el.hasAttribute("inverse")).toBe(false);
+    expect(style(".ui-hn__me", el).color).toBe(light.fg);
+  });
+
   test("a photo, falling back to initials when it fails to load; an unsafe URL is never used", async () => {
     const PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
     const el = await fixture<TcHeaderNav>(html`<tc-header-nav .user=${{ ...USER, avatar: PIXEL }}></tc-header-nav>`);

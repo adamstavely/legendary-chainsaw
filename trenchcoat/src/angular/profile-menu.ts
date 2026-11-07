@@ -40,10 +40,10 @@ export class ProfileMenu {
     this.#el.look = v;
   }
   /**
-   * An action was picked; detail `{ id: string }`.
+   * An action was picked; detail `{ id: string, checked?: boolean }` – `checked` is a switch item's new state.
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-item-select") readonly tcItemSelect = new EventEmitter<CustomEvent<{ id: string }>>();
+  @Output("tc-item-select") readonly tcItemSelect = new EventEmitter<CustomEvent<{ id: string; checked?: boolean }>>();
   /**
    * The setup's next step was picked; detail `{ next: string }`.
    * Types $event; the element dispatches the event itself.

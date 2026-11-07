@@ -1344,7 +1344,7 @@ const css = /* css */ `
 
 .ui-as, .ui-as *, .ui-as *::before, .ui-as *::after { box-sizing: border-box; }
 .ui-as {
-  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--tc-font-sans, "Inter Variable", "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   font-size: var(--tc-font-size-md, 13px);
   color: var(--tc-text-secondary, light-dark(#404040, #c8c8cc));
   -webkit-font-smoothing: antialiased;

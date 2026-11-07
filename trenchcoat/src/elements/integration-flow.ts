@@ -187,7 +187,7 @@ const css = /* css */ `
   /* The card labels are drawn on the 2400 × 1490 stage and scaled down with it: display sizes off the type scale */
   --tc-integration-flow-title-size: 37px;
   --tc-integration-flow-sub-size: 33.5px;
-  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--tc-font-sans, "Inter Variable", "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="if"] *, [data-ui="if"] *::before, [data-ui="if"] *::after { box-sizing: border-box; margin: 0; padding: 0; }

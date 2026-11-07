@@ -58,7 +58,7 @@
     {
      "name": "tc-item-select",
      "detail": "",
-     "description": "An action was picked; detail `{ id: string }`.",
+     "description": "An action was picked; detail `{ id: string, checked?: boolean }` – `checked` is a switch item's new state.",
      "cancelable": false
     },
     {
@@ -89,6 +89,7 @@
     "--tc-duration-base",
     "--tc-duration-fast",
     "--tc-duration-instant",
+    "--tc-duration-moderate",
     "--tc-duration-reveal-slow",
     "--tc-ease-move",
     "--tc-ease-standard",
@@ -143,6 +144,13 @@
     "--tc-subtitle-line-height",
     "--tc-surface-on-tray",
     "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
@@ -483,7 +491,7 @@
   "windowed": false
  },
  "size": {
-  "min": 27349,
-  "gzip": 7829
+  "min": 29068,
+  "gzip": 8256
  }
 }

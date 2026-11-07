@@ -40,6 +40,24 @@ Standard and Clean differ only in the pieces: the triggers are 32 px round butto
 account card is Standard's gray tray card or Clean's white menu card, and Clean draws initials in a medium weight. Set
 `look` on the element and the bell and picker inside it follow.
 
+### On a dark header bar
+
+A header bar that's dark in both themes – a brand navy, say – needs light triggers even when the page is light. Set
+`inverse`: the bell, the picker's button, the avatar and the hairline take the dark theme's colours, hover fills and
+focus ring, whatever the page's theme, while the account card, the notifications panel and the app picker keep the
+page's light or dark theme. Set `--tc-hn-ring` to the bar's colour so the unread badge and the presence dot are
+ringed in it. Don't put `data-tc-theme="dark"` on the bar for this: the popovers live inside it and would turn dark
+too.
+
+```html
+<header style="background: #081d35">
+  <tc-header-nav inverse style="--tc-hn-ring: #081d35">
+    <tc-notifications></tc-notifications>
+    <tc-app-picker></tc-app-picker>
+  </tc-header-nav>
+</header>
+```
+
 ## Keyboard
 
 | Key | What it does |
@@ -63,6 +81,8 @@ open. The face and the presence dot are hidden from screen readers – the butto
 - `user.name` is the full name: the initials, the avatar's name and the card's heading come from it.
 - Give `user.avatar` a photo URL, or leave it out for initials. A photo that fails to load falls back to initials.
 - `accountItems` replaces Settings, Language, Docs and Sign out; keep the list short and put Sign out last.
+- An account item with `checked` is a switch, such as “Dark mode”. Picking it fires `tc-account-select` with `checked`
+  as its new state and leaves the card open; set the item's `checked` to it.
 - Rename “Account” with `account-label` in other languages.
 
 ## Do

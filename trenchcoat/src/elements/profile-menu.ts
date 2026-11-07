@@ -1,5 +1,6 @@
 import { html, nothing, svg, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
@@ -14,7 +15,9 @@ import type { Look } from "./internal/look";
  *   </tc-profile-menu>
  *
  * The actions are a named group of plain buttons (always visible, so not an ARIA menu); ↑ ↓ Home End move between
- * them as a convenience. Picking one fires `tc-item-select` ({ id }) and calls the item's `onSelect`; the setup's
+ * them as a convenience. Picking one fires `tc-item-select` ({ id }) and calls the item's `onSelect`. An item with
+ * `checked` is a switch (role="switch", aria-checked) with a small switch on the right: picking it fires
+ * `tc-item-select` with `checked` as it should become, and the page sets the item's `checked` to that. The setup's
  * "Next" button fires `tc-setup-continue` and calls `setup.onContinue`. The progress bar fills once the card is seen.
  */
 
@@ -25,7 +28,15 @@ export type ProfileMenuItem = {
   icon?: Element;
   /** Small pill on the right, e.g. "New" */
   badge?: string;
+  /** Makes the item an on/off switch, showing this state; the page sets it from the event's `checked` */
+  checked?: boolean;
   onSelect?: () => void;
+};
+/** Details of the events */
+export type ProfileMenuItemSelect = {
+  id: string;
+  /** For a switch item: its state after this pick, the opposite of its `checked` */
+  checked?: boolean;
 };
 
 export type ProfileSetup = {
@@ -37,7 +48,7 @@ export type ProfileSetup = {
   onContinue?: () => void;
 };
 
-export type ProfileMenuIconName = "settings" | "language" | "docs" | "apps" | "logout";
+export type ProfileMenuIconName = "settings" | "language" | "docs" | "apps" | "logout" | "moon" | "sun";
 
 /** The icons' shapes; the stroke follows the menu's look through --tc-profile-menu-icon-stroke */
 const iconShapes: Record<ProfileMenuIconName, string> = {
@@ -47,6 +58,8 @@ const iconShapes: Record<ProfileMenuIconName, string> = {
   docs: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4M16 13H8M16 17H8M10 9H8"></path>',
   apps: '<rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><path d="M17.5 3v7M14 6.5h7"></path>',
   logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>',
+  sun: '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>',
 };
 
 /** One of the menu's icons as an element, to put in `items` */
@@ -75,7 +88,7 @@ const arrowIcon = (look: Look) =>
 /**
  * An account card: the signed-in user, actions and profile setup progress.
  * @tag tc-profile-menu
- * @fires tc-item-select - An action was picked; detail `{ id: string }`.
+ * @fires tc-item-select - An action was picked; detail `{ id: string, checked?: boolean }` – `checked` is a switch item's new state.
  * @fires tc-setup-continue - The setup's next step was picked; detail `{ next: string }`.
  */
 export class TcProfileMenu extends TcElement {
@@ -138,7 +151,7 @@ export class TcProfileMenu extends TcElement {
 
   private select(item: ProfileMenuItem) {
     item.onSelect?.();
-    this.emit("tc-item-select", { id: item.id });
+    this.emit<ProfileMenuItemSelect>("tc-item-select", item.checked === undefined ? { id: item.id } : { id: item.id, checked: !item.checked });
   }
 
   private continueSetup(setup: ProfileSetup) {
@@ -194,10 +207,17 @@ export class TcProfileMenu extends TcElement {
           ${repeat(
             items,
             (item) => item.id,
-            (item) => html`<button type="button" class="ui-pm__item" @click=${() => this.select(item)}>
+            (item) => html`<button
+              type="button"
+              class="ui-pm__item"
+              role=${ifDefined(item.checked === undefined ? undefined : "switch")}
+              aria-checked=${ifDefined(item.checked === undefined ? undefined : item.checked ? "true" : "false")}
+              @click=${() => this.select(item)}
+            >
               <span class="ui-pm__icon">${item.icon ? item.icon.cloneNode(true) : nothing}</span>
               <span class="ui-pm__label" title=${item.label}>${item.label}</span>
               ${item.badge ? html`<span class="ui-pm__badge">${item.badge}</span>` : nothing}
+              ${item.checked === undefined ? nothing : html`<span class="ui-pm__switch" aria-hidden="true"><span></span></span>`}
             </button>`,
           )}
         </div>
@@ -413,6 +433,30 @@ export class TcProfileMenu extends TcElement {
   line-height: var(--tc-line-height-tight);
   color: var(--tc-tone-rose-fg);
 }
+/* A switch item's switch, at the row's end: the switch pattern, off is --tc-switch-off (≥ 3:1), on is the accent */
+.ui-pm__switch {
+  position: relative;
+  flex: none;
+  width: var(--tc-switch-w);
+  height: var(--tc-switch-h);
+  margin-left: auto;
+  border-radius: var(--tc-switch-radius);
+  background: var(--tc-switch-off);
+  transition: background-color var(--tc-duration-base) var(--tc-ease-standard);
+}
+.ui-pm__item[aria-checked="true"] .ui-pm__switch { background: var(--tc-switch-on); }
+.ui-pm__switch > span {
+  position: absolute;
+  top: var(--tc-space-0-5);
+  left: var(--tc-space-0-5);
+  width: var(--tc-switch-knob);
+  height: var(--tc-switch-knob);
+  border-radius: calc(var(--tc-switch-radius) - var(--tc-space-0-5));
+  background: var(--tc-switch-knob-bg);
+  box-shadow: var(--tc-shadow-control);
+  transition: transform var(--tc-duration-moderate) var(--tc-ease-move);
+}
+.ui-pm__item[aria-checked="true"] .ui-pm__switch > span { transform: translateX(calc(var(--tc-switch-w) - var(--tc-switch-h))); }
 /* Profile setup in the gray extension – kept to two short lines and a bar */
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__setup {
   padding: var(--tc-space-2-5) var(--tc-space-4-5) var(--tc-space-3);
@@ -519,7 +563,7 @@ export class TcProfileMenu extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__next { min-height: 36px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ui-pm__item, .ui-pm__icon, .ui-pm__fill, .ui-pm__next, .ui-pm__next svg { transition: none; }
+  .ui-pm__item, .ui-pm__icon, .ui-pm__fill, .ui-pm__next, .ui-pm__next svg, .ui-pm__switch, .ui-pm__switch > span { transition: none; }
 }
 `;
 }
