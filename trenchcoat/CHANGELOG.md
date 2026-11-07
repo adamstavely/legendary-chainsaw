@@ -24,6 +24,22 @@
   back, a cursor walks its measured rows while a frame, padding guides and a width chip draw round each; finite, and
   still under reduced motion.
 
+## 0.3.0 – Angular: one entry point per element
+
+- **Angular:** every directive has its own entry point, `@adamstavely/trenchcoat/angular/<name>` (typed by
+  `dist/angular/<name>.d.ts`): `import { SideNav } from "@adamstavely/trenchcoat/angular/side-nav"` loads that
+  element only, so an element used on a lazy route stays in that route's chunk. Through the index
+  (`@adamstavely/trenchcoat/angular`, still exported, with `TRENCHCOAT`), a bundler with lazy routes can hoist every
+  element imported that way into the initial bundle. The docs, `trenchcoat info` and `trenchcoat init` now show the
+  per-element import; `check:angular` compiles against one and checks, with an esbuild code-splitting build, that a
+  lazy chunk's elements stay out of the initial chunks.
+
+## 0.2.1 – Side Nav: the brand routes too
+
+- **Side Nav:** a plain click on the linked brand (`brand-href`) fires the cancelable `tc-navigate` as the items do,
+  with `{ id: "brand", href, item, brand: true }` (`SIDE_NAV_BRAND_ID`), so a single-page app can route it instead of
+  reloading. ⌘/Ctrl-, Shift- and middle clicks stay with the browser; `current` doesn't change.
+
 ## 0.2.0 – Side Nav
 
 - **Side Nav** (`tc-side-nav`): an app's main navigation down the side – the brand at the top, places with icons,

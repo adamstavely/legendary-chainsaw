@@ -118,7 +118,7 @@ function init() {
   const framework = ["next", "nuxt", "@angular/core", "svelte", "vue", "react"].find((d) => d in deps);
   console.log(`Detected: ${framework ?? "no framework"}\n\n1. At your app's entry: import "@adamstavely/trenchcoat/tokens.css";`);
   if (framework === "next" || framework === "react") console.log('2. Use components from "@adamstavely/trenchcoat/react", in a client component with Next.js.');
-  else if (framework === "@angular/core") console.log('2. Use the standalone directives from "@adamstavely/trenchcoat/angular".');
+  else if (framework === "@angular/core") console.log('2. Import each standalone directive from its own entry point, such as import { SharePanel } from "@adamstavely/trenchcoat/angular/share-panel"; – it loads that element only.');
   else console.log('2. Import each element once, such as import "@adamstavely/trenchcoat/share-panel"; then use its tag.');
   console.log("3. Find components: trenchcoat list <words>");
   console.log("\nFor AI coding tools, add the MCP server: trenchcoat-mcp");

@@ -1028,9 +1028,9 @@
     "tag": "tc-agent-fleet",
     "source": "demo",
     "runs": 7,
-    "cold": 23,
-    "first": 2.9,
-    "update": 0.2,
+    "cold": 15.2,
+    "first": 4,
+    "update": 0.3,
     "updateKind": "one item of agents replaced",
     "nodes": 230,
     "scale": {
@@ -1039,14 +1039,14 @@
      "points": [
       {
        "items": 100,
-       "first": 15,
-       "update": 1.1,
+       "first": 23.9,
+       "update": 1.5,
        "nodes": 2174
       },
       {
        "items": 1000,
-       "first": 119.9,
-       "update": 8.8,
+       "first": 165.8,
+       "update": 8.2,
        "nodes": 20399
       }
      ]
@@ -1418,9 +1418,9 @@
     "tag": "tc-agent-inbox",
     "source": "demo",
     "runs": 7,
-    "cold": 14.4,
-    "first": 2.1,
-    "update": 0.4,
+    "cold": 23.5,
+    "first": 3.2,
+    "update": 0.5,
     "updateKind": "one item of tasks replaced",
     "nodes": 272,
     "scale": {
@@ -1429,14 +1429,14 @@
      "points": [
       {
        "items": 100,
-       "first": 21.9,
-       "update": 2.7,
+       "first": 36.3,
+       "update": 2.9,
        "nodes": 4376
       },
       {
        "items": 1000,
-       "first": 227.8,
-       "update": 18.2,
+       "first": 235.1,
+       "update": 16.5,
        "nodes": 43256
       }
      ]
@@ -2353,9 +2353,9 @@
     "tag": "tc-agent-tree",
     "source": "demo",
     "runs": 7,
-    "cold": 14.1,
+    "cold": 14,
     "first": 1.1,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 48,
     "scale": null,
@@ -3704,9 +3704,9 @@
     "tag": "tc-approval-card",
     "source": "demo",
     "runs": 7,
-    "cold": 17.7,
-    "first": 1,
-    "update": 0.4,
+    "cold": 30.4,
+    "first": 1.2,
+    "update": 0.5,
     "updateKind": "one item of details replaced",
     "nodes": 59,
     "scale": {
@@ -3715,13 +3715,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2.2,
+       "first": 2.3,
        "update": 0.3,
        "nodes": 350
       },
       {
        "items": 1000,
-       "first": 12.6,
+       "first": 12.9,
        "update": 1.3,
        "nodes": 3050
       }
@@ -3915,9 +3915,9 @@
     "tag": "tc-approval-gates",
     "source": "demo",
     "runs": 7,
-    "cold": 12.1,
-    "first": 1.3,
-    "update": 0.2,
+    "cold": 13.4,
+    "first": 2.9,
+    "update": 0.4,
     "updateKind": "one item of gates replaced",
     "nodes": 126,
     "scale": {
@@ -3926,14 +3926,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.7,
-       "update": 0.3,
+       "first": 4.5,
+       "update": 0.5,
        "nodes": 510
       },
       {
        "items": 1000,
-       "first": 13,
-       "update": 2,
+       "first": 19.8,
+       "update": 2.6,
        "nodes": 4110
       }
      ]
@@ -10082,8 +10082,8 @@
     "tag": "tc-collaboration-stream",
     "source": "demo",
     "runs": 7,
-    "cold": 14.6,
-    "first": 2.9,
+    "cold": 22.9,
+    "first": 4.3,
     "update": 0.4,
     "updateKind": "one item of messages replaced",
     "nodes": 256,
@@ -10093,14 +10093,14 @@
      "points": [
       {
        "items": 100,
-       "first": 12.7,
-       "update": 1.3,
+       "first": 21.9,
+       "update": 1.8,
        "nodes": 2149
       },
       {
        "items": 1000,
-       "first": 129.8,
-       "update": 8,
+       "first": 136.5,
+       "update": 7.6,
        "nodes": 20949
       }
      ]
@@ -17653,7 +17653,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-07",
-   "hash": "2b12d2bfc9fbcfc7",
+   "hash": "8e2b06cd4c5a94f0",
    "bundle": {
     "own": {
      "min": 34126,
@@ -19216,6 +19216,11 @@
       "min": 12726
      },
      {
+      "name": "side-nav",
+      "kind": "element",
+      "min": 12628
+     },
+     {
       "name": "share-link-manager",
       "kind": "element",
       "min": 12430
@@ -19234,11 +19239,6 @@
       "name": "redaction-review",
       "kind": "element",
       "min": 12332
-     },
-     {
-      "name": "side-nav",
-      "kind": "element",
-      "min": 12331
      },
      {
       "name": "audience-mix",
@@ -21697,21 +21697,21 @@
      }
     ],
     "withoutLit": {
-     "min": 9848500,
-     "gzip": 2451744
+     "min": 9848797,
+     "gzip": 2451866
     },
     "withLit": {
-     "min": 9789019,
-     "gzip": 2432049
+     "min": 9789316,
+     "gzip": 2432176
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.9,
-    "first": 0.6,
-    "update": 0.1,
+    "cold": 2.5,
+    "first": 1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -24082,7 +24082,7 @@
     "tag": "tc-inspect-frame",
     "source": "demo",
     "runs": 7,
-    "cold": 3.7,
+    "cold": 6.2,
     "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -36415,9 +36415,9 @@
     "tag": "tc-root-cause-tree",
     "source": "demo",
     "runs": 7,
-    "cold": 9,
-    "first": 1.3,
-    "update": 0.4,
+    "cold": 21.7,
+    "first": 2.7,
+    "update": 0.5,
     "updateKind": "one item of hypotheses replaced",
     "nodes": 103,
     "scale": {
@@ -36426,14 +36426,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.9,
-       "update": 1.5,
+       "first": 17.2,
+       "update": 1.7,
        "nodes": 1414
       },
       {
        "items": 1000,
-       "first": 87.1,
-       "update": 7.1,
+       "first": 88.6,
+       "update": 7,
        "nodes": 13834
       }
      ]
@@ -36843,9 +36843,9 @@
     "tag": "tc-run-checkpoints",
     "source": "demo",
     "runs": 7,
-    "cold": 8.9,
-    "first": 1.8,
-    "update": 0.4,
+    "cold": 19.6,
+    "first": 4.7,
+    "update": 0.7,
     "updateKind": "one item of checkpoints replaced",
     "nodes": 164,
     "scale": {
@@ -36854,14 +36854,14 @@
      "points": [
       {
        "items": 100,
-       "first": 10.6,
-       "update": 1,
+       "first": 16.5,
+       "update": 1.2,
        "nodes": 1491
       },
       {
        "items": 1000,
-       "first": 115.6,
-       "update": 7.5,
+       "first": 122.6,
+       "update": 7.7,
        "nodes": 14241
       }
      ]
@@ -39644,11 +39644,11 @@
   },
   "side-nav": {
    "measuredAt": "2026-11-07",
-   "hash": "5ee5aec1b20d615d",
+   "hash": "8e60c845f8640362",
    "bundle": {
     "own": {
-     "min": 14383,
-     "gzip": 5018
+     "min": 14671,
+     "gzip": 5096
     },
     "shared": [
      {
@@ -39693,21 +39693,21 @@
      }
     ],
     "withoutLit": {
-     "min": 21442,
-     "gzip": 6999
+     "min": 21730,
+     "gzip": 7087
     },
     "withLit": {
-     "min": 41478,
-     "gzip": 13535
+     "min": 41766,
+     "gzip": 13619
     }
    },
    "render": {
     "tag": "tc-side-nav",
     "source": "demo",
     "runs": 7,
-    "cold": 3.4,
-    "first": 1.4,
-    "update": 0.8,
+    "cold": 4.8,
+    "first": 1.5,
+    "update": 0.9,
     "updateKind": "one item of items replaced",
     "nodes": 81,
     "scale": {
@@ -39716,14 +39716,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7,
-       "update": 3.1,
+       "first": 9,
+       "update": 2.6,
        "nodes": 957
       },
       {
        "items": 1000,
-       "first": 38.3,
-       "update": 20.7,
+       "first": 35.4,
+       "update": 21.3,
        "nodes": 9446
       }
      ]
@@ -44019,9 +44019,9 @@
     "tag": "tc-tool-access-map",
     "source": "demo",
     "runs": 7,
-    "cold": 10.9,
-    "first": 1.6,
-    "update": 0.7,
+    "cold": 14.3,
+    "first": 3.4,
+    "update": 0.8,
     "updateKind": "one item of tools replaced",
     "nodes": 181,
     "scale": {
@@ -44030,14 +44030,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.3,
-       "update": 5.4,
+       "first": 20.6,
+       "update": 4.9,
        "nodes": 1344
       },
       {
        "items": 1000,
-       "first": 79.2,
-       "update": 24.6,
+       "first": 56.3,
+       "update": 24.4,
        "nodes": 12844
       }
      ]

@@ -136,7 +136,7 @@ export function Imports({ slug, api }: { slug: string; api: ApiPage }) {
     ["HTML", <code>{mod}</code>],
     ["React / Next.js", wrappers.length ? <><code>{`import { ${wrappers.join(", ")} } from "@adamstavely/trenchcoat/react";`}</code> <span className="muted">· in a client component in Next.js</span></> : <><code>{mod}</code> <span className="muted">· no wrapper: use the tag</span></>],
     ["Vue / Nuxt", <><code>{mod}</code> <span className="muted">· tags starting with tc- are custom elements</span></>],
-    ["Angular", <><code>{`import { ${api.elements.map(angularName).join(", ")} } from "@adamstavely/trenchcoat/angular";`}</code> <span className="muted">· standalone directives, no schema</span></>],
+    ["Angular", <><code>{`import { ${api.elements.map(angularName).join(", ")} } from "@adamstavely/trenchcoat/angular/${slug}";`}</code> <span className="muted">· standalone directives, no schema</span></>],
     ["Svelte", <code>{mod}</code>],
   ];
   return (
@@ -156,7 +156,7 @@ const SETUP: Record<Framework, ReactNode> = {
   html: <>Import the module once – it registers the tag – and load <code>@adamstavely/trenchcoat/tokens.css</code>. Nothing else to set up.</>,
   react: <>The wrappers in <code>@adamstavely/trenchcoat/react</code> take React props and callbacks. In Next.js (App Router) they render on the client only: use them from a <code>"use client"</code> file.</>,
   vue: <>Tell the template compiler that <code>tc-</code> tags are custom elements: <code>compilerOptions.isCustomElement</code> in the Vue plugin, or <code>vue.compilerOptions</code> in <code>nuxt.config.ts</code>.</>,
-  angular: <>Import the element's directive from <code>@adamstavely/trenchcoat/angular</code> into the component's <code>imports</code> – no <code>CUSTOM_ELEMENTS_SCHEMA</code>. The directive registers the tag, and strict templates check every binding and event.</>,
+  angular: <>Import the element's directive from its own entry point, <code>@adamstavely/trenchcoat/angular/&lt;name&gt;</code> (it loads that element only, so a lazy route keeps it), into the component's <code>imports</code> – no <code>CUSTOM_ELEMENTS_SCHEMA</code>. The directive registers the tag, and strict templates check every binding and event.</>,
   svelte: <>Import the module in the component's script. Svelte sets a property when the element has one, so lists and objects pass as they are.</>,
 };
 const SSR: Record<Framework, ReactNode> = {

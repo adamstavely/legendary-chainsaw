@@ -4,7 +4,7 @@ import { TcSideNav, type SideNavCollapsedChange, type SideNavNavigate } from "..
 import { h, useControlled } from "./internal";
 
 export type { SideNavCollapsedChange, SideNavItem, SideNavLabels, SideNavNavigate } from "../side-nav";
-export { defaultSideNavLabels } from "../side-nav";
+export { defaultSideNavLabels, SIDE_NAV_BRAND_ID } from "../side-nav";
 
 const RawSideNav = createComponent({
   tagName: "tc-side-nav",
@@ -21,7 +21,7 @@ export type SideNavProps = Omit<RawProps, "current" | "collapsed" | "onTcNavigat
   current?: string | null;
   /** The current item at first, when `current` isn't controlled; then a click moves it */
   defaultCurrent?: string | null;
-  /** An item was clicked; call `event.preventDefault()` to route a link yourself instead of following it */
+  /** An item or the linked brand (id "brand", `event.detail.brand`) was clicked; call `event.preventDefault()` to route a link yourself instead of following it */
   onNavigate?: (id: string, href: string | undefined, event: CustomEvent<SideNavNavigate>) => void;
   /** Folded into an icon-only rail – controlled when given */
   collapsed?: boolean;
@@ -42,7 +42,7 @@ export function SideNav({ current, defaultCurrent = null, onNavigate, collapsed,
     collapsed: c.value,
     onTcNavigate: (e: CustomEvent<SideNavNavigate>) => {
       onNavigate?.(e.detail.id, e.detail.href, e);
-      if (current === undefined && !e.defaultPrevented) setOwn(e.detail.id);
+      if (current === undefined && !e.defaultPrevented && !e.detail.brand) setOwn(e.detail.id);
     },
     onTcCollapsedChange: (e: CustomEvent<SideNavCollapsedChange>) => c.handler(e.detail.collapsed, e),
   });

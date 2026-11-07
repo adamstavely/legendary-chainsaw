@@ -202,6 +202,8 @@ ${els.map(directive).join("\n")}`,
 files.set(
   "index.ts",
   `${header}// Every element's directive: import { Button, Combobox } from "@adamstavely/trenchcoat/angular", or TRENCHCOAT for all of them.
+// Prefer each one's own entry point – import { Button } from "@adamstavely/trenchcoat/angular/button" – which loads that
+// element only: with lazy routes, a bundler can otherwise pull every element imported through this index up front.
 ${[...bySlug].map(([slug, els]) => `import { ${els.map((el) => el.name).join(", ")} } from "./${slug}.js";`).join("\n")}
 
 export { ${elements.map((el) => el.name).join(", ")} };

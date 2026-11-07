@@ -3,7 +3,8 @@
 // type declarations emitted from the current sources (remediation 6.5):
 //   · React – tsc with examples/react's React types (the Next.js tab shows the same wrapper code)
 //   · Vue – vue-tsc with trenchcoat/vue, so templates are type-checked: props and @tc-* events
-//   · Angular – ngc with strictTemplates against the trenchcoat/angular directives: bindings, attributes and $event
+//   · Angular – ngc with strictTemplates against the directives' own entry points (trenchcoat/angular/<name>): bindings,
+//     attributes and $event
 //   · Svelte – the Svelte compiler (no svelte-check in the app), plus tsc on each <script lang="ts"> with Svelte's
 //     rune types; the markup's bindings aren't type-checked
 //   · HTML – each <script type="module"> parsed (syntax only: plain JS has no types to check against)
@@ -58,7 +59,7 @@ execSync("npx cem analyze --config custom-elements-manifest.config.mjs", { cwd: 
 for (const f of ["vue.d.ts", "svelte.d.ts"]) cpSync(join(ROOT, "dist/types", f), join(types, f));
 writeFileSync(join(types, "tokens.css.d.ts"), "export {};\n");
 const trenchcoatPaths = {
-  trenchcoat: [join(types, "elements/index.d.ts")],
+  "@adamstavely/trenchcoat": [join(types, "elements/index.d.ts")],
   "@adamstavely/trenchcoat/react": [join(types, "elements/react.d.ts")],
   "@adamstavely/trenchcoat/vue": [join(types, "vue.d.ts")],
   "@adamstavely/trenchcoat/svelte": [join(types, "svelte.d.ts")],
@@ -66,6 +67,7 @@ const trenchcoatPaths = {
   // The Angular directives from their generated sources, compiled with the snippets
   "@adamstavely/trenchcoat/angular": [join(ROOT, "src/angular/index.ts")],
   "@adamstavely/trenchcoat/angular/forms": [join(ROOT, "src/angular/forms.ts")],
+  "@adamstavely/trenchcoat/angular/*": [join(ROOT, "src/angular/*.ts")],
   "@adamstavely/trenchcoat/look-provider": [join(types, "elements/internal/look.d.ts")],
   "@adamstavely/trenchcoat/*": [join(types, "elements/*.d.ts")],
 };

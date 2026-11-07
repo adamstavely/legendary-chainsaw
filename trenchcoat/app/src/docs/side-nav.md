@@ -10,7 +10,9 @@ An app's main navigation down the side of the page: the product's name and logo 
 app – each with an icon, and a count or a short word when something waits there – one of them the current page. The
 page's own children sit at the bottom: a reminder, an upgrade offer, a setup guide. Items with `href` are real links,
 so a middle-click or ⌘/Ctrl-click opens a new tab; every plain click fires a cancelable `tc-navigate`, so a
-single-page app's router can take it instead. `collapsible` adds a button that folds the bar into an icon-only rail.
+single-page app's router can take it instead. A linked brand (`brand-href`) fires the same event with the id
+`"brand"` and `brand: true`, and doesn't change `current`. `collapsible` adds a button that folds the bar into an
+icon-only rail.
 
 ## When to use
 
@@ -63,6 +65,7 @@ collapse button says whether the bar is open (`aria-expanded`), and folding anno
 - Name each place with a noun people use for it: “Portfolio”, “Reports”, not “Manage portfolio”.
 - Keep badges to counts and one short word; a badge that's always there stops being read.
 - Put admin and rarely used places in their own section at the end.
+- If your router handles `tc-navigate`, check `event.detail.brand` (or the id `"brand"`) for the brand's link home.
 
 ## Do
 

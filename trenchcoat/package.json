@@ -1,6 +1,6 @@
 {
   "name": "@adamstavely/trenchcoat",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Trenchcoat – Lit web components for AI-native products",
   "license": "UNLICENSED",
   "repository": {
@@ -63,7 +63,10 @@
     "./internal/*": null,
     "./elements/*": null,
     "./generative/*": null,
-    "./angular/*": null,
+    "./angular/*": {
+      "types": "./dist/angular/*.d.ts",
+      "import": "./dist/angular/*.js"
+    },
     "./types/*": null,
     "./*": {
       "types": "./dist/types/elements/*.d.ts",
