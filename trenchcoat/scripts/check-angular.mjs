@@ -6,9 +6,12 @@
 //   · several that must not – a misspelt input binding (a plain attribute is allowed on any element, as in HTML), a value of the wrong type, a misread $event, a non-numeric attribute for a number, an unknown tc-* tag –
 //     each failing with the error Angular gives for it
 // then imports the built package in plain Node – no DOM, as a server-side render (SSR) meets it, and with Node's strict
-// ESM resolution, as webpack and test runners do: every dist/*.js and dist/angular/*.js module, and each entry point
+// ESM resolution, as webpack and test runners do: every dist/*.js and dist/angular/*.js module, and each entry point;
+// then bundles with esbuild, code splitting on as for lazy routes: a directive from its own entry point
+// (angular/<name>) brings its element only, and elements a lazy chunk imports stay out of the initial chunks
 //   node scripts/check-angular.mjs
 import { execSync } from "node:child_process";
+import { build } from "esbuild";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -36,6 +39,7 @@ const tsconfig = {
     paths: {
       "@adamstavely/trenchcoat/angular": ["dist/angular/index.d.ts"],
       "@adamstavely/trenchcoat/angular/forms": ["dist/angular/forms.d.ts"],
+      "@adamstavely/trenchcoat/angular/*": ["dist/angular/*"],
       "@adamstavely/trenchcoat/look-provider": ["dist/types/elements/internal/look.d.ts"],
       "@adamstavely/trenchcoat/*": ["dist/types/elements/*"],
     },
@@ -46,7 +50,7 @@ const tsconfig = {
 };
 
 /** Compiles one component; returns the compiler's output when it fails, "" when it compiles */
-function compile(name, imports, template, members = "") {
+function compile(name, imports, template, members = "", from = "@adamstavely/trenchcoat/angular") {
   const dir = join(TMP, name);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
@@ -55,7 +59,7 @@ function compile(name, imports, template, members = "") {
     join(dir, "app.ts"),
     `import { Component } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ${imports} } from "@adamstavely/trenchcoat/angular";
+import { ${imports} } from "${from}";
 import { TRENCHCOAT_FORMS } from "@adamstavely/trenchcoat/angular/forms";
 import type { ComboboxOption } from "@adamstavely/trenchcoat/combobox";
 
@@ -102,6 +106,16 @@ const good = compile(
 );
 if (good) problems.push(`the good app didn't compile:\n${good.slice(0, 2000)}`);
 
+// Must compile: a directive from its own entry point, typed the same way
+const entry = compile(
+  "entry",
+  "SideNav",
+  `<tc-side-nav brand="Halden" current="home" [items]="[]" [collapsed]="on" (tc-navigate)="last = $event.detail.id"></tc-side-nav>`,
+  "count = 0; last: string | null = null;",
+  "@adamstavely/trenchcoat/angular/side-nav",
+);
+if (entry) problems.push(`a directive from its own entry point (angular/side-nav) didn't compile:\n${entry.slice(0, 2000)}`);
+
 // Must not compile, each with Angular's error for it
 const bad = [
   ["misspelt input", "Button", `<tc-button [lable]="'Save'"></tc-button>`, /NG8002|Can't bind to 'lable'|not a known property/, ""],
@@ -126,7 +140,7 @@ const imports = run(
     const failed = [];
     const mods = [...readdirSync("dist").filter((f) => f.endsWith(".js")).map((f) => "./dist/" + f),
       ...readdirSync("dist/angular").filter((f) => f.endsWith(".js")).map((f) => "./dist/angular/" + f)].filter((f) => !/ [0-9]+[.]js$/.test(f));
-    for (const m of [...mods, "@adamstavely/trenchcoat", "@adamstavely/trenchcoat/react", "@adamstavely/trenchcoat/angular", "@adamstavely/trenchcoat/angular/forms", "@adamstavely/trenchcoat/generative"]) {
+    for (const m of [...mods, "@adamstavely/trenchcoat", "@adamstavely/trenchcoat/react", "@adamstavely/trenchcoat/angular", "@adamstavely/trenchcoat/angular/forms", "@adamstavely/trenchcoat/angular/side-nav", "@adamstavely/trenchcoat/generative"]) {
       try { await import(m); } catch (e) { failed.push(m + ": " + String(e.message).split("\\n")[0]); }
     }
     console.log(JSON.stringify({ count: mods.length, failed }));
@@ -135,9 +149,35 @@ const imports = run(
 const { count, failed } = JSON.parse(imports.trim().split("\n").pop());
 for (const f of failed) problems.push(`doesn't import in Node (SSR, strict ESM): ${f}`);
 
+// Bundled as an app with lazy routes: the main chunk uses Side Nav, a lazy chunk Button and Combobox. Each directive's
+// own entry point keeps the lazy chunk's elements out of what loads first – the index can't (esbuild, like Angular's
+// builder, hoists everything reached through it into a shared chunk the main one loads)
+const SHAKE = join(TMP, "shake");
+mkdirSync(SHAKE, { recursive: true });
+writeFileSync(join(SHAKE, "main.js"), `import { SideNav } from "@adamstavely/trenchcoat/angular/side-nav";\nconsole.log(SideNav);\nexport const lazy = () => import("./lazy.js");\n`);
+writeFileSync(join(SHAKE, "lazy.js"), `import { Button } from "@adamstavely/trenchcoat/angular/button";\nimport { Combobox } from "@adamstavely/trenchcoat/angular/combobox";\nconsole.log(Button, Combobox);\n`);
+const bundle = await build({ entryPoints: [join(SHAKE, "main.js")], bundle: true, splitting: true, format: "esm", platform: "browser", outdir: join(SHAKE, "out"), write: false, metafile: true, external: ["@angular/*"], logLevel: "silent" });
+const outputs = bundle.metafile.outputs;
+const text = Object.fromEntries(bundle.outputFiles.map((f) => [f.path, f.text]));
+const abs = (p) => resolve(ROOT, p);
+const defined = (paths) => new Set(paths.flatMap((p) => [...(text[abs(p)] ?? "").matchAll(/customElements\.define\(\s*"(tc-[a-z0-9-]+)"/g)].map((m) => m[1])));
+const initial = new Set();
+for (const queue = [Object.keys(outputs).find((k) => outputs[k].entryPoint?.endsWith("main.js"))]; queue.length; ) {
+  const k = queue.pop();
+  if (!k || initial.has(k) || !outputs[k]) continue;
+  initial.add(k);
+  for (const i of outputs[k].imports) if (i.kind === "import-statement" && !i.external) queue.push(i.path);
+}
+const upFront = defined([...initial]);
+const everything = defined(Object.keys(outputs));
+for (const tag of ["tc-button", "tc-combobox"]) if (upFront.has(tag)) problems.push(`bundling: ${tag}, used only by a lazy chunk, loads up front`);
+if (!upFront.has("tc-side-nav")) problems.push("bundling: tc-side-nav isn't in the main chunk");
+const extra = [...everything].filter((t) => !["tc-side-nav", "tc-button", "tc-combobox", "tc-look-provider"].includes(t));
+if (extra.length) problems.push(`bundling: angular/<name> entry points pulled in other elements: ${extra.join(", ")}`);
+
 rmSync(TMP, { recursive: true, force: true });
 if (problems.length) {
   console.error(`angular: ${problems.length} problem${problems.length === 1 ? "" : "s"}\n  ${problems.join("\n  ")}`);
   process.exit(1);
 }
-console.log(`angular ok: strict templates check the wrappers' inputs and events, ngModel and formControl work, ${bad.length} mistakes are caught, and all ${count} modules import in Node without a DOM`);
+console.log(`angular ok: strict templates check the wrappers' inputs and events, ngModel and formControl work, ${bad.length} mistakes are caught, all ${count} modules import in Node without a DOM, and a directive's own entry point bundles its element only`);

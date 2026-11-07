@@ -64,12 +64,15 @@ client-only plugin (`plugins/trenchcoat.client.ts` with `import "@adamstavely/tr
 
 ## Angular
 
-`@adamstavely/trenchcoat/angular` has a standalone directive for every element, named after it (`tc-combobox` → `Combobox`). Put
+Every element has a standalone directive, named after it (`tc-combobox` → `Combobox`), at its own entry point:
+`@adamstavely/trenchcoat/angular/<name>`. Import each directive from there – it loads that one element, so an element
+used only on a lazy route stays in that route's chunk. (`@adamstavely/trenchcoat/angular` still exports them all, and
+`TRENCHCOAT`, but with lazy routes a bundler can pull every element imported through it into the initial bundle.) Put
 the directives in a component's `imports` – no `CUSTOM_ELEMENTS_SCHEMA` – and strict templates check every binding:
 
 ```ts
 import { Component, signal } from "@angular/core";
-import { Combobox } from "@adamstavely/trenchcoat/angular";
+import { Combobox } from "@adamstavely/trenchcoat/angular/combobox";
 import type { ComboboxOption } from "@adamstavely/trenchcoat/combobox";
 
 @Component({
