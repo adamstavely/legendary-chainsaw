@@ -60,14 +60,14 @@ Say what the file is and what people can do instead: "sample-plate-14.cdx can't 
 <tc-preview-unavailable></tc-preview-unavailable>
 
 <script type="module">
-  import "trenchcoat/preview-unavailable";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/preview-unavailable";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { PreviewUnavailable } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PreviewUnavailable } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <PreviewUnavailable />;

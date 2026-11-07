@@ -153,7 +153,7 @@
   {
    "tag": "tc-notification-stack",
    "className": "TcNotificationStack",
-   "module": "trenchcoat/notification-stack",
+   "module": "@adamstavely/trenchcoat/notification-stack",
    "data": [
     "notices"
    ],

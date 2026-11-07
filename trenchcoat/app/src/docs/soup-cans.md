@@ -61,14 +61,14 @@ When it stands for a state, say it in words beside it or as the caption: "Nothin
 <tc-soup-cans caption="Nothing sorted yet"></tc-soup-cans>
 
 <script type="module">
-  import "trenchcoat/soup-cans";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/soup-cans";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { SoupCans } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SoupCans } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <SoupCans caption="Nothing sorted yet" />;

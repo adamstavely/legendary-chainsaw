@@ -233,7 +233,7 @@
   {
    "tag": "tc-toaster",
    "className": "TcToaster",
-   "module": "trenchcoat/toaster",
+   "module": "@adamstavely/trenchcoat/toaster",
    "data": [
     "hotkey"
    ],

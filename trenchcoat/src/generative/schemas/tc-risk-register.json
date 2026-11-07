@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-risk-register.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-risk-register.json",
   "title": "tc-risk-register",
   "description": "A risk register – a 5 × 5 likelihood × impact heat grid with counts and moves since the last review, beside a\nsortable register whose risks open with their mitigation and can be rescored.",
   "type": "object",

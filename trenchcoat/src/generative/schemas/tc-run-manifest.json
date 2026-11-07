@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-run-manifest.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-manifest.json",
   "title": "tc-run-manifest",
   "description": "A run's reproducibility record: model, settings, instruction hash, sources, intent and the verification summary,\nwith copy and export.",
   "type": "object",

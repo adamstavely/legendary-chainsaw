@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-query-builder.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-query-builder.json",
   "title": "tc-query-builder",
   "description": "A visual query builder – conditions joined by AND or OR, one level of nested groups, a field, an operator by type\nand a value per condition, and the query read back in words and as a query string with Copy and Run.",
   "type": "object",

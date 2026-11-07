@@ -57,7 +57,7 @@ hidden from assistive technology. Nothing in it can be operated.
 <tc-team-invite id="invite" label="Invite teammates to work with you"></tc-team-invite>
 
 <script type="module">
-  import "trenchcoat/team-invite";
+  import "@adamstavely/trenchcoat/team-invite";
 
   document.querySelector("#invite").avatars = [
     { src: "/avatars/maya.webp" },
@@ -68,7 +68,7 @@ hidden from assistive technology. Nothing in it can be operated.
 ```
 
 ```tsx
-import { TeamInvite } from "trenchcoat/react";
+import { TeamInvite } from "@adamstavely/trenchcoat/react";
 
 export function EmptyTeam() {
   return (

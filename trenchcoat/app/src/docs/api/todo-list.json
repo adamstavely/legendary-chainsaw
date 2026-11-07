@@ -249,7 +249,7 @@
   {
    "tag": "tc-todo-list",
    "className": "TcTodoList",
-   "module": "trenchcoat/todo-list",
+   "module": "@adamstavely/trenchcoat/todo-list",
    "data": [
     "items",
     "labels"

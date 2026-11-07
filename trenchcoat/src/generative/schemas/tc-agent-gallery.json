@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-gallery.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-gallery.json",
   "title": "tc-agent-gallery",
   "description": "A showcase of agents as slim gradient panels, one open in the middle with its product screen.",
   "type": "object",

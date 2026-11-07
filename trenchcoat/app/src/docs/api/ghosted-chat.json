@@ -157,7 +157,7 @@
   {
    "tag": "tc-ghosted-chat",
    "className": "TcGhostedChat",
-   "module": "trenchcoat/ghosted-chat",
+   "module": "@adamstavely/trenchcoat/ghosted-chat",
    "data": [],
    "attributes": [
     {

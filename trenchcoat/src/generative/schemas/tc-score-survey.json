@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-score-survey.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-score-survey.json",
   "title": "tc-score-survey",
   "description": "The NPS or CSAT question a person answers, with an optional follow-up and a thank-you.",
   "type": "object",

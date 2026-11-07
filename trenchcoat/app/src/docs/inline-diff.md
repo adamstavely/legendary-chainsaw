@@ -87,8 +87,8 @@ icon buttons are named “Undo last decision”, “Previous suggestion” and �
 ></tc-inline-diff>
 
 <script type="module">
-  import "trenchcoat/inline-diff";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/inline-diff";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const diff = document.querySelector("#diff");
   diff.addEventListener("tc-done", (e) => console.log("final:", e.detail.text));
@@ -97,8 +97,8 @@ icon buttons are named “Undo last decision”, “Previous suggestion” and �
 
 ```tsx
 import { useRef } from "react";
-import { InlineDiff, type InlineDiffHandle } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { InlineDiff, type InlineDiffHandle } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Rewrite({ original, suggested, onSave }: { original: string; suggested: string; onSave: (text: string) => void }) {
   const diff = useRef<InlineDiffHandle>(null);

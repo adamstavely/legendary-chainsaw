@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agreement-tracker.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agreement-tracker.json",
   "title": "tc-agreement-tracker",
   "description": "How often the AI agreed with the person's framing versus pushed back, this session: the record, the rate and the\nrun, amber at a run of agreements, with \"Show the other side\".",
   "type": "object",

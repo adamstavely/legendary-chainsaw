@@ -301,7 +301,7 @@
   {
    "tag": "tc-client-context",
    "className": "TcClientContext",
-   "module": "trenchcoat/client-context",
+   "module": "@adamstavely/trenchcoat/client-context",
    "data": [
     "clients",
     "me"

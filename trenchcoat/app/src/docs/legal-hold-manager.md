@@ -67,8 +67,8 @@ Write `reason` so someone can tell in a year why it exists. Pass `now`: without 
 <tc-legal-hold-manager id="holds"></tc-legal-hold-manager>
 
 <script type="module">
-  import "trenchcoat/legal-hold-manager";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/legal-hold-manager";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const manager = document.querySelector("#holds");
   manager.now = Date.now();
@@ -78,8 +78,8 @@ Write `reason` so someone can tell in a year why it exists. Pass `now`: without 
 ```
 
 ```tsx
-import { LegalHoldManager, type LegalHold } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LegalHoldManager, type LegalHold } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const holds: LegalHold[] = [{ id: "a", name: "Supply dispute", placedBy: "Noor Haddad", placedAt: Date.UTC(2026, 2, 9), reason: "Counsel asked us to keep it.", status: "active", items: [] }];
 

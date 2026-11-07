@@ -61,14 +61,14 @@ for a new one." Don't show what the link led to.
 <tc-link-expired></tc-link-expired>
 
 <script type="module">
-  import "trenchcoat/link-expired";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/link-expired";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { LinkExpired } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LinkExpired } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <LinkExpired />;

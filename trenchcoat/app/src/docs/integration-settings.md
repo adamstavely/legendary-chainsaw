@@ -94,8 +94,8 @@ clipboard.”, “Changes saved.”, “Changes discarded.” – and failures a
 <tc-integration-settings id="shopify" name="Shopify" meta="Connected Mar 14 · syncing orders every 5 min"></tc-integration-settings>
 
 <script type="module">
-  import "trenchcoat/integration-settings";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/integration-settings";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#shopify");
   card.values = { enabled: true, siteUrl: "northwind-goods.com", timeZone: "(GMT −05:00) New York", apiKey: null };
@@ -106,8 +106,8 @@ clipboard.”, “Changes saved.”, “Changes discarded.” – and failures a
 ```
 
 ```tsx
-import { IntegrationSettings, type IntegrationValues } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IntegrationSettings, type IntegrationValues } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ShopifySettings({ saved }: { saved: IntegrationValues }) {
   return (

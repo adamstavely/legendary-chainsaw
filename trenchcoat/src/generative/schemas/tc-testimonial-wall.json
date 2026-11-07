@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-testimonial-wall.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-testimonial-wall.json",
   "title": "tc-testimonial-wall",
   "description": "The landing-page wall of quotes: columns that scroll endlessly in opposite directions, ease to a stop on hover and pause for good.",
   "type": "object",

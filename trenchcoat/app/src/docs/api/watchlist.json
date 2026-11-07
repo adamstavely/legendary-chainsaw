@@ -254,7 +254,7 @@
   {
    "tag": "tc-watchlist",
    "className": "TcWatchlist",
-   "module": "trenchcoat/watchlist",
+   "module": "@adamstavely/trenchcoat/watchlist",
    "data": [
     "items",
     "riskLabels"

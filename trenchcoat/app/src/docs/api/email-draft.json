@@ -352,7 +352,7 @@
   {
    "tag": "tc-email-draft",
    "className": "TcEmailDraft",
-   "module": "trenchcoat/email-draft",
+   "module": "@adamstavely/trenchcoat/email-draft",
    "data": [
     "contacts",
     "tones",

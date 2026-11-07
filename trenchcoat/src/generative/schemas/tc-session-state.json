@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-session-state.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-session-state.json",
   "title": "tc-session-state",
   "description": "Where a long LLM session stands: a health pill, tiles for the goal, open loops, pending artifacts and context\npressure, and status chips.",
   "type": "object",

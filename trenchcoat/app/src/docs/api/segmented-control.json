@@ -277,7 +277,7 @@
   {
    "tag": "tc-segmented-control",
    "className": "TcSegmentedControl",
-   "module": "trenchcoat/segmented-control",
+   "module": "@adamstavely/trenchcoat/segmented-control",
    "data": [
     "options"
    ],

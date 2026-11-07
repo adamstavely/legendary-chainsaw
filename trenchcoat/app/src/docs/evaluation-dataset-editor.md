@@ -111,8 +111,8 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 <tc-evaluation-dataset-editor id="set" name="set"></tc-evaluation-dataset-editor>
 
 <script type="module">
-  import "trenchcoat/evaluation-dataset-editor";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/evaluation-dataset-editor";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const set = document.querySelector("#set");
   set.heading = "Support replies";
@@ -128,8 +128,8 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 
 ```tsx
 import { useState } from "react";
-import { EvaluationDatasetEditor, type EvaluationDatasetValue, type EvaluationDatasetVersion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EvaluationDatasetEditor, type EvaluationDatasetValue, type EvaluationDatasetVersion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SupportSet({ start, versions }: { start: EvaluationDatasetValue; versions: EvaluationDatasetVersion[] }) {
   const [value, setValue] = useState(start);

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-sparkline.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sparkline.json",
   "title": "tc-sparkline",
   "description": "A small inline trend chart – line, area, bars or win-loss – sized from the text around it, with optional markers, a\nreference line, a tone for which way it went and, when interactive, a tooltip per point.",
   "type": "object",

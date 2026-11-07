@@ -350,7 +350,7 @@
   {
    "tag": "tc-project-card",
    "className": "TcProjectCard",
-   "module": "trenchcoat/project-card",
+   "module": "@adamstavely/trenchcoat/project-card",
    "data": [
     "tasks",
     "statuses",

@@ -61,7 +61,7 @@
   {
    "tag": "tc-staggered-reveal",
    "className": "TcStaggeredReveal",
-   "module": "trenchcoat/staggered-reveal",
+   "module": "@adamstavely/trenchcoat/staggered-reveal",
    "data": [],
    "attributes": [
     {

@@ -227,7 +227,7 @@
   {
    "tag": "tc-project-flow",
    "className": "TcProjectFlow",
-   "module": "trenchcoat/project-flow",
+   "module": "@adamstavely/trenchcoat/project-flow",
    "data": [],
    "attributes": [
     {

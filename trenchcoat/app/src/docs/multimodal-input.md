@@ -88,8 +88,8 @@ the budget”.
 <tc-multimodal-input id="ask" budget="64000"></tc-multimodal-input>
 
 <script type="module">
-  import "trenchcoat/multimodal-input";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/multimodal-input";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ask = document.querySelector("#ask");
   ask.accept = ["image/png", "image/jpeg", "audio/*", ".pdf"];
@@ -102,8 +102,8 @@ the budget”.
 
 ```tsx
 import { useState } from "react";
-import { MultimodalInput, type MultimodalAttachment } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MultimodalInput, type MultimodalAttachment } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Ask() {
   const [attachments, setAttachments] = useState<MultimodalAttachment[]>([]);

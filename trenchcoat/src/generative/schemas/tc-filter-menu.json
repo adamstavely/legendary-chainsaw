@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-filter-menu.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-filter-menu.json",
   "title": "tc-filter-menu",
   "description": "Grouped filters: removable chips on top, collapsible groups of checkboxes below.",
   "type": "object",

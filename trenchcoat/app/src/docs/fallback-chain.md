@@ -63,8 +63,8 @@ Write `reason` as what happened: "Timed out after 8 seconds", not an error code.
 <tc-fallback-chain id="chain" request="Summarise the report"></tc-fallback-chain>
 
 <script type="module">
-  import "trenchcoat/fallback-chain";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/fallback-chain";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#chain").attempts = [
     { id: "a", model: "Model A", state: "failed", reason: "Timed out" },
@@ -74,8 +74,8 @@ Write `reason` as what happened: "Timed out after 8 seconds", not an error code.
 ```
 
 ```tsx
-import { FallbackChain, type FallbackAttempt } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FallbackChain, type FallbackAttempt } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const attempts: FallbackAttempt[] = [
   { id: "a", model: "Model A", state: "failed", reason: "Timed out" },

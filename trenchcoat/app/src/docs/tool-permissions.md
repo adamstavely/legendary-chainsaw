@@ -93,8 +93,8 @@ section headed “Changes” or “No changes”; Reset and Save are `aria-disab
 <tc-tool-permissions id="perms" heading="Tool permissions"></tc-tool-permissions>
 
 <script type="module">
-  import "trenchcoat/tool-permissions";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tool-permissions";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const perms = document.querySelector("#perms");
   perms.agents = [{ id: "coder", name: "Coder", model: "Sonnet" }, { id: "ops", name: "Ops", model: "Opus" }];
@@ -115,8 +115,8 @@ section headed “Changes” or “No changes”; Reset and Save are `aria-disab
 
 ```tsx
 import { useState } from "react";
-import { ToolPermissions, type ToolPermissionMatrix, type ToolPermissionTool } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ToolPermissions, type ToolPermissionMatrix, type ToolPermissionTool } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const tools: ToolPermissionTool[] = [
   { id: "github", name: "GitHub", scopes: [{ id: "read", label: "Read code" }, { id: "push", label: "Push to main", risk: "destructive" }] },

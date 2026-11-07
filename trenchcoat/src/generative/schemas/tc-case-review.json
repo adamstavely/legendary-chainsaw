@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-case-review.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-case-review.json",
   "title": "tc-case-review",
   "description": "One case ready for a person to decide: the evidence, the timeline, the assistant's suggestion and the decision.",
   "type": "object",

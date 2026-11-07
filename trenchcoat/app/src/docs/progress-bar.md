@@ -55,14 +55,14 @@ Write `label` as what's being waited for: "Loading results". An unknown wait swe
 <tc-progress-bar label="Loading results"></tc-progress-bar>
 
 <script type="module">
-  import "trenchcoat/progress-bar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/progress-bar";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { ProgressBar } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProgressBar } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Import({ share }: { share: number }) {
   return <ProgressBar label="Importing" value={share} done={share >= 1} />;

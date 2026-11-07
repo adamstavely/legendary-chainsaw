@@ -82,8 +82,8 @@ setting) draws everything at once.
 <tc-segmented-bar heading="GPU hours by lab" description="This month" unit=" h"></tc-segmented-bar>
 
 <script type="module">
-  import "trenchcoat/segmented-bar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/segmented-bar";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-segmented-bar").data = [
     { label: "Genomics", value: 4200 },
     { label: "Imaging", value: 2650 },
@@ -93,8 +93,8 @@ setting) draws everything at once.
 ```
 
 ```tsx
-import { SegmentedBar } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SegmentedBar } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", value: 4200 },

@@ -35,7 +35,7 @@ page `<label for>` names them.
 
 ## React
 
-`trenchcoat/react` wraps each element with React props and callbacks: `value` / `defaultValue` / `onChange` for
+`@adamstavely/trenchcoat/react` wraps each element with React props and callbacks: `value` / `defaultValue` / `onChange` for
 controlled and uncontrolled use, `title` for headings, and React nodes for icons and avatars. React nodes passed as
 content are rendered once and cloned into the element – they look the same, but event handlers inside them don't
 run (stepper-form's steps are the exception: they stay live React). A `ref` is the element itself.
@@ -52,5 +52,5 @@ sandbox-log), so 10,000 rows cost about as much as 60.
 
 ## Size
 
-Import elements one by one (`trenchcoat/button`): each pulls in itself and the small shared base. A page with one
+Import elements one by one (`@adamstavely/trenchcoat/button`): each pulls in itself and the small shared base. A page with one
 button is about 15 KB gzipped, Lit included; Lit (8 KB) is shared by every element on the page.

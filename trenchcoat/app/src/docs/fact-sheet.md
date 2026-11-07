@@ -89,8 +89,8 @@ grades work”. Copying is confirmed in a polite status message, “Full name co
 <tc-fact-sheet id="facts" heading="Customer profile"></tc-fact-sheet>
 
 <script type="module">
-  import "trenchcoat/fact-sheet";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/fact-sheet";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const facts = document.querySelector("#facts");
   facts.sections = [
@@ -114,8 +114,8 @@ grades work”. Copying is confirmed in a polite status message, “Full name co
 ```
 
 ```tsx
-import { FactSheet, type FactSection } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FactSheet, type FactSection } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sections: FactSection[] = [
   {

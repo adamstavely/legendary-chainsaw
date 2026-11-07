@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-writing-assistant.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-writing-assistant.json",
   "title": "tc-writing-assistant",
   "description": "A compact AI chat card with suggestions, a growing prompt field and dictation.",
   "type": "object",

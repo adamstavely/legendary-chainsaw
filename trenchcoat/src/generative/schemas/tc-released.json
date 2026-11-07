@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-released.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-released.json",
   "title": "tc-released",
   "description": "A document with a check on it and a few sparks around, for content that's out and live.",
   "type": "object",

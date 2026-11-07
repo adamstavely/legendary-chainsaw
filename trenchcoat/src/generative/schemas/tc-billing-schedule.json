@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-billing-schedule.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-billing-schedule.json",
   "title": "tc-billing-schedule",
   "description": "One phase of a billing plan: dates, products, a discount or a minimum, and the totals.",
   "type": "object",

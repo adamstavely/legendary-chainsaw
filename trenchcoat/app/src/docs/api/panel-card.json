@@ -161,7 +161,7 @@
   {
    "tag": "tc-panel-card",
    "className": "TcPanelCard",
-   "module": "trenchcoat/panel-card",
+   "module": "@adamstavely/trenchcoat/panel-card",
    "data": [],
    "attributes": [
     {

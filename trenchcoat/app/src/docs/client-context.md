@@ -101,8 +101,8 @@ P&L”. A collapsed report's body is `inert`, so its buttons aren't reached. Swi
 <tc-client-context id="client"></tc-client-context>
 
 <script type="module">
-  import "trenchcoat/client-context";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/client-context";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const client = document.querySelector("#client");
   client.me = { name: "Sofia Lind" };
@@ -113,8 +113,8 @@ P&L”. A collapsed report's body is `inert`, so its buttons aren't reached. Swi
 
 ```tsx
 import { useState } from "react";
-import { ClientContext, defaultContextClients } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ClientContext, defaultContextClients } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Clients() {
   const [client, setClient] = useState("northwind");

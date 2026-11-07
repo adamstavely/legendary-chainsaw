@@ -88,8 +88,8 @@ The table has row and column headers, and when it is wider than the card it beco
 <tc-breakdown-chart id="work" heading="Sprint 24 workload" fill></tc-breakdown-chart>
 
 <script type="module">
-  import "trenchcoat/breakdown-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/breakdown-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const chart = document.querySelector("#work");
   chart.dimensions = [
@@ -110,8 +110,8 @@ The table has row and column headers, and when it is wider than the card it beco
 ```
 
 ```tsx
-import { BreakdownChart, type BreakdownRecord, type Dimension, type Measure } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BreakdownChart, type BreakdownRecord, type Dimension, type Measure } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const dimensions: Dimension[] = [
   { key: "status", label: "Status", values: ["Todo", "In progress", "Done"] },

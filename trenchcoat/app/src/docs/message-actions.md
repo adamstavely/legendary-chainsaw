@@ -87,8 +87,8 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 </div>
 
 <script type="module">
-  import "trenchcoat/message-actions";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/message-actions";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const versions = ["Wrap the filter in useMemo.", "Memoize the list and debounce the input."];
   const answer = document.querySelector("#answer");
@@ -106,8 +106,8 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 
 ```tsx
 import { useState } from "react";
-import { MessageActions, MessageText } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MessageActions, MessageText } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Answer({ versions, onRegenerate }: { versions: string[]; onRegenerate: () => Promise<void> }) {
   const [version, setVersion] = useState(versions.length - 1);

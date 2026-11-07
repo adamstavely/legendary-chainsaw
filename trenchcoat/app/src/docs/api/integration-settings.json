@@ -425,7 +425,7 @@
   {
    "tag": "tc-integration-settings",
    "className": "TcIntegrationSettings",
-   "module": "trenchcoat/integration-settings",
+   "module": "@adamstavely/trenchcoat/integration-settings",
    "data": [
     "logo",
     "values",

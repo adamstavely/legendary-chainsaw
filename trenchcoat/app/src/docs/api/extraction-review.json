@@ -288,7 +288,7 @@
   {
    "tag": "tc-extraction-review",
    "className": "TcExtractionReview",
-   "module": "trenchcoat/extraction-review",
+   "module": "@adamstavely/trenchcoat/extraction-review",
    "data": [
     "fields",
     "pages"

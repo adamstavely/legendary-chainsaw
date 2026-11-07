@@ -55,8 +55,8 @@ The grid is `aria-hidden="true"`, so screen readers skip it and read only your c
 </tc-grid-background>
 
 <script type="module">
-  import "trenchcoat/grid-background";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/grid-background";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const grid = document.querySelector("#hero");
   grid.fade = 60;
@@ -65,8 +65,8 @@ The grid is `aria-hidden="true"`, so screen readers skip it and read only your c
 ```
 
 ```tsx
-import { GridBackground } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GridBackground } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Hero() {
   return (

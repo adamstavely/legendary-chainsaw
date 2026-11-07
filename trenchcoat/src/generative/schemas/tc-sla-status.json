@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-sla-status.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sla-status.json",
   "title": "tc-sla-status",
   "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,\nper-type rows and a period chooser.",
   "type": "object",

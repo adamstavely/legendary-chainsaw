@@ -202,7 +202,7 @@
   {
    "tag": "tc-waffle-chart",
    "className": "TcWaffleChart",
-   "module": "trenchcoat/waffle-chart",
+   "module": "@adamstavely/trenchcoat/waffle-chart",
    "data": [
     "label",
     "value"

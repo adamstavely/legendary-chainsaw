@@ -86,8 +86,8 @@ reads the range instead (“From 0.58 in Session 1 to 0.70 in Session 3.”).
 <tc-engagement-quality id="quality" scope="Last 5 sessions · 38 reviews" shared-with="your team lead" browsable></tc-engagement-quality>
 
 <script type="module">
-  import "trenchcoat/engagement-quality";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/engagement-quality";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#quality");
   card.trend = [
@@ -106,8 +106,8 @@ reads the range instead (“From 0.58 in Session 1 to 0.70 in Session 3.”).
 ```
 
 ```tsx
-import { EngagementQuality } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EngagementQuality } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ReviewQuality() {
   return (

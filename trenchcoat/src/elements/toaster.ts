@@ -12,7 +12,7 @@ import { FocusRescueController, HotkeyController, rescueFocus } from "./internal
  * Put <tc-toaster> once near the root, then call toast("Saved"), toast.success(…), toast.error(…),
  * toast.promise(promise, { loading, success, error }) or toast.dismiss(id) from anywhere.
  *
- *   import { toast } from "trenchcoat/toaster";
+ *   import { toast } from "@adamstavely/trenchcoat/toaster";
  *   <tc-toaster position="bottom-right"></tc-toaster>
  *   toast.success("Invoice sent", { description: "INV-2041" });
  *

@@ -84,8 +84,8 @@ message.
 <tc-co-occurrence id="coc" heading="Seen together with ACC-2291" window="120-day window" events="17"></tc-co-occurrence>
 
 <script type="module">
-  import "trenchcoat/co-occurrence";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/co-occurrence";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const coc = document.querySelector("#coc");
   coc.sources = [{ id: "login", label: "Logins" }, { id: "pay", label: "Payments" }];
@@ -99,8 +99,8 @@ message.
 
 ```tsx
 import { useState } from "react";
-import { CoOccurrence, type CoEntity } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CoOccurrence, type CoEntity } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const entities: CoEntity[] = [
   { id: "dana", name: "Dana Okafor", detail: "ACC-4471-K", score: 92, together: 14, bySource: { login: 9, pay: 14 } },

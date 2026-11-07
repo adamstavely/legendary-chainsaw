@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-evidence-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-evidence-list.json",
   "title": "tc-evidence-list",
   "description": "Exhibits linked to a matter – reference, title, type, source with its grade, date, holder and status – each opening\nonto its chain of custody with the hash at every step.",
   "type": "object",

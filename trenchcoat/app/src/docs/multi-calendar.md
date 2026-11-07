@@ -126,8 +126,8 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 <tc-multi-calendar id="team" heading="Team calendars" view="week" week-start="1"></tc-multi-calendar>
 
 <script type="module">
-  import "trenchcoat/multi-calendar";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/multi-calendar";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const cal = document.querySelector("#team");
   const maya = { id: "maya", name: "Maya Chen" };
@@ -150,8 +150,8 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 
 ```tsx
 import { useState } from "react";
-import { MultiCalendar, type CalendarEvent, type CalendarSource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MultiCalendar, type CalendarEvent, type CalendarSource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const maya = { id: "maya", name: "Maya Chen" };
 const calendars: CalendarSource[] = [

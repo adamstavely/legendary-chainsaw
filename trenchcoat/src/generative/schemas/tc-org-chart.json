@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-org-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-org-chart.json",
   "title": "tc-org-chart",
   "description": "Who reports to whom: people's cards joined by reporting lines, branches that fold, search, a picked person's manager\nand reports, pan and zoom, and an outline when narrow.",
   "type": "object",

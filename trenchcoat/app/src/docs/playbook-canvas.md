@@ -98,8 +98,8 @@ dry run's result, “Dry run: 4 of 6 steps run · 1 skipped · pauses at Lead si
 <tc-playbook-canvas id="playbook" heading="Refund requests" current-version="v7"></tc-playbook-canvas>
 
 <script type="module">
-  import "trenchcoat/playbook-canvas";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/playbook-canvas";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const playbook = document.querySelector("#playbook");
   playbook.value = {
@@ -119,8 +119,8 @@ dry run's result, “Dry run: 4 of 6 steps run · 1 skipped · pauses at Lead si
 
 ```tsx
 import { useState } from "react";
-import { PlaybookCanvas, type Playbook, type PlaybookDryRun } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PlaybookCanvas, type Playbook, type PlaybookDryRun } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function RefundPlaybook({ initial, dryRunOn }: { initial: Playbook; dryRunOn: (p: Playbook) => Promise<PlaybookDryRun> }) {
   const [value, setValue] = useState<Playbook>(initial);

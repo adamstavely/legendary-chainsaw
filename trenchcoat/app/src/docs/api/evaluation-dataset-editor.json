@@ -436,7 +436,7 @@
   {
    "tag": "tc-evaluation-dataset-editor",
    "className": "TcEvaluationDatasetEditor",
-   "module": "trenchcoat/evaluation-dataset-editor",
+   "module": "@adamstavely/trenchcoat/evaluation-dataset-editor",
    "data": [
     "value",
     "splits",

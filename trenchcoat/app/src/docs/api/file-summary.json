@@ -341,7 +341,7 @@
   {
    "tag": "tc-file-summary",
    "className": "TcFileSummary",
-   "module": "trenchcoat/file-summary",
+   "module": "@adamstavely/trenchcoat/file-summary",
    "data": [
     "file",
     "points",

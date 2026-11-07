@@ -50,7 +50,7 @@
   {
    "tag": "tc-collapse",
    "className": "TcCollapse",
-   "module": "trenchcoat/collapse",
+   "module": "@adamstavely/trenchcoat/collapse",
    "data": [],
    "attributes": [
     {

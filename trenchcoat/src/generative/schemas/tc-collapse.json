@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-collapse.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-collapse.json",
   "title": "tc-collapse",
   "description": "Content that glides open and shut, to its real height.",
   "type": "object",

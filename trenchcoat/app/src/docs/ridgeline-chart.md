@@ -84,8 +84,8 @@ setting) draws everything at once.
 <tc-ridgeline-chart heading="Time to freezer" description="Hours from collection, by team" unit=" h"></tc-ridgeline-chart>
 
 <script type="module">
-  import "trenchcoat/ridgeline-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ridgeline-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-ridgeline-chart").data = [
     { group: "Field ecology", value: 5.2 },
     { group: "Field ecology", value: 6.1 },
@@ -96,8 +96,8 @@ setting) draws everything at once.
 ```
 
 ```tsx
-import { RidgelineChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RidgelineChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { group: "Field ecology", value: 5.2 },

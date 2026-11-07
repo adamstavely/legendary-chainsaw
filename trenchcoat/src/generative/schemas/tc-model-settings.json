@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-model-settings.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-model-settings.json",
   "title": "tc-model-settings",
   "description": "How one model generates: its supported parameters with plain explanations, presets, feedback on incompatible\nsettings and what differs from the defaults.",
   "type": "object",

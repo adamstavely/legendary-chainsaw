@@ -180,7 +180,7 @@
   {
    "tag": "tc-grade-distribution",
    "className": "TcGradeDistribution",
-   "module": "trenchcoat/grade-distribution",
+   "module": "@adamstavely/trenchcoat/grade-distribution",
    "data": [
     "grades",
     "selected"

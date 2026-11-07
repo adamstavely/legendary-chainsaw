@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-person-hovercard.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-person-hovercard.json",
   "title": "tc-person-hovercard",
   "description": "The profile card behind a name: picture, pronouns, title and team, status, local time, manager, Email, Message,\nView profile and links – on hover, focus or tap.",
   "type": "object",

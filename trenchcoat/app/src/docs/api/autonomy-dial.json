@@ -223,7 +223,7 @@
   {
    "tag": "tc-autonomy-dial",
    "className": "TcAutonomyDial",
-   "module": "trenchcoat/autonomy-dial",
+   "module": "@adamstavely/trenchcoat/autonomy-dial",
    "data": [
     "actions",
     "pinned"

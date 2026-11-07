@@ -64,8 +64,8 @@ Give `role`, so people know why someone's in the chain. Set `actor` to the perso
 <tc-approval-chain id="chain" actor="Noor Haddad"></tc-approval-chain>
 
 <script type="module">
-  import "trenchcoat/approval-chain";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/approval-chain";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const chain = document.querySelector("#chain");
   chain.steps = [{ id: "a", name: "Noor Haddad", status: "current" }];
@@ -74,8 +74,8 @@ Give `role`, so people know why someone's in the chain. Set `actor` to the perso
 ```
 
 ```tsx
-import { ApprovalChain, type ApprovalStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ApprovalChain, type ApprovalStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const steps: ApprovalStep[] = [{ id: "a", name: "Noor Haddad", status: "current" }];
 

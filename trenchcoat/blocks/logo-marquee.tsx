@@ -1,12 +1,12 @@
 "use client";
 
-import { LogoMarquee as Base, type LogoMarqueeProps as BaseProps, type MarqueeLogo } from "trenchcoat/react";
+import { LogoMarquee as Base, type LogoMarqueeProps as BaseProps, type MarqueeLogo } from "@adamstavely/trenchcoat/react";
 
 /*
  * Logo Marquee – the endless "Trusted by" strip for landing pages. Rows of logos loop seamlessly, ease to a stop on
  * hover or keyboard focus, scrub with inertia and lift the hovered logo to colour; a Pause / Play button stops it for
  * good (WCAG 2.2.2), and prefers-reduced-motion shows a static row. It is the <tc-logo-marquee> element through
- * `trenchcoat/react` (install `trenchcoat` instead of copying files); every framework gets the same element. Marks may
+ * `@adamstavely/trenchcoat/react` (install `@adamstavely/trenchcoat` instead of copying files); every framework gets the same element. Marks may
  * be React nodes.
  */
 

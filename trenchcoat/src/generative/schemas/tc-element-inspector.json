@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-element-inspector.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-element-inspector.json",
   "title": "tc-element-inspector",
   "description": "A page's elements as a tree beside the chosen element's box model and styles.",
   "type": "object",

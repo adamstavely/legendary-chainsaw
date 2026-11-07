@@ -234,7 +234,7 @@
   {
    "tag": "tc-progress-tracker",
    "className": "TcProgressTracker",
-   "module": "trenchcoat/progress-tracker",
+   "module": "@adamstavely/trenchcoat/progress-tracker",
    "data": [
     "steps",
     "done",

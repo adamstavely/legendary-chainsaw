@@ -98,7 +98,7 @@ scrolls).
 ```
 
 ```tsx
-import { OrgChart, type OrgChartPerson } from "trenchcoat/react";
+import { OrgChart, type OrgChartPerson } from "@adamstavely/trenchcoat/react";
 
 export function Team({ people }: { people: OrgChartPerson[] }) {
   return <OrgChart title="Research" people={people} defaultSelected="r1" onSelectedChange={(id) => console.log(id)} />;

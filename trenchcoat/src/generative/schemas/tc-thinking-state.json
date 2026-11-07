@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-thinking-state.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-thinking-state.json",
   "title": "tc-thinking-state",
   "description": "The \"working…\" panel of an AI chat: steps and searches appear one by one, then \"Worked for …\".",
   "type": "object",

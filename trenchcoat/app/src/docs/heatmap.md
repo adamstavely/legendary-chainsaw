@@ -110,8 +110,8 @@ In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `a
 <tc-heatmap id="use" heading="Instrument use" unit="%" row-header="Day" crosshair canvas-threshold="2500"></tc-heatmap>
 
 <script type="module">
-  import "trenchcoat/heatmap";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/heatmap";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const map = document.querySelector("#use");
   map.rows = ["Mon", "Tue", "Wed"];
@@ -128,8 +128,8 @@ In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `a
 
 ```tsx
 import { useState } from "react";
-import { Heatmap, type HeatmapCell } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Heatmap, type HeatmapCell } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function InstrumentUse({ values }: { values: (number | null)[][] }) {
   const [selected, setSelected] = useState<HeatmapCell | null>(null);

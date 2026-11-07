@@ -91,8 +91,8 @@ is a `role="status"`, so a finished search is announced; an error is an alert. T
 <tc-search-results id="search" query="freezer"></tc-search-results>
 
 <script type="module">
-  import "trenchcoat/search-results";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/search-results";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const results = document.querySelector("#search");
   results.addEventListener("tc-search", async (e) => {
@@ -107,8 +107,8 @@ is a `role="status"`, so a finished search is announced; an error is an alert. T
 
 ```tsx
 import { useState } from "react";
-import { SearchResults, type SearchResultsFile, type SearchResultsStatus } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SearchResults, type SearchResultsFile, type SearchResultsStatus } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Search({ find, open }: { find: (q: string) => Promise<SearchResultsFile[]>; open: (path: string, line: number) => void }) {
   const [query, setQuery] = useState("");

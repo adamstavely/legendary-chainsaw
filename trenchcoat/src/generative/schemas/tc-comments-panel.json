@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-comments-panel.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-comments-panel.json",
   "title": "tc-comments-panel",
   "description": "A comment feed with filters, sort, runnable /edit commands, resolving and a composer.",
   "type": "object",

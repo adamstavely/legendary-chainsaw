@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-citation-badge.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-citation-badge.json",
   "title": "tc-citation-badge",
   "description": "A small badge of citation counts by kind – Publications, Supporting, Mentioning, Contrasting – with a tooltip\nthat says what each means, and an optional link to the details.",
   "type": "object",

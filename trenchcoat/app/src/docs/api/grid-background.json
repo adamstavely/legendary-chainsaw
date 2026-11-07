@@ -257,7 +257,7 @@
   {
    "tag": "tc-grid-background",
    "className": "TcGridBackground",
-   "module": "trenchcoat/grid-background",
+   "module": "@adamstavely/trenchcoat/grid-background",
    "data": [],
    "attributes": [
     {

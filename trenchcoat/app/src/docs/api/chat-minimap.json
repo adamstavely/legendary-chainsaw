@@ -210,7 +210,7 @@
   {
    "tag": "tc-chat-minimap",
    "className": "TcChatMinimap",
-   "module": "trenchcoat/chat-minimap",
+   "module": "@adamstavely/trenchcoat/chat-minimap",
    "data": [
     "items",
     "scrollRoot"

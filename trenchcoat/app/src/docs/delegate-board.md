@@ -91,8 +91,8 @@ hidden tasks.
 <tc-delegate-board id="board"></tc-delegate-board>
 
 <script type="module">
-  import "trenchcoat/delegate-board";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/delegate-board";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const board = document.querySelector("#board");
   board.agents = [
@@ -112,8 +112,8 @@ hidden tasks.
 
 ```tsx
 import { useState } from "react";
-import { DelegateBoard, type DelegateAgent, type DelegateTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DelegateBoard, type DelegateAgent, type DelegateTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const agents: DelegateAgent[] = [
   { id: "research", name: "Research", model: "Claude Opus", current: 18, rate: 0.08 },

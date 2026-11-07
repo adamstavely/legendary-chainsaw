@@ -82,8 +82,8 @@ The options sit in a `radiogroup`, each a `radio` with `aria-checked`; with `kin
 <tc-segmented-control id="view" aria-label="View"></tc-segmented-control>
 
 <script type="module">
-  import "trenchcoat/segmented-control";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/segmented-control";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const view = document.querySelector("#view");
   view.options = [
@@ -98,8 +98,8 @@ The options sit in a `radiogroup`, each a `radio` with `aria-checked`; with `kin
 
 ```tsx
 import { useState } from "react";
-import { SegmentedControl } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SegmentedControl } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function BillingPeriod() {
   const [period, setPeriod] = useState<"monthly" | "yearly">("yearly");

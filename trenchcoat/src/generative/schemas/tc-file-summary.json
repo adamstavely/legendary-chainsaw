@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-file-summary.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-file-summary.json",
   "title": "tc-file-summary",
   "description": "An AI summary of a file – the file's type, size and length, a summary that streams in, key points citing their\npages or times, the people, organisations, dates and amounts it mentions, and Copy, Regenerate and Open file.",
   "type": "object",

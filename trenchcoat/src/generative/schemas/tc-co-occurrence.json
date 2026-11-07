@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-co-occurrence.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-co-occurrence.json",
   "title": "tc-co-occurrence",
   "description": "Entities ranked by how often they appear together with a subject – strength in words and bars, a score, the share\nof events, a count per source and when last seen – with each row opening its shared events.",
   "type": "object",

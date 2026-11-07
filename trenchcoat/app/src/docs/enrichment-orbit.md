@@ -44,8 +44,8 @@ and say what is happening, not what it looks like.
 </div>
 
 <script type="module">
-  import "trenchcoat/enrichment-orbit";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/enrichment-orbit";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   // Named while the work runs; without a label the scene is decorative
   document.querySelector("#orbit").label = "Enriching your leads";
@@ -53,8 +53,8 @@ and say what is happening, not what it looks like.
 ```
 
 ```tsx
-import { EnrichmentOrbit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EnrichmentOrbit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Enriching() {
   return (

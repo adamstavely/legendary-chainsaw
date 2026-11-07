@@ -97,8 +97,8 @@ TypeScript” after a copy. The copy buttons are named “Copy as JSON” and �
 <tc-structured-output id="triage" heading="Ticket triage" variable-name="triage"></tc-structured-output>
 
 <script type="module">
-  import "trenchcoat/structured-output";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/structured-output";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const out = document.querySelector("#triage");
   out.schema = {
@@ -120,8 +120,8 @@ TypeScript” after a copy. The copy buttons are named “Copy as JSON” and �
 
 ```tsx
 import { useState } from "react";
-import { StructuredOutput, type StructuredOutputSchema } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { StructuredOutput, type StructuredOutputSchema } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const schema: StructuredOutputSchema = {
   type: "object",

@@ -80,8 +80,8 @@ from assistive technology. Nothing is announced as the run moves on.
 <tc-plan-vs-actual id="run" task="Ship the pricing page"></tc-plan-vs-actual>
 
 <script type="module">
-  import "trenchcoat/plan-vs-actual";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/plan-vs-actual";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const chart = document.querySelector("#run");
   chart.steps = [
@@ -94,8 +94,8 @@ from assistive technology. Nothing is announced as the run moves on.
 ```
 
 ```tsx
-import { PlanVsActual, type PlanVsActualStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PlanVsActual, type PlanVsActualStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const steps: PlanVsActualStep[] = [
   { id: "brief", title: "Read the brief", plan: 6000, start: 0, end: 5000, cost: 0.02, planCost: 0.02 },

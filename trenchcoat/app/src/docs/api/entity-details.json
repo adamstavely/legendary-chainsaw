@@ -250,7 +250,7 @@
   {
    "tag": "tc-entity-details",
    "className": "TcEntityDetails",
-   "module": "trenchcoat/entity-details",
+   "module": "@adamstavely/trenchcoat/entity-details",
    "data": [
     "kinds",
     "resolve",

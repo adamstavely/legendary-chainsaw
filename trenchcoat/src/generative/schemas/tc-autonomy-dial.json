@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-autonomy-dial.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-autonomy-dial.json",
   "title": "tc-autonomy-dial",
   "description": "How much an agent may do on its own: three levels, and the actions it runs alone or asks about first.",
   "type": "object",

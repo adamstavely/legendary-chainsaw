@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-access-request.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-access-request.json",
   "title": "tc-access-request",
   "description": "A request for access to one piece of data – the resource and its classification, the level, how long, a\njustification – then where the request stands: pending, approved, denied or expired.",
   "type": "object",

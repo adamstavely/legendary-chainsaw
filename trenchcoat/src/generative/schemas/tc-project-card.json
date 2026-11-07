@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-project-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-project-card.json",
   "title": "tc-project-card",
   "description": "A project summary with a segmented progress ring that unfolds into its subtasks, people and status.",
   "type": "object",

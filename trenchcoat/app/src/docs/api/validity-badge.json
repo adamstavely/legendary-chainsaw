@@ -297,7 +297,7 @@
   {
    "tag": "tc-validity-badge",
    "className": "TcValidityBadge",
-   "module": "trenchcoat/validity-badge",
+   "module": "@adamstavely/trenchcoat/validity-badge",
    "data": [
     "bandLabels",
     "items"

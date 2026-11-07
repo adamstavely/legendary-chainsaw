@@ -106,8 +106,8 @@ status the app returned, "Nothing more known.", "Couldn't load the details." and
 <tc-identifier-details id="report"></tc-identifier-details>
 
 <script type="module">
-  import "trenchcoat/identifier-details";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/identifier-details";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const report = document.querySelector("#report");
   report.text = "Exploited CVE-2026-0001 from 192.0.2.44; write-up at doi:10.5555/example.2026.0142.";
@@ -119,8 +119,8 @@ status the app returned, "Nothing more known.", "Couldn't load the details." and
 ```
 
 ```tsx
-import { IdentifierDetails, type IdentifierInfo } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IdentifierDetails, type IdentifierInfo } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const intel: Record<string, IdentifierInfo> = {
   "cve:CVE-2026-0001": { title: "Heap overflow in badge reader firmware", severity: "critical", score: 9.8 },

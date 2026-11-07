@@ -92,8 +92,8 @@ After Run plan, focus moves to the run's status line.
 <tc-agent-plan id="plan" heading="Find out why customers churned" estimate="~2 min" status="draft" cancellable></tc-agent-plan>
 
 <script type="module">
-  import "trenchcoat/agent-plan";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-plan";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const plan = document.querySelector("#plan");
   plan.steps = [
@@ -110,8 +110,8 @@ After Run plan, focus moves to the run's status line.
 
 ```tsx
 import { useState } from "react";
-import { AgentPlan, type AgentPlanStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentPlan, type AgentPlanStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const draft: AgentPlanStep[] = [
   { id: "pull", title: "Pull churned accounts", tool: "stripe.query" },

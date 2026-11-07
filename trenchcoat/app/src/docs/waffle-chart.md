@@ -83,8 +83,8 @@ system's reduced-motion setting) draws everything at once.
 <tc-waffle-chart heading="GPU hours" description="This quarter, by lab" unit=" h"></tc-waffle-chart>
 
 <script type="module">
-  import "trenchcoat/waffle-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/waffle-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-waffle-chart").data = [
     { label: "Genomics", value: 4120 },
     { label: "Climate", value: 2680 },
@@ -94,8 +94,8 @@ system's reduced-motion setting) draws everything at once.
 ```
 
 ```tsx
-import { WaffleChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { WaffleChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Genomics", value: 4120 },

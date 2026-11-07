@@ -98,8 +98,8 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 <tc-gauge id="freezer" label="Freezer B-3" unit="°C" min="-90" max="-60" value="-78" previous-label="the last reading" good="down"></tc-gauge>
 
 <script type="module">
-  import "trenchcoat/gauge";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/gauge";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gauge = document.querySelector("#freezer");
   gauge.bands = [
@@ -114,8 +114,8 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 
 ```tsx
 import { useState } from "react";
-import { Gauge } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Gauge } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AlarmLevel() {
   const [value, setValue] = useState(-70);

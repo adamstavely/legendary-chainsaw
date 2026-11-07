@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-search-results.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-search-results.json",
   "title": "tc-search-results",
   "description": "Results of a search across files: grouped by file, each matching line with the match marked, with a field to search again and optional replace.",
   "type": "object",

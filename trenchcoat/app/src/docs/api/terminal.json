@@ -295,7 +295,7 @@
   {
    "tag": "tc-terminal",
    "className": "TcTerminal",
-   "module": "trenchcoat/terminal",
+   "module": "@adamstavely/trenchcoat/terminal",
    "data": [
     "history"
    ],

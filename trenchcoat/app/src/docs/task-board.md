@@ -84,8 +84,8 @@ details", inert while closed; its choices are toggle buttons.
 <tc-task-board id="board"></tc-task-board>
 
 <script type="module">
-  import "trenchcoat/task-board";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/task-board";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const board = document.querySelector("#board");
   board.path = ["Northwind", "Web app", "Sprint 24"];
@@ -102,8 +102,8 @@ details", inert while closed; its choices are toggle buttons.
 
 ```tsx
 import { useState } from "react";
-import { TaskBoard, type Task } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TaskBoard, type Task } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const statuses = [
   { id: "todo", label: "Todo" },

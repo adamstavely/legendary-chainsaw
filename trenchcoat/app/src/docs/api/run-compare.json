@@ -264,7 +264,7 @@
   {
    "tag": "tc-run-compare",
    "className": "TcRunCompare",
-   "module": "trenchcoat/run-compare",
+   "module": "@adamstavely/trenchcoat/run-compare",
    "data": [
     "baseline",
     "candidate",

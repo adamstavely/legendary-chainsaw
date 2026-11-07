@@ -86,8 +86,8 @@ period chooser is a radio group labelled “Period”.
 <tc-sla-status id="sla" heading="SLA performance" unit="requests"></tc-sla-status>
 
 <script type="module">
-  import "trenchcoat/sla-status";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/sla-status";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const sla = document.querySelector("#sla");
   sla.split = { met: 233, atRisk: 10, breached: 5 };
@@ -102,8 +102,8 @@ period chooser is a radio group labelled “Period”.
 
 ```tsx
 import { useState } from "react";
-import { SlaStatus, type SlaSplit } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SlaStatus, type SlaSplit } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const split: SlaSplit = { met: 233, atRisk: 10, breached: 5 };
 

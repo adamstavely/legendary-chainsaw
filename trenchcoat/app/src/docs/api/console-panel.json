@@ -277,7 +277,7 @@
   {
    "tag": "tc-console-panel",
    "className": "TcConsolePanel",
-   "module": "trenchcoat/console-panel",
+   "module": "@adamstavely/trenchcoat/console-panel",
    "data": [
     "entries",
     "levels",

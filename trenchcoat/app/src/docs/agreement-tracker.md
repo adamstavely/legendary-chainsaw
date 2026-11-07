@@ -84,8 +84,8 @@ after – and clears when a push-back ends the run.
 <tc-agreement-tracker id="agreement" scope="Sign-up drop-off · this session"></tc-agreement-tracker>
 
 <script type="module">
-  import "trenchcoat/agreement-tracker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agreement-tracker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const tracker = document.querySelector("#agreement");
   tracker.threshold = 2;
@@ -99,8 +99,8 @@ after – and clears when a push-back ends the run.
 ```
 
 ```tsx
-import { AgreementTracker, type AgreementTurn } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgreementTracker, type AgreementTurn } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SessionAgreement({ turns, showCounter }: { turns: AgreementTurn[]; showCounter: (turnId?: string) => void }) {
   return (

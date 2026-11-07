@@ -71,14 +71,14 @@ such as "Show photo", with `reveal-label`.
 </tc-content-shield>
 
 <script type="module">
-  import "trenchcoat/content-shield";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/content-shield";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { ContentShield } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ContentShield } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Photo() {
   return (

@@ -51,14 +51,14 @@ that label – do that when the scene says something the text around it doesn't.
 <tc-lead-sourcing label="Leads sourced from Gmail and Grok"></tc-lead-sourcing>
 
 <script type="module">
-  import "trenchcoat/lead-sourcing";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/lead-sourcing";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { LeadSourcing } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LeadSourcing } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SourcesCard() {
   return (

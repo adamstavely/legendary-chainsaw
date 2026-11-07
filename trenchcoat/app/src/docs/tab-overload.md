@@ -53,8 +53,8 @@ label; take the label away and it is decorative again.
 <tc-tab-overload label="Three browser windows, the front one highlighted"></tc-tab-overload>
 
 <script type="module">
-  import "trenchcoat/tab-overload";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tab-overload";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const art = document.querySelector("tc-tab-overload");
   art.label = "Three browser windows – everything you had open, in one place";
@@ -62,8 +62,8 @@ label; take the label away and it is decorative again.
 ```
 
 ```tsx
-import { TabOverload } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TabOverload } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function EmptyTabs() {
   return (

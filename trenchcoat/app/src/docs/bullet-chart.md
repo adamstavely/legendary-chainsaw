@@ -83,8 +83,8 @@ text inks beside the bars. `still` (or the system's reduced-motion setting) draw
 <tc-bullet-chart heading="Audit readiness" description="Score out of 100"></tc-bullet-chart>
 
 <script type="module">
-  import "trenchcoat/bullet-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/bullet-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const el = document.querySelector("tc-bullet-chart");
   el.ranges = ["poor", "fair"];
   el.data = [
@@ -95,8 +95,8 @@ text inks beside the bars. `still` (or the system's reduced-motion setting) draw
 ```
 
 ```tsx
-import { BulletChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BulletChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Biosafety", value: 72, target: 85, poor: 50, fair: 75 },

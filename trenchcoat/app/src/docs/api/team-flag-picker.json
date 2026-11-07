@@ -169,7 +169,7 @@
   {
    "tag": "tc-team-flag-picker",
    "className": "TcTeamFlagPicker",
-   "module": "trenchcoat/team-flag-picker",
+   "module": "@adamstavely/trenchcoat/team-flag-picker",
    "data": [
     "flags",
     "labels"

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-eval-scorecard.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-eval-scorecard.json",
   "title": "tc-eval-scorecard",
   "description": "Test cases run against prompt or model versions – pass or fail per case per version, the pass rate across versions,\nfilters by tag, and a case opened beside its expected answer.",
   "type": "object",

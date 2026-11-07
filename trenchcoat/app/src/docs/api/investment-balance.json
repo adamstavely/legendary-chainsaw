@@ -215,7 +215,7 @@
   {
    "tag": "tc-investment-balance",
    "className": "TcInvestmentBalance",
-   "module": "trenchcoat/investment-balance",
+   "module": "@adamstavely/trenchcoat/investment-balance",
    "data": [
     "tiers"
    ],

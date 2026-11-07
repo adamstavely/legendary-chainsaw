@@ -118,7 +118,7 @@
   {
    "tag": "tc-drag-lift",
    "className": "TcDragLift",
-   "module": "trenchcoat/drag-lift",
+   "module": "@adamstavely/trenchcoat/drag-lift",
    "data": [],
    "attributes": [
     {

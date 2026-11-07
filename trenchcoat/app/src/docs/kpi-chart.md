@@ -93,8 +93,8 @@ stroke pattern as well as its colour, so the series don't rely on colour alone.
 <tc-kpi-chart id="latency" heading="p95 latency" value="420ms" delta="-12" lower-is-better></tc-kpi-chart>
 
 <script type="module">
-  import "trenchcoat/kpi-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/kpi-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const chart = document.querySelector("#revenue");
   chart.labels = ["Mar 2", "Mar 3", "Mar 4"];
@@ -109,8 +109,8 @@ stroke pattern as well as its colour, so the series don't rely on colour alone.
 ```
 
 ```tsx
-import { KpiChart, type KpiSeries } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { KpiChart, type KpiSeries } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const series: KpiSeries[] = [
   { label: "Subscriptions", values: [4200, 4380, 4610] },

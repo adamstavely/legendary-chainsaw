@@ -106,8 +106,8 @@ described by what goes with it. A polite status message says “Connecting to Da
 <tc-mcp-connection-manager id="mcp"></tc-mcp-connection-manager>
 
 <script type="module">
-  import "trenchcoat/mcp-connection-manager";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/mcp-connection-manager";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const mcp = document.querySelector("#mcp");
   mcp.value = [{ id: "gh", name: "GitHub", transport: "http", target: "https://mcp.example.com/gh", auth: "token", credentialRef: "vault/gh" }];
@@ -122,8 +122,8 @@ described by what goes with it. A polite status message says “Connecting to Da
 
 ```tsx
 import { useState } from "react";
-import { McpConnectionManager, type McpConnection, type McpServer } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { McpConnectionManager, type McpConnection, type McpServer } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Servers({ start, connect }: { start: McpServer[]; connect: (s: McpServer, signal: AbortSignal) => Promise<McpConnection> }) {
   const [servers, setServers] = useState(start);

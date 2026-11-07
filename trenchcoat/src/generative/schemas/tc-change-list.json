@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-change-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-change-list.json",
   "title": "tc-change-list",
   "description": "Proposed code changes as compact rows: state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.",
   "type": "object",

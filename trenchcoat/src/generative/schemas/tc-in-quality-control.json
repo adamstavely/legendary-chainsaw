@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-in-quality-control.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-in-quality-control.json",
   "title": "tc-in-quality-control",
   "description": "A document with a magnifying glass over a check on it, for content being checked before it moves on.",
   "type": "object",

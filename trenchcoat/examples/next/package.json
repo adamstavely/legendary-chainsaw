@@ -9,7 +9,7 @@
     "next": "16.4.3",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "trenchcoat": "file:../.packed/trenchcoat.tgz"
+    "@adamstavely/trenchcoat": "file:../.packed/trenchcoat.tgz"
   },
   "devDependencies": {
     "@types/node": "22.15.0",

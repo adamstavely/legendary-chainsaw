@@ -84,8 +84,8 @@ confirmed in a polite status message. The legend and readout repeat the cells, s
 <tc-capacity-bars id="capacity" unit="FTE"></tc-capacity-bars>
 
 <script type="module">
-  import "trenchcoat/capacity-bars";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/capacity-bars";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const capacity = document.querySelector("#capacity");
   capacity.people = [
@@ -101,8 +101,8 @@ confirmed in a polite status message. The legend and readout repeat the cells, s
 
 ```tsx
 import { useState } from "react";
-import { CapacityBars, type CapacityPerson } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CapacityBars, type CapacityPerson } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const people: CapacityPerson[] = [
   { id: "am", name: "Arjun Mehta", role: "Principal Investigator", capacity: 1, allocations: [

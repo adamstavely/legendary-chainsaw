@@ -127,7 +127,7 @@
   {
    "tag": "tc-agent-face",
    "className": "TcAgentFace",
-   "module": "trenchcoat/agent-face",
+   "module": "@adamstavely/trenchcoat/agent-face",
    "data": [
     "labels"
    ],

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-biometric-status.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-biometric-status.json",
   "title": "tc-biometric-status",
   "description": "Biometric enrolment across modalities – each with its status, detail and a quality meter – with the count\nenrolled, an optional match score, and selectable rows.",
   "type": "object",

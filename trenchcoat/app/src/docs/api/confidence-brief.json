@@ -333,7 +333,7 @@
   {
    "tag": "tc-confidence-brief",
    "className": "TcConfidenceBrief",
-   "module": "trenchcoat/confidence-brief",
+   "module": "@adamstavely/trenchcoat/confidence-brief",
    "data": [
     "confidenceLabels",
     "uncertainty",

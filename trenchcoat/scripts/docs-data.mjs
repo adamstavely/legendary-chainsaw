@@ -186,7 +186,7 @@ export function frameworkFacts(el, slug, source = "") {
   return {
     tag: el.tag,
     className: el.className,
-    module: `trenchcoat/${slug}`,
+    module: `@adamstavely/trenchcoat/${slug}`,
     data: el.properties.filter((p) => !p.attribute && !p.readonly && p.name !== "look").map((p) => p.name),
     attributes: el.properties.filter((p) => p.attribute && p.name !== "look").map((p) => ({ name: p.name, attribute: p.attribute })),
     events,

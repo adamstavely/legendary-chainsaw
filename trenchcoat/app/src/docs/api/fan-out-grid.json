@@ -337,7 +337,7 @@
   {
    "tag": "tc-fan-out-grid",
    "className": "TcFanOutGrid",
-   "module": "trenchcoat/fan-out-grid",
+   "module": "@adamstavely/trenchcoat/fan-out-grid",
    "data": [
     "tasks",
     "onRetry",

@@ -80,7 +80,7 @@ in a narrow column.
 
 ```tsx
 import { useState } from "react";
-import { SavedSearchAlerts, type SearchAlert } from "trenchcoat/react";
+import { SavedSearchAlerts, type SearchAlert } from "@adamstavely/trenchcoat/react";
 
 export function Alerts() {
   const [alerts, setAlerts] = useState<SearchAlert[]>([]);

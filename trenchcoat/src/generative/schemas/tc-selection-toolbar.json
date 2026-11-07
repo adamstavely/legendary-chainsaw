@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-selection-toolbar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-selection-toolbar.json",
   "title": "tc-selection-toolbar",
   "description": "A formatting bar that floats over selected text: actions, toggles that show their state, and option menus. It fires commands; the page's editor applies them.",
   "type": "object",

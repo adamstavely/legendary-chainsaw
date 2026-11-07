@@ -204,7 +204,7 @@
   {
    "tag": "tc-approval-chain",
    "className": "TcApprovalChain",
-   "module": "trenchcoat/approval-chain",
+   "module": "@adamstavely/trenchcoat/approval-chain",
    "data": [
     "steps",
     "delegates",

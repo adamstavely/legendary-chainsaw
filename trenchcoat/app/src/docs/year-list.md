@@ -74,8 +74,8 @@ It's a `listbox` named by `label`, vertical or horizontal, with each year an `op
 <tc-year-list id="years" label="Report year" from="2013" to="2026" selected="2026" count-label="reports"></tc-year-list>
 
 <script type="module">
-  import "trenchcoat/year-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/year-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const years = document.querySelector("#years");
   years.counts = { 2026: 41, 2025: 128, 2024: 117 };
@@ -85,8 +85,8 @@ It's a `listbox` named by `label`, vertical or horizontal, with each year an `op
 
 ```tsx
 import { useState } from "react";
-import { YearList } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { YearList } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ReportYears() {
   const [year, setYear] = useState<number | null>(2026);

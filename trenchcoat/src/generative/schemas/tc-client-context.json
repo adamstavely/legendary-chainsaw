@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-client-context.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-client-context.json",
   "title": "tc-client-context",
   "description": "One client's numbers, reports and shared context – switch clients, sync, regenerate reports and keep a team timeline.",
   "type": "object",

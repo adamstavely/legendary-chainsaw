@@ -86,8 +86,8 @@ problems are shown, or that a check is running, and the list is `aria-busy` whil
 <tc-problem-list id="problems"></tc-problem-list>
 
 <script type="module">
-  import "trenchcoat/problem-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/problem-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const list = document.querySelector("#problems");
   list.problems = [
@@ -98,8 +98,8 @@ problems are shown, or that a check is running, and the list is `aria-busy` whil
 ```
 
 ```tsx
-import { ProblemList, type ProblemItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProblemList, type ProblemItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Problems({ problems, open, fix }: { problems: ProblemItem[]; open: (path: string, line: number) => void; fix: (p: ProblemItem) => void }) {
   return <ProblemList problems={problems} defaultFilter="error" onTcOpen={(e) => open(e.detail.path, e.detail.line)} onTcFix={(e) => fix(e.detail.problem)} />;

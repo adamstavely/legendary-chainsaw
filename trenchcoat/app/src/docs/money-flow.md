@@ -104,8 +104,8 @@ status message, and clearing with “Selection cleared”. The table has a capti
 <tc-money-flow id="flow" heading="Money flow" currency="EUR"></tc-money-flow>
 
 <script type="module">
-  import "trenchcoat/money-flow";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/money-flow";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const flow = document.querySelector("#flow");
   flow.nodes = [
@@ -123,8 +123,8 @@ status message, and clearing with “Selection cleared”. The table has a capti
 
 ```tsx
 import { useState } from "react";
-import { MoneyFlow, type FlowNode, type FlowRef, type FlowTransfer } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MoneyFlow, type FlowNode, type FlowRef, type FlowTransfer } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const nodes: FlowNode[] = [
   { id: "op", label: "Halden Freight SARL", kind: "company", detail: "France" },

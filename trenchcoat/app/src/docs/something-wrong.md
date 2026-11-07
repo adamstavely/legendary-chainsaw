@@ -59,14 +59,14 @@ Pair it with a short heading ("We couldn't load this") and one line on what to d
 <h2>We couldn't load this</h2>
 
 <script type="module">
-  import "trenchcoat/something-wrong";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/something-wrong";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { SomethingWrong } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SomethingWrong } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return (

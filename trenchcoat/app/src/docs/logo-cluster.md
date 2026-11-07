@@ -54,16 +54,16 @@ Decorative by default: the host is `aria-hidden="true"` and screen readers skip 
 <tc-logo-cluster id="tools"></tc-logo-cluster>
 
 <script type="module">
-  import "trenchcoat/logo-cluster";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/logo-cluster";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#tools").label = "Works with Notion, Figma, Linear and more";
 </script>
 ```
 
 ```tsx
-import { LogoCluster } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LogoCluster } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Tools() {
   return <LogoCluster label="Works with Notion, Figma, Linear and more" style={{ maxWidth: 320 }} />;

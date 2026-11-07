@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-bump-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-bump-chart.json",
   "title": "tc-bump-chart",
   "description": "Ranks changing over steps – one line per item, first place at the top – with the biggest climber emphasised, names\nat both ends and a table view.",
   "type": "object",

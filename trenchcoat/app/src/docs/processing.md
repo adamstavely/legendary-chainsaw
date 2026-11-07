@@ -61,14 +61,14 @@ next – an email, the result appearing here – so people don't start the job t
 <tc-processing></tc-processing>
 
 <script type="module">
-  import "trenchcoat/processing";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/processing";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { Processing } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Processing } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <Processing />;

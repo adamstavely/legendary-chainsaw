@@ -88,8 +88,8 @@ revealing anything the sharer shouldn't learn about that person.
 <tc-share-panel id="share" resource-name="Trial 12 results"></tc-share-panel>
 
 <script type="module">
-  import "trenchcoat/share-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/share-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#share");
   panel.directory = [{ id: "noor", kind: "person", name: "Noor Haddad" }];
@@ -104,8 +104,8 @@ revealing anything the sharer shouldn't learn about that person.
 ```
 
 ```tsx
-import { SharePanel, type ShareEntitlementCheck, type ShareRecipient } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SharePanel, type ShareEntitlementCheck, type ShareRecipient } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const directory: ShareRecipient[] = [{ id: "noor", kind: "person", name: "Noor Haddad" }];
 const check: ShareEntitlementCheck = async (recipient, level, signal) => {

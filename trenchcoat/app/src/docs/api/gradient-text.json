@@ -255,7 +255,7 @@
   {
    "tag": "tc-gradient-text",
    "className": "TcGradientText",
-   "module": "trenchcoat/gradient-text",
+   "module": "@adamstavely/trenchcoat/gradient-text",
    "data": [
     "content",
     "colors"

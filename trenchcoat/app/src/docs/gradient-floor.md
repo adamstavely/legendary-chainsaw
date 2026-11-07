@@ -62,8 +62,8 @@ Both layers are `aria-hidden="true"`, so screen readers skip the floor and read 
 </tc-gradient-floor>
 
 <script type="module">
-  import "trenchcoat/gradient-floor";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/gradient-floor";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const floor = document.querySelector("#hero");
   floor.colors = ["#FF7700", "#FF0055", "#0073FF"];
@@ -72,8 +72,8 @@ Both layers are `aria-hidden="true"`, so screen readers skip the floor and read 
 ```
 
 ```tsx
-import { GradientFloor } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GradientFloor } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Hero() {
   return (

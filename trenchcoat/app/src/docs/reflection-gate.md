@@ -106,8 +106,8 @@ In the short version the form's name includes “Short version”, the one field
 <tc-reflection-gate id="gate" mode="prior" allow-skip></tc-reflection-gate>
 
 <script type="module">
-  import "trenchcoat/reflection-gate";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/reflection-gate";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gate = document.querySelector("#gate");
   gate.answer = "Either side can end the agreement with 30 days' written notice.";
@@ -119,8 +119,8 @@ In the short version the form's name includes “Short version”, the one field
 ```
 
 ```tsx
-import { ReflectionGate, type ReflectionGateSubmission } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ReflectionGate, type ReflectionGateSubmission } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const claims = [
   { id: "notice", text: "Either side can end the agreement with 30 days' notice" },

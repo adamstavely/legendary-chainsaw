@@ -70,8 +70,8 @@ action is named with its row, such as "Save Lab workstation", and a switch is na
 <tc-environment-list id="env" heading="Environment"></tc-environment-list>
 
 <script type="module">
-  import "trenchcoat/environment-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/environment-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#env");
   el.items = [
@@ -83,8 +83,8 @@ action is named with its row, such as "Save Lab workstation", and a switch is na
 ```
 
 ```tsx
-import { EnvironmentList, type EnvironmentItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EnvironmentList, type EnvironmentItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: EnvironmentItem[] = [
   { id: "repo", kind: "repo", label: "institute/sample-tracker" },

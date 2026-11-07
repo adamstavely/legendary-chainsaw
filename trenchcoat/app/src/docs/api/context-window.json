@@ -322,7 +322,7 @@
   {
    "tag": "tc-context-window",
    "className": "TcContextWindow",
-   "module": "trenchcoat/context-window",
+   "module": "@adamstavely/trenchcoat/context-window",
    "data": [
     "parts",
     "modelIcon",

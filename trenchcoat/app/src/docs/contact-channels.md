@@ -94,8 +94,8 @@ confirmed in a polite status message.
 <tc-contact-channels id="contact" heading="Contact points"></tc-contact-channels>
 
 <script type="module">
-  import "trenchcoat/contact-channels";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/contact-channels";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const contact = document.querySelector("#contact");
   contact.channels = [
@@ -108,8 +108,8 @@ confirmed in a polite status message.
 ```
 
 ```tsx
-import { ContactChannels, type ContactChannel } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ContactChannels, type ContactChannel } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const channels: ContactChannel[] = [
   { id: "e1", kind: "email", value: "elena.ruiz@example.com", role: "Primary", state: "verified" },

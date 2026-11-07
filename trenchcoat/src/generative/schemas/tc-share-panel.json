@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-share-panel.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-share-panel.json",
   "title": "tc-share-panel",
   "description": "Shares something with people and groups, at a level for each, after checking each is entitled to see it.",
   "type": "object",

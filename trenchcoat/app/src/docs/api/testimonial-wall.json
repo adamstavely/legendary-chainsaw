@@ -298,7 +298,7 @@
   {
    "tag": "tc-testimonial-wall",
    "className": "TcTestimonialWall",
-   "module": "trenchcoat/testimonial-wall",
+   "module": "@adamstavely/trenchcoat/testimonial-wall",
    "data": [
     "items",
     "buttonLabels"

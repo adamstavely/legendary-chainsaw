@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-knowledge-promotion.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-knowledge-promotion.json",
   "title": "tc-knowledge-promotion",
   "description": "Promote a verified fact into shared team knowledge: the fact with any disputed versions beside it, a checklist of\nrequired and recommended conditions with who met them and when, and Promote and Dispute.",
   "type": "object",

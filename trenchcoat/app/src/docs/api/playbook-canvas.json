@@ -360,7 +360,7 @@
   {
    "tag": "tc-playbook-canvas",
    "className": "TcPlaybookCanvas",
-   "module": "trenchcoat/playbook-canvas",
+   "module": "@adamstavely/trenchcoat/playbook-canvas",
    "data": [
     "value",
     "phases",

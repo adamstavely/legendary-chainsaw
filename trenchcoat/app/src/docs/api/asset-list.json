@@ -221,7 +221,7 @@
   {
    "tag": "tc-asset-list",
    "className": "TcAssetList",
-   "module": "trenchcoat/asset-list",
+   "module": "@adamstavely/trenchcoat/asset-list",
    "data": [
     "groups",
     "statuses",

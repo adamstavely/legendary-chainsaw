@@ -208,7 +208,7 @@
   {
    "tag": "tc-legal-hold-manager",
    "className": "TcLegalHoldManager",
-   "module": "trenchcoat/legal-hold-manager",
+   "module": "@adamstavely/trenchcoat/legal-hold-manager",
    "data": [
     "holds",
     "labels"

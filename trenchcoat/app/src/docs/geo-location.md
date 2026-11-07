@@ -89,8 +89,8 @@ names the place, and the map's iframe is titled "Map of …". Bad coordinates ar
 <tc-geo-location id="site" heading="Field site" label="North weather mast" latitude="57.04121" longitude="-3.61274" zoom="13"></tc-geo-location>
 
 <script type="module">
-  import "trenchcoat/geo-location";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/geo-location";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const site = document.querySelector("#site");
   site.addEventListener("tc-open", (e) => console.log("Opening", e.detail.provider.name, e.detail.url));
@@ -99,8 +99,8 @@ names the place, and the map's iframe is titled "Map of …". Bad coordinates ar
 
 ```tsx
 import { useState } from "react";
-import { GeoLocation, defaultGeoProviders, type GeoPoint } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GeoLocation, defaultGeoProviders, type GeoPoint } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sites: GeoPoint[] = [
   { id: "mast", label: "North weather mast", latitude: 57.04121, longitude: -3.61274 },

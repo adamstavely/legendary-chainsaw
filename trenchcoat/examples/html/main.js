@@ -1,5 +1,5 @@
-import "trenchcoat";
-import "trenchcoat/tokens.css";
+import "@adamstavely/trenchcoat";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const $ = (s) => document.querySelector(s);
 let clicks = 0;

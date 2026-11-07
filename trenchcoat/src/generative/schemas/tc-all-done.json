@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-all-done.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-all-done.json",
   "title": "tc-all-done",
   "description": "An empty tray with a check above it, for an inbox or queue with nothing waiting.",
   "type": "object",

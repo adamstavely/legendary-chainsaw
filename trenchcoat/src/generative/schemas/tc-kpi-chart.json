@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-kpi-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-kpi-chart.json",
   "title": "tc-kpi-chart",
   "description": "A metric card with a multi-line chart, a legend and a hover tooltip.",
   "type": "object",

@@ -250,7 +250,7 @@
   {
    "tag": "tc-session-state",
    "className": "TcSessionState",
-   "module": "trenchcoat/session-state",
+   "module": "@adamstavely/trenchcoat/session-state",
    "data": [
     "healthLabels",
     "loops",

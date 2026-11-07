@@ -145,7 +145,7 @@
   {
    "tag": "tc-funnel-chart",
    "className": "TcFunnelChart",
-   "module": "trenchcoat/funnel-chart",
+   "module": "@adamstavely/trenchcoat/funnel-chart",
    "data": [
     "label",
     "value"

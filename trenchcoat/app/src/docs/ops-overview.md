@@ -89,8 +89,8 @@ degraded”. Actionable tiles are buttons with the same name.
 <tc-ops-overview id="ops" heading="Command overview" status="All operations active" health="nominal" change-label="since last week"></tc-ops-overview>
 
 <script type="module">
-  import "trenchcoat/ops-overview";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ops-overview";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ops = document.querySelector("#ops");
   ops.tiles = [
@@ -103,8 +103,8 @@ degraded”. Actionable tiles are buttons with the same name.
 ```
 
 ```tsx
-import { OpsOverview, type OpsTile } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { OpsOverview, type OpsTile } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const tiles: OpsTile[] = [
   { id: "cases", label: "Active cases", value: 12, change: 2, goodWhen: "none" },

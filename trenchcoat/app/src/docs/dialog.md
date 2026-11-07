@@ -77,8 +77,8 @@ through `aria-describedby` when there is one. Close is a button named by `close-
 
 ```html
 <script type="module">
-  import "trenchcoat/dialog";
-  import "trenchcoat/button";
+  import "@adamstavely/trenchcoat/dialog";
+  import "@adamstavely/trenchcoat/button";
   const dialog = document.querySelector("tc-dialog");
   const apply = Object.assign(document.createElement("tc-button"), { label: "Apply settings", variant: "primary" });
   apply.addEventListener("click", () => (dialog.open = false));
@@ -97,8 +97,8 @@ through `aria-describedby` when there is one. Close is a button named by `close-
 
 ```tsx
 import { useState } from "react";
-import { Button, Dialog } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Button, Dialog } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Example() {
   const [open, setOpen] = useState(false);

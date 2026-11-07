@@ -83,8 +83,8 @@ everything at once.
 <tc-pareto-chart heading="Audit findings" description="This quarter, by cause"></tc-pareto-chart>
 
 <script type="module">
-  import "trenchcoat/pareto-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/pareto-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-pareto-chart").data = [
     { label: "Labelling", value: 46 },
     { label: "Storage temperature", value: 31 },
@@ -94,8 +94,8 @@ everything at once.
 ```
 
 ```tsx
-import { ParetoChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ParetoChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Labelling", value: 46 },

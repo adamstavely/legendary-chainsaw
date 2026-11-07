@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-decision-tree.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-decision-tree.json",
   "title": "tc-decision-tree",
   "description": "An agent's open decision drawn as a tree of options and consequences – pick a path or write your own instruction.",
   "type": "object",

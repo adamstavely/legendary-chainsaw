@@ -254,7 +254,7 @@
   {
    "tag": "tc-delegate-board",
    "className": "TcDelegateBoard",
-   "module": "trenchcoat/delegate-board",
+   "module": "@adamstavely/trenchcoat/delegate-board",
    "data": [
     "agents",
     "tasks",

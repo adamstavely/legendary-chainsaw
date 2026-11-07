@@ -93,8 +93,8 @@ attention – “Writer needs you. Browser failed” – as it changes. Pause is
 <tc-agent-graph id="graph"></tc-agent-graph>
 
 <script type="module">
-  import "trenchcoat/agent-graph";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-graph";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const graph = document.querySelector("#graph");
   graph.heading = "Pricing review";
@@ -125,8 +125,8 @@ attention – “Writer needs you. Browser failed” – as it changes. Pause is
 ```
 
 ```tsx
-import { AgentGraph, type GraphCall, type GraphNode } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentGraph, type GraphCall, type GraphNode } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const nodes: GraphNode[] = [
   { id: "lead", name: "Lead", kind: "agent", lead: true, status: "working" },

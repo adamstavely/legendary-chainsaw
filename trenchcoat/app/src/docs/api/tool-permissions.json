@@ -309,7 +309,7 @@
   {
    "tag": "tc-tool-permissions",
    "className": "TcToolPermissions",
-   "module": "trenchcoat/tool-permissions",
+   "module": "@adamstavely/trenchcoat/tool-permissions",
    "data": [
     "agents",
     "tools",

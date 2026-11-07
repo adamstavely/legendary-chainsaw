@@ -206,7 +206,7 @@
   {
    "tag": "tc-audience-mix",
    "className": "TcAudienceMix",
-   "module": "trenchcoat/audience-mix",
+   "module": "@adamstavely/trenchcoat/audience-mix",
    "data": [
     "sectors",
     "split",

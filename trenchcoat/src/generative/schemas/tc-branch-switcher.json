@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-branch-switcher.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-branch-switcher.json",
   "title": "tc-branch-switcher",
   "description": "The current branch with ahead and behind counts, and a filterable list of worktrees, local and remote branches to switch to or create from.",
   "type": "object",

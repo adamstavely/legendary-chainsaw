@@ -89,8 +89,8 @@ couldn't be sent. Try again.”
   agent="Collections agent" attachment="INV-4471.pdf"></tc-email-draft>
 
 <script type="module">
-  import "trenchcoat/email-draft";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/email-draft";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const draft = document.querySelector("#draft");
   draft.contacts = [{ name: "Ava Patel", email: "ava@lumenhealth.com" }];
@@ -102,8 +102,8 @@ couldn't be sent. Try again.”
 ```
 
 ```tsx
-import { EmailDraft, type DraftContact, type DraftEmail } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EmailDraft, type DraftContact, type DraftEmail } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const contacts: DraftContact[] = [{ name: "Ava Patel", email: "ava@lumenhealth.com" }];
 

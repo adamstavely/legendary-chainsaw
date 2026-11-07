@@ -99,8 +99,8 @@ known.", "Couldn't load the details." and "Copied …".
 <tc-entity-details id="note"></tc-entity-details>
 
 <script type="module">
-  import "trenchcoat/entity-details";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/entity-details";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const note = document.querySelector("#note");
   note.text = "Incident lead: priya.natarajan@example.org (+44 20 7946 0958). Ping @ops_lead.";
@@ -113,8 +113,8 @@ known.", "Couldn't load the details." and "Copied …".
 ```
 
 ```tsx
-import { EntityDetails, type EntityInfo } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EntityDetails, type EntityInfo } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const directory: Record<string, EntityInfo> = {
   "email:priya.natarajan@example.org": { name: "Priya Natarajan", summary: "Security operations lead" },

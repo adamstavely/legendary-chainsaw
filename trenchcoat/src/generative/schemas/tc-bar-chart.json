@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-bar-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-bar-chart.json",
   "title": "tc-bar-chart",
   "description": "Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – with the highest one\nemphasised, values at the bars' ends and a table view.",
   "type": "object",

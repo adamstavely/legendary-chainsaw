@@ -132,7 +132,7 @@
   {
    "tag": "tc-in-quality-control",
    "className": "TcInQualityControl",
-   "module": "trenchcoat/in-quality-control",
+   "module": "@adamstavely/trenchcoat/in-quality-control",
    "data": [],
    "attributes": [
     {

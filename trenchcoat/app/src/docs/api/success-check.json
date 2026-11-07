@@ -75,7 +75,7 @@
   {
    "tag": "tc-success-check",
    "className": "TcSuccessCheck",
-   "module": "trenchcoat/success-check",
+   "module": "@adamstavely/trenchcoat/success-check",
    "data": [],
    "attributes": [
     {

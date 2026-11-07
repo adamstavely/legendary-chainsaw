@@ -88,8 +88,8 @@ number, and reads the final one afterwards.
 <tc-kpi-board id="board" heading="Overview"></tc-kpi-board>
 
 <script type="module">
-  import "trenchcoat/kpi-board";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/kpi-board";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const labels = ["22 Oct", "23 Oct", "24 Oct"];
   const board = document.querySelector("#board");
@@ -107,8 +107,8 @@ number, and reads the final one afterwards.
 
 ```tsx
 import { useState } from "react";
-import { KpiBoard, type KpiBoardData } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { KpiBoard, type KpiBoardData } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const labels = ["22 Oct", "23 Oct", "24 Oct"];
 const week: KpiBoardData = {

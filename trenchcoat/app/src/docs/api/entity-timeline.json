@@ -253,7 +253,7 @@
   {
    "tag": "tc-entity-timeline",
    "className": "TcEntityTimeline",
-   "module": "trenchcoat/entity-timeline",
+   "module": "@adamstavely/trenchcoat/entity-timeline",
    "data": [
     "events",
     "categories",

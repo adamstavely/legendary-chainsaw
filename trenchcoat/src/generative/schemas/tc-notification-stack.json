@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-notification-stack.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-notification-stack.json",
   "title": "tc-notification-stack",
   "description": "Notices stacked behind each other; dismissing the front one brings up the next.",
   "type": "object",

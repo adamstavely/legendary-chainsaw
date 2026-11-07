@@ -313,7 +313,7 @@
   {
    "tag": "tc-provider-connection",
    "className": "TcProviderConnection",
-   "module": "trenchcoat/provider-connection",
+   "module": "@adamstavely/trenchcoat/provider-connection",
    "data": [
     "value",
     "providers",

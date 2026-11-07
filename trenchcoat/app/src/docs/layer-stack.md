@@ -52,8 +52,8 @@ have no panels: the change is visual only, so put anything people must read in t
 <tc-layer-stack id="layers" rounds="1"></tc-layer-stack>
 
 <script type="module">
-  import "trenchcoat/layer-stack";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/layer-stack";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const stack = document.querySelector("#layers");
   stack.items = [
@@ -67,8 +67,8 @@ have no panels: the change is visual only, so put anything people must read in t
 
 ```tsx
 import { useState } from "react";
-import { LayerStack, type LayerStackItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { LayerStack, type LayerStackItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: LayerStackItem[] = [
   { title: "Triggered by events", hint: "Webhooks", icon: "bolt" },

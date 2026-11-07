@@ -54,14 +54,14 @@ Rename words with `labels`, or set `label` for one in context: "Checking access"
 <tc-status-morph status="checking" announce></tc-status-morph>
 
 <script type="module">
-  import "trenchcoat/status-morph";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/status-morph";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { StatusMorph } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { StatusMorph } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Check({ done }: { done: boolean }) {
   return <StatusMorph status={done ? "done" : "checking"} announce />;

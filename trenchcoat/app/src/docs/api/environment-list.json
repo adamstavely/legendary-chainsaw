@@ -149,7 +149,7 @@
   {
    "tag": "tc-environment-list",
    "className": "TcEnvironmentList",
-   "module": "trenchcoat/environment-list",
+   "module": "@adamstavely/trenchcoat/environment-list",
    "data": [
     "items",
     "toggles"

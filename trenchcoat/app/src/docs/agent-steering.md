@@ -87,8 +87,8 @@ says what happened to each note: “Queued for the next step: …”, “Interru
 <tc-agent-steering id="run" heading="Add email verification to users" agent="Opus 5.5" removable></tc-agent-steering>
 
 <script type="module">
-  import "trenchcoat/agent-steering";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-steering";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const run = document.querySelector("#run");
   run.startedAt = Date.now() - 41000;
@@ -105,8 +105,8 @@ says what happened to each note: “Queued for the next step: …”, “Interru
 
 ```tsx
 import { useState } from "react";
-import { AgentSteering, type SteerNote, type SteerStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentSteering, type SteerNote, type SteerStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SteerRun({ steps, startedAt }: { steps: SteerStep[]; startedAt: number }) {
   const [queue, setQueue] = useState<SteerNote[]>([]);

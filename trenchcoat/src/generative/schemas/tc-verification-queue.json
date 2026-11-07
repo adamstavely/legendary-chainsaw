@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-verification-queue.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-verification-queue.json",
   "title": "tc-verification-queue",
   "description": "The claims collected across a session, each marked verified externally, can't verify, incorrect or dismissed\nwith its source passage beside it, and an export that stays blocked until they're reviewed.",
   "type": "object",

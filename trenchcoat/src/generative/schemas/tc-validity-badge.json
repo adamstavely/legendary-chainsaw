@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-validity-badge.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-validity-badge.json",
   "title": "tc-validity-badge",
   "description": "Evidence freshness as a band that decays with age, plus contested and superseded marks – a badge, or a margin\nstrip for a document's paragraphs.",
   "type": "object",

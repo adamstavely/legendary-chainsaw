@@ -129,7 +129,7 @@
   {
    "tag": "tc-change-summary",
    "className": "TcChangeSummary",
-   "module": "trenchcoat/change-summary",
+   "module": "@adamstavely/trenchcoat/change-summary",
    "data": [
     "icon",
     "changes"

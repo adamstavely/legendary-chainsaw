@@ -166,7 +166,7 @@
   {
    "tag": "tc-venn-diagram",
    "className": "TcVennDiagram",
-   "module": "trenchcoat/venn-diagram",
+   "module": "@adamstavely/trenchcoat/venn-diagram",
    "data": [
     "sets",
     "size",
@@ -444,7 +444,7 @@
   "windowed": false
  },
  "size": {
-  "min": 48647,
-  "gzip": 17140
+  "min": 48886,
+  "gzip": 17230
  }
 }

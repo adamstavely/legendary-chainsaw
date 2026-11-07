@@ -112,8 +112,8 @@ Each source's freshness badge says, for example, “Aging source, observed 5 mon
 <tc-claim-answer id="answer"></tc-claim-answer>
 
 <script type="module">
-  import "trenchcoat/claim-answer";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/claim-answer";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const answer = document.querySelector("#answer");
   answer.sources = [
@@ -133,8 +133,8 @@ Each source's freshness badge says, for example, “Aging source, observed 5 mon
 
 ```tsx
 import { useState } from "react";
-import { ClaimAnswer, type AnswerClaim, type ClaimSource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ClaimAnswer, type AnswerClaim, type ClaimSource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sources: ClaimSource[] = [{ id: "quote", site: "Freight quote", title: "Carrier quote", validity: { observed: "2026-05-17" } }];
 const claims: AnswerClaim[] = [

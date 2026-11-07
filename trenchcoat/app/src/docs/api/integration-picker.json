@@ -552,7 +552,7 @@
   {
    "tag": "tc-integration-picker",
    "className": "TcIntegrationPicker",
-   "module": "trenchcoat/integration-picker",
+   "module": "@adamstavely/trenchcoat/integration-picker",
    "data": [
     "integrations",
     "appIcon",

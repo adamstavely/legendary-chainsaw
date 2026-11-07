@@ -206,7 +206,7 @@
   {
    "tag": "tc-layer-stack",
    "className": "TcLayerStack",
-   "module": "trenchcoat/layer-stack",
+   "module": "@adamstavely/trenchcoat/layer-stack",
    "data": [
     "items"
    ],

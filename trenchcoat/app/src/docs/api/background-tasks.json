@@ -379,7 +379,7 @@
   {
    "tag": "tc-background-tasks",
    "className": "TcBackgroundTasks",
-   "module": "trenchcoat/background-tasks",
+   "module": "@adamstavely/trenchcoat/background-tasks",
    "data": [
     "tasks",
     "announce"

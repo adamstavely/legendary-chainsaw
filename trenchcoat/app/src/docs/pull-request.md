@@ -83,8 +83,8 @@ Mark ready, Update branch or Resolve, `role="status"` says what's under way, unl
 <tc-pull-request id="pr" number="128" pr-title="Add the booking calendar" state="open" head="feature/booking-calendar" base="main" mergeable="clean"></tc-pull-request>
 
 <script type="module">
-  import "trenchcoat/pull-request";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/pull-request";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const pr = document.querySelector("#pr");
   pr.checks = { passing: 6, failing: 0, pending: 1, skipped: 0 };
@@ -93,8 +93,8 @@ Mark ready, Update branch or Resolve, `role="status"` says what's under way, unl
 ```
 
 ```tsx
-import { PullRequest } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PullRequest } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function BranchPullRequest({ onMerge }: { onMerge: (method: string) => void }) {
   return (

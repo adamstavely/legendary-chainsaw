@@ -140,7 +140,7 @@
   {
    "tag": "tc-content-hidden",
    "className": "TcContentHidden",
-   "module": "trenchcoat/content-hidden",
+   "module": "@adamstavely/trenchcoat/content-hidden",
    "data": [],
    "attributes": [
     {

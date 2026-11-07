@@ -82,8 +82,8 @@ alert: “Couldn't undo – try again”.
 <tc-agent-ledger id="ledger" agent="Launch agent"></tc-agent-ledger>
 
 <script type="module">
-  import "trenchcoat/agent-ledger";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-ledger";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ledger = document.querySelector("#ledger");
   const now = Date.now();
@@ -98,8 +98,8 @@ alert: “Couldn't undo – try again”.
 ```
 
 ```tsx
-import { AgentLedger, type LedgerEntry } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentLedger, type LedgerEntry } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function LaunchLedger({ entries }: { entries: LedgerEntry[] }) {
   return (

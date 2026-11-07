@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-entity-details.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-entity-details.json",
   "title": "tc-entity-details",
   "description": "Email addresses, phone numbers, links and",
   "type": "object",

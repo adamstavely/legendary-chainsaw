@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-experiment-card.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-experiment-card.json",
   "title": "tc-experiment-card",
   "description": "An A/B test that unfolds into the full comparison; pick a winner and run an action on it.",
   "type": "object",

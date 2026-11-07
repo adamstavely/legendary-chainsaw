@@ -80,8 +80,8 @@ not only colours; the failed-invariant marks are hidden, the rule ids are read.
 <tc-red-team-finding id="findings" open-evidence></tc-red-team-finding>
 
 <script type="module">
-  import "trenchcoat/red-team-finding";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/red-team-finding";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#findings");
   el.findings = [
@@ -104,8 +104,8 @@ not only colours; the failed-invariant marks are hidden, the rule ids are read.
 
 ```tsx
 import { useState } from "react";
-import { RedTeamFinding, type Finding } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RedTeamFinding, type Finding } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const findings: Finding[] = [
   {

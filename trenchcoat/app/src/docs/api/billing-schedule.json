@@ -325,7 +325,7 @@
   {
    "tag": "tc-billing-schedule",
    "className": "TcBillingSchedule",
-   "module": "trenchcoat/billing-schedule",
+   "module": "@adamstavely/trenchcoat/billing-schedule",
    "data": [
     "catalog",
     "lines"

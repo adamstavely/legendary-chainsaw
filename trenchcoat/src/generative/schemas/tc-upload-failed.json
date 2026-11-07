@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-upload-failed.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-upload-failed.json",
   "title": "tc-upload-failed",
   "description": "A file lifted above an open tray, its upload arrow stopping short, with a cross badge, for an upload that didn't finish.",
   "type": "object",

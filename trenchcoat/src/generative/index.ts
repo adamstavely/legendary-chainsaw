@@ -1,5 +1,5 @@
 /*
- * trenchcoat/generative – what an app needs to let a model place Trenchcoat components in its answers.
+ * @adamstavely/trenchcoat/generative – what an app needs to let a model place Trenchcoat components in its answers.
  *
  * Two ways in, the same components and checks:
  *   · JSON in the answer: the model writes tc-generated-ui's spec, and a { type: "component", tag, props } block places

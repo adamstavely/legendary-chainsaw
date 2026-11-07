@@ -56,8 +56,8 @@ Decorative by default: the host is `aria-hidden="true"` and screen readers skip 
 <tc-model-wheel id="models" hold="2000" label="Works with Claude, ChatGPT, Gemini and more"></tc-model-wheel>
 
 <script type="module">
-  import "trenchcoat/model-wheel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/model-wheel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const wheel = document.querySelector("#models");
   wheel.turns = 3;
@@ -65,8 +65,8 @@ Decorative by default: the host is `aria-hidden="true"` and screen readers skip 
 ```
 
 ```tsx
-import { ModelWheel, modelWheelDefaults } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ModelWheel, modelWheelDefaults } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const models = modelWheelDefaults.filter((m) => m.name !== "Perplexity");
 

@@ -525,7 +525,7 @@
   {
    "tag": "tc-tool-call-card",
    "className": "TcToolCallCard",
-   "module": "trenchcoat/tool-call-card",
+   "module": "@adamstavely/trenchcoat/tool-call-card",
    "data": [
     "summary",
     "icon",
@@ -585,7 +585,7 @@
   {
    "tag": "tc-tool-call-group",
    "className": "TcToolCallGroup",
-   "module": "trenchcoat/tool-call-card",
+   "module": "@adamstavely/trenchcoat/tool-call-card",
    "data": [],
    "attributes": [
     {

@@ -98,8 +98,8 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 <tc-ai-workspace id="ws" user-name="Lena"></tc-ai-workspace>
 
 <script type="module">
-  import "trenchcoat/ai-workspace";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/ai-workspace";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ws = document.querySelector("#ws");
   ws.respond = async (message, history) => {
@@ -112,8 +112,8 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 ```
 
 ```tsx
-import { AiWorkspace, type AiWorkspaceConversation } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AiWorkspace, type AiWorkspaceConversation } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Assistant({ saved, save }: { saved: AiWorkspaceConversation[]; save: (next: AiWorkspaceConversation[]) => void }) {
   return (

@@ -238,7 +238,7 @@
   {
    "tag": "tc-tilt-card",
    "className": "TcTiltCard",
-   "module": "trenchcoat/tilt-card",
+   "module": "@adamstavely/trenchcoat/tilt-card",
    "data": [],
    "attributes": [
     {

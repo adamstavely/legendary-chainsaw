@@ -70,8 +70,8 @@ show (“Integrates with Notion, Stripe, Figma, …”). The tiles themselves ar
 <tc-integration-grid id="tools" columns="7"></tc-integration-grid>
 
 <script type="module">
-  import "trenchcoat/integration-grid";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/integration-grid";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const grid = document.querySelector("#tools");
   grid.logos = [
@@ -83,8 +83,8 @@ show (“Integrates with Notion, Stripe, Figma, …”). The tiles themselves ar
 ```
 
 ```tsx
-import { IntegrationGrid, type IntegrationGridLogo } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { IntegrationGrid, type IntegrationGridLogo } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const logos: IntegrationGridLogo[] = [
   { name: "Stripe", color: "#635BFF", path: "M13.976 9.15c…" },

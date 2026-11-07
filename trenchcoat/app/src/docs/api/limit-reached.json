@@ -124,7 +124,7 @@
   {
    "tag": "tc-limit-reached",
    "className": "TcLimitReached",
-   "module": "trenchcoat/limit-reached",
+   "module": "@adamstavely/trenchcoat/limit-reached",
    "data": [],
    "attributes": [
     {

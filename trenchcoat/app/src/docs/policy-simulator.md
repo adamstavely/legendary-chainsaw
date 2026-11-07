@@ -91,8 +91,8 @@ shows an alert with `errorLabel`.
 <tc-policy-simulator id="sim" description="Check what the policy would do before it happens."></tc-policy-simulator>
 
 <script type="module">
-  import "trenchcoat/policy-simulator";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/policy-simulator";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const sim = document.querySelector("#sim");
   sim.examples = [{ label: "Refund $2,400", action: "Refund invoice INV-2291", ruleClass: "spend", context: "amount: $2,400" }];
@@ -102,8 +102,8 @@ shows an alert with `errorLabel`.
 ```
 
 ```tsx
-import { PolicySimulator, type PolicySimInput, type PolicySimResult } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PolicySimulator, type PolicySimInput, type PolicySimResult } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function DryRun({ dryRun }: { dryRun: (input: PolicySimInput) => Promise<PolicySimResult> }) {
   return (

@@ -344,7 +344,7 @@
   {
    "tag": "tc-text-annotator",
    "className": "TcTextAnnotator",
-   "module": "trenchcoat/text-annotator",
+   "module": "@adamstavely/trenchcoat/text-annotator",
    "data": [
     "value",
     "colors",

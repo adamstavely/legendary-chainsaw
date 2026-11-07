@@ -154,7 +154,7 @@
   {
    "tag": "tc-slider-field",
    "className": "TcSliderField",
-   "module": "trenchcoat/slider-field",
+   "module": "@adamstavely/trenchcoat/slider-field",
    "data": [
     "value"
    ],

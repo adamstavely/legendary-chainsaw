@@ -81,8 +81,8 @@ is read with “Masked: ” before what the app gave (“Masked: •••• 48
 <tc-guardrail-notice id="notice" action="redacted" policy="Personal data" reason="The reply quoted a customer's card number."></tc-guardrail-notice>
 
 <script type="module">
-  import "trenchcoat/guardrail-notice";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/guardrail-notice";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const notice = document.querySelector("#notice");
   notice.original = [{ text: "Refunded to the card ending " }, { text: "•••• 4821", mark: "masked" }];
@@ -92,8 +92,8 @@ is read with “Masked: ” before what the app gave (“Masked: •••• 48
 ```
 
 ```tsx
-import { GuardrailNotice, type GuardrailSegment } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { GuardrailNotice, type GuardrailSegment } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function RedactedReply({ original, revised, review }: { original: GuardrailSegment[]; revised: GuardrailSegment[]; review: (policy: string) => void }) {
   return (

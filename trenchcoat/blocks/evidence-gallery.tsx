@@ -1,17 +1,17 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, Ref } from "react";
-import { EvidenceGallery as TcEvidenceGallery, type Attestation, type EvidenceFilter, type EvidenceItem, type Look } from "trenchcoat/react";
+import { EvidenceGallery as TcEvidenceGallery, type Attestation, type EvidenceFilter, type EvidenceItem, type Look } from "@adamstavely/trenchcoat/react";
 
 /*
  * Evidence Gallery – the images behind a set of claims, with whether each is attested and how many claims lean on
  * it: a filter by attestation with a count on each, the library's Image Grid (alt text, Compare and Download) and
  * the library's Data Table, read only and sortable, in the same order.
- * The block is the <tc-evidence-gallery> element through `trenchcoat/react` – the same component Angular, Vue and
+ * The block is the <tc-evidence-gallery> element through `@adamstavely/trenchcoat/react` – the same component Angular, Vue and
  * plain HTML get – kept here with its original props. The look follows the nearest <LookProvider>, or the `look` prop.
  */
 
-export type { Attestation, EvidenceFilter, EvidenceItem } from "trenchcoat/react";
+export type { Attestation, EvidenceFilter, EvidenceItem } from "@adamstavely/trenchcoat/react";
 
 type OwnProps = {
   items: EvidenceItem[];

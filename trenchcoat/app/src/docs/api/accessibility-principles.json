@@ -148,7 +148,7 @@
   {
    "tag": "tc-accessibility-principles",
    "className": "TcAccessibilityPrinciples",
-   "module": "trenchcoat/accessibility-principles",
+   "module": "@adamstavely/trenchcoat/accessibility-principles",
    "data": [
     "labels"
    ],

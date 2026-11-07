@@ -207,11 +207,11 @@ function lintOne(source, data, facts) {
   };
 
   for (const m of text.matchAll(/customElements\.define\(\s*["'`](tc-[a-z0-9-]+)/g)) facts.ownTags.add(m[1]);
-  for (const m of text.matchAll(/\bfrom\s+["']trenchcoat(?:\/([^"']+))?["']|\bimport\s+["']trenchcoat(?:\/([^"']+))?["']|\bimport\(\s*["']trenchcoat(?:\/([^"']+))?["']|@import\s+(?:url\()?["']trenchcoat(?:\/([^"']+))?["']|(?:src|href)=["'][^"']*trenchcoat\/?([^"']*)["']/g)) {
+  for (const m of text.matchAll(/\bfrom\s+["']@adamstavely\/trenchcoat(?:\/([^"']+))?["']|\bimport\s+["']@adamstavely\/trenchcoat(?:\/([^"']+))?["']|\bimport\(\s*["']@adamstavely\/trenchcoat(?:\/([^"']+))?["']|@import\s+(?:url\()?["']@adamstavely\/trenchcoat(?:\/([^"']+))?["']|(?:src|href)=["'][^"']*trenchcoat\/?([^"']*)["']/g)) {
     const path = m[1] ?? m[2] ?? m[3] ?? m[4] ?? m[5] ?? "";
     facts.imports.add(path);
     if (m[0].startsWith("src") || m[0].startsWith("href")) continue;
-    if (path && !isPackagePath(path, data)) report("unknown-import", m.index, `"trenchcoat/${path}" isn't in the package.${suggest(path, data.slugs)}`);
+    if (path && !isPackagePath(path, data)) report("unknown-import", m.index, `"@adamstavely/trenchcoat/${path}" isn't in the package.${suggest(path, data.slugs)}`);
   }
   for (const m of text.matchAll(/--tc-[a-z0-9-]*[a-z0-9]/g)) {
     const at = m.index;
@@ -280,9 +280,9 @@ function lintOne(source, data, facts) {
     }
   }
 
-  // A component from trenchcoat/react, under whatever name this file gave it
+  // A component from @adamstavely/trenchcoat/react, under whatever name this file gave it
   const wrappers = new Map();
-  for (const m of text.matchAll(/import\s*(?:type\s*)?\{([^}]*)\}\s*from\s*["']trenchcoat\/react["']/g)) {
+  for (const m of text.matchAll(/import\s*(?:type\s*)?\{([^}]*)\}\s*from\s*["']@adamstavely\/trenchcoat\/react["']/g)) {
     for (const part of m[1].split(",")) {
       const [name, alias] = part.trim().split(/\s+as\s+/);
       if (!name) continue;
@@ -361,12 +361,12 @@ export function lintSources(sources, data, { project = true } = {}) {
         const paths = [element.slug, `elements/${element.slug}`, `angular/${element.slug}`];
         if (paths.some((p) => facts.imports.has(p)) || facts.imports.has("angular") || facts.imports.has("vue") || facts.imports.has("svelte")) continue;
         warned.add(tag);
-        report("missing-import", offset, `Nothing here imports <${tag}>, so it stays an empty tag. Add: import "trenchcoat/${element.slug}";`);
+        report("missing-import", offset, `Nothing here imports <${tag}>, so it stays an empty tag. Add: import "@adamstavely/trenchcoat/${element.slug}";`);
       }
     }
     if (facts.usedAny && !facts.imports.has("tokens.css")) {
       const first = sources[0];
-      results.push([{ file: first.file, line: 1, column: 1, rule: "missing-tokens", severity: RULES["missing-tokens"], message: 'Nothing here imports the tokens, so elements draw without colours or spacing. Add once, at the entry: import "trenchcoat/tokens.css";' }]);
+      results.push([{ file: first.file, line: 1, column: 1, rule: "missing-tokens", severity: RULES["missing-tokens"], message: 'Nothing here imports the tokens, so elements draw without colours or spacing. Add once, at the entry: import "@adamstavely/trenchcoat/tokens.css";' }]);
     }
   }
   return results.flat().sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.column - b.column);

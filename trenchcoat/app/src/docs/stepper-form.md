@@ -92,8 +92,8 @@ group named by `label`.
 
 <script type="module">
   import { html } from "lit";
-  import "trenchcoat/stepper-form";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/stepper-form";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const form = document.querySelector("#setup");
   form.values = { workspace: "" };
@@ -116,8 +116,8 @@ group named by `label`.
 ```
 
 ```tsx
-import { StepperForm, StepperField, StepperInput, StepperReview, type Step } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { StepperForm, StepperField, StepperInput, StepperReview, type Step } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 type Values = { workspace: string };
 

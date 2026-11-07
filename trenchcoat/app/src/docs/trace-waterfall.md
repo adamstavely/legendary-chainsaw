@@ -94,8 +94,8 @@ details”, with the stats as a description list and a “Close details” butto
 <tc-trace-waterfall id="trace" heading="Trace"></tc-trace-waterfall>
 
 <script type="module">
-  import "trenchcoat/trace-waterfall";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/trace-waterfall";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const trace = document.querySelector("#trace");
   trace.root = {
@@ -113,8 +113,8 @@ details”, with the stats as a description list and a “Close details” butto
 ```
 
 ```tsx
-import { TraceWaterfall, type TraceSpan } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TraceWaterfall, type TraceSpan } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const run: TraceSpan = {
   id: "run",

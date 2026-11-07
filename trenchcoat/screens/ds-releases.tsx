@@ -8,7 +8,7 @@
  * it lets its illustration be the empty state.
  * Sits in the Trenchcoat App Shell.
  * Imports: App Shell (AppShell, Icon) from Trenchcoat screens; Awaiting Review, In Translation, In Quality Control,
- * In Coordination, Pending Release, Released and Data Table from `trenchcoat/react`; icons from lucide-react 1.55.0.
+ * In Coordination, Pending Release, Released and Data Table from `@adamstavely/trenchcoat/react`; icons from lucide-react 1.55.0.
  */
 
 import { useCallback, useId, useRef, useState, type ComponentPropsWithoutRef, type ComponentType, type KeyboardEvent, type Ref } from "react";
@@ -24,7 +24,7 @@ import {
   type DataColumn,
   type DataRow,
   type TagTone,
-} from "trenchcoat/react";
+} from "@adamstavely/trenchcoat/react";
 import { AppShell, Icon, type AppShellProps, type ShellNavItem, type ShellGroup } from "@/components/ui/app-shell";
 
 /** Sample content – replace with your own data */

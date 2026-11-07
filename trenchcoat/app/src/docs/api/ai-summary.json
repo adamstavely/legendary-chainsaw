@@ -404,7 +404,7 @@
   {
    "tag": "tc-ai-summary",
    "className": "TcAiSummary",
-   "module": "trenchcoat/ai-summary",
+   "module": "@adamstavely/trenchcoat/ai-summary",
    "data": [
     "sources",
     "points",

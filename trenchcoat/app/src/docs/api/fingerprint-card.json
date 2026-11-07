@@ -213,7 +213,7 @@
   {
    "tag": "tc-fingerprint-card",
    "className": "TcFingerprintCard",
-   "module": "trenchcoat/fingerprint-card",
+   "module": "@adamstavely/trenchcoat/fingerprint-card",
    "data": [
     "prints",
     "statusLabels"

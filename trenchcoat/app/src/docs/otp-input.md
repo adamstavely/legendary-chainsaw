@@ -88,8 +88,8 @@ after a resend and “You can resend the code now” when the countdown ends.
 </form>
 
 <script type="module">
-  import "trenchcoat/otp-input";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/otp-input";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const field = document.querySelector("#code");
   field.onComplete = (code, { signal }) => fetch(`/api/verify?code=${code}`, { signal }).then((r) => {
@@ -100,8 +100,8 @@ after a resend and “You can resend the code now” when the countdown ends.
 ```
 
 ```tsx
-import { OtpInput } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { OtpInput } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 async function verify(code: string) {
   const res = await fetch("/api/verify", { method: "POST", body: JSON.stringify({ code }) });

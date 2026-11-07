@@ -401,7 +401,7 @@
   {
    "tag": "tc-decision-tree",
    "className": "TcDecisionTree",
-   "module": "trenchcoat/decision-tree",
+   "module": "@adamstavely/trenchcoat/decision-tree",
    "data": [
     "decisions",
     "onChoose"

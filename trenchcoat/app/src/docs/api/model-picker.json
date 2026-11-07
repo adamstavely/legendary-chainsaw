@@ -341,7 +341,7 @@
   {
    "tag": "tc-model-picker",
    "className": "TcModelPicker",
-   "module": "trenchcoat/model-picker",
+   "module": "@adamstavely/trenchcoat/model-picker",
    "data": [
     "models"
    ],

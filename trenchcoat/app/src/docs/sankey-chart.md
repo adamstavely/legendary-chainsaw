@@ -89,8 +89,8 @@ once.
 <tc-sankey-chart heading="Grant funding" description="This year, in millions" unit="M"></tc-sankey-chart>
 
 <script type="module">
-  import "trenchcoat/sankey-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/sankey-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-sankey-chart").data = [
     { source: "Federal grants", target: "Genomics", value: 6.4 },
     { source: "Foundation", target: "Imaging", value: 2.6 },
@@ -101,8 +101,8 @@ once.
 ```
 
 ```tsx
-import { SankeyChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SankeyChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { source: "Federal grants", target: "Genomics", value: 6.4 },

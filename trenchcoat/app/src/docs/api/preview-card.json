@@ -240,7 +240,7 @@
   {
    "tag": "tc-preview-card",
    "className": "TcPreviewCard",
-   "module": "trenchcoat/preview-card",
+   "module": "@adamstavely/trenchcoat/preview-card",
    "data": [],
    "attributes": [
     {

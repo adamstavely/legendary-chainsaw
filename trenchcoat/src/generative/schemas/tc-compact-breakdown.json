@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-compact-breakdown.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-compact-breakdown.json",
   "title": "tc-compact-breakdown",
   "description": "One total split into its parts: a big number, a stacked bar and a ranked list, with an optional period switch.",
   "type": "object",

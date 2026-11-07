@@ -108,8 +108,8 @@ With `why`, the card is also described by the reason line. Each argument field i
 <tc-approval-card id="ask" heading="Send campaign email" risk="high" expires-in="45"></tc-approval-card>
 
 <script type="module">
-  import "trenchcoat/approval-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/approval-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#ask");
   card.description = "The October product update goes to 2,412 customers.";
@@ -128,8 +128,8 @@ With `why`, the card is also described by the reason line. Each argument field i
 ```
 
 ```tsx
-import { ApprovalCard } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ApprovalCard } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function SendCampaign({ send }: { send: (always: boolean) => Promise<void> }) {
   return (

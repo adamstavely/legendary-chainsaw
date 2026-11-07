@@ -100,7 +100,7 @@ panel's width) and `--tc-lpe-ruler-h`. Breakpoints are coloured from the theme's
 ```
 
 ```tsx
-import { Loupe } from "trenchcoat/react";
+import { Loupe } from "@adamstavely/trenchcoat/react";
 
 export function DevTools() {
   if (process.env.NODE_ENV === "production") return null;

@@ -88,8 +88,8 @@ as "1.5 times".
 <tc-text-to-speech id="guide" heading="Harrow Point light" lang="en"></tc-text-to-speech>
 
 <script type="module">
-  import "trenchcoat/text-to-speech";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/text-to-speech";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const guide = document.querySelector("#guide");
   guide.text = "The Harrow Point light was first lit in 1871. Today it still flashes twice every fifteen seconds.";
@@ -100,8 +100,8 @@ as "1.5 times".
 
 ```tsx
 import { useState } from "react";
-import { TextToSpeech } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TextToSpeech } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function AudioGuide({ text }: { text: string }) {
   const [rate, setRate] = useState(1);

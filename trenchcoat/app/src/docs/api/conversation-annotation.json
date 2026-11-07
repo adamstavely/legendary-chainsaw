@@ -355,7 +355,7 @@
   {
    "tag": "tc-conversation-annotation",
    "className": "TcConversationAnnotation",
-   "module": "trenchcoat/conversation-annotation",
+   "module": "@adamstavely/trenchcoat/conversation-annotation",
    "data": [
     "messages",
     "labels",

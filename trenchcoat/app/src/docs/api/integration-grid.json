@@ -166,7 +166,7 @@
   {
    "tag": "tc-integration-grid",
    "className": "TcIntegrationGrid",
-   "module": "trenchcoat/integration-grid",
+   "module": "@adamstavely/trenchcoat/integration-grid",
    "data": [
     "logos",
     "mark"

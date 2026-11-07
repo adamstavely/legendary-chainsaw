@@ -57,14 +57,14 @@ Replace the words to suit the place: "No cases yet". Add one line on what to do 
 <tc-first-use></tc-first-use>
 
 <script type="module">
-  import "trenchcoat/first-use";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/first-use";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { FirstUse } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FirstUse } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return <FirstUse />;

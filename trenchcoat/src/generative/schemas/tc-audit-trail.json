@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-audit-trail.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-audit-trail.json",
   "title": "tc-audit-trail",
   "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
   "type": "object",

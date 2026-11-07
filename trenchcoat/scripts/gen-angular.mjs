@@ -192,8 +192,8 @@ for (const [slug, els] of bySlug) {
   files.set(
     `${slug}.ts`,
     `${header}import { Directive, ElementRef, ${any("outputs") ? "EventEmitter, " : ""}${any("inputs") ? "Input, " : ""}${any("outputs") ? "Output, " : ""}inject } from "@angular/core";
-import type { ${imports.join(", ")} } from "trenchcoat/${slug}";
-import "trenchcoat/${slug}";
+import type { ${imports.join(", ")} } from "@adamstavely/trenchcoat/${slug}";
+import "@adamstavely/trenchcoat/${slug}";
 
 ${els.map(directive).join("\n")}`,
   );
@@ -201,7 +201,7 @@ ${els.map(directive).join("\n")}`,
 
 files.set(
   "index.ts",
-  `${header}// Every element's directive: import { Button, Combobox } from "trenchcoat/angular", or TRENCHCOAT for all of them.
+  `${header}// Every element's directive: import { Button, Combobox } from "@adamstavely/trenchcoat/angular", or TRENCHCOAT for all of them.
 ${[...bySlug].map(([slug, els]) => `import { ${els.map((el) => el.name).join(", ")} } from "./${slug}.js";`).join("\n")}
 
 export { ${elements.map((el) => el.name).join(", ")} };
@@ -215,12 +215,12 @@ const forms = elements.filter((el) => el.value);
 files.set(
   "forms.ts",
   `${header}// ngModel, formControl and formControlName for the elements that hold a value: import { CheckboxValueAccessor } from
-// "trenchcoat/angular/forms", or TRENCHCOAT_FORMS for all of them, next to FormsModule or ReactiveFormsModule.
+// "@adamstavely/trenchcoat/angular/forms", or TRENCHCOAT_FORMS for all of them, next to FormsModule or ReactiveFormsModule.
 // The element keeps its own state; the accessor writes the form's value into it and reports tc-value-change back –
 // once the event has finished, so a change the page cancels (preventDefault) never reaches the form.
 import { Directive, ElementRef, forwardRef, inject, isDevMode } from "@angular/core";
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from "@angular/forms";
-${forms.map((el) => `import type { ${el.cls} } from "trenchcoat/${el.slug}";`).join("\n")}
+${forms.map((el) => `import type { ${el.cls} } from "@adamstavely/trenchcoat/${el.slug}";`).join("\n")}
 
 /** What every accessor shares: the element's value in, tc-value-change and focus-out back */
 abstract class ValueAccessor<E extends HTMLElement & { value: unknown }> implements ControlValueAccessor {

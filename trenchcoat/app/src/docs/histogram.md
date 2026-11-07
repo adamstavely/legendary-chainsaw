@@ -86,15 +86,15 @@ everything at once.
 <tc-histogram heading="Assay turnaround" description="This month, hours" unit=" h" markers="both"></tc-histogram>
 
 <script type="module">
-  import "trenchcoat/histogram";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/histogram";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-histogram").data = [{ value: 21.5 }, { value: 18 }, { value: 24.2 }, { value: 39 }];
 </script>
 ```
 
 ```tsx
-import { Histogram } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Histogram } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [{ value: 21.5 }, { value: 18 }, { value: 24.2 }, { value: 39 }];
 

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-retrieval-settings.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-retrieval-settings.json",
   "title": "tc-retrieval-settings",
   "description": "Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking, metadata filters and how many chunks go\ninto context – with the pipeline they make and the cost and latency the app reports.",
   "type": "object",

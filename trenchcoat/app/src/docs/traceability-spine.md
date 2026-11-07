@@ -88,8 +88,8 @@ lines and the stage colours are hidden; the path is in the message.
 <tc-traceability-spine id="spine" heading="Neuromorphic computing"></tc-traceability-spine>
 
 <script type="module">
-  import "trenchcoat/traceability-spine";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/traceability-spine";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const spine = document.querySelector("#spine");
   spine.nodes = [
@@ -104,8 +104,8 @@ lines and the stage colours are hidden; the path is in the message.
 
 ```tsx
 import { useState } from "react";
-import { TraceabilitySpine, type SpineNode } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TraceabilitySpine, type SpineNode } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const nodes: SpineNode[] = [
   { id: "q1", stage: "question", title: "Can spiking nets match dense accuracy at 1% of the energy?", status: "Open", links: ["g1"] },

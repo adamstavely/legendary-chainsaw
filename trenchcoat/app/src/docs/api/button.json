@@ -252,7 +252,7 @@
   {
    "tag": "tc-button",
    "className": "TcButton",
-   "module": "trenchcoat/button",
+   "module": "@adamstavely/trenchcoat/button",
    "data": [],
    "attributes": [
     {

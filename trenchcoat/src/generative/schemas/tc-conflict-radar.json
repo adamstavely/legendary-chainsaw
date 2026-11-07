@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-conflict-radar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-conflict-radar.json",
   "title": "tc-conflict-radar",
   "description": "Which parallel agents touch the same files, and where they collide.",
   "type": "object",

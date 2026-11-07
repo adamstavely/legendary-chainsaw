@@ -92,8 +92,8 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 <tc-knowledge-source-manager id="ksm"></tc-knowledge-source-manager>
 
 <script type="module">
-  import "trenchcoat/knowledge-source-manager";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/knowledge-source-manager";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const ksm = document.querySelector("#ksm");
   ksm.now = Date.now();
@@ -108,8 +108,8 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 
 ```tsx
 import { useState } from "react";
-import { KnowledgeSourceManager, type KnowledgeSource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { KnowledgeSourceManager, type KnowledgeSource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Sources({ initial }: { initial: KnowledgeSource[] }) {
   const [sources, setSources] = useState(initial);

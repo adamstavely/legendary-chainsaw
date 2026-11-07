@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-world-map.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-world-map.json",
   "title": "tc-world-map",
   "description": "A world map with one highlighted continent and a menu to switch it.",
   "type": "object",

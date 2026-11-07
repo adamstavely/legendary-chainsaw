@@ -84,8 +84,8 @@ toggle buttons in a group named “Show only”. A polite live region reports pr
 <tc-fan-out-grid id="job" heading="Lead enrichment" job="Enrich 3 leads"></tc-fan-out-grid>
 
 <script type="module">
-  import "trenchcoat/fan-out-grid";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/fan-out-grid";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const grid = document.querySelector("#job");
   grid.tasks = [
@@ -100,8 +100,8 @@ toggle buttons in a group named “Show only”. A polite live region reports pr
 ```
 
 ```tsx
-import { FanoutGrid, type FanoutTask } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { FanoutGrid, type FanoutTask } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Enrichment({ tasks, elapsed, retry }: { tasks: FanoutTask[]; elapsed: number; retry: (ids: string[]) => Promise<void> }) {
   return <FanoutGrid title="Lead enrichment" job={`Enrich ${tasks.length} leads`} tasks={tasks} elapsed={elapsed} workers={8} onRetry={retry} />;

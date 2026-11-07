@@ -270,7 +270,7 @@
   {
    "tag": "tc-scheduled-runs",
    "className": "TcScheduledRuns",
-   "module": "trenchcoat/scheduled-runs",
+   "module": "@adamstavely/trenchcoat/scheduled-runs",
    "data": [
     "sessions",
     "tasks",

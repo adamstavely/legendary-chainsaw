@@ -67,8 +67,8 @@ Write `title` as what's wrong, in a line, and keep the evidence for `detail`. Us
 <tc-agent-findings id="check"></tc-agent-findings>
 
 <script type="module">
-  import "trenchcoat/agent-findings";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-findings";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const check = document.querySelector("#check");
   check.agents = [{ id: "a", name: "Budget checker", status: "running", progress: 0.6 }];
@@ -77,8 +77,8 @@ Write `title` as what's wrong, in a line, and keep the evidence for `detail`. Us
 ```
 
 ```tsx
-import { AgentFindings, type AgentFinding, type AgentFindingsAgent } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentFindings, type AgentFinding, type AgentFindingsAgent } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const agents: AgentFindingsAgent[] = [{ id: "a", name: "Budget checker", status: "running", progress: 0.6 }];
 const findings: AgentFinding[] = [{ id: "f", agent: "a", severity: "high", title: "Totals don't match" }];

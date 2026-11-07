@@ -84,8 +84,8 @@ previous period". Export says "Exported" or "Export failed" in a status message.
 <tc-metrics-dashboard id="sales" heading="Sales" site="Northwind Store"></tc-metrics-dashboard>
 
 <script type="module">
-  import "trenchcoat/metrics-dashboard";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/metrics-dashboard";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const sales = document.querySelector("#sales");
   sales.onExport = (range, metric) => fetch(`/export?range=${range}&metric=${metric}`);
@@ -95,8 +95,8 @@ previous period". Export says "Exported" or "Export failed" in a status message.
 
 ```tsx
 import { useState } from "react";
-import { MetricsDashboard, type MetricKey } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { MetricsDashboard, type MetricKey } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Sales() {
   const [metric, setMetric] = useState<MetricKey>("revenue");

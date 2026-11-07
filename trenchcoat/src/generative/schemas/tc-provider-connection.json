@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-provider-connection.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-provider-connection.json",
   "title": "tc-provider-connection",
   "description": "A connection to a model provider: provider, endpoint, deployment and a masked credential reference, with an\napp-run connection test, its health, when it was checked and the models the endpoint reports.",
   "type": "object",

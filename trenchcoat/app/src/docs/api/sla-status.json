@@ -209,7 +209,7 @@
   {
    "tag": "tc-sla-status",
    "className": "TcSlaStatus",
-   "module": "trenchcoat/sla-status",
+   "module": "@adamstavely/trenchcoat/sla-status",
    "data": [
     "split",
     "rows",

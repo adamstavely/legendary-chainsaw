@@ -108,8 +108,8 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 <tc-coordinate-details id="notes"></tc-coordinate-details>
 
 <script type="module">
-  import "trenchcoat/coordinate-details";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/coordinate-details";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const notes = document.querySelector("#notes");
   notes.text = "Transect A starts at 50°49′12″N 1°05′24″W; samples were taken at 50.7980, -1.0912.";
@@ -122,8 +122,8 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 ```
 
 ```tsx
-import { CoordinateDetails, type CoordinatePlace } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CoordinateDetails, type CoordinatePlace } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const places: Record<string, CoordinatePlace> = {
   "50.7980,-1.0912": { name: "Sampling point W3", kind: "Water sampling site" },

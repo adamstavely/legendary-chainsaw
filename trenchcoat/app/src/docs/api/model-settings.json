@@ -289,7 +289,7 @@
   {
    "tag": "tc-model-settings",
    "className": "TcModelSettings",
-   "module": "trenchcoat/model-settings",
+   "module": "@adamstavely/trenchcoat/model-settings",
    "data": [
     "model",
     "value",

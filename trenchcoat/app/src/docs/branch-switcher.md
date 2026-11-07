@@ -82,8 +82,8 @@ grouped by section, and the current branch is the selected option. Picking or cr
 <tc-branch-switcher id="branch" current="feature/booking-calendar" base="main"></tc-branch-switcher>
 
 <script type="module">
-  import "trenchcoat/branch-switcher";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/branch-switcher";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#branch");
   el.branches = [
@@ -96,8 +96,8 @@ grouped by section, and the current branch is the selected option. Picking or cr
 
 ```tsx
 import { useState } from "react";
-import { BranchSwitcher, type BranchItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BranchSwitcher, type BranchItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const branches: BranchItem[] = [
   { name: "main", kind: "local" },

@@ -87,8 +87,8 @@ reads its label and count, and the selected tab is `aria-selected`. Give a tab `
 <tc-profile-header id="header" name="Dana Whitfield" more></tc-profile-header>
 
 <script type="module">
-  import "trenchcoat/profile-header";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/profile-header";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const header = document.querySelector("#header");
   header.status = { label: "Enhanced review", tone: "warning" };
@@ -103,8 +103,8 @@ reads its label and count, and the selected tab is `aria-selected`. Give a tab `
 
 ```tsx
 import { useState } from "react";
-import { ProfileHeader } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ProfileHeader } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function CustomerHeader() {
   const [tab, setTab] = useState("overview");

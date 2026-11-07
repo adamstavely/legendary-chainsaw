@@ -71,8 +71,8 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 <tc-thinking-loader id="loader" interval="1400"></tc-thinking-loader>
 
 <script type="module">
-  import "trenchcoat/thinking-loader";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/thinking-loader";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const loader = document.querySelector("#loader");
   loader.phases = ["Thinking", "Searching the web", "Writing response"];
@@ -84,8 +84,8 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 ```
 
 ```tsx
-import { ThinkingLoader } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ThinkingLoader } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Working({ phase, done }: { phase: number; done: boolean }) {
   return <ThinkingLoader phases={["Thinking", "Searching the web", "Writing response"]} phase={phase} done={done} />;

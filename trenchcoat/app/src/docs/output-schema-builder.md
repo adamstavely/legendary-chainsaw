@@ -105,8 +105,8 @@ item reads its key, value and type, with “?” after an optional key.
 <tc-output-schema-builder id="schema" name="schema"></tc-output-schema-builder>
 
 <script type="module">
-  import "trenchcoat/output-schema-builder";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/output-schema-builder";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const builder = document.querySelector("#schema");
   builder.heading = "Ticket triage";
@@ -121,8 +121,8 @@ item reads its key, value and type, with “?” after an optional key.
 
 ```tsx
 import { useState } from "react";
-import { OutputSchemaBuilder, schemaFromFields, type OutputSchemaField } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { OutputSchemaBuilder, schemaFromFields, type OutputSchemaField } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function TriageSchema() {
   const [fields, setFields] = useState<OutputSchemaField[]>([

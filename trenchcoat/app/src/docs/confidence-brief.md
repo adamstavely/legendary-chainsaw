@@ -83,8 +83,8 @@ copy, a status region says “Brief copied as text”, or “Couldn't copy the b
 <tc-confidence-brief id="brief" heading="Annual pricing and churn" meta="27 Oct · for the leadership meeting"></tc-confidence-brief>
 
 <script type="module">
-  import "trenchcoat/confidence-brief";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/confidence-brief";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const brief = document.querySelector("#brief");
   brief.question = "Will annual-only pricing reduce churn?";
@@ -99,8 +99,8 @@ copy, a status region says “Brief copied as text”, or “Couldn't copy the b
 ```
 
 ```tsx
-import { ConfidenceBrief } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ConfidenceBrief } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PricingBrief({ openRecord }: { openRecord: (id: string) => void }) {
   return (

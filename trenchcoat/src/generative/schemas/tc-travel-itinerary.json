@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-travel-itinerary.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-travel-itinerary.json",
   "title": "tc-travel-itinerary",
   "description": "Trips as legs – route, mode and carrier, document, confidence, source and grade, and flags – grouped into\njourneys headed by their route.",
   "type": "object",

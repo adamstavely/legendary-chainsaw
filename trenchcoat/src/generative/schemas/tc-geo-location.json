@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-geo-location.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-geo-location.json",
   "title": "tc-geo-location",
   "description": "Coordinates made useful – decimal or degrees-minutes-seconds, Copy, links to mapping tools and an embedded map that\nloads only when asked.",
   "type": "object",

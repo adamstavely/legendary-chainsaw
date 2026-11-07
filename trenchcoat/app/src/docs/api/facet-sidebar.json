@@ -232,7 +232,7 @@
   {
    "tag": "tc-facet-sidebar",
    "className": "TcFacetSidebar",
-   "module": "trenchcoat/facet-sidebar",
+   "module": "@adamstavely/trenchcoat/facet-sidebar",
    "data": [
     "facets",
     "value",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-context-window.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-context-window.json",
   "title": "tc-context-window",
   "description": "What fills a model's context window, as a field of cells per part, with removal and compaction.",
   "type": "object",

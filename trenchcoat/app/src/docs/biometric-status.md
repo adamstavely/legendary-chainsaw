@@ -86,8 +86,8 @@ meters are hidden; the words read.
 <tc-biometric-status id="bio" heading="Enrolment"></tc-biometric-status>
 
 <script type="module">
-  import "trenchcoat/biometric-status";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/biometric-status";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const bio = document.querySelector("#bio");
   bio.modalities = [
@@ -102,8 +102,8 @@ meters are hidden; the words read.
 
 ```tsx
 import { useState } from "react";
-import { BiometricStatus, type BiometricModality } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { BiometricStatus, type BiometricModality } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const modalities: BiometricModality[] = [
   { id: "face", label: "Face", kind: "face", detail: "Front and profile", status: "enrolled", quality: 0.96 },

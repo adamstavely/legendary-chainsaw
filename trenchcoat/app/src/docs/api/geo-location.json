@@ -329,7 +329,7 @@
   {
    "tag": "tc-geo-location",
    "className": "TcGeoLocation",
-   "module": "trenchcoat/geo-location",
+   "module": "@adamstavely/trenchcoat/geo-location",
    "data": [
     "points",
     "providers"

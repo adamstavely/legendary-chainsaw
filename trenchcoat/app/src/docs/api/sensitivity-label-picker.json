@@ -173,7 +173,7 @@
   {
    "tag": "tc-sensitivity-label-picker",
    "className": "TcSensitivityLabelPicker",
-   "module": "trenchcoat/sensitivity-label-picker",
+   "module": "@adamstavely/trenchcoat/sensitivity-label-picker",
    "data": [
     "options",
     "labels"

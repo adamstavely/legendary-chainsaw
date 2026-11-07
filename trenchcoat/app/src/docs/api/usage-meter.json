@@ -388,7 +388,7 @@
   {
    "tag": "tc-usage-meter",
    "className": "TcUsageMeter",
-   "module": "trenchcoat/usage-meter",
+   "module": "@adamstavely/trenchcoat/usage-meter",
    "data": [
     "used",
     "limits",

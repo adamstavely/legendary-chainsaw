@@ -292,7 +292,7 @@
   {
    "tag": "tc-smart-recommendation",
    "className": "TcSmartRecommendation",
-   "module": "trenchcoat/smart-recommendation",
+   "module": "@adamstavely/trenchcoat/smart-recommendation",
    "data": [
     "options",
     "accepted",

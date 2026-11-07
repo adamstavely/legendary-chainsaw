@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-chat-history.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-chat-history.json",
   "title": "tc-chat-history",
   "description": "The conversation list: search, pinning, folders, rename and delete with Undo, grouped by date; windowed.",
   "type": "object",

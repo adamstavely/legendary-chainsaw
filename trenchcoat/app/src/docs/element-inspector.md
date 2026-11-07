@@ -79,8 +79,8 @@ box-model drawing is hidden from screen readers; a sentence under it reads the c
 <tc-element-inspector id="dom" description="staging.halden.example/grants/218/apply"></tc-element-inspector>
 
 <script type="module">
-  import "trenchcoat/element-inspector";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/element-inspector";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#dom");
   el.nodes = [{ id: "form", tag: "form", attrs: { id: "apply", class: "form" }, children: [{ id: "submit", tag: "button", text: "Submit" }] }];
@@ -94,8 +94,8 @@ box-model drawing is hidden from screen readers; a sentence under it reads the c
 
 ```tsx
 import { useState } from "react";
-import { ElementInspector, type InspectorDetails, type InspectorNode } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ElementInspector, type InspectorDetails, type InspectorNode } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Inspector({ nodes, detailsFor }: { nodes: InspectorNode[]; detailsFor: (id: string) => InspectorDetails }) {
   const [selected, setSelected] = useState<string | null>(null);

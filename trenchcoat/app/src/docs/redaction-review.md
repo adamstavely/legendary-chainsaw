@@ -65,8 +65,8 @@ Write `reason` as what the text is: "Phone number". Only one span can be reveale
 <tc-redaction-review id="review"></tc-redaction-review>
 
 <script type="module">
-  import "trenchcoat/redaction-review";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/redaction-review";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#review");
   review.blocks = [{ id: "p1", text: "Reach them on 555-0142." }];
@@ -76,8 +76,8 @@ Write `reason` as what the text is: "Phone number". Only one span can be reveale
 ```
 
 ```tsx
-import { RedactionReview, type Redaction, type RedactionBlock } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RedactionReview, type Redaction, type RedactionBlock } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const blocks: RedactionBlock[] = [{ id: "p1", text: "Reach them on 555-0142." }];
 const redactions: Redaction[] = [{ id: "r1", block: "p1", start: 14, end: 22, reason: "Phone number", status: "proposed" }];

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-integration-settings.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-integration-settings.json",
   "title": "tc-integration-settings",
   "description": "The settings card of one connected service: a switch, an API key, the site address and a time zone, with a save bar.",
   "type": "object",

@@ -73,16 +73,16 @@ or `openable` it's an image, focusable so the description can be read. The marks
 <tc-citation-badge id="badge" source="Larkfield Index" href="/papers/42/citations"></tc-citation-badge>
 
 <script type="module">
-  import "trenchcoat/citation-badge";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/citation-badge";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   document.querySelector("#badge").counts = { publications: 522, supporting: 29, mentioning: 348, contrasting: 7 };
 </script>
 ```
 
 ```tsx
-import { CitationBadge } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CitationBadge } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Badge() {
   return <CitationBadge source="Larkfield Index" href="/papers/42/citations" counts={{ publications: 522, supporting: 29, mentioning: 348, contrasting: 7 }} />;

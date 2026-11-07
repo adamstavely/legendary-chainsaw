@@ -323,7 +323,7 @@
   {
    "tag": "tc-results-list",
    "className": "TcResultsList",
-   "module": "trenchcoat/results-list",
+   "module": "@adamstavely/trenchcoat/results-list",
    "data": [
     "results"
    ],

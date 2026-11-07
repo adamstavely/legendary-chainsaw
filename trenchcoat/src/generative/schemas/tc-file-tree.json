@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-file-tree.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-file-tree.json",
   "title": "tc-file-tree",
   "description": "A project's files: folders that fold, a filter, an icon per kind of file and an optional Git status.",
   "type": "object",

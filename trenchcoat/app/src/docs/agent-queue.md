@@ -96,8 +96,8 @@ queue”; the stepper is a group named “Workers” whose count is announced as
 <tc-agent-queue id="queue" name="support-automation" pausable stepper backpressure="14"></tc-agent-queue>
 
 <script type="module">
-  import "trenchcoat/agent-queue";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-queue";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const queue = document.querySelector("#queue");
   queue.workers = [{ id: "w1", name: "Sonnet" }, { id: "w2", name: "Haiku" }];
@@ -111,8 +111,8 @@ queue”; the stepper is a group named “Workers” whose count is announced as
 
 ```tsx
 import { useState } from "react";
-import { AgentQueue, type QueueJob, type QueueWorker } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentQueue, type QueueJob, type QueueWorker } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const workers: QueueWorker[] = [{ id: "w1", name: "Sonnet" }, { id: "w2", name: "Haiku" }];
 

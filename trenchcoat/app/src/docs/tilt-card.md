@@ -65,8 +65,8 @@ order you wrote it.
 </tc-tilt-card>
 
 <script type="module">
-  import "trenchcoat/tilt-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tilt-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#plan");
   card.perspective = 700;
@@ -75,8 +75,8 @@ order you wrote it.
 ```
 
 ```tsx
-import { TiltCard } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TiltCard } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function PlanCard() {
   return (

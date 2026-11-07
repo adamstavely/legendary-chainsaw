@@ -330,7 +330,7 @@
   {
    "tag": "tc-mcp-connection-manager",
    "className": "TcMcpConnectionManager",
-   "module": "trenchcoat/mcp-connection-manager",
+   "module": "@adamstavely/trenchcoat/mcp-connection-manager",
    "data": [
     "value",
     "connections",

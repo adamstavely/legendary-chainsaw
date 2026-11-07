@@ -86,8 +86,8 @@ streams in. The orb is hidden from assistive technology.
 <tc-voice-mode id="voice" name="Atlas" state="listening"></tc-voice-mode>
 
 <script type="module">
-  import "trenchcoat/voice-mode";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/voice-mode";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const voice = document.querySelector("#voice");
   voice.turns = [
@@ -100,8 +100,8 @@ streams in. The orb is hidden from assistive technology.
 ```
 
 ```tsx
-import { VoiceMode, type VoiceModeState, type VoiceTurn } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { VoiceMode, type VoiceModeState, type VoiceTurn } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Conversation({
   state,

@@ -87,8 +87,8 @@ tokens”), and the chosen one is `aria-selected`. Extended thinking and Web sea
 <tc-model-picker id="model" value="atlas" side="top"></tc-model-picker>
 
 <script type="module">
-  import "trenchcoat/model-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/model-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const picker = document.querySelector("#model");
   picker.models = [
@@ -102,8 +102,8 @@ tokens”), and the chosen one is `aria-selected`. Extended thinking and Web sea
 
 ```tsx
 import { useState } from "react";
-import { ModelPicker, type ModelEffort, type PickerModel } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ModelPicker, type ModelEffort, type PickerModel } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const models: PickerModel[] = [
   { id: "auto", name: "Auto", description: "Picks the right model per message" },

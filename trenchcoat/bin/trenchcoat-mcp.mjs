@@ -134,7 +134,7 @@ function callTool(name, args = {}) {
     if (!entry) return refused(`No entry called "${args.name}". Use search_components to find one.`);
     if (name === "get_usage") {
       const usage = usageFor(entry);
-      if (!Object.keys(usage).length) return text(`${entry.name} is a React file to copy: npx trenchcoat add ${entry.slug}`);
+      if (!Object.keys(usage).length) return text(`${entry.name} is a React file to copy: npx -p @adamstavely/trenchcoat trenchcoat add ${entry.slug}`);
       return text(args.framework ? (usage[args.framework] ?? `No ${args.framework} usage for ${entry.name}.`) : usage);
     }
     return text({ ...entry, api: readApi(entry.slug)?.elements ?? null, docs: readDoc(entry.slug) ?? null });

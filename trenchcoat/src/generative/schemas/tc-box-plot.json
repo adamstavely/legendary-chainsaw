@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-box-plot.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-box-plot.json",
   "title": "tc-box-plot",
   "description": "How values spread within each group, as boxes with whiskers and outliers or as violins, the group with the highest\nmedian emphasised, with a table view.",
   "type": "object",

@@ -71,8 +71,8 @@ named by `input-label`. `role="status"` says when a command starts and finishes.
 <tc-terminal id="term" prompt="~/project $"></tc-terminal>
 
 <script type="module">
-  import "trenchcoat/terminal";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/terminal";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const term = document.querySelector("#term");
   term.addEventListener("tc-command", (e) => {
@@ -86,8 +86,8 @@ named by `input-label`. `role="status"` says when a command starts and finishes.
 
 ```tsx
 import { useState } from "react";
-import { Terminal } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { Terminal } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Console({ run }: { run: (command: string) => Promise<string> }) {
   const [output, setOutput] = useState("");

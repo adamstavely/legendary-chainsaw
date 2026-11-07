@@ -92,7 +92,7 @@ Remove appears when a to-do is hovered or focused; on touch screens it always sh
 
 ```tsx
 import { useState } from "react";
-import { TodoList, type TodoItem } from "trenchcoat/react";
+import { TodoList, type TodoItem } from "@adamstavely/trenchcoat/react";
 
 export function Prep() {
   const [items, setItems] = useState<TodoItem[]>([{ id: "a", text: "Book the hall" }]);

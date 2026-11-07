@@ -83,8 +83,8 @@ for Field reports.”
 <tc-evidence-coverage id="coverage" scope="For the answer on Northwind Freight"></tc-evidence-coverage>
 
 <script type="module">
-  import "trenchcoat/evidence-coverage";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/evidence-coverage";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const coverage = document.querySelector("#coverage");
   coverage.sources = [
@@ -98,8 +98,8 @@ for Field reports.”
 ```
 
 ```tsx
-import { EvidenceCoverage, type CoverageSource } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EvidenceCoverage, type CoverageSource } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const sources: CoverageSource[] = [
   { id: "sales", label: "Sales and orders", status: "current" },

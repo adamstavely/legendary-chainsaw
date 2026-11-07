@@ -301,7 +301,7 @@
   {
    "tag": "tc-agreement-tracker",
    "className": "TcAgreementTracker",
-   "module": "trenchcoat/agreement-tracker",
+   "module": "@adamstavely/trenchcoat/agreement-tracker",
    "data": [
     "turns",
     "stanceLabels"

@@ -329,7 +329,7 @@
   {
    "tag": "tc-ai-workspace",
    "className": "TcAiWorkspace",
-   "module": "trenchcoat/ai-workspace",
+   "module": "@adamstavely/trenchcoat/ai-workspace",
    "data": [
     "pinned",
     "conversations",

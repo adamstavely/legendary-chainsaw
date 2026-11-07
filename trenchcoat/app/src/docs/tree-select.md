@@ -88,8 +88,8 @@ status confirms picks (“Sciences, Physics selected”, “Optics checked. 3 se
 <tc-tree-select label="Subject" name="subject"></tc-tree-select>
 
 <script type="module">
-  import "trenchcoat/tree-select";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tree-select";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const field = document.querySelector("tc-tree-select");
   field.options = [
@@ -103,8 +103,8 @@ status confirms picks (“Sciences, Physics selected”, “Optics checked. 3 se
 
 ```tsx
 import { useState } from "react";
-import { TreeSelect, type TreeOption, type TreeSelectValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TreeSelect, type TreeOption, type TreeSelectValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const subjects: TreeOption[] = [
   { id: "sciences", label: "Sciences", children: [{ id: "optics", label: "Optics" }, { id: "botany", label: "Botany" }] },

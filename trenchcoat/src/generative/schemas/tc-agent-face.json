@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-face.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-face.json",
   "title": "tc-agent-face",
   "description": "Donovan's animated face, which shows what the agent is doing.",
   "type": "object",

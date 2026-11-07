@@ -186,7 +186,7 @@
   {
    "tag": "tc-histogram",
    "className": "TcHistogram",
-   "module": "trenchcoat/histogram",
+   "module": "@adamstavely/trenchcoat/histogram",
    "data": [
     "value",
     "domain",

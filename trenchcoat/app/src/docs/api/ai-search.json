@@ -361,7 +361,7 @@
   {
    "tag": "tc-ai-search",
    "className": "TcAiSearch",
-   "module": "trenchcoat/ai-search",
+   "module": "@adamstavely/trenchcoat/ai-search",
    "data": [
     "suggestions",
     "examples",

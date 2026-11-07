@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-progress-bar.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-progress-bar.json",
   "title": "tc-progress-bar",
   "description": "A thin bar for a wait, of known or unknown length.",
   "type": "object",

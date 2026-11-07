@@ -96,8 +96,8 @@ A status region says how many rows are checked and, for a range, its summary: â€
 <tc-data-table id="accounts" heading="Accounts"></tc-data-table>
 
 <script type="module">
-  import "trenchcoat/data-table";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/data-table";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const table = document.querySelector("#accounts");
   table.columns = [
@@ -117,8 +117,8 @@ A status region says how many rows are checked and, for a range, its summary: â€
 
 ```tsx
 import { useState } from "react";
-import { DataTable, type DataColumn, type DataRow } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { DataTable, type DataColumn, type DataRow } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const columns: DataColumn[] = [
   { key: "name", label: "Company", type: "title", width: "170px" },

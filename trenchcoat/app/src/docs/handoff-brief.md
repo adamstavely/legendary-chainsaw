@@ -86,8 +86,8 @@ accepted. The work is yours now.”
 <tc-handoff-brief id="brief" heading="Q3 supplier review" summary="Two-thirds done; Northwind is the only supplier at risk."></tc-handoff-brief>
 
 <script type="module">
-  import "trenchcoat/handoff-brief";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/handoff-brief";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const brief = document.querySelector("#brief");
   brief.from = { name: "Ana Ruiz" };
@@ -102,8 +102,8 @@ accepted. The work is yours now.”
 
 ```tsx
 import { useState } from "react";
-import { HandoffBrief, type HandoffBriefAccess, type HandoffBriefSection } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { HandoffBrief, type HandoffBriefAccess, type HandoffBriefSection } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ReviewHandoff({ missing, onAccepted }: { missing: HandoffBriefAccess[]; onAccepted: () => void }) {
   const [acknowledged, setAcknowledged] = useState<HandoffBriefSection[]>([]);

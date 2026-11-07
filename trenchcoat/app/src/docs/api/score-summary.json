@@ -323,7 +323,7 @@
   {
    "tag": "tc-score-summary",
    "className": "TcScoreSummary",
-   "module": "trenchcoat/score-summary",
+   "module": "@adamstavely/trenchcoat/score-summary",
    "data": [
     "responses",
     "scores",

@@ -63,8 +63,8 @@ Tools are words, such as "Archive search". A page may pass `toolIcon`, its own e
 <tc-agent-monitor id="run" name="Archive reader"></tc-agent-monitor>
 
 <script type="module">
-  import "trenchcoat/agent-monitor";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-monitor";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const run = document.querySelector("#run");
   run.startedAt = Date.now() - 60000;
@@ -75,8 +75,8 @@ Tools are words, such as "Archive search". A page may pass `toolIcon`, its own e
 ```
 
 ```tsx
-import { AgentMonitor, type AgentMonitorStep } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentMonitor, type AgentMonitorStep } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Run({ startedAt, steps }: { startedAt: number; steps: AgentMonitorStep[] }) {
   return <AgentMonitor name="Archive reader" startedAt={startedAt} steps={steps} cost={0.42} onTcAction={(e) => console.log(e.detail.action)} />;

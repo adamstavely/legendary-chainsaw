@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-speed-reader.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-speed-reader.json",
   "title": "tc-speed-reader",
   "description": "Speed reading, one word at a time in a fixed frame, with the recognition point on a guide mark, the speed, words at\na time, a scrubber and the time left.",
   "type": "object",

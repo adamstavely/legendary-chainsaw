@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-roadmap-timeline.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-roadmap-timeline.json",
   "title": "tc-roadmap-timeline",
   "description": "Workstreams on a calendar, Gantt style – lanes, bars with progress and status, milestones, a Today line and\ndependency arrows, at a week, month or quarter scale, with details for the piece of work selected.",
   "type": "object",

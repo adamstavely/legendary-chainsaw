@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { SecretField } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SecretField } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <SecretField label="API key" />; }
 ```

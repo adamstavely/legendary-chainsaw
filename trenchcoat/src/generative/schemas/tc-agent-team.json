@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-agent-team.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-team.json",
   "title": "tc-agent-team",
   "description": "A prompt builds a team of three agents, who pop in with their roles and tools.",
   "type": "object",

@@ -45,10 +45,10 @@
       "@motion/*": [
         "motion/*"
       ],
-      "trenchcoat/react": [
+      "@adamstavely/trenchcoat/react": [
         "src/elements/react.ts"
       ],
-      "trenchcoat/look-provider": [
+      "@adamstavely/trenchcoat/look-provider": [
         "src/elements/internal/look.ts"
       ],
       "@/components/ui/*": [
@@ -66,7 +66,7 @@
     "vite.config.ts",
     "src"
   ],
-  // The Angular wrappers import the built package ("trenchcoat/*") and use Angular's decorators: npm run
+  // The Angular wrappers import the built package ("@adamstavely/trenchcoat/*") and use Angular's decorators: npm run
   // check:angular builds the package and compiles them with ngc. iCloud's "<name> 2.ts" copies (the repo lives under
   // ~/Documents) redeclare their originals' globals
   "exclude": [

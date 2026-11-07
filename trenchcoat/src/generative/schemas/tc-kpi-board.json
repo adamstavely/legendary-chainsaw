@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-kpi-board.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-kpi-board.json",
   "title": "tc-kpi-board",
   "description": "A dashboard's top: a date range, three trend cards, an overview that compares two periods, and a focus card.",
   "type": "object",

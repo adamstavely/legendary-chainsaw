@@ -351,7 +351,7 @@
   {
    "tag": "tc-verification-queue",
    "className": "TcVerificationQueue",
-   "module": "trenchcoat/verification-queue",
+   "module": "@adamstavely/trenchcoat/verification-queue",
    "data": [
     "claims",
     "sources",

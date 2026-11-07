@@ -1,5 +1,5 @@
 /*
- * trenchcoat/headless – the behaviour inside Trenchcoat's elements, with no styles or markup of its own, for building your
+ * @adamstavely/trenchcoat/headless – the behaviour inside Trenchcoat's elements, with no styles or markup of its own, for building your
  * own. The controllers plug into a Lit element (any ReactiveControllerHost). The plain functions need only the DOM, so they
  * work in any framework.
  */

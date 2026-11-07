@@ -286,7 +286,7 @@
   {
    "tag": "tc-roadmap-timeline",
    "className": "TcRoadmapTimeline",
-   "module": "trenchcoat/roadmap-timeline",
+   "module": "@adamstavely/trenchcoat/roadmap-timeline",
    "data": [
     "lanes",
     "items",

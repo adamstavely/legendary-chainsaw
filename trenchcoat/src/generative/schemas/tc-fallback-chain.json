@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-fallback-chain.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-fallback-chain.json",
   "title": "tc-fallback-chain",
   "description": "One request finding a model that answers, as a small flow in fallback order.",
   "type": "object",

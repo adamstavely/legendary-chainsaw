@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-context-map.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-context-map.json",
   "title": "tc-context-map",
   "description": "What fills an agent's context window, as a treemap.",
   "type": "object",

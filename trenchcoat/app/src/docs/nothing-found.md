@@ -59,14 +59,14 @@ Pair it with a short heading ("No results for that search") and one line on what
 <h2>No results for that search</h2>
 
 <script type="module">
-  import "trenchcoat/nothing-found";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/nothing-found";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { NothingFound } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NothingFound } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function State() {
   return (

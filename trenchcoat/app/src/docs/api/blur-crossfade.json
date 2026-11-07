@@ -216,7 +216,7 @@
   {
    "tag": "tc-blur-crossfade",
    "className": "TcBlurCrossfade",
-   "module": "trenchcoat/blur-crossfade",
+   "module": "@adamstavely/trenchcoat/blur-crossfade",
    "data": [],
    "attributes": [
     {

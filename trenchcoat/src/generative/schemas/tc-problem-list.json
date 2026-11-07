@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-problem-list.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-problem-list.json",
   "title": "tc-problem-list",
   "description": "Diagnostics from a build, type check or linter: grouped by file, a severity filter with counts, a text filter, and quick fixes.",
   "type": "object",

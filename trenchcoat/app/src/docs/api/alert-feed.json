@@ -274,7 +274,7 @@
   {
    "tag": "tc-alert-feed",
    "className": "TcAlertFeed",
-   "module": "trenchcoat/alert-feed",
+   "module": "@adamstavely/trenchcoat/alert-feed",
    "data": [
     "items",
     "actions",

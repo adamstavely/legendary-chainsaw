@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-claim-answer.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-claim-answer.json",
   "title": "tc-claim-answer",
   "description": "An AI answer marked up claim by claim: source type, confidence, uncertainty, the passages behind each claim and a\ncounter-position; claims can be sent to verification.",
   "type": "object",

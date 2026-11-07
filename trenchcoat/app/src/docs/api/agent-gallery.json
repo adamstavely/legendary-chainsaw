@@ -349,7 +349,7 @@
   {
    "tag": "tc-agent-gallery",
    "className": "TcAgentGallery",
-   "module": "trenchcoat/agent-gallery",
+   "module": "@adamstavely/trenchcoat/agent-gallery",
    "data": [
     "items"
    ],

@@ -1,6 +1,6 @@
 "use client";
 import { useState, type FormEvent } from "react";
-import { Button, Combobox, DataTable, LookProvider, type ComboboxOption, type DataColumn, type DataRow } from "trenchcoat/react";
+import { Button, Combobox, DataTable, LookProvider, type ComboboxOption, type DataColumn, type DataRow } from "@adamstavely/trenchcoat/react";
 
 const people: ComboboxOption[] = [
   { value: "ana", label: "Ana Lima", group: "People" },

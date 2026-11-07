@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-feedback-rubric.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-feedback-rubric.json",
   "title": "tc-feedback-rubric",
   "description": "Structured rating of an answer: rubric scores, the failure type and the ideal answer, sent as one payload.",
   "type": "object",

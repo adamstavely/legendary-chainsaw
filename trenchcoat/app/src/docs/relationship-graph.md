@@ -93,7 +93,7 @@ run from 1 to 4 px by `weight` (1–5). Below 620 px the panel goes under the dr
 ```
 
 ```tsx
-import { RelationshipGraph, type RelationEdge, type RelationNode } from "trenchcoat/react";
+import { RelationshipGraph, type RelationEdge, type RelationNode } from "@adamstavely/trenchcoat/react";
 
 export function Network({ nodes, edges }: { nodes: RelationNode[]; edges: RelationEdge[] }) {
   return <RelationshipGraph title="Consortium" nodes={nodes} edges={edges} defaultDepth={1} onEgoChange={(id) => console.log(id)} />;

@@ -436,7 +436,7 @@
   {
    "tag": "tc-preview-frame",
    "className": "TcPreviewFrame",
-   "module": "trenchcoat/preview-frame",
+   "module": "@adamstavely/trenchcoat/preview-frame",
    "data": [
     "consoleCount",
     "tabs",

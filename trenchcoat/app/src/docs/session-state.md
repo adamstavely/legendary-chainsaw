@@ -82,8 +82,8 @@ and its mark is hidden. The chips are a list labelled “Status”; a chip that'
 <tc-session-state id="state" description="Where this session stands." health="healthy" goal="Ship the onboarding flow" pressure="0.68" actionable></tc-session-state>
 
 <script type="module">
-  import "trenchcoat/session-state";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/session-state";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const state = document.querySelector("#state");
   state.loops = ["copy", "empty state", "analytics"];
@@ -97,8 +97,8 @@ and its mark is hidden. The chips are a list labelled “Status”; a chip that'
 ```
 
 ```tsx
-import { SessionState } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SessionState } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Where() {
   return (

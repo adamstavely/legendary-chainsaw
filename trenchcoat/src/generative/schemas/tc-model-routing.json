@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-model-routing.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-model-routing.json",
   "title": "tc-model-routing",
   "description": "Model routing as a route: rules in order, then the fallback chain, with each target's health, breaker and region,\nand a route test the app answers.",
   "type": "object",

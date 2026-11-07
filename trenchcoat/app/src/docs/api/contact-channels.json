@@ -256,7 +256,7 @@
   {
    "tag": "tc-contact-channels",
    "className": "TcContactChannels",
-   "module": "trenchcoat/contact-channels",
+   "module": "@adamstavely/trenchcoat/contact-channels",
    "data": [
     "channels",
     "states",

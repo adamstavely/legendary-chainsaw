@@ -246,7 +246,7 @@
   {
    "tag": "tc-tag-input",
    "className": "TcTagInput",
-   "module": "trenchcoat/tag-input",
+   "module": "@adamstavely/trenchcoat/tag-input",
    "data": [
     "value",
     "suggestions",

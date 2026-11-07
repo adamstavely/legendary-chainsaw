@@ -72,8 +72,8 @@ a colour, but the editor points it out.
 <tc-team-flag-editor id="flags"></tc-team-flag-editor>
 
 <script type="module">
-  import "trenchcoat/team-flag-editor";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/team-flag-editor";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const editor = document.querySelector("#flags");
   editor.flags = [{ id: "review", label: "Needs review", meaning: "A second auditor should read this.", color: "#CA8A04" }];
@@ -84,8 +84,8 @@ a colour, but the editor points it out.
 
 ```tsx
 import { useState } from "react";
-import { TeamFlagEditor, type TeamFlag } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { TeamFlagEditor, type TeamFlag } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function FlagSettings() {
   const [flags, setFlags] = useState<TeamFlag[]>([{ id: "review", label: "Needs review", meaning: "A second auditor should read this.", color: "#CA8A04" }]);

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-legal-hold-manager.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-legal-hold-manager.json",
   "title": "tc-legal-hold-manager",
   "description": "Which items are on legal hold, with adding items and releasing a hold for a written reason.",
   "type": "object",

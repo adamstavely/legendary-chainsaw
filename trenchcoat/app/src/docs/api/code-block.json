@@ -378,7 +378,7 @@
   {
    "tag": "tc-code-block",
    "className": "TcCodeBlock",
-   "module": "trenchcoat/code-block",
+   "module": "@adamstavely/trenchcoat/code-block",
    "data": [
     "current"
    ],

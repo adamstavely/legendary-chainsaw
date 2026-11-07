@@ -555,7 +555,7 @@
   {
    "tag": "tc-agent-cursors",
    "className": "TcAgentCursors",
-   "module": "trenchcoat/agent-cursors",
+   "module": "@adamstavely/trenchcoat/agent-cursors",
    "data": [
     "agents",
     "blocks",

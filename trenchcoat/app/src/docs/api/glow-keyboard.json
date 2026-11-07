@@ -120,7 +120,7 @@
   {
    "tag": "tc-glow-keyboard",
    "className": "TcGlowKeyboard",
-   "module": "trenchcoat/glow-keyboard",
+   "module": "@adamstavely/trenchcoat/glow-keyboard",
    "data": [
     "prompts"
    ],

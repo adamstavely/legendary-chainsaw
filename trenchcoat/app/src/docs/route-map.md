@@ -77,8 +77,8 @@ route is announced through a polite status.
 <tc-route-map id="routes" description="staging.halden.example"></tc-route-map>
 
 <script type="module">
-  import "trenchcoat/route-map";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/route-map";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#routes");
   el.routes = [
@@ -90,8 +90,8 @@ route is announced through a polite status.
 ```
 
 ```tsx
-import { RouteMap, type RouteItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RouteMap, type RouteItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const routes: RouteItem[] = [
   { id: "home", path: "/", status: "ok", loadMs: 420 },

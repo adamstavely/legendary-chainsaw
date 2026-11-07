@@ -93,8 +93,8 @@ than the chunk.”, “Context can't take more chunks than retrieval returns.”
 <tc-retrieval-settings id="rag" name="retrieval"></tc-retrieval-settings>
 
 <script type="module">
-  import "trenchcoat/retrieval-settings";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/retrieval-settings";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const rag = document.querySelector("#rag");
   rag.filterFields = [
@@ -111,8 +111,8 @@ than the chunk.”, “Context can't take more chunks than retrieval returns.”
 
 ```tsx
 import { useState } from "react";
-import { RetrievalSettings, RETRIEVAL_SETTINGS_DEFAULT, type RetrievalSettingsValue } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RetrievalSettings, RETRIEVAL_SETTINGS_DEFAULT, type RetrievalSettingsValue } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function HelpCentreRetrieval() {
   const [value, setValue] = useState<RetrievalSettingsValue>(RETRIEVAL_SETTINGS_DEFAULT);

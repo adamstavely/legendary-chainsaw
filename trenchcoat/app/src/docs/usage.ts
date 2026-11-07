@@ -65,7 +65,7 @@ export type ApiPage = {
 
 export type Framework = "html" | "react" | "vue" | "angular" | "svelte";
 
-/** The element's Angular directive in trenchcoat/angular: its class name without "Tc" (TcCombobox → Combobox) */
+/** The element's Angular directive in @adamstavely/trenchcoat/angular: its class name without "Tc" (TcCombobox → Combobox) */
 export const angularName = (f: { className: string }) => f.className.replace(/^Tc/, "");
 /** [key, tab label, long label, code language] – HTML first: it's the one every other framework builds on */
 export const FRAMEWORKS: [Framework, string, string, string][] = [
@@ -113,7 +113,7 @@ function factsOf(slug: string, el: ApiElement): FrameworkFacts {
   return {
     tag: el.tag,
     className: el.className,
-    module: `trenchcoat/${slug}`,
+    module: `@adamstavely/trenchcoat/${slug}`,
     data: el.properties.filter((p) => !p.attribute && !p.readonly && p.name !== "look").map((p) => p.name),
     attributes: el.properties.filter((p) => p.attribute && p.name !== "look").map((p) => ({ name: p.name, attribute: p.attribute! })),
     events: el.events.map((e) => ({ name: e.name, cancelable: e.cancelable })),
@@ -135,7 +135,7 @@ export function generated(slug: string, f: FrameworkFacts, react?: ApiReact, el?
 
 <script type="module">
   import "${f.module}";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const el = document.querySelector("#${slug}");
 ${data.map((p) => `  el.${p} = ${p}; // ${typeText(p)}, from your app\n`).join("")}${event ? `  el.addEventListener("${event}", (e) => console.log(e.detail));\n` : ""}</script>`;
@@ -144,8 +144,8 @@ ${data.map((p) => `  el.${p} = ${p}; // ${typeText(p)}, from your app\n`).join("
   const ev = f.events.map((e) => reactEvent(e.name, react)).find(Boolean) ?? null;
   const rp = reactProps(f, react);
   const tsx = `import type { ComponentProps } from "react";
-import { ${component} } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ${component} } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function ${name}Example(${rp.length ? `{ ${rp.join(", ")} }: Pick<ComponentProps<typeof ${component}>, ${rp.map((p) => `"${p}"`).join(" | ")}>` : ""}) {
   return <${component}${rp.map((p) => ` ${p}={${p}}`).join("")}${ev ? ` ${ev.prop}={(${ev.alias ? "...args" : "e"}) => console.log(${ev.alias ? "args" : "e.detail"})}` : ""} />;
@@ -154,7 +154,7 @@ export function ${name}Example(${rp.length ? `{ ${rp.join(", ")} }: Pick<Compone
   const props = data.length ? `defineProps<{ ${data.map((p) => `${p}: ${typeOf(f, p)}`).join("; ")} }>();\n` : "";
   const vue = `<script setup lang="ts">
 import "${f.module}";
-import "trenchcoat/tokens.css";
+import "@adamstavely/trenchcoat/tokens.css";
 ${data.length ? `${typeImport}\n\n${props}` : "\n"}${event ? `const ${handler(event)} = (e: CustomEvent) => console.log(e.detail);\n` : ""}</script>
 
 <template>
@@ -163,7 +163,7 @@ ${data.length ? `${typeImport}\n\n${props}` : "\n"}${event ? `const ${handler(ev
 
   const directive = angularName(f);
   const angular = `import { Component${data.length ? ", input" : ""} } from "@angular/core";
-import { ${directive} } from "trenchcoat/angular";
+import { ${directive} } from "@adamstavely/trenchcoat/angular";
 ${data.length ? `${typeImport}\n` : ""}
 @Component({
   selector: "app-${slug}-example",
@@ -175,7 +175,7 @@ ${data.map((p) => `  readonly ${p} = input.required<${typeOf(f, p)}>();\n`).join
 
   const svelte = `<script lang="ts">
   import "${f.module}";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/tokens.css";
   ${typeImport}
 
 ${data.length ? `  let { ${data.join(", ")} }: { ${data.map((p) => `${p}: ${typeOf(f, p)}`).join("; ")} } = $props();\n` : ""}  let el: ${f.className};
@@ -225,7 +225,7 @@ export function controlledSnippets(slug: string, f: FrameworkFacts, react?: ApiR
   const offered = ev && (ev.alias ? own.has(p) && firstParam === own.get(p) : !react?.hides.includes(p) || own.has(p));
   const tsx = offered
     ? `import { useState, type ComponentProps } from "react";
-import { ${component} } from "trenchcoat/react";
+import { ${component} } from "@adamstavely/trenchcoat/react";
 
 type Own = ComponentProps<typeof ${component}>;
 type Props = Omit<Own, "${p}" | "${ev.prop}"> & { initial: NonNullable<Own["${p}"]> };
@@ -256,7 +256,7 @@ const ${on} = (e: ${detail}) => {
 </template>`;
 
   const angular = `import { Component, input, linkedSignal } from "@angular/core";
-import { ${angularName(f)} } from "trenchcoat/angular";
+import { ${angularName(f)} } from "@adamstavely/trenchcoat/angular";
 ${typeImport}
 
 @Component({

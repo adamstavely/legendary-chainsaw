@@ -10,7 +10,7 @@ viewBox, with nothing to install and no stylesheet to load.
 - **Inline** – paste the file's markup into the page. It follows the page's theme: a `.dark` or `.light` class,
   `data-theme` or `data-tc-theme` on an ancestor, or else the page's `color-scheme`. Add `aria-hidden="true"` when
   it's decorative, or keep its `<title>` and give it `role="img"` when it says something.
-- **From the package** – `import url from "trenchcoat/illustrations/spot/laws/fitts-law.svg"`, with your bundler's
+- **From the package** – `import url from "@adamstavely/trenchcoat/illustrations/spot/laws/fitts-law.svg"`, with your bundler's
   asset handling.
 - **In design tools** – every shape also carries its light colours as plain attributes, so Figma, Illustrator and
   anything else that ignores CSS shows the light version.

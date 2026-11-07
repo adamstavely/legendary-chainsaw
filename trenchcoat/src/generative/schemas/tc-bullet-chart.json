@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-bullet-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-bullet-chart.json",
   "title": "tc-bullet-chart",
   "description": "Measures against their targets and qualitative ranges, one row each, with the one furthest behind emphasised, the\nvalues at the right and a table view.",
   "type": "object",

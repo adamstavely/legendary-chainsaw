@@ -90,8 +90,8 @@ waiting”. Acknowledging is confirmed with “Acknowledged: …”. Pause feed 
 <tc-alert-feed id="feed" heading="Live alerts"></tc-alert-feed>
 
 <script type="module">
-  import "trenchcoat/alert-feed";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/alert-feed";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const feed = document.querySelector("#feed");
   feed.items = [
@@ -103,8 +103,8 @@ waiting”. Acknowledging is confirmed with “Acknowledged: …”. Pause feed 
 ```
 
 ```tsx
-import { AlertFeed, type AlertItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AlertFeed, type AlertItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: AlertItem[] = [
   { id: "a1", category: "Payment", severity: "critical", title: "Card used in two countries within an hour", subject: "Dana Okafor · CUS-0098-S · Geneva", time: Date.parse("2026-10-27T09:41:00") },

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-prompt-library.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-prompt-library.json",
   "title": "tc-prompt-library",
   "description": "Saved prompt templates whose variables are filled in place.",
   "type": "object",

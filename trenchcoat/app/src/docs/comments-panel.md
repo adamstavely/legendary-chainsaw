@@ -92,8 +92,8 @@ alerts: “The edit couldn't be applied.”, “The edit couldn't be undone.”,
 <tc-comments-panel id="comments" closable></tc-comments-panel>
 
 <script type="module">
-  import "trenchcoat/comments-panel";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/comments-panel";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const panel = document.querySelector("#comments");
   panel.currentUser = { name: "Jordan Lee" };
@@ -109,8 +109,8 @@ alerts: “The edit couldn't be applied.”, “The edit couldn't be undone.”,
 
 ```tsx
 import { useState } from "react";
-import { CommentsPanel, type PanelComment } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { CommentsPanel, type PanelComment } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Review({ initial }: { initial: PanelComment[] }) {
   const [comments, setComments] = useState(initial);

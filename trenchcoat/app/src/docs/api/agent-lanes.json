@@ -334,7 +334,7 @@
   {
    "tag": "tc-agent-lanes",
    "className": "TcAgentLanes",
-   "module": "trenchcoat/agent-lanes",
+   "module": "@adamstavely/trenchcoat/agent-lanes",
    "data": [
     "agents",
     "tasks",

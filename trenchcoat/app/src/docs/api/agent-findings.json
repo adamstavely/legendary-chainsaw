@@ -229,7 +229,7 @@
   {
    "tag": "tc-agent-findings",
    "className": "TcAgentFindings",
-   "module": "trenchcoat/agent-findings",
+   "module": "@adamstavely/trenchcoat/agent-findings",
    "data": [
     "agents",
     "findings",

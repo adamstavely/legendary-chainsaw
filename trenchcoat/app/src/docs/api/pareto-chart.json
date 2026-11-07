@@ -155,7 +155,7 @@
   {
    "tag": "tc-pareto-chart",
    "className": "TcParetoChart",
-   "module": "trenchcoat/pareto-chart",
+   "module": "@adamstavely/trenchcoat/pareto-chart",
    "data": [
     "label",
     "value",

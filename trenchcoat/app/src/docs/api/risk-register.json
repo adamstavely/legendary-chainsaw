@@ -344,7 +344,7 @@
   {
    "tag": "tc-risk-register",
    "className": "TcRiskRegister",
-   "module": "trenchcoat/risk-register",
+   "module": "@adamstavely/trenchcoat/risk-register",
    "data": [
     "risks",
     "cell",

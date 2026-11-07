@@ -90,7 +90,7 @@
   {
    "tag": "tc-logo-cluster",
    "className": "TcLogoCluster",
-   "module": "trenchcoat/logo-cluster",
+   "module": "@adamstavely/trenchcoat/logo-cluster",
    "data": [],
    "attributes": [
     {

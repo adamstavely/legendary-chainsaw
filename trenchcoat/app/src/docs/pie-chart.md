@@ -77,8 +77,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 <tc-pie-chart heading="Funding by source"></tc-pie-chart>
 
 <script type="module">
-  import "trenchcoat/pie-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/pie-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-pie-chart").data = [
     { label: "Federal grants", value: 48 },
     { label: "Foundations", value: 21 },
@@ -88,8 +88,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 ```
 
 ```tsx
-import { PieChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PieChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const data = [
   { label: "Federal grants", value: 48 },

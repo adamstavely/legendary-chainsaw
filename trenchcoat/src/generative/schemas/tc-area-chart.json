@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-area-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-area-chart.json",
   "title": "tc-area-chart",
   "description": "Totals and their make-up over time as filled areas – stacked, stacked to 100% or overlapping – with names at their\nends, the nearest point read across series, and a table view.",
   "type": "object",

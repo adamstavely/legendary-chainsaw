@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-bubble-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-bubble-chart.json",
   "title": "tc-bubble-chart",
   "description": "Points by x and y, sized by a third value – a bubble chart, or a scatter plot without `size` – with the largest\nemphasised and named, that switches to a canvas for thousands of points.",
   "type": "object",

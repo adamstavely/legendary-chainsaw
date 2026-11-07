@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-coverage-ring.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-coverage-ring.json",
   "title": "tc-coverage-ring",
   "description": "One share as a large ring – the percentage and a caption in the middle, a title and a line – with an optional bar of\nsegments from the healthiest to those that need attention, each read out on hover or focus.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-cover-flow.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-cover-flow.json",
   "title": "tc-cover-flow",
   "description": "Browse covers in 3D: the front one faces you, the others stack up on both sides.",
   "type": "object",

@@ -39,7 +39,7 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 ## Example
 
 ```tsx
-import { RadioGroup } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RadioGroup } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 export function Example() { return <RadioGroup label="Review mode" defaultValue="ask" options={[{ value: "ask", label: "Ask first" }, { value: "auto", label: "Automatic" }]} />; }
 ```

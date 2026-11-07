@@ -97,8 +97,8 @@ the new half an image with the colour's hex. Copy announces what it copied.
 <tc-color-picker id="brand" heading="Primary colour" value="#3a6df0" alpha></tc-color-picker>
 
 <script type="module">
-  import "trenchcoat/color-picker";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/color-picker";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const picker = document.querySelector("#brand");
   picker.swatches = [{ value: "#3a6df0", name: "Primary" }, { value: "#f97316", name: "Accent" }];
@@ -108,8 +108,8 @@ the new half an image with the colour's hex. Copy announces what it copied.
 
 ```tsx
 import { useState } from "react";
-import { ColorPicker } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ColorPicker } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function BrandColour({ saved }: { saved: string }) {
   const [value, setValue] = useState(saved);

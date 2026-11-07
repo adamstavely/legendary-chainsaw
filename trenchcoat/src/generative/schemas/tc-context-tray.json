@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-context-tray.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-context-tray.json",
   "title": "tc-context-tray",
   "description": "What the model can see, as chips with their token weight: remove (undoable), pin, and the total against the window.",
   "type": "object",

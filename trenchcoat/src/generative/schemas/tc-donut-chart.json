@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-donut-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-donut-chart.json",
   "title": "tc-donut-chart",
   "description": "Shares of a whole round a hole holding the total, each slice in its own ink or one emphasised, with a legend of\nevery slice and its share and a table view.",
   "type": "object",

@@ -87,8 +87,8 @@ and 1 file change.”, then “Went back to step 4 with your note.”; a failed 
 <tc-run-checkpoints id="run" heading="Move billing from MySQL to Postgres" status="running"></tc-run-checkpoints>
 
 <script type="module">
-  import "trenchcoat/run-checkpoints";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/run-checkpoints";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const run = document.querySelector("#run");
   run.elapsed = 70000;
@@ -101,8 +101,8 @@ and 1 file change.”, then “Went back to step 4 with your note.”; a failed 
 ```
 
 ```tsx
-import { RunCheckpoints, type RunCheckpoint } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RunCheckpoints, type RunCheckpoint } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const checkpoints: RunCheckpoint[] = [
   { id: "s1", title: "Read the billing schema", tool: "read_files", at: 0, tokens: 4200 },

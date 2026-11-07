@@ -394,7 +394,7 @@
   {
    "tag": "tc-handoff",
    "className": "TcHandoff",
-   "module": "trenchcoat/handoff",
+   "module": "@adamstavely/trenchcoat/handoff",
    "data": [
     "agent",
     "done",

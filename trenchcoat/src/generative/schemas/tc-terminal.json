@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-terminal.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-terminal.json",
   "title": "tc-terminal",
   "description": "A command line for a panel: output in colour above a prompt with history; the page runs the commands.",
   "type": "object",

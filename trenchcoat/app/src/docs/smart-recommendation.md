@@ -83,8 +83,8 @@ Accept and Undo buttons are `aria-busy` and `aria-disabled` while the app works.
 <tc-smart-recommendation id="sync" heading="Recommended"></tc-smart-recommendation>
 
 <script type="module">
-  import "trenchcoat/smart-recommendation";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/smart-recommendation";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const card = document.querySelector("#sync");
   card.options = [
@@ -97,8 +97,8 @@ Accept and Undo buttons are `aria-busy` and `aria-disabled` while the app works.
 ```
 
 ```tsx
-import { SmartRecommendation, type Recommendation } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SmartRecommendation, type Recommendation } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const options: Recommendation[] = [
   { id: "incremental", label: "Incremental sync", reason: "Only 3% of your rows changed last week.", signal: 3 },

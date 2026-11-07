@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-reliance-gauge.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-reliance-gauge.json",
   "title": "tc-reliance-gauge",
   "description": "Whether trust in an AI matches its performance: a reliance–accuracy dial with its trend, signals against review\nthresholds, overtrust and undertrust episodes, and the recommended review level.",
   "type": "object",

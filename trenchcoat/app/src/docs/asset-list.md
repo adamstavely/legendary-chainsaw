@@ -94,8 +94,8 @@ plate shown”.
 <tc-asset-list id="assets" heading="Assets"></tc-asset-list>
 
 <script type="module">
-  import "trenchcoat/asset-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/asset-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const assets = document.querySelector("#assets");
   assets.groups = [
@@ -108,8 +108,8 @@ plate shown”.
 ```
 
 ```tsx
-import { AssetList, type AssetGroup } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AssetList, type AssetGroup } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const groups: AssetGroup[] = [
   { id: "vehicles", label: "Vehicles", assets: [{ id: "v1", kind: "car", name: "Audi A6 Avant", identifier: "AB-441-KX", identifierLabel: "Plate", status: "confirmed" }] },

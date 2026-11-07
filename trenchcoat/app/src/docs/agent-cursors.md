@@ -87,8 +87,8 @@ starts a comment (“Ada is writing a comment”). Tabs, when set, follow the ta
 <tc-agent-cursors id="brief" heading="Launch brief" can-accept can-reject></tc-agent-cursors>
 
 <script type="module">
-  import "trenchcoat/agent-cursors";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/agent-cursors";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const doc = document.querySelector("#brief");
   doc.agents = [{ id: "ada", name: "Ada", color: "#7c3aed" }];
@@ -104,8 +104,8 @@ starts a comment (“Ada is writing a comment”). Tabs, when set, follow the ta
 
 ```tsx
 import { useState } from "react";
-import { AgentCursors, acceptSuggestion, type DocBlock, type DocSuggestion } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AgentCursors, acceptSuggestion, type DocBlock, type DocSuggestion } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const agents = [{ id: "ada", name: "Ada", color: "#7c3aed" }];
 

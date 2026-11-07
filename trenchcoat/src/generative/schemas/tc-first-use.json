@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-first-use.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-first-use.json",
   "title": "tc-first-use",
   "description": "An empty workspace with one highlighted spot to start from, for a new team or project with nothing in it yet.",
   "type": "object",

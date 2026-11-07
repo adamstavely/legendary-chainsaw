@@ -95,8 +95,8 @@ The stats are a description list: each value with its label.
 <tc-account-list id="accounts" heading="Linked accounts"></tc-account-list>
 
 <script type="module">
-  import "trenchcoat/account-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/account-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const accounts = document.querySelector("#accounts");
   accounts.stats = [{ id: "volume", label: "Flagged volume", value: "€428K", detail: "last 90 days" }];
@@ -110,8 +110,8 @@ The stats are a description list: each value with its label.
 ```
 
 ```tsx
-import { AccountList, type AccountRecord } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AccountList, type AccountRecord } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const accounts: AccountRecord[] = [
   { id: "a1", institution: "Banque Rhône", country: "France", type: "Business operating", number: "FR7630006000011234567890189", status: "flagged" },

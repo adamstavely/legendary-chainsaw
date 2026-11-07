@@ -649,7 +649,7 @@
   {
    "tag": "tc-notifications",
    "className": "TcNotifications",
-   "module": "trenchcoat/notifications",
+   "module": "@adamstavely/trenchcoat/notifications",
    "data": [
     "items",
     "categories",

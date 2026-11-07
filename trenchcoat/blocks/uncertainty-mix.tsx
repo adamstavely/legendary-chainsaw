@@ -1,18 +1,18 @@
 "use client";
 
 import type { ComponentPropsWithoutRef, Ref } from "react";
-import { UncertaintyMix as TcUncertaintyMix, defaultUncertaintyKinds, type Look, type UncertaintyKind, type UncertaintySource } from "trenchcoat/react";
+import { UncertaintyMix as TcUncertaintyMix, defaultUncertaintyKinds, type Look, type UncertaintyKind, type UncertaintySource } from "@adamstavely/trenchcoat/react";
 
 /*
  * Uncertainty Mix – where an answer's uncertainty comes from. Not all uncertainty is the same: some would shrink with
  * more information, some can't be known yet, some is past what the model knows – and each asks for something
  * different. A reading card (the whole answer's mix, what each kind means and what to do) beside the library's
  * Breakdown Chart of the same mix per part of the answer – hide a kind in the chart's legend and the reading follows.
- * The block is the <tc-uncertainty-mix> element through `trenchcoat/react` – the same component Angular, Vue and
+ * The block is the <tc-uncertainty-mix> element through `@adamstavely/trenchcoat/react` – the same component Angular, Vue and
  * plain HTML get – kept here with its original props. The look follows the nearest <LookProvider>, or the `look` prop.
  */
 
-export type { UncertaintyKind, UncertaintySource } from "trenchcoat/react";
+export type { UncertaintyKind, UncertaintySource } from "@adamstavely/trenchcoat/react";
 
 type OwnProps = {
   sources: UncertaintySource[];

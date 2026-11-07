@@ -89,8 +89,8 @@ prompt”. A status region announces “All variables filled”, “Prompt copie
 <tc-prompt-library id="prompts" heading="Prompts" use-label="Use prompt"></tc-prompt-library>
 
 <script type="module">
-  import "trenchcoat/prompt-library";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/prompt-library";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const library = document.querySelector("#prompts");
   library.templates = [
@@ -111,8 +111,8 @@ prompt”. A status region announces “All variables filled”, “Prompt copie
 ```
 
 ```tsx
-import { PromptLibrary, type PromptTemplate } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PromptLibrary, type PromptTemplate } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const templates: PromptTemplate[] = [
   {

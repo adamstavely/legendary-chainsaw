@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-status-morph.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-status-morph.json",
   "title": "tc-status-morph",
   "description": "One state's mark changing into the next, with its word.",
   "type": "object",

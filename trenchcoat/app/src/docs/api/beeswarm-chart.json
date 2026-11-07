@@ -163,7 +163,7 @@
   {
    "tag": "tc-beeswarm-chart",
    "className": "TcBeeswarmChart",
-   "module": "trenchcoat/beeswarm-chart",
+   "module": "@adamstavely/trenchcoat/beeswarm-chart",
    "data": [
     "value",
     "group",

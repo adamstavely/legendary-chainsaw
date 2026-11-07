@@ -79,8 +79,8 @@ message, “Registered office selected”, and clearing with “Selection cleare
 <tc-place-list id="places" heading="Places"></tc-place-list>
 
 <script type="module">
-  import "trenchcoat/place-list";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/place-list";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const list = document.querySelector("#places");
   list.places = [
@@ -93,8 +93,8 @@ message, “Registered office selected”, and clearing with “Selection cleare
 
 ```tsx
 import { useState } from "react";
-import { PlaceList, type PlaceRecord } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PlaceList, type PlaceRecord } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const places: PlaceRecord[] = [
   { id: "p1", name: "Registered office", type: "work", status: "confirmed", address: "14 Harbour Row, Leith, Edinburgh" },

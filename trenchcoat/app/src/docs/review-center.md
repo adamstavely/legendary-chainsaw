@@ -96,8 +96,8 @@ queue.” when saving fails.
 <tc-review-center id="review" reviewed="11"></tc-review-center>
 
 <script type="module">
-  import "trenchcoat/review-center";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/review-center";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#review");
   review.items = [
@@ -119,8 +119,8 @@ queue.” when saving fails.
 ```
 
 ```tsx
-import { ReviewCenter, type ReviewItem, type ReviewResult } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { ReviewCenter, type ReviewItem, type ReviewResult } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 async function decide(item: ReviewItem, result: ReviewResult) {
   const res = await fetch(`/api/review/${item.id}`, { method: "POST", body: JSON.stringify(result) });

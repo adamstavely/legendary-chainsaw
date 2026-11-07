@@ -69,8 +69,8 @@ learn.
 <tc-access-review id="review" heading="Q4 access review"></tc-access-review>
 
 <script type="module">
-  import "trenchcoat/access-review";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/access-review";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const review = document.querySelector("#review");
   review.items = [{ id: "a", name: "Noor Haddad", resource: "Trial 12", level: "Can edit", status: "authorized" }];
@@ -79,8 +79,8 @@ learn.
 ```
 
 ```tsx
-import { AccessReview, type AccessReviewItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { AccessReview, type AccessReviewItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: AccessReviewItem[] = [{ id: "a", name: "Noor Haddad", resource: "Trial 12", level: "Can edit", status: "authorized" }];
 

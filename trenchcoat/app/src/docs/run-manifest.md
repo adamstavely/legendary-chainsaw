@@ -86,8 +86,8 @@ reviewed”. The actions are a `toolbar` named “Manifest actions”.
 <tc-run-manifest id="manifest" model="Opus 5.5" timestamp="Oct 24, 14:02 UTC"></tc-run-manifest>
 
 <script type="module">
-  import "trenchcoat/run-manifest";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/run-manifest";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const manifest = document.querySelector("#manifest");
   manifest.runId = "run_8f2c41d07a";
@@ -106,8 +106,8 @@ reviewed”. The actions are a `toolbar` named “Manifest actions”.
 ```
 
 ```tsx
-import { RunManifest, type RunManifestRecord } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { RunManifest, type RunManifestRecord } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 function download(record: RunManifestRecord) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2)], { type: "application/json" }));

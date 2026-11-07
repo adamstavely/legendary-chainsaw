@@ -160,7 +160,7 @@ Then these sections, in order:
 6. **Screen readers:** roles, names, announcements.
 7. **Content:** writing guidance for the data.
 8. **Do / Don't.**
-9. **Example:** an `html` block, then a `tsx` block using `trenchcoat/react`. The tsx is type-checked against the
+9. **Example:** an `html` block, then a `tsx` block using `@adamstavely/trenchcoat/react`. The tsx is type-checked against the
    wrappers.
 
 The per-framework sections (Vue, Angular, Svelte) are generated; don't write them by hand.

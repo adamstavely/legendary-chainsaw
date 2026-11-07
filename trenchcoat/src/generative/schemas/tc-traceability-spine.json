@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-traceability-spine.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-traceability-spine.json",
   "title": "tc-traceability-spine",
   "description": "The chain from questions to outcomes in stage columns, linked cards joined by lines, and a card's whole path traced\non click or Enter.",
   "type": "object",

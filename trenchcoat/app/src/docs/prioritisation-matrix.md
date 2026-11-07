@@ -91,7 +91,7 @@ size) and `--tc-pmx-plot-max` (the plot's largest width).
 
 ```tsx
 import { useState } from "react";
-import { PrioritisationMatrix, type PrioritisationItem } from "trenchcoat/react";
+import { PrioritisationMatrix, type PrioritisationItem } from "@adamstavely/trenchcoat/react";
 
 export function Portfolio() {
   const [items, setItems] = useState<PrioritisationItem[]>([{ id: "portal", label: "Open data portal", value: 8.5, effort: 3 }]);

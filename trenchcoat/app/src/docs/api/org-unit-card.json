@@ -303,7 +303,7 @@
   {
    "tag": "tc-org-unit-card",
    "className": "TcOrgUnitCard",
-   "module": "trenchcoat/org-unit-card",
+   "module": "@adamstavely/trenchcoat/org-unit-card",
    "data": [
     "lead",
     "stats",

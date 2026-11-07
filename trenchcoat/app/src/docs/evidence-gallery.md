@@ -75,8 +75,8 @@ announce themselves as they do on their own; each tile's badge says its attestat
 <tc-evidence-gallery id="evidence" heading="Evidence" subtitle="Claim 2291 · damaged delivery"></tc-evidence-gallery>
 
 <script type="module">
-  import "trenchcoat/evidence-gallery";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/evidence-gallery";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const gallery = document.querySelector("#evidence");
   gallery.items = [
@@ -90,8 +90,8 @@ announce themselves as they do on their own; each tile's badge says its attestat
 
 ```tsx
 import { useState } from "react";
-import { EvidenceGallery, type EvidenceFilter, type EvidenceItem } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { EvidenceGallery, type EvidenceFilter, type EvidenceItem } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const items: EvidenceItem[] = [
   { id: "dock", title: "Loading bay, camera 2", kind: "Photo", src: "/evidence/dock.jpg", alt: "Loading bay at dawn, both doors open", attestation: "attested", claims: 3, source: "Site camera 2" },

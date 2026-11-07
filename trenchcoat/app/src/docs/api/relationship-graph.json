@@ -324,7 +324,7 @@
   {
    "tag": "tc-relationship-graph",
    "className": "TcRelationshipGraph",
-   "module": "trenchcoat/relationship-graph",
+   "module": "@adamstavely/trenchcoat/relationship-graph",
    "data": [
     "nodes",
     "edges",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-dumbbell-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-dumbbell-chart.json",
   "title": "tc-dumbbell-chart",
   "description": "Two values per item – before and after, target and actual – as dots joined by a bar, the item that moved most\nemphasised, with the end values written beside and a table view.",
   "type": "object",

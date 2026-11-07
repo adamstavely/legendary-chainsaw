@@ -265,7 +265,7 @@
   {
    "tag": "tc-engagement-quality",
    "className": "TcEngagementQuality",
-   "module": "trenchcoat/engagement-quality",
+   "module": "@adamstavely/trenchcoat/engagement-quality",
    "data": [
     "signals",
     "trend",

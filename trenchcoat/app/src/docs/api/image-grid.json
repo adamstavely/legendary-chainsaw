@@ -499,7 +499,7 @@
   {
    "tag": "tc-image-grid",
    "className": "TcImageGrid",
-   "module": "trenchcoat/image-grid",
+   "module": "@adamstavely/trenchcoat/image-grid",
    "data": [
     "tiles",
     "actions",

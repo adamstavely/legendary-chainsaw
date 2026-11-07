@@ -78,14 +78,14 @@ word – "New", "Beta". For `fit="scale"`, set `preview-width` to the width the 
 <tc-preview-card heading="Agent Cursors" description="Agents working in a document like teammates" src="/shots/cursors.png" href="/agent-cursors" badge="New"></tc-preview-card>
 
 <script type="module">
-  import "trenchcoat/preview-card";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/preview-card";
+  import "@adamstavely/trenchcoat/tokens.css";
 </script>
 ```
 
 ```tsx
-import { PreviewCard } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PreviewCard } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Tile() {
   return <PreviewCard title="Agent Cursors" description="Agents working in a document like teammates" src="/shots/cursors.png" href="/agent-cursors" badge="New" />;

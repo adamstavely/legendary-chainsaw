@@ -258,7 +258,7 @@
   {
    "tag": "tc-work-item",
    "className": "TcWorkItem",
-   "module": "trenchcoat/work-item",
+   "module": "@adamstavely/trenchcoat/work-item",
    "data": [
     "statusLabels",
     "people"

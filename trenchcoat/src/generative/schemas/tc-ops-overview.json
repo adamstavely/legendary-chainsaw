@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-ops-overview.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ops-overview.json",
   "title": "tc-ops-overview",
   "description": "An operations overview strip – a status line, a health pill and count tiles, each with its change since the last\nperiod in words and colour, an optional sparkline and tone, optionally actionable.",
   "type": "object",

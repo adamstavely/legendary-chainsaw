@@ -68,7 +68,7 @@
   {
    "tag": "tc-enrichment-orbit",
    "className": "TcEnrichmentOrbit",
-   "module": "trenchcoat/enrichment-orbit",
+   "module": "@adamstavely/trenchcoat/enrichment-orbit",
    "data": [],
    "attributes": [
     {

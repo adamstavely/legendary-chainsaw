@@ -78,8 +78,8 @@ integration tile has its name as text.
 <tc-pricing-plans id="pricing" billing="monthly"></tc-pricing-plans>
 
 <script type="module">
-  import "trenchcoat/pricing-plans";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/pricing-plans";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const pricing = document.querySelector("#pricing");
   pricing.addEventListener("tc-plan-select", (e) => console.log(e.detail.plan.id, e.detail.billing));
@@ -88,8 +88,8 @@ integration tile has its name as text.
 
 ```tsx
 import { useState } from "react";
-import { PricingPlans, VisitorsIcon, type PricingBilling, type PricingPlan } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { PricingPlans, VisitorsIcon, type PricingBilling, type PricingPlan } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const plans: PricingPlan[] = [
   {

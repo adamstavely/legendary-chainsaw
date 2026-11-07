@@ -86,8 +86,8 @@ buttons are named "Start over", "Previous sentence", "Previous word", "Next word
 <tc-speed-reader id="reader" heading="A short history of lighthouses" wpm="350"></tc-speed-reader>
 
 <script type="module">
-  import "trenchcoat/speed-reader";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/speed-reader";
+  import "@adamstavely/trenchcoat/tokens.css";
 
   const reader = document.querySelector("#reader");
   reader.text = "For most of history, sailors found their way home by fires lit on headlands. Early towers burned wood.";
@@ -98,8 +98,8 @@ buttons are named "Start over", "Previous sentence", "Previous word", "Next word
 
 ```tsx
 import { useState } from "react";
-import { SpeedReader } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SpeedReader } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Briefing({ text }: { text: string }) {
   const [position, setPosition] = useState(0);

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-staggered-reveal.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-staggered-reveal.json",
   "title": "tc-staggered-reveal",
   "description": "Children arrive one after another, once, the first time they're seen.",
   "type": "object",

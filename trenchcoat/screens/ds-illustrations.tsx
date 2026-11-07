@@ -9,36 +9,36 @@
  * `view`/`defaultView`/`onViewChange`.
  * className, other DOM props and `ref` go to the App Shell's root.
  * Imports: App Shell (app-shell.tsx) from Trenchcoat screens; Preview Card, Soup Cans and Nothing Found from
- * `trenchcoat/react`; spot illustrations from `trenchcoat/illustrations/spot` (your bundler's asset handling); icons
+ * `@adamstavely/trenchcoat/react`; spot illustrations from `@adamstavely/trenchcoat/illustrations/spot` (your bundler's asset handling); icons
  * from lucide-react 1.55.0.
  */
 
 import { useCallback, useRef, useState, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
 import { BoxesIcon, CompassIcon, GitPullRequestArrowIcon, ImageIcon, LayersIcon, MessageCircleIcon, PaletteIcon, RocketIcon, TagIcon } from "lucide-react";
-import { NothingFound, PreviewCard, SoupCans } from "trenchcoat/react";
+import { NothingFound, PreviewCard, SoupCans } from "@adamstavely/trenchcoat/react";
 import { AppShell, SearchField, SectionHead, Tabs, ViewToggle, useToast, type AppShellProps, type ShellGroup, type ShellNavItem, type ViewMode } from "@/components/ui/app-shell";
-import colors from "trenchcoat/illustrations/spot/foundations/colors.svg";
-import typography from "trenchcoat/illustrations/spot/foundations/typography.svg";
-import spacing from "trenchcoat/illustrations/spot/foundations/spacing.svg";
-import shadows from "trenchcoat/illustrations/spot/foundations/shadows.svg";
-import tokens from "trenchcoat/illustrations/spot/foundations/tokens.svg";
-import iconLibrary from "trenchcoat/illustrations/spot/foundations/icon-library.svg";
-import emptyLoading from "trenchcoat/illustrations/spot/patterns/empty-loading-states.svg";
-import errorHandling from "trenchcoat/illustrations/spot/patterns/error-handling.svg";
-import dataVisualization from "trenchcoat/illustrations/spot/patterns/data-visualization.svg";
-import aiThinking from "trenchcoat/illustrations/spot/patterns/ai-thinking-states.svg";
-import colorContrast from "trenchcoat/illustrations/spot/guidelines/color-contrast.svg";
-import focus from "trenchcoat/illustrations/spot/guidelines/focus.svg";
-import keyboardGestures from "trenchcoat/illustrations/spot/guidelines/keyboard-gestures.svg";
-import informationArchitecture from "trenchcoat/illustrations/spot/guidelines/information-architecture.svg";
-import journeyMaps from "trenchcoat/illustrations/spot/research/journey-maps.svg";
-import usability from "trenchcoat/illustrations/spot/research/usability.svg";
-import researchMethods from "trenchcoat/illustrations/spot/research/research-methods.svg";
-import conductingInterviews from "trenchcoat/illustrations/spot/research/conducting-interviews.svg";
-import fittsLaw from "trenchcoat/illustrations/spot/laws/fitts-law.svg";
-import hicksLaw from "trenchcoat/illustrations/spot/laws/hicks-law.svg";
-import millersLaw from "trenchcoat/illustrations/spot/laws/millers-law.svg";
-import jakobsLaw from "trenchcoat/illustrations/spot/laws/jakobs-law.svg";
+import colors from "@adamstavely/trenchcoat/illustrations/spot/foundations/colors.svg";
+import typography from "@adamstavely/trenchcoat/illustrations/spot/foundations/typography.svg";
+import spacing from "@adamstavely/trenchcoat/illustrations/spot/foundations/spacing.svg";
+import shadows from "@adamstavely/trenchcoat/illustrations/spot/foundations/shadows.svg";
+import tokens from "@adamstavely/trenchcoat/illustrations/spot/foundations/tokens.svg";
+import iconLibrary from "@adamstavely/trenchcoat/illustrations/spot/foundations/icon-library.svg";
+import emptyLoading from "@adamstavely/trenchcoat/illustrations/spot/patterns/empty-loading-states.svg";
+import errorHandling from "@adamstavely/trenchcoat/illustrations/spot/patterns/error-handling.svg";
+import dataVisualization from "@adamstavely/trenchcoat/illustrations/spot/patterns/data-visualization.svg";
+import aiThinking from "@adamstavely/trenchcoat/illustrations/spot/patterns/ai-thinking-states.svg";
+import colorContrast from "@adamstavely/trenchcoat/illustrations/spot/guidelines/color-contrast.svg";
+import focus from "@adamstavely/trenchcoat/illustrations/spot/guidelines/focus.svg";
+import keyboardGestures from "@adamstavely/trenchcoat/illustrations/spot/guidelines/keyboard-gestures.svg";
+import informationArchitecture from "@adamstavely/trenchcoat/illustrations/spot/guidelines/information-architecture.svg";
+import journeyMaps from "@adamstavely/trenchcoat/illustrations/spot/research/journey-maps.svg";
+import usability from "@adamstavely/trenchcoat/illustrations/spot/research/usability.svg";
+import researchMethods from "@adamstavely/trenchcoat/illustrations/spot/research/research-methods.svg";
+import conductingInterviews from "@adamstavely/trenchcoat/illustrations/spot/research/conducting-interviews.svg";
+import fittsLaw from "@adamstavely/trenchcoat/illustrations/spot/laws/fitts-law.svg";
+import hicksLaw from "@adamstavely/trenchcoat/illustrations/spot/laws/hicks-law.svg";
+import millersLaw from "@adamstavely/trenchcoat/illustrations/spot/laws/millers-law.svg";
+import jakobsLaw from "@adamstavely/trenchcoat/illustrations/spot/laws/jakobs-law.svg";
 
 /** The design system's menu – shared by its screens */
 const nav: ShellNavItem[] = [
@@ -137,7 +137,7 @@ export function DesignSystemIllustrationsScreen({
 
   const open = (s: Spot) => {
     if (onOpen) return onOpen(s.slug);
-    const line = `import url from "trenchcoat/illustrations/spot/${s.slug}.svg";`;
+    const line = `import url from "@adamstavely/trenchcoat/illustrations/spot/${s.slug}.svg";`;
     if (!navigator.clipboard) return showToast(line);
     navigator.clipboard.writeText(line).then(
       () => showToast(`Copied the import for ${s.name}`),

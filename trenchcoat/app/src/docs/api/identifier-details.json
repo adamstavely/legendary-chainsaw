@@ -256,7 +256,7 @@
   {
    "tag": "tc-identifier-details",
    "className": "TcIdentifierDetails",
-   "module": "trenchcoat/identifier-details",
+   "module": "@adamstavely/trenchcoat/identifier-details",
    "data": [
     "kinds",
     "resolve",
