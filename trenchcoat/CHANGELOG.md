@@ -9,6 +9,8 @@
   wrap onto further rows instead of turning into slivers.
 - **Stepper input:** a `<textarea>` inside is styled and wired like an `<input>` – the field's border, focus ring and
   invalid state, its id and description – starts at its `rows` and resizes vertically.
+- **Image Grid:** a download still fetching its image when the grid leaves the page now lets go of the image's object
+  URL and saves nothing, instead of starting the download from a page that has moved on.
 
 ## 0.3.0 – Angular: one entry point per element
 
