@@ -3,7 +3,8 @@ import type * as UI from "../../../src/elements/react";
 import type { AgentTask } from "../../../src/elements/react";
 
 /* Background tasks that move on their own: running tasks gather steps and tool calls, one finishes,
-   another stops to ask you. Approve / Reject / Retry update the list, and "New task" adds one. */
+   another stops to ask you. Approve / Reject / Retry update the list, and "New task" adds one.
+   Below it, the recap a research institute's team finds in the morning: what its agents did overnight. */
 
 const MIN = 60_000;
 
@@ -86,6 +87,50 @@ function initialTasks(now: number): AgentTask[] {
   ];
 }
 
+const HOUR = 60 * MIN;
+
+/** The night before: from 6:40 PM to 8:10 AM, whatever today's date */
+function overnight(): { since: number; now: number; tasks: AgentTask[] } {
+  const now = new Date();
+  now.setHours(8, 10, 0, 0);
+  const at = now.getTime();
+  const since = at - 13.5 * HOUR;
+  const t = (h: number) => since + h * HOUR;
+  return {
+    since,
+    now: at,
+    tasks: [
+      { id: "travel", title: "Approve travel for the field survey", description: "Two return trips to the coastal station – over the auto-approve limit.", agent: "Opus 5.5", status: "waiting", startedAt: t(7.6), finishedAt: t(7.6), tools: 4, sources: 2, steps: [{ label: "Collected three quotes" }, { label: "Picked the cheapest refundable fares" }] },
+      { id: "preprint", title: "Post the preprint to the archive", description: "Needs a second author's sign-off before it goes out.", agent: "Sonnet 5", status: "waiting", startedAt: t(9.9), finishedAt: t(9.9), tools: 3, sources: 1 },
+      { id: "catalogue", title: "Sync the specimen catalogue", description: "The archive's token expired after 1,284 of 3,900 records.", agent: "Haiku 5", status: "failed", finishedAt: t(8.4), elapsed: 26 * MIN, tools: 12, sources: 1 },
+      { id: "questions", title: "Answered visitor questions", description: "38 questions from the public site, first reply within two minutes.", agent: "Haiku 5", status: "done", finishedAt: t(0.4), elapsed: 41 * MIN, tools: 38, undoable: false },
+      { id: "drafts", title: "Closed stale draft reports", description: "Six drafts untouched for 90 days, archived with a note.", agent: "Sonnet 5", status: "done", finishedAt: t(1.5), elapsed: 3 * MIN, tools: 6, undoable: true },
+      { id: "tags", title: "Tagged new datasets", description: "17 uploads tagged by instrument and site, 4 marked for review.", agent: "Haiku 5", status: "done", finishedAt: t(3.8), elapsed: 12 * MIN, tools: 17, undoable: true },
+      { id: "index", title: "Index the photo archive", agent: "Sonnet 5", status: "running", startedAt: t(12.9), tools: 9 },
+    ],
+  };
+}
+
+function Recap({ ui }: { ui: typeof UI }) {
+  const { AgentInbox } = ui;
+  const [night] = useState(overnight);
+  const [tasks, setTasks] = useState(night.tasks);
+  const patch = (id: string, fn: (t: AgentTask) => AgentTask) => setTasks((ts) => ts.map((t) => (t.id === id ? fn(t) : t)));
+  return (
+    <AgentInbox
+      title="Overnight"
+      tasks={tasks}
+      defaultView="recap"
+      since={night.since}
+      now={night.now}
+      onApprove={(t) => patch(t.id, (x) => ({ ...x, status: "done", steps: [...(x.steps ?? []), { label: "Approved by you" }] }))}
+      onReject={(t) => patch(t.id, (x) => ({ ...x, status: "failed", description: "Rejected by you – nothing was sent." }))}
+      onRetry={(t) => patch(t.id, (x) => ({ ...x, status: "running", startedAt: night.now, description: "Retrying with a fresh token." }))}
+      onUndo={() => new Promise((resolve) => setTimeout(resolve, 600))}
+    />
+  );
+}
+
 const MIGRATE_STEPS = ["Converted proration.test.ts", "Converted coupons.test.ts", "Converted webhooks.test.ts", "All 38 suites green"];
 const DIGEST_STEPS = ["Wrote theme summaries", "Picked 3 quotes per theme"];
 
@@ -121,7 +166,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   }, []);
 
   return (
-    <div style={{ width: "100%", maxWidth: 860 }}>
+    <div style={{ display: "grid", gap: 24, width: "100%", maxWidth: 860 }}>
       <AgentInbox
         title="Agent tasks"
         tasks={tasks}
@@ -150,6 +195,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           },
         }}
       />
+      <Recap ui={ui} />
     </div>
   );
 }

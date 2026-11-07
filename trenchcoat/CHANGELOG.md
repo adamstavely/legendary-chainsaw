@@ -1,11 +1,32 @@
 # Changelog
 
-## 0.5.0 – Org unit card: a team's own figures
+## 0.5.0 – Org unit card figures, and agent operations: Root Cause Tree, Tool Access Map, Collaboration Stream, Agent Fleet, Approval Gates, Inspect Frame
 
 - **Org Unit Card:** `OrgTeam.figures` – more figures on a team's row, after coverage, gaps and FTE: each an `id`, a
   `value` written as shown ("50%", "—"), a quiet `label` under it ("joint") and an optional `tone` (`"success"`,
   `"warning"`, `"danger"`) that tints the value as a stat's tone does. Like the built-in figures, they hide when the
   card is narrower than 560px. The `OrgFigure` type is exported, from the React entry too.
+- **Root Cause Tree** (`tc-root-cause-tree`): a fault tree of hypotheses an agent checks one by one – each says Not
+  checked, Checking, Ruled out or Confirmed; OR and AND branches; ruled-out branches mute and the way from the
+  confirmed cause up to the failure is drawn link by link. A tree with arrow keys and an evidence panel.
+- **Tool Access Map** (`tc-tool-access-map`): one agent with every tool it can reach in a ring – used, failed, running,
+  not used yet or no access, in words – each tool's calls with arguments, results and a cancelable `tc-replay`. Takes
+  the same call feed as Agent Graph.
+- **Collaboration Stream** (`tc-collaboration-stream`): what agents say to each other in a run – from and to on every
+  message, handoffs as slim rows, questions for you with an answer box, file previews, details with tool calls,
+  filter tabs and an @-composer (`tc-send`).
+- **Agent Fleet** (`tc-agent-fleet`): several top-level agents as cards summing up their sub-agents; opening one shows
+  its `tc-agent-tree` beside it (below it when narrow).
+- **Approval Gates** (`tc-approval-gates`): an agent run's approval requests as a stack – the one to decide on top
+  with its diff or arguments and the steps it holds; decisions (`tc-decide`) drop it into the Decided list.
+- **Approval Card:** optional `diff` (a small unified diff) and `args` (the call's arguments) in the preview.
+- **Agent Inbox:** `view="recap"` with `since` – “While you were away”, a curve of what happened, and Needs you, Failed
+  and Done groups; done tasks marked `undoable` get Undo (`tc-undo`).
+- **Run Checkpoints:** `branches` and `branch` – a restore starts a new attempt that forks from its checkpoint, and
+  earlier attempts stay visible, labelled and inspectable (`tc-branch-change`).
+- **Inspect Frame** illustration (`tc-inspect-frame`): any component seen like a selection in a design tool – tilted
+  back, a cursor walks its measured rows while a frame, padding guides and a width chip draw round each; finite, and
+  still under reduced motion.
 
 ## 0.4.1 – Lint fixes for charts
 

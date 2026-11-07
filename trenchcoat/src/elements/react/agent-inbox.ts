@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcAgentInbox, type AgentInboxExpandedChange, type AgentInboxView, type AgentInboxViewChange, type AgentTask } from "../agent-inbox";
+import { TcAgentInbox, type AgentInboxExpandedChange, type AgentInboxUndo, type AgentInboxView, type AgentInboxViewChange, type AgentTask } from "../agent-inbox";
 import { h, useControlled } from "./internal";
 
-export type { AgentInboxView, AgentTask, AgentTaskHandler, AgentTaskStatus, AgentTaskStep } from "../agent-inbox";
+export type { AgentInboxUndo, AgentInboxView, AgentTask, AgentTaskHandler, AgentTaskStatus, AgentTaskStep } from "../agent-inbox";
 
 const RawAgentInbox = createComponent({
   tagName: "tc-agent-inbox",
@@ -13,6 +13,7 @@ const RawAgentInbox = createComponent({
     onTcViewChange: "tc-view-change" as EventName<CustomEvent<AgentInboxViewChange>>,
     onTcExpandedChange: "tc-expanded-change" as EventName<CustomEvent<AgentInboxExpandedChange>>,
     onTcOpen: "tc-open" as EventName<CustomEvent<AgentTask>>,
+    onTcUndo: "tc-undo" as EventName<CustomEvent<AgentInboxUndo>>,
   },
 });
 type RawAgentInboxProps = React.ComponentProps<typeof RawAgentInbox>;
@@ -23,7 +24,7 @@ export type AgentInboxProps = Omit<RawAgentInboxProps, "heading" | "view" | "exp
   title?: string;
   /** Shows an Open button on running and done tasks */
   onOpen?: (task: AgentTask) => void;
-  /** The layout. Controlled when defined; otherwise the component keeps it, starting from `defaultView` */
+  /** The layout – "board", "list", or "recap" (what changed since `since`). Controlled when defined; otherwise the component keeps it, starting from `defaultView` */
   view?: AgentInboxView;
   /** The layout at first when `view` isn't controlled */
   defaultView?: AgentInboxView;

@@ -137,6 +137,39 @@
     "evidenceLabel": {
       "type": "string",
       "description": "The heading of the evidence chips"
+    },
+    "diff": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApprovalDiffLine"
+          }
+        }
+      },
+      "required": [
+        "path",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "description": "A file change the action would make, shown as a small unified diff: `{ path, lines: [{ kind, text }] }`"
+    },
+    "diffLabel": {
+      "type": "string",
+      "description": "The heading of the diff"
+    },
+    "args": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "The call's arguments, shown as a readable code block"
+    },
+    "argsLabel": {
+      "type": "string",
+      "description": "The heading of the arguments"
     }
   },
   "additionalProperties": false,
@@ -183,6 +216,28 @@
       ],
       "additionalProperties": false,
       "description": "A source the request rests on, shown as a chip: a link with `href`, else a button that fires tc-evidence-select"
+    },
+    "ApprovalDiffLine": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "add",
+            "context",
+            "remove"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One line of a file change: unchanged context, an added line or a removed one"
     }
   }
 }

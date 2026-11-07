@@ -500,6 +500,76 @@ describe("tc-approval-card", () => {
     await act(async () => root.unmount());
   });
 
+  test("diff and args are off by default; diff shows the path, counts, signs and screen-reader words", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Move the embargo"></tc-approval-card>`);
+    expect(el.querySelector(".ui-ap__code")).toBeNull();
+    el.diff = {
+      path: "survey/report.config.ts",
+      lines: [
+        { kind: "context", text: "export const report = {" },
+        { kind: "remove", text: 'embargo: "2026-11-20"' },
+        { kind: "add", text: 'embargo: "2026-11-13"' },
+        { kind: "add", text: "public: true" },
+      ],
+    };
+    await settle();
+    const region = el.querySelector<HTMLElement>(".ui-ap__code[data-kind='diff']")!;
+    expect(region.getAttribute("role")).toBe("region");
+    expect(region.tabIndex).toBe(0);
+    expect(region.getAttribute("aria-label")).toBe("Changes: survey/report.config.ts");
+    expect(el.querySelector(".ui-ap__path")!.textContent).toBe("survey/report.config.ts");
+    expect(el.querySelector(".ui-ap__stat .tc-sr-only")!.textContent).toBe("2 added, 1 removed");
+    const lines = [...el.querySelectorAll(".ui-ap__line")];
+    expect(lines.map((l) => (l as HTMLElement).dataset.kind)).toEqual(["context", "remove", "add", "add"]);
+    expect(lines.map((l) => l.querySelector(".ui-ap__sign")!.textContent)).toEqual([" ", "−", "+", "+"]);
+    expect(lines[1].querySelector(".ui-ap__lc")!.textContent).toBe('Removed: embargo: "2026-11-20"');
+    expect(lines[2].querySelector(".ui-ap__lc")!.textContent).toBe('Added: embargo: "2026-11-13"');
+    expect(lines[0].querySelector(".tc-sr-only")).toBeNull();
+    el.diffLabel = "File change";
+    await settle();
+    expect(region.getAttribute("aria-label")).toBe("File change: survey/report.config.ts");
+    // An empty diff shows nothing
+    el.diff = { path: "x.ts", lines: [] };
+    await settle();
+    expect(el.querySelector(".ui-ap__code")).toBeNull();
+  });
+
+  test("args: indented JSON with keys, strings, numbers and keywords coloured; a value JSON can't hold falls back to text", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run the migration" .args=${{ dataset: "survey-2026", rows: 48210, dry_run: false, note: null }}></tc-approval-card>`);
+    const region = el.querySelector<HTMLElement>(".ui-ap__code[data-kind='args']")!;
+    expect(region.getAttribute("aria-label")).toBe("Arguments");
+    const text = [...region.querySelectorAll(".ui-ap__lc")].map((l) => l.textContent).join("\n");
+    expect(text).toBe(JSON.stringify({ dataset: "survey-2026", rows: 48210, dry_run: false, note: null }, null, 2));
+    expect([...region.querySelectorAll(".ui-ap__t-p")].map((t) => t.textContent)).toEqual(['"dataset"', '"rows"', '"dry_run"', '"note"']);
+    expect([...region.querySelectorAll(".ui-ap__t-s")].map((t) => t.textContent)).toEqual(['"survey-2026"']);
+    expect([...region.querySelectorAll(".ui-ap__t-n")].map((t) => t.textContent)).toEqual(["48210"]);
+    expect([...region.querySelectorAll(".ui-ap__t-k")].map((t) => t.textContent)).toEqual(["false", "null"]);
+    const loop: Record<string, unknown> = { a: 1 };
+    loop.self = loop;
+    el.args = loop;
+    await settle();
+    expect(el.querySelector(".ui-ap__code[data-kind='args']")!.textContent!.trim()).toBe("[object Object]");
+  });
+
+  test("React wrapper: diff and args pass through", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () =>
+      root.render(
+        React.createElement(ApprovalCard, {
+          title: "Move the embargo",
+          diff: { path: "a.ts", lines: [{ kind: "add", text: "x" }] },
+          args: { commit: true },
+        }),
+      ),
+    );
+    await settle(host);
+    expect(host.querySelector(".ui-ap__code[data-kind='diff'] .ui-ap__lc")!.textContent).toBe("Added: x");
+    expect(host.querySelector(".ui-ap__code[data-kind='args'] .ui-ap__t-k")!.textContent).toBe("true");
+    await act(async () => root.unmount());
+  });
+
   test("axe: no violations in either look", async () => {
     const wrap = await fixture(html`<div>
       <tc-approval-card heading="Send campaign email" .description=${"To every customer"} risk="high" expires-in="45" .details=${[{ label: "Subject", value: "Hello" }]}></tc-approval-card>
@@ -529,6 +599,8 @@ async function axeDetail(wrap: Element) {
         evidence: [{ label: "Invoice INV-2291", detail: "PDF", href: "https://example.com" }, { label: "Support thread", detail: "3 messages" }],
         editableDetails: true,
         details: [{ label: "Amount", value: "$2,400" }, { label: "Customer", value: "Harbor & Co" }],
+        diff: { path: "billing/refunds.ts", lines: [{ kind: "context", text: "const limit = {" }, { kind: "remove", text: "  max: 1000," }, { kind: "add", text: "  max: 2400," }, { kind: "context", text: "};" }] },
+        args: { invoice: "INV-2291", amount: 2400, notify: true, memo: null },
       });
       box.append(card);
     }

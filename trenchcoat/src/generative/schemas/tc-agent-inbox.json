@@ -20,9 +20,10 @@
       "type": "string",
       "enum": [
         "board",
-        "list"
+        "list",
+        "recap"
       ],
-      "description": "The layout: \"board\" or \"list\""
+      "description": "The layout: \"board\", \"list\" or \"recap\" (what changed since `since`)"
     },
     "expanded": {
       "type": "string",
@@ -31,6 +32,18 @@
     "openable": {
       "type": "boolean",
       "description": "Shows an Open button on running and done tasks (fires tc-open)"
+    },
+    "since": {
+      "type": "number",
+      "description": "The start of the recap's period, in epoch ms – when you left. Set, Recap joins the layout switch"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, in epoch ms – the recap's period ends here and the clocks of waiting and running tasks hold at it; unset reads the clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for the recap's times of day"
     }
   },
   "additionalProperties": false,
@@ -85,6 +98,22 @@
             "$ref": "#/definitions/AgentTaskStep"
           },
           "description": "What the agent did so far, oldest first – the last four are shown when the card is open"
+        },
+        "finishedAt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "When the task last changed – finished, failed or stopped to ask you. The recap places it here on its chart, and leaves it out when it's before `since` (unset: the start plus `elapsed`)"
+        },
+        "undoable": {
+          "type": "boolean",
+          "description": "A done task that can be taken back: the recap shows Undo on it"
         }
       },
       "required": [

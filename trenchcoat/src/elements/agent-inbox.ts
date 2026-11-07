@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
@@ -15,6 +16,8 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  *     Retry when it failed, Open when it runs or is done (`openable`)
  *   · a card that changes state shows it in place first, then glides over to its new column
  *   · Board / List switches the layout; narrow containers always get the list
+ *   · Recap ("while you were away", with `since`) shows only what changed since then: a small chart of the period
+ *     with a peak per task, then Needs you, Failed and Done – acted on right on the card, Undo on undoable done ones
  * Clean drops the gray tray, and its bar has no action button.
  *
  *   <tc-agent-inbox heading="Agent tasks" .tasks=${tasks} .onApprove=${(t) => api.approve(t.id)}></tc-agent-inbox>
@@ -51,9 +54,14 @@ export type AgentTask = {
   sources?: number;
   /** What the agent did so far, oldest first – the last four are shown when the card is open */
   steps?: AgentTaskStep[];
+  /** When the task last changed – finished, failed or stopped to ask you. The recap places it here on its chart, and
+   *  leaves it out when it's before `since` (unset: the start plus `elapsed`) */
+  finishedAt?: number | Date;
+  /** A done task that can be taken back: the recap shows Undo on it */
+  undoable?: boolean;
 };
 
-export type AgentInboxView = "board" | "list";
+export type AgentInboxView = "board" | "list" | "recap";
 
 /** A decision's handler. It may return a promise: the card's buttons wait while it runs, and if it rejects the card
  *  stays as it was and says so, so you can try again */
@@ -61,6 +69,7 @@ export type AgentTaskHandler = (task: AgentTask) => void | Promise<unknown>;
 
 export type AgentInboxViewChange = { view: AgentInboxView };
 export type AgentInboxExpandedChange = { expanded: string | null };
+export type AgentInboxUndo = { task: AgentTask };
 
 type Lane = "needs" | "running" | "done";
 const LANES: { id: Lane; label: string }[] = [
@@ -69,9 +78,32 @@ const LANES: { id: Lane; label: string }[] = [
   { id: "done", label: "Done" },
 ];
 const laneOf = (s: AgentTaskStatus): Lane => (s === "waiting" || s === "failed" ? "needs" : s === "running" ? "running" : "done");
+/** The recap's groups: a running task stays in the group it was in (after Approve or Retry) */
+type RecapGroup = "needs" | "failed" | "done";
+const GROUPS: { id: RecapGroup; label: string }[] = [
+  { id: "needs", label: "Needs you" },
+  { id: "failed", label: "Failed" },
+  { id: "done", label: "Done" },
+];
+const groupOf = (s: AgentTaskStatus): RecapGroup | undefined => (s === "waiting" ? "needs" : s === "failed" ? "failed" : s === "done" ? "done" : undefined);
+const GROUP_WORD: Record<RecapGroup, string> = { needs: "needs you", failed: "failed", done: "done" };
 const STATE: Record<AgentTaskStatus, string> = { waiting: "Waiting for you", running: "Running", done: "Done", failed: "Failed" };
 const live = (s: AgentTaskStatus) => s === "running" || s === "waiting";
 const ms = (d: number | Date) => (typeof d === "number" ? d : d.getTime());
+/** When a task last changed, for the recap – undefined when it can't be told */
+const eventAt = (t: AgentTask) =>
+  t.finishedAt !== undefined ? ms(t.finishedAt) : t.startedAt !== undefined ? ms(t.startedAt) + (live(t.status) ? 0 : (t.elapsed ?? 0)) : undefined;
+const timeFormats = new Map<string, Intl.DateTimeFormat>();
+/** 6:40 PM – a time of day in the inbox's locale */
+const timeOfDay = (at: number, locale: string) => {
+  let f = timeFormats.get(locale);
+  if (!f) timeFormats.set(locale, (f = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" })));
+  return f.format(at);
+};
+/** The chart's curve: a soft peak per task, sampled across the period */
+const SAMPLES = 120;
+const SPREAD = 0.018;
+const curveAt = (xs: number[], x: number) => xs.reduce((n, p) => n + Math.exp(-((x - p) ** 2) / (2 * SPREAD * SPREAD)), 0);
 const pad = (n: number) => String(n).padStart(2, "0");
 const clock = (time: number) => {
   const s = Math.max(0, Math.floor(time / 1000));
@@ -107,6 +139,8 @@ const wrenchIcon = () => lineIcon(12, "0 0 12 12", 1.2, svg`<path d="M7.6 1.6a2.
 const searchIcon = () => lineIcon(12, "0 0 12 12", 1.2, svg`<circle cx="5.2" cy="5.2" r="3.3"></circle><path d="m7.7 7.7 2.6 2.6"></path>`);
 const boardIcon = () => lineIcon(13, "0 0 14 14", 1.2, svg`<rect x="1.8" y="2.2" width="3.2" height="9.6" rx="1"></rect><rect x="8.9" y="2.2" width="3.2" height="6.4" rx="1"></rect>`);
 const listIcon = () => lineIcon(13, "0 0 14 14", 1.2, svg`<path d="M2.2 3.6h9.6M2.2 7h9.6M2.2 10.4h9.6"></path>`);
+const recapIcon = () => lineIcon(13, "0 0 14 14", 1.2, svg`<circle cx="7" cy="7" r="5"></circle><path d="M7 4.2V7l1.9 1.3"></path>`);
+const VIEW_TEXT: Record<AgentInboxView, string> = { board: "Board", list: "List", recap: "Recap" };
 // The header icon: an inbox tray
 const inboxIcon = svg`<path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>`;
 const plusIcon = () => lineIcon(12, "0 0 12 12", 1.5, svg`<path d="M6 2.2v7.6M2.2 6h7.6"></path>`);
@@ -119,6 +153,7 @@ let instances = 0;
  * @fires tc-view-change - The user switched Board / List ({ view }: AgentInboxViewChange); cancelable
  * @fires tc-expanded-change - A card was unfolded or folded ({ expanded }: AgentInboxExpandedChange, null = none); cancelable
  * @fires tc-open - Open was pressed on a running or done task; `detail` is the `AgentTask`
+ * @fires tc-undo - Undo was pressed on an undoable done task in the recap ({ task }: AgentInboxUndo); cancelable – preventDefault() skips `onUndo`
  */
 export class TcAgentInbox extends TcElement {
   static override ui = "ai";
@@ -130,7 +165,7 @@ export class TcAgentInbox extends TcElement {
   @property() accessor heading = "Agent inbox";
   /** A button in the bar, e.g. { label: "New task", onClick } – Standard look only; the Clean bar has no button */
   @property({ attribute: false }) accessor action: { label: string; onClick: () => void } | undefined = undefined;
-  /** The layout: "board" or "list" */
+  /** The layout: "board", "list" or "recap" (what changed since `since`) */
   @property({ reflect: false }) accessor view: AgentInboxView = "board";
   /** The id of the unfolded card, or null */
   @property({ attribute: false }) accessor expanded: string | null = null;
@@ -142,6 +177,14 @@ export class TcAgentInbox extends TcElement {
   @property({ attribute: false }) accessor onReject: AgentTaskHandler | undefined = undefined;
   /** Called on Retry; may return a promise */
   @property({ attribute: false }) accessor onRetry: AgentTaskHandler | undefined = undefined;
+  /** Called on Undo, after an uncanceled tc-undo; may return a promise */
+  @property({ attribute: false }) accessor onUndo: AgentTaskHandler | undefined = undefined;
+  /** The start of the recap's period, in epoch ms – when you left. Set, Recap joins the layout switch */
+  @property({ type: Number }) accessor since: number | undefined = undefined;
+  /** The time now, in epoch ms – the recap's period ends here and the clocks of waiting and running tasks hold at it; unset reads the clock */
+  @property({ type: Number }) accessor now: number | undefined = undefined;
+  /** Locale for the recap's times of day */
+  @property() accessor locale = "en-US";
 
   /** @internal Decisions shown until the task passed in changes */
   @state() accessor local: Record<string, Override> = {};
@@ -149,6 +192,10 @@ export class TcAgentInbox extends TcElement {
   @state() accessor busy: Record<string, "pending" | "error"> = {};
   /** @internal The column each card sits in – a changed card moves there after a moment */
   @state() accessor placed: Record<string, Lane> | undefined = undefined;
+  /** @internal The task lit on the recap's chart and board – pointed at or focused */
+  @state() accessor hot: string | null = null;
+  /** @internal Tasks taken back with Undo, by the version they were undone at */
+  @state() accessor undone: Record<string, string> = {};
 
   private readonly uid = `tc-ai${++instances}`;
   private seen: Record<string, number> = {};
@@ -160,6 +207,12 @@ export class TcAgentInbox extends TcElement {
   private places = new Map<string, { left: number; top: number }>();
   private moveKey = "";
   private alive = false;
+  /** The recap's group per task, kept while a decision has it running */
+  private recapPlace: Record<string, RecapGroup> = {};
+  /** The end of the recap's period, read before render */
+  private recapEnd = 0;
+  /** The chart peak that holds the tab stop */
+  private peakCursor: string | null = null;
 
   constructor() {
     super();
@@ -210,6 +263,13 @@ export class TcAgentInbox extends TcElement {
     super.willUpdate(changed);
     this.dataset.view = this.view;
     if (!this.placed) this.placed = Object.fromEntries(this.list.map((t) => [t.id, laneOf(t.status)]));
+    if (this.view === "recap") {
+      this.recapEnd = this.now ?? wall();
+      for (const t of this.list) {
+        const g = groupOf(t.status);
+        if (g) this.recapPlace[t.id] = g;
+      }
+    }
   }
 
   /* ---------- Elapsed times: painted in place, no render ---------- */
@@ -221,7 +281,7 @@ export class TcAgentInbox extends TcElement {
   }
 
   private paint = () => {
-    const at = wall();
+    const at = this.now ?? wall();
     const byId = new Map(this.list.map((t) => [t.id, t]));
     for (const el of this.querySelectorAll<HTMLElement>(".ui-ai__card")) {
       const t = byId.get(el.dataset.id!);
@@ -245,7 +305,7 @@ export class TcAgentInbox extends TcElement {
 
   protected override updated() {
     const list = this.list;
-    const at = wall();
+    const at = this.now ?? wall();
     for (const t of list) this.seen[t.id] ??= at;
     this.paint();
     this.syncTick();
@@ -312,10 +372,24 @@ export class TcAgentInbox extends TcElement {
   };
 
   /** A radiogroup with its keyboard pattern: one tab stop, arrows (and Home / End) move and pick */
+  private get views(): AgentInboxView[] {
+    return this.since !== undefined || this.view === "recap" ? ["board", "list", "recap"] : ["board", "list"];
+  }
+
   private onViewsKey(e: KeyboardEvent) {
-    const order = ["board", "list"] as const;
-    const at = order.indexOf(this.view);
-    const to = e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowUp" ? (at + 1) % 2 : e.key === "Home" ? 0 : e.key === "End" ? 1 : -1;
+    const order = this.views;
+    const n = order.length;
+    const at = Math.max(0, order.indexOf(this.view));
+    const to =
+      e.key === "ArrowRight" || e.key === "ArrowDown"
+        ? (at + 1) % n
+        : e.key === "ArrowLeft" || e.key === "ArrowUp"
+          ? (at - 1 + n) % n
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? n - 1
+              : -1;
     if (to < 0) return;
     e.preventDefault();
     this.setView(order[to]);
@@ -326,15 +400,32 @@ export class TcAgentInbox extends TcElement {
    *  promise holds the card until it settles, and a rejection leaves the card as it was, with a note */
   private decide(task: AgentTask, next: AgentTaskStatus, note: string, handler?: AgentTaskHandler) {
     // A decision swaps the card's buttons and later moves it to another column: focus goes to the card first
-    const card = this.querySelector(`[data-id="${CSS.escape(task.id)}"]`);
-    rescueFocus(card?.querySelector(".ui-ai__fold"), [card?.querySelector(".ui-ai__card-main")]);
+    this.rescue(task);
     if (this.busy[task.id] === "pending") return;
     const original = this.tasks.find((t) => t.id === task.id) ?? task;
+    this.run(task, handler, () => (this.local = { ...this.local, [task.id]: { version: versionOf(original), status: next, startedAt: wall(), steps: [...(task.steps ?? []), { label: note, time: "now" }] } }));
+  }
+
+  /** The card's buttons change: focus goes to the card first */
+  private rescue(task: AgentTask) {
+    const card = this.querySelector(`.ui-ai__card[data-id="${CSS.escape(task.id)}"]`);
+    rescueFocus(card?.querySelector(".ui-ai__actions"), [card?.querySelector(".ui-ai__card-main")]);
+  }
+
+  /** Undo (recap): reported first, cancelable; then `onUndo`, which may hold the card like a decision */
+  private undo(task: AgentTask) {
+    if (this.busy[task.id] === "pending") return;
+    if (!this.emit<AgentInboxUndo>("tc-undo", { task }, { cancelable: true })) return;
+    this.rescue(task);
+    const original = this.tasks.find((t) => t.id === task.id) ?? task;
+    this.run(task, this.onUndo, () => (this.undone = { ...this.undone, [task.id]: versionOf(original) }));
+  }
+
+  private run(task: AgentTask, handler: AgentTaskHandler | undefined, apply: () => void) {
     const settle = () => {
       const { [task.id]: _settled, ...others } = this.busy;
       this.busy = others;
     };
-    const apply = () => (this.local = { ...this.local, [task.id]: { version: versionOf(original), status: next, startedAt: wall(), steps: [...(task.steps ?? []), { label: note, time: "now" }] } });
     const done = handler?.(task);
     if (done && typeof (done as Promise<unknown>).then === "function") {
       this.busy = { ...this.busy, [task.id]: "pending" };
@@ -356,7 +447,7 @@ export class TcAgentInbox extends TcElement {
 
   /* ---------- Render ---------- */
 
-  private card(t: AgentTask, index: number) {
+  private card(t: AgentTask, index: number, recap = false) {
     const open = this.expanded === t.id;
     const state = this.busy[t.id];
     const pending = state === "pending" ? "true" : undefined;
@@ -365,7 +456,35 @@ export class TcAgentInbox extends TcElement {
     const foldId = `${this.uid}-${index}`;
     // The word goes first when a card is slim – the glyph already says it – so the time always fits
     const word = t.status === "done" ? "Done in " : t.status === "failed" ? STATE.failed : `${STATE[t.status]} · `;
-    return html`<li data-id=${t.id} class="ui-ai__card" data-status=${t.status} ?data-open=${open}>
+    const at = recap ? eventAt(t) : undefined;
+    const undone = this.undone[t.id] === versionOf(this.tasks.find((x) => x.id === t.id) ?? t);
+    const actions = html`<div class="ui-ai__actions" aria-busy=${ifDefined(pending)}>
+      ${state === "error" && (t.status === "waiting" || t.status === "failed" || (recap && t.status === "done")) ? html`<span class="ui-ai__error" role="alert">Didn't go through – try again</span>` : nothing}
+      ${t.status === "waiting"
+        ? html`<button type="button" class="ui-ai__btn" aria-disabled=${ifDefined(pending)} @click=${() => this.decide(t, "failed", "You rejected the request", this.onReject)}>Reject</button>
+            <button type="button" class="ui-ai__btn ui-ai__btn--primary" aria-disabled=${ifDefined(pending)} @click=${() => this.decide(t, "running", "You approved – continuing", this.onApprove)}>Approve</button>`
+        : nothing}
+      ${t.status === "failed"
+        ? html`<button type="button" class="ui-ai__btn ui-ai__btn--primary" aria-disabled=${ifDefined(pending)} @click=${() => this.decide(t, "running", "Retrying", this.onRetry)}>Retry</button>`
+        : nothing}
+      ${recap && t.status === "done" && t.undoable
+        ? undone
+          ? html`<span class="ui-ai__undone">Undone</span>`
+          : html`<button type="button" class="ui-ai__btn" aria-disabled=${ifDefined(pending)} @click=${() => this.undo(t)}>Undo<span class="ui-ai__sr"> ${t.title}</span></button>`
+        : nothing}
+      ${(t.status === "running" || t.status === "done") && this.openable ? html`<button type="button" class="ui-ai__btn" @click=${() => this.emit("tc-open", t)}>Open</button>` : nothing}
+    </div>`;
+    return html`<li
+      data-id=${t.id}
+      class="ui-ai__card"
+      data-status=${t.status}
+      ?data-open=${open}
+      ?data-hot=${recap && this.hot === t.id}
+      @mouseenter=${recap ? () => (this.hot = t.id) : nothing}
+      @mouseleave=${recap ? () => this.hot === t.id && (this.hot = null) : nothing}
+      @focusin=${recap ? () => (this.hot = t.id) : nothing}
+      @focusout=${recap ? (e: FocusEvent) => !(e.currentTarget as Element).contains(e.relatedTarget as Node) && this.hot === t.id && (this.hot = null) : nothing}
+    >
       <button type="button" class="ui-ai__card-main" data-focus-key=${t.id} aria-expanded=${open ? "true" : "false"} aria-controls=${foldId} @click=${() => this.setExpanded(open ? null : t.id)}>
         <span class="ui-ai__title-row"><span class="ui-ai__spark">${spark()}</span><span class="ui-ai__title">${t.title}</span></span>
         ${t.description ? html`<span class="ui-ai__desc">${t.description}</span>` : nothing}
@@ -377,6 +496,7 @@ export class TcAgentInbox extends TcElement {
           <span class="ui-ai__meta">
             ${t.sources !== undefined ? html`<span title="Sources read">${searchIcon()}${t.sources}<span class="ui-ai__sr"> sources read</span></span>` : nothing}
             ${t.tools !== undefined ? html`<span title="Tool calls">${wrenchIcon()}${t.tools}<span class="ui-ai__sr"> tool calls</span></span>` : nothing}
+            ${at !== undefined ? html`<span><span class="ui-ai__sr">at </span><time>${timeOfDay(at, this.locale)}</time></span>` : nothing}
           </span>
         </span>
       </button>
@@ -389,21 +509,131 @@ export class TcAgentInbox extends TcElement {
                   ${steps.map((s, i) => html`<li ?data-last=${i === steps.length - 1}><span>${s.label}</span>${s.time ? html`<time>${s.time}</time>` : nothing}</li>`)}
                 </ol>`
               : nothing}
-            <div class="ui-ai__actions" aria-busy=${ifDefined(pending)}>
-              ${state === "error" && (t.status === "waiting" || t.status === "failed") ? html`<span class="ui-ai__error" role="alert">Didn't go through – try again</span>` : nothing}
-              ${t.status === "waiting"
-                ? html`<button type="button" class="ui-ai__btn" aria-disabled=${ifDefined(pending)} @click=${() => this.decide(t, "failed", "You rejected the request", this.onReject)}>Reject</button>
-                    <button type="button" class="ui-ai__btn ui-ai__btn--primary" aria-disabled=${ifDefined(pending)} @click=${() => this.decide(t, "running", "You approved – continuing", this.onApprove)}>Approve</button>`
-                : nothing}
-              ${t.status === "failed"
-                ? html`<button type="button" class="ui-ai__btn ui-ai__btn--primary" aria-disabled=${ifDefined(pending)} @click=${() => this.decide(t, "running", "Retrying", this.onRetry)}>Retry</button>`
-                : nothing}
-              ${(t.status === "running" || t.status === "done") && this.openable ? html`<button type="button" class="ui-ai__btn" @click=${() => this.emit("tc-open", t)}>Open</button>` : nothing}
-            </div>
+            ${recap ? nothing : actions}
           </div>
         </div>
       </div>
+      ${recap && (t.status === "waiting" || t.status === "failed" || (t.status === "done" && t.undoable) || ((t.status === "running" || t.status === "done") && this.openable))
+        ? html`<div class="ui-ai__recap-actions">${actions}</div>`
+        : nothing}
     </li>`;
+  }
+
+  /* ---------- Recap: what changed while you were away ---------- */
+
+  private recapItems(list: AgentTask[]) {
+    const since = this.since;
+    return list.filter((t) => {
+      const at = eventAt(t);
+      return since === undefined || at === undefined || at >= since;
+    });
+  }
+
+  private groupFor(t: AgentTask) {
+    return groupOf(t.status) ?? this.recapPlace[t.id];
+  }
+
+  private lightCard(id: string) {
+    const main = this.querySelector<HTMLElement>(`[data-id="${CSS.escape(id)}"] .ui-ai__card-main`);
+    main?.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+    main?.focus({ preventScroll: true });
+  }
+
+  private onPeaksKey(e: KeyboardEvent) {
+    const peaks = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>(".ui-ai__peak")];
+    const at = peaks.indexOf(e.target as HTMLElement);
+    if (at < 0) return;
+    const n = peaks.length;
+    const to =
+      e.key === "ArrowRight" || e.key === "ArrowDown" ? Math.min(n - 1, at + 1) : e.key === "ArrowLeft" || e.key === "ArrowUp" ? Math.max(0, at - 1) : e.key === "Home" ? 0 : e.key === "End" ? n - 1 : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    this.peakCursor = peaks[to].dataset.id!;
+    for (const p of peaks) p.tabIndex = p === peaks[to] ? 0 : -1;
+    peaks[to].focus();
+  }
+
+  private renderRecap(list: AgentTask[]) {
+    const items = this.recapItems(list);
+    const end = this.recapEnd;
+    const dated = items.map((t) => ({ t, at: eventAt(t) })).filter((x): x is { t: AgentTask; at: number } => x.at !== undefined);
+    const start = Math.min(this.since ?? end, ...dated.map((x) => x.at));
+    const span = Math.max(1, end - start);
+    const placed = dated
+      .filter((x) => this.groupFor(x.t))
+      .map((x) => ({ ...x, x: Math.min(1, Math.max(0, (x.at - start) / span)) }))
+      .sort((a, b) => a.x - b.x);
+    const xs = placed.map((p) => p.x);
+    const ys = Array.from({ length: SAMPLES + 1 }, (_, i) => curveAt(xs, i / SAMPLES));
+    const top = Math.max(1, ...ys);
+    const pts = ys.map((y, i) => `${((i / SAMPLES) * 1000).toFixed(1)},${(56 - (y / top) * 44).toFixed(1)}`);
+    const line = `M${pts.join(" L")}`;
+    const grouped = Object.fromEntries(GROUPS.map((g) => [g.id, items.filter((t) => this.groupFor(t) === g.id)])) as Record<RecapGroup, AgentTask[]>;
+    const running = items.filter((t) => !this.groupFor(t)).length;
+    const counts = GROUPS.map((g) => `${grouped[g.id].length} ${GROUP_WORD[g.id]}`);
+    const tabStop = placed.some((p) => p.t.id === this.peakCursor) ? this.peakCursor : placed[0]?.t.id;
+    const startText = timeOfDay(start, this.locale);
+    const endText = timeOfDay(end, this.locale);
+    return html`<div class="ui-ai__recap">
+      <div class="ui-ai__recap-top">
+      <div class="ui-ai__recap-head">
+        <h3 class="ui-ai__recap-title">While you were away</h3>
+        <p class="ui-ai__recap-since">Since ${startText}<span aria-hidden="true"> · </span><span class="ui-ai__sr">, </span>${clock(end - start)}</p>
+        <p class="ui-ai__recap-sum">${counts.join(" · ")}${running ? ` · ${running} still running` : ""}</p>
+      </div>
+      <div class="ui-ai__chart">
+        <div class="ui-ai__plot">
+          <svg class="ui-ai__curve" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">${svg`<path class="ui-ai__area" d=${`${line} L1000,56 L0,56 Z`}></path><path class="ui-ai__line" d=${line}></path><path class="ui-ai__base" d="M0 56.5H1000"></path>`}</svg>
+          <div class="ui-ai__peaks" role="group" aria-label=${`Timeline from ${startText} to ${endText}: ${counts.join(", ")}`} @keydown=${this.onPeaksKey}>
+            ${placed.map((p) => {
+              const g = this.groupFor(p.t)!;
+              return html`<button
+                type="button"
+                class="ui-ai__peak"
+                data-id=${p.t.id}
+                data-group=${g}
+                ?data-hot=${this.hot === p.t.id}
+                tabindex=${p.t.id === tabStop ? 0 : -1}
+                style=${styleMap({ "--x": `${p.x * 100}%`, "--y": `${(curveAt(xs, p.x) / top) * 44}px` })}
+                aria-label=${`${p.t.title} – ${GROUP_WORD[g]}, ${timeOfDay(p.at, this.locale)}`}
+                @mouseenter=${() => (this.hot = p.t.id)}
+                @mouseleave=${() => this.hot === p.t.id && (this.hot = null)}
+                @focus=${() => {
+                  this.peakCursor = p.t.id;
+                  this.hot = p.t.id;
+                }}
+                @blur=${() => this.hot === p.t.id && (this.hot = null)}
+                @click=${() => this.lightCard(p.t.id)}
+              >${stateIcon(g === "needs" ? "waiting" : g)}</button>`;
+            })}
+          </div>
+        </div>
+        <div class="ui-ai__axis" aria-hidden="true"><span>${startText}</span><span>${endText}</span></div>
+        <ul class="ui-ai__legend" aria-hidden="true">
+          ${GROUPS.map((g) => html`<li data-group=${g.id}>${stateIcon(g.id === "needs" ? "waiting" : g.id)}${g.label}</li>`)}
+        </ul>
+      </div>
+      </div>
+      <div class="ui-ai__lanes">
+        ${GROUPS.map(
+          (g) => html`<section class="ui-ai__lane" aria-label=${g.label}>
+            <header class="ui-ai__lane-head">
+              <span class="ui-ai__lane-spark" aria-hidden="true">${spark()}</span>
+              <span class="ui-ai__lane-name">${g.label}</span>
+              <span class="ui-ai__count">${grouped[g.id].length}</span>
+            </header>
+            <ul class="ui-ai__cards">
+              ${repeat(
+                grouped[g.id],
+                (t) => t.id,
+                (t) => this.card(t, list.indexOf(t), true),
+              )}
+              ${grouped[g.id].length === 0 ? html`<li class="ui-ai__empty">Nothing here</li>` : nothing}
+            </ul>
+          </section>`,
+        )}
+      </div>
+    </div>`;
   }
 
   protected override render() {
@@ -412,10 +642,10 @@ export class TcAgentInbox extends TcElement {
     const counts = Object.fromEntries(LANES.map((l) => [l.id, list.filter((t) => this.laneFor(t) === l.id).length])) as Record<Lane, number>;
     const summary = `${list.filter((t) => t.status === "waiting" || t.status === "failed").length} need you, ${list.filter((t) => t.status === "running").length} running`;
     const views = html`<div class="ui-ai__views" role="radiogroup" aria-label="Layout" @keydown=${this.onViewsKey}>
-      ${(["board", "list"] as const).map(
+      ${this.views.map(
         (v) =>
           html`<button type="button" role="radio" aria-checked=${this.view === v ? "true" : "false"} tabindex=${this.view === v ? 0 : -1} class="ui-ai__view" @click=${() => this.setView(v)}>
-            ${v === "board" ? boardIcon() : listIcon()}<span class="ui-ai__label">${v === "board" ? "Board" : "List"}</span>
+            ${v === "board" ? boardIcon() : v === "list" ? listIcon() : recapIcon()}<span class="ui-ai__label">${VIEW_TEXT[v]}</span>
           </button>`,
       )}
     </div>`;
@@ -428,7 +658,9 @@ export class TcAgentInbox extends TcElement {
             ? html`${this.action ? html`<button type="button" class="ui-ai__action" @click=${() => this.action?.onClick()}>${plusIcon()}<span class="ui-ai__label">${this.action.label}</span></button>` : nothing}${views}`
             : views,
       })}
-      <div class="ui-ai__lanes">
+      ${this.view === "recap"
+        ? this.renderRecap(list)
+        : html`<div class="ui-ai__lanes">
         ${LANES.map(
           (lane) => html`<section class="ui-ai__lane" aria-label=${lane.label}>
             <header class="ui-ai__lane-head">
@@ -446,7 +678,7 @@ export class TcAgentInbox extends TcElement {
             </ul>
           </section>`,
         )}
-      </div>
+      </div>`}
       <span class="ui-ai__sr" aria-live="polite">${summary}</span>
     `;
   }
@@ -457,6 +689,9 @@ export class TcAgentInbox extends TcElement {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  /* The recap chart's curve and the area under it */
+  --tc-agent-inbox-curve: var(--tc-text-disabled);
+  --tc-agent-inbox-area: var(--tc-fill-subtle);
   /* The tray recipe */
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
@@ -473,6 +708,8 @@ export class TcAgentInbox extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ai"] {
   /* The quiet lane behind the cards, also the view switch track */
   --tc-agent-inbox-lane-bg: light-dark(#f4f4f5, #161618);
+  --tc-agent-inbox-curve: var(--tc-text-disabled);
+  --tc-agent-inbox-area: var(--tc-fill-subtle);
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
@@ -609,6 +846,42 @@ export class TcAgentInbox extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ai"][data-view="list"] .ui-ai__lane-name { text-align: left; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ai"][data-view="list"] .ui-ai__count { justify-self: start; }
 .ui-ai__lanes { animation: ui-ai-in var(--tc-duration-slow) var(--tc-ease-standard) both; }
+/* ----- Recap: what changed while you were away ----- */
+.ui-ai__recap { display: grid; gap: var(--tc-space-2); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ai__recap { gap: var(--tc-space-1); }
+.ui-ai__recap-top { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-3); border-radius: var(--tc-card-radius); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ai__recap-top { background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ai__recap-top { background: var(--tc-agent-inbox-lane-bg); }
+.ui-ai__recap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--tc-space-1) var(--tc-space-3); min-width: 0; }
+.ui-ai__recap-title { margin: 0; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); }
+.ui-ai__recap-since, .ui-ai__recap-sum { margin: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-ai__recap-sum { flex-basis: 100%; color: var(--tc-text-secondary); }
+.ui-ai__chart { display: grid; gap: var(--tc-space-1); min-width: 0; }
+.ui-ai__plot { position: relative; height: 60px; margin: 0 var(--tc-space-2-5); }
+.ui-ai__curve { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ui-ai__area { fill: var(--tc-agent-inbox-area); }
+.ui-ai__line { fill: none; stroke: var(--tc-agent-inbox-curve); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.ui-ai__base { fill: none; stroke: var(--tc-border-default); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ui-ai__peaks { position: absolute; inset: 0; }
+/* A peak: the task's glyph on a chip of the card's colour, colour and shape both say what happened */
+.ui-ai__peak { position: absolute; left: calc(var(--x) - 10px); bottom: calc(var(--y) - 6px); display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); transition: transform var(--tc-duration-base) var(--tc-ease-move), box-shadow var(--tc-duration-base) var(--tc-ease-standard); animation: ui-ai-pop var(--tc-duration-slow) var(--tc-ease-move) both; }
+.ui-ai__peak:hover, .ui-ai__peak[data-hot] { z-index: 1; transform: scale(1.2); box-shadow: var(--tc-shadow-raised), 0 0 0 var(--tc-focus-ring-width) var(--tc-border-selected); }
+/* The glyph carries the colour; the legend's words stay in text colours */
+:is(.ui-ai__peak, .ui-ai__legend li)[data-group="needs"] .ui-ai__state-icon { color: var(--tc-status-warning-solid); }
+:is(.ui-ai__peak, .ui-ai__legend li)[data-group="failed"] .ui-ai__state-icon { color: var(--tc-status-danger-solid); }
+:is(.ui-ai__peak, .ui-ai__legend li)[data-group="done"] .ui-ai__state-icon { color: var(--tc-status-success-solid); }
+:is(.ui-ai__peak, .ui-ai__legend li)[data-group] .ui-ai__state-icon { animation: none; }
+.ui-ai__axis { display: flex; justify-content: space-between; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-ai__legend { display: flex; flex-wrap: wrap; gap: var(--tc-space-1) var(--tc-space-3-5); margin-top: var(--tc-space-1) !important; font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-ai__legend li { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
+.ui-ai__legend li > span { flex: none; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ai__lane[aria-label="Failed"] .ui-ai__lane-spark { color: var(--tc-status-danger-solid); }
+/* A recap card's buttons sit on the card, not in its fold */
+.ui-ai__recap-actions { padding: 0 var(--tc-space-3-5) var(--tc-space-3); }
+.ui-ai__recap-actions .ui-ai__actions { margin-top: 0; }
+.ui-ai__undone { align-self: center; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+/* Lit from the chart: the card the pointer or focus is on */
+.ui-ai__card[data-hot] { box-shadow: var(--tc-card-shadow-hover), 0 0 0 var(--tc-focus-ring-width) var(--tc-border-selected); }
 @keyframes ui-ai-spin { to { transform: rotate(360deg); } }
 @keyframes ui-ai-pop { from { opacity: 0; transform: scale(0.6); } }
 @keyframes ui-ai-in { from { opacity: 0.4; } }

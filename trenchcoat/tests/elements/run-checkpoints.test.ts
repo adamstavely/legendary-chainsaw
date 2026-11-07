@@ -9,7 +9,7 @@ import { createRoot } from "react-dom/client";
 import { act } from "react";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/run-checkpoints";
-import type { RunCheckpoint, TcRunCheckpoints } from "../../src/elements/run-checkpoints";
+import type { RunCheckpoint, RunCheckpointBranch, RunCheckpointsBranchChange, TcRunCheckpoints } from "../../src/elements/run-checkpoints";
 import { RunCheckpoints } from "../../src/elements/react/run-checkpoints";
 import { cleanup, fixture, settle } from "./helpers";
 
@@ -287,4 +287,170 @@ describe("tc-run-checkpoints", () => {
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
   }
+
+  describe("branches", () => {
+    // The first attempt ran to 1:06 and failed at step 3; going back to "c" ran step 3 again from 1:12
+    const RETRY: RunCheckpointBranch = {
+      id: "b2",
+      from: "c",
+      label: "Fix the rounding",
+      checkpoints: [
+        { id: "c2", title: "Run the tests again", at: 72_000, tokens: 400 },
+        { id: "e2", title: "Open a pull request", at: 90_000, status: "active" },
+      ],
+    };
+    const branched = (attrs: { look?: string; branch?: string | null } = {}) =>
+      fixture<TcRunCheckpoints>(
+        html`<tc-run-checkpoints look=${attrs.look ?? "standard"} heading="Move billing to Postgres" status="running" .elapsed=${100_000} .checkpoints=${LIST} .branches=${[RETRY]} .branch=${attrs.branch ?? null}></tc-run-checkpoints>`,
+      );
+    const lanes = (el: Element) => [...el.querySelectorAll<HTMLElement>(".ui-rcp__attempt")];
+    const shownIds = (el: Element) => rows(el).map((r) => r.dataset.id);
+
+    test("no branches: no attempts drawing, nothing changes", async () => {
+      const el = await make();
+      expect(el.querySelector(".ui-rcp__attempts")).toBeNull();
+      expect(el.querySelector(".ui-rcp__count")!.textContent).toBe("Checkpoints · 5");
+    });
+
+    for (const look of looks) {
+      test(`${look}: the newest attempt is on show; the one it left is faded and says so in words`, async () => {
+        const el = await branched({ look });
+        expect(shownIds(el)).toEqual(["a", "b", "c2", "e2"]);
+        expect(plain(el.querySelector(".ui-rcp__count")!.textContent)).toBe("Checkpoints · 4 · , 2 attempts");
+        const l = lanes(el);
+        expect(el.querySelector('[role="radiogroup"]')!.getAttribute("aria-label")).toBe("Attempts");
+        expect(l.map((x) => x.querySelector(".ui-rcp__attempt-label")!.textContent)).toEqual(["First attempt", "Fix the rounding"]);
+        expect(l.map((x) => x.querySelector(".ui-rcp__attempt-word")!.textContent)).toEqual(["Earlier attempt", "Current attempt"]);
+        expect(l.map((x) => x.hasAttribute("data-earlier"))).toEqual([true, false]);
+        expect(l.map((x) => x.getAttribute("aria-checked"))).toEqual(["false", "true"]);
+        expect(plain(l[1].querySelector(".ui-rcp__sr")!.textContent)).toBe(", 4 steps, live, went back to 0:41 of First attempt");
+        // The fork leaves the first lane at step 3 (0:41) and joins at 1:12; one lane up
+        const fork = l[1].querySelector<HTMLElement>(".ui-rcp__fork")!;
+        expect(fork.style.getPropertyValue("--from")).toBe("41%");
+        expect(fork.style.getPropertyValue("--to")).toBe("72%");
+        expect(fork.style.getPropertyValue("--up")).toBe("1");
+        expect(l[0].querySelectorAll(".ui-rcp__track-dot").length).toBe(5);
+        expect(l[1].querySelectorAll(".ui-rcp__track-dot").length).toBe(2);
+        expect(l[1].querySelector(".ui-rcp__track-now")).not.toBeNull();
+        expect(el.querySelector(".ui-rcp__earlier")).toBeNull();
+        // The faded lane is coloured, not see-through
+        const line = getComputedStyle(l[0].querySelector(".ui-rcp__track-line")!);
+        expect(line.opacity).toBe("1");
+        expect(line.backgroundColor).not.toBe(getComputedStyle(l[1].querySelector(".ui-rcp__track-line")!).backgroundColor);
+      });
+    }
+
+    test("picking an earlier attempt lists its steps; they stay inspectable, and a pick shows what going back discards", async () => {
+      const el = await branched();
+      const seen: (string | null)[] = [];
+      el.addEventListener("tc-branch-change", (e) => seen.push((e as CustomEvent<RunCheckpointsBranchChange>).detail.branch));
+      lanes(el)[0].click();
+      await settle();
+      expect(seen).toEqual(["original"]);
+      expect(el.branch).toBe("original");
+      expect(shownIds(el)).toEqual(["a", "b", "c", "d", "e"]);
+      expect(lanes(el)[0].getAttribute("aria-checked")).toBe("true");
+      expect(el.querySelector(".ui-rcp__earlier")!.textContent).toMatch(/^Earlier attempt/);
+      expect(status(el)).toBe("Showing an earlier attempt, First attempt: 5 steps.");
+      rows(el)[2].click();
+      await settle();
+      expect(el.selected).toBe("c");
+      expect(el.querySelector(".ui-rcp__btn")!.textContent).toContain("Go back to step 3");
+    });
+
+    test("keyboard: one tab stop in Attempts; arrows move and pick", async () => {
+      const el = await branched();
+      let l = lanes(el);
+      expect(l.map((x) => x.tabIndex)).toEqual([-1, 0]);
+      l[1].focus();
+      await key(l[1], "ArrowUp");
+      l = lanes(el);
+      expect(el.branch).toBe("original");
+      expect(document.activeElement).toBe(l[0]);
+      await key(l[0], "End");
+      expect(el.branch).toBe("b2");
+      expect(document.activeElement).toBe(lanes(el)[1]);
+    });
+
+    test("controlled: preventDefault keeps the attempt until the app passes it", async () => {
+      const el = await branched();
+      el.addEventListener("tc-branch-change", (e) => e.preventDefault());
+      lanes(el)[0].click();
+      await settle();
+      expect(el.branch).toBeNull();
+      expect(shownIds(el)).toEqual(["a", "b", "c2", "e2"]);
+      el.branch = "original";
+      await settle();
+      expect(shownIds(el)).toEqual(["a", "b", "c", "d", "e"]);
+    });
+
+    test("going back from an earlier attempt, the new branch is shown when the app adds it", async () => {
+      const el = await branched({ branch: "original" });
+      const seen: (string | null)[] = [];
+      el.addEventListener("tc-branch-change", (e) => seen.push((e as CustomEvent<RunCheckpointsBranchChange>).detail.branch));
+      el.addEventListener("tc-restore", () => {
+        el.branches = [...el.branches, { id: "b3", from: "b", checkpoints: [{ id: "b3a", title: "Write the migration, smaller", at: 95_000 }] }];
+      });
+      rows(el)[1].click();
+      await settle();
+      el.querySelector<HTMLButtonElement>(".ui-rcp__btn")!.click();
+      await settle();
+      await settle();
+      expect(seen).toEqual(["b3"]);
+      expect(shownIds(el)).toEqual(["a", "b3a"]);
+      const l = lanes(el);
+      expect(l[2].querySelector(".ui-rcp__attempt-label")!.textContent).toBe("Attempt 3");
+      expect(l[2].querySelector(".ui-rcp__attempt-word")!.textContent).toBe("Current attempt");
+      expect(l.map((x) => x.hasAttribute("data-earlier"))).toEqual([true, true, false]);
+      // It forks from step 2 of the first attempt, two lanes up
+      expect(l[2].querySelector<HTMLElement>(".ui-rcp__fork")!.style.getPropertyValue("--up")).toBe("2");
+    });
+
+    test("narrow: the drawing keeps its size and scrolls", async () => {
+      const wrap = await fixture(html`<div style="width: 300px"><tc-run-checkpoints status="running" .elapsed=${100_000} .checkpoints=${LIST} .branches=${[RETRY]}></tc-run-checkpoints></div>`);
+      const scroll = wrap.querySelector<HTMLElement>(".ui-rcp__attempts-scroll")!;
+      expect(wrap.querySelector<HTMLElement>(".ui-rcp__attempts")!.offsetWidth).toBeGreaterThanOrEqual(360);
+      expect(scroll.scrollWidth).toBeGreaterThan(scroll.clientWidth);
+      expect(getComputedStyle(scroll).overflowX).toBe("auto");
+    });
+
+    test("the wrapper: controlled branch and onBranchChange", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const picks: (string | null)[] = [];
+      await act(async () => root.render(React.createElement(RunCheckpoints, { checkpoints: LIST, branches: [RETRY], branch: null, onBranchChange: (id) => picks.push(id) })));
+      await settle();
+      const el = host.querySelector("tc-run-checkpoints")!;
+      lanes(el)[0].click();
+      await act(async () => settle());
+      expect(picks).toEqual(["original"]);
+      expect(shownIds(el)).toEqual(["a", "b", "c2", "e2"]);
+      await act(async () => root.unmount());
+      // Uncontrolled: the pick stays
+      const host2 = document.createElement("div");
+      document.body.append(host2);
+      const root2 = createRoot(host2);
+      await act(async () => root2.render(React.createElement(RunCheckpoints, { checkpoints: LIST, branches: [RETRY] })));
+      await settle();
+      const el2 = host2.querySelector("tc-run-checkpoints")!;
+      lanes(el2)[0].click();
+      await act(async () => settle());
+      expect(shownIds(el2)).toEqual(["a", "b", "c", "d", "e"]);
+      await act(async () => root2.unmount());
+    });
+
+    for (const theme of ["light", "dark"] as const) {
+      test(`axe: attempts in both looks (${theme})`, async () => {
+        const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10; color-scheme: dark" : ""}>
+          <tc-run-checkpoints heading="Standard" status="running" .elapsed=${100_000} .checkpoints=${LIST} .branches=${[RETRY]}></tc-run-checkpoints>
+          <tc-run-checkpoints look="clean" heading="Clean" status="done" .checkpoints=${LIST} .branches=${[RETRY]} branch="original"></tc-run-checkpoints>
+        </div>`);
+        await wait(600);
+        document.getAnimations().forEach((a) => a.effect?.getTiming().iterations !== Infinity && a.finish());
+        const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+        expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+      });
+    }
+  });
 });

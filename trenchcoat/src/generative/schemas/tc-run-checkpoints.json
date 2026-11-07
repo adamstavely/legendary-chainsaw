@@ -26,6 +26,17 @@
       "type": "string",
       "description": "The run's goal, shown as the heading"
     },
+    "branches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunCheckpointBranch"
+      },
+      "description": "Later attempts at the run, oldest first – each branches out of the checkpoint it went back to; the last one is the live attempt"
+    },
+    "branch": {
+      "type": "string",
+      "description": "The attempt on show: a branch's id, \"original\" for the first attempt, or null for the newest. Changes apply unless a tc-branch-change listener calls preventDefault()"
+    },
     "selected": {
       "type": "string",
       "description": "The picked checkpoint's id. Picks apply unless a tc-selected-change listener calls preventDefault()"
@@ -134,6 +145,49 @@
         "value"
       ],
       "additionalProperties": false
+    },
+    "RunCheckpointBranch": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "The checkpoint it went back to – on the first attempt or on another branch"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short name, e.g. \"With the staging database\" – defaults to \"Attempt 2\", \"Attempt 3\" …"
+        },
+        "status": {
+          "$ref": "#/definitions/RunCheckpointsStatus",
+          "description": "How this attempt ended – the newest attempt uses the element's `status`"
+        },
+        "checkpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RunCheckpoint"
+          },
+          "description": "Its checkpoints, oldest first, from the step it runs again; the steps before `from` are shared with the attempt it left. `at` keeps counting from the start of the run"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "checkpoints"
+      ],
+      "additionalProperties": false,
+      "description": "Another attempt at the run: after going back to a checkpoint, the run branches out of it"
+    },
+    "RunCheckpointsStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "paused",
+        "running"
+      ]
     }
   }
 }

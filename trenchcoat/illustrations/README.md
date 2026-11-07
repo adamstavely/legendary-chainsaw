@@ -24,6 +24,7 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **In Coordination** (`in-coordination.tsx`) – A document with three linked points on it, with the words In coordination, for work being agreed between teams before it goes ahead
 - **In Quality Control** (`in-quality-control.tsx`) – A document with a magnifying glass over a check on it, with the words In quality control, for content being checked before it moves on
 - **In Translation** (`in-translation.tsx`) – A document with two speech bubbles on it, with the words In translation, for content being translated into other languages
+- **Inspect Frame** (`inspect-frame.tsx`) – Any component seen like a selection in a design tool – tilted back, a cursor walks through its rows while a frame with handles, padding numbers on guide lines and a W Fill width chip draw round each; twice through, then it rests on the first row
 - **Integration Beam** (`integration-beam.tsx`) – Your product between the tools it connects – light pulses flow along curved beams, hover to focus a tool, click to pause it; a few sync cycles each time it comes into view
 - **Integration Flow** (`integration-flow.tsx`) – Integration pills rotating along a dashed arc, each beaming its data into a central analysis hub – once round the integrations, then it rests
 - **Integration Grid** (`integration-grid.tsx`) – Honeycomb-like wall of integration logos around a bright centre tile with your product mark, fading out toward the edges

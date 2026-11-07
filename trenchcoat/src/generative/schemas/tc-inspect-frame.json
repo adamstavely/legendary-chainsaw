@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-inspect-frame.json",
+  "title": "tc-inspect-frame",
+  "description": "A component seen like a selection in a design tool – tilted back, with a selection frame, spacing numbers and a\nguide walking through its rows. Its content is its first element child.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Accessible name; without it the illustration is decorative and hidden from screen readers"
+    },
+    "targets": {
+      "type": "string",
+      "description": "CSS selector for the rows to walk through, inside the content; \"\" (the default) picks the root's block children"
+    },
+    "playing": {
+      "type": "boolean",
+      "description": "Walks the selection through the rows; false holds it on the first row"
+    },
+    "hold": {
+      "type": "number",
+      "description": "How long the selection stays on a row, in ms"
+    },
+    "delay": {
+      "type": "number",
+      "description": "Wait before the first selection, in ms – e.g. until the section around it has come in"
+    },
+    "rounds": {
+      "type": "number",
+      "description": "How many times it walks through the rows before it rests on the first one"
+    },
+    "mirror": {
+      "type": "boolean",
+      "description": "Tilted the other way and fading out to the left – for the left side of a layout"
+    },
+    "flat": {
+      "type": "boolean",
+      "description": "No tilt and no fade"
+    },
+    "contentWidth": {
+      "type": "number",
+      "description": "The content's width in px, before it's scaled to fit the frame"
+    }
+  },
+  "additionalProperties": false
+}
