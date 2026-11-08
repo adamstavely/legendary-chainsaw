@@ -172,6 +172,35 @@ describe("tc-priority-list", () => {
     expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
   });
 
+  test("figures: a column's width fits a longer heading, taken from the name column; header and rows share it", async () => {
+    const wide = [
+      { id: "last", label: "Last month", width: 88 },
+      { id: "this", label: "This month", width: 88 },
+    ];
+    const wrap = await fixture(html`<div style="width: 460px"><tc-priority-list locale="en" keep-trend-line .hide=${["coverage", "open", "work", "health"]} .items=${CENTRES} .figures=${wide}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    await finish(el);
+    const heads = [...el.querySelectorAll<HTMLElement>(".ui-prl__col--fig")];
+    for (const h of heads) {
+      expect(Math.round(h.getBoundingClientRect().width)).toBe(88);
+      // The heading fits on one line, unclipped
+      expect(h.scrollWidth).toBeLessThanOrEqual(h.clientWidth + 1);
+    }
+    for (const [i, h] of heads.entries()) {
+      const cell = row(el, CENTRES[0].id).querySelectorAll<HTMLElement>(".ui-prl__fig")[i].getBoundingClientRect();
+      expect(Math.abs(cell.right - h.getBoundingClientRect().right)).toBeLessThanOrEqual(1);
+    }
+    // The momentum line keeps its track; the name gave up the room
+    expect(Math.round(el.querySelector<HTMLElement>(".ui-prl__col--momentum")!.getBoundingClientRect().width)).toBe(108);
+    // Nothing overflows: the frame past the edge is clipped, and the row ends inside the list
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+    expect(row(el, CENTRES[0].id).getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
+    // Unset, a column is 56px as before; a bad width is ignored
+    el.figures = [{ id: "last", label: "Last mo." }, { id: "this", label: "This mo.", width: -4 }];
+    await finish(el);
+    expect([...el.querySelectorAll<HTMLElement>(".ui-prl__col--fig")].map((h) => Math.round(h.getBoundingClientRect().width))).toEqual([56, 56]);
+  });
+
   test("a row with no priority shows its code in a neutral badge and reads it instead of a tier; filters count it", async () => {
     const el = await fixture<TcPriorityList>(html`<tc-priority-list heading="Centres" name-label="Centre" .items=${[...CENTRES, ITEMS[1]]}></tc-priority-list>`);
     const badge = row(el, "energy").querySelector<HTMLElement>(".ui-prl__badge")!;

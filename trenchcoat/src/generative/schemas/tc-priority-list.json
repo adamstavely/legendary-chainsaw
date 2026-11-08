@@ -226,6 +226,10 @@
         "unit": {
           "type": "string",
           "description": "A short unit after each value, as the work count has: \"3·pp\""
+        },
+        "width": {
+          "type": "number",
+          "description": "The column's width in px, for a heading longer than \"This mo.\"; unset is 56. The name column gives up the room"
         }
       },
       "required": [

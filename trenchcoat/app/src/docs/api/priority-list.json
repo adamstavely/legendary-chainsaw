@@ -282,10 +282,9 @@
     "--tc-prl-c-momentum",
     "--tc-prl-c-open",
     "--tc-prl-c-work",
-    "--tc-prl-fig-w",
+    "--tc-prl-figs",
     "--tc-prl-freed",
     "--tc-prl-lead",
-    "--tc-prl-n",
     "--tc-radius-full",
     "--tc-radius-md",
     "--tc-radius-sm",
@@ -648,7 +647,7 @@
   "windowed": false
  },
  "size": {
-  "min": 38665,
-  "gzip": 11433
+  "min": 38748,
+  "gzip": 11490
  }
 }

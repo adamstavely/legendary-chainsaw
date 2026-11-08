@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.16.0 – Wider figure columns on the priority list; the AI summary's ask box stays at the bottom
+
+- **Priority List:** a `PriorityFigureColumn` takes a `width` in px, for a heading longer than the 56px default allows –
+  "Last month" and "This month" fit in 88px. The name column gives up the room; the header and every row share the
+  widths, and a missing or invalid width keeps 56px.
+- **AI Summary:** stretched taller than its content – to a grid row's height, say – the card fills the element and the
+  room goes under the summary, so the ask box and the footer ("Was this helpful?", Sources, Copy, Regenerate) sit at the
+  bottom with no space below them. At its natural height nothing changes.
+
 ## 0.15.0 – Time Details
 
 - **Time Details** (`tc-time-details`): times in a passage of text, found and underlined – hover or focus one and a
