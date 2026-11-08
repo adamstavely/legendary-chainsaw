@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.5 – Long facet options fit the sidebar
+
+- **Facet Sidebar:** an option too long for the sidebar ends in an ellipsis inside the card, with its count still
+  showing and its whole name on hover. Before, the longest option widened the list past the card's edge, where it was
+  cut off mid-word, count and all.
+
 ## 0.17.4 – A search box on the facet sidebar; a disclaimer on the AI summary
 
 - **Facet Sidebar:** `search-label` adds a search box above the filters, for searching the results' own text – "Search

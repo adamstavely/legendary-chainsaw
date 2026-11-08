@@ -112,6 +112,18 @@ describe("tc-facet-sidebar", () => {
     expect(getComputedStyle(input).backgroundColor).toBe("rgb(255, 255, 255)");
   });
 
+  test("a long option ends in an ellipsis inside the card, its count still showing, its whole name on hover", async () => {
+    const long = "Americas and Counternarcotics Mission Center";
+    const el = await fixture<TcFacetSidebar>(html`<div style="width: 280px"><tc-facet-sidebar .facets=${[{ id: "region", label: "Region", type: "checkbox", options: [{ value: "acmc", label: long, count: 12 }] }]}></tc-facet-sidebar></div>`);
+    const label = option(el, "region", long);
+    const card = el.querySelector(".ui-fct__card")!.getBoundingClientRect();
+    expect(label.getBoundingClientRect().right).toBeLessThanOrEqual(card.right);
+    expect(label.querySelector(".ui-fct__option-count")!.getBoundingClientRect().right).toBeLessThanOrEqual(card.right);
+    const name = label.querySelector<HTMLElement>(".ui-fct__option-text")!;
+    expect(name.scrollWidth).toBeGreaterThan(name.clientWidth);
+    expect(name.title).toBe(long);
+  });
+
   test("a chip's × removes it and focus moves on; prevented, the value stays", async () => {
     const el = await make("standard", { kind: ["doc", "note"] });
     el.querySelectorAll<HTMLButtonElement>(".ui-fct__chip-x")[0].click();

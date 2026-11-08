@@ -336,7 +336,7 @@ export class TcFacetSidebar extends TcElement {
                     }} />
                     ${f.type === "radio" ? html`<span class="ui-fct__dot" aria-hidden="true"></span>` : tick()}
                   </span>
-                  <span class="ui-fct__option-text">${o.label}</span>
+                  <span class="ui-fct__option-text" title=${o.label}>${o.label}</span>
                   ${o.count !== undefined ? html`<span class="ui-fct__option-count">${fmtCount(o.count)}</span>` : nothing}
                 </label>
               </div>`;
@@ -549,7 +549,7 @@ export class TcFacetSidebar extends TcElement {
 .ui-fct__search-input::-webkit-search-cancel-button { display: none; }
 .ui-fct__search-input:focus-visible { background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow-focus); }
 /* Options */
-.ui-fct__options { display: grid; }
+.ui-fct__options { display: grid; grid-template-columns: minmax(0, 1fr); }
 .ui-fct__option-label { display: flex; align-items: center; gap: var(--tc-space-2-5); min-height: var(--tc-control-h-sm); padding: 0 var(--tc-space-1); border-radius: var(--tc-menu-item-radius); font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); cursor: pointer; }
 .ui-fct__option-label:hover { background: var(--tc-menu-item-hover); }
 .ui-fct__option-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
