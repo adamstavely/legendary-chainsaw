@@ -731,6 +731,11 @@ export class TcAiSummary extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="aism"] *, [data-ui="aism"] *::before, [data-ui="aism"] *::after { box-sizing: border-box; }
+/* Taller than its content – stretched to a grid row, say – the card fills the element and the room goes under the
+   summary: the ask box and the footer stay at the bottom, with no space below them */
+[data-ui="aism"] { display: flex; flex-direction: column; }
+[data-ui="aism"] > .ui-aism__card { display: flex; flex: 1 0 auto; flex-direction: column; }
+.ui-aism__card > .ui-aism__body { flex: 1 0 auto; align-content: start; }
 :where([data-ui="aism"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="aism"] :is(button, a):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="aism"] :is(ul, ol) { margin: 0; padding: 0; list-style: none; }

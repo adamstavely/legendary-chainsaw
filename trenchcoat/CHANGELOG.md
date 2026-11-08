@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.16.0 – Subagent List, and subagents in the Session Panel
+## 0.17.0 – Subagent List, and subagents in the Session Panel
 
 - **Subagent List** (`tc-subagent-list`): the sub-agents a session has started, grouped Active (running or waiting)
   and Done (finished, failed or stopped) with counts. Each row is the agent's own mark – a flower, star, rings or
@@ -13,6 +13,15 @@
   (`subagent` / `defaultSubagent` / `onSubagentChange` in React); the list's own `tc-selected-change` stops at the
   panel, so it's never taken for the tool rail's. `now` holds the clocks still. Subagents is open by default, between
   Outputs and Changes; `sections` now defaults to `["environment", "subagents", "changes"]`.
+
+## 0.16.0 – Wider figure columns on the priority list; the AI summary's ask box stays at the bottom
+
+- **Priority List:** a `PriorityFigureColumn` takes a `width` in px, for a heading longer than the 56px default allows –
+  "Last month" and "This month" fit in 88px. The name column gives up the room; the header and every row share the
+  widths, and a missing or invalid width keeps 56px.
+- **AI Summary:** stretched taller than its content – to a grid row's height, say – the card fills the element and the
+  room goes under the summary, so the ask box and the footer ("Was this helpful?", Sources, Copy, Regenerate) sit at the
+  bottom with no space below them. At its natural height nothing changes.
 
 ## 0.15.0 – Time Details
 

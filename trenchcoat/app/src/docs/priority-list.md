@@ -11,7 +11,8 @@ the others are outlined – beside the name, the owner and team, and its health 
 momentum is a small line over the last few periods with its change, green and ▲ when it's rising, red and ▼ when it's
 falling. Coverage is a slim bar with its share, red when it's low. A pill says what's open ("5 gaps") and a mono count
 says how much work is in flight ("3·wk"). `figures` adds columns of the page's own after Work – papers published last
-month and this, say – each filled from the row's `figures` by the column's id. Chips in the header count each health and
+month and this, say – each filled from the row's `figures` by the column's id. A column is 56px, room for "This mo.";
+give it a `width` for a longer heading ("This month" takes about 88px) and the name column gives up the room. Chips in the header count each health and
 filter by one; with `grouped`, rows fall under a header per priority that counts what's at risk.
 
 A row with no `priority` shows its `badge` instead, a short code such as "CEC" in a neutral badge, so the same list can
