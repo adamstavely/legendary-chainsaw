@@ -180,6 +180,54 @@ describe("tc-header-nav", () => {
     expect(leaked).toBe(0);
   });
 
+  test("the account card's defaults end Docs, Terms and Conditions, Sign out; Terms and Conditions reports id terms", async () => {
+    const el = await make();
+    const picked: string[] = [];
+    el.addEventListener("tc-account-select", (e) => picked.push((e as CustomEvent<HeaderNavAccountSelect>).detail.id));
+    avatar(el).click();
+    await expect.poll(() => pop(el)?.querySelectorAll("tc-profile-menu button").length ?? 0).toBeGreaterThan(3);
+    const labels = [...pop(el)!.querySelectorAll<HTMLButtonElement>("tc-profile-menu button")].map((b) => b.textContent!.replace(/\s+/g, " ").trim());
+    expect(labels.slice(-3)).toEqual(["Docs", "Terms and Conditions", "Sign out"]);
+    [...pop(el)!.querySelectorAll<HTMLButtonElement>("button")].find((b) => b.textContent?.includes("Terms and Conditions"))!.click();
+    await settle();
+    expect(picked).toEqual(["terms"]);
+    expect(pop(el)).toBeNull();
+  });
+
+  test("each trigger shows its name in a tooltip on keyboard focus – also inverse; Escape hides it, and it's hidden while open", async () => {
+    const wrap = await fixture(html`<div style="padding: 8px 8px 64px; background: #081d35">
+      <tc-header-nav inverse .user=${USER}>
+        <tc-notifications .now=${NOW} .items=${ITEMS}></tc-notifications>
+        <tc-app-picker current="mail" .apps=${APPS}></tc-app-picker>
+      </tc-header-nav>
+    </div>`);
+    const el = wrap.querySelector<TcHeaderNav>("tc-header-nav")!;
+    await settle();
+    const tips = [
+      [".ui-ntc__trigger", ".ui-ntc__tip", "Notifications"],
+      [".ui-apk__trigger", ".ui-apk__tip", "Apps"],
+      [".ui-hn__me", ".ui-hn__tip", "Account: Ada Lovelace"],
+    ] as const;
+    const shown = (sel: string) => getComputedStyle(el.querySelector(sel)!).visibility === "visible";
+    for (const [, tip, name] of tips) {
+      expect(el.querySelector(tip)!.textContent).toBe(name);
+      expect(el.querySelector(tip)!.getAttribute("aria-hidden")).toBe("true");
+      expect(shown(tip)).toBe(false);
+    }
+    // Ink on the dark bar: the tooltip uses the tooltip tokens, resolved in the trigger's dark scheme
+    expect(getComputedStyle(el.querySelector(".ui-hn__tip")!).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+    for (const [trigger, tip] of tips) {
+      el.querySelector<HTMLElement>(trigger)!.focus({ focusVisible: true } as FocusOptions);
+      await expect.poll(() => shown(tip), { message: tip }).toBe(true);
+      el.querySelector(trigger)!.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+      await expect.poll(() => shown(tip), { message: tip }).toBe(false);
+      el.querySelector(trigger)!.removeAttribute("data-hush");
+    }
+    el.panel = "account";
+    await settle();
+    expect(shown(".ui-hn__tip")).toBe(false);
+  });
+
   test("a switch item in the account card reports its new state and keeps the card open; the page sets it", async () => {
     const el = await make();
     let dark = false;

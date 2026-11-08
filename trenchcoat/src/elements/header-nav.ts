@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 import { PopoverController } from "./internal/popover";
 import { safeMediaUrl } from "./internal/safe-media";
+import { hushTip, unhushTip } from "./internal/trigger-tip";
 import "./profile-menu";
 import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type ProfileSetup, type TcProfileMenu } from "./profile-menu";
 
@@ -21,6 +22,9 @@ import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type
  * viewport. Opening it moves focus to its first action; Escape or picking an action closes it with focus back on the
  * avatar; a pointer-down outside, or focus moving to anything else, closes it where focus is. Tab order is the visual
  * order: bell, picker, avatar, then the open popover.
+ *
+ * Each trigger shows its name in a tooltip under it on hover (after a beat) and on keyboard focus – "Notifications",
+ * "Apps", "Account: Ada Lovelace" – hidden while its popover is open, and with Escape until the next hover or focus.
  *
  * `inverse` is for a dark header bar in either theme: the bell, the picker's button, the avatar and the hairline take
  * the dark theme's colours (color-scheme: dark on those triggers only), while the popovers keep the page's theme.
@@ -75,12 +79,13 @@ export function headerNavInitials(name: string) {
 /** The tone a name gets when the user has none – the same every time */
 export const headerNavTone = (name: string): HeaderNavTone => TONES[[...name].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % TONES.length];
 
-/** The account card's actions when `accountItems` is unset: Settings, Language, Docs and Sign out */
+/** The account card's actions when `accountItems` is unset: Settings, Language, Docs, Terms and Conditions and Sign out */
 export function headerNavDefaultItems(): ProfileMenuItem[] {
   return [
     { id: "settings", label: "Settings", icon: profileMenuIcon("settings") },
     { id: "language", label: "Language", icon: profileMenuIcon("language") },
     { id: "docs", label: "Docs", icon: profileMenuIcon("docs") },
+    { id: "terms", label: "Terms and Conditions", icon: profileMenuIcon("terms") },
     { id: "sign-out", label: "Sign out", icon: profileMenuIcon("logout") },
   ];
 }
@@ -100,7 +105,7 @@ export class TcHeaderNav extends TcElement {
 
   /** The signed-in person */
   @property({ attribute: false }) accessor user: HeaderNavUser = { name: "", email: "" };
-  /** The account card's actions; unset shows Settings, Language, Docs and Sign out */
+  /** The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out */
   @property({ attribute: false }) accessor accountItems: ProfileMenuItem[] | undefined = undefined;
   /** Profile setup progress in the account card – unset hides it */
   @property({ attribute: false }) accessor setup: ProfileSetup | undefined = undefined;
@@ -305,10 +310,13 @@ export class TcHeaderNav extends TcElement {
         aria-expanded=${open ? "true" : "false"}
         aria-controls=${ifDefined(open ? `${this.uid}-account` : undefined)}
         @click=${() => this.request(open ? null : "account")}
+        @keydown=${hushTip}
+        @pointerenter=${unhushTip}
+        @focus=${unhushTip}
       >
         ${this.renderFace()}${u.presence ? html`<span class="ui-hn__dot" data-presence=${u.presence} aria-hidden="true"></span>` : nothing}${presence
           ? html`<span id=${`${this.uid}-presence`} class="ui-hn__sr">${presence}</span>`
-          : nothing}
+          : nothing}<span class="ui-hn__tip" aria-hidden="true">${`${this.accountLabel}: ${u.name}`}</span>
       </button>${open
         ? html`<div id=${`${this.uid}-account`} class="ui-hn__pop" role="dialog" aria-label=${this.accountLabel} tabindex="-1">
             <tc-profile-menu
@@ -366,6 +374,12 @@ export class TcHeaderNav extends TcElement {
 }
 .ui-hn__me:hover, .ui-hn__me[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); }
 .ui-hn__me:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+/* The trigger's name in a tooltip under it: on hover after a beat, on keyboard focus; not while its popover is open */
+.ui-hn__tip { position: absolute; top: calc(100% + var(--tc-space-1-5)); right: 0; z-index: var(--tc-z-dropdown); display: block; width: max-content; max-width: 240px; padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); box-shadow: var(--tc-shadow-overlay); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; pointer-events: none; visibility: hidden; opacity: 0; transform: translateY(-2px); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-move), visibility 0s linear var(--tc-duration-base); }
+.ui-hn__me:focus-visible:not([aria-expanded="true"], [data-hush]) .ui-hn__tip { visibility: visible; opacity: 1; transform: none; transition-delay: 0ms; }
+@media (hover: hover) {
+  .ui-hn__me:hover:not([aria-expanded="true"], [data-hush]) .ui-hn__tip { visibility: visible; opacity: 1; transform: none; transition-delay: var(--tc-duration-slower); }
+}
 
 /* The face: a photo, or initials on a tone */
 .ui-hn__face {

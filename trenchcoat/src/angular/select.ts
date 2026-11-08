@@ -31,6 +31,10 @@ export class Select {
   @Input() set labelVisible(v: TcSelect["labelVisible"] | "" | "true" | "false") {
     this.#el.labelVisible = typeof v === "string" ? v !== "false" : v;
   }
+  /** Where the visible label sits, with `label-visible` only: "top", above the trigger (default), or "start", before it on the same line in the caption style. Without `label-visible` it changes nothing */
+  @Input() set labelPlacement(v: TcSelect["labelPlacement"]) {
+    this.#el.labelPlacement = v;
+  }
   /** What the trigger says while no option is chosen */
   @Input() set placeholder(v: TcSelect["placeholder"]) {
     this.#el.placeholder = v;

@@ -48,7 +48,7 @@ export type ProfileSetup = {
   onContinue?: () => void;
 };
 
-export type ProfileMenuIconName = "settings" | "language" | "docs" | "apps" | "logout" | "moon" | "sun";
+export type ProfileMenuIconName = "settings" | "language" | "docs" | "apps" | "logout" | "moon" | "sun" | "terms";
 
 /** The icons' shapes; the stroke follows the menu's look through --tc-profile-menu-icon-stroke */
 const iconShapes: Record<ProfileMenuIconName, string> = {
@@ -59,6 +59,7 @@ const iconShapes: Record<ProfileMenuIconName, string> = {
   apps: '<rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><path d="M17.5 3v7M14 6.5h7"></path>',
   logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path>',
   moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>',
+  terms: '<path d="M15 12h-5M15 8h-5M19 17V5a2 2 0 0 0-2-2H4"></path><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"></path>',
   sun: '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>',
 };
 

@@ -36,7 +36,7 @@
       "items": {
         "$ref": "#/definitions/ProfileMenuItem"
       },
-      "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out"
+      "description": "The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out"
     },
     "setup": {
       "type": "object",

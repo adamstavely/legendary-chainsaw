@@ -168,6 +168,7 @@ export * from "./react/file-tree";
 export * from "./react/filter-menu";
 export * from "./react/fingerprint-card";
 export * from "./react/first-use";
+export * from "./react/footnotes";
 export * from "./react/friction-profile";
 export * from "./react/funnel-chart";
 export * from "./react/gap-exposure";

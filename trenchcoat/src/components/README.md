@@ -136,6 +136,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **File Tree** (`file-tree.tsx`) – A project's files – folders that fold, a filter, an icon per kind of file and a Git status, with search inside files left to the page
 - **Filter Menu** (`filter-menu.tsx`) – Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
 - **Fingerprint Card** (`fingerprint-card.tsx`) – A ten-print card – each finger's print and status in ANSI/NIST positions, captured with its NFIQ quality, poor, not captured, unable to print or bandaged, and a finger's detail
+- **Footnotes** (`footnotes.tsx`) – A quiet card of caveats and notes under a page's charts – numbered or bulleted, each with an optional link an app's router can take, and nothing at all when there are none
 - **Friction Profile** (`friction-profile.tsx`) – Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened
 - **Funnel Chart** (`funnel-chart.tsx`) – How many are left at each step of a process as centred bars narrowing down the page, joined by curved necks, each step's rate against the one before or the first, the biggest drop emphasised, and a table view
 - **Gap Exposure** (`gap-exposure.tsx`) – Gaps or risks and whether anyone is working on them – severity in words and a mark, the item and its priority, coverage, owner and what's invested, with the severe uncovered ones called out, grouping by priority or severity and an uncovered-only switch

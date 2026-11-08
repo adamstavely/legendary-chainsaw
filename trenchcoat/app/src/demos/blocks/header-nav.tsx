@@ -1,13 +1,15 @@
 import { useMemo, useRef, useState } from "react";
 import type * as UI from "@blocks/header-nav";
 import type { AppPickerApp, NotificationItem, NotificationsChange } from "@adamstavely/trenchcoat/react";
+import { TermsDialog } from "../../../../src/elements/react/terms-dialog";
 import { caption, textButton } from "../../demo-kit";
 
 /* A product's header: the logo and a search field on the left, the Header Nav block on the right – notifications,
    the app picker and Ada's avatar. Open any of the three: the others close. Read or dismiss notifications, approve
    the access request, switch apps or pick an account action; what happened shows under the header. Narrow the stage
    (or view it at 320 px) and the search folds into an icon that opens it across the header. "Dark bar" puts it on a
-   navy bar in either theme: the block's \`inverse\` keeps its buttons legible there, and its popovers follow the page. */
+   navy bar in either theme: the block's \`inverse\` keeps its buttons legible there, and its popovers follow the page.
+   Terms and Conditions in the account card opens a read-only Terms dialog, closed with Close. */
 
 // A fixed clock, so "6m" and the day groups read the same on every load
 const NOW = Date.UTC(2026, 9, 27, 9, 30);
@@ -56,12 +58,19 @@ function makeNotifications(): NotificationItem[] {
   ];
 }
 
+const TERMS = [
+  { id: "use", heading: "Using Northwind", body: "You may use Northwind for your organisation's work while your account is active.\n\nKeep your sign-in to yourself." },
+  { id: "data", heading: "Your data", body: "What you put in Northwind stays yours. We process it only to run the service." },
+  { id: "changes", heading: "Changes to these terms", body: "We'll tell you before these terms change, in the app and by email." },
+];
+
 const SEARCH = '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>';
 const CLOSE = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>';
 const Icon = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" dangerouslySetInnerHTML={{ __html: d }} />;
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { HeaderNav } = ui;
+  const [terms, setTerms] = useState(false);
   const apps = useMemo(makeApps, []);
   const [items, setItems] = useState<NotificationItem[]>(makeNotifications);
   const [current, setCurrent] = useState("projects");
@@ -158,7 +167,10 @@ export default function Demo({ ui }: { ui: typeof UI }) {
                 }}
                 setup={{ done: 3, total: 5, next: "Add a profile photo" }}
                 onSetupContinue={(next: string) => setLast(`Next setup step: ${next}`)}
-                onAccountSelect={(id: string) => setLast(id === "sign-out" ? "Signed out (not really)" : `Account: ${id}`)}
+                onAccountSelect={(id: string) => {
+                  if (id === "terms") setTerms(true);
+                  setLast(id === "sign-out" ? "Signed out (not really)" : id === "terms" ? "Opened the Terms and Conditions" : `Account: ${id}`);
+                }}
               />
             </>
           )}
@@ -172,6 +184,17 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           </div>
         </main>
       </div>
+      {/* Terms and Conditions from the account card: read-only – nothing to consent to, no Decline, Close to leave */}
+      <TermsDialog
+        open={terms}
+        onOpenChange={setTerms}
+        heading="Terms and Conditions"
+        version="3.2"
+        effectiveDate="1 October 2026"
+        canDecline={false}
+        acceptLabel="Close"
+        sections={TERMS}
+      />
       <p style={{ ...caption, margin: 0, minHeight: 18 }}>
         <span role="status">{last}</span>{" "}
         <button type="button" style={textButton} aria-pressed={dark} onClick={() => setDark(!dark)}>

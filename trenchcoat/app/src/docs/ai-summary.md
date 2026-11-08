@@ -19,6 +19,16 @@ The page drives it with `status`: "idle" offers Summarise, "summarising" shows a
 and a caret while the text grows, "done" shows everything, and "error" shows what went wrong with Retry. Stream by
 setting `tldr`, `summary`, `points` and `questions` as they arrive.
 
+Follow-up questions: set `ask` to the question box's placeholder (“Ask Donovan a follow-up…”) and a field shows under
+the summary, above the footer. Enter sends (Shift+Enter starts a new line) and fires a cancelable `tc-ask` with the
+trimmed question; the box clears unless the event is prevented. The page answers through `messages`, oldest first:
+questions show as bubbles at the right, answers as text under the summary's icon, with optional cited `points` whose
+chips work as the summary's do. An answer with `status: "thinking"` shimmers, and the box is disabled until it's done.
+
+`icon` puts an app's own mark – a persona's logo, an `<svg>` or `<img>` – in place of the sparkle, in the header and
+beside each answer. `badge` renames the “AI-generated” badge, for a summary written by rules rather than a model; an
+empty string hides it.
+
 ## When to use
 
 - Catching up on a long thread, channel or ticket without reading every message.
@@ -40,8 +50,10 @@ setting `tldr`, `summary`, `points` and `questions` as they arrive.
 5. **Summary** `.ui-aism__summary` – the paragraphs, with a caret while they stream in; a shimmer `.ui-aism__skeleton` before the first words
 6. **Key points** `.ui-aism__points` – each point with numbered source chips `.ui-aism__cite` and their tooltip `.ui-aism__tip`
 7. **Footer** `.ui-aism__foot` – Was this helpful?, Sources, Copy and Regenerate
-8. **Sources** `.ui-aism__sources` – every source, numbered as the chips cite it, with its kind and when
-9. **Error** `.ui-aism__error` – what went wrong, with Retry
+8. **Follow-up** `.ui-aism__chat` – the conversation under a quiet divider: question bubbles `.ui-aism__bubble` and answers `.ui-aism__answer`
+9. **Question box** `.ui-aism__ask` – a field that grows to four lines, with Send `.ui-aism__send`
+10. **Sources** `.ui-aism__sources` – every source, numbered as the chips cite it, with its kind and when
+11. **Error** `.ui-aism__error` – what went wrong, with Retry
 
 ## Looks
 
@@ -61,6 +73,8 @@ then helpful and not helpful, Sources, Copy and Regenerate, and each source's li
 | Home / End | In Short / Detailed, picks Short or Detailed |
 | Enter / Space | Uses the focused control: opens a source, gives feedback, opens the sources, copies, regenerates |
 | Escape | On a source chip, hides its tooltip |
+| Enter | In the question box, sends the question |
+| Shift+Enter | In the question box, starts a new line |
 
 While summarising, feedback, Copy and Regenerate are disabled; if focus was on a control that goes away, it moves to
 Short / Detailed. Picking a length while summarising fires tc-length-change, so the page can start again.
@@ -72,7 +86,10 @@ streams it is `aria-busy`, and the status is announced politely: “Summarising 
 ready”, or “Couldn't summarise #launch-q3: …”. An error is also an `alert`. A source chip shows “2” and reads “Source 2:
 Marco in #launch-q3”; its visual tooltip repeats the name, so it's hidden from screen readers. Helpful and Not helpful
 are toggle buttons (`aria-pressed`) in a group labelled “Was this helpful?”, confirmed with “Marked as helpful”. Sources
-is a disclosure (`aria-expanded`) over a list labelled “Sources”. Copy confirms with “Summary copied”.
+is a disclosure (`aria-expanded`) over a list labelled “Sources”. Copy confirms with “Summary copied”. The follow-up
+conversation is a list under a “Follow-up” heading; questions read “You asked: …”, an answer being written reads
+“Thinking…” and is `aria-busy`, and each answer is announced politely once written. The question box is labelled by
+its placeholder.
 
 ## Content
 
@@ -87,6 +104,8 @@ is a disclosure (`aria-expanded`) over a list labelled “Sources”. Copy confi
 - Set `generatedAt` and `model`, so people can judge how fresh and how trustworthy the summary is.
 - Pass new sources with their `at`, or set `stale`, so people know when the summary is behind.
 - Summarise again on `tc-retry` and `tc-length-change`, setting `status` back to "summarising".
+- On `tc-ask`, add the question and a `"thinking"` answer to `messages` at once, then fill the answer in.
+- Set `badge` to say how the summary was made when a model didn't write it.
 
 ## Don't
 

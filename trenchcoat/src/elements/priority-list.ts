@@ -4,6 +4,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-priority-list> – a portfolio's topics or projects by priority. Each row has a priority badge (1 is the top tier,
@@ -37,6 +38,9 @@ export type PriorityItem = {
   priority?: number;
   /** A short code shown in the badge when there's no priority, e.g. "CEC" */
   badge?: string;
+  /** A logo shown in the badge column in place of `badge` when there's no priority – an image URL (through
+   *  safeMediaUrl); `badge` stays as the screen-reader text. Missing, unsafe or failing to load, the code shows */
+  badgeImage?: string;
   health: PriorityHealth;
   /** Recent values for the momentum line, oldest first */
   trend?: number[];
@@ -141,6 +145,8 @@ export class TcPriorityList extends TcElement {
   @property() accessor empty = "Nothing to show.";
 
   @state() private accessor activeId = "";
+  /** Badge images that failed to load, by row id and URL: those rows show their code, without retrying */
+  @state() private accessor brokenImages: ReadonlySet<string> = new Set();
 
   private uid = `tc-prl-${++uidCount}`;
 
@@ -201,6 +207,16 @@ export class TcPriorityList extends TcElement {
 
   private renderLead(item: PriorityItem) {
     if (item.priority !== undefined) return html`${this.renderBadge(item.priority)}<span class="ui-prl__sr">Priority ${item.priority}, ${this.tier(item.priority)}. </span>`;
+    const src = safeMediaUrl(item.badgeImage);
+    const key = `${item.id}\n${src}`;
+    if (src && !this.brokenImages.has(key))
+      return html`<img
+          class="ui-prl__badge-img"
+          src=${src}
+          alt=""
+          draggable="false"
+          @error=${() => (this.brokenImages = new Set([...this.brokenImages, key]))}
+        />${item.badge ? html`<span class="ui-prl__sr">${item.badge}. </span>` : nothing}`;
     if (item.badge) return html`<span class="ui-prl__badge ui-prl__badge--code" aria-hidden="true">${item.badge}</span><span class="ui-prl__sr">${item.badge}. </span>`;
     return nothing;
   }
@@ -323,7 +339,7 @@ export class TcPriorityList extends TcElement {
         keepAside: true,
       })}
       <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
-      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && i.badge)} style=${`--tc-prl-n: ${figs}`}>
+      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} style=${`--tc-prl-n: ${figs}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
@@ -430,6 +446,8 @@ export class TcPriorityList extends TcElement {
 /* The priority badge: the top tier in ink, the rest outlined */
 .ui-prl__badge { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: var(--tc-radius-sm); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-strong); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-none); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
 .ui-prl__badge[data-priority="1"] { background: var(--tc-surface-inverse); box-shadow: none; color: var(--tc-text-on-inverse); }
+/* A row's logo in place of its code: the code badge's height, the column's width, contained, with the badge's corners */
+.ui-prl__badge-img { display: block; width: auto; max-width: 100%; height: 22px; object-fit: contain; border-radius: var(--tc-radius-sm); }
 .ui-prl__badge--code { width: auto; min-width: 22px; max-width: 100%; padding: 0 var(--tc-space-1); overflow: hidden; background: var(--tc-fill-default); box-shadow: none; font-size: var(--tc-font-size-2xs); letter-spacing: 0; text-overflow: clip; white-space: nowrap; }
 .ui-prl__badge[data-priority="2"] { box-shadow: inset 0 0 0 1.5px var(--tc-text-secondary); color: var(--tc-text-primary); }
 .ui-prl__who { display: grid; gap: var(--tc-space-0-5); }

@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcAiSummary, type AiSummaryCiteOpen, type AiSummaryFeedback, type AiSummaryFeedbackValue, type AiSummaryLength, type AiSummaryLengthChange, type AiSummaryRetry } from "../ai-summary";
+import { TcAiSummary, type AiSummaryAsk, type AiSummaryCiteOpen, type AiSummaryFeedback, type AiSummaryFeedbackValue, type AiSummaryLength, type AiSummaryLengthChange, type AiSummaryRetry } from "../ai-summary";
 import { h, useControlled } from "./internal";
 
-export type { AiSummaryCiteOpen, AiSummaryFeedbackValue, AiSummaryLength, AiSummaryPoint, AiSummarySource, AiSummarySourceKind, AiSummaryStatus } from "../ai-summary";
+export type { AiSummaryAsk, AiSummaryCiteOpen, AiSummaryFeedbackValue, AiSummaryLength, AiSummaryMessage, AiSummaryPoint, AiSummarySource, AiSummarySourceKind, AiSummaryStatus } from "../ai-summary";
 export { aiSummaryAgo } from "../ai-summary";
 
 const RawAiSummary = createComponent({
@@ -17,10 +17,11 @@ const RawAiSummary = createComponent({
     onTcCiteOpen: "tc-cite-open" as EventName<CustomEvent<AiSummaryCiteOpen>>,
     onTcFeedback: "tc-feedback" as EventName<CustomEvent<AiSummaryFeedback>>,
     onTcCopy: "tc-copy" as EventName<CustomEvent<{ text: string }>>,
+    onTcAsk: "tc-ask" as EventName<CustomEvent<AiSummaryAsk>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawAiSummary>;
-type Owned = "heading" | "length" | "feedback" | "onCopy" | "children" | "onTcSummarise" | "onTcRetry" | "onTcLengthChange" | "onTcCiteOpen" | "onTcFeedback" | "onTcCopy";
+type Owned = "heading" | "length" | "feedback" | "onCopy" | "children" | "onTcSummarise" | "onTcRetry" | "onTcLengthChange" | "onTcCiteOpen" | "onTcFeedback" | "onTcCopy" | "onTcAsk";
 export type AiSummaryProps = Omit<RawProps, Owned> & {
   /** The heading ("Summary" by default) */
   title?: string;
@@ -44,9 +45,11 @@ export type AiSummaryProps = Omit<RawProps, Owned> & {
   onCiteOpen?: (cite: AiSummaryCiteOpen) => boolean | void;
   /** Called with the copied text once the summary is on the clipboard */
   onCopy?: (text: string) => void;
+  /** A follow-up question was sent (trimmed); return false to keep it in the box */
+  onAsk?: (question: string) => boolean | void;
 };
 
-export function AiSummary({ title, length, defaultLength = "short", onLengthChange, feedback, defaultFeedback = null, onFeedbackChange, onSummarise, onRetry, onCiteOpen, onCopy, ...props }: AiSummaryProps) {
+export function AiSummary({ title, length, defaultLength = "short", onLengthChange, feedback, defaultFeedback = null, onFeedbackChange, onSummarise, onRetry, onCiteOpen, onCopy, onAsk, ...props }: AiSummaryProps) {
   const l = useControlled<AiSummaryLength>(length, defaultLength, onLengthChange);
   const f = useControlled<AiSummaryFeedbackValue>(feedback, defaultFeedback, onFeedbackChange);
   return h(RawAiSummary, {
@@ -62,5 +65,8 @@ export function AiSummary({ title, length, defaultLength = "short", onLengthChan
       if (onCiteOpen?.(e.detail) === false) e.preventDefault();
     },
     onTcCopy: (e: CustomEvent<{ text: string }>) => onCopy?.(e.detail.text),
+    onTcAsk: (e: CustomEvent<AiSummaryAsk>) => {
+      if (onAsk?.(e.detail.question) === false) e.preventDefault();
+    },
   });
 }

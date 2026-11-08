@@ -77,6 +77,43 @@ describe("tc-select", () => {
     expect(list(el).getAttribute("aria-labelledby")).toBe(label.id);
   });
 
+  test("label-placement=start puts the label before the trigger on its line, as a caption, still naming it; the list stays under the trigger", async () => {
+    const el = await fixture<TcSelect>(html`<tc-select label="Period" label-visible label-placement="start" value="this-year" .options=${periods}></tc-select>`);
+    const label = el.querySelector<HTMLElement>(".ui-select__label")!;
+    expect(el.hasAttribute("data-label-start")).toBe(true);
+    expect(trigger(el).getAttribute("aria-labelledby")).toBe(`${label.id} ${el.querySelector(".ui-select__value")!.id}`);
+    const l = label.getBoundingClientRect();
+    const t = trigger(el).getBoundingClientRect();
+    expect(l.right).toBeLessThanOrEqual(t.left);
+    expect(Math.abs(l.top + l.height / 2 - (t.top + t.height / 2))).toBeLessThan(2);
+    expect(getComputedStyle(label).fontSize).toBe(getComputedStyle(el).getPropertyValue("--tc-caption-font-size").trim());
+    el.open = true;
+    await settle();
+    await frame();
+    expect(Math.abs(el.querySelector(".ui-select__pop")!.getBoundingClientRect().left - t.left)).toBeLessThan(2);
+    // Hidden label or "top": the attribute does nothing
+    el.labelPlacement = "top";
+    await settle();
+    expect(el.hasAttribute("data-label-start")).toBe(false);
+  });
+
+  test("label-placement=start without label-visible shows no label and leaves the trigger as it is", async () => {
+    const wrap = await fixture(html`<div style="display: grid; justify-items: start; gap: 8px">
+      <tc-select class="plain" label="Period" value="this-year" .options=${periods}></tc-select>
+      <tc-select class="start" label="Period" label-placement="start" value="this-year" .options=${periods}></tc-select>
+    </div>`);
+    const plain = wrap.querySelector<TcSelect>(".plain")!;
+    const start = wrap.querySelector<TcSelect>(".start")!;
+    expect(start.querySelector(".ui-select__label")).toBeNull();
+    expect(start.hasAttribute("data-label-start")).toBe(false);
+    expect(text(trigger(start))).toBe("Period: This year");
+    const a = trigger(plain).getBoundingClientRect();
+    const b = trigger(start).getBoundingClientRect();
+    expect(b.width).toBe(a.width);
+    expect(b.left).toBe(a.left);
+    expect(start.getBoundingClientRect().width).toBe(plain.getBoundingClientRect().width);
+  });
+
   test("a click picks: reported, applied, closed", async () => {
     const values: string[] = [];
     const el = await fixture<TcSelect>(html`<tc-select open .options=${periods} @tc-value-change=${(e: CustomEvent<{ value: string }>) => values.push(e.detail.value)}></tc-select>`);

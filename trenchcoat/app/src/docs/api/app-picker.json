@@ -224,9 +224,11 @@
     "--tc-control-h-sm",
     "--tc-control-px-sm",
     "--tc-control-radius-sm",
+    "--tc-duration-base",
     "--tc-duration-fast",
     "--tc-duration-quick",
     "--tc-duration-shimmer",
+    "--tc-duration-slower",
     "--tc-ease-in-out",
     "--tc-ease-move",
     "--tc-ease-standard",
@@ -252,10 +254,12 @@
     "--tc-line-height-none",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
+    "--tc-line-height-tight",
     "--tc-menu-item-hover",
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-xl",
+    "--tc-shadow-overlay",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
@@ -288,9 +292,16 @@
     "--tc-tone-teal-fg",
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
     "--tc-tracking-tight",
     "--tc-tray-inset",
-    "--tc-tray-radius"
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
    ]
   }
  ],
@@ -433,6 +444,7 @@
   }
  ],
  "changelog": [
+  "**Header Nav:** the bell, the app picker and the avatar each show their name in a tooltip under them on hover (after a beat) and keyboard focus – the bell's `heading` (“Notifications”), the picker's `label` (“Apps”) and the avatar's `account-label` with the person's name (“Account: Helena Vance”). Hidden while the trigger's popover is open, and with Escape until the next hover or focus; on an `inverse` bar they take the dark theme's tooltip colours. `tc-notifications` and `tc-app-picker` show theirs standalone too.",
   "**`tc-app-picker`:** the app launcher. - **Sections:** Pinned, Recent and All apps, or your own groups. - **Finding and opening:** search; real links; arrow keys across the grid. - **Pins and states:** an \"Edit pins\" mode, loading and error states, and an inline panel layout."
  ],
  "frameworks": [
@@ -786,7 +798,7 @@
   "windowed": false
  },
  "size": {
-  "min": 52763,
-  "gzip": 16089
+  "min": 54399,
+  "gzip": 16439
  }
 }
