@@ -389,6 +389,7 @@ export * from "./react/text-to-speech";
 export * from "./react/thinking-loader";
 export * from "./react/thinking-state";
 export * from "./react/tilt-card";
+export * from "./react/time-details";
 export * from "./react/tips-panel";
 export * from "./react/toaster";
 export * from "./react/todo-list";

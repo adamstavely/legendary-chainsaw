@@ -3177,6 +3177,14 @@
     ]
   },
   {
+    "tag": "tc-time-details",
+    "name": "TimeDetails",
+    "description": "Times in text, underlined: hover or focus one to see it in your own time zone.",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-tips-panel",
     "name": "TipsPanel",
     "description": "A panel of short tips, each with one action that marks it done.",

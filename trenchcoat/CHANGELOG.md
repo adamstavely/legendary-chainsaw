@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.15.0 – Time Details
+
+- **Time Details** (`tc-time-details`): times in a passage of text, found and underlined – hover or focus one and a
+  tooltip shows it in the reader's own zone (“Your local time · 1:00 AM EST”), with the weekday and date when the day
+  changes (“Saturday, 7 November · The day before”). It reads 24- and 12-hour times with a zone (“06:00 UTC”, “6 PM
+  ET”, “14:00 GMT+1”, “06:00Z”), ISO stamps, an ISO date before a time, and ranges (“05:30–09:00 UTC”); ET, CT, MT
+  and PT follow daylight saving. Times without a date fall on `date` or today; the reader's zone is the browser's,
+  or `time-zone`. Each time is described by its local time for screen readers. Also exported: `findTimes()`.
+
 ## 0.14.1 – Choice cards are reachable by keyboard with nothing chosen
 
 - **Stepper Form:** `tc-stepper-choices` with no option chosen – an empty `value`, or one that matches no option – made

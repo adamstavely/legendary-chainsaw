@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-time-details.json",
+  "title": "tc-time-details",
+  "description": "Times in text, underlined: hover or focus one to see it in your own time zone.",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The text to find times in: plain text, shown as written (line breaks kept)"
+    },
+    "date": {
+      "type": "string",
+      "description": "The day times written without a date fall on, \"YYYY-MM-DD\"; by default today in the zone each is written in"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms – today is taken from it when `date` isn't given; by default the element's own clock"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The reader's time zone, an IANA name such as \"Europe/Berlin\"; by default the browser's"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on a time before its tooltip opens, ms"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "yours": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "same": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words the tooltip uses, merged over the defaults"
+    }
+  },
+  "additionalProperties": false
+}

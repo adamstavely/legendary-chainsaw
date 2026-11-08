@@ -456,6 +456,9 @@
     "literal spacing": 5,
     "background-position animation": 1
   },
+  "src/elements/time-details.ts": {
+    "clock/environment read": 2
+  },
   "src/elements/toaster.ts": {
     "clock/environment read": 1,
     "literal spacing": 5
