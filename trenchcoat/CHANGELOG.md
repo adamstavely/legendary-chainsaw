@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.3 – Priority list columns line up
+
+- **Priority List:** when no row has a priority, a code or a logo, the badge column goes, rather than indent every row
+  with an empty one – the names start at the row's edge, under their heading. A row with no trend keeps the line's
+  room when other rows have one, so every change lines up after the lines instead of jumping left.
+
 ## 0.17.2 – The AI summary shows a finished answer whole
 
 - **AI Summary:** an answer written over its thinking row – the same message id, its status now done or error – is

@@ -270,7 +270,7 @@ export class TcPriorityList extends TcElement {
             : html`<span class="ui-prl__sr">. ${this.health(item.health)}</span>`}
         </span>
         ${this.shows("momentum") ? html`<span class="ui-prl__cell ui-prl__momentum" data-dir=${dir}>
-          ${item.trend && item.trend.length > 1 ? html`<svg class="ui-prl__spark" viewBox="0 0 64 20" aria-hidden="true">${spark(item.trend)}</svg>` : nothing}
+          ${item.trend && item.trend.length > 1 ? html`<svg class="ui-prl__spark" viewBox="0 0 64 20" aria-hidden="true">${spark(item.trend)}</svg>` : html`<span class="ui-prl__spark" data-none aria-hidden="true"></span>`}
           ${change === undefined
             ? nothing
             : html`<span class="ui-prl__change"><span class="ui-prl__sr">. ${this.momentumLabel} ${sayChange}</span><span aria-hidden="true">${dir === "up" ? "▲" : dir === "down" ? "▼" : "–"}&#8202;${this.pct(Math.abs(change))}</span></span>`}
@@ -350,7 +350,7 @@ export class TcPriorityList extends TcElement {
         keepAside: true,
       })}
       <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
-      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-keep-trend-line=${this.keepTrendLine} ?data-name-center=${this.nameAlign === "center"} style=${`--tc-prl-figs: ${this.figures.map(figWidth).join(" ")}`}>
+      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-no-lead=${!this.items.some((i) => i.priority !== undefined || i.badge || i.badgeImage)} ?data-sparks=${this.items.some((i) => (i.trend?.length ?? 0) > 1)} ?data-keep-trend-line=${this.keepTrendLine} ?data-name-center=${this.nameAlign === "center"} style=${`--tc-prl-figs: ${this.figures.map(figWidth).join(" ")}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
@@ -414,6 +414,9 @@ export class TcPriorityList extends TcElement {
 [data-ui="prl"] { --tc-prl-cols: minmax(0, 1fr) 108px 120px 72px 40px; }
 .ui-prl__card { --tc-prl-lead: 28px; --tc-prl-fig-w: 56px; --tc-prl-c-momentum: 108px; --tc-prl-c-coverage: 120px; --tc-prl-c-open: 72px; --tc-prl-c-work: 40px; }
 .ui-prl__card[data-codes] { --tc-prl-lead: 48px; }
+/* No row has a priority, code or logo: the lead column goes, rather than indent every row with an empty one */
+.ui-prl__card[data-no-lead] { --tc-prl-lead: ; }
+.ui-prl__card[data-no-lead] .ui-prl__cell--badge { display: none; }
 [data-ui="prl"] *, [data-ui="prl"] *::before, [data-ui="prl"] *::after { box-sizing: border-box; }
 [data-ui="prl"] p { margin: 0; }
 [data-ui="prl"] ul { margin: 0; padding: 0; list-style: none; }
@@ -442,6 +445,7 @@ export class TcPriorityList extends TcElement {
 .ui-prl__col--fig[data-align="center"] { text-align: center; }
 /* name-align="center": the heading over the names alone, both centered */
 .ui-prl__card[data-name-center] .ui-prl__col--name { grid-column: 2; text-align: center; }
+.ui-prl__card[data-no-lead] .ui-prl__col--name { grid-column: 1; }
 .ui-prl__card[data-name-center] .ui-prl__who { justify-items: center; text-align: center; }
 .ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols) var(--tc-prl-figs); }
 /* ----- A group's header ----- */
@@ -479,6 +483,8 @@ export class TcPriorityList extends TcElement {
 .ui-prl__momentum[data-dir="up"] { color: var(--tc-status-success-fg); }
 .ui-prl__momentum[data-dir="down"] { color: var(--tc-status-danger-fg); }
 .ui-prl__spark { width: 52px; height: 20px; overflow: visible; }
+/* A row without a trend keeps the line's room when others have one, so every change lines up after the lines */
+.ui-prl__card:not([data-sparks]) .ui-prl__spark[data-none] { display: none; }
 .ui-prl__spark polyline { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .ui-prl__spark circle { fill: currentColor; }
 .ui-prl__change { font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -524,6 +530,7 @@ export class TcPriorityList extends TcElement {
 @container (max-width: 400px) {
   .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 60px; --tc-prl-c-momentum: ; --tc-prl-c-coverage: 60px; --tc-prl-c-open: ; --tc-prl-c-work: ; }
   .ui-prl__card[data-codes] { --tc-prl-lead: 44px; }
+  .ui-prl__card[data-no-lead] { --tc-prl-lead: ; }
   .ui-prl__momentum, .ui-prl__col--momentum { display: none; }
   .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
