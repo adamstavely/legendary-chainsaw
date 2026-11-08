@@ -38,6 +38,14 @@
      "readonly": false
     },
     {
+     "name": "labelPlacement",
+     "attribute": "label-placement",
+     "type": "\"top\" | \"start\"",
+     "default": "\"top\"",
+     "description": "Where the visible label sits, with `label-visible` only: \"top\", above the trigger (default), or \"start\", before it on the same line in the caption style. Without `label-visible` it changes nothing",
+     "readonly": false
+    },
+    {
      "name": "placeholder",
      "attribute": "placeholder",
      "type": "string",
@@ -109,6 +117,12 @@
     "--tc-action-secondary-fg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
     "--tc-control-font-size",
     "--tc-control-font-weight",
     "--tc-control-h-lg",
@@ -243,6 +257,10 @@
     {
      "name": "labelVisible",
      "attribute": "label-visible"
+    },
+    {
+     "name": "labelPlacement",
+     "attribute": "label-placement"
     },
     {
      "name": "placeholder",
@@ -505,7 +523,7 @@
   "windowed": false
  },
  "size": {
-  "min": 23819,
-  "gzip": 7649
+  "min": 24890,
+  "gzip": 7894
  }
 }

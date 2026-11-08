@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { hushTip, unhushTip } from "./internal/trigger-tip";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
@@ -521,19 +522,22 @@ export class TcAppPicker extends TcElement {
     return html`<button
       type="button"
       class="ui-apk__trigger"
+      @pointerenter=${unhushTip}
+      @focus=${unhushTip}
       aria-label=${this.label}
       aria-haspopup="dialog"
       aria-expanded=${this.open ? "true" : "false"}
       aria-controls=${ifDefined(this.pop.open ? `${this.uid}-panel` : undefined)}
       @click=${() => this.setOpen(!this.open)}
       @keydown=${(e: KeyboardEvent) => {
+        hushTip(e);
         if (e.key === "ArrowDown" && !this.open && !e.altKey && !e.ctrlKey && !e.metaKey) {
           e.preventDefault();
           this.setOpen(true);
         }
       }}
     >
-      <svg class="ui-apk__waffle" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${WAFFLE}</svg>
+      <svg class="ui-apk__waffle" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${WAFFLE}</svg><span class="ui-apk__tip" aria-hidden="true">${this.label}</span>
     </button>`;
   }
 
@@ -714,6 +718,7 @@ export class TcAppPicker extends TcElement {
 /* ---- The button: a ghost icon button with the waffle ---- */
 [data-ui="apk"]:not([layout="panel"]) { display: inline-flex; vertical-align: middle; }
 .ui-apk__trigger {
+  position: relative;
   display: inline-grid;
   place-items: center;
   width: var(--tc-control-h-md);
@@ -727,6 +732,12 @@ tc-header-nav[inverse] .ui-apk__trigger { color-scheme: dark; }
 .ui-apk__trigger:hover, .ui-apk__trigger[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-apk__waffle { width: 18px; height: 18px; transition: transform var(--tc-duration-fast) var(--tc-ease-move); }
 .ui-apk__trigger[aria-expanded="true"] .ui-apk__waffle { transform: scale(0.9); }
+/* The trigger's name in a tooltip under it: on hover after a beat, on keyboard focus; not while its popover is open */
+.ui-apk__tip { position: absolute; top: calc(100% + var(--tc-space-1-5)); left: 50%; z-index: var(--tc-z-dropdown); display: block; width: max-content; max-width: 240px; padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); box-shadow: var(--tc-shadow-overlay); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; pointer-events: none; visibility: hidden; opacity: 0; transform: translate(-50%, -2px); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-move), visibility 0s linear var(--tc-duration-base); }
+.ui-apk__trigger:focus-visible:not([aria-expanded="true"], [data-hush]) .ui-apk__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: 0ms; }
+@media (hover: hover) {
+  .ui-apk__trigger:hover:not([aria-expanded="true"], [data-hush]) .ui-apk__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: var(--tc-duration-slower); }
+}
 
 /* ---- The popover: the menu surface, sized to its columns ---- */
 .ui-apk__pop {

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-footnotes.json",
+  "title": "tc-footnotes",
+  "description": "A quiet card of caveats and notes under a page's charts, numbered or bulleted, each with an optional link.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FootnoteNote"
+      },
+      "description": "The notes, in order"
+    },
+    "numbered": {
+      "type": "boolean",
+      "description": "Numbers the notes (default true); numbered=\"false\" gives a plain bulleted list"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FootnoteNote": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "The note, in plain text"
+        },
+        "href": {
+          "type": "string",
+          "description": "Where its link goes; through safeUrl – an unsafe link is dropped",
+          "format": "uri-reference"
+        },
+        "linkLabel": {
+          "type": "string",
+          "description": "The link's words (default \"More\")"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

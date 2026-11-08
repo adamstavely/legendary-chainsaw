@@ -305,10 +305,13 @@
     "--tc-control-h-sm",
     "--tc-control-px-sm",
     "--tc-control-radius-sm",
+    "--tc-duration-base",
     "--tc-duration-fast",
     "--tc-duration-shimmer",
+    "--tc-duration-slower",
     "--tc-duration-slowest",
     "--tc-ease-in-out",
+    "--tc-ease-move",
     "--tc-ease-out",
     "--tc-ease-standard",
     "--tc-fill-default",
@@ -328,10 +331,12 @@
     "--tc-line-height-none",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
+    "--tc-line-height-tight",
     "--tc-menu-item-hover",
     "--tc-menu-item-radius",
     "--tc-radius-full",
     "--tc-radius-md",
+    "--tc-shadow-overlay",
     "--tc-shimmer",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -374,8 +379,15 @@
     "--tc-tone-teal-fg",
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
     "--tc-tray-inset",
-    "--tc-tray-radius"
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
    ]
   }
  ],
@@ -651,6 +663,7 @@
   }
  ],
  "changelog": [
+  "**Header Nav:** the bell, the app picker and the avatar each show their name in a tooltip under them on hover (after a beat) and keyboard focus – the bell's `heading` (“Notifications”), the picker's `label` (“Apps”) and the avatar's `account-label` with the person's name (“Account: Helena Vance”). Hidden while the trigger's popover is open, and with Escape until the next hover or focus; on an `inverse` bar they take the dark theme's tooltip colours. `tc-notifications` and `tc-app-picker` show theirs standalone too.",
   "**`tc-notifications`:** the notification center. - **Bell:** an unread badge. - **List:** All / Unread and category tabs, with items grouped by day. - **Per item:** read toggle, actions and dismiss; \"Mark all as read\". - **More:** load more or infinite scroll, polite announcements of new arrivals, and an inline mode. Every change is a cancelable event."
  ],
  "frameworks": [
@@ -1133,7 +1146,7 @@
   "windowed": false
  },
  "size": {
-  "min": 60641,
-  "gzip": 17902
+  "min": 62272,
+  "gzip": 18265
  }
 }

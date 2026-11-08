@@ -11,7 +11,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/ai-summary";
-import { aiSummaryAgo, type AiSummaryCiteOpen, type AiSummaryPoint, type AiSummarySource, type TcAiSummary } from "../../src/elements/ai-summary";
+import { aiSummaryAgo, type AiSummaryAsk, type AiSummaryCiteOpen, type AiSummaryMessage, type AiSummaryPoint, type AiSummarySource, type TcAiSummary } from "../../src/elements/ai-summary";
 import { AiSummary } from "../../src/elements/react/ai-summary";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -316,6 +316,109 @@ describe("tc-ai-summary", () => {
     await act(async () => root.unmount());
   });
 
+  test("icon replaces the header's sparkle and marks each answer; badge relabels AI-generated, and an empty one hides it", async () => {
+    const logo = document.createElement("img");
+    logo.className = "persona-logo";
+    logo.alt = "";
+    const el = await make("standard", "done", { icon: logo, messages: [{ id: "a1", role: "assistant", text: "Yes." }] });
+    expect(el.querySelector(".tc-head__icon .persona-logo")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon .tc-head__glyph")).toBeNull();
+    expect(el.querySelector(".ui-aism__msg-icon .persona-logo")).toBeTruthy();
+    expect(logo.isConnected).toBe(false);
+    el.badge = "Rule-based";
+    await expect.poll(() => text(el.querySelector(".ui-aism__ai-tag"))).toBe("Rule-based");
+    el.badge = "";
+    await expect.poll(() => el.querySelector(".ui-aism__ai-tag")).toBeNull();
+    expect(text(el.querySelector(".ui-aism__ai-by"))).toBe("Claude Sonnet · 12 min ago");
+  });
+
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: ask shows a question box; Enter sends the trimmed question and clears it, Shift+Enter and blanks don't send, preventing keeps it`, async () => {
+      const el = await make(look);
+      expect(el.querySelector(".ui-aism__ask")).toBeNull();
+      el.ask = "Ask Donovan a follow-up…";
+      await settle();
+      const field = el.querySelector<HTMLTextAreaElement>(".ui-aism__ask-input")!;
+      expect(field.placeholder).toBe("Ask Donovan a follow-up…");
+      expect(field.getAttribute("aria-label")).toBe("Ask Donovan a follow-up…");
+      // Under the summary, above the footer
+      expect(el.querySelector(".ui-aism__ask")!.compareDocumentPosition(el.querySelector(".ui-aism__foot")!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const asked: string[] = [];
+      el.addEventListener("tc-ask", (e) => asked.push((e as CustomEvent<AiSummaryAsk>).detail.question));
+      const type = async (v: string) => {
+        field.value = v;
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+        await settle();
+      };
+      const enter = (shiftKey = false) => field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", shiftKey, bubbles: true, cancelable: true }));
+      await type("   ");
+      enter();
+      expect((el.querySelector(".ui-aism__send") as HTMLButtonElement).disabled).toBe(true);
+      await type("  Who fixes it?  ");
+      enter(true);
+      await settle();
+      expect(asked).toEqual([]);
+      expect(field.value).toBe("  Who fixes it?  ");
+      enter();
+      await settle();
+      expect(asked).toEqual(["Who fixes it?"]);
+      expect(field.value).toBe("");
+      el.addEventListener("tc-ask", (e) => e.preventDefault());
+      await type("And when?");
+      el.querySelector<HTMLButtonElement>(".ui-aism__send")!.click();
+      await settle();
+      expect(asked).toEqual(["Who fixes it?", "And when?"]);
+      expect(field.value).toBe("And when?");
+    });
+  }
+
+  test("messages show under Follow-up – questions as bubbles, answers with the icon; thinking disables the box; an answer's chip fires tc-cite-open", async () => {
+    const thinking: AiSummaryMessage[] = [
+      { id: "q1", role: "user", text: "Who fixes the bug?" },
+      { id: "a1", role: "assistant", text: "", status: "thinking" },
+    ];
+    const el = await make("standard", "done", { ask: "Ask a follow-up…", messages: thinking });
+    expect(text(el.querySelector(".ui-aism__chat-head"))).toBe("Follow-up");
+    expect([...el.querySelectorAll<HTMLElement>(".ui-aism__msg")].map((m) => m.dataset.role)).toEqual(["user", "assistant"]);
+    expect(text(el.querySelector(".ui-aism__bubble"))).toBe("You asked: Who fixes the bug?");
+    expect(el.querySelector('.ui-aism__msg[data-role="assistant"] .ui-aism__skeleton')).toBeTruthy();
+    expect(el.querySelector('.ui-aism__msg[data-role="assistant"] .ui-aism__msg-icon svg')).toBeTruthy();
+    expect(el.querySelector<HTMLTextAreaElement>(".ui-aism__ask-input")!.disabled).toBe(true);
+    const scrolled = vi.spyOn(Element.prototype, "scrollIntoView");
+    el.messages = [thinking[0], { id: "a1", role: "assistant", text: "Marco, by Friday.\n\nThen a day on staging.", points: [{ id: "who", text: "Marco owns BILL-482.", sources: ["t1"] }] }];
+    await expect.poll(() => el.querySelector<HTMLTextAreaElement>(".ui-aism__ask-input")!.disabled).toBe(false);
+    expect(status(el)).toBe("Marco, by Friday.\n\nThen a day on staging.");
+    expect([...el.querySelectorAll(".ui-aism__answer .ui-aism__p")].map((p) => p.textContent)).toEqual(["Marco, by Friday.", "Then a day on staging."]);
+    el.messages = [...el.messages, { id: "q2", role: "user", text: "Thanks" }];
+    await settle();
+    expect(scrolled).toHaveBeenCalledWith({ block: "nearest" });
+    const cites: AiSummaryCiteOpen[] = [];
+    el.addEventListener("tc-cite-open", (e) => cites.push((e as CustomEvent<AiSummaryCiteOpen>).detail));
+    el.querySelector<HTMLElement>(".ui-aism__answer .ui-aism__cite")!.click();
+    expect(cites).toEqual([{ sourceId: "t1", pointId: "who" }]);
+  });
+
+  test("React wrapper: onAsk gets the question, and returning false keeps it in the box", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const asked: string[] = [];
+    await act(async () => root.render(React.createElement(AiSummary, { status: "done", summary: SUMMARY, ask: "Ask…", badge: "Rules", onAsk: (q) => (asked.push(q), false) })));
+    await settle();
+    const el = host.querySelector("tc-ai-summary")!;
+    expect(text(el.querySelector(".ui-aism__ai-tag"))).toBe("Rules");
+    const field = el.querySelector<HTMLTextAreaElement>(".ui-aism__ask-input")!;
+    field.value = "Why?";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true }));
+    await settle();
+    expect(asked).toEqual(["Why?"]);
+    expect(field.value).toBe("Why?");
+    await act(async () => root.unmount());
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe (${theme}): no violations in either look – done with the sources open and stale, summarising, error and idle`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
@@ -324,6 +427,8 @@ describe("tc-ai-summary", () => {
         <tc-ai-summary status="summarising" .sources=${SOURCES}></tc-ai-summary>
         <tc-ai-summary look="clean" status="error" error="The model timed out." .sources=${SOURCES}></tc-ai-summary>
         <tc-ai-summary status="idle" .sources=${SOURCES}></tc-ai-summary>
+        <tc-ai-summary status="done" ask="Ask a follow-up…" .sources=${SOURCES} .summary=${SUMMARY} .messages=${[{ id: "q", role: "user", text: "Who?" }, { id: "a", role: "assistant", text: "Marco.", points: [{ id: "p", text: "Marco owns it.", sources: ["t1"] }] }, { id: "q2", role: "user", text: "When?" }, { id: "a2", role: "assistant", text: "", status: "thinking" }]}></tc-ai-summary>
+        <tc-ai-summary look="clean" status="done" ask="Ask a follow-up…" badge="Rule-based" .sources=${SOURCES} .summary=${SUMMARY} .messages=${[{ id: "q", role: "user", text: "Who?" }, { id: "a", role: "assistant", text: "Nobody knows.", status: "error" }]}></tc-ai-summary>
       </div>`);
       await finish(wrap);
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });

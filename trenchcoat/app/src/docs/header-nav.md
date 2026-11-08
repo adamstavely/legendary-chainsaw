@@ -33,6 +33,7 @@ a popover under it. Only one of the three popovers is open at a time: opening on
 5. **Face** `.ui-hn__face` – the photo, or the initials on a tone
 6. **Presence** `.ui-hn__dot` – online, away, busy or offline, on the avatar's bottom corner
 7. **Account card** `.ui-hn__pop` – the popover holding the `tc-profile-menu`
+8. **Tooltips** `.ui-hn__tip` (and the bell's `.ui-ntc__tip`, the picker's `.ui-apk__tip`) – each trigger's name under it
 
 ## Looks
 
@@ -67,6 +68,10 @@ too.
 | Escape | Closes the account card and puts focus back on the avatar |
 | Enter / Space on an action | Picks it; the card closes and focus goes back to the avatar |
 
+Hovering a trigger (after a beat) or focusing it from the keyboard shows its name in a tooltip under it –
+“Notifications”, “Apps”, “Account: Ada Lovelace” – except while its popover is open. Escape hides the tooltip until
+the next hover or focus. On an `inverse` bar the tooltips take the dark theme's tooltip colours, light on the dark bar.
+
 Opening the card moves focus to its first action. Clicking outside, or moving focus anywhere else, closes it where
 focus is.
 
@@ -74,13 +79,18 @@ focus is.
 
 The avatar is a button named “Account: Ada Lovelace”, with `aria-haspopup="dialog"` and `aria-expanded`; its presence
 is its description (“Online”). The card is a non-modal dialog named “Account” that the avatar controls while it's
-open. The face and the presence dot are hidden from screen readers – the button's name and description say it all.
+open. The face, the presence dot and the tooltips are hidden from screen readers – the button's name and description say
+it all; each tooltip repeats its trigger's name (the bell's `heading`, the picker's `label`, and `account-label` with
+the person's name).
 
 ## Content
 
 - `user.name` is the full name: the initials, the avatar's name and the card's heading come from it.
 - Give `user.avatar` a photo URL, or leave it out for initials. A photo that fails to load falls back to initials.
-- `accountItems` replaces Settings, Language, Docs and Sign out; keep the list short and put Sign out last.
+- The default actions are Settings, Language, Docs, Terms and Conditions and Sign out. Terms and Conditions fires
+  `tc-account-select` with `id: "terms"`: open a read-only `tc-terms-dialog` on it – no `consents`, `canDecline`
+  false and `accept-label="Close"` – as the gallery does.
+- `accountItems` replaces the defaults; keep the list short and put Sign out last.
 - An account item with `checked` is a switch, such as “Dark mode”. Picking it fires `tc-account-select` with `checked`
   as its new state and leaves the card open; set the item's `checked` to it.
 - Rename “Account” with `account-label` in other languages.

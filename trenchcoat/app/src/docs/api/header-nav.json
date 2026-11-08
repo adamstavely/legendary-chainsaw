@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "ProfileMenuItem[] | undefined",
      "default": "undefined",
-     "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out",
+     "description": "The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out",
      "readonly": false
     },
     {
@@ -130,7 +130,9 @@
     "--tc-border-default",
     "--tc-control-h-md",
     "--tc-control-h-sm",
+    "--tc-duration-base",
     "--tc-duration-fast",
+    "--tc-duration-slower",
     "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-focus-outline",
@@ -143,10 +145,12 @@
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-none",
+    "--tc-line-height-tight",
     "--tc-menu-radius",
     "--tc-radius-full",
     "--tc-shadow-overlay",
     "--tc-space-1",
+    "--tc-space-1-5",
     "--tc-space-2",
     "--tc-space-5",
     "--tc-status-danger-solid",
@@ -164,7 +168,14 @@
     "--tc-tone-teal-fg",
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
     "--tc-tray-radius",
+    "--tc-z-dropdown",
     "--tc-z-popover"
    ]
   }
@@ -183,7 +194,7 @@
   {
    "name": "headerNavDefaultItems",
    "signature": "headerNavDefaultItems(): ProfileMenuItem[]",
-   "description": "The account card's actions when `accountItems` is unset: Settings, Language, Docs and Sign out"
+   "description": "The account card's actions when `accountItems` is unset: Settings, Language, Docs, Terms and Conditions and Sign out"
   }
  ],
  "react": [
@@ -207,7 +218,7 @@
      "name": "accountItems",
      "type": "ProfileMenuItem[]",
      "optional": true,
-     "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out. Icons may be React nodes"
+     "description": "The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out. Icons may be React nodes"
     },
     {
      "name": "onAccountSelect",
@@ -273,7 +284,7 @@
      "name": "accountItems",
      "type": "ProfileMenuItem[]",
      "optional": true,
-     "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out. Icons may be React nodes"
+     "description": "The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out. Icons may be React nodes"
     },
     {
      "name": "onAccountSelect",
@@ -690,7 +701,7 @@
   "windowed": false
  },
  "size": {
-  "min": 50660,
-  "gzip": 14850
+  "min": 52522,
+  "gzip": 15280
  }
 }

@@ -17,6 +17,11 @@ filter by one; with `grouped`, rows fall under a header per priority that counts
 A row with no `priority` shows its `badge` instead, a short code such as "CEC" in a neutral badge, so the same list can
 summarise things that have no tier: centres, teams, programmes. With `grouped`, those rows come last, under no header.
 
+Such a row can show a logo instead: `badgeImage` is an image URL (through `safeMediaUrl`, so a data: image works too)
+drawn at the code badge's height, contained in the column's width with the badge's rounded corners. It has `alt=""` –
+the `badge` code stays as the row's screen-reader text. A missing or unsafe URL, or an image that fails to load, shows
+the code badge instead; a failed logo isn't retried, so it never flickers, and the column keeps its width.
+
 ## When to use
 
 - A directorate's or a programme's portfolio, ranked so the most important and most at-risk items stand out.
@@ -38,7 +43,7 @@ summarise things that have no tier: centres, teams, programmes. With `grouped`, 
 3. **Group header** `.ui-prl__group-head` – with `grouped`: the tier, how many it holds and how many are at risk
 4. **Row** `.ui-prl__row` – one topic or project; opens on Enter or a click
 5. **Priority** `.ui-prl__badge` – the tier's number: ink for the top tier, outlined for the rest; or the row's code,
-   on a gray fill
+   on a gray fill; or its logo `.ui-prl__badge-img`
 6. **Health** `.ui-prl__health` – at risk, watch or on track, in words with a dot
 7. **Momentum** `.ui-prl__momentum` – the line and the change, with an arrow and a colour
 8. **Coverage** `.ui-prl__coverage` – the share covered over a slim bar

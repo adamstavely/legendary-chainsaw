@@ -142,6 +142,10 @@
           "type": "string",
           "description": "A short code shown in the badge when there's no priority, e.g. \"CEC\""
         },
+        "badgeImage": {
+          "type": "string",
+          "description": "A logo shown in the badge column in place of `badge` when there's no priority – an image URL (through safeMediaUrl); `badge` stays as the screen-reader text. Missing, unsafe or failing to load, the code shows"
+        },
         "health": {
           "$ref": "#/definitions/PriorityHealth"
         },

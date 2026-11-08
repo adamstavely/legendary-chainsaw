@@ -25,7 +25,8 @@ optional description line under each. Options can be disabled: they show, but ca
 
 ## Anatomy
 
-1. **Label** `.ui-select__label` – shown above the trigger with `label-visible`; otherwise read by screen readers only
+1. **Label** `.ui-select__label` – shown above the trigger with `label-visible`, or before it on the same line with
+   `label-placement="start"` as well; otherwise read by screen readers only
 2. **Trigger** `.ui-select__trigger` – the chosen option's label, or the placeholder, and a chevron
 3. **List** `.ui-select__list` – the options, in a popover under the trigger
 4. **Option** `.ui-select__option` – label, optional description, and a check on the chosen one
@@ -66,6 +67,10 @@ disabled ones carry `aria-disabled`. Option ids come from their position, never 
 
 - Use `align="end"` when the select sits at the right edge of a header.
 - Show the label (`label-visible`) inside forms, where the trigger alone doesn't say what it sets.
+- In a toolbar or a page header, put the label on the trigger's line with `label-visible label-placement="start"`: a
+  small caption (the `--tc-caption-*` tokens), vertically centred, with the list still opening under the trigger. The
+  visible label stays optional – `label-placement` does nothing without `label-visible` (false by default), so removing
+  `label-visible` turns it off and the label is the accessible name only, with the trigger unchanged.
 - Control `value` and prevent `tc-value-change` when the page decides whether a pick applies.
 
 ## Don't

@@ -102,6 +102,21 @@
     "locale": {
       "type": "string",
       "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "badge": {
+      "type": "string",
+      "description": "The words of the \"AI-generated\" badge; an empty string hides it"
+    },
+    "ask": {
+      "type": "string",
+      "description": "The follow-up question box's placeholder, e.g. \"Ask Donovan a follow-up…\"; set, the box shows under the summary"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiSummaryMessage"
+      },
+      "description": "The follow-up conversation, oldest first: questions (\"user\") and answers (\"assistant\")"
     }
   },
   "additionalProperties": false,
@@ -168,6 +183,48 @@
       ],
       "additionalProperties": false,
       "description": "A key point, with the ids of the sources it comes from"
+    },
+    "AiSummaryMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "assistant",
+            "user"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Plain text; blank lines split paragraphs, as `summary` does"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "done",
+            "error",
+            "thinking"
+          ],
+          "description": "An answer being written (\"thinking\"), written (\"done\", the default) or failed (\"error\")"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AiSummaryPoint"
+          },
+          "description": "Cited points under an answer, with chips numbered from `sources` as the summary's are"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A follow-up question, or the answer to one"
     }
   }
 }

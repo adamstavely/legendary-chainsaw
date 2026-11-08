@@ -16,6 +16,7 @@ import { TcElement } from "./internal/base";
  *   <tc-select label="Period" value="month" .options=${[{ value: "month", label: "This month" }, { value: "last", label: "Last month" }]}></tc-select>
  *
  * `label` names the control: shown above the trigger with `label-visible`, else read by screen readers only.
+ * `label-placement="start"` puts the visible label before the trigger on one line instead, as a small caption.
  * Every pick fires a cancelable `tc-value-change` ({ value }): call preventDefault() to keep control of `value`.
  * Standard and Clean differ in the control's and the menu's own tokens only: the same trigger, list and keys.
  */
@@ -61,6 +62,8 @@ export class TcSelect extends TcElement {
   @property() accessor label = "";
   /** Show `label` above the trigger instead of only to screen readers */
   @property({ type: Boolean, attribute: "label-visible" }) accessor labelVisible = false;
+  /** Where the visible label sits, with `label-visible` only: "top", above the trigger (default), or "start", before it on the same line in the caption style. Without `label-visible` it changes nothing */
+  @property({ attribute: "label-placement" }) accessor labelPlacement: "top" | "start" = "top";
   /** What the trigger says while no option is chosen */
   @property() accessor placeholder = "Choose…";
   /** Whether the list is open */
@@ -231,6 +234,7 @@ export class TcSelect extends TcElement {
     this.toggleAttribute("data-open", this.open);
     this.toggleAttribute("data-disabled", this.disabled);
     this.dataset.align = this.align;
+    this.toggleAttribute("data-label-start", this.labelVisible && !!this.label && this.labelPlacement === "start");
   }
 
   protected override updated(changed: PropertyValues<this>) {
@@ -336,6 +340,11 @@ export class TcSelect extends TcElement {
 .ui-select__label { display: block; font-weight: var(--tc-font-weight-medium); cursor: default; }
 :where([data-look="standard"], [data-look="standard"] *).ui-select__label { margin: 0 0 var(--tc-space-2) var(--tc-space-0-5); font-size: var(--tc-font-size-md); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-select__label { margin: 0 0 var(--tc-space-1-5) var(--tc-space-0-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
+/* ----- Label at the start: on the trigger's line, vertically centred, as a caption; the list stays under the trigger ----- */
+[data-ui="select"][data-label-start] { display: inline-grid; grid-template-columns: auto minmax(0, auto); align-items: center; column-gap: var(--tc-space-2); }
+[data-ui="select"][data-label-start] .ui-select__label { grid-column: 1; grid-row: 1; margin: 0; font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); white-space: nowrap; }
+[data-ui="select"][data-label-start] .ui-select__trigger { grid-column: 2; grid-row: 1; }
+[data-ui="select"][data-label-start] .ui-select__pop { grid-column: 2; grid-row: 1; }
 /* ----- Trigger: a secondary button – the chosen label and a chevron ----- */
 .ui-select__trigger {
   appearance: none;

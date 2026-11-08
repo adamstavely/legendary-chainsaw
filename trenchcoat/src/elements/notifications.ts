@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { hushTip, unhushTip } from "./internal/trigger-tip";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
@@ -594,13 +595,16 @@ export class TcNotifications extends TcElement {
     return html`<button
       type="button"
       class="ui-ntc__trigger"
+      @pointerenter=${unhushTip}
+      @focus=${unhushTip}
       aria-haspopup="dialog"
       aria-expanded=${this.open ? "true" : "false"}
       aria-controls=${ifDefined(this.pop.open ? `${this.uid}-panel` : undefined)}
       aria-label=${n ? `${this.heading}, ${n} unread` : this.heading}
       @click=${() => this.setOpen(!this.open)}
+      @keydown=${hushTip}
     >
-      ${icon(BELL, "ui-ntc__bell")}${keyed(this.pulses, badge === nothing ? nothing : html`<span class="ui-ntc__badge-wrap" ?data-pulse=${this.pulses > 0}>${badge}</span>`)}
+      ${icon(BELL, "ui-ntc__bell")}${keyed(this.pulses, badge === nothing ? nothing : html`<span class="ui-ntc__badge-wrap" ?data-pulse=${this.pulses > 0}>${badge}</span>`)}<span class="ui-ntc__tip" aria-hidden="true">${this.heading}</span>
     </button>`;
   }
 
@@ -807,6 +811,12 @@ export class TcNotifications extends TcElement {
 }
 .ui-ntc__trigger:hover, .ui-ntc__trigger[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-ntc__bell { width: 18px; height: 18px; }
+/* The trigger's name in a tooltip under it: on hover after a beat, on keyboard focus; not while its popover is open */
+.ui-ntc__tip { position: absolute; top: calc(100% + var(--tc-space-1-5)); left: 50%; z-index: var(--tc-z-dropdown); display: block; width: max-content; max-width: 240px; padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); box-shadow: var(--tc-shadow-overlay); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; pointer-events: none; visibility: hidden; opacity: 0; transform: translate(-50%, -2px); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-move), visibility 0s linear var(--tc-duration-base); }
+.ui-ntc__trigger:focus-visible:not([aria-expanded="true"], [data-hush]) .ui-ntc__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: 0ms; }
+@media (hover: hover) {
+  .ui-ntc__trigger:hover:not([aria-expanded="true"], [data-hush]) .ui-ntc__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: var(--tc-duration-slower); }
+}
 .ui-ntc__badge-wrap { position: absolute; top: -2px; right: -4px; display: inline-flex; }
 .ui-ntc__badge {
   display: inline-grid;

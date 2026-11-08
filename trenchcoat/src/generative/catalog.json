@@ -253,7 +253,8 @@
       "tc-length-change",
       "tc-cite-open",
       "tc-feedback",
-      "tc-copy"
+      "tc-copy",
+      "tc-ask"
     ]
   },
   {
@@ -1390,6 +1391,14 @@
     "name": "FirstUse",
     "description": "An empty workspace with one highlighted spot to start from, for a new team or project with nothing in it yet.",
     "events": []
+  },
+  {
+    "tag": "tc-footnotes",
+    "name": "Footnotes",
+    "description": "A quiet card of caveats and notes under a page's charts, numbered or bulleted, each with an optional link.",
+    "events": [
+      "tc-navigate"
+    ]
   },
   {
     "tag": "tc-friction-profile",

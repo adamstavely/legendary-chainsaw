@@ -27,7 +27,7 @@ export type HeaderNavOwnProps = {
   notifications?: Omit<NotificationsProps, "open" | "defaultOpen" | "inline">;
   /** The app picker: <AppPicker> props – the app's apps, pins and handlers. Unset hides the picker */
   apps?: Omit<AppPickerProps, "open" | "defaultOpen" | "layout">;
-  /** The account card's actions; unset shows Settings, Language, Docs and Sign out. Icons may be React nodes */
+  /** The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out. Icons may be React nodes */
   accountItems?: ProfileMenuItem[];
   /** An account action was picked (the popover closes and focus returns to the avatar); for a switch item, `checked` is its new state and the popover stays open */
   onAccountSelect?: (id: string, checked?: boolean) => void;

@@ -157,6 +157,7 @@ export * from "./file-tree";
 export * from "./filter-menu";
 export * from "./fingerprint-card";
 export * from "./first-use";
+export * from "./footnotes";
 export * from "./friction-profile";
 export * from "./funnel-chart";
 export * from "./gap-exposure";

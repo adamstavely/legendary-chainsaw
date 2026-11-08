@@ -19,7 +19,7 @@ export class HeaderNav {
   @Input() set user(v: TcHeaderNav["user"]) {
     this.#el.user = v;
   }
-  /** The account card's actions; unset shows Settings, Language, Docs and Sign out */
+  /** The account card's actions; unset shows Settings, Language, Docs, Terms and Conditions and Sign out */
   @Input() set accountItems(v: TcHeaderNav["accountItems"]) {
     this.#el.accountItems = v;
   }

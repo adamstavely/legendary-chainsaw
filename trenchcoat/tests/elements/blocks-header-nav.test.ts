@@ -164,7 +164,7 @@ describe("blocks/header-nav", () => {
     expect(p.left).toBeGreaterThanOrEqual(0);
     expect(pop.textContent).toContain("Ada Lovelace");
     expect(pop.textContent).toContain("ada@example.com");
-    expect([...pop.querySelectorAll(".ui-pm__label")].map((l) => l.textContent)).toEqual(["Settings", "Language", "Docs", "Sign out"]);
+    expect([...pop.querySelectorAll(".ui-pm__label")].map((l) => l.textContent)).toEqual(["Settings", "Language", "Docs", "Terms and Conditions", "Sign out"]);
     expect(document.activeElement?.textContent).toContain("Settings");
 
     const signOut = [...pop.querySelectorAll<HTMLButtonElement>(".ui-pm__item")].find((b) => b.textContent?.includes("Sign out"))!;

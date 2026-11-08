@@ -235,6 +235,36 @@ describe("tc-priority-list", () => {
     });
   }
 
+  test("badgeImage shows a logo in place of the code, which stays as screen-reader text; no image, or one that fails, shows the code", async () => {
+    const LOGO = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="20"><rect width="40" height="20" fill="teal"/></svg>');
+    const items: PriorityItem[] = [
+      { id: "logo", name: "Air Force Materiel", badge: "AFMC", badgeImage: LOGO, health: "on-track" },
+      { id: "broken", name: "Expeditionary", badge: "EAPMC", badgeImage: "/no-such-logo-404.png", health: "watch" },
+      { id: "unsafe", name: "Unsafe", badge: "UNS", badgeImage: "javascript:alert(1)", health: "watch" },
+      { id: "plain", name: "Plain", badge: "PLN", health: "on-track" },
+    ];
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list heading="Centres" .items=${items}></tc-priority-list>`);
+    const img = row(el, "logo").querySelector<HTMLImageElement>(".ui-prl__badge-img")!;
+    expect(img).toBeTruthy();
+    expect(img.getAttribute("alt")).toBe("");
+    expect(img.getAttribute("src")).toBe(LOGO);
+    expect(row(el, "logo").querySelector(".ui-prl__badge--code")).toBeNull();
+    expect(row(el, "logo").querySelector(".ui-prl__sr")!.textContent).toBe("AFMC. ");
+    await expect.poll(() => img.complete && img.naturalWidth > 0).toBe(true);
+    expect(img.getBoundingClientRect().height).toBe(22);
+    expect(img.getBoundingClientRect().width).toBeLessThanOrEqual(row(el, "logo").querySelector(".ui-prl__cell--badge")!.getBoundingClientRect().width);
+    // A logo that fails to load falls back to the code, once, without retrying
+    await expect.poll(() => row(el, "broken").querySelector(".ui-prl__badge--code")?.textContent).toBe("EAPMC");
+    expect(row(el, "broken").querySelector(".ui-prl__badge-img")).toBeNull();
+    el.items = [...el.items];
+    await settle();
+    expect(row(el, "broken").querySelector(".ui-prl__badge-img")).toBeNull();
+    // An unsafe URL, or none, shows the code
+    expect(row(el, "unsafe").querySelector(".ui-prl__badge-img")).toBeNull();
+    expect(row(el, "unsafe").querySelector(".ui-prl__badge--code")!.textContent).toBe("UNS");
+    expect(row(el, "plain").querySelector(".ui-prl__badge--code")!.textContent).toBe("PLN");
+  });
+
   test("badge codes up to five letters show whole, wide and narrow", async () => {
     const items: PriorityItem[] = ["AFMC", "EAPMC", "WCPMC", "CCI"].map((code) => ({ id: code, name: `${code} centre`, badge: code, health: "on-track" }));
     const wrap = await fixture(html`<div style="width: 820px"><tc-priority-list .items=${items}></tc-priority-list></div>`);

@@ -72,4 +72,5 @@ export const AppsIcon = () =>
   );
 export const LogoutIcon = () => h(Svg, null, p("M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"));
 export const MoonIcon = () => h(Svg, null, p("M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"));
+export const TermsIcon = () => h(Svg, null, p("M15 12h-5M15 8h-5M19 17V5a2 2 0 0 0-2-2H4"), p("M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"));
 export const SunIcon = () => h(Svg, null, h("circle", { cx: "12", cy: "12", r: "4" }), p("M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"));

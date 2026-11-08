@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.13.0 – Footnotes; follow-up questions in the AI summary; header tooltips and Terms; inline select labels; priority-list logos
+
+- **Footnotes:** `tc-footnotes` (`@adamstavely/trenchcoat/footnotes`, React `Footnotes`, Angular `Footnotes` from
+  `@adamstavely/trenchcoat/angular/footnotes`), a quiet card of caveats and notes under a page's charts.
+  - `heading` (“Notes”), `description`, `notes` (`FootnoteNote[]`: `id`, `text`, `href?`, `linkLabel?`, exported),
+    `numbered` (true by default; `numbered="false"` gives a bulleted list) and `look`. The notes are small secondary
+    text in the standard card shell, with a muted icon so the card sits below the charts it explains.
+  - A note's link (its `linkLabel`, or “More”; `href` through `safeUrl`, an unsafe one dropped) fires a cancelable
+    `tc-navigate` (`{ href, id }`: `FootnotesNavigate`) – prevented, the link isn't followed, so an app's router can
+    take it. Modifier clicks are left to the browser.
+  - The host is a region named by the heading. With no notes it renders nothing at all – no heading-only card, no
+    region.
+- **AI Summary:** follow-up questions. `ask` (the attribute, a placeholder such as “Ask Donovan a follow-up…”) shows a
+  question box at the bottom of the card, under the summary and above the footer: one line that grows to four, with
+  Send, on the field tokens in both looks. Enter sends and Shift+Enter starts a new line; sending fires a cancelable
+  `tc-ask` (`{ question }`: `AiSummaryAsk`, trimmed, never blank) and clears the box unless it's prevented. The box is
+  disabled while an answer is being written, and focus returns to it once it's done.
+- **AI Summary:** `messages` (`AiSummaryMessage[]`, exported: `id`, `role: "user" | "assistant"`, `text`, `status?:
+  "thinking" | "done" | "error"`, `points?`) shows the conversation under the summary, below a quiet “Follow-up”
+  divider, oldest first: questions as bubbles at the right, answers as text with the summary's typography and a small
+  copy of the icon. A `"thinking"` answer shimmers as the summary does; answer points cite `sources` with the same
+  chips and `tc-cite-open`. New messages fade in (not with reduced motion) and scroll into view within the nearest
+  scroll container; each answer is announced politely once written.
+- **AI Summary:** `icon`, an `<svg>` or `<img>` element (cloned) in place of the header's sparkle, drawn at its size –
+  a persona's logo, say. `badge` renames the “AI-generated” badge (“Rule-based”); an empty string hides it.
+- **React:** `AiSummary` takes `onAsk(question)`; return false to keep the question in the box. **Angular:** the
+  `AiSummary` directive takes `icon`, `badge`, `ask` and `messages`, and emits `tcAsk` (`tc-ask`).
+- **Header Nav:** the bell, the app picker and the avatar each show their name in a tooltip under them on hover (after
+  a beat) and keyboard focus – the bell's `heading` (“Notifications”), the picker's `label` (“Apps”) and the avatar's
+  `account-label` with the person's name (“Account: Helena Vance”). Hidden while the trigger's popover is open, and
+  with Escape until the next hover or focus; on an `inverse` bar they take the dark theme's tooltip colours.
+  `tc-notifications` and `tc-app-picker` show theirs standalone too.
+- **Header Nav:** the account card's defaults add **Terms and Conditions** (`id: "terms"`) before Sign out. Picking it
+  fires `tc-account-select` with `id: "terms"`; open a read-only `tc-terms-dialog` on it (no consents, `canDecline`
+  false, `accept-label="Close"`), as the gallery now does.
+- **Profile Menu:** a `"terms"` icon (Lucide scroll-text) for `profileMenuIcon`, and `TermsIcon` in React.
+- **Select:** `label-placement="start"` (`labelPlacement`, `"top" | "start"`, default `"top"`) puts the visible label
+  before the trigger on one line, vertically centred, as a caption (the `--tc-caption-*` tokens), with the list still
+  opening under the trigger; `aria-labelledby` is unchanged. It only applies with `label-visible`, which stays off by
+  default: without it there's no visible label and the trigger is exactly as before, so removing `label-visible` turns
+  the inline label off.
+- **Priority List:** `PriorityItem.badgeImage`, a logo URL (through `safeMediaUrl`) shown in the badge column in place
+  of a row's code – the code badge's height, contained in the column, with its rounded corners and `alt=""`, the code
+  staying as screen-reader text. Missing, unsafe or failing to load (an `error`), the row shows its code badge; a failed
+  logo is remembered per row, so it doesn't retry or flicker and the columns don't shift.
+
 ## 0.12.0 – Name the momentum column, hide the health word; hidden priority columns keep what's left; a brandless side nav's button at the end
 
 - **Priority List:** `momentum-label` (`momentumLabel`, default “Momentum”) names the momentum column, and is what screen

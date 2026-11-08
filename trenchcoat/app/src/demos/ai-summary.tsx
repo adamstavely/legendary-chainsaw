@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { AiSummaryLength, AiSummaryPoint, AiSummarySource, AiSummaryStatus } from "../../../src/elements/react";
+import type { AiSummaryLength, AiSummaryMessage, AiSummaryPoint, AiSummarySource, AiSummaryStatus } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* A fictional product team's launch thread, summarised. It opens summarised twelve minutes ago; "3 new messages"
    adds replies after that, so the summary says it's behind and offers Update. Update, Regenerate or Detailed stream a
-   new summary in. "Fail next time" makes the next run error; "Start over" goes back to Summarise. */
+   new summary in. "Fail next time" makes the next run error; "Start over" goes back to Summarise. A follow-up asked in
+   the box at the bottom is answered after a moment, citing the thread. */
 
 const NOW = Date.UTC(2026, 9, 28, 15, 0);
 const MIN = 60_000;
@@ -38,6 +39,11 @@ const POINTS: AiSummaryPoint[] = [
   { id: "support", text: "Support is two people short for launch week.", sources: ["m3"] },
   { id: "ready", text: "Checklist and pricing copy are on track.", sources: ["d1", "d2"] },
 ];
+/** Canned answers to follow-ups, in turn */
+const ANSWERS: Omit<AiSummaryMessage, "id" | "role">[] = [
+  { text: "Marco owns the fix. He expects it on staging by Friday, then wants a day of soak before it ships.", points: [{ id: "owner", text: "Marco is fixing BILL-482.", sources: ["t1", "m2"] }] },
+  { text: "Nobody has decided yet. Lena asked for either a week's delay on the help-centre migration or two contractors.", points: [{ id: "staff", text: "Support is two people short for launch week.", sources: ["m3"] }] },
+];
 const QUESTIONS = ["Delay the help-centre migration, or bring in two contractors?", "Who signs off the billing fix after the staging soak?"];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
@@ -51,11 +57,14 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [at, setAt] = useState(NOW - 12 * MIN);
   const [fail, setFail] = useState(false);
   const [note, setNote] = useState("");
+  const [messages, setMessages] = useState<AiSummaryMessage[]>([]);
+  const answer = useRef(0);
   const timer = useRef(0);
   const wait = useRef(0);
   const stop = () => {
     window.clearTimeout(wait.current);
     window.clearInterval(timer.current);
+    window.clearTimeout(answer.current);
   };
 
   useEffect(() => stop, []);
@@ -98,6 +107,16 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     }, 600);
   };
 
+  const ask = (question: string) => {
+    const n = messages.length / 2;
+    const id = `a${n}`;
+    setMessages((m) => [...m, { id: `q${n}`, role: "user", text: question }, { id, role: "assistant", text: "", status: "thinking" }]);
+    answer.current = window.setTimeout(() => {
+      const reply = ANSWERS[n % ANSWERS.length];
+      setMessages((m) => m.map((x) => (x.id === id ? { ...x, ...reply, status: "done" } : x)));
+    }, 1200);
+  };
+
   return (
     <div style={{ width: "100%", maxWidth: 620, display: "grid", gap: 8 }}>
       <AiSummary
@@ -114,6 +133,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         now={NOW}
         error="The model timed out after 60 seconds. Try again, or summarise fewer messages."
         length={length}
+        ask="Ask a follow-up…"
+        messages={messages}
+        onAsk={ask}
         onLengthChange={(l) => {
           setLength(l);
           run(l);
@@ -146,6 +168,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             setSummary("");
             setShown(0);
             setNote("");
+            setMessages([]);
           }}
         >
           Start over

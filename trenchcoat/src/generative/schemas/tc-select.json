@@ -24,6 +24,14 @@
       "type": "boolean",
       "description": "Show `label` above the trigger instead of only to screen readers"
     },
+    "labelPlacement": {
+      "type": "string",
+      "enum": [
+        "start",
+        "top"
+      ],
+      "description": "Where the visible label sits, with `label-visible` only: \"top\", above the trigger (default), or \"start\", before it on the same line in the caption style. Without `label-visible` it changes nothing"
+    },
     "placeholder": {
       "type": "string",
       "description": "What the trigger says while no option is chosen"

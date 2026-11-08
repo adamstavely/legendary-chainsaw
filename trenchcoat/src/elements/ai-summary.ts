@@ -1,5 +1,6 @@
 import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
+import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
@@ -22,6 +23,9 @@ import { safeUrl } from "./internal/safe-url";
  *   · freshness: `stale` (true, or how many new items), or sources dated after `generatedAt`, shows "3 new messages
  *     since this summary" with Update
  *   · times are epoch ms; the element reads the clock when it connects and every 30 s unless `now` is given
+ *   · follow-ups: `ask` shows a question box under the summary; Enter fires tc-ask, and the page answers by adding to
+ *     `messages`, shown under a "Follow-up" divider – questions as bubbles, answers as text with cited points
+ *   · `icon` puts an app's own mark (a persona's logo) in place of the sparkle; `badge` renames "AI-generated"
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-ai-summary status="done" .sources=${sources} tldr="Launch moves to the 14th." .summary=${text}
@@ -44,12 +48,24 @@ export type AiSummaryPoint = { id: string; text: string; sources?: string[] };
 export type AiSummaryStatus = "idle" | "summarising" | "done" | "error";
 export type AiSummaryLength = "short" | "detailed";
 export type AiSummaryFeedbackValue = "up" | "down" | null;
+/** A follow-up question, or the answer to one */
+export type AiSummaryMessage = {
+  id: string;
+  role: "user" | "assistant";
+  /** Plain text; blank lines split paragraphs, as `summary` does */
+  text: string;
+  /** An answer being written ("thinking"), written ("done", the default) or failed ("error") */
+  status?: "thinking" | "done" | "error";
+  /** Cited points under an answer, with chips numbered from `sources` as the summary's are */
+  points?: AiSummaryPoint[];
+};
 
 /** Details of the events */
 export type AiSummaryCiteOpen = { sourceId: string; pointId: string };
 export type AiSummaryLengthChange = { length: AiSummaryLength };
 export type AiSummaryRetry = { reason: "regenerate" | "error" | "stale" };
 export type AiSummaryFeedback = { value: AiSummaryFeedbackValue };
+export type AiSummaryAsk = { question: string };
 
 let uidCount = 0;
 const MIN = 60_000;
@@ -84,6 +100,7 @@ const refreshIcon = () => lucide(svg`<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 
 const upIcon = () => lucide(svg`<path d="M7 10v12"></path><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"></path>`, 14);
 const downIcon = () => lucide(svg`<path d="M17 14V2"></path><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"></path>`, 14);
 const chevronIcon = () => lucide(svg`<path d="m6 9 6 6 6-6"></path>`, 14);
+const sendIcon = () => lucide(svg`<path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path>`, 16);
 const alertIcon = () => lucide(svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path>`, 16);
 
 /** "just now", "5 min ago", "3 h ago", else the date */
@@ -105,6 +122,7 @@ export function aiSummaryAgo(ms: number, now: number, locale?: string) {
  * @fires tc-cite-open - A citation chip was used ({ sourceId, pointId }: AiSummaryCiteOpen); cancelable – prevented, a link to the source doesn't open
  * @fires tc-feedback - Helpful or not helpful was pressed, or pressed again to take it back ({ value }: AiSummaryFeedback); cancelable – prevented, `feedback` stays as it was
  * @fires tc-copy - The summary is on the clipboard ({ text })
+ * @fires tc-ask - A follow-up question was sent with Enter or Send ({ question }: AiSummaryAsk), trimmed; cancelable – prevented, the question stays in the box
  */
 export class TcAiSummary extends TcElement {
   static override ui = "aism";
@@ -145,23 +163,49 @@ export class TcAiSummary extends TcElement {
   @property() accessor error: string | undefined = undefined;
   /** The language for dates and numbers, e.g. "en-GB"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
+  /** An icon element in place of the header's sparkle – a persona's logo, an <svg> or <img> (cloned). Answers carry a small copy */
+  @property({ attribute: false }) accessor icon: Element | undefined = undefined;
+  /** The words of the "AI-generated" badge; an empty string hides it */
+  @property() accessor badge: string | undefined = undefined;
+  /** The follow-up question box's placeholder, e.g. "Ask Donovan a follow-up…"; set, the box shows under the summary */
+  @property() accessor ask: string | undefined = undefined;
+  /** The follow-up conversation, oldest first: questions ("user") and answers ("assistant") */
+  @property({ attribute: false }) accessor messages: AiSummaryMessage[] = [];
 
   @state() private accessor clock = 0;
   @state() private accessor copied = false;
   @state() private accessor announce = "";
   /** The citation chip whose source is previewed: "point:source" */
   @state() private accessor tip = "";
+  /** The follow-up being written */
+  @state() private accessor draft = "";
 
   private uid = `tc-aism-${++uidCount}`;
   private copiedTimer = 0;
   private timer = 0;
+  /** The header's copy of `icon`, and each answer's small one, made once per icon */
+  private iconOf: Element | undefined;
+  private headClone: Node | undefined;
+  private msgClones = new Map<string, Node>();
+  /** Each message's id and status as last seen, to scroll new ones into view and announce new answers */
+  private seen: Map<string, string | undefined> | null = null;
+  private revealId = "";
+  /** The question box was disabled while it had focus: focus goes back to it once it's enabled again */
+  private refocusAsk = false;
 
   constructor() {
     super();
     // The shimmer pauses while the element is off screen
-    new OffScreenController(this, () => this.status === "summarising");
-    // Focus never drops to <body> when a button it was on goes away (Summarise, Retry, Update)
-    new FocusRescueController(this, () => this.querySelector<HTMLElement>(".ui-aism__len [tabindex='0']"));
+    new OffScreenController(this, () => this.status === "summarising" || this.thinking);
+    // Focus never drops to <body> when a button it was on goes away (Summarise, Retry, Update). The question box,
+    // disabled while an answer is being written, gets focus back once it's enabled again
+    new FocusRescueController(this, (key) => {
+      if (key === "ask") {
+        this.refocusAsk = true;
+        return null;
+      }
+      return this.querySelector<HTMLElement>(".ui-aism__len [tabindex='0']");
+    });
   }
 
   override connectedCallback() {
@@ -213,6 +257,26 @@ export class TcAiSummary extends TcElement {
     const kinds = new Set(newer.map((s) => this.kindOf(s)));
     const kind = kinds.size === 1 ? [...kinds][0] : "other";
     return `${new Intl.NumberFormat(this.locale).format(n)} new ${KIND_NOUN[kind][n === 1 ? 0 : 1]} since this summary`;
+  }
+  /** An answer is being written */
+  private get thinking() {
+    return this.messages.some((m) => m.status === "thinking");
+  }
+  private get askDisabled() {
+    return this.thinking || this.status === "summarising";
+  }
+  /** The app's icon, cloned once for the header and once for each answer */
+  private syncIcon() {
+    if (this.iconOf === this.icon) return;
+    this.iconOf = this.icon;
+    this.headClone = this.icon?.cloneNode(true);
+    this.msgClones.clear();
+  }
+  private msgIcon(id: string) {
+    if (!this.icon) return lucide(sparkles, 14);
+    let copy = this.msgClones.get(id);
+    if (!copy) this.msgClones.set(id, (copy = this.icon.cloneNode(true)));
+    return copy;
   }
   private sourceIndex(id: string) {
     return this.sources.findIndex((s) => s.id === id);
@@ -271,6 +335,28 @@ export class TcAiSummary extends TcElement {
     this.announce = next === "up" ? "Marked as helpful" : next === "down" ? "Marked as not helpful" : "Feedback cleared";
   }
 
+  private get askField() {
+    return this.querySelector<HTMLTextAreaElement>(".ui-aism__ask-input");
+  }
+  private sendAsk() {
+    const question = this.draft.trim();
+    if (!question || this.askDisabled) return;
+    if (!this.emit<AiSummaryAsk>("tc-ask", { question }, { cancelable: true })) return;
+    this.draft = "";
+  }
+  private onAskKey(e: KeyboardEvent) {
+    if (e.key !== "Enter" || e.shiftKey || e.isComposing) return;
+    e.preventDefault();
+    this.sendAsk();
+  }
+  /** Grows the box to fit its lines, up to its max-height, where field-sizing isn't supported */
+  private fit() {
+    const ta = this.askField;
+    if (!ta || CSS.supports?.("field-sizing", "content")) return;
+    ta.style.height = "auto";
+    ta.style.height = `${ta.scrollHeight}px`;
+  }
+
   private openCite(e: Event, point: AiSummaryPoint, source: AiSummarySource) {
     if (!this.emit<AiSummaryCiteOpen>("tc-cite-open", { sourceId: source.id, pointId: point.id }, { cancelable: true })) e.preventDefault();
   }
@@ -289,6 +375,45 @@ export class TcAiSummary extends TcElement {
       else this.announce = "";
     }
     if (changed.has("status") && this.status !== "done") this.copied = false;
+    if (changed.has("icon")) this.syncIcon();
+    if (changed.has("messages") || this.seen === null) this.noteMessages();
+  }
+
+  /** Finds new messages (to scroll to) and answers just written (to announce), once the first set has been seen */
+  private noteMessages() {
+    const first = this.seen === null;
+    const before = this.seen ?? new Map<string, string | undefined>();
+    const now = new Map<string, string | undefined>();
+    for (const m of this.messages) {
+      const st = m.status ?? "done";
+      now.set(m.id, st);
+      if (first) continue;
+      const was = before.get(m.id);
+      if (!before.has(m.id)) this.revealId = m.id;
+      if (m.role !== "assistant" || st === "thinking" || was === st) continue;
+      if (st === "done") this.announce = m.text.trim();
+      else if (st === "error") this.announce = `Couldn't answer: ${m.text.trim()}`;
+    }
+    for (const id of this.msgClones.keys()) if (!now.has(id)) this.msgClones.delete(id);
+    this.seen = now;
+  }
+
+  protected override updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (this.revealId) {
+      // Within the nearest scroll container, never the page top
+      this.querySelector(`.ui-aism__msg[data-id="${CSS.escape(this.revealId)}"]`)?.scrollIntoView?.({ block: "nearest" });
+      this.revealId = "";
+    }
+    if (changed.has("draft") && !this.draft) {
+      const ta = this.askField;
+      if (ta) ta.style.height = "";
+    }
+    if (this.refocusAsk && !this.askDisabled) {
+      this.refocusAsk = false;
+      const active = document.activeElement;
+      if (!active || active === document.body || active === this) this.askField?.focus({ preventScroll: true });
+    }
   }
 
   /* ---------- Rendering ---------- */
@@ -297,12 +422,15 @@ export class TcAiSummary extends TcElement {
     const by = [this.model, this.generatedAt !== undefined && this.status === "done" && this.at ? aiSummaryAgo(this.generatedAt, this.at, this.locale) : ""].filter(Boolean);
     const counts = this.counts;
     const about = [this.subject, counts].filter(Boolean).join(" · ");
+    const badge = this.badge ?? "AI-generated";
     return cardHead({
-      icon: sparkles,
+      icon: (this.icon && (this.headClone as Element)) || sparkles,
       title: this.heading,
-      subtitle: html`${about ? html`<span class="ui-aism__about">${about}</span>` : nothing}<span class="ui-aism__ai"
-          ><span class="ui-aism__ai-tag">AI-generated</span>${by.length ? html`<span class="ui-aism__ai-by">${by.join(" · ")}</span>` : nothing}</span
-        >`,
+      subtitle: html`${about ? html`<span class="ui-aism__about">${about}</span>` : nothing}${badge || by.length
+        ? html`<span class="ui-aism__ai"
+            >${badge ? html`<span class="ui-aism__ai-tag">${badge}</span>` : nothing}${by.length ? html`<span class="ui-aism__ai-by">${by.join(" · ")}</span>` : nothing}</span
+          >`
+        : nothing}`,
       id: `${this.uid}-title`,
       aside: html`<div class="ui-aism__len" role="radiogroup" aria-label="Summary length" @keydown=${this.onLengthKey}>
         ${(["short", "detailed"] as const).map(
@@ -344,11 +472,11 @@ export class TcAiSummary extends TcElement {
     </div>`;
   }
 
-  private renderCite(point: AiSummaryPoint, id: string) {
+  private renderCite(point: AiSummaryPoint, id: string, scope = "") {
     const i = this.sourceIndex(id);
     const source = this.sources[i];
     if (!source) return nothing;
-    const key = `${point.id}:${id}`;
+    const key = `${scope}${point.id}:${id}`;
     const open = this.tip === key;
     const show = () => (this.tip = key);
     const hide = () => {
@@ -422,6 +550,74 @@ export class TcAiSummary extends TcElement {
     </section>`;
   }
 
+  /** Paragraphs split on blank lines */
+  private paras(text: string) {
+    return text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  }
+
+  private renderMessage(m: AiSummaryMessage) {
+    const status = m.status ?? "done";
+    if (m.role === "user")
+      return html`<li class="ui-aism__msg" data-id=${m.id} data-role="user">
+        <p class="ui-aism__bubble"><span class="tc-sr-only">You asked: </span>${m.text}</p>
+      </li>`;
+    const points = m.points ?? [];
+    return html`<li class="ui-aism__msg" data-id=${m.id} data-role="assistant" data-status=${status} aria-busy=${status === "thinking" ? "true" : "false"}>
+      <span class="ui-aism__msg-icon" aria-hidden="true" ?data-own=${!!this.icon}>${this.msgIcon(m.id)}</span>
+      <div class="ui-aism__answer">
+        ${status === "thinking" && !m.text.trim()
+          ? html`<span class="tc-sr-only">Thinking…</span><div class="ui-aism__skeleton ui-aism__thinking" aria-hidden="true"><span></span><span></span></div>`
+          : html`${status === "error" ? html`<p class="ui-aism__msg-error">${alertIcon()}<span>${m.text}</span></p>` : this.paras(m.text).map((p) => html`<p class="ui-aism__p">${p}</p>`)}
+            ${points.length
+              ? html`<ul class="ui-aism__points">
+                  ${repeat(
+                    points,
+                    (p) => p.id,
+                    (p) => html`<li class="ui-aism__point">
+                      <span class="ui-aism__bullet" aria-hidden="true"></span>
+                      <span class="ui-aism__point-text">${p.text}${(p.sources ?? []).map((id) => html` ${this.renderCite(p, id, `${m.id}/`)}`)}</span>
+                    </li>`,
+                  )}
+                </ul>`
+              : nothing}`}
+      </div>
+    </li>`;
+  }
+
+  private renderChat() {
+    if (!this.messages.length) return nothing;
+    return html`<section class="ui-aism__chat" aria-labelledby=${`${this.uid}-chat`}>
+      <h4 class="ui-aism__chat-head" id=${`${this.uid}-chat`}><span>Follow-up</span></h4>
+      <ol class="ui-aism__msgs">${repeat(this.messages, (m) => m.id, (m) => this.renderMessage(m))}</ol>
+    </section>`;
+  }
+
+  private renderAsk() {
+    if (this.ask === undefined || this.ask === null) return nothing;
+    const label = this.ask || "Ask a follow-up…";
+    const disabled = this.askDisabled;
+    return html`<div class="ui-aism__ask" ?data-disabled=${disabled}>
+      <div class="ui-aism__ask-field" @click=${(e: Event) => !(e.target as HTMLElement).closest("button") && this.askField?.focus({ preventScroll: true })}>
+        <textarea
+          class="ui-aism__ask-input"
+          rows="1"
+          data-focus-key="ask"
+          aria-label=${label}
+          placeholder=${label}
+          .enterKeyHint=${"send"}
+          .value=${live(this.draft)}
+          ?disabled=${disabled}
+          @input=${(e: Event) => {
+            this.draft = (e.target as HTMLTextAreaElement).value;
+            this.fit();
+          }}
+          @keydown=${(e: KeyboardEvent) => this.onAskKey(e)}
+        ></textarea>
+        <button type="button" class="ui-aism__send" data-focus-key="ask" aria-label="Send" ?disabled=${disabled || !this.draft.trim()} @click=${() => this.sendAsk()}>${sendIcon()}</button>
+      </div>
+    </div>`;
+  }
+
   private renderBody() {
     const s = this.status;
     if (s === "idle")
@@ -439,7 +635,8 @@ export class TcAiSummary extends TcElement {
         <button type="button" class="tc-btn-sm ui-aism__retry" @click=${() => this.emit<AiSummaryRetry>("tc-retry", { reason: "error" })}>${refreshIcon()}Retry</button>
       </div>`;
     return html`${this.renderStale()}
-      <div class="ui-aism__body">${this.renderSummary()} ${this.renderPoints()} ${this.renderQuestions()}</div>`;
+      <div class="ui-aism__body">${this.renderSummary()} ${this.renderPoints()} ${this.renderQuestions()} ${this.renderChat()}</div>
+      ${this.renderAsk()}`;
   }
 
   private renderSources() {
@@ -543,6 +740,8 @@ export class TcAiSummary extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-aism__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* ----- The header: what was summarised, that it's AI-generated, and Short / Detailed ----- */
 [data-ui="aism"] .tc-head__icon { color: var(--tc-tone-violet-fg); }
+/* An app's own icon is drawn the sparkle's size */
+[data-ui="aism"] .tc-head .tc-head__icon > :not(.tc-head__glyph) { width: var(--tc-head-glyph); height: var(--tc-head-glyph); object-fit: contain; }
 .ui-aism__about { display: block; }
 .ui-aism__ai { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1-5); margin-top: var(--tc-space-1) !important; }
 .ui-aism__ai-tag { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-tone-violet-bg); color: var(--tc-tone-violet-fg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); }
@@ -590,6 +789,32 @@ export class TcAiSummary extends TcElement {
 .ui-aism__cite:hover, .ui-aism__cite:focus-visible { background: var(--tc-fill-selected) !important; color: var(--tc-accent-text) !important; }
 .ui-aism__tip { position: absolute; bottom: calc(100% + var(--tc-space-1-5)); left: 50%; z-index: var(--tc-z-popover); display: flex; align-items: center; gap: var(--tc-space-1-5); width: max-content; max-width: 260px; padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); color: var(--tc-tooltip-fg); box-shadow: var(--tc-shadow-overlay); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-snug); pointer-events: none; transform: translateX(-50%); animation: ui-aism-in var(--tc-duration-fast) var(--tc-ease-standard) both; }
 .ui-aism__tip-kind { opacity: 0.8; }
+/* ----- Follow-up: the conversation under a quiet divider – questions as bubbles at the right, answers as text ----- */
+.ui-aism__chat { display: grid; gap: var(--tc-space-3); min-width: 0; }
+.ui-aism__chat-head { display: flex; align-items: center; gap: var(--tc-space-2); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-aism__chat-head::before, .ui-aism__chat-head::after { content: ""; flex: 1; border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-aism__msgs { display: grid; gap: var(--tc-space-3); }
+.ui-aism__msg { display: flex; gap: var(--tc-space-2); min-width: 0; animation: ui-aism-msg var(--tc-duration-moderate) var(--tc-ease-move) both; }
+.ui-aism__msg[data-role="user"] { justify-content: flex-end; }
+.ui-aism__bubble { max-width: min(85%, 36rem); padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-xl); border-bottom-right-radius: var(--tc-radius-xs); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-subtle); color: var(--tc-text-primary); line-height: var(--tc-line-height-snug); white-space: pre-wrap; overflow-wrap: anywhere; }
+.ui-aism__msg-icon { display: flex; flex: none; align-items: center; justify-content: center; width: 20px; height: 1lh; color: var(--tc-tone-violet-fg); }
+.ui-aism__msg-icon[data-own] > * { width: 16px; height: 16px; object-fit: contain; }
+.ui-aism__answer { display: grid; flex: 1; gap: var(--tc-space-2); min-width: 0; }
+.ui-aism__thinking { width: 100%; padding-top: var(--tc-space-1); }
+.ui-aism__msg-error { display: flex; align-items: flex-start; gap: var(--tc-space-1-5); color: var(--tc-status-danger-fg); line-height: var(--tc-line-height-snug); }
+/* ----- The question box: a field that grows to a few lines, with Send ----- */
+.ui-aism__ask { padding: 0 var(--tc-space-4) var(--tc-space-4); }
+.ui-aism__ask-field { display: flex; align-items: flex-end; gap: var(--tc-space-2); min-height: var(--tc-field-h); padding: var(--tc-space-1) var(--tc-space-1) var(--tc-space-1) var(--tc-field-px); border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-aism__ask-field { background: var(--tc-field-bg-sunken); }
+.ui-aism__ask-field:hover { box-shadow: var(--tc-field-shadow-hover); }
+[data-ui="aism"] .ui-aism__ask-field:focus-within { background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow-focus); }
+.ui-aism__ask-input { flex: 1; align-self: center; min-width: 0; max-height: calc(4lh + 2px); margin: var(--tc-space-0-5) 0; padding: 0; border: 0; outline: none; background: none; font: inherit; font-size: var(--tc-field-font-size); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); resize: none; overflow-y: auto; field-sizing: content; }
+.ui-aism__ask-input::placeholder { color: var(--tc-text-placeholder); }
+.ui-aism__ask[data-disabled] .ui-aism__ask-field { opacity: 0.6; cursor: default; }
+.ui-aism__send { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-primary-bg) !important; box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg) !important; transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-aism__send:not(:disabled):hover { background: var(--tc-action-primary-bg-hover) !important; }
+.ui-aism__send:not(:disabled):active { background: var(--tc-action-primary-bg-active) !important; }
+.ui-aism__send:disabled { opacity: 0.2; cursor: default; }
 /* ----- The footer: was it helpful, Sources, Copy and Regenerate ----- */
 .ui-aism__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4); border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-aism__helpful { display: inline-flex; align-items: center; gap: var(--tc-space-1); }
@@ -621,6 +846,7 @@ export class TcAiSummary extends TcElement {
 @keyframes ui-aism-shimmer { to { transform: translateX(100%); } }
 @keyframes ui-aism-blink { to { visibility: hidden; } }
 @keyframes ui-aism-in { from { opacity: 0; } }
+@keyframes ui-aism-msg { from { opacity: 0; transform: translateY(4px); } }
 @container (max-width: 420px) {
   .ui-aism__actions .tc-btn-sm:not(.ui-aism__src-toggle) > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .ui-aism__helpful-label { display: none; }
@@ -629,7 +855,7 @@ export class TcAiSummary extends TcElement {
   [data-ui="aism"] *, [data-ui="aism"] *::before, [data-ui="aism"] *::after { animation: none !important; transition: none !important; }
 }
 @media (forced-colors: active) {
-  .ui-aism__cite, .ui-aism__ai-tag { border: 1px solid ButtonText; }
+  .ui-aism__cite, .ui-aism__ai-tag, .ui-aism__bubble, .ui-aism__ask-field { border: 1px solid ButtonText; }
   .ui-aism__len-opt[aria-checked="true"], .ui-aism__thumb[aria-pressed="true"] { outline: 2px solid Highlight; }
 }
 `;
