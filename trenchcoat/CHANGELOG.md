@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.17.4 – A search box on the facet sidebar; a disclaimer on the AI summary
+
+- **Facet Sidebar:** `search-label` adds a search box above the filters, for searching the results' own text – "Search
+  topics", say. It's a white field the size of a page's own, not a long facet's small sunken one. Each keystroke sets
+  `query` and fires `tc-query-change` (`{ query }`); the page does the searching. Clear all shows while there's a
+  search and empties it along with the filters.
+- **AI Summary:** `disclaimer` puts one quiet line at the bottom of the card – "AI can make mistakes. Check important
+  info." – as the chat composer and side pane have. It also describes the ask box to screen readers. Unset, there's none.
+
 ## 0.17.3 – Priority list columns line up
 
 - **Priority List:** when no row has a priority, a code or a logo, the badge column goes, rather than indent every row

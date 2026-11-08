@@ -103,6 +103,10 @@ export class AiSummary {
   @Input() set messages(v: TcAiSummary["messages"]) {
     this.#el.messages = v;
   }
+  /** One quiet line at the bottom of the card – "AI can make mistakes. Check important info." – unset, none */
+  @Input() set disclaimer(v: TcAiSummary["disclaimer"]) {
+    this.#el.disclaimer = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcAiSummary["look"]) {
     this.#el.look = v;
