@@ -305,16 +305,18 @@ describe("tc-ai-summary", () => {
     }
   });
 
-  test("disclaimer: one quiet line at the bottom of the card, describing the ask box; unset, none", async () => {
+  test("disclaimer: one quiet line under the ask box, above the footer, describing the ask box; unset, none", async () => {
     const plain = await make("standard", "done", { ask: "Ask a follow-up…" });
     expect(plain.querySelector(".ui-aism__disclaimer")).toBeNull();
     expect(plain.querySelector(".ui-aism__ask-input")!.hasAttribute("aria-describedby")).toBe(false);
     const el = await make("standard", "done", { ask: "Ask a follow-up…", disclaimer: "AI can make mistakes. Check important info." });
     const line = el.querySelector<HTMLElement>(".ui-aism__disclaimer")!;
     expect(text(line)).toBe("AI can make mistakes. Check important info.");
-    expect(el.querySelector(".ui-aism__card")!.lastElementChild).toBe(line);
+    expect(line.previousElementSibling!.classList.contains("ui-aism__ask")).toBe(true);
+    expect(line.nextElementSibling!.classList.contains("ui-aism__foot")).toBe(true);
     expect(el.querySelector(".ui-aism__ask-input")!.getAttribute("aria-describedby")).toBe(line.id);
-    expect(line.getBoundingClientRect().top).toBeGreaterThanOrEqual(el.querySelector(".ui-aism__foot")!.getBoundingClientRect().bottom - 1);
+    expect(line.getBoundingClientRect().top).toBeGreaterThanOrEqual(el.querySelector(".ui-aism__ask")!.getBoundingClientRect().bottom - 1);
+    expect(line.getBoundingClientRect().bottom).toBeLessThanOrEqual(el.querySelector(".ui-aism__foot")!.getBoundingClientRect().top + 1);
   });
 
   test("without `now` the element keeps its own clock; focus left on a vanishing button moves to Short / Detailed", async () => {

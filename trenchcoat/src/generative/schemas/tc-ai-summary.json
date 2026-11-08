@@ -120,7 +120,7 @@
     },
     "disclaimer": {
       "type": "string",
-      "description": "One quiet line at the bottom of the card – \"AI can make mistakes. Check important info.\" – unset, none"
+      "description": "One quiet line under the ask box, above the footer – \"AI can make mistakes. Check important info.\" – unset, none"
     }
   },
   "additionalProperties": false,

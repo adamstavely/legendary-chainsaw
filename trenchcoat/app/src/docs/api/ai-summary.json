@@ -186,7 +186,7 @@
      "attribute": "disclaimer",
      "type": "string",
      "default": "\"\"",
-     "description": "One quiet line at the bottom of the card – \"AI can make mistakes. Check important info.\" – unset, none",
+     "description": "One quiet line under the ask box, above the footer – \"AI can make mistakes. Check important info.\" – unset, none",
      "readonly": false
     },
     {
@@ -627,7 +627,7 @@
   "floor": {
    "chrome": "123",
    "edge": "123",
-   "firefox": "120",
+   "firefox": "121",
    "safari": "17.5",
    "safari_ios": "17.5"
   },
@@ -639,7 +639,7 @@
     "light-dark"
    ],
    "firefox": [
-    "light-dark"
+    "has"
    ],
    "safari": [
     "light-dark"
@@ -733,6 +733,23 @@
     "via": [
      "itself",
      "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
     ]
    },
    {
@@ -890,7 +907,7 @@
   "windowed": false
  },
  "size": {
-  "min": 54041,
-  "gzip": 15432
+  "min": 54149,
+  "gzip": 15453
  }
 }

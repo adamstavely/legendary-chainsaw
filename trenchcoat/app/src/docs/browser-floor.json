@@ -23,7 +23,7 @@
    "features": [
     "has"
    ],
-   "elements": 95
+   "elements": 96
   },
   "safari": {
    "features": [
@@ -184,7 +184,7 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 95
+   "elements": 96
   },
   {
    "id": "aspect-ratio",
