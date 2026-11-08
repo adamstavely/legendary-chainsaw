@@ -305,6 +305,18 @@ describe("tc-ai-summary", () => {
     }
   });
 
+  test("disclaimer: one quiet line at the bottom of the card, describing the ask box; unset, none", async () => {
+    const plain = await make("standard", "done", { ask: "Ask a follow-up…" });
+    expect(plain.querySelector(".ui-aism__disclaimer")).toBeNull();
+    expect(plain.querySelector(".ui-aism__ask-input")!.hasAttribute("aria-describedby")).toBe(false);
+    const el = await make("standard", "done", { ask: "Ask a follow-up…", disclaimer: "AI can make mistakes. Check important info." });
+    const line = el.querySelector<HTMLElement>(".ui-aism__disclaimer")!;
+    expect(text(line)).toBe("AI can make mistakes. Check important info.");
+    expect(el.querySelector(".ui-aism__card")!.lastElementChild).toBe(line);
+    expect(el.querySelector(".ui-aism__ask-input")!.getAttribute("aria-describedby")).toBe(line.id);
+    expect(line.getBoundingClientRect().top).toBeGreaterThanOrEqual(el.querySelector(".ui-aism__foot")!.getBoundingClientRect().bottom - 1);
+  });
+
   test("without `now` the element keeps its own clock; focus left on a vanishing button moves to Short / Detailed", async () => {
     const el = await fixture<TcAiSummary>(html`<tc-ai-summary status="done" .generatedAt=${Date.now() - 5 * MIN} .sources=${SOURCES} summary="Gist."></tc-ai-summary>`);
     expect(text(el.querySelector(".ui-aism__ai-by"))).toBe("5 min ago");

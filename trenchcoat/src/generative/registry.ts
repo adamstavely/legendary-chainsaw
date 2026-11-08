@@ -138,7 +138,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-evidence-list": { events: ["tc-selected-change","tc-copy"], load: () => import("../elements/evidence-list"), schema: () => import("./schemas/tc-evidence-list.json") },
   "tc-experiment-card": { events: ["tc-open-change","tc-metric-change","tc-winner-change"], load: () => import("../elements/experiment-card"), schema: () => import("./schemas/tc-experiment-card.json") },
   "tc-extraction-review": { events: ["tc-fields-change","tc-confirm"], load: () => import("../elements/extraction-review"), schema: () => import("./schemas/tc-extraction-review.json") },
-  "tc-facet-sidebar": { events: ["tc-value-change","tc-collapsed-change"], load: () => import("../elements/facet-sidebar"), schema: () => import("./schemas/tc-facet-sidebar.json") },
+  "tc-facet-sidebar": { events: ["tc-value-change","tc-collapsed-change","tc-query-change"], load: () => import("../elements/facet-sidebar"), schema: () => import("./schemas/tc-facet-sidebar.json") },
   "tc-fact-sheet": { events: ["tc-copy"], load: () => import("../elements/fact-sheet"), schema: () => import("./schemas/tc-fact-sheet.json") },
   "tc-fallback-chain": { events: ["tc-selected-change"], load: () => import("../elements/fallback-chain"), schema: () => import("./schemas/tc-fallback-chain.json") },
   "tc-fan-out-grid": { events: ["tc-selected-change","tc-filter-change","tc-select"], load: () => import("../elements/fan-out-grid"), schema: () => import("./schemas/tc-fan-out-grid.json") },

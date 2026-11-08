@@ -54,6 +54,22 @@
      "readonly": false
     },
     {
+     "name": "searchLabel",
+     "attribute": "search-label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Shows a search box above the filters, labelled with this – \"Search topics\"; unset, there's none",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search box's text. Changed by the user, firing tc-query-change",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -74,6 +90,12 @@
      "detail": "",
      "description": "A facet was folded or opened ({ collapsed }: FacetCollapsedChange); cancelable – prevented, `collapsed` stays as it was",
      "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search box's text changed ({ query }: FacetQueryChange), on every keystroke and on Clear all",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -103,10 +125,13 @@
     "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
     "--tc-field-px",
     "--tc-field-radius",
     "--tc-field-shadow",
     "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
     "--tc-fill-selected",
     "--tc-fill-strong",
     "--tc-fill-subtle",
@@ -250,6 +275,14 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "searchLabel",
+     "attribute": "search-label"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
     }
    ],
    "events": [
@@ -260,6 +293,10 @@
     {
      "name": "tc-collapsed-change",
      "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": false
     }
    ],
    "controlled": [
@@ -437,7 +474,7 @@
   "windowed": false
  },
  "size": {
-  "min": 32746,
-  "gzip": 9882
+  "min": 34414,
+  "gzip": 10284
  }
 }

@@ -37,6 +37,14 @@
     "locale": {
       "type": "string",
       "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "searchLabel": {
+      "type": "string",
+      "description": "Shows a search box above the filters, labelled with this – \"Search topics\"; unset, there's none"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search box's text. Changed by the user, firing tc-query-change"
     }
   },
   "additionalProperties": false,

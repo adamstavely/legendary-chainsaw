@@ -14,6 +14,8 @@ import { cardHead } from "./internal/card-head";
  *   · every change fires a cancelable tc-value-change ({ value, facet }) with the whole value as it will be – prevent
  *     it and update `value` yourself to keep the filters in the URL or a store
  *   · the range's thumbs are sliders: arrow keys step, Shift for ten steps, Home / End to the ends, or drag
+ *   · `search-label` adds a search box above the filters, for the results' own text: each keystroke fires
+ *     tc-query-change ({ query }) and the page does the searching; Clear all empties it too
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-facet-sidebar .facets=${[{ id: "kind", label: "Kind", type: "checkbox", options: [{ value: "doc", label: "Documents", count: 12 }] }]}></tc-facet-sidebar>
@@ -41,6 +43,7 @@ export type FacetValues = Record<string, FacetValue>;
 /** Details of the events */
 export type FacetValueChange = { value: FacetValues; facet: string };
 export type FacetCollapsedChange = { collapsed: string[] };
+export type FacetQueryChange = { query: string };
 
 let uidCount = 0;
 const SEARCH_OVER = 8;
@@ -74,6 +77,7 @@ export function facetActive(f: Facet, v: FacetValue | undefined): boolean {
  * @tag tc-facet-sidebar
  * @fires tc-value-change - A filter changed ({ value, facet }: FacetValueChange); cancelable – prevented, `value` stays as it was
  * @fires tc-collapsed-change - A facet was folded or opened ({ collapsed }: FacetCollapsedChange); cancelable – prevented, `collapsed` stays as it was
+ * @fires tc-query-change - The search box's text changed ({ query }: FacetQueryChange), on every keystroke and on Clear all
  */
 export class TcFacetSidebar extends TcElement {
   static override ui = "fct";
@@ -90,6 +94,10 @@ export class TcFacetSidebar extends TcElement {
   @property({ type: Number, attribute: "show-count" }) accessor showCount = 5;
   /** The language for numbers and dates, e.g. "en-GB"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
+  /** Shows a search box above the filters, labelled with this – "Search topics"; unset, there's none */
+  @property({ attribute: "search-label" }) accessor searchLabel: string | undefined = undefined;
+  /** The search box's text. Changed by the user, firing tc-query-change */
+  @property() accessor query = "";
 
   @state() private accessor expanded = new Set<string>();
   @state() private accessor searches: Record<string, string> = {};
@@ -184,12 +192,23 @@ export class TcFacetSidebar extends TcElement {
     this.set(f, next, `Removed ${c.label}`);
   }
 
+  private setQuery(query: string) {
+    this.query = query;
+    this.emit<FacetQueryChange>("tc-query-change", { query });
+  }
+
   private clearAll() {
-    if (!Object.keys(this.value).length) return;
-    this.refocus = "all";
-    if (!this.emit<FacetValueChange>("tc-value-change", { value: {}, facet: "" }, { cancelable: true })) return;
-    this.value = {};
-    this.announce = "All filters cleared";
+    const searching = this.searchLabel !== undefined && this.query !== "";
+    if (!Object.keys(this.value).length && !searching) return;
+    if (searching) this.setQuery("");
+    if (Object.keys(this.value).length) {
+      this.refocus = "all";
+      if (!this.emit<FacetValueChange>("tc-value-change", { value: {}, facet: "" }, { cancelable: true })) return;
+      this.value = {};
+    } else {
+      this.querySelector<HTMLElement>(".ui-fct__query input")?.focus();
+    }
+    this.announce = searching ? "Search and filters cleared" : "All filters cleared";
   }
 
   private fold(f: Facet) {
@@ -435,15 +454,29 @@ export class TcFacetSidebar extends TcElement {
   protected override render() {
     const id = this.uid;
     const chips = this.chips;
+    const searching = this.searchLabel !== undefined && this.query !== "";
     return html`
       <span class="tc-sr-only" role="status">${this.announce}</span>
       ${cardHead({
         icon: filterGlyph,
         title: this.heading,
         id: `${id}-title`,
-        aside: chips.length ? html`<button type="button" class="ui-fct__clear" @click=${() => this.clearAll()}>Clear all</button>` : nothing,
+        aside: chips.length || searching ? html`<button type="button" class="ui-fct__clear" @click=${() => this.clearAll()}>Clear all</button>` : nothing,
       })}
       <div class="ui-fct__card" role="group" aria-labelledby=${`${id}-title`}>
+        ${this.searchLabel !== undefined
+          ? html`<label class="ui-fct__search ui-fct__query">
+              <span class="ui-fct__search-icon" aria-hidden="true">${searchIcon()}</span>
+              <span class="tc-sr-only">${this.searchLabel}</span>
+              <input
+                type="search"
+                class="ui-fct__search-input"
+                placeholder=${this.searchLabel}
+                .value=${live(this.query)}
+                @input=${(e: Event) => this.setQuery((e.target as HTMLInputElement).value)}
+              />
+            </label>`
+          : nothing}
         ${chips.length
           ? html`<ul class="ui-fct__chips" aria-label="Filters in use">
               ${chips.map(
@@ -487,6 +520,12 @@ export class TcFacetSidebar extends TcElement {
 [data-ui="fct"] svg { display: block; flex: none; }
 .ui-fct__clear { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-accent-text); }
 .ui-fct__clear:hover { text-decoration: underline; text-underline-offset: var(--tc-space-0-5); }
+/* ----- The search box, above the filters: a white field the size of the page's own, not a facet's sunken one ----- */
+.ui-fct__query { margin: var(--tc-space-3) var(--tc-space-3) 0; }
+.ui-fct__query + .ui-fct__chips { padding-top: var(--tc-space-2); }
+.ui-fct__query .ui-fct__search-input { height: var(--tc-field-h); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); font-size: var(--tc-field-font-size); }
+.ui-fct__query .ui-fct__search-input:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-fct__query .ui-fct__search-input:focus-visible { box-shadow: var(--tc-field-shadow-focus); }
 /* ----- Chips ----- */
 .ui-fct__chips { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-1); }
 .ui-fct__chip { display: inline-flex; align-items: center; gap: var(--tc-space-0-5); min-height: var(--tc-pill-h-lg); padding: 0 var(--tc-space-0-5) 0 var(--tc-space-2-5); border-radius: var(--tc-radius-full); background: var(--tc-fill-selected); font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); animation: ui-fct-in var(--tc-duration-moderate) var(--tc-ease-move) both; }

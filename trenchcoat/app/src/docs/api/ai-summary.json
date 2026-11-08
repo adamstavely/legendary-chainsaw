@@ -182,6 +182,14 @@
      "readonly": false
     },
     {
+     "name": "disclaimer",
+     "attribute": "disclaimer",
+     "type": "string",
+     "default": "\"\"",
+     "description": "One quiet line at the bottom of the card – \"AI can make mistakes. Check important info.\" – unset, none",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -565,6 +573,10 @@
     {
      "name": "ask",
      "attribute": "ask"
+    },
+    {
+     "name": "disclaimer",
+     "attribute": "disclaimer"
     }
    ],
    "events": [
@@ -878,7 +890,7 @@
   "windowed": false
  },
  "size": {
-  "min": 53427,
-  "gzip": 15266
+  "min": 54041,
+  "gzip": 15432
  }
 }

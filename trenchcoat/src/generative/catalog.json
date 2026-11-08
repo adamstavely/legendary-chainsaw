@@ -1293,7 +1293,8 @@
     "description": "Search filters with counts – checkbox, radio, range and date facets that fold, the filters in use as removable",
     "events": [
       "tc-value-change",
-      "tc-collapsed-change"
+      "tc-collapsed-change",
+      "tc-query-change"
     ]
   },
   {
