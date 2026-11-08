@@ -113,7 +113,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Footnotes:** `tc-footnotes` (`@adamstavely/trenchcoat/footnotes`, React `Footnotes`, Angular `Footnotes` from `@adamstavely/trenchcoat/angular/footnotes`), a quiet card of caveats and notes under a page's charts. - `heading` (“Notes”), `description`, `notes` (`FootnoteNote[]`: `id`, `text`, `href?`, `linkLabel?`, exported), `numbered` (true by default; `numbered=\"false\"` gives a bulleted list) and `look`. The notes are small secondary text in the standard card shell, with a muted icon so the card sits below the charts it explains. - A note's link (its `linkLabel`, or “More”; `href` through `safeUrl`, an unsafe one dropped) fires a cancelable `tc-navigate` (`{ href, id }`: `FootnotesNavigate`) – prevented, the link isn't followed, so an app's router can take it. Modifier clicks are left to the browser. - The host is a region named by the heading. With no notes it renders nothing at all – no heading-only card, no region."
+ ],
  "frameworks": [
   {
    "tag": "tc-footnotes",
