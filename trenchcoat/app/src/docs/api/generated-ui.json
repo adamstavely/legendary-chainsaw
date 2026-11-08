@@ -528,6 +528,7 @@
     "via": [
      "internal/card-head",
      "internal/kit",
+     "kpi-chart",
      "tokens.css"
     ]
    },
@@ -597,7 +598,7 @@
   "windowed": false
  },
  "size": {
-  "min": 9907018,
-  "gzip": 2467741
+  "min": 9911006,
+  "gzip": 2468920
  }
 }

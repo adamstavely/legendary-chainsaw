@@ -334,6 +334,49 @@ describe("tc-priority-list", () => {
     expect(el.querySelector(".ui-prl__card")!.hasAttribute("data-hide")).toBe(false);
   });
 
+  test("keep-trend-line at 460px, codes as names, two figures, coverage/open/work/health hidden: the line, both figures, no overflow", async () => {
+    const centres: PriorityItem[] = [
+      { id: "afmc", name: "AFMC", badge: "AFMC", health: "watch", trend: [4, 6, 5, 8], change: 0.12, figures: { last: 14, this: 17 } },
+      { id: "eapmc", name: "EAPMC", badge: "EAPMC", health: "on-track", trend: [9, 7, 6], change: -0.2, figures: { last: 1200, this: 980 } },
+    ];
+    const wrap = await fixture(html`<div style="width: 460px"><tc-priority-list keep-trend-line hide="coverage open work health" .items=${centres} .figures=${FIGURES}></tc-priority-list></div>`);
+    const el = wrap.querySelector<TcPriorityList>("tc-priority-list")!;
+    await settle();
+    expect(el.keepTrendLine).toBe(true);
+    const r = row(el, "eapmc");
+    const shown = (sel: string) => [...r.querySelectorAll(sel)].every((n) => getComputedStyle(n).display !== "none");
+    await expect.poll(() => shown(".ui-prl__spark")).toBe(true);
+    expect(r.querySelectorAll(".ui-prl__fig")).toHaveLength(2);
+    expect(shown(".ui-prl__fig")).toBe(true);
+    expect(r.querySelector(".ui-prl__momentum")!.getBoundingClientRect().width).toBeGreaterThanOrEqual(100);
+    // Nothing overflows: the frame past the edge is clipped, and the row and its last figure end inside the list
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+    const figs = r.querySelectorAll(".ui-prl__fig");
+    expect(r.getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
+    expect(figs[1].getBoundingClientRect().right).toBeLessThanOrEqual(r.getBoundingClientRect().right + 1);
+    expect(r.scrollWidth).toBeLessThanOrEqual(r.clientWidth + 1);
+    // Below 400px the momentum column itself still folds away
+    (wrap as HTMLElement).style.width = "300px";
+    await settle();
+    await expect.poll(() => getComputedStyle(row(el, "eapmc").querySelector(".ui-prl__momentum")!).display).toBe("none");
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+  });
+
+  test("without keep-trend-line nothing changes: the line still folds at 460px and the tracks are as before", async () => {
+    const centres: PriorityItem[] = [{ id: "afmc", name: "AFMC", badge: "AFMC", health: "watch", trend: [4, 6, 5, 8], change: 0.12, figures: { last: 14, this: 17 } }];
+    const make = (keep: boolean) =>
+      fixture(html`<div style="width: 460px"><tc-priority-list ?keep-trend-line=${keep} hide="coverage open work health" .items=${centres} .figures=${FIGURES}></tc-priority-list></div>`);
+    const plain = (await make(false)).querySelector<TcPriorityList>("tc-priority-list")!;
+    await settle();
+    expect(plain.querySelector(".ui-prl__card")!.hasAttribute("data-keep-trend-line")).toBe(false);
+    expect(getComputedStyle(row(plain, "afmc").querySelector(".ui-prl__spark")!).display).toBe("none");
+    const before = getComputedStyle(row(plain, "afmc")).gridTemplateColumns;
+    cleanup();
+    const kept = (await make(true)).querySelector<TcPriorityList>("tc-priority-list")!;
+    await settle();
+    expect(getComputedStyle(row(kept, "afmc")).gridTemplateColumns).not.toBe(before);
+  });
+
   test("narrow with figures: the work count goes first, then the figures, and the row still fits", async () => {
     const wrap = await fixture(html`<div style="width: 580px"><tc-priority-list .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
     const el = wrap.querySelector("tc-priority-list")!;

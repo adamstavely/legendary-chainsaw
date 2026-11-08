@@ -62,6 +62,11 @@ the name always keeps at least 140px from 300px up. As the list narrows, the mom
 change and the coverage bar, leaving the coverage share (400px). With figures – about two – the line, the work count
 and the open pill go sooner (760px) to make room for them.
 
+`keep-trend-line` (`keepTrendLine`) keeps the momentum line wherever the momentum column shows – it still folds below
+400px – at the column's full 108px, beside the change. The name column gives up the difference, so names truncate
+sooner: use it when the names are short, such as a centre's code (“AFMC”, “EAPMC”) in place of its full name. It works
+with `hide` – a 460px rail with coverage, open, work and health hidden keeps the line and two figures.
+
 ## Keyboard
 
 The filters come first in the tab order, then the rows as one tab stop.

@@ -118,6 +118,14 @@
      "readonly": false
     },
     {
+     "name": "forecastLabel",
+     "attribute": "forecast-label",
+     "type": "string",
+     "default": "\"Forecast\"",
+     "description": "The word for forecast points: the label at the rule where the forecast starts, in the legend and tooltip",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -141,6 +149,7 @@
    "tokens": [
     "--tc-border-strong",
     "--tc-border-subtle",
+    "--tc-caption-tracking",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-divider",
@@ -154,6 +163,7 @@
     "--tc-ease-standard",
     "--tc-focus-outline",
     "--tc-font-sans",
+    "--tc-font-size-2xs",
     "--tc-font-size-3xl",
     "--tc-font-size-4xl",
     "--tc-font-size-lg",
@@ -310,6 +320,10 @@
     {
      "name": "fill",
      "attribute": "fill"
+    },
+    {
+     "name": "forecastLabel",
+     "attribute": "forecast-label"
     }
    ],
    "events": [
@@ -489,6 +503,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -519,7 +534,7 @@
   "windowed": false
  },
  "size": {
-  "min": 32613,
-  "gzip": 9241
+  "min": 35787,
+  "gzip": 10174
  }
 }

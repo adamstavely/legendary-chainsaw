@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.14.0 – Forecasts on the KPI chart; priority lists that keep their trend line
+
+- **KPI Chart:** forecasts. A `KpiSeries` takes `forecastFrom`, the index into `values` and `labels` where its forecast
+  starts: from there the line continues dashed, joined to the last actual point with no gap. An optional `band`
+  (`{ low, high }`, one of each per point) shades the forecast's range in the series' colour behind the line, over the
+  forecast part only; the y scale takes the band in.
+  - A quiet dashed rule and a small label mark the first forecast point; `forecast-label` (`forecastLabel`, default
+    “Forecast”) names it there, in the legend's dashed entry (added when any series has a forecast) and in the tooltip,
+    which reads forecast points as “Forecast · 14 (11–17)”.
+  - The plot's accessible name says where the forecast starts (“…; the forecast starts at May”), and the arrow keys
+    read forecast points as such (“Jun: Papers forecast 17 (13–40)”). The band follows the line's draw-in animation,
+    which reduced motion turns off; both looks.
+  - Without `forecastFrom`, nothing changes.
+- **Priority List:** `keep-trend-line` (`keepTrendLine`, false by default) keeps the momentum line at every width where
+  the momentum column shows (it still folds below 400px), at the column's full 108px beside the change; the name
+  column gives up the difference and truncates sooner – meant for short names such as codes. It composes with `hide`
+  and the frame's credit for hidden columns: a 460px list of codes with two figures and coverage, open, work and health
+  hidden keeps the line and both figures, without overflowing.
+
 ## 0.13.0 – Footnotes; follow-up questions in the AI summary; header tooltips and Terms; inline select labels; priority-list logos
 
 - **Footnotes:** `tc-footnotes` (`@adamstavely/trenchcoat/footnotes`, React `Footnotes`, Angular `Footnotes` from

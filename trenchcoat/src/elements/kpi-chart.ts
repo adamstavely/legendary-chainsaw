@@ -17,6 +17,11 @@ import { cardHead } from "./internal/card-head";
  * The plot is a focusable group: ← → Home End move the highlighted point and a status region reads it out; Esc
  * closes the tooltip. Each highlighted-point change fires a cancelable `tc-index-change` ({ index }): call
  * preventDefault() to control `index` yourself.
+ *
+ * Forecasts: a series' `forecastFrom` is the index where its values become a forecast – drawn as a dashed continuation
+ * of the same line, joined to the last actual point – with an optional `band` (low and high per point) shaded behind
+ * it over the forecast part. A quiet rule and "Forecast" (`forecast-label`) mark where the forecast starts; the
+ * tooltip, the legend and the screen-reader text say which points are forecast.
  */
 
 export type KpiSeries = {
@@ -28,6 +33,10 @@ export type KpiSeries = {
   color?: string;
   /** One value per label, same length as `labels` */
   values: number[];
+  /** The index into `values` and `labels` where the forecast starts: values from it on are forecast, drawn dashed */
+  forecastFrom?: number;
+  /** A forecast's range, low and high per point (the same length as `values`), shaded behind the forecast part only */
+  band?: { low: number[]; high: number[] };
 };
 
 export type KpiIndexChange = { index: number | null };
@@ -43,6 +52,20 @@ const colorOf = (s: KpiSeries, k: number) => s.color || `var(--tc-chart-${(k % 6
  *  var() tokens resolve */
 const swatch = (color: string, k: number) =>
   html`<svg class="ui-kpi__swatch" viewBox="0 0 14 4" aria-hidden="true">${svg`<line x1="1" y1="2" x2="13" y2="2" style=${styleMap({ stroke: color })} stroke-dasharray=${ifDefined(dashOf(k))}></line>`}</svg>`;
+
+/** The forecast's stroke pattern – the same for every line, so "dashed" always reads as forecast */
+const FORECAST_DASH = "4 3";
+/** Where a series' forecast starts, or undefined when it has none (or it's out of range) */
+const forecastOf = (s: KpiSeries) => {
+  const f = s.forecastFrom;
+  return f !== undefined && Number.isInteger(f) && f >= 0 && f < s.values.length ? f : undefined;
+};
+/** A finite band value at i, else undefined */
+const bandAt = (s: KpiSeries, i: number) => {
+  const lo = s.band?.low[i];
+  const hi = s.band?.high[i];
+  return Number.isFinite(lo) && Number.isFinite(hi) ? ([lo as number, hi as number] as const) : undefined;
+};
 
 const compact = (n: number) => (Math.abs(n) >= 1000 ? `${+(n / 1000).toFixed(Math.abs(n) >= 10000 ? 0 : 1)}k` : `${Math.round(n)}`);
 
@@ -109,6 +132,8 @@ export class TcKpiChart extends TcElement {
   @property({ type: Number }) accessor index: number | null = null;
   /** Fill the container: no max-width, the card stretches and the plot grows with its height */
   @property({ type: Boolean }) accessor fill = false;
+  /** The word for forecast points: the label at the rule where the forecast starts, in the legend and tooltip */
+  @property({ attribute: "forecast-label" }) accessor forecastLabel = "Forecast";
 
   /** @internal What a screen reader hears while reading the chart with the arrow keys */
   @state() private accessor spoken = "";
@@ -170,9 +195,25 @@ export class TcKpiChart extends TcElement {
   };
   private onLeave = () => this.setIndex(null);
 
+  /** @internal A series' value at i as words: "14", or "forecast 14 (11–17)" */
+  private valueText(s: KpiSeries, i: number, spoken = false) {
+    const f = forecastOf(s);
+    const v = this.format(s.values[i] ?? 0);
+    if (f === undefined || i < f) return v;
+    const band = bandAt(s, i);
+    const range = band ? ` (${this.format(band[0])}–${this.format(band[1])})` : "";
+    return spoken ? `${this.forecastLabel.toLowerCase()} ${v}${range}` : `${this.forecastLabel} · ${v}${range}`;
+  }
+
+  /** @internal The first index any series forecasts from, or undefined */
+  private get forecastStart() {
+    const starts = this.series.map(forecastOf).filter((f): f is number => f !== undefined);
+    return starts.length ? Math.min(...starts) : undefined;
+  }
+
   /** @internal One point read out: its date, then each line's value */
   private describe(i: number) {
-    return `${(this.tooltipLabels ?? this.labels)[i]}: ${this.series.map((s) => `${s.label} ${this.format(s.values[i] ?? 0)}`).join(", ")}`;
+    return `${(this.tooltipLabels ?? this.labels)[i]}: ${this.series.map((s) => `${s.label} ${this.valueText(s, i, true)}`).join(", ")}`;
   }
 
   private onKey = (e: KeyboardEvent) => {
@@ -198,7 +239,16 @@ export class TcKpiChart extends TcElement {
     const clean = this.resolvedLook === "clean";
     const count = labels.length;
     const x = (i: number) => (count > 1 ? (i / (count - 1)) * 100 : 50);
-    const [min, max] = niceRange(series.flatMap((s) => s.values));
+    // The domain takes in each forecast's band as well as the values
+    const [min, max] = niceRange(
+      series.flatMap((s) => {
+        const f = forecastOf(s);
+        if (f === undefined || !s.band) return s.values;
+        const band = s.values.slice(f).flatMap((_, j) => bandAt(s, f + j) ?? []);
+        return [...s.values, ...band];
+      }),
+    );
+    const start = this.forecastStart;
     const y = (v: number) => ((max - v) / (max - min)) * 100;
     const open = this.active !== null;
     const shown = this.shown;
@@ -224,7 +274,7 @@ export class TcKpiChart extends TcElement {
           class="ui-kpi__plot"
           tabindex="0"
           role="group"
-          aria-label=${`${this.heading} chart – use the arrow keys to read the values per day`}
+          aria-label=${`${this.heading} chart – use the arrow keys to read the values per day${start !== undefined && labels[start] !== undefined ? `; the ${this.forecastLabel.toLowerCase()} starts at ${labels[start]}` : ""}`}
           @pointermove=${this.onPointer}
           @pointerdown=${this.onPointer}
           @pointerleave=${this.onLeave}
@@ -235,12 +285,26 @@ export class TcKpiChart extends TcElement {
           <span class="ui-kpi__grid" style="top: 50%"></span>
           <span class="ui-kpi__grid" style="top: 100%"></span>
 
+          ${start !== undefined
+            ? html`<span class="ui-kpi__forecast-rule" style=${styleMap({ left: `${x(start)}%` })} aria-hidden="true"><span class="ui-kpi__forecast-tag">${this.forecastLabel}</span></span>`
+            : nothing}
+
           <svg class="ui-kpi__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             ${repeat(
               series,
               (s) => s.label,
-              (s, k) =>
-                svg`<polyline points=${s.values.map((v, i) => `${x(i)},${y(v)}`).join(" ")} style=${styleMap({ stroke: colorOf(s, k) })} stroke-dasharray=${ifDefined(dashOf(k))} vector-effect="non-scaling-stroke"></polyline>`,
+              (s, k) => {
+                const f = forecastOf(s);
+                const pts = (from: number, to: number) => s.values.slice(from, to).map((v, j) => `${x(from + j)},${y(v)}`).join(" ");
+                if (f === undefined)
+                  return svg`<polyline points=${pts(0, s.values.length)} style=${styleMap({ stroke: colorOf(s, k) })} stroke-dasharray=${ifDefined(dashOf(k))} vector-effect="non-scaling-stroke"></polyline>`;
+                // The band: high along the forecast, back along low – only where both are given
+                const band = s.values.map((_, i) => i).filter((i) => i >= f && bandAt(s, i));
+                const area = band.length > 1 ? [...band.map((i) => `${x(i)},${y(bandAt(s, i)![1])}`), ...band.reverse().map((i) => `${x(i)},${y(bandAt(s, i)![0])}`)].join(" ") : "";
+                return svg`${area ? svg`<polygon class="ui-kpi__band" data-series=${s.label} points=${area} style=${styleMap({ fill: colorOf(s, k) })}></polygon>` : nothing}${f > 0
+                    ? svg`<polyline class="ui-kpi__actual" data-series=${s.label} points=${pts(0, f)} style=${styleMap({ stroke: colorOf(s, k) })} stroke-dasharray=${ifDefined(dashOf(k))} vector-effect="non-scaling-stroke"></polyline>`
+                    : nothing}<polyline class="ui-kpi__forecast" data-series=${s.label} data-from=${f} points=${pts(Math.max(0, f - 1), s.values.length)} style=${styleMap({ stroke: colorOf(s, k) })} stroke-dasharray=${FORECAST_DASH} vector-effect="non-scaling-stroke"></polyline>`;
+              },
             )}
           </svg>
 
@@ -259,7 +323,11 @@ export class TcKpiChart extends TcElement {
               ${repeat(
                 rows,
                 (r) => r.label,
-                (r) => html`<li>${swatch(r.color, r.k)}<span class="ui-kpi__label">${r.label}</span><span class="ui-kpi__num">${format(r.value)}</span></li>`,
+                (r) => {
+                  const f = forecastOf(r);
+                  const ahead = f !== undefined && shown >= f;
+                  return html`<li ?data-forecast=${ahead}>${swatch(r.color, r.k)}<span class="ui-kpi__label">${r.label}</span><span class="ui-kpi__num">${this.valueText(r, shown)}</span></li>`;
+                },
               )}
             </ul>
           </div>
@@ -275,6 +343,9 @@ export class TcKpiChart extends TcElement {
       ${showLegend
         ? html`<ul class="ui-kpi__legend" aria-label="Lines">
             ${series.map((s, k) => html`<li>${swatch(colorOf(s, k), k)}${s.label}</li>`)}
+            ${start !== undefined
+              ? html`<li class="ui-kpi__legend-forecast"><svg class="ui-kpi__swatch" viewBox="0 0 14 4" aria-hidden="true">${svg`<line x1="1" y1="2" x2="13" y2="2" stroke-dasharray="2.5 2"></line>`}</svg>${this.forecastLabel}</li>`
+              : nothing}
           </ul>`
         : nothing}
       <span class="ui-kpi__sr" role="status">${this.spoken}</span>
@@ -662,6 +733,12 @@ export class TcKpiChart extends TcElement {
   line-height: var(--tc-line-height-tight);
   color: var(--tc-text-muted);
 }
+/* Forecast: a translucent band in the series' colour behind its dashed line, and a quiet rule where it starts */
+.ui-kpi__lines polygon.ui-kpi__band { fill-opacity: 0.14; stroke: none; }
+.ui-kpi__forecast-rule { position: absolute; top: 0; bottom: 0; width: 0; border-left: var(--tc-hairline) dashed var(--tc-border-strong); pointer-events: none; }
+.ui-kpi__forecast-tag { position: absolute; top: 0; left: var(--tc-space-1); font-size: var(--tc-font-size-2xs); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-caption-tracking); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-kpi__legend-forecast .ui-kpi__swatch line { stroke: var(--tc-text-muted); }
+.ui-kpi__tooltip li[data-forecast] .ui-kpi__num { color: var(--tc-text-secondary); }
 /* Legend: each line's name with its colour and stroke pattern */
 .ui-kpi__legend {
   display: flex;
@@ -699,6 +776,10 @@ export class TcKpiChart extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__footer { padding: var(--tc-space-2-5) var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__tooltip { min-width: 144px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__num { padding-left: var(--tc-space-3); }
+}
+@media (forced-colors: active) {
+  .ui-kpi__forecast-rule { border-left-color: CanvasText; }
+  .ui-kpi__lines polygon.ui-kpi__band { forced-color-adjust: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-kpi__lines { animation: none; }

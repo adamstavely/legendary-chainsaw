@@ -71,6 +71,10 @@ export class KpiChart {
   @Input() set fill(v: TcKpiChart["fill"] | "" | "true" | "false") {
     this.#el.fill = typeof v === "string" ? v !== "false" : v;
   }
+  /** The word for forecast points: the label at the rule where the forecast starts, in the legend and tooltip */
+  @Input() set forecastLabel(v: TcKpiChart["forecastLabel"]) {
+    this.#el.forecastLabel = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcKpiChart["look"]) {
     this.#el.look = v;

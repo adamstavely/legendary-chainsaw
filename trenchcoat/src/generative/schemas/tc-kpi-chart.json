@@ -61,6 +61,10 @@
     "fill": {
       "type": "boolean",
       "description": "Fill the container: no max-width, the card stretches and the plot grows with its height"
+    },
+    "forecastLabel": {
+      "type": "string",
+      "description": "The word for forecast points: the label at the rule where the forecast starts, in the legend and tooltip"
     }
   },
   "additionalProperties": false,
@@ -81,6 +85,33 @@
             "type": "number"
           },
           "description": "One value per label, same length as `labels`"
+        },
+        "forecastFrom": {
+          "type": "number",
+          "description": "The index into `values` and `labels` where the forecast starts: values from it on are forecast, drawn dashed"
+        },
+        "band": {
+          "type": "object",
+          "properties": {
+            "low": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "high": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "low",
+            "high"
+          ],
+          "additionalProperties": false,
+          "description": "A forecast's range, low and high per point (the same length as `values`), shaded behind the forecast part only"
         }
       },
       "required": [

@@ -7,6 +7,7 @@ const dates = Array.from({ length: DAYS }, (_, i) => new Date(start.getFullYear(
 const labels = dates.map((d) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
 const tooltipLabels = dates.map((d) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }));
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
 const percent = (n: number) => `${n.toFixed(1)}%`;
 const money = (n: number) => (Math.abs(n) >= 1000 ? `$${(n / 1000).toFixed(1)}k` : `$${Math.round(n)}`);
 
@@ -57,6 +58,17 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         deltaFormat={percent}
         footer="Last 14 days · updated live"
         defaultIndex={DAYS - 1}
+      />
+      {/* History and a forecast in one line: dashed from May, its range shaded behind it */}
+      <div style={{ height: 16 }} />
+      <KpiChart
+        title="Papers"
+        value="1,240"
+        labels={MONTHS}
+        series={[{ label: "Papers", values: [980, 1030, 1090, 1150, 1205, 1240, 1290, 1335, 1380], forecastFrom: 6, band: { low: [0, 0, 0, 0, 0, 0, 1255, 1280, 1300], high: [0, 0, 0, 0, 0, 0, 1320, 1390, 1460] } }]}
+        format={(n: number) => n.toLocaleString("en-US")}
+        legend
+        footer="Accepted papers, cumulative · forecast to September"
       />
     </div>
   );
