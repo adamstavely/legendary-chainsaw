@@ -238,6 +238,32 @@ describe("tc-ai-summary", () => {
     expect(retried).toEqual(["regenerate"]);
   });
 
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: taller than its content, the ask box and footer sit at the bottom with no space under them`, async () => {
+      const el = await make(look, "done", { ask: "Ask a follow-up…" });
+      el.style.height = "900px";
+      await settle();
+      const card = el.querySelector<HTMLElement>(".ui-aism__card")!.getBoundingClientRect();
+      const ask = el.querySelector<HTMLElement>(".ui-aism__ask")!.getBoundingClientRect();
+      const foot = el.querySelector<HTMLElement>(".ui-aism__foot")!.getBoundingClientRect();
+      const host = el.getBoundingClientRect();
+      const inset = parseFloat(getComputedStyle(el).paddingBottom);
+      // The card fills the element, the footer ends the card, the ask box sits right on the footer
+      expect(Math.abs(card.bottom - (host.bottom - inset))).toBeLessThanOrEqual(1);
+      expect(Math.abs(foot.bottom - card.bottom)).toBeLessThanOrEqual(1);
+      expect(Math.abs(ask.bottom - foot.top)).toBeLessThanOrEqual(1);
+      // The room went between the summary and the ask box
+      const body = el.querySelector<HTMLElement>(".ui-aism__body")!;
+      const last = body.lastElementChild!.getBoundingClientRect();
+      expect(ask.top - last.bottom).toBeGreaterThan(200);
+      // At its natural height nothing moves apart
+      el.style.height = "";
+      await settle();
+      const natural = el.querySelector<HTMLElement>(".ui-aism__body")!.getBoundingClientRect();
+      expect(Math.abs(el.querySelector<HTMLElement>(".ui-aism__ask")!.getBoundingClientRect().top - natural.bottom)).toBeLessThanOrEqual(1);
+    });
+  }
+
   test("without `now` the element keeps its own clock; focus left on a vanishing button moves to Short / Detailed", async () => {
     const el = await fixture<TcAiSummary>(html`<tc-ai-summary status="done" .generatedAt=${Date.now() - 5 * MIN} .sources=${SOURCES} summary="Gist."></tc-ai-summary>`);
     expect(text(el.querySelector(".ui-aism__ai-by"))).toBe("5 min ago");

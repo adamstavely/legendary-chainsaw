@@ -67,6 +67,8 @@ export type PriorityFigureColumn = {
   label: string;
   /** A short unit after each value, as the work count has: "3·pp" */
   unit?: string;
+  /** The column's width in px, for a heading longer than "This mo."; unset is 56. The name column gives up the room */
+  width?: number;
 };
 export type PriorityFilter = PriorityHealth | "all";
 
@@ -331,6 +333,7 @@ export class TcPriorityList extends TcElement {
     const tiers = [...new Set(rows.flatMap((r) => (r.priority === undefined ? [] : [r.priority])))];
     const untiered = rows.filter((r) => r.priority === undefined);
     const figs = this.figures.length;
+    const figWidth = (c: PriorityFigureColumn) => (Number.isFinite(c.width) && c.width! > 0 ? `${c.width}px` : "var(--tc-prl-fig-w)");
     const hidden = COLUMNS.filter((c) => !this.shows(c)).join(" ");
     return html`
       ${cardHead({
@@ -342,7 +345,7 @@ export class TcPriorityList extends TcElement {
         keepAside: true,
       })}
       <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
-      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-keep-trend-line=${this.keepTrendLine} style=${`--tc-prl-n: ${figs}`}>
+      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-keep-trend-line=${this.keepTrendLine} style=${`--tc-prl-figs: ${this.figures.map(figWidth).join(" ")}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
@@ -431,7 +434,7 @@ export class TcPriorityList extends TcElement {
 .ui-prl__col { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ui-prl__col--name { grid-column: 1 / 3; }
 .ui-prl__col--open, .ui-prl__col--work, .ui-prl__col--fig { text-align: right; }
-.ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols) repeat(var(--tc-prl-n), var(--tc-prl-fig-w)); }
+.ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols) var(--tc-prl-figs); }
 /* ----- A group's header ----- */
 .ui-prl__group + .ui-prl__group { border-top: var(--tc-hairline) solid var(--tc-border-default); }
 .ui-prl__group-head { display: flex; align-items: center; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-1); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
