@@ -314,6 +314,7 @@ export class TcPriorityList extends TcElement {
         aside: !this.noFilters && this.items.length ? this.renderFilters() : nothing,
         keepAside: true,
       })}
+      <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
       <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && i.badge)} style=${`--tc-prl-n: ${figs}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
@@ -332,6 +333,7 @@ export class TcPriorityList extends TcElement {
                 : this.renderList(rows, stop, this.heading)}`
           : html`<p class="ui-prl__empty">${this.empty}</p>`}
       </div>
+      </div>
     `;
   }
 
@@ -344,6 +346,8 @@ export class TcPriorityList extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
+  /* The frame reaches past the edge with columns hidden (see .ui-prl__frame); nothing shows there */
+  overflow-x: clip;
   container-type: inline-size;
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
@@ -482,6 +486,23 @@ export class TcPriorityList extends TcElement {
   .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
 }
+/* The folding steps above measure the frame, not the element. With columns hidden, the frame is as wide as the element
+   plus the room those columns would take (and the card inside it as wide as the element), so what's left folds only
+   when it runs out of room itself – a list showing its name, momentum and two figures keeps them in 450px. A hidden
+   column counts the width it has where the figures fold (the 560px step), so the name never gets less room than it
+   would with every column shown */
+.ui-prl__frame {
+  --tc-prl-freed: calc(var(--tc-prl-f-momentum, 0px) + var(--tc-prl-f-coverage, 0px) + var(--tc-prl-f-open, 0px) + var(--tc-prl-f-work, 0px));
+  container-type: inline-size;
+  width: calc(100% + var(--tc-prl-freed));
+  margin-inline-end: calc(-1 * var(--tc-prl-freed));
+}
+.ui-prl__frame > .ui-prl__card { width: calc(100% - var(--tc-prl-freed)); }
+/* Each column's width at that step and the gap before it; the work count is already gone there, and so is the open pill
+   with figures */
+.ui-prl__frame[data-hide~="momentum"] { --tc-prl-f-momentum: calc(64px + var(--tc-space-3)); }
+.ui-prl__frame[data-hide~="coverage"] { --tc-prl-f-coverage: calc(88px + var(--tc-space-3)); }
+.ui-prl__frame[data-hide~="open"]:not([data-figs]) { --tc-prl-f-open: calc(60px + var(--tc-space-3)); }
 /* hide: the columns left out lose their tracks too, at every width, so the name and the rest take the room. Each
    column's width follows the folding steps above (--tc-prl-c-*, empty when folded away); after them, so they win */
 .ui-prl__card[data-hide] { --tc-prl-cols: minmax(0, 1fr) var(--tc-prl-c-momentum) var(--tc-prl-c-coverage) var(--tc-prl-c-open) var(--tc-prl-c-work); }

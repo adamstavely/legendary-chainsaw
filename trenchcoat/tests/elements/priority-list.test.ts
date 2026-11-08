@@ -252,11 +252,22 @@ describe("tc-priority-list", () => {
     // The last figure ends at the row's end: no empty gap after it
     const last = r.querySelectorAll(".ui-prl__fig");
     expect(r.getBoundingClientRect().right - last[last.length - 1].getBoundingClientRect().right).toBeLessThan(16);
-    // Narrow: the remaining columns still fold away and the row fits
-    (wrap as HTMLElement).style.width = "380px";
+    // A narrow rail: with three columns hidden, momentum and the figures still fit, and the name keeps 140px
+    (wrap as HTMLElement).style.width = "450px";
+    await settle();
+    await expect.poll(() => getComputedStyle(row(el, CENTRES[0].id)).gridTemplateColumns.split(" ").length).toBe(3 + FIGURES.length);
+    expect(getComputedStyle(row(el, CENTRES[0].id).querySelector(".ui-prl__fig")!).display).not.toBe("none");
+    expect(row(el, CENTRES[0].id).querySelector(".ui-prl__name")!.getBoundingClientRect().width).toBeGreaterThanOrEqual(140);
+    // The frame reaching past the edge is clipped: nothing scrolls around the list, and the rows end inside it
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+    expect(row(el, CENTRES[0].id).getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
+    // Narrower: what's left still folds away, and the row fits
+    (wrap as HTMLElement).style.width = "300px";
     await settle();
     await expect.poll(() => getComputedStyle(row(el, CENTRES[0].id)).gridTemplateColumns.split(" ").length).toBe(2);
-    expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+    // The frame reaching past the edge is clipped: nothing scrolls around the list, and the rows end inside it
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+    expect(row(el, CENTRES[0].id).getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
     el.hide = [];
     await settle();
     expect(el.querySelector(".ui-prl__col--work")).not.toBeNull();
