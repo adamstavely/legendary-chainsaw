@@ -188,7 +188,7 @@ export class StepperTags {
 }
 
 /**
- * <tc-stepper-choices> for Angular: Selectable cards – a ring glides to the chosen one. Arrow keys move, Enter picks and continues. Form-associated: the
+ * <tc-stepper-choices> for Angular: Selectable cards – a ring glides to the chosen one. One Tab stop: the chosen card, or the first enabled one when
  * 
  * imports: [StepperChoices] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */
