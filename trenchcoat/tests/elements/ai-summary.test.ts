@@ -454,6 +454,8 @@ describe("tc-ai-summary", () => {
     const scrolled = vi.spyOn(Element.prototype, "scrollIntoView");
     el.messages = [thinking[0], { id: "a1", role: "assistant", text: "Marco, by Friday.\n\nThen a day on staging.", points: [{ id: "who", text: "Marco owns BILL-482.", sources: ["t1"] }] }];
     await expect.poll(() => el.querySelector<HTMLTextAreaElement>(".ui-aism__ask-input")!.disabled).toBe(false);
+    // The answer written over its thinking row is brought into view
+    expect(scrolled.mock.contexts.some((c) => (c as Element).getAttribute("data-id") === "a1")).toBe(true);
     expect(status(el)).toBe("Marco, by Friday.\n\nThen a day on staging.");
     expect([...el.querySelectorAll(".ui-aism__answer .ui-aism__p")].map((p) => p.textContent)).toEqual(["Marco, by Friday.", "Then a day on staging."]);
     el.messages = [...el.messages, { id: "q2", role: "user", text: "Thanks" }];

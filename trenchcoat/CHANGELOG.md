@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.2 – The AI summary shows a finished answer whole
+
+- **AI Summary:** an answer written over its thinking row – the same message id, its status now done or error – is
+  scrolled into view once it's written, so a long answer's end isn't left below the scroll area's edge. New messages
+  were already scrolled to; an answer that grew in place wasn't.
+
 ## 0.17.1 – Centered figure columns and names on the priority list; the AI summary scrolls within, its ask box white
 
 - **Priority List:** a `PriorityFigureColumn` takes `align: "center"`, centering its heading and values – "Last month"
