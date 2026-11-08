@@ -300,6 +300,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Text To Speech** (`text-to-speech.tsx`) – Reads a passage aloud with the browser's voices – the sentence and the spoken word marked as it goes, click a sentence to read from there, play, pause, skip and stop, and a voice, speed and pitch picker
 - **Thinking Loader** (`thinking-loader.tsx`) – A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 - **Thinking State** (`thinking-state.tsx`) – AI working panel with a live timer, searched sources and thinking steps that appear one by one
+- **Time Details** (`time-details.tsx`) – Times in text, found and underlined – hover or focus one for “Your local time”: the time in the reader’s own zone, with the weekday and date when the day changes; times without a zone, versions and rooms stay plain
 - **Tips Panel** (`tips-panel.tsx`) – Grid of short tips with one action each – taken tips turn into a done state
 - **To-do List** (`todo-list.tsx`) – A to-do list people keep themselves – add, tick off, edit in place, move with Alt + arrows and remove with Undo, with All / To do / Done tabs, progress and Clear done
 - **Toaster** (`toaster.tsx`) – Calm toasts from anywhere – a stack that fans out on hover, promise toasts that morph from spinner to check, swipe to dismiss

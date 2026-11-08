@@ -1,0 +1,444 @@
+{
+ "elements": [
+  {
+   "tag": "tc-time-details",
+   "className": "TcTimeDetails",
+   "description": "Times in text, underlined: hover or focus one to see it in your own time zone.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text to find times in: plain text, shown as written (line breaks kept)",
+     "readonly": false
+    },
+    {
+     "name": "date",
+     "attribute": "date",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The day times written without a date fall on, \"YYYY-MM-DD\"; by default today in the zone each is written in",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, epoch ms – today is taken from it when `date` isn't given; by default the element's own clock",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The reader's time zone, an IANA name such as \"Europe/Berlin\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for times and dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "hoverDelay",
+     "attribute": "hover-delay",
+     "type": "number",
+     "default": "300",
+     "description": "How long the pointer rests on a time before its tooltip opens, ms",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<TimeDetailsLabels>",
+     "default": "{}",
+     "description": "The words the tooltip uses, merged over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "times",
+     "attribute": null,
+     "type": "TimeMatch[]",
+     "default": null,
+     "description": "The times found in `text`, in order",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A tooltip opened or closed ({ open }: TimeOpenChange; null when closed)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "openCard",
+     "params": "index: unknown",
+     "returns": "void",
+     "description": "Opens the tooltip for the time at `index` in `times`, pinned open"
+    },
+    {
+     "name": "closeCard",
+     "params": "",
+     "returns": "void",
+     "description": "Closes the open tooltip, if any"
+    }
+   ],
+   "ui": "tmd",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-sm",
+    "--tc-font-weight-strong",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-radius-2xs",
+    "--tc-space-0-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "timeZoneAbbreviations",
+   "signature": "timeZoneAbbreviations: Readonly<Record<string, number | string>>",
+   "description": "The zone names it reads: a fixed offset in minutes, or an IANA zone for names that follow daylight saving. IST,\nAST and others that name several zones are left out, so they're never converted wrongly."
+  },
+  {
+   "name": "findTimes",
+   "signature": "findTimes(text: string, opts: FindTimesOptions): TimeMatch[]",
+   "description": "Every time with a zone in `text`, in order, with the instant it means. Times without a date fall on `date`\n(\"YYYY-MM-DD\"), or on today (from `now`) in the zone they're written in."
+  }
+ ],
+ "react": [
+  {
+   "component": "TimeDetails",
+   "exported": true,
+   "props": [
+    {
+     "name": "onOpenChange",
+     "type": "(open: TimeMatch | null) => void",
+     "optional": true,
+     "description": "Called with the time whose tooltip opened, or null when it closed"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-open-change": "onOpenChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**Time Details** (`tc-time-details`): times in a passage of text, found and underlined – hover or focus one and a tooltip shows it in the reader's own zone (“Your local time · 1:00 AM EST”), with the weekday and date when the day changes (“Saturday, 7 November · The day before”). It reads 24- and 12-hour times with a zone (“06:00 UTC”, “6 PM ET”, “14:00 GMT+1”, “06:00Z”), ISO stamps, an ISO date before a time, and ranges (“05:30–09:00 UTC”); ET, CT, MT and PT follow daylight saving. Times without a date fall on `date` or today; the reader's zone is the browser's, or `time-zone`. Each time is described by its local time for screen readers. Also exported: `findTimes()`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-time-details",
+   "className": "TcTimeDetails",
+   "module": "@adamstavely/trenchcoat/time-details",
+   "data": [
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "date",
+     "attribute": "date"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "hoverDelay",
+     "attribute": "hover-delay"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29895,
+  "gzip": 11087
+ }
+}

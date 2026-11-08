@@ -378,6 +378,7 @@ export * from "./text-to-speech";
 export * from "./thinking-loader";
 export * from "./thinking-state";
 export * from "./tilt-card";
+export * from "./time-details";
 export * from "./tips-panel";
 export * from "./toaster";
 export * from "./todo-list";

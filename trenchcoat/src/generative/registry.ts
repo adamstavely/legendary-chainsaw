@@ -343,6 +343,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-text-annotator": { events: ["tc-value-change","tc-copy","tc-filter-change"], load: () => import("../elements/text-annotator"), schema: () => import("./schemas/tc-text-annotator.json") },
   "tc-text-to-speech": { events: ["tc-rate-change","tc-pitch-change","tc-voice-change","tc-start","tc-end"], load: () => import("../elements/text-to-speech"), schema: () => import("./schemas/tc-text-to-speech.json") },
   "tc-thinking-state": { events: ["tc-progress-change","tc-done","tc-open-change"], load: () => import("../elements/thinking-state"), schema: () => import("./schemas/tc-thinking-state.json") },
+  "tc-time-details": { events: ["tc-open-change"], load: () => import("../elements/time-details"), schema: () => import("./schemas/tc-time-details.json") },
   "tc-tips-panel": { events: ["tc-done-change","tc-tip-action","tc-close"], load: () => import("../elements/tips-panel"), schema: () => import("./schemas/tc-tips-panel.json") },
   "tc-todo-list": { events: ["tc-items-change","tc-filter-change"], load: () => import("../elements/todo-list"), schema: () => import("./schemas/tc-todo-list.json") },
   "tc-tool-access-map": { events: ["tc-selected-change","tc-agent-id-change","tc-replay"], load: () => import("../elements/tool-access-map"), schema: () => import("./schemas/tc-tool-access-map.json") },
