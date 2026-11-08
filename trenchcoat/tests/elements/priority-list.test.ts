@@ -67,7 +67,7 @@ describe("tc-priority-list", () => {
   test("momentum: a line when there's a trend, the change's direction and tone; coverage low below the threshold; open pill wording", async () => {
     const el = await make();
     expect(row(el, "climate").querySelector(".ui-prl__spark polyline")).toBeTruthy();
-    expect(row(el, "edge").querySelector(".ui-prl__spark")).toBeNull();
+    expect(row(el, "edge").querySelector("svg.ui-prl__spark")).toBeNull();
     expect(row(el, "climate").querySelector<HTMLElement>(".ui-prl__momentum")!.dataset.dir).toBe("down");
     expect(row(el, "carbon").querySelector<HTMLElement>(".ui-prl__momentum")!.dataset.dir).toBe("up");
     expect(row(el, "edge").querySelector<HTMLElement>(".ui-prl__momentum")!.dataset.dir).toBe("flat");
@@ -231,6 +231,28 @@ describe("tc-priority-list", () => {
     await finish(el);
     const h = el.querySelector<HTMLElement>(".ui-prl__col--fig")!.getBoundingClientRect();
     expect(Math.abs(text(row(el, codes[0].id).querySelector(".ui-prl__fig [aria-hidden]")!).right - h.right)).toBeLessThanOrEqual(1);
+  });
+
+  test("with no priority, code or logo on any row, the lead column goes; a row with no trend keeps the line's room", async () => {
+    const codes: PriorityItem[] = CENTRES.map((c, i) => ({ ...c, name: c.badge ?? c.name, badge: undefined, trend: i === 0 ? undefined : [50, 52, 51], change: 0.02 }));
+    const wrap = await fixture(html`<div style="width: 560px"><tc-priority-list locale="en" name-label="Center" keep-trend-line .hide=${["coverage", "open", "work", "health"]} .items=${codes}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    await finish(el);
+    const card = el.querySelector<HTMLElement>(".ui-prl__card")!;
+    // The names start at the row's padding, not after an empty badge column
+    const first = row(el, codes[0].id);
+    const pad = parseFloat(getComputedStyle(first).paddingLeft);
+    expect(Math.round(first.querySelector(".ui-prl__who")!.getBoundingClientRect().left - first.getBoundingClientRect().left)).toBe(Math.round(pad));
+    expect(Math.round(el.querySelector(".ui-prl__col--name")!.getBoundingClientRect().left)).toBe(Math.round(first.querySelector(".ui-prl__who")!.getBoundingClientRect().left));
+    // Every change starts at the same x, with or without a line before it
+    const lefts = codes.map((c) => Math.round(row(el, c.id).querySelector(".ui-prl__change")!.getBoundingClientRect().left));
+    expect(new Set(lefts).size).toBe(1);
+    // A badge brings the column back; with no trends at all, no room is kept
+    el.items = [{ ...codes[0], badge: "X" }, ...codes.slice(1).map((c) => ({ ...c, trend: undefined }))];
+    await finish(el);
+    expect(card.hasAttribute("data-no-lead")).toBe(false);
+    expect(card.hasAttribute("data-sparks")).toBe(false);
+    expect(getComputedStyle(row(el, codes[1].id).querySelector(".ui-prl__spark")!).display).toBe("none");
   });
 
   test("a row with no priority shows its code in a neutral badge and reads it instead of a tier; filters count it", async () => {
