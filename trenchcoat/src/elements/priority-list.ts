@@ -52,8 +52,9 @@ export type PriorityItem = {
   figures?: Record<string, number | string>;
 };
 /** A built-in column `hide` can leave out */
-export type PriorityColumn = "momentum" | "coverage" | "open" | "work";
-const COLUMNS: readonly PriorityColumn[] = ["momentum", "coverage", "open", "work"];
+/** What `hide` can leave out: the built-in columns, and "health" – the health word under each name */
+export type PriorityColumn = "momentum" | "coverage" | "open" | "work" | "health";
+const COLUMNS: readonly PriorityColumn[] = ["momentum", "coverage", "open", "work", "health"];
 
 /** One more column after Work, filled from each row's `figures` */
 export type PriorityFigureColumn = {
@@ -104,7 +105,8 @@ export class TcPriorityList extends TcElement {
   /** The topics or projects, in the order to show them (within a group when grouped) */
   @property({ attribute: false }) accessor items: PriorityItem[] = [];
   /** Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.
-   *  `hide="coverage open work"`; the name and the other columns take the room */
+   *  `hide="coverage open work"`; the name and the other columns take the room. "health" leaves the health word out
+   *  from under each name (screen readers still hear it); with no owner either, the name stands alone */
   @property({ converter: { fromAttribute: (v: string | null) => (v ?? "").split(/\s+/).filter((c): c is PriorityColumn => (COLUMNS as readonly string[]).includes(c)) } })
   accessor hide: PriorityColumn[] = [];
   /** More columns after Work, in order, filled from each row's `figures` */
@@ -121,6 +123,8 @@ export class TcPriorityList extends TcElement {
   @property({ attribute: false }) accessor healthLabels: Partial<Record<PriorityHealth, string>> = {};
   /** The first column's heading */
   @property({ attribute: "name-label" }) accessor nameLabel = "Topic";
+  /** The momentum column's heading, also read before each row's change: "Trend" */
+  @property({ attribute: "momentum-label" }) accessor momentumLabel = "Momentum";
   /** What's open, after its count: "5 gaps" */
   @property({ attribute: "open-unit" }) accessor openUnit = "gaps";
   /** What's open when there's one: "1 gap"; `open-unit` when unset */
@@ -230,16 +234,20 @@ export class TcPriorityList extends TcElement {
         <span class="ui-prl__cell ui-prl__cell--badge">${this.renderLead(item)}</span>
         <span class="ui-prl__cell ui-prl__who">
           <span class="ui-prl__name">${item.name}</span>
-          <span class="ui-prl__meta">
-            ${item.owner || item.team ? html`<span class="ui-prl__owner">${[item.owner, item.team].filter(Boolean).join(" · ")}</span>` : nothing}
-            <span class="ui-prl__health" data-health=${item.health}><span class="ui-prl__sr">. </span>${this.health(item.health)}</span>
-          </span>
+          ${item.owner || item.team || this.shows("health")
+            ? html`<span class="ui-prl__meta">
+                ${item.owner || item.team ? html`<span class="ui-prl__owner">${[item.owner, item.team].filter(Boolean).join(" · ")}</span>` : nothing}
+                ${this.shows("health")
+                  ? html`<span class="ui-prl__health" data-health=${item.health}><span class="ui-prl__sr">. </span>${this.health(item.health)}</span>`
+                  : html`<span class="ui-prl__sr">. ${this.health(item.health)}</span>`}
+              </span>`
+            : html`<span class="ui-prl__sr">. ${this.health(item.health)}</span>`}
         </span>
         ${this.shows("momentum") ? html`<span class="ui-prl__cell ui-prl__momentum" data-dir=${dir}>
           ${item.trend && item.trend.length > 1 ? html`<svg class="ui-prl__spark" viewBox="0 0 64 20" aria-hidden="true">${spark(item.trend)}</svg>` : nothing}
           ${change === undefined
             ? nothing
-            : html`<span class="ui-prl__change"><span class="ui-prl__sr">. Momentum ${sayChange}</span><span aria-hidden="true">${dir === "up" ? "▲" : dir === "down" ? "▼" : "–"}&#8202;${this.pct(Math.abs(change))}</span></span>`}
+            : html`<span class="ui-prl__change"><span class="ui-prl__sr">. ${this.momentumLabel} ${sayChange}</span><span aria-hidden="true">${dir === "up" ? "▲" : dir === "down" ? "▼" : "–"}&#8202;${this.pct(Math.abs(change))}</span></span>`}
         </span>` : nothing}
         ${this.shows("coverage") ? html`<span class="ui-prl__cell ui-prl__coverage">
           ${cov === undefined
@@ -314,11 +322,12 @@ export class TcPriorityList extends TcElement {
         aside: !this.noFilters && this.items.length ? this.renderFilters() : nothing,
         keepAside: true,
       })}
+      <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
       <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && i.badge)} style=${`--tc-prl-n: ${figs}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
-                ${this.shows("momentum") ? html`<span class="ui-prl__col ui-prl__col--momentum">Momentum</span>` : nothing}
+                ${this.shows("momentum") ? html`<span class="ui-prl__col ui-prl__col--momentum">${this.momentumLabel}</span>` : nothing}
                 ${this.shows("coverage") ? html`<span class="ui-prl__col ui-prl__col--coverage">Coverage</span>` : nothing}
                 ${this.shows("open") ? html`<span class="ui-prl__col ui-prl__col--open">Open</span>` : nothing}
                 ${this.shows("work") ? html`<span class="ui-prl__col ui-prl__col--work">Work</span>` : nothing}
@@ -332,6 +341,7 @@ export class TcPriorityList extends TcElement {
                 : this.renderList(rows, stop, this.heading)}`
           : html`<p class="ui-prl__empty">${this.empty}</p>`}
       </div>
+      </div>
     `;
   }
 
@@ -344,6 +354,8 @@ export class TcPriorityList extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
+  /* The frame reaches past the edge with columns hidden (see .ui-prl__frame); nothing shows there */
+  overflow-x: clip;
   container-type: inline-size;
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
@@ -374,7 +386,7 @@ export class TcPriorityList extends TcElement {
    away as it narrows. The badge's column widens for codes; the page's figures add a column each */
 [data-ui="prl"] { --tc-prl-cols: minmax(0, 1fr) 108px 120px 72px 40px; }
 .ui-prl__card { --tc-prl-lead: 28px; --tc-prl-fig-w: 56px; --tc-prl-c-momentum: 108px; --tc-prl-c-coverage: 120px; --tc-prl-c-open: 72px; --tc-prl-c-work: 40px; }
-.ui-prl__card[data-codes] { --tc-prl-lead: 40px; }
+.ui-prl__card[data-codes] { --tc-prl-lead: 48px; }
 [data-ui="prl"] *, [data-ui="prl"] *::before, [data-ui="prl"] *::after { box-sizing: border-box; }
 [data-ui="prl"] p { margin: 0; }
 [data-ui="prl"] ul { margin: 0; padding: 0; list-style: none; }
@@ -477,11 +489,28 @@ export class TcPriorityList extends TcElement {
 }
 @container (max-width: 400px) {
   .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 60px; --tc-prl-c-momentum: ; --tc-prl-c-coverage: 60px; --tc-prl-c-open: ; --tc-prl-c-work: ; }
-  .ui-prl__card[data-codes] { --tc-prl-lead: 36px; }
+  .ui-prl__card[data-codes] { --tc-prl-lead: 44px; }
   .ui-prl__momentum, .ui-prl__col--momentum { display: none; }
   .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
 }
+/* The folding steps above measure the frame, not the element. With columns hidden, the frame is as wide as the element
+   plus the room those columns would take (and the card inside it as wide as the element), so what's left folds only
+   when it runs out of room itself – a list showing its name, momentum and two figures keeps them in 450px. A hidden
+   column counts the width it has where the figures fold (the 560px step), so the name never gets less room than it
+   would with every column shown */
+.ui-prl__frame {
+  --tc-prl-freed: calc(var(--tc-prl-f-momentum, 0px) + var(--tc-prl-f-coverage, 0px) + var(--tc-prl-f-open, 0px) + var(--tc-prl-f-work, 0px));
+  container-type: inline-size;
+  width: calc(100% + var(--tc-prl-freed));
+  margin-inline-end: calc(-1 * var(--tc-prl-freed));
+}
+.ui-prl__frame > .ui-prl__card { width: calc(100% - var(--tc-prl-freed)); }
+/* Each column's width at that step and the gap before it; the work count is already gone there, and so is the open pill
+   with figures */
+.ui-prl__frame[data-hide~="momentum"] { --tc-prl-f-momentum: calc(64px + var(--tc-space-3)); }
+.ui-prl__frame[data-hide~="coverage"] { --tc-prl-f-coverage: calc(88px + var(--tc-space-3)); }
+.ui-prl__frame[data-hide~="open"]:not([data-figs]) { --tc-prl-f-open: calc(60px + var(--tc-space-3)); }
 /* hide: the columns left out lose their tracks too, at every width, so the name and the rest take the room. Each
    column's width follows the folding steps above (--tc-prl-c-*, empty when folded away); after them, so they win */
 .ui-prl__card[data-hide] { --tc-prl-cols: minmax(0, 1fr) var(--tc-prl-c-momentum) var(--tc-prl-c-coverage) var(--tc-prl-c-open) var(--tc-prl-c-work); }

@@ -25,7 +25,7 @@
       "items": {
         "$ref": "#/definitions/PriorityColumn"
       },
-      "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g. `hide=\"coverage open work\"`; the name and the other columns take the room"
+      "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g. `hide=\"coverage open work\"`; the name and the other columns take the room. \"health\" leaves the health word out from under each name (screen readers still hear it); with no owner either, the name stands alone"
     },
     "figures": {
       "type": "array",
@@ -80,6 +80,10 @@
     "nameLabel": {
       "type": "string",
       "description": "The first column's heading"
+    },
+    "momentumLabel": {
+      "type": "string",
+      "description": "The momentum column's heading, also read before each row's change: \"Trend\""
     },
     "openUnit": {
       "type": "string",
@@ -194,11 +198,12 @@
       "type": "string",
       "enum": [
         "coverage",
+        "health",
         "momentum",
         "open",
         "work"
       ],
-      "description": "A built-in column `hide` can leave out"
+      "description": "What `hide` can leave out: the built-in columns, and \"health\" – the health word under each name"
     },
     "PriorityFigureColumn": {
       "type": "object",

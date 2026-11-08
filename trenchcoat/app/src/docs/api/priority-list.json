@@ -34,7 +34,7 @@
      "attribute": "hide",
      "type": "PriorityColumn[]",
      "default": "[]",
-     "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.\n`hide=\"coverage open work\"`; the name and the other columns take the room",
+     "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.\n`hide=\"coverage open work\"`; the name and the other columns take the room. \"health\" leaves the health word out\nfrom under each name (screen readers still hear it); with no owner either, the name stands alone",
      "readonly": false
     },
     {
@@ -91,6 +91,14 @@
      "type": "string",
      "default": "\"Topic\"",
      "description": "The first column's heading",
+     "readonly": false
+    },
+    {
+     "name": "momentumLabel",
+     "attribute": "momentum-label",
+     "type": "string",
+     "default": "\"Momentum\"",
+     "description": "The momentum column's heading, also read before each row's change: \"Trend\"",
      "readonly": false
     },
     {
@@ -182,6 +190,38 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-prl-f-momentum",
+     "value": "0px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-prl-f-coverage",
+     "value": "0px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-prl-f-open",
+     "value": "0px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-prl-f-work",
+     "value": "0px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
     }
    ],
    "tokens": [
@@ -235,6 +275,7 @@
     "--tc-prl-c-open",
     "--tc-prl-c-work",
     "--tc-prl-fig-w",
+    "--tc-prl-freed",
     "--tc-prl-lead",
     "--tc-prl-n",
     "--tc-radius-full",
@@ -367,6 +408,10 @@
     {
      "name": "nameLabel",
      "attribute": "name-label"
+    },
+    {
+     "name": "momentumLabel",
+     "attribute": "momentum-label"
     },
     {
      "name": "openUnit",
@@ -591,7 +636,7 @@
   "windowed": false
  },
  "size": {
-  "min": 34822,
-  "gzip": 10270
+  "min": 36725,
+  "gzip": 10800
  }
 }

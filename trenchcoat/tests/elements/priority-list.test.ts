@@ -235,6 +235,35 @@ describe("tc-priority-list", () => {
     });
   }
 
+  test("badge codes up to five letters show whole, wide and narrow", async () => {
+    const items: PriorityItem[] = ["AFMC", "EAPMC", "WCPMC", "CCI"].map((code) => ({ id: code, name: `${code} centre`, badge: code, health: "on-track" }));
+    const wrap = await fixture(html`<div style="width: 820px"><tc-priority-list .items=${items}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    const clipped = () => [...el.querySelectorAll<HTMLElement>(".ui-prl__badge--code")].filter((b) => b.scrollWidth > b.clientWidth + 0.5).map((b) => b.textContent);
+    expect(clipped()).toEqual([]);
+    (wrap as HTMLElement).style.width = "360px";
+    await settle();
+    expect(clipped()).toEqual([]);
+  });
+
+  test("momentum-label renames the momentum column, and what screen readers hear before each change", async () => {
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list momentum-label="Trend" .items=${ITEMS}></tc-priority-list>`);
+    expect(el.querySelector(".ui-prl__col--momentum")!.textContent!.trim()).toBe("Trend");
+    expect(el.querySelector(".ui-prl__change .ui-prl__sr")!.textContent).toMatch(/^\. Trend /);
+  });
+
+  test("hide health leaves the health word out from under each name; screen readers still hear it", async () => {
+    const items = ITEMS.map(({ owner: _o, team: _t, ...rest }) => rest);
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list hide="health" .items=${items}></tc-priority-list>`);
+    expect(el.hide).toEqual(["health"]);
+    expect(el.querySelector(".ui-prl__health")).toBeNull();
+    expect(el.querySelector(".ui-prl__meta")).toBeNull();
+    const who = el.querySelector(".ui-prl__who")!;
+    expect(who.querySelector(".ui-prl__sr")!.textContent).toMatch(/^\. (At risk|Watch|On track)$/);
+    // The columns are untouched
+    expect(el.querySelector(".ui-prl__col--momentum")).not.toBeNull();
+  });
+
   test("hide leaves columns out of the header, the rows and the grid; the name and figures take the room", async () => {
     const wrap = await fixture(html`<div style="width: 820px"><tc-priority-list hide="coverage open work" .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
     const el = wrap.querySelector<TcPriorityList>("tc-priority-list")!;
@@ -252,11 +281,23 @@ describe("tc-priority-list", () => {
     // The last figure ends at the row's end: no empty gap after it
     const last = r.querySelectorAll(".ui-prl__fig");
     expect(r.getBoundingClientRect().right - last[last.length - 1].getBoundingClientRect().right).toBeLessThan(16);
-    // Narrow: the remaining columns still fold away and the row fits
-    (wrap as HTMLElement).style.width = "380px";
+    // A narrow rail: with three columns hidden, momentum and the figures still fit, and the name keeps 140px (beside a
+    // code's 48px column)
+    (wrap as HTMLElement).style.width = "460px";
+    await settle();
+    await expect.poll(() => getComputedStyle(row(el, CENTRES[0].id)).gridTemplateColumns.split(" ").length).toBe(3 + FIGURES.length);
+    expect(getComputedStyle(row(el, CENTRES[0].id).querySelector(".ui-prl__fig")!).display).not.toBe("none");
+    expect(row(el, CENTRES[0].id).querySelector(".ui-prl__name")!.getBoundingClientRect().width).toBeGreaterThanOrEqual(140);
+    // The frame reaching past the edge is clipped: nothing scrolls around the list, and the rows end inside it
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+    expect(row(el, CENTRES[0].id).getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
+    // Narrower: what's left still folds away, and the row fits
+    (wrap as HTMLElement).style.width = "300px";
     await settle();
     await expect.poll(() => getComputedStyle(row(el, CENTRES[0].id)).gridTemplateColumns.split(" ").length).toBe(2);
-    expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+    // The frame reaching past the edge is clipped: nothing scrolls around the list, and the rows end inside it
+    expect((wrap as HTMLElement).scrollWidth).toBeLessThanOrEqual((wrap as HTMLElement).clientWidth + 1);
+    expect(row(el, CENTRES[0].id).getBoundingClientRect().right).toBeLessThanOrEqual(el.getBoundingClientRect().right + 1);
     el.hide = [];
     await settle();
     expect(el.querySelector(".ui-prl__col--work")).not.toBeNull();

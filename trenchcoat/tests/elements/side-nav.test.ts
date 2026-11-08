@@ -181,6 +181,19 @@ describe("tc-side-nav", () => {
     expect(Math.round(box.bottom - promo.getBoundingClientRect().bottom)).toBeLessThan(40);
   });
 
+  test("without a brand, the collapse button keeps to the end of the bar, and to the middle of the rail", async () => {
+    const el = await fixture<TcSideNav>(html`<tc-side-nav collapsible .items=${ITEMS} style="width: 248px"></tc-side-nav>`);
+    const head = el.querySelector<HTMLElement>(".ui-snav__head")!;
+    const toggle = el.querySelector<HTMLElement>(".ui-snav__toggle")!;
+    expect(el.querySelector(".ui-snav__brand")).toBeNull();
+    expect(head.getBoundingClientRect().right - toggle.getBoundingClientRect().right).toBeLessThan(8);
+    toggle.click();
+    await el.updateComplete;
+    const h = head.getBoundingClientRect();
+    const t = toggle.getBoundingClientRect();
+    expect(Math.abs(h.left + h.width / 2 - (t.left + t.width / 2))).toBeLessThan(2);
+  });
+
   test("collapsible: the button folds it into a rail (cancelable); labels stay readable and show as tooltips", async () => {
     const el = await fixture<TcSideNav>(html`<tc-side-nav collapsible brand="Halden" .items=${ITEMS} current="home"><p class="promo">Hi</p></tc-side-nav>`);
     const toggle = el.querySelector<HTMLButtonElement>(".ui-snav__toggle")!;
