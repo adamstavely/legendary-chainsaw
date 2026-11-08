@@ -86,6 +86,14 @@
      "readonly": false
     },
     {
+     "name": "keepTrendLine",
+     "attribute": "keep-trend-line",
+     "type": "boolean",
+     "default": "false",
+     "description": "Keeps the momentum line at every width where the momentum column shows (it still folds below 400px), at its full\nwidth beside the change; the name takes the difference and truncates sooner – for short names such as codes",
+     "readonly": false
+    },
+    {
      "name": "nameLabel",
      "attribute": "name-label",
      "type": "string",
@@ -406,6 +414,10 @@
      "attribute": "no-filters"
     },
     {
+     "name": "keepTrendLine",
+     "attribute": "keep-trend-line"
+    },
+    {
      "name": "nameLabel",
      "attribute": "name-label"
     },
@@ -636,7 +648,7 @@
   "windowed": false
  },
  "size": {
-  "min": 37892,
-  "gzip": 11262
+  "min": 38665,
+  "gzip": 11433
  }
 }

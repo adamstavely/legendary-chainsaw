@@ -59,6 +59,13 @@ export class PriorityList {
   @Input() set healthLabels(v: TcPriorityList["healthLabels"]) {
     this.#el.healthLabels = v;
   }
+  /**
+   * Keeps the momentum line at every width where the momentum column shows (it still folds below 400px), at its full
+   * width beside the change; the name takes the difference and truncates sooner – for short names such as codes
+   */
+  @Input() set keepTrendLine(v: TcPriorityList["keepTrendLine"] | "" | "true" | "false") {
+    this.#el.keepTrendLine = typeof v === "string" ? v !== "false" : v;
+  }
   /** The first column's heading */
   @Input() set nameLabel(v: TcPriorityList["nameLabel"]) {
     this.#el.nameLabel = v;

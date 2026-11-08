@@ -125,6 +125,9 @@ export class TcPriorityList extends TcElement {
   @property({ attribute: false }) accessor tiers: Record<number, string> = {};
   /** The healths' names, merged over the defaults (At risk, Watch, On track) */
   @property({ attribute: false }) accessor healthLabels: Partial<Record<PriorityHealth, string>> = {};
+  /** Keeps the momentum line at every width where the momentum column shows (it still folds below 400px), at its full
+   *  width beside the change; the name takes the difference and truncates sooner – for short names such as codes */
+  @property({ type: Boolean, attribute: "keep-trend-line" }) accessor keepTrendLine = false;
   /** The first column's heading */
   @property({ attribute: "name-label" }) accessor nameLabel = "Topic";
   /** The momentum column's heading, also read before each row's change: "Trend" */
@@ -339,7 +342,7 @@ export class TcPriorityList extends TcElement {
         keepAside: true,
       })}
       <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
-      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} style=${`--tc-prl-n: ${figs}`}>
+      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-keep-trend-line=${this.keepTrendLine} style=${`--tc-prl-n: ${figs}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
@@ -536,6 +539,13 @@ export class TcPriorityList extends TcElement {
 .ui-prl__card[data-hide~="coverage"] { --tc-prl-c-coverage: ; }
 .ui-prl__card[data-hide~="open"] { --tc-prl-c-open: ; }
 .ui-prl__card[data-hide~="work"] { --tc-prl-c-work: ; }
+/* keep-trend-line: the momentum column keeps its line and its full width wherever it shows; the name gives up the
+   room. The tracks follow --tc-prl-c-* as with hide, so it composes with hide and the frame's credit */
+.ui-prl__card[data-keep-trend-line] { --tc-prl-cols: minmax(0, 1fr) var(--tc-prl-c-momentum) var(--tc-prl-c-coverage) var(--tc-prl-c-open) var(--tc-prl-c-work); }
+@container (width > 400px) {
+  .ui-prl__card[data-keep-trend-line]:not([data-hide~="momentum"]) { --tc-prl-c-momentum: 108px; }
+  .ui-prl__card[data-keep-trend-line] .ui-prl__spark { display: block; }
+}
 @media (forced-colors: active) {
   .ui-prl__bar-fill, .ui-prl__dot, .ui-prl__health::before { background: CanvasText; }
 }

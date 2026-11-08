@@ -11,6 +11,13 @@ got there. With several lines it compares parts of the metric – subscriptions 
 tooltip follows the pointer with each line's value on that day. People read the number first and the trend second,
 and can step through the points with the keyboard.
 
+A line can run on into a forecast. Give its series `forecastFrom`, the index into `values` and `labels` where the
+forecast starts: from there the line continues dashed, joined to the last actual point with no gap. An optional
+`band` – `{ low, high }`, one of each per point – shades the forecast's range in the line's colour behind it, over the
+forecast part only, and the y scale takes the band in. A quiet rule and the word “Forecast” (`forecast-label`) mark
+where the forecast starts; the tooltip reads forecast points as “Forecast · 14 (11–17)”, and the legend adds a dashed
+“Forecast” entry. Without `forecastFrom`, nothing changes.
+
 ## When to use
 
 - Dashboards and overviews where one number matters and its recent trend explains it.
@@ -30,7 +37,10 @@ and can step through the points with the keyboard.
 3. **Change** `.ui-kpi__delta` – a rise in green and a drop in red, or the other way round with `lower-is-better`
 4. **Plot** `.ui-kpi__plot` – the lines on three gridlines, with the axis values beside them
 5. **Tooltip** `.ui-kpi__tooltip` – the point's date and each line's value, largest first
-6. **Legend** `.ui-kpi__legend` – names each line by its colour and stroke pattern
+6. **Legend** `.ui-kpi__legend` – names each line by its colour and stroke pattern, and the forecast's dashes
+   `.ui-kpi__legend-forecast`
+7. **Forecast** `.ui-kpi__forecast` – a line's dashed forecast part, over its range `.ui-kpi__band`, after the rule
+   `.ui-kpi__forecast-rule` with its label `.ui-kpi__forecast-tag`
 
 ## Looks
 
@@ -54,7 +64,9 @@ The plot is a focusable group named after the title (“Revenue chart – use th
 day”). As the arrow keys move, a status region reads the point: its tooltip label, then each line's value (“Tue, Mar
 4: Subscriptions $4.6k, Services $2.5k, One-off $1.1k”). The axes, lines and tooltip are hidden from assistive
 technology – the status region carries the same numbers. The legend is a list labelled “Lines”. Each line has its own
-stroke pattern as well as its colour, so the series don't rely on colour alone.
+stroke pattern as well as its colour, so the series don't rely on colour alone. With a forecast, the plot's name says
+where it starts (“…; the forecast starts at May”), and forecast points are read as such (“Jun: Papers forecast 17
+(13–40)”).
 
 ## Content
 

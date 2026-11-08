@@ -77,6 +77,10 @@
       "additionalProperties": false,
       "description": "The healths' names, merged over the defaults (At risk, Watch, On track)"
     },
+    "keepTrendLine": {
+      "type": "boolean",
+      "description": "Keeps the momentum line at every width where the momentum column shows (it still folds below 400px), at its full width beside the change; the name takes the difference and truncates sooner – for short names such as codes"
+    },
     "nameLabel": {
       "type": "string",
       "description": "The first column's heading"

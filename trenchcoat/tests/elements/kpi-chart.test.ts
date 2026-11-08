@@ -274,3 +274,61 @@ describe("tc-kpi-chart", () => {
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
 });
+
+describe("tc-kpi-chart forecasts", () => {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+  const papers: KpiSeries[] = [
+    { label: "Papers", color: "teal", values: [8, 10, 12, 14, 15, 17], forecastFrom: 4, band: { low: [0, 0, 0, 0, 12, 13], high: [0, 0, 0, 0, 18, 40] } },
+  ];
+  const pointsOf = (el: Element, sel: string) => el.querySelector(sel)!.getAttribute("points")!.trim().split(" ");
+
+  test("the forecast is a dashed line from the last actual point; the band covers only the forecast and widens the y scale", async () => {
+    const el = await fixture<TcKpiChart>(html`<tc-kpi-chart heading="Papers" value="17" .labels=${months} .series=${papers}></tc-kpi-chart>`);
+    const actual = pointsOf(el, "polyline.ui-kpi__actual");
+    const forecast = pointsOf(el, "polyline.ui-kpi__forecast");
+    expect(actual).toHaveLength(4);
+    // Joined: the forecast starts at the last actual point (index 3) and runs to the end
+    expect(forecast).toHaveLength(3);
+    expect(forecast[0]).toBe(actual[3]);
+    expect(el.querySelector("polyline.ui-kpi__forecast")!.getAttribute("stroke-dasharray")).toBeTruthy();
+    expect(el.querySelector("polyline.ui-kpi__forecast")!.getAttribute("data-from")).toBe("4");
+    // The band: indices 4 and 5 only, high then low – four corners, none over the actual part
+    const band = pointsOf(el, "polygon.ui-kpi__band").map((p) => +p.split(",")[0]);
+    expect(band).toHaveLength(4);
+    expect(Math.min(...band)).toBeCloseTo(80);
+    // The y domain takes in the band's 40
+    expect(el.querySelector(".ui-kpi__yaxis span")!.textContent).toBe("40");
+    // A rule and the label where the forecast starts; the legend's dashed swatch
+    expect(el.querySelector<HTMLElement>(".ui-kpi__forecast-rule")!.style.left).toBe("80%");
+    expect(el.querySelector(".ui-kpi__forecast-tag")!.textContent).toBe("Forecast");
+    expect(el.querySelector(".ui-kpi__legend")).toBeNull();
+    el.legend = true;
+    await settle();
+    expect(el.querySelector(".ui-kpi__legend-forecast")!.textContent!.trim()).toBe("Forecast");
+    expect(el.querySelector(".ui-kpi__plot")!.getAttribute("aria-label")).toContain("the forecast starts at May");
+  });
+
+  test("the tooltip and the spoken text mark forecast points, with their range; actual points stay plain", async () => {
+    const el = await fixture<TcKpiChart>(html`<tc-kpi-chart heading="Papers" forecast-label="Projected" .labels=${months} .series=${papers}></tc-kpi-chart>`);
+    el.index = 5;
+    await settle();
+    expect(el.querySelector(".ui-kpi__tooltip li")!.hasAttribute("data-forecast")).toBe(true);
+    expect(el.querySelector(".ui-kpi__tooltip .ui-kpi__num")!.textContent).toBe("Projected · 17 (13–40)");
+    el.index = 2;
+    await settle();
+    expect(el.querySelector(".ui-kpi__tooltip li")!.hasAttribute("data-forecast")).toBe(false);
+    expect(el.querySelector(".ui-kpi__tooltip .ui-kpi__num")!.textContent).toBe("12");
+    el.index = null;
+    await settle();
+    await key(plotOf(el), "End");
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Jun: Papers projected 17 (13–40)");
+  });
+
+  test("without forecastFrom nothing changes: one polyline per series, no band, rule or legend entry", async () => {
+    const el = await fixture<TcKpiChart>(html`<tc-kpi-chart heading="Revenue" legend .labels=${labels} .series=${two}></tc-kpi-chart>`);
+    expect(el.querySelectorAll(".ui-kpi__lines polyline")).toHaveLength(2);
+    expect(el.querySelector(".ui-kpi__lines polyline")!.getAttribute("class")).toBeNull();
+    expect(el.querySelector(".ui-kpi__band, .ui-kpi__forecast, .ui-kpi__forecast-rule, .ui-kpi__legend-forecast")).toBeNull();
+    expect(el.querySelector(".ui-kpi__plot")!.getAttribute("aria-label")).toBe("Revenue chart – use the arrow keys to read the values per day");
+  });
+});
