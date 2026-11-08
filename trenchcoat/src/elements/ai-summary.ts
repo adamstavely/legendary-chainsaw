@@ -383,7 +383,7 @@ export class TcAiSummary extends TcElement {
     if (changed.has("messages") || this.seen === null) this.noteMessages();
   }
 
-  /** Finds new messages (to scroll to) and answers just written (to announce), once the first set has been seen */
+  /** Finds new messages and answers just written (to scroll to and announce), once the first set has been seen */
   private noteMessages() {
     const first = this.seen === null;
     const before = this.seen ?? new Map<string, string | undefined>();
@@ -395,6 +395,8 @@ export class TcAiSummary extends TcElement {
       const was = before.get(m.id);
       if (!before.has(m.id)) this.revealId = m.id;
       if (m.role !== "assistant" || st === "thinking" || was === st) continue;
+      // An answer written over its thinking row has grown: bring its end into view too
+      if (before.has(m.id)) this.revealId = m.id;
       if (st === "done") this.announce = m.text.trim();
       else if (st === "error") this.announce = `Couldn't answer: ${m.text.trim()}`;
     }
