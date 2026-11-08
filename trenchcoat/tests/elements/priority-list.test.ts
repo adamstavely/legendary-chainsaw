@@ -235,6 +235,24 @@ describe("tc-priority-list", () => {
     });
   }
 
+  test("momentum-label renames the momentum column, and what screen readers hear before each change", async () => {
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list momentum-label="Trend" .items=${ITEMS}></tc-priority-list>`);
+    expect(el.querySelector(".ui-prl__col--momentum")!.textContent!.trim()).toBe("Trend");
+    expect(el.querySelector(".ui-prl__change .ui-prl__sr")!.textContent).toMatch(/^\. Trend /);
+  });
+
+  test("hide health leaves the health word out from under each name; screen readers still hear it", async () => {
+    const items = ITEMS.map(({ owner: _o, team: _t, ...rest }) => rest);
+    const el = await fixture<TcPriorityList>(html`<tc-priority-list hide="health" .items=${items}></tc-priority-list>`);
+    expect(el.hide).toEqual(["health"]);
+    expect(el.querySelector(".ui-prl__health")).toBeNull();
+    expect(el.querySelector(".ui-prl__meta")).toBeNull();
+    const who = el.querySelector(".ui-prl__who")!;
+    expect(who.querySelector(".ui-prl__sr")!.textContent).toMatch(/^\. (At risk|Watch|On track)$/);
+    // The columns are untouched
+    expect(el.querySelector(".ui-prl__col--momentum")).not.toBeNull();
+  });
+
   test("hide leaves columns out of the header, the rows and the grid; the name and figures take the room", async () => {
     const wrap = await fixture(html`<div style="width: 820px"><tc-priority-list hide="coverage open work" .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
     const el = wrap.querySelector<TcPriorityList>("tc-priority-list")!;

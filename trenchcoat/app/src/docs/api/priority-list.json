@@ -34,7 +34,7 @@
      "attribute": "hide",
      "type": "PriorityColumn[]",
      "default": "[]",
-     "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.\n`hide=\"coverage open work\"`; the name and the other columns take the room",
+     "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.\n`hide=\"coverage open work\"`; the name and the other columns take the room. \"health\" leaves the health word out\nfrom under each name (screen readers still hear it); with no owner either, the name stands alone",
      "readonly": false
     },
     {
@@ -91,6 +91,14 @@
      "type": "string",
      "default": "\"Topic\"",
      "description": "The first column's heading",
+     "readonly": false
+    },
+    {
+     "name": "momentumLabel",
+     "attribute": "momentum-label",
+     "type": "string",
+     "default": "\"Momentum\"",
+     "description": "The momentum column's heading, also read before each row's change: \"Trend\"",
      "readonly": false
     },
     {
@@ -402,6 +410,10 @@
      "attribute": "name-label"
     },
     {
+     "name": "momentumLabel",
+     "attribute": "momentum-label"
+    },
+    {
      "name": "openUnit",
      "attribute": "open-unit"
     },
@@ -624,7 +636,7 @@
   "windowed": false
  },
  "size": {
-  "min": 36346,
-  "gzip": 10742
+  "min": 36725,
+  "gzip": 10797
  }
 }

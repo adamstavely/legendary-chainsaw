@@ -52,8 +52,9 @@ export type PriorityItem = {
   figures?: Record<string, number | string>;
 };
 /** A built-in column `hide` can leave out */
-export type PriorityColumn = "momentum" | "coverage" | "open" | "work";
-const COLUMNS: readonly PriorityColumn[] = ["momentum", "coverage", "open", "work"];
+/** What `hide` can leave out: the built-in columns, and "health" – the health word under each name */
+export type PriorityColumn = "momentum" | "coverage" | "open" | "work" | "health";
+const COLUMNS: readonly PriorityColumn[] = ["momentum", "coverage", "open", "work", "health"];
 
 /** One more column after Work, filled from each row's `figures` */
 export type PriorityFigureColumn = {
@@ -104,7 +105,8 @@ export class TcPriorityList extends TcElement {
   /** The topics or projects, in the order to show them (within a group when grouped) */
   @property({ attribute: false }) accessor items: PriorityItem[] = [];
   /** Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.
-   *  `hide="coverage open work"`; the name and the other columns take the room */
+   *  `hide="coverage open work"`; the name and the other columns take the room. "health" leaves the health word out
+   *  from under each name (screen readers still hear it); with no owner either, the name stands alone */
   @property({ converter: { fromAttribute: (v: string | null) => (v ?? "").split(/\s+/).filter((c): c is PriorityColumn => (COLUMNS as readonly string[]).includes(c)) } })
   accessor hide: PriorityColumn[] = [];
   /** More columns after Work, in order, filled from each row's `figures` */
@@ -121,6 +123,8 @@ export class TcPriorityList extends TcElement {
   @property({ attribute: false }) accessor healthLabels: Partial<Record<PriorityHealth, string>> = {};
   /** The first column's heading */
   @property({ attribute: "name-label" }) accessor nameLabel = "Topic";
+  /** The momentum column's heading, also read before each row's change: "Trend" */
+  @property({ attribute: "momentum-label" }) accessor momentumLabel = "Momentum";
   /** What's open, after its count: "5 gaps" */
   @property({ attribute: "open-unit" }) accessor openUnit = "gaps";
   /** What's open when there's one: "1 gap"; `open-unit` when unset */
@@ -230,16 +234,20 @@ export class TcPriorityList extends TcElement {
         <span class="ui-prl__cell ui-prl__cell--badge">${this.renderLead(item)}</span>
         <span class="ui-prl__cell ui-prl__who">
           <span class="ui-prl__name">${item.name}</span>
-          <span class="ui-prl__meta">
-            ${item.owner || item.team ? html`<span class="ui-prl__owner">${[item.owner, item.team].filter(Boolean).join(" · ")}</span>` : nothing}
-            <span class="ui-prl__health" data-health=${item.health}><span class="ui-prl__sr">. </span>${this.health(item.health)}</span>
-          </span>
+          ${item.owner || item.team || this.shows("health")
+            ? html`<span class="ui-prl__meta">
+                ${item.owner || item.team ? html`<span class="ui-prl__owner">${[item.owner, item.team].filter(Boolean).join(" · ")}</span>` : nothing}
+                ${this.shows("health")
+                  ? html`<span class="ui-prl__health" data-health=${item.health}><span class="ui-prl__sr">. </span>${this.health(item.health)}</span>`
+                  : html`<span class="ui-prl__sr">. ${this.health(item.health)}</span>`}
+              </span>`
+            : html`<span class="ui-prl__sr">. ${this.health(item.health)}</span>`}
         </span>
         ${this.shows("momentum") ? html`<span class="ui-prl__cell ui-prl__momentum" data-dir=${dir}>
           ${item.trend && item.trend.length > 1 ? html`<svg class="ui-prl__spark" viewBox="0 0 64 20" aria-hidden="true">${spark(item.trend)}</svg>` : nothing}
           ${change === undefined
             ? nothing
-            : html`<span class="ui-prl__change"><span class="ui-prl__sr">. Momentum ${sayChange}</span><span aria-hidden="true">${dir === "up" ? "▲" : dir === "down" ? "▼" : "–"}&#8202;${this.pct(Math.abs(change))}</span></span>`}
+            : html`<span class="ui-prl__change"><span class="ui-prl__sr">. ${this.momentumLabel} ${sayChange}</span><span aria-hidden="true">${dir === "up" ? "▲" : dir === "down" ? "▼" : "–"}&#8202;${this.pct(Math.abs(change))}</span></span>`}
         </span>` : nothing}
         ${this.shows("coverage") ? html`<span class="ui-prl__cell ui-prl__coverage">
           ${cov === undefined
@@ -319,7 +327,7 @@ export class TcPriorityList extends TcElement {
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
-                ${this.shows("momentum") ? html`<span class="ui-prl__col ui-prl__col--momentum">Momentum</span>` : nothing}
+                ${this.shows("momentum") ? html`<span class="ui-prl__col ui-prl__col--momentum">${this.momentumLabel}</span>` : nothing}
                 ${this.shows("coverage") ? html`<span class="ui-prl__col ui-prl__col--coverage">Coverage</span>` : nothing}
                 ${this.shows("open") ? html`<span class="ui-prl__col ui-prl__col--open">Open</span>` : nothing}
                 ${this.shows("work") ? html`<span class="ui-prl__col ui-prl__col--work">Work</span>` : nothing}

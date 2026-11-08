@@ -29,7 +29,8 @@ export class PriorityList {
   }
   /**
    * Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.
-   * `hide="coverage open work"`; the name and the other columns take the room
+   * `hide="coverage open work"`; the name and the other columns take the room. "health" leaves the health word out
+   * from under each name (screen readers still hear it); with no owner either, the name stands alone
    */
   @Input() set hide(v: TcPriorityList["hide"]) {
     this.#el.hide = v;
@@ -61,6 +62,10 @@ export class PriorityList {
   /** The first column's heading */
   @Input() set nameLabel(v: TcPriorityList["nameLabel"]) {
     this.#el.nameLabel = v;
+  }
+  /** The momentum column's heading, also read before each row's change: "Trend" */
+  @Input() set momentumLabel(v: TcPriorityList["momentumLabel"]) {
+    this.#el.momentumLabel = v;
   }
   /** What's open, after its count: "5 gaps" */
   @Input() set openUnit(v: TcPriorityList["openUnit"]) {
