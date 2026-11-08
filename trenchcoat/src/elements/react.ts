@@ -369,6 +369,7 @@ export * from "./react/stepper-form";
 export * from "./react/stories";
 export * from "./react/stream-graph";
 export * from "./react/structured-output";
+export * from "./react/subagent-list";
 export * from "./react/success-check";
 export * from "./react/sunburst-chart";
 export * from "./react/switch";

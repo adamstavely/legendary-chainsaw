@@ -2844,10 +2844,11 @@
   {
     "tag": "tc-session-panel",
     "name": "SessionPanel",
-    "description": "The side panel of a working session: tools, environment, context, connectors, outputs, changes and background tasks.",
+    "description": "The side panel of a working session: tools, environment, context, connectors, outputs, subagents, changes and background tasks.",
     "events": [
       "tc-sections-change",
-      "tc-section-open"
+      "tc-section-open",
+      "tc-subagent-change"
     ]
   },
   {
@@ -3031,6 +3032,14 @@
       "tc-collapsed-change",
       "tc-copy",
       "tc-validate"
+    ]
+  },
+  {
+    "tag": "tc-subagent-list",
+    "name": "SubagentList",
+    "description": "The sub-agents a session started, grouped Active and Done, each with its mark, what it's doing and a live clock.",
+    "events": [
+      "tc-selected-change"
     ]
   },
   {

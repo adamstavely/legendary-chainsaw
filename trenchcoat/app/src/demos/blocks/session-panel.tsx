@@ -15,6 +15,7 @@ import type {
   RouteItem,
   SearchResultsFile,
   SessionItem,
+  Subagent,
   WebVital,
 } from "../../../../src/elements/react";
 import { caption } from "../../demo-kit";
@@ -60,6 +61,13 @@ const SESSIONS: SessionItem[] = [
   { id: "s1", title: "Cold-chain alerts", status: "running", project: "sample-tracker", branch: "cold-chain-alerts", updated: NOW - M, detail: "Running tests" },
   { id: "s2", title: "Booking calendar for instrument pages", status: "waiting", project: "sample-tracker", branch: "feature/booking-calendar", updated: NOW - 4 * M, unread: true, detail: "Wants to run the migrations" },
   { id: "s3", title: "Label printer layout", status: "idle", project: "label-service", branch: "label-layout", updated: NOW - 3 * 60 * M },
+];
+const SUBAGENTS: Subagent[] = [
+  { id: "notify-tests", name: "Write tests for notify()", status: "waiting", activity: "awaiting command message", startedAt: NOW - 86_000 },
+  { id: "gap-review", name: "Review gap alert thresholds", status: "running", activity: "reading 3 of 7 freezer logs", startedAt: NOW - 4 * M },
+  { id: "lint-sweep", name: "Lint sweep", status: "done", endedAt: NOW - 20_000 },
+  { id: "export-docs", name: "Document the sample export", status: "done", endedAt: NOW - 62 * M },
+  { id: "label-check", name: "Check label printer fonts", status: "failed", activity: "the printer didn't answer", endedAt: NOW - 3 * 60 * M },
 ];
 const BRANCHES: BranchItem[] = [
   { name: "cold-chain-alerts", kind: "worktree", ahead: 3, behind: 1, updated: NOW - M, dirty: true, path: "~/institute/.worktrees/cold-chain" },
@@ -310,6 +318,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           context={0.17}
           connectors="3 to reconnect"
           outputs="51"
+          subagents={SUBAGENTS}
+          now={NOW}
+          onSubagentChange={(_, agent) => setNote(`Open ${agent?.name ?? "the subagent"}'s transcript.`)}
           changes={CHANGES}
           changeActions={[{ id: "copy", label: "Copy link" }]}
           changeLimit={3}

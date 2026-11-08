@@ -1,14 +1,14 @@
 ---
 pattern: disclosure
 status: new
-related: panel-card, icon-rail, environment-list, change-list
+related: panel-card, icon-rail, environment-list, subagent-list, change-list
 ---
 
 ## Overview
 
 The side panel of a working session: a rail of tools, where the session runs, how full its context is, its connectors,
-outputs and background tasks, and the changes it has made. Environment and Changes fold open here; the other sections are
-rows that tell the page to open their details.
+outputs, the subagents it started and its background tasks, and the changes it has made. Environment, Subagents and
+Changes fold open here; the other sections are rows that tell the page to open their details.
 
 ## When to use
 
@@ -25,7 +25,7 @@ rows that tell the page to open their details.
 
 1. **Stack** `.ui-ssp__stack` – the sections, in order
 2. **Rail** `.ui-ssp__rail` – the tools
-3. **Section** `.ui-ssp__section` – Environment or Changes, which fold
+3. **Section** `.ui-ssp__section` – Environment, Subagents or Changes, which fold
 4. **Row** `.ui-ssp__row` – Context, Connectors, Outputs or Background tasks, which open elsewhere
 
 A section with nothing to show is left out.
@@ -48,16 +48,22 @@ The panel follows tab order, one stop per control.
 ## Screen readers
 
 The rail is a named `toolbar`. Sections are buttons with `aria-expanded`. Context is a `meter` with its value in words.
-Each change says its state, not only its colour.
+Each change says its state, not only its colour. Subagents are a `tc-subagent-list`: groups named with their count, each
+agent a button that says whether it's running, waiting, finished, failed or stopped, and agents that finish or fail are
+announced.
 
 ## Content
 
 Give each row's value in a few words, such as "14 to reconnect" or "4 running". Leave out a value to leave out its row.
+`subagents` takes the session's sub-agents, newest first; the section's value counts the active ones ("1 active") or,
+with none running, all of them. Pass `now` to hold their clocks still.
 
 ## Do
 
 - Listen for `tc-section-open` and open your details, such as `tc-context-map`, `tc-artifact-panel` or `tc-background-tasks`.
 - Listen for the contained elements' events here: `tc-selected-change`, `tc-toggles-change`, `tc-action`, `tc-open`.
+- Listen for `tc-subagent-change` to open the chosen subagent's transcript – the list's own `tc-selected-change` stops at
+  the panel, so it's never mistaken for the rail's.
 
 ## Don't
 
@@ -88,6 +94,8 @@ export function Side({ onOpen }: { onOpen: (section: string) => void }) {
       environment={[{ id: "repo", kind: "repo", label: "institute/sample-tracker" }]}
       context={0.17}
       outputs="51"
+      subagents={[{ id: "tests", name: "Write tests for notify()", status: "running", startedAt: Date.now() - 40_000 }]}
+      onSubagentChange={(id) => id && onOpen(`subagent:${id}`)}
       changes={[{ id: "a", title: "Alert on freezer gaps", repo: "sample-tracker", number: 214, state: "open" }]}
       onTcSectionOpen={(e) => onOpen(e.detail.section)}
     />

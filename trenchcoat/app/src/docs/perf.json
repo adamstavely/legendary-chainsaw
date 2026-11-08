@@ -17766,7 +17766,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-08",
-   "hash": "9a78428b15ef6e5d",
+   "hash": "c701cd3a2ef6b0f7",
    "bundle": {
     "own": {
      "min": 34126,
@@ -18096,7 +18096,7 @@
      {
       "name": "client-context",
       "kind": "element",
-      "min": 61688
+      "min": 61696
      },
      {
       "name": "agent-plan",
@@ -18651,7 +18651,7 @@
      {
       "name": "clarifying-questions",
       "kind": "element",
-      "min": 26438
+      "min": 26450
      },
      {
       "name": "agent-team",
@@ -19274,6 +19274,11 @@
       "min": 13856
      },
      {
+      "name": "subagent-list",
+      "kind": "element",
+      "min": 13823
+     },
+     {
       "name": "day-rhythm",
       "kind": "element",
       "min": 13810
@@ -19619,6 +19624,11 @@
       "min": 6480
      },
      {
+      "name": "session-panel",
+      "kind": "element",
+      "min": 6472
+     },
+     {
       "name": "slope-chart",
       "kind": "element",
       "min": 6416
@@ -19672,11 +19682,6 @@
       "name": "dialog",
       "kind": "element",
       "min": 5384
-     },
-     {
-      "name": "session-panel",
-      "kind": "element",
-      "min": 5226
      },
      {
       "name": "in-translation",
@@ -19921,7 +19926,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 61752
+      "min": 61921
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -19942,6 +19947,11 @@
       "name": "src/generative/schemas/tc-configuration-release-control.json",
       "kind": "other",
       "min": 6455
+     },
+     {
+      "name": "src/generative/schemas/tc-session-panel.json",
+      "kind": "other",
+      "min": 6004
      },
      {
       "name": "src/generative/schemas/tc-multi-calendar.json",
@@ -20062,11 +20072,6 @@
       "name": "src/generative/schemas/tc-donut-chart.json",
       "kind": "other",
       "min": 4565
-     },
-     {
-      "name": "src/generative/schemas/tc-session-panel.json",
-      "kind": "other",
-      "min": 4548
      },
      {
       "name": "src/generative/schemas/tc-pull-request.json",
@@ -20882,6 +20887,11 @@
       "name": "src/generative/schemas/tc-traceability-spine.json",
       "kind": "other",
       "min": 2291
+     },
+     {
+      "name": "src/generative/schemas/tc-subagent-list.json",
+      "kind": "other",
+      "min": 2289
      },
      {
       "name": "src/generative/schemas/tc-output-schema-builder.json",
@@ -21855,20 +21865,20 @@
      }
     ],
     "withoutLit": {
-     "min": 9925439,
-     "gzip": 2474392
+     "min": 9944649,
+     "gzip": 2479291
     },
     "withLit": {
-     "min": 9865067,
-     "gzip": 2452978
+     "min": 9884070,
+     "gzip": 2457830
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 9.9,
-    "first": 0.8,
+    "cold": 6.4,
+    "first": 0.6,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -39219,18 +39229,18 @@
    }
   },
   "session-panel": {
-   "measuredAt": "2026-11-04",
-   "hash": "2206566c8624f8c1",
+   "measuredAt": "2026-11-08",
+   "hash": "819f86b27c0d14a7",
    "bundle": {
     "own": {
-     "min": 7202,
-     "gzip": 2936
+     "min": 8430,
+     "gzip": 3234
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22579
+      "min": 22585
      },
      {
       "name": "internal/settings",
@@ -39240,7 +39250,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8540
+      "min": 8544
      },
      {
       "name": "internal/card-head",
@@ -39276,6 +39286,11 @@
       "name": "internal/util",
       "kind": "internal",
       "min": 141
+     },
+     {
+      "name": "subagent-list",
+      "kind": "element",
+      "min": 13448
      },
      {
       "name": "change-list",
@@ -39314,20 +39329,20 @@
      }
     ],
     "withoutLit": {
-     "min": 92491,
-     "gzip": 23404
+     "min": 107355,
+     "gzip": 27236
     },
     "withLit": {
-     "min": 115305,
-     "gzip": 31035
+     "min": 129972,
+     "gzip": 34789
     }
    },
    "render": {
     "tag": "tc-session-panel",
     "source": "defaults",
     "runs": 7,
-    "cold": 1.4,
-    "first": 0.2,
+    "cold": 2,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 1,
@@ -42016,6 +42031,104 @@
     "updateKind": "re-render with the same data",
     "nodes": 46,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "subagent-list": {
+   "measuredAt": "2026-11-08",
+   "hash": "f68ddaa356b34eef",
+   "bundle": {
+    "own": {
+     "min": 15824,
+     "gzip": 5897
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21078
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 23314,
+     "gzip": 8070
+    },
+    "withLit": {
+     "min": 45667,
+     "gzip": 15440
+    }
+   },
+   "render": {
+    "tag": "tc-subagent-list",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.1,
+    "first": 1.5,
+    "update": 0.4,
+    "updateKind": "one item of agents replaced",
+    "nodes": 141,
+    "scale": {
+     "property": "agents",
+     "demoItems": 9,
+     "points": [
+      {
+       "items": 100,
+       "first": 7.6,
+       "update": 1.2,
+       "nodes": 1332
+      },
+      {
+       "items": 1000,
+       "first": 70.9,
+       "update": 7.6,
+       "nodes": 13332
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

@@ -21,9 +21,14 @@ const WHERE = [
   { id: "remote", kind: "computer" as const, label: "Remote control", toggle: true },
 ];
 const CHANGES = [{ id: "a", title: "Alert on freezer gaps", repo: "sample-tracker", number: 214, state: "open" as const, additions: 3, deletions: 1 }];
+const NOW = Date.UTC(2026, 10, 2, 15, 0);
+const SUBAGENTS = [
+  { id: "tests", name: "Write tests for notify()", status: "waiting" as const, activity: "awaiting command message", startedAt: NOW - 86_000 },
+  { id: "lint", name: "Lint sweep", status: "done" as const, endedAt: NOW - 20_000 },
+];
 
 const full = (look = "standard") =>
-  fixture<TcSessionPanel>(html`<tc-session-panel look=${look} .tools=${TOOLS} .environment=${WHERE} .context=${0.17} connectors="3 to reconnect" outputs="51" .changes=${CHANGES} background="4 running"></tc-session-panel>`);
+  fixture<TcSessionPanel>(html`<tc-session-panel look=${look} .tools=${TOOLS} .environment=${WHERE} .context=${0.17} connectors="3 to reconnect" outputs="51" .subagents=${SUBAGENTS} .now=${NOW} .changes=${CHANGES} background="4 running"></tc-session-panel>`);
 const section = (el: Element, name: string) => el.querySelector<HTMLElement>(`[data-section="${name}"]`)!;
 const head = (el: Element, name: string) => section(el, name).querySelector<HTMLButtonElement>(".ui-pnc__button")!;
 
@@ -34,7 +39,7 @@ describe("tc-session-panel", () => {
       expect(el.getAttribute("data-ui")).toBe("ssp");
       expect(el.getAttribute("data-look")).toBe(look);
       expect(el.querySelector('[role="toolbar"]')).not.toBeNull();
-      for (const name of ["environment", "context", "connectors", "outputs", "changes", "background"]) expect(section(el, name), name).not.toBeNull();
+      for (const name of ["environment", "context", "connectors", "outputs", "subagents", "changes", "background"]) expect(section(el, name), name).not.toBeNull();
       expect(section(el, "connectors").textContent).toContain("3 to reconnect");
       expect(el.querySelector('[role="meter"]')?.getAttribute("aria-valuenow")).toBeTruthy();
       expect(el.textContent).toContain("institute/sample-tracker");
@@ -56,8 +61,8 @@ describe("tc-session-panel", () => {
     expect(head(el, "changes").getAttribute("aria-expanded")).toBe("true");
     head(el, "changes").click();
     await settle(el);
-    expect(seen).toEqual([{ sections: ["environment"], section: "changes", expanded: false }]);
-    expect(el.sections).toEqual(["environment"]);
+    expect(seen).toEqual([{ sections: ["environment", "subagents"], section: "changes", expanded: false }]);
+    expect(el.sections).toEqual(["environment", "subagents"]);
     await expect.poll(() => head(el, "changes").getAttribute("aria-expanded")).toBe("false");
     head(el, "changes").click();
     await settle(el);
@@ -116,6 +121,63 @@ describe("tc-session-panel", () => {
     el.changes = [{ id: "b", title: "Second change", repo: "sample-tracker", state: "draft" }];
     await settle(el);
     await expect.poll(() => el.textContent).toContain("Second change");
+  });
+
+  test("Subagents: open by default, a bare list inside, the active count as its value, and the panel's clock", async () => {
+    const el = await full();
+    expect(head(el, "subagents").getAttribute("aria-expanded")).toBe("true");
+    const value = () => section(el, "subagents").querySelector(".ui-pnc__value")?.textContent?.trim();
+    expect(value()).toBe("1 active");
+    const list = section(el, "subagents").querySelector("tc-subagent-list")!;
+    expect(list.hasAttribute("bare")).toBe(true);
+    expect(list.querySelector("h3")).toBeNull();
+    expect([...list.querySelectorAll(".ui-sba__time")].map((t) => t.textContent)).toEqual(["1m 26s", "just now"]);
+    el.labels = { subagentsActive: "{count} läuft" };
+    await settle(el);
+    expect(value()).toBe("1 läuft");
+    el.subagents = SUBAGENTS.map((a) => ({ ...a, status: "done" as const, endedAt: NOW }));
+    await settle(el);
+    expect(value()).toBe("2");
+  });
+
+  test("choosing a subagent fires tc-subagent-change, never tc-selected-change at the panel; preventDefault keeps the old one", async () => {
+    const el = await full();
+    const heard: string[] = [];
+    el.addEventListener("tc-selected-change", () => heard.push("selected"));
+    el.addEventListener("tc-subagent-change", (e) => heard.push(`subagent:${(e as CustomEvent).detail.subagent}:${(e as CustomEvent).detail.agent.name}`));
+    const rows = () => [...section(el, "subagents").querySelectorAll<HTMLButtonElement>(".ui-sba__row")];
+    rows()[1].click();
+    await settle(el);
+    expect(heard).toEqual(["subagent:lint:Lint sweep"]);
+    expect(el.subagent).toBe("lint");
+    expect(rows()[1].getAttribute("aria-current")).toBe("true");
+    el.addEventListener("tc-subagent-change", (e) => e.preventDefault());
+    rows()[0].click();
+    await settle(el);
+    expect(el.subagent).toBe("lint");
+    expect(rows()[0].getAttribute("aria-current")).toBe("false");
+  });
+
+  test("React: onSubagentChange hears the choice and onToolChange doesn't", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const tools: (string | null)[] = [];
+    const agents: string[] = [];
+    await act(async () =>
+      root.render(
+        React.createElement(SessionPanel, { tools: TOOLS, subagents: SUBAGENTS, now: NOW, onToolChange: (t) => void tools.push(t), onSubagentChange: (id, a) => void agents.push(`${id}:${a?.name}`) }),
+      ),
+    );
+    const el = host.querySelector("tc-session-panel") as TcSessionPanel;
+    await settle(el);
+    await act(async () => section(el, "subagents").querySelector<HTMLButtonElement>(".ui-sba__row")!.click());
+    await settle(el);
+    expect(agents).toEqual(["tests:Write tests for notify()"]);
+    expect(tools).toEqual([]);
+    expect(el.subagent).toBe("tests");
+    await act(async () => root.unmount());
+    host.remove();
   });
 
   test("React: uncontrolled survives a re-render, and controlled stays until the parent changes it", async () => {
