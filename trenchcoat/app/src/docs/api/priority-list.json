@@ -102,6 +102,14 @@
      "readonly": false
     },
     {
+     "name": "nameAlign",
+     "attribute": "name-align",
+     "type": "\"start\" | \"center\"",
+     "default": "\"start\"",
+     "description": "Names at the start of their column (the default), or centered with their heading over them – for short names\nsuch as codes",
+     "readonly": false
+    },
+    {
      "name": "momentumLabel",
      "attribute": "momentum-label",
      "type": "string",
@@ -421,6 +429,10 @@
      "attribute": "name-label"
     },
     {
+     "name": "nameAlign",
+     "attribute": "name-align"
+    },
+    {
      "name": "momentumLabel",
      "attribute": "momentum-label"
     },
@@ -647,7 +659,7 @@
   "windowed": false
  },
  "size": {
-  "min": 38748,
-  "gzip": 11468
+  "min": 39407,
+  "gzip": 11664
  }
 }

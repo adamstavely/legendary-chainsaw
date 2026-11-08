@@ -70,6 +70,13 @@ export class PriorityList {
   @Input() set nameLabel(v: TcPriorityList["nameLabel"]) {
     this.#el.nameLabel = v;
   }
+  /**
+   * Names at the start of their column (the default), or centered with their heading over them – for short names
+   * such as codes
+   */
+  @Input() set nameAlign(v: TcPriorityList["nameAlign"]) {
+    this.#el.nameAlign = v;
+  }
   /** The momentum column's heading, also read before each row's change: "Trend" */
   @Input() set momentumLabel(v: TcPriorityList["momentumLabel"]) {
     this.#el.momentumLabel = v;
