@@ -287,6 +287,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Stories** (`stories.tsx`) – Avatars for people and accounts with a gradient ring for something new – open one for a "what changed" brief: a bento grid of metric, status, note, list, image and link tiles
 - **Stream Graph** (`stream-graph.tsx`) – Several series flowing over time, stacked round a moving centre line – the largest emphasised against shades of the quiet ink, layers ordered inside-out and named beside their ends – every series read at the nearest x
 - **Structured Output** (`structured-output.tsx`) – Streaming JSON as a typed tree, checked against its schema as it arrives – missing and invalid fields flagged, copy as JSON or code
+- **Subagent List** (`subagent-list.tsx`) – The sub-agents a session started, grouped Active and Done with counts – each with its own drawn mark, what it's doing now, and a clock that ticks while it runs or how long ago it finished; waiting and failed in words, choose one to open it
 - **Sunburst Chart** (`sunburst-chart.tsx`) – A hierarchy as rings, top level innermost – the largest leaf and its path to the centre emphasised, outer names and shares beside the circle, inner names on card-coloured chips, rings that sweep round in turn
 - **Switch** (`switch.tsx`) – An accessible on/off setting
 - **Synthesis Notes** (`synthesis-notes.tsx`) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from

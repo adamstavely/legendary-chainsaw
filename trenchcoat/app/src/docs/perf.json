@@ -2878,11 +2878,11 @@
   },
   "ai-summary": {
    "measuredAt": "2026-11-08",
-   "hash": "76a2adec4e40b37e",
+   "hash": "52f700d9ae370db8",
    "bundle": {
     "own": {
-     "min": 42995,
-     "gzip": 11967
+     "min": 43434,
+     "gzip": 12025
     },
     "shared": [
      {
@@ -2932,21 +2932,21 @@
      }
     ],
     "withoutLit": {
-     "min": 52612,
-     "gzip": 14944
+     "min": 53051,
+     "gzip": 14990
     },
     "withLit": {
-     "min": 75483,
-     "gzip": 22435
+     "min": 75922,
+     "gzip": 22456
     }
    },
    "render": {
     "tag": "tc-ai-summary",
     "source": "demo",
     "runs": 7,
-    "cold": 22.4,
-    "first": 3.9,
-    "update": 0.5,
+    "cold": 19.5,
+    "first": 1.4,
+    "update": 0.3,
     "updateKind": "one item of sources replaced",
     "nodes": 114,
     "scale": {
@@ -2955,14 +2955,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4,
-       "update": 0.7,
+       "first": 1.6,
+       "update": 0.2,
        "nodes": 114
       },
       {
        "items": 1000,
-       "first": 2.7,
-       "update": 0.4,
+       "first": 1.6,
+       "update": 0.2,
        "nodes": 114
       }
      ]
@@ -17766,7 +17766,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-08",
-   "hash": "9a78428b15ef6e5d",
+   "hash": "5a6282fb3fc312d7",
    "bundle": {
     "own": {
      "min": 34126,
@@ -18096,7 +18096,7 @@
      {
       "name": "client-context",
       "kind": "element",
-      "min": 61688
+      "min": 61696
      },
      {
       "name": "agent-plan",
@@ -18311,7 +18311,7 @@
      {
       "name": "ai-summary",
       "kind": "element",
-      "min": 40832
+      "min": 41271
      },
      {
       "name": "provider-connection",
@@ -18591,7 +18591,7 @@
      {
       "name": "priority-list",
       "kind": "element",
-      "min": 28785
+      "min": 28868
      },
      {
       "name": "attestation-check",
@@ -18651,7 +18651,7 @@
      {
       "name": "clarifying-questions",
       "kind": "element",
-      "min": 26438
+      "min": 26450
      },
      {
       "name": "agent-team",
@@ -19274,6 +19274,11 @@
       "min": 13856
      },
      {
+      "name": "subagent-list",
+      "kind": "element",
+      "min": 13823
+     },
+     {
       "name": "day-rhythm",
       "kind": "element",
       "min": 13810
@@ -19619,6 +19624,11 @@
       "min": 6480
      },
      {
+      "name": "session-panel",
+      "kind": "element",
+      "min": 6472
+     },
+     {
       "name": "slope-chart",
       "kind": "element",
       "min": 6416
@@ -19672,11 +19682,6 @@
       "name": "dialog",
       "kind": "element",
       "min": 5384
-     },
-     {
-      "name": "session-panel",
-      "kind": "element",
-      "min": 5226
      },
      {
       "name": "in-translation",
@@ -19921,7 +19926,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 61752
+      "min": 61921
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -19942,6 +19947,11 @@
       "name": "src/generative/schemas/tc-configuration-release-control.json",
       "kind": "other",
       "min": 6455
+     },
+     {
+      "name": "src/generative/schemas/tc-session-panel.json",
+      "kind": "other",
+      "min": 6004
      },
      {
       "name": "src/generative/schemas/tc-multi-calendar.json",
@@ -19984,6 +19994,11 @@
       "min": 5581
      },
      {
+      "name": "src/generative/schemas/tc-priority-list.json",
+      "kind": "other",
+      "min": 5461
+     },
+     {
       "name": "src/generative/schemas/tc-combo-chart.json",
       "kind": "other",
       "min": 5447
@@ -19992,11 +20007,6 @@
       "name": "src/generative/schemas/tc-file-details.json",
       "kind": "other",
       "min": 5445
-     },
-     {
-      "name": "src/generative/schemas/tc-priority-list.json",
-      "kind": "other",
-      "min": 5314
      },
      {
       "name": "src/generative/schemas/tc-bubble-chart.json",
@@ -20062,11 +20072,6 @@
       "name": "src/generative/schemas/tc-donut-chart.json",
       "kind": "other",
       "min": 4565
-     },
-     {
-      "name": "src/generative/schemas/tc-session-panel.json",
-      "kind": "other",
-      "min": 4548
      },
      {
       "name": "src/generative/schemas/tc-pull-request.json",
@@ -20882,6 +20887,11 @@
       "name": "src/generative/schemas/tc-traceability-spine.json",
       "kind": "other",
       "min": 2291
+     },
+     {
+      "name": "src/generative/schemas/tc-subagent-list.json",
+      "kind": "other",
+      "min": 2289
      },
      {
       "name": "src/generative/schemas/tc-output-schema-builder.json",
@@ -21855,21 +21865,21 @@
      }
     ],
     "withoutLit": {
-     "min": 9925439,
-     "gzip": 2474392
+     "min": 9945318,
+     "gzip": 2479523
     },
     "withLit": {
-     "min": 9865067,
-     "gzip": 2452978
+     "min": 9884739,
+     "gzip": 2458153
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 9.9,
-    "first": 0.8,
-    "update": 0.2,
+    "cold": 6.4,
+    "first": 0.5,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -32617,11 +32627,11 @@
   },
   "priority-list": {
    "measuredAt": "2026-11-08",
-   "hash": "21c6c3efe9aefe41",
+   "hash": "31cf606b9ca2456f",
    "bundle": {
     "own": {
-     "min": 30773,
-     "gzip": 9071
+     "min": 30856,
+     "gzip": 9108
     },
     "shared": [
      {
@@ -32671,21 +32681,21 @@
      }
     ],
     "withoutLit": {
-     "min": 38665,
-     "gzip": 11433
+     "min": 38748,
+     "gzip": 11468
     },
     "withLit": {
-     "min": 60954,
-     "gzip": 18801
+     "min": 61037,
+     "gzip": 18843
     }
    },
    "render": {
     "tag": "tc-priority-list",
     "source": "demo",
     "runs": 7,
-    "cold": 10,
-    "first": 2.6,
-    "update": 0.8,
+    "cold": 10.9,
+    "first": 4.7,
+    "update": 1.3,
     "updateKind": "one item of items replaced",
     "nodes": 363,
     "scale": {
@@ -32694,14 +32704,14 @@
      "points": [
       {
        "items": 100,
-       "first": 19.4,
-       "update": 5.9,
+       "first": 30.2,
+       "update": 7.7,
        "nodes": 3730
       },
       {
        "items": 1000,
-       "first": 195.7,
-       "update": 50.3,
+       "first": 194.7,
+       "update": 48.4,
        "nodes": 37030
       }
      ]
@@ -39219,18 +39229,18 @@
    }
   },
   "session-panel": {
-   "measuredAt": "2026-11-04",
-   "hash": "2206566c8624f8c1",
+   "measuredAt": "2026-11-08",
+   "hash": "819f86b27c0d14a7",
    "bundle": {
     "own": {
-     "min": 7202,
-     "gzip": 2936
+     "min": 8430,
+     "gzip": 3234
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22579
+      "min": 22585
      },
      {
       "name": "internal/settings",
@@ -39240,7 +39250,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8540
+      "min": 8544
      },
      {
       "name": "internal/card-head",
@@ -39276,6 +39286,11 @@
       "name": "internal/util",
       "kind": "internal",
       "min": 141
+     },
+     {
+      "name": "subagent-list",
+      "kind": "element",
+      "min": 13448
      },
      {
       "name": "change-list",
@@ -39314,20 +39329,20 @@
      }
     ],
     "withoutLit": {
-     "min": 92491,
-     "gzip": 23404
+     "min": 107355,
+     "gzip": 27236
     },
     "withLit": {
-     "min": 115305,
-     "gzip": 31035
+     "min": 129972,
+     "gzip": 34789
     }
    },
    "render": {
     "tag": "tc-session-panel",
     "source": "defaults",
     "runs": 7,
-    "cold": 1.4,
-    "first": 0.2,
+    "cold": 2,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 1,
@@ -42016,6 +42031,104 @@
     "updateKind": "re-render with the same data",
     "nodes": 46,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "subagent-list": {
+   "measuredAt": "2026-11-08",
+   "hash": "f68ddaa356b34eef",
+   "bundle": {
+    "own": {
+     "min": 15824,
+     "gzip": 5897
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21078
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 23314,
+     "gzip": 8070
+    },
+    "withLit": {
+     "min": 45667,
+     "gzip": 15440
+    }
+   },
+   "render": {
+    "tag": "tc-subagent-list",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.1,
+    "first": 1.5,
+    "update": 0.4,
+    "updateKind": "one item of agents replaced",
+    "nodes": 141,
+    "scale": {
+     "property": "agents",
+     "demoItems": 9,
+     "points": [
+      {
+       "items": 100,
+       "first": 7.6,
+       "update": 1.2,
+       "nodes": 1332
+      },
+      {
+       "items": 1000,
+       "first": 70.9,
+       "update": 7.6,
+       "nodes": 13332
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

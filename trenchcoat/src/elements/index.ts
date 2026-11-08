@@ -358,6 +358,7 @@ export * from "./stepper-form";
 export * from "./stories";
 export * from "./stream-graph";
 export * from "./structured-output";
+export * from "./subagent-list";
 export * from "./success-check";
 export * from "./sunburst-chart";
 export * from "./switch";

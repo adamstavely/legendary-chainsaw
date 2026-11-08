@@ -436,6 +436,9 @@
   "src/elements/stepper-form.ts": {
     "literal spacing": 12
   },
+  "src/elements/subagent-list.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/task-board.ts": {
     "clock/environment read": 1
   },

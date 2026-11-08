@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.17.0 – Subagent List, and subagents in the Session Panel
+
+- **Subagent List** (`tc-subagent-list`): the sub-agents a session has started, grouped Active (running or waiting)
+  and Done (finished, failed or stopped) with counts. Each row is the agent's own mark – a flower, star, rings or
+  leaves in one of six tones, drawn from its id – its name, what it's doing now, and a time: a clock that ticks while
+  it's active ("1m 26s") or how long ago it ended ("just now", "1h ago"). Waiting, failed and stopped say so in words;
+  rows are one tab stop with the arrow keys; choosing one fires a cancelable `tc-selected-change`; agents that finish,
+  fail or start waiting are announced. Also exported: `subagentMark()` and `subagentClock()`.
+- **Session Panel:** a **Subagents** section – `subagents` takes the session's sub-agents and draws them with a bare
+  Subagent List, its value the number active. Choosing one fires `tc-subagent-change` with a controllable `subagent`
+  (`subagent` / `defaultSubagent` / `onSubagentChange` in React); the list's own `tc-selected-change` stops at the
+  panel, so it's never taken for the tool rail's. `now` holds the clocks still. Subagents is open by default, between
+  Outputs and Changes; `sections` now defaults to `["environment", "subagents", "changes"]`.
+
 ## 0.16.0 – Wider figure columns on the priority list; the AI summary's ask box stays at the bottom
 
 - **Priority List:** a `PriorityFigureColumn` takes a `width` in px, for a heading longer than the 56px default allows –

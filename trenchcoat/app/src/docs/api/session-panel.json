@@ -3,7 +3,7 @@
   {
    "tag": "tc-session-panel",
    "className": "TcSessionPanel",
-   "description": "The side panel of a working session: tools, environment, context, connectors, outputs, changes and background tasks.",
+   "description": "The side panel of a working session: tools, environment, context, connectors, outputs, subagents, changes and background tasks.",
    "properties": [
     {
      "name": "tools",
@@ -70,6 +70,30 @@
      "readonly": false
     },
     {
+     "name": "subagents",
+     "attribute": null,
+     "type": "Subagent[]",
+     "default": "[]",
+     "description": "The subagents the session started; without any, the section is left out",
+     "readonly": false
+    },
+    {
+     "name": "subagent",
+     "attribute": "subagent",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the chosen subagent. Changed by the user unless a tc-subagent-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now for the subagents' clocks, epoch ms; by default the list's own clock, which ticks",
+     "readonly": false
+    },
+    {
      "name": "changes",
      "attribute": null,
      "type": "ChangeItem[]",
@@ -105,7 +129,7 @@
      "name": "sections",
      "attribute": null,
      "type": "SessionPanelSection[]",
-     "default": "[\"environment\", \"changes\"]",
+     "default": "[\"environment\", \"subagents\", \"changes\"]",
      "description": "The sections folded open. Changed by the user unless a tc-sections-change listener calls preventDefault()",
      "readonly": false
     },
@@ -138,6 +162,12 @@
      "detail": "",
      "description": "A row that opens details elsewhere was pressed ({ section }: SessionPanelSectionOpen)",
      "cancelable": false
+    },
+    {
+     "name": "tc-subagent-change",
+     "detail": "",
+     "description": "A subagent was chosen ({ subagent, agent }: SessionPanelSubagentChange); cancelable – prevented, `subagent` stays as it was",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -212,17 +242,37 @@
      "type": "(sections: SessionPanelSection[]) => void",
      "optional": true,
      "description": "A section folded open or shut"
+    },
+    {
+     "name": "subagent",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chosen subagent's id – controlled when given"
+    },
+    {
+     "name": "defaultSubagent",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chosen subagent on mount when `subagent` isn't controlled"
+    },
+    {
+     "name": "onSubagentChange",
+     "type": "(subagent: string | null, agent: Subagent | null) => void",
+     "optional": true,
+     "description": "A subagent was chosen"
     }
    ],
    "hides": [
     "tool",
     "toggles",
     "sections",
+    "subagent",
     "children"
    ],
    "events": {
     "tc-sections-change": null,
     "tc-section-open": "onTcSectionOpen",
+    "tc-subagent-change": null,
     "tc-selected-change": null,
     "tc-toggles-change": null,
     "tc-action": "onTcAction",
@@ -241,6 +291,7 @@
     "moreTools",
     "environment",
     "toggles",
+    "subagents",
     "changes",
     "changeActions",
     "sections",
@@ -264,6 +315,14 @@
      "attribute": "outputs"
     },
     {
+     "name": "subagent",
+     "attribute": "subagent"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
      "name": "changeLimit",
      "attribute": "change-limit"
     },
@@ -280,9 +339,17 @@
     {
      "name": "tc-section-open",
      "cancelable": false
+    },
+    {
+     "name": "tc-subagent-change",
+     "cancelable": true
     }
    ],
    "controlled": [
+    {
+     "property": "subagent",
+     "event": "tc-subagent-change"
+    },
     {
      "property": "sections",
      "event": "tc-sections-change"
@@ -426,7 +493,8 @@
      "internal/settings",
      "icon-rail",
      "meter-row",
-     "panel-card"
+     "panel-card",
+     "subagent-list"
     ]
    },
    {
@@ -518,6 +586,7 @@
      "icon-rail",
      "meter-row",
      "panel-card",
+     "subagent-list",
      "tokens.css"
     ]
    },
@@ -594,6 +663,7 @@
      "icon-rail",
      "meter-row",
      "panel-card",
+     "subagent-list",
      "tokens.css"
     ]
    }
@@ -601,38 +671,45 @@
  },
  "runtime": {
   "timers": [
-   "setTimeout (internal/popover › PopoverController)"
+   "setTimeout (internal/popover › PopoverController)",
+   "setInterval, cleared (subagent-list)"
   ],
   "frames": [
    "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
   ],
-  "animations": 0,
+  "animations": 1,
   "observers": [
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "MutationObserver (internal/controllers › FocusRescueController)",
    "ResizeObserver (internal/popover › PopoverController)"
   ],
-  "clock": [],
+  "clock": [
+   "Date.now() (subagent-list)"
+  ],
   "listeners": [
-   "document pointerdown (icon-rail)"
+   "document pointerdown (icon-rail)",
+   "document visibilitychange (subagent-list)"
   ],
   "pauses": {
    "offscreen": [],
-   "hidden": [],
+   "hidden": [
+    "subagent-list"
+   ],
    "reducedMotion": [
     "CSS (internal/kit › kitCss)",
     "CSS (internal/popover › popoverCss)",
     "CSS (internal/settings › rawSettingsCss)",
     "CSS (meter-row)",
     "script (panel-card)",
-    "CSS (panel-card)"
+    "CSS (panel-card)",
+    "CSS (subagent-list)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 92491,
-  "gzip": 23314
+  "min": 107355,
+  "gzip": 27236
  }
 }

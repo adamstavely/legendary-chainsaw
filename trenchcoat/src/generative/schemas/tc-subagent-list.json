@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-subagent-list.json",
+  "title": "tc-subagent-list",
+  "description": "The sub-agents a session started, grouped Active and Done, each with its mark, what it's doing and a live clock.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Subagent"
+      },
+      "description": "The sub-agents, in the order to show them within each group – newest first reads best"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the chosen agent. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock, which ticks"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drop the tray and card, for a place that already has one"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "justNow": {
+          "type": "string"
+        },
+        "ago": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "finished": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "stopped": {
+          "type": "string"
+        },
+        "activeCount": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it uses, merged over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Subagent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "What it was asked to do, short – \"Review forms current\""
+        },
+        "status": {
+          "$ref": "#/definitions/SubagentStatus"
+        },
+        "activity": {
+          "type": "string",
+          "description": "What it's doing now, or why it stopped – \"awaiting command message\""
+        },
+        "startedAt": {
+          "type": "number",
+          "description": "When it started, epoch ms – an active agent's clock runs from here"
+        },
+        "endedAt": {
+          "type": "number",
+          "description": "When it finished, failed or stopped, epoch ms – a done agent shows how long ago"
+        },
+        "mark": {
+          "type": "string",
+          "description": "What its mark is drawn from, when not its id – to give agents the same mark across sessions"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "One sub-agent"
+    },
+    "SubagentStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "running",
+        "stopped",
+        "waiting"
+      ],
+      "description": "Where a sub-agent is: running and waiting are Active; done, failed and stopped are Done"
+    }
+  }
+}
