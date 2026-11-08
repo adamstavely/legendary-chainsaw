@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/facet-sidebar";
-import { facetActive, type Facet, type FacetValueChange, type FacetValues, type TcFacetSidebar } from "../../src/elements/facet-sidebar";
+import { facetActive, type Facet, type FacetQueryChange, type FacetValueChange, type FacetValues, type TcFacetSidebar } from "../../src/elements/facet-sidebar";
 import { FacetSidebar } from "../../src/elements/react/facet-sidebar";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -78,6 +78,38 @@ describe("tc-facet-sidebar", () => {
     await settle();
     expect(el.value).toEqual({});
     expect(seen.map((s) => s.facet)).toEqual(["kind", "access", "access", ""]);
+  });
+
+  test("search-label: a white search box above the filters; typing fires tc-query-change, Clear all empties it", async () => {
+    const plain = await make();
+    expect(plain.querySelector(".ui-fct__query")).toBeNull();
+    const el = await fixture<TcFacetSidebar>(html`<tc-facet-sidebar search-label="Search topics" .facets=${FACETS}></tc-facet-sidebar>`);
+    const input = el.querySelector<HTMLInputElement>(".ui-fct__query input")!;
+    expect(input.placeholder).toBe("Search topics");
+    expect(text(el.querySelector(".ui-fct__query"))).toBe("Search topics");
+    expect(el.querySelector(".ui-fct__clear")).toBeNull();
+    const seen: string[] = [];
+    el.addEventListener("tc-query-change", (e) => seen.push((e as CustomEvent<FacetQueryChange>).detail.query));
+    input.value = "quan";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    expect(el.query).toBe("quan");
+    // A search alone brings Clear all, which empties it and keeps focus in the box
+    el.querySelector<HTMLButtonElement>(".ui-fct__clear")!.click();
+    await settle();
+    expect(el.query).toBe("");
+    expect(input.value).toBe("");
+    expect(document.activeElement).toBe(input);
+    // With filters too, Clear all empties both
+    el.query = "kelp";
+    option(el, "kind", "Documents").querySelector("input")!.click();
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-fct__clear")!.click();
+    await settle();
+    expect([el.query, el.value]).toEqual(["", {}]);
+    expect(seen).toEqual(["quan", "", ""]);
+    // White, not the sunken fill a facet's own search has
+    expect(getComputedStyle(input).backgroundColor).toBe("rgb(255, 255, 255)");
   });
 
   test("a chip's × removes it and focus moves on; prevented, the value stays", async () => {
@@ -231,7 +263,7 @@ describe("tc-facet-sidebar", () => {
     test(`axe (${theme}): no violations in either look`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base); width: 300px">
         <tc-facet-sidebar .facets=${FACETS} .value=${{ kind: ["doc"], pages: [10, 60] }}></tc-facet-sidebar>
-        <tc-facet-sidebar look="clean" .facets=${FACETS} .collapsed=${["prog"]}></tc-facet-sidebar>
+        <tc-facet-sidebar look="clean" search-label="Search topics" query="kelp" .facets=${FACETS} .collapsed=${["prog"]}></tc-facet-sidebar>
       </div>`);
       await finish(wrap);
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
