@@ -6,6 +6,8 @@
   readers hear before each row's change – `momentum-label="Trend"` reads “Trend down 5%”.
 - **Priority List:** `hide` takes `"health"` too, leaving the health word out from under each name (screen readers still
   hear it); a row with no owner or team then shows its name alone.
+- **Priority List:** badge codes up to five letters (“EAPMC”) show whole – the code column is 48px (44px when narrow), up
+  from 40px (36px), which clipped them.
 - **Priority List:** with `hide`, the columns that remain fold away only when they run out of room themselves. Before,
   they folded at the widths that assumed every column was shown, so a Centres list with coverage, open and work hidden
   lost its momentum and figures in a 450px rail with room to spare. A hidden column counts the width it has where the

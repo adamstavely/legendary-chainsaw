@@ -235,6 +235,17 @@ describe("tc-priority-list", () => {
     });
   }
 
+  test("badge codes up to five letters show whole, wide and narrow", async () => {
+    const items: PriorityItem[] = ["AFMC", "EAPMC", "WCPMC", "CCI"].map((code) => ({ id: code, name: `${code} centre`, badge: code, health: "on-track" }));
+    const wrap = await fixture(html`<div style="width: 820px"><tc-priority-list .items=${items}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    const clipped = () => [...el.querySelectorAll<HTMLElement>(".ui-prl__badge--code")].filter((b) => b.scrollWidth > b.clientWidth + 0.5).map((b) => b.textContent);
+    expect(clipped()).toEqual([]);
+    (wrap as HTMLElement).style.width = "360px";
+    await settle();
+    expect(clipped()).toEqual([]);
+  });
+
   test("momentum-label renames the momentum column, and what screen readers hear before each change", async () => {
     const el = await fixture<TcPriorityList>(html`<tc-priority-list momentum-label="Trend" .items=${ITEMS}></tc-priority-list>`);
     expect(el.querySelector(".ui-prl__col--momentum")!.textContent!.trim()).toBe("Trend");
@@ -270,8 +281,9 @@ describe("tc-priority-list", () => {
     // The last figure ends at the row's end: no empty gap after it
     const last = r.querySelectorAll(".ui-prl__fig");
     expect(r.getBoundingClientRect().right - last[last.length - 1].getBoundingClientRect().right).toBeLessThan(16);
-    // A narrow rail: with three columns hidden, momentum and the figures still fit, and the name keeps 140px
-    (wrap as HTMLElement).style.width = "450px";
+    // A narrow rail: with three columns hidden, momentum and the figures still fit, and the name keeps 140px (beside a
+    // code's 48px column)
+    (wrap as HTMLElement).style.width = "460px";
     await settle();
     await expect.poll(() => getComputedStyle(row(el, CENTRES[0].id)).gridTemplateColumns.split(" ").length).toBe(3 + FIGURES.length);
     expect(getComputedStyle(row(el, CENTRES[0].id).querySelector(".ui-prl__fig")!).display).not.toBe("none");

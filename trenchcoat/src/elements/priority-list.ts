@@ -386,7 +386,7 @@ export class TcPriorityList extends TcElement {
    away as it narrows. The badge's column widens for codes; the page's figures add a column each */
 [data-ui="prl"] { --tc-prl-cols: minmax(0, 1fr) 108px 120px 72px 40px; }
 .ui-prl__card { --tc-prl-lead: 28px; --tc-prl-fig-w: 56px; --tc-prl-c-momentum: 108px; --tc-prl-c-coverage: 120px; --tc-prl-c-open: 72px; --tc-prl-c-work: 40px; }
-.ui-prl__card[data-codes] { --tc-prl-lead: 40px; }
+.ui-prl__card[data-codes] { --tc-prl-lead: 48px; }
 [data-ui="prl"] *, [data-ui="prl"] *::before, [data-ui="prl"] *::after { box-sizing: border-box; }
 [data-ui="prl"] p { margin: 0; }
 [data-ui="prl"] ul { margin: 0; padding: 0; list-style: none; }
@@ -489,7 +489,7 @@ export class TcPriorityList extends TcElement {
 }
 @container (max-width: 400px) {
   .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 60px; --tc-prl-c-momentum: ; --tc-prl-c-coverage: 60px; --tc-prl-c-open: ; --tc-prl-c-work: ; }
-  .ui-prl__card[data-codes] { --tc-prl-lead: 36px; }
+  .ui-prl__card[data-codes] { --tc-prl-lead: 44px; }
   .ui-prl__momentum, .ui-prl__col--momentum { display: none; }
   .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
