@@ -1,10 +1,12 @@
 # Changelog
 
-## 0.17.5 – Long facet options fit the sidebar
+## 0.17.5 – Long facet options fit the sidebar; the AI summary's disclaimer sits under its ask box
 
 - **Facet Sidebar:** an option too long for the sidebar ends in an ellipsis inside the card, with its count still
   showing and its whole name on hover. Before, the longest option widened the list past the card's edge, where it was
   cut off mid-word, count and all.
+- **AI Summary:** the `disclaimer` sits right under the ask box, above "Was this helpful?" and Sources, rather than
+  at the bottom of the card – it reads with the box it's about.
 
 ## 0.17.4 – A search box on the facet sidebar; a disclaimer on the AI summary
 

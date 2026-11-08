@@ -26,7 +26,7 @@ import { safeUrl } from "./internal/safe-url";
  *   · follow-ups: `ask` shows a question box under the summary; Enter fires tc-ask, and the page answers by adding to
  *     `messages`, shown under a "Follow-up" divider – questions as bubbles, answers as text with cited points
  *   · `icon` puts an app's own mark (a persona's logo) in place of the sparkle; `badge` renames "AI-generated"
- *   · `disclaimer` – one quiet line at the bottom of the card, "AI can make mistakes…", which also describes the ask box
+ *   · `disclaimer` – one quiet line under the ask box, above the footer, "AI can make mistakes…", which also describes the ask box
  *   · given a height shorter than its content, the summary and the conversation scroll between the header and the ask
  *     box; at its natural height nothing scrolls
  *   · the ask box is a white field in either look; its send button is the primary action, or `--tc-aism-send-bg` (with
@@ -176,7 +176,7 @@ export class TcAiSummary extends TcElement {
   @property() accessor ask: string | undefined = undefined;
   /** The follow-up conversation, oldest first: questions ("user") and answers ("assistant") */
   @property({ attribute: false }) accessor messages: AiSummaryMessage[] = [];
-  /** One quiet line at the bottom of the card – "AI can make mistakes. Check important info." – unset, none */
+  /** One quiet line under the ask box, above the footer – "AI can make mistakes. Check important info." – unset, none */
   @property() accessor disclaimer = "";
 
   @state() private accessor clock = 0;
@@ -703,8 +703,9 @@ export class TcAiSummary extends TcElement {
       <span class="tc-sr-only" role="status">${this.announce}</span>
       ${this.renderHead()}
       <div class="ui-aism__card">
-        ${this.renderBody()} ${this.renderFoot()}
+        ${this.renderBody()}
         ${this.disclaimer ? html`<p class="ui-aism__disclaimer" id=${`${this.uid}-disclaimer`}>${this.disclaimer}</p>` : nothing}
+        ${this.renderFoot()}
       </div>
     `;
   }
@@ -823,7 +824,8 @@ export class TcAiSummary extends TcElement {
 .ui-aism__msg-error { display: flex; align-items: flex-start; gap: var(--tc-space-1-5); color: var(--tc-status-danger-fg); line-height: var(--tc-line-height-snug); }
 /* ----- The question box: a field that grows to a few lines, with Send ----- */
 .ui-aism__ask { padding: 0 var(--tc-space-4) var(--tc-space-4); }
-/* The disclaimer: one quiet line, the card's last */
+/* The disclaimer: one quiet line under the ask box, above the footer */
+.ui-aism__ask:has(+ .ui-aism__disclaimer) { padding-bottom: var(--tc-space-2); }
 .ui-aism__disclaimer { margin: 0; padding: 0 var(--tc-space-4) var(--tc-space-3); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-normal); text-align: center; color: var(--tc-text-muted); }
 .ui-aism__ask-field { display: flex; align-items: flex-end; gap: var(--tc-space-2); min-height: var(--tc-field-h); padding: var(--tc-space-1) var(--tc-space-1) var(--tc-space-1) var(--tc-field-px); border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-aism__ask-field:hover { box-shadow: var(--tc-field-shadow-hover); }
