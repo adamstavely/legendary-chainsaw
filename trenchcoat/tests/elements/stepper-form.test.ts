@@ -11,6 +11,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/stepper-form";
 import type { StepperContext, StepperFormStep, TcStepperForm } from "../../src/elements/stepper-form";
 import { StepperField as RField, StepperForm as RForm, StepperInput as RInput, StepperTags as RTags, type Step as RStep } from "../../src/elements/react/stepper-form";
+import { userEvent } from "vitest/browser";
 import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(() => {
@@ -241,6 +242,67 @@ describe("tc-stepper-form", () => {
     x("c@d.co").click();
     expect(document.activeElement).toBe(el.querySelector(".ui-sf__tags-input"));
     await vi.waitFor(() => expect(el.querySelectorAll(".ui-sf__chip").length).toBe(0));
+  });
+
+  describe("choices: one Tab stop (WCAG 2.1.1)", () => {
+    type Choices = HTMLElement & { value: string; disabled: boolean; options: { value: string; title: string; disabled?: boolean }[] };
+    const OPTIONS = [
+      { value: "solo", title: "Solo", disabled: true },
+      { value: "team", title: "Team" },
+      { value: "org", title: "Organisation" },
+    ];
+    const make = (value: string) =>
+      fixture<HTMLDivElement>(html`<div><button id="before">Before</button><tc-stepper-choices label="Team" .value=${value} .options=${OPTIONS}></tc-stepper-choices></div>`).then(async (wrap) => {
+        await settle();
+        return { wrap, el: wrap.querySelector<Choices>("tc-stepper-choices")! };
+      });
+    const tabbable = (el: Element) => [...el.querySelectorAll<HTMLElement>('[role="radio"]')].filter((r) => r.tabIndex === 0).map((r) => r.dataset.value);
+
+    for (const value of ["", "unknown"])
+      test(`nothing chosen (${JSON.stringify(value)}): the first enabled radio is the one Tab stop; Tab reaches it and Space picks it`, async () => {
+        const { wrap, el } = await make(value);
+        const picked: string[] = [];
+        el.addEventListener("tc-value-change", (e) => picked.push((e as CustomEvent<{ value: string }>).detail.value));
+        expect(tabbable(el)).toEqual(["team"]);
+        wrap.querySelector<HTMLButtonElement>("#before")!.focus();
+        await userEvent.tab();
+        expect(document.activeElement).toBe(el.querySelector('[data-value="team"]'));
+        await userEvent.keyboard(" ");
+        await settle();
+        expect(picked).toEqual(["team"]);
+        expect(el.value).toBe("team");
+        expect(tabbable(el)).toEqual(["team"]);
+        // Arrow keys still move and pick, skipping the disabled option as they wrap
+        await userEvent.keyboard("{ArrowDown}");
+        await settle();
+        expect(el.value).toBe("org");
+        await userEvent.keyboard("{ArrowDown}");
+        await settle();
+        expect(el.value).toBe("team");
+        expect(document.activeElement).toBe(el.querySelector('[data-value="team"]'));
+      });
+
+    test("nothing chosen: Enter on the Tab stop picks it", async () => {
+      const { el } = await make("");
+      const team = el.querySelector<HTMLElement>('[data-value="team"]')!;
+      team.focus();
+      team.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true }));
+      await settle();
+      expect(el.value).toBe("team");
+    });
+
+    test("a chosen option is the only Tab stop; a disabled group, or one with every option disabled, has none", async () => {
+      const { el } = await make("org");
+      expect(tabbable(el)).toEqual(["org"]);
+      el.disabled = true;
+      await settle();
+      expect(tabbable(el)).toEqual([]);
+      el.disabled = false;
+      el.value = "";
+      el.options = OPTIONS.map((o) => ({ ...o, disabled: true }));
+      await settle();
+      expect(tabbable(el)).toEqual([]);
+    });
   });
 
   for (const look of ["standard", "clean"]) {

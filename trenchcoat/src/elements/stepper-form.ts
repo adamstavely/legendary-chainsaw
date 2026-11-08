@@ -1568,12 +1568,15 @@ export type StepperChoice = {
   description?: string | Element;
   /** A small label, e.g. "Popular" */
   badge?: string;
+  /** Shown but can't be chosen; the arrow keys and Tab skip it */
+  disabled?: boolean;
 };
 
 const content = (v: string | Element) => (typeof v === "string" ? v : v.cloneNode(true));
 
 /**
- * Selectable cards – a ring glides to the chosen one. Arrow keys move, Enter picks and continues. Form-associated: the
+ * Selectable cards – a ring glides to the chosen one. One Tab stop: the chosen card, or the first enabled one when
+ * none is chosen. Arrow keys move and pick (skipping disabled cards), Space picks, Enter picks and continues. Form-associated: the
  * chosen value is submitted under `name`.
  * @tag tc-stepper-choices
  * @fires tc-value-change - Another card was chosen; detail `{ value: string }`. Cancelable.
@@ -1642,19 +1645,39 @@ export class TcStepperChoices extends TcStepperBlock {
     if (this.emit("tc-value-change", { value }, { cancelable: true })) this.value = value;
   }
 
+  /** The option that takes Tab: the chosen one, else the first enabled one (the ARIA radio group pattern); none when
+   *  the group or every option is disabled */
+  private get tabStop() {
+    if (this.isDisabled) return undefined;
+    const chosen = this.options.find((o) => o.value === this.value && !o.disabled);
+    return (chosen ?? this.options.find((o) => !o.disabled))?.value;
+  }
+
   private onKeyDown(e: KeyboardEvent) {
     if (this.isDisabled || e.isComposing) return;
     const options = this.options;
-    const at = options.findIndex((o) => o.value === this.value);
+    const focused = (e.target as HTMLElement).closest?.<HTMLElement>("[data-value]")?.dataset.value;
+    // From the chosen option, or – with none chosen – the one focus is on
+    let at = options.findIndex((o) => o.value === this.value);
+    if (at < 0) at = options.findIndex((o) => o.value === focused);
     const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
     if (step) {
       e.preventDefault();
-      const next = options[(at + step + options.length) % options.length];
+      const enabled = options.filter((o) => !o.disabled).length;
+      if (!enabled) return;
+      // The next enabled option, wrapping; from nowhere, the first (or last) enabled one
+      let i = at < 0 ? (step > 0 ? -1 : 0) : at;
+      do i = (i + step + options.length) % options.length;
+      while (options[i].disabled);
+      const next = options[i];
       this.pick(next.value);
       this.querySelector<HTMLElement>(`[data-value="${CSS.escape(next.value)}"]`)?.focus();
     } else if (e.key === "Enter") {
       e.preventDefault();
-      this.closest("form")?.requestSubmit();
+      // Enter picks the focused option, then continues
+      const option = options.find((o) => o.value === focused && !o.disabled);
+      if (option) this.pick(option.value);
+      void this.updateComplete.then(() => this.closest("form")?.requestSubmit());
     }
   }
 
@@ -1676,6 +1699,7 @@ export class TcStepperChoices extends TcStepperBlock {
 
   protected override render() {
     const disabled = this.isDisabled;
+    const stop = this.tabStop;
     return html`<span class="ui-sf__ring" aria-hidden="true"></span>${repeat(
         this.options,
         (o) => o.value,
@@ -1685,10 +1709,10 @@ export class TcStepperChoices extends TcStepperBlock {
             type="button"
             role="radio"
             aria-checked=${on ? "true" : "false"}
-            tabindex=${on ? 0 : -1}
+            tabindex=${o.value === stop ? 0 : -1}
             data-value=${o.value}
             class="ui-sf__choice"
-            ?disabled=${disabled}
+            ?disabled=${disabled || !!o.disabled}
             @click=${() => this.pick(o.value)}
           >
             <span class="ui-sf__choice-top"

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.14.1 – Choice cards are reachable by keyboard with nothing chosen
+
+- **Stepper Form:** `tc-stepper-choices` with no option chosen – an empty `value`, or one that matches no option – made
+  every card `tabindex="-1"`, so the group couldn't be reached with Tab (WCAG 2.1.1). Following the ARIA radio group
+  pattern, the first enabled card now takes the Tab stop when none is chosen; the chosen card still does otherwise.
+  Space picks it, Enter picks it and continues, and the arrow keys move and pick from there, skipping disabled cards.
+  A `StepperChoice` can be `disabled`; with the group disabled, or every card disabled, nothing is focusable.
+
 ## 0.14.0 – Forecasts on the KPI chart; priority lists that keep their trend line
 
 - **KPI Chart:** forecasts. A `KpiSeries` takes `forecastFrom`, the index into `values` and `labels` where its forecast

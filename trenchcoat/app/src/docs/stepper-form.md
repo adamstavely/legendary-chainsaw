@@ -51,8 +51,10 @@ vertically.
 | Enter | In a field: Continue (or Finish on the last step) |
 | Enter / , / ; | In an email list: adds what was typed as a chip; with nothing typed, Enter continues |
 | Backspace | In an empty email list: removes the last chip |
-| ← → ↑ ↓ | In a set of choice cards: chooses the previous or next card, wrapping |
-| Enter | On a choice card: Continue |
+| Tab | Into a set of choice cards: lands on the chosen card, or on the first enabled card when none is chosen – one stop for the group |
+| ← → ↑ ↓ | In a set of choice cards: chooses the previous or next card, wrapping and skipping disabled cards |
+| Space | On a choice card: chooses it |
+| Enter | On a choice card: chooses it, then Continue |
 | Tab | Moves through the steps people can jump back to, the step's fields, Back and Continue |
 
 ## Screen readers

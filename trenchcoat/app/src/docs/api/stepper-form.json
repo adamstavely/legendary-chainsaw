@@ -845,7 +845,7 @@
   {
    "tag": "tc-stepper-choices",
    "className": "TcStepperChoices",
-   "description": "Selectable cards – a ring glides to the chosen one. Arrow keys move, Enter picks and continues. Form-associated: the\nchosen value is submitted under `name`.",
+   "description": "Selectable cards – a ring glides to the chosen one. One Tab stop: the chosen card, or the first enabled one when\nnone is chosen. Arrow keys move and pick (skipping disabled cards), Space picks, Enter picks and continues. Form-associated: the\nchosen value is submitted under `name`.",
    "properties": [
     {
      "name": "value",
@@ -1688,6 +1688,7 @@
   }
  ],
  "changelog": [
+  "**Stepper Form:** `tc-stepper-choices` with no option chosen – an empty `value`, or one that matches no option – made every card `tabindex=\"-1\"`, so the group couldn't be reached with Tab (WCAG 2.1.1). Following the ARIA radio group pattern, the first enabled card now takes the Tab stop when none is chosen; the chosen card still does otherwise. Space picks it, Enter picks it and continues, and the arrow keys move and pick from there, skipping disabled cards. A `StepperChoice` can be `disabled`; with the group disabled, or every card disabled, nothing is focusable.",
   "**stepper-form error contrast:** its error messages were 3.9:1; they now use the danger text colour.",
   "stepper-form `initialValues` → `defaultValues`; `initialStep` → `defaultStep`"
  ],
@@ -2274,7 +2275,7 @@
   "windowed": false
  },
  "size": {
-  "min": 89692,
-  "gzip": 19976
+  "min": 90156,
+  "gzip": 20139
  }
 }
