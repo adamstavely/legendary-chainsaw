@@ -3,7 +3,12 @@ name: Trenchcoat publish
 # Publishes @adamstavely/trenchcoat to GitHub Packages with no manual steps: on a merge to main that touches
 # trenchcoat/, it publishes package.json's version if that version isn't on the registry yet, then tags the commit
 # trenchcoat-v<version>. Pushing a trenchcoat-v* tag by hand still works as a fallback (the tag must match the
-# version). The full CI suite runs first, so a broken package is never published
+# version).
+#
+# A broken package is never published, without running the ~45-minute suite twice: a merge to main can only land once
+# its PR's required `ci-ok` check has passed, so a merge publishes after confirming that check on the merged PR. A
+# commit on main with no PR whose ci-ok passed doesn't publish. A hand-pushed tag has no PR to vouch for it, so it
+# still runs the full suite first
 on:
   push:
     branches: [main]
@@ -23,6 +28,9 @@ jobs:
     permissions:
       contents: write
       packages: write
+      # To find the merged PR and read its ci-ok check
+      pull-requests: read
+      checks: read
     defaults:
       run:
         working-directory: trenchcoat
@@ -62,25 +70,44 @@ jobs:
             echo "::error::couldn't check the registry for $version"
             exit 1
           fi
+      # A merge: the PR it came from must have passed ci-ok, the check main requires. Its head is what CI ran on
+      - name: The merged PR passed CI
+        if: steps.version.outputs.publish == 'true' && github.ref_type == 'branch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr="$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '[.[] | select(.merged_at != null)][0]')"
+          if [ -z "$pr" ] || [ "$pr" = "null" ]; then
+            echo "::error::$GITHUB_SHA didn't come from a merged PR, so nothing vouches for it; publish with a tag instead"
+            exit 1
+          fi
+          number="$(jq -r .number <<<"$pr")"
+          head="$(jq -r .head.sha <<<"$pr")"
+          conclusion="$(gh api "repos/$GITHUB_REPOSITORY/commits/$head/check-runs?check_name=ci-ok" --jq '[.check_runs[] | select(.status == "completed")][0].conclusion')"
+          echo "PR #$number, head $head: ci-ok $conclusion"
+          if [ "$conclusion" != "success" ]; then
+            echo "::error::PR #$number's ci-ok check didn't pass ($conclusion)"
+            exit 1
+          fi
       - if: steps.version.outputs.publish == 'true'
         run: npm ci
-      # npm run ci runs the element tests in real browsers
+      # A hand-pushed tag runs the full suite (below): the element tests run in real browsers
       - name: Playwright browsers
-        if: steps.version.outputs.publish == 'true'
+        if: steps.version.outputs.publish == 'true' && github.ref_type == 'tag'
         run: npx playwright install --with-deps
       # check:snippets (in npm run ci) type-checks the docs' snippets inside the example apps, which install the
       # packed tarball: build and pack first, as trenchcoat-ci.yml does
       - name: Build and pack for the examples
-        if: steps.version.outputs.publish == 'true'
+        if: steps.version.outputs.publish == 'true' && github.ref_type == 'tag'
         run: |
           npm run build:package
           rm -rf examples/.packed && mkdir -p examples/.packed
           npm pack --pack-destination examples/.packed
           mv examples/.packed/adamstavely-trenchcoat-*.tgz examples/.packed/trenchcoat.tgz
       - name: Framework examples
-        if: steps.version.outputs.publish == 'true'
+        if: steps.version.outputs.publish == 'true' && github.ref_type == 'tag'
         run: npm run examples -- --no-pack
-      - if: steps.version.outputs.publish == 'true'
+      - if: steps.version.outputs.publish == 'true' && github.ref_type == 'tag'
         run: npm run ci
       - if: steps.version.outputs.publish == 'true'
         run: npm run build:package
