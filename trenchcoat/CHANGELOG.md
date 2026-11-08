@@ -1,11 +1,13 @@
 # Changelog
 
-## 0.11.1 – Priority lists with hidden columns keep what's left
+## 0.11.1 – Priority lists with hidden columns keep what's left; a brandless side nav's button at the end
 
 - **Priority List:** with `hide`, the columns that remain fold away only when they run out of room themselves. Before,
   they folded at the widths that assumed every column was shown, so a Centres list with coverage, open and work hidden
   lost its momentum and figures in a 450px rail with room to spare. A hidden column counts the width it has where the
   figures fold, so the name never gets less room than it would with every column shown.
+- **Side Nav:** without a brand – when the app's header carries it, say – the collapse button keeps to the end of the bar,
+  as it does beside a brand, instead of the start; folded into a rail it stays centred.
 
 ## 0.11.0 – Results list headings as given; priority lists without some columns; side-nav item spacing
 

@@ -201,7 +201,7 @@ export class TcSideNav extends TcElement {
   protected override render() {
     const words = this.words;
     return html`
-      <div class="ui-snav__head">
+      <div class="ui-snav__head" ?data-brandless=${!this.brand && !this.brandIcon}>
         ${this.brandPart()}
         ${this.collapsible
           ? html`<button type="button" class="ui-snav__toggle" aria-expanded=${this.collapsed ? "false" : "true"} aria-controls=${`${this.uid}-nav`} title=${this.collapsed ? words.expand : words.collapse} @click=${() => this.toggle()}>
@@ -263,6 +263,9 @@ export class TcSideNav extends TcElement {
    gap between the other children stays as it is */
 .ui-snav__head { display: flex; align-items: center; gap: var(--tc-space-1); min-height: var(--tc-control-h-md); margin-block-end: calc(var(--tc-snav-head-gap, var(--tc-space-2)) - var(--tc-space-2)); padding: 0 var(--tc-space-1); }
 [data-ui="snav"][collapsed] .ui-snav__head { flex-direction: column; padding: 0; }
+/* Without a brand (it's in the app's header, say), the collapse button keeps to the end of the bar, as it does beside one */
+.ui-snav__head[data-brandless] { justify-content: flex-end; }
+[data-ui="snav"][collapsed] .ui-snav__head[data-brandless] { justify-content: center; }
 /* The brand's name and logo take their size from the page: --tc-snav-brand-size, --tc-snav-brand-weight and
    --tc-snav-logo-size on tc-side-nav. The logo never grows past the rail's inner width, so the rail can centre it */
 .ui-snav__brand { display: flex; flex: 1; align-items: center; gap: var(--tc-space-2); min-width: 0; color: var(--tc-text-primary); font-weight: var(--tc-snav-brand-weight, var(--tc-font-weight-semibold)); text-decoration: none; border-radius: var(--tc-radius-md); }
