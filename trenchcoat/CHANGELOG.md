@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.17.1 – Centered figure columns and names on the priority list; the AI summary scrolls within, its ask box white
+
+- **Priority List:** a `PriorityFigureColumn` takes `align: "center"`, centering its heading and values – "Last month"
+  over its counts – instead of lining them up at the column's end. `name-align="center"` centers the names, with their
+  heading over the names alone rather than over the badge column too – for short names such as codes.
+
+- **AI Summary:** given a height shorter than its content, the summary and the conversation scroll between the header
+  and the ask box, which stay put with the footer – the page needn't scroll the whole card. At its natural height
+  nothing scrolls.
+- **AI Summary:** the ask box is a white field in the clean look too, not a gray sunken one. Its send button is still
+  the primary action, unless the page sets `--tc-aism-send-bg` (with `--tc-aism-send-bg-hover`,
+  `--tc-aism-send-bg-active` and `--tc-aism-send-fg`) on the element or a parent – a brand blue, say. With nothing
+  to send it fades to 45%, not 20%, so it keeps its colour rather than washing out to gray.
+
 ## 0.17.0 – Subagent List, and subagents in the Session Panel
 
 - **Subagent List** (`tc-subagent-list`): the sub-agents a session has started, grouped Active (running or waiting)

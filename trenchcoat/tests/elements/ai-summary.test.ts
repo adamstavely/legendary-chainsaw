@@ -264,6 +264,47 @@ describe("tc-ai-summary", () => {
     });
   }
 
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: shorter than its content, the summary scrolls between the header and the ask box, which stay put`, async () => {
+      const el = await make(look, "done", { ask: "Ask a follow-up…" });
+      el.style.height = "320px";
+      await settle();
+      const body = el.querySelector<HTMLElement>(".ui-aism__body")!;
+      const host = el.getBoundingClientRect();
+      const foot = el.querySelector<HTMLElement>(".ui-aism__foot")!.getBoundingClientRect();
+      const ask = el.querySelector<HTMLElement>(".ui-aism__ask")!.getBoundingClientRect();
+      expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      // Nothing spills out of the element: the footer ends inside it, the ask box sits on the footer, under the body
+      expect(foot.bottom).toBeLessThanOrEqual(host.bottom + 1);
+      expect(Math.abs(ask.bottom - foot.top)).toBeLessThanOrEqual(1);
+      expect(body.getBoundingClientRect().bottom).toBeLessThanOrEqual(ask.top + 1);
+      // Scrolling the body moves the summary, not the ask box
+      body.scrollTop = body.scrollHeight;
+      expect(el.querySelector<HTMLElement>(".ui-aism__ask")!.getBoundingClientRect().top).toBeCloseTo(ask.top, 0);
+    });
+  }
+
+  test("the ask box is a white field in either look; its send button takes --tc-aism-send-bg, else the primary action", async () => {
+    for (const look of ["standard", "clean"] as const) {
+      const el = await make(look, "done", { ask: "Ask a follow-up…" });
+      const field = getComputedStyle(el.querySelector(".ui-aism__ask-field")!).backgroundColor;
+      const probe = document.createElement("div");
+      probe.style.background = "var(--tc-field-bg)";
+      el.append(probe);
+      expect(field).toBe(getComputedStyle(probe).backgroundColor);
+      probe.style.background = "var(--tc-action-primary-bg)";
+      const send = el.querySelector<HTMLButtonElement>(".ui-aism__send")!;
+      send.style.transition = "none";
+      expect(getComputedStyle(send).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+      probe.remove();
+      el.style.setProperty("--tc-aism-send-bg", "rgb(26, 74, 138)");
+      expect(getComputedStyle(send).backgroundColor).toBe("rgb(26, 74, 138)");
+      // Empty, it fades but keeps its colour
+      expect(send.disabled).toBe(true);
+      expect(Number(getComputedStyle(send).opacity)).toBeGreaterThanOrEqual(0.4);
+    }
+  });
+
   test("without `now` the element keeps its own clock; focus left on a vanishing button moves to Short / Detailed", async () => {
     const el = await fixture<TcAiSummary>(html`<tc-ai-summary status="done" .generatedAt=${Date.now() - 5 * MIN} .sources=${SOURCES} summary="Gist."></tc-ai-summary>`);
     expect(text(el.querySelector(".ui-aism__ai-by"))).toBe("5 min ago");

@@ -26,6 +26,10 @@ import { safeUrl } from "./internal/safe-url";
  *   · follow-ups: `ask` shows a question box under the summary; Enter fires tc-ask, and the page answers by adding to
  *     `messages`, shown under a "Follow-up" divider – questions as bubbles, answers as text with cited points
  *   · `icon` puts an app's own mark (a persona's logo) in place of the sparkle; `badge` renames "AI-generated"
+ *   · given a height shorter than its content, the summary and the conversation scroll between the header and the ask
+ *     box; at its natural height nothing scrolls
+ *   · the ask box is a white field in either look; its send button is the primary action, or `--tc-aism-send-bg` (with
+ *     `-hover`, `-active` and `--tc-aism-send-fg`) set on the element or a parent
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-ai-summary status="done" .sources=${sources} tldr="Launch moves to the 14th." .summary=${text}
@@ -732,10 +736,11 @@ export class TcAiSummary extends TcElement {
 }
 [data-ui="aism"] *, [data-ui="aism"] *::before, [data-ui="aism"] *::after { box-sizing: border-box; }
 /* Taller than its content – stretched to a grid row, say – the card fills the element and the room goes under the
-   summary: the ask box and the footer stay at the bottom, with no space below them */
+   summary: the ask box and the footer stay at the bottom, with no space below them. Shorter – a fixed height – the
+   summary and the conversation scroll between the header and the ask box, which stay put */
 [data-ui="aism"] { display: flex; flex-direction: column; }
-[data-ui="aism"] > .ui-aism__card { display: flex; flex: 1 0 auto; flex-direction: column; }
-.ui-aism__card > .ui-aism__body { flex: 1 0 auto; align-content: start; }
+[data-ui="aism"] > .ui-aism__card { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+.ui-aism__card > .ui-aism__body { flex: 1 1 auto; align-content: start; min-height: 0; overflow-y: auto; }
 :where([data-ui="aism"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="aism"] :is(button, a):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="aism"] :is(ul, ol) { margin: 0; padding: 0; list-style: none; }
@@ -810,16 +815,17 @@ export class TcAiSummary extends TcElement {
 /* ----- The question box: a field that grows to a few lines, with Send ----- */
 .ui-aism__ask { padding: 0 var(--tc-space-4) var(--tc-space-4); }
 .ui-aism__ask-field { display: flex; align-items: flex-end; gap: var(--tc-space-2); min-height: var(--tc-field-h); padding: var(--tc-space-1) var(--tc-space-1) var(--tc-space-1) var(--tc-field-px); border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-aism__ask-field { background: var(--tc-field-bg-sunken); }
 .ui-aism__ask-field:hover { box-shadow: var(--tc-field-shadow-hover); }
 [data-ui="aism"] .ui-aism__ask-field:focus-within { background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow-focus); }
 .ui-aism__ask-input { flex: 1; align-self: center; min-width: 0; max-height: calc(4lh + 2px); margin: var(--tc-space-0-5) 0; padding: 0; border: 0; outline: none; background: none; font: inherit; font-size: var(--tc-field-font-size); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); resize: none; overflow-y: auto; field-sizing: content; }
 .ui-aism__ask-input::placeholder { color: var(--tc-text-placeholder); }
 .ui-aism__ask[data-disabled] .ui-aism__ask-field { opacity: 0.6; cursor: default; }
-.ui-aism__send { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-primary-bg) !important; box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg) !important; transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
-.ui-aism__send:not(:disabled):hover { background: var(--tc-action-primary-bg-hover) !important; }
-.ui-aism__send:not(:disabled):active { background: var(--tc-action-primary-bg-active) !important; }
-.ui-aism__send:disabled { opacity: 0.2; cursor: default; }
+/* The send button is the primary action unless the page gives it its own colour – a brand blue, say */
+.ui-aism__send { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-aism-send-bg, var(--tc-action-primary-bg)) !important; box-shadow: var(--tc-action-primary-shadow); color: var(--tc-aism-send-fg, var(--tc-action-primary-fg)) !important; transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-aism__send:not(:disabled):hover { background: var(--tc-aism-send-bg-hover, var(--tc-action-primary-bg-hover)) !important; }
+.ui-aism__send:not(:disabled):active { background: var(--tc-aism-send-bg-active, var(--tc-action-primary-bg-active)) !important; }
+/* With nothing to send it fades, but keeps its colour rather than washing out to gray */
+.ui-aism__send:disabled { opacity: 0.45; cursor: default; }
 /* ----- The footer: was it helpful, Sources, Copy and Regenerate ----- */
 .ui-aism__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4); border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-aism__helpful { display: inline-flex; align-items: center; gap: var(--tc-space-1); }

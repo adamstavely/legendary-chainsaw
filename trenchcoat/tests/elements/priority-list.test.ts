@@ -201,6 +201,38 @@ describe("tc-priority-list", () => {
     expect([...el.querySelectorAll<HTMLElement>(".ui-prl__col--fig")].map((h) => Math.round(h.getBoundingClientRect().width))).toEqual([56, 56]);
   });
 
+  test("figures centered, and name-align=center: values sit centered under their headings, names under theirs", async () => {
+    const codes = CENTRES.map((c) => ({ ...c, name: c.badge ?? c.name, badge: undefined }));
+    const centered = [
+      { id: "last", label: "Last month", width: 88, align: "center" as const },
+      { id: "this", label: "This month", width: 88, align: "center" as const },
+    ];
+    const wrap = await fixture(html`<div style="width: 460px"><tc-priority-list locale="en" name-align="center" name-label="Center" keep-trend-line .hide=${["coverage", "open", "work", "health"]} .items=${codes} .figures=${centered}></tc-priority-list></div>`);
+    const el = wrap.querySelector("tc-priority-list")!;
+    await finish(el);
+    const mid = (r: DOMRect) => (r.left + r.right) / 2;
+    const text = (e: Element) => {
+      const range = document.createRange();
+      range.selectNodeContents(e);
+      return range.getBoundingClientRect();
+    };
+    for (const [i, h] of [...el.querySelectorAll<HTMLElement>(".ui-prl__col--fig")].entries()) {
+      for (const c of codes) {
+        const value = row(el, c.id).querySelectorAll<HTMLElement>(".ui-prl__fig")[i].querySelector("[aria-hidden]");
+        // Biosciences has no figure this month
+        if (value) expect(Math.abs(mid(text(value)) - mid(text(h)))).toBeLessThanOrEqual(1);
+      }
+    }
+    const head = text(el.querySelector(".ui-prl__col--name")!);
+    for (const c of codes) expect(Math.abs(mid(text(row(el, c.id).querySelector(".ui-prl__name")!)) - mid(head))).toBeLessThanOrEqual(1);
+    // By default, names start their column and values end theirs
+    el.nameAlign = "start";
+    el.figures = centered.map(({ align: _, ...c }) => c);
+    await finish(el);
+    const h = el.querySelector<HTMLElement>(".ui-prl__col--fig")!.getBoundingClientRect();
+    expect(Math.abs(text(row(el, codes[0].id).querySelector(".ui-prl__fig [aria-hidden]")!).right - h.right)).toBeLessThanOrEqual(1);
+  });
+
   test("a row with no priority shows its code in a neutral badge and reads it instead of a tier; filters count it", async () => {
     const el = await fixture<TcPriorityList>(html`<tc-priority-list heading="Centres" name-label="Centre" .items=${[...CENTRES, ITEMS[1]]}></tc-priority-list>`);
     const badge = row(el, "energy").querySelector<HTMLElement>(".ui-prl__badge")!;

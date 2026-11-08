@@ -237,7 +237,40 @@
    "slots": [],
    "methods": [],
    "ui": "aism",
-   "cssProperties": [],
+   "cssProperties": [
+    {
+     "name": "--tc-aism-send-bg",
+     "value": "var(--tc-action-primary-bg)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-aism-send-fg",
+     "value": "var(--tc-action-primary-fg)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-aism-send-bg-hover",
+     "value": "var(--tc-action-primary-bg-hover)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-aism-send-bg-active",
+     "value": "var(--tc-action-primary-bg-active)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
    "tokens": [
     "--tc-accent",
     "--tc-accent-text",
@@ -272,7 +305,6 @@
     "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-field-bg",
-    "--tc-field-bg-sunken",
     "--tc-field-font-size",
     "--tc-field-h",
     "--tc-field-px",
@@ -846,7 +878,7 @@
   "windowed": false
  },
  "size": {
-  "min": 53051,
-  "gzip": 14990
+  "min": 53427,
+  "gzip": 15266
  }
 }

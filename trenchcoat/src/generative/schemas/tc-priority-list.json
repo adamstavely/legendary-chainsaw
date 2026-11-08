@@ -85,6 +85,14 @@
       "type": "string",
       "description": "The first column's heading"
     },
+    "nameAlign": {
+      "type": "string",
+      "enum": [
+        "center",
+        "start"
+      ],
+      "description": "Names at the start of their column (the default), or centered with their heading over them – for short names such as codes"
+    },
     "momentumLabel": {
       "type": "string",
       "description": "The momentum column's heading, also read before each row's change: \"Trend\""
@@ -230,6 +238,14 @@
         "width": {
           "type": "number",
           "description": "The column's width in px, for a heading longer than \"This mo.\"; unset is 56. The name column gives up the room"
+        },
+        "align": {
+          "type": "string",
+          "enum": [
+            "center",
+            "end"
+          ],
+          "description": "Where the heading and values sit: at the column's end, as numbers usually do (unset), or centered under the heading"
         }
       },
       "required": [

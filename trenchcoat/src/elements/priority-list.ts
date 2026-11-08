@@ -69,6 +69,8 @@ export type PriorityFigureColumn = {
   unit?: string;
   /** The column's width in px, for a heading longer than "This mo."; unset is 56. The name column gives up the room */
   width?: number;
+  /** Where the heading and values sit: at the column's end, as numbers usually do (unset), or centered under the heading */
+  align?: "end" | "center";
 };
 export type PriorityFilter = PriorityHealth | "all";
 
@@ -132,6 +134,9 @@ export class TcPriorityList extends TcElement {
   @property({ type: Boolean, attribute: "keep-trend-line" }) accessor keepTrendLine = false;
   /** The first column's heading */
   @property({ attribute: "name-label" }) accessor nameLabel = "Topic";
+  /** Names at the start of their column (the default), or centered with their heading over them – for short names
+   *  such as codes */
+  @property({ attribute: "name-align" }) accessor nameAlign: "start" | "center" = "start";
   /** The momentum column's heading, also read before each row's change: "Trend" */
   @property({ attribute: "momentum-label" }) accessor momentumLabel = "Momentum";
   /** What's open, after its count: "5 gaps" */
@@ -229,7 +234,7 @@ export class TcPriorityList extends TcElement {
   private renderFigure(col: PriorityFigureColumn, item: PriorityItem) {
     const v = item.figures?.[col.id];
     const shown = v === undefined || v === "" ? undefined : typeof v === "number" ? new Intl.NumberFormat(this.locale).format(v) : v;
-    return html`<span class="ui-prl__cell ui-prl__fig" data-fig=${col.id}>
+    return html`<span class="ui-prl__cell ui-prl__fig" data-fig=${col.id} data-align=${ifDefined(col.align === "center" ? "center" : undefined)}>
       ${shown === undefined ? nothing : html`<span class="ui-prl__sr">. ${shown} ${col.label}</span><span aria-hidden="true">${shown}${col.unit ? `·${col.unit}` : ""}</span>`}
     </span>`;
   }
@@ -345,7 +350,7 @@ export class TcPriorityList extends TcElement {
         keepAside: true,
       })}
       <div class="ui-prl__frame" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0}>
-      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-keep-trend-line=${this.keepTrendLine} style=${`--tc-prl-figs: ${this.figures.map(figWidth).join(" ")}`}>
+      <div class="ui-prl__card" data-hide=${ifDefined(hidden || undefined)} ?data-figs=${figs > 0} ?data-codes=${this.items.some((i) => i.priority === undefined && (i.badge || i.badgeImage))} ?data-keep-trend-line=${this.keepTrendLine} ?data-name-center=${this.nameAlign === "center"} style=${`--tc-prl-figs: ${this.figures.map(figWidth).join(" ")}`}>
         ${rows.length
           ? html`<div class="ui-prl__columns" aria-hidden="true">
                 <span class="ui-prl__col ui-prl__col--name">${this.nameLabel}</span>
@@ -353,7 +358,7 @@ export class TcPriorityList extends TcElement {
                 ${this.shows("coverage") ? html`<span class="ui-prl__col ui-prl__col--coverage">Coverage</span>` : nothing}
                 ${this.shows("open") ? html`<span class="ui-prl__col ui-prl__col--open">Open</span>` : nothing}
                 ${this.shows("work") ? html`<span class="ui-prl__col ui-prl__col--work">Work</span>` : nothing}
-                ${this.figures.map((c) => html`<span class="ui-prl__col ui-prl__col--fig" data-fig=${c.id}>${c.label}</span>`)}
+                ${this.figures.map((c) => html`<span class="ui-prl__col ui-prl__col--fig" data-fig=${c.id} data-align=${ifDefined(c.align === "center" ? "center" : undefined)}>${c.label}</span>`)}
               </div>
               ${this.grouped
                 ? html`${tiers.map((n) => {
@@ -434,6 +439,10 @@ export class TcPriorityList extends TcElement {
 .ui-prl__col { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ui-prl__col--name { grid-column: 1 / 3; }
 .ui-prl__col--open, .ui-prl__col--work, .ui-prl__col--fig { text-align: right; }
+.ui-prl__col--fig[data-align="center"] { text-align: center; }
+/* name-align="center": the heading over the names alone, both centered */
+.ui-prl__card[data-name-center] .ui-prl__col--name { grid-column: 2; text-align: center; }
+.ui-prl__card[data-name-center] .ui-prl__who { justify-items: center; text-align: center; }
 .ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols) var(--tc-prl-figs); }
 /* ----- A group's header ----- */
 .ui-prl__group + .ui-prl__group { border-top: var(--tc-hairline) solid var(--tc-border-default); }
@@ -486,6 +495,7 @@ export class TcPriorityList extends TcElement {
 .ui-prl__open-cell { justify-self: end; }
 .ui-prl__open { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-danger-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-status-danger-fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-prl__open[data-none] { background: var(--tc-fill-default); color: var(--tc-text-muted); }
+.ui-prl__fig[data-align="center"] { justify-self: center; }
 .ui-prl__work, .ui-prl__fig { justify-self: end; font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-prl__empty { padding: var(--tc-space-6) var(--tc-space-4) !important; color: var(--tc-text-muted); text-align: center; }
 /* The name keeps at least 140px from 300px up: each step folds columns away before it gets narrower */
