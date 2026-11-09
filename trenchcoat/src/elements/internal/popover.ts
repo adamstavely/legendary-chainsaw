@@ -152,6 +152,21 @@ export type PopoverOptions = PlaceOptions & {
   closeOnFocusOut?: boolean;
 };
 
+/**
+ * The CSS zoom an element ends up with: `currentCSSZoom` where the browser has it, else the product of its own and its
+ * ancestors' `zoom` (across shadow roots) – older WebKit zooms the same way but doesn't report it
+ */
+function cssZoom(el: Element): number {
+  const own = (el as Element & { currentCSSZoom?: number }).currentCSSZoom;
+  if (typeof own === "number") return own;
+  let zoom = 1;
+  for (let n: Element | null = el; n; n = n.parentElement ?? ((n.getRootNode() as ShadowRoot).host ?? null)) {
+    const z = parseFloat(getComputedStyle(n).zoom);
+    if (z > 0) zoom *= z;
+  }
+  return zoom;
+}
+
 type Host = ReactiveControllerHost & HTMLElement;
 
 /** Open popovers, newest last – Escape closes the newest */
@@ -378,7 +393,7 @@ export class PopoverController implements ReactiveController {
     } else {
       // The top layer escapes transforms but not CSS zoom: on a zoomed page (zoom on <html>, say) the popover is zoomed
       // too, so its left and top, written in its own pixels, are divided by the zoom it ends up with
-      const zoom = (pop as HTMLElement & { currentCSSZoom?: number }).currentCSSZoom ?? 1;
+      const zoom = cssZoom(pop);
       scale = zoom > 0 ? 1 / zoom : 1;
     }
     const size = { width: pop.offsetWidth / scale, height: pop.offsetHeight / scale };
