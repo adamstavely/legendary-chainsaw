@@ -57,6 +57,16 @@ const button = (el: Element, name: string) => [...el.querySelectorAll<HTMLElemen
 const text = (el: Element | null) => el?.textContent?.replace(/\s+/g, " ").trim();
 
 describe("tc-ai-summary", () => {
+  test("--tc-head-align: start puts the icon by the heading rather than the middle of the tall header", async () => {
+    const el = await make("clean");
+    const icon = () => el.querySelector(".tc-head__icon")!.getBoundingClientRect();
+    const title = el.querySelector(".tc-head__title")!.getBoundingClientRect();
+    // The subtitle runs to more than one line, so the middle sits below the heading
+    expect(icon().top).toBeGreaterThan(title.top + 4);
+    el.style.setProperty("--tc-head-align", "start");
+    expect(Math.abs(icon().top - title.top)).toBeLessThan(1.5);
+  });
+
   test("relative times: just now, minutes, hours, then the date", () => {
     expect(aiSummaryAgo(NOW - 10_000, NOW)).toBe("just now");
     expect(aiSummaryAgo(NOW - 12 * MIN, NOW)).toBe("12 min ago");

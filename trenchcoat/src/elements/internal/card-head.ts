@@ -19,6 +19,8 @@ import { ifDefined } from "lit/directives/if-defined.js";
  *   · `picture` puts a picture that fills the box in place of the icon – an avatar (an <img>, or initials): round
  *     for a person, square (the box's own radius) for an account or a workspace
  *   · `keepAside` keeps the aside on the title's line however narrow (a dialog's Close); the title wraps instead
+ *   · the icon sits in the middle of the title and subtitle; `--tc-head-align: start` from the page puts it by the title
+ *     instead – for a card whose subtitle runs to several lines, where the middle is well below the title
  */
 
 export type CardHead = {
@@ -70,7 +72,8 @@ export const cardHeadCss = /* css */ `
 .tc-head .tc-head__icon[data-picture="round"] { border-radius: 50%; }
 .tc-head .tc-head__icon[data-picture] > * { width: 100%; height: 100%; max-width: none; max-height: none; }
 /* The icon and the text stay together; only the aside wraps, onto its own line when the title needs the room */
-.tc-head__main { flex: 1 1 auto; display: flex; align-items: center; gap: var(--tc-head-gap); min-width: min(100%, 12rem); }
+/* --tc-head-align: start lines the icon up with the title rather than the middle of a tall title-and-subtitle block */
+.tc-head__main { flex: 1 1 auto; display: flex; align-items: var(--tc-head-align, center); gap: var(--tc-head-gap); min-width: min(100%, 12rem); }
 .tc-head__text { flex: 1 1 0; min-width: 0; }
 .tc-head__title { margin: 0; color: var(--tc-title-color); font-family: var(--tc-font-sans); font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); overflow-wrap: break-word; }
 .tc-head__sub { margin: 0; color: var(--tc-subtitle-color); font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); overflow-wrap: anywhere; }

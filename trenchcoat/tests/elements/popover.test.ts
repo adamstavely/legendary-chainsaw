@@ -268,6 +268,25 @@ describe("PopoverController – the top layer", () => {
     expect(hit && pop.contains(hit)).toBe(true);
   });
 
+  test("in the top layer on a zoomed page (CSS zoom, which it still inherits), placed by its anchor as shown", async () => {
+    const page = document.createElement("div");
+    page.style.cssText = "zoom: 0.8";
+    document.body.append(page);
+    for (const align of ["center", "end"] as const) {
+      const el = await host({ side: "bottom", align }, page);
+      el.pop.show();
+      await el.updateComplete;
+      const pop = el.querySelector<HTMLElement>(".pop")!;
+      expect(pop.matches(":popover-open")).toBe(true);
+      const p = await box(el);
+      const a = el.querySelector(".anchor")!.getBoundingClientRect();
+      near(p.top, a.bottom + 8);
+      if (align === "end") near(p.right, a.right);
+      else near(p.left + p.width / 2, a.left + a.width / 2);
+      el.remove();
+    }
+  });
+
   test("a popover kept rendered while closed leaves the top layer when it closes", async () => {
     class Kept extends LitElement {
       pop = new PopoverController(this, { popover: () => this.querySelector(".pop"), anchor: () => this.querySelector(".anchor") });
