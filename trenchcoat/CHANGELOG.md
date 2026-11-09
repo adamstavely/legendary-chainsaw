@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.17.7 – Popovers sit by their buttons on a zoomed page; a card's icon can sit by its title
+
+- **Popovers** (the header nav's account card, the notifications panel, the app picker, hover cards, the selection
+  toolbar – everything placed by the shared popover controller): on a page using CSS zoom – `zoom: 0.9` on `<html>`
+  to make a whole site a step smaller, say – they open where they belong, by their trigger. The top layer escapes
+  transforms but still inherits zoom, so they were placed by unzoomed coordinates and landed off to the side (about
+  10% of the way back towards the page's top-left corner).
+- **Card headers:** `--tc-head-align: start`, set from the page, puts a card's icon level with its title instead of in
+  the middle of the title and subtitle – for a card whose subtitle runs to several lines, like an AI summary's subject,
+  badge and model, where the middle sits well below the title. Unset, it stays centred.
+
 ## 0.17.6 – Header nav sizes for a taller bar
 
 - **Header Nav:** four sizes the page can set on `tc-header-nav`, and the bell and the app picker inside it follow:

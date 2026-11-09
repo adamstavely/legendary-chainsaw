@@ -21,7 +21,8 @@ import { adoptStyles } from "./styles";
  *     `position: fixed` at `--tc-z-popover`
  *   · placement – above the anchor by default (`side`), centred (`align`), flipped to the other side when it doesn't
  *     fit, shifted to stay `margin` px inside the viewport, followed on scroll, resize and size changes. Outside the
- *     top layer it corrects for a transformed or zoomed ancestor (which would make `fixed` relative to it). The element
+ *     top layer it corrects for a transformed or zoomed ancestor (which would make `fixed` relative to it); in it, for
+ *     CSS zoom, which the top layer still inherits – a page zoomed to 90% places its popovers by its buttons. The element
  *     gets data-side ("top" / "bottom") and data-placed once it's in place (the base CSS keeps it invisible until
  *     then, so it never flashes at 0, 0), and `--tc-pop-arrow-x`, the anchor's centre in the popover's own pixels
  *   · Escape closes the topmost open popover anywhere on the page (WCAG 1.4.13) and, if focus was inside it, sends
@@ -374,6 +375,11 @@ export class PopoverController implements ReactiveController {
       probe.remove();
       origin = box;
       scale = box.width ? 100 / box.width : 1;
+    } else {
+      // The top layer escapes transforms but not CSS zoom: on a zoomed page (zoom on <html>, say) the popover is zoomed
+      // too, so its left and top, written in its own pixels, are divided by the zoom it ends up with
+      const zoom = (pop as HTMLElement & { currentCSSZoom?: number }).currentCSSZoom ?? 1;
+      scale = zoom > 0 ? 1 / zoom : 1;
     }
     const size = { width: pop.offsetWidth / scale, height: pop.offsetHeight / scale };
     const viewport = { width: doc.documentElement.clientWidth, height: doc.documentElement.clientHeight };
