@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.8 – The standalone gallery, rebuilt
+
+- **Standalone gallery:** `standalone/trenchcoat-gallery.html` is rebuilt from this release – it was last built on
+  Oct 29 and now has all 435 items: 97 more components, 5 blocks (Access Review, Audit Trail, Case Review, File Details,
+  Session Panel), 7 screens, 24 illustrations and 10 motion pieces. It's about 26 MB (7.6 MB gzipped).
+
 ## 0.17.7 – Popovers sit by their buttons on a zoomed page; a card's icon can sit by its title
 
 - **Popovers** (the header nav's account card, the notifications panel, the app picker, hover cards, the selection
