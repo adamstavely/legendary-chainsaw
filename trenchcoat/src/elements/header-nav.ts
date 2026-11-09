@@ -26,6 +26,11 @@ import { profileMenuIcon, type ProfileMenuItem, type ProfileMenuItemSelect, type
  * Each trigger shows its name in a tooltip under it on hover (after a beat) and on keyboard focus – "Notifications",
  * "Apps", "Account: Ada Lovelace" – hidden while its popover is open, and with Escape until the next hover or focus.
  *
+ * Sized from the page, for a taller bar: --tc-hn-trigger-size (the three round buttons; the control height by default),
+ * --tc-hn-icon-size (the bell and the picker's waffle; 18px), --tc-hn-face-size (the avatar's photo or initials; the
+ * small control height) and --tc-hn-initials-size (the initials' text; the xs font size). Set on tc-header-nav, they
+ * reach the bell and the picker inside it.
+ *
  * `inverse` is for a dark header bar in either theme: the bell, the picker's button, the avatar and the hairline take
  * the dark theme's colours (color-scheme: dark on those triggers only), while the popovers keep the page's theme.
  *
@@ -359,8 +364,8 @@ export class TcHeaderNav extends TcElement {
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: var(--tc-control-h-md);
-  height: var(--tc-control-h-md);
+  width: var(--tc-hn-trigger-size, var(--tc-control-h-md));
+  height: var(--tc-hn-trigger-size, var(--tc-control-h-md));
   margin: 0;
   padding: 0;
   border: 0;
@@ -386,13 +391,13 @@ export class TcHeaderNav extends TcElement {
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  width: var(--tc-control-h-sm);
-  height: var(--tc-control-h-sm);
+  width: var(--tc-hn-face-size, var(--tc-control-h-sm));
+  height: var(--tc-hn-face-size, var(--tc-control-h-sm));
   overflow: hidden;
   border-radius: var(--tc-radius-full);
   background: var(--tc-tone-teal-bg);
   color: var(--tc-tone-teal-fg);
-  font-size: var(--tc-font-size-xs);
+  font-size: var(--tc-hn-initials-size, var(--tc-font-size-xs));
   font-weight: var(--tc-font-weight-semibold);
   line-height: var(--tc-line-height-none);
   letter-spacing: 0;

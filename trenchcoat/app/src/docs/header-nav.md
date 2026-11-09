@@ -41,6 +41,11 @@ Standard and Clean differ only in the pieces: the triggers are 32 px round butto
 account card is Standard's gray tray card or Clean's white menu card, and Clean draws initials in a medium weight. Set
 `look` on the element and the bell and picker inside it follow.
 
+For a taller bar, size the pieces from the page on `tc-header-nav`, and the bell and the picker inside it follow:
+`--tc-hn-trigger-size` (the three round buttons; the control height by default), `--tc-hn-icon-size` (the bell and
+the waffle; 18px), `--tc-hn-face-size` (the avatar's photo or initials; the small control height) and
+`--tc-hn-initials-size` (the initials' text; the xs font size). The account card's own avatar keeps its size.
+
 ### On a dark header bar
 
 A header bar that's dark in both themes – a brand navy, say – needs light triggers even when the page is light. Set
