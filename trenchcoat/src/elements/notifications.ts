@@ -803,14 +803,14 @@ export class TcNotifications extends TcElement {
   position: relative;
   display: inline-grid;
   place-items: center;
-  width: var(--tc-control-h-md);
-  height: var(--tc-control-h-md);
+  width: var(--tc-hn-trigger-size, var(--tc-control-h-md));
+  height: var(--tc-hn-trigger-size, var(--tc-control-h-md));
   border-radius: var(--tc-radius-full);
   color: var(--tc-action-ghost-fg);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }
 .ui-ntc__trigger:hover, .ui-ntc__trigger[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
-.ui-ntc__bell { width: 18px; height: 18px; }
+.ui-ntc__bell { width: var(--tc-hn-icon-size, 18px); height: var(--tc-hn-icon-size, 18px); }
 /* The trigger's name in a tooltip under it: on hover after a beat, on keyboard focus; not while its popover is open */
 .ui-ntc__tip { position: absolute; top: calc(100% + var(--tc-space-1-5)); left: 50%; z-index: var(--tc-z-dropdown); display: block; width: max-content; max-width: 240px; padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); box-shadow: var(--tc-shadow-overlay); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; pointer-events: none; visibility: hidden; opacity: 0; transform: translate(-50%, -2px); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-move), visibility 0s linear var(--tc-duration-base); }
 .ui-ntc__trigger:focus-visible:not([aria-expanded="true"], [data-hush]) .ui-ntc__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: 0ms; }

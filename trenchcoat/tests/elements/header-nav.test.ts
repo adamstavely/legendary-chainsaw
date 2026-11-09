@@ -297,6 +297,28 @@ describe("tc-header-nav", () => {
     host.remove();
   });
 
+  test("sized from the page: the triggers, their icons, the face and its initials, reaching the bell and the picker", async () => {
+    const el = await make("clean");
+    const size = (sel: string) => {
+      const r = el.querySelector(sel)!.getBoundingClientRect();
+      return [Math.round(r.width), Math.round(r.height)];
+    };
+    // Defaults: the control heights and an 18px icon
+    expect(size(".ui-hn__me")).toEqual(size(".ui-ntc__trigger"));
+    expect(size(".ui-ntc__bell")).toEqual([18, 18]);
+    el.style.cssText = "--tc-hn-trigger-size: 40px; --tc-hn-icon-size: 22px; --tc-hn-face-size: 34px; --tc-hn-initials-size: 17px";
+    for (const sel of [".ui-ntc__trigger", ".ui-apk__trigger", ".ui-hn__me"]) expect(size(sel), sel).toEqual([40, 40]);
+    expect(size(".ui-ntc__bell")).toEqual([22, 22]);
+    expect(size(".ui-apk__waffle")).toEqual([22, 22]);
+    expect(size(".ui-hn__face")).toEqual([34, 34]);
+    expect(getComputedStyle(el.querySelector(".ui-hn__face")!).fontSize).toBe("17px");
+    // The account card's face keeps its own size
+    el.panel = "account";
+    await settle();
+    await expect.poll(() => !!el.querySelector(".ui-hn__pop tc-profile-menu .ui-hn__face")).toBe(true);
+    expect(getComputedStyle(el.querySelector(".ui-hn__pop tc-profile-menu .ui-hn__face")!).fontSize).not.toBe("17px");
+  });
+
   test("inverse: on a light page the triggers take dark colours for a dark bar; the popovers keep the page's light theme", async () => {
     const wrap = await fixture(html`<div data-tc-theme="light" style="padding: 16px">
       <div class="probe-light"><span class="fg" style="color: var(--tc-action-ghost-fg)"></span><span class="bg" style="background: var(--tc-surface-raised)"></span><span class="sep" style="background: var(--tc-border-default)"></span></div>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.17.6 – Header nav sizes for a taller bar
+
+- **Header Nav:** four sizes the page can set on `tc-header-nav`, and the bell and the app picker inside it follow:
+  `--tc-hn-trigger-size` (the three round buttons; the control height by default), `--tc-hn-icon-size` (the bell and
+  the waffle; 18px), `--tc-hn-face-size` (the avatar; the small control height) and `--tc-hn-initials-size` (the
+  initials' text; the xs font size). A taller app bar can scale them up together without restyling the elements. The
+  account card's own avatar keeps its size.
+
 ## 0.17.5 – Long facet options fit the sidebar; the AI summary's disclaimer sits under its ask box
 
 - **Facet Sidebar:** an option too long for the sidebar ends in an ellipsis inside the card, with its count still

@@ -257,6 +257,22 @@
    "ui": "ntc",
    "cssProperties": [
     {
+     "name": "--tc-hn-trigger-size",
+     "value": "var(--tc-control-h-md)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hn-icon-size",
+     "value": "18px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-hn-ring",
      "value": "var(--tc-surface-raised)",
      "looks": [
@@ -1146,7 +1162,7 @@
   "windowed": false
  },
  "size": {
-  "min": 62272,
-  "gzip": 18265
+  "min": 62374,
+  "gzip": 18410
  }
 }

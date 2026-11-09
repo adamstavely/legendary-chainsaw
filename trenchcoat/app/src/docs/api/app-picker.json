@@ -189,6 +189,22 @@
    "ui": "apk",
    "cssProperties": [
     {
+     "name": "--tc-hn-trigger-size",
+     "value": "var(--tc-control-h-md)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hn-icon-size",
+     "value": "18px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-app-picker-tile-w",
      "value": "92px",
      "looks": [
@@ -798,7 +814,7 @@
   "windowed": false
  },
  "size": {
-  "min": 54399,
-  "gzip": 16439
+  "min": 54501,
+  "gzip": 16538
  }
 }

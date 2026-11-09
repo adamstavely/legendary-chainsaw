@@ -114,6 +114,30 @@
      ]
     },
     {
+     "name": "--tc-hn-trigger-size",
+     "value": "var(--tc-control-h-md)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hn-face-size",
+     "value": "var(--tc-control-h-sm)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-hn-initials-size",
+     "value": "var(--tc-font-size-xs)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-hn-from",
      "value": "translateY(-4px)",
      "looks": [
@@ -341,6 +365,7 @@
   }
  ],
  "changelog": [
+  "**Header Nav:** four sizes the page can set on `tc-header-nav`, and the bell and the app picker inside it follow: `--tc-hn-trigger-size` (the three round buttons; the control height by default), `--tc-hn-icon-size` (the bell and the waffle; 18px), `--tc-hn-face-size` (the avatar; the small control height) and `--tc-hn-initials-size` (the initials' text; the xs font size). A taller app bar can scale them up together without restyling the elements. The account card's own avatar keeps its size.",
   "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
  ],
  "frameworks": [
@@ -701,7 +726,7 @@
   "windowed": false
  },
  "size": {
-  "min": 52522,
-  "gzip": 15280
+  "min": 52652,
+  "gzip": 15406
  }
 }
