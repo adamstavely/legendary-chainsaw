@@ -4,6 +4,7 @@ import { DocsPage } from "./docs/DocsPage";
 import { FOUNDATIONS, Foundations } from "./docs/Foundations";
 import { GUIDANCE } from "./docs/guidance";
 import { CATEGORIES, ENTRIES, LIBRARY_INFO, type Entry, type LibraryInfo, type Variant } from "./registry";
+import { DOCUMENTED } from "./catalog";
 import { HAS_CLEAN_THUMBS, categorySlug, initials, thumbFor } from "./thumbs";
 
 type Mode = Variant | "both";
@@ -521,8 +522,6 @@ function Home() {
   );
 }
 
-/** Pieces that are elements get a design-system page; blocks and screens keep the plain focus view */
-const DOCUMENTED = new Set(["components", "illustrations", "motion"]);
 
 function FocusView({ entry, mode, section }: { entry: Entry; mode: Mode; section: string }) {
   const i = ENTRIES.indexOf(entry);
