@@ -14,6 +14,9 @@
 - **`npm run export:docs-md`** rewrites `docs/` from the gallery's sources (`app/src/docs/markdown.ts`, through Vite);
   `-- --check` fails when it's out of date. The library list – names, intros and categories – moved from the registry
   to `app/src/catalog.ts`, so the export reads it without loading the demos.
+- **Tests:** the idle update-budget test measures the elements 40 at a time, each batch its own test and alone on the
+  page, after its charts' entrances have played. With all of them on one page it took 184–226 of its 240 s in WebKit on
+  CI, and timed out; it now takes about a minute.
 
 ## 0.17.8 – The standalone gallery, rebuilt
 
