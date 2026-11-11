@@ -1672,6 +1672,19 @@
     ]
   },
   {
+    "tag": "tc-image-generation",
+    "name": "ImageGeneration",
+    "description": "One image while it's generated: queued, a picture that sharpens as it progresses with the step and time left, then the image – or why it failed.",
+    "events": [
+      "tc-cancel",
+      "tc-retry",
+      "tc-regenerate",
+      "tc-download",
+      "tc-copy-prompt",
+      "tc-expanded-change"
+    ]
+  },
+  {
     "tag": "tc-image-grid",
     "name": "ImageGrid",
     "description": "Generated images as a grid of variations: regenerate one, upscale, compare two, download, alt text for each.",

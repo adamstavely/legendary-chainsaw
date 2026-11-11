@@ -180,6 +180,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-icon-rail": { events: ["tc-selected-change","tc-action"], load: () => import("../elements/icon-rail"), schema: () => import("./schemas/tc-icon-rail.json") },
   "tc-icon-swap": { events: ["tc-state-change"], load: () => import("../elements/icon-swap"), schema: () => import("./schemas/tc-icon-swap.json") },
   "tc-identifier-details": { events: ["tc-identifier-lookup","tc-copy","tc-open","tc-open-change"], load: () => import("../elements/identifier-details"), schema: () => import("./schemas/tc-identifier-details.json") },
+  "tc-image-generation": { events: ["tc-cancel","tc-retry","tc-regenerate","tc-download","tc-copy-prompt","tc-expanded-change"], load: () => import("../elements/image-generation"), schema: () => import("./schemas/tc-image-generation.json") },
   "tc-image-grid": { events: ["tc-open","tc-regenerate","tc-upscale","tc-download","tc-tiles-change","tc-compare-change","tc-split-change"], load: () => import("../elements/image-grid"), schema: () => import("./schemas/tc-image-grid.json") },
   "tc-in-coordination": { events: [], load: () => import("../elements/in-coordination"), schema: () => import("./schemas/tc-in-coordination.json") },
   "tc-in-quality-control": { events: [], load: () => import("../elements/in-quality-control"), schema: () => import("./schemas/tc-in-quality-control.json") },
