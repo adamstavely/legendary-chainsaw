@@ -9,7 +9,7 @@ import { userEvent } from "vitest/browser";
 import "../../src/elements/menu-morph";
 import type { TcMenuMorph } from "../../src/elements/menu-morph";
 import { MenuMorph } from "../../src/elements/react/menu-morph";
-import { cleanup, finish, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle, pageStyles } from "./helpers";
 
 afterEach(() => {
   cleanup();
@@ -227,7 +227,7 @@ describe("tc-menu-morph", () => {
 
   for (const theme of ["light", "dark"]) {
     test(`axe (${theme}): no violations, shut and open`, async () => {
-      const wrap = await fixture(html`<div data-tc-theme=${theme}><tc-menu-morph>
+      const wrap = await fixture(html`<div data-tc-page data-tc-theme=${theme}>${pageStyles}<tc-menu-morph>
         <button type="button" data-menu-trigger>Actions</button>
         <div data-menu aria-label="Finding actions"><button type="button" role="menuitem">Assign reviewer</button><button type="button" role="menuitem">Export finding</button></div>
       </tc-menu-morph></div>`);

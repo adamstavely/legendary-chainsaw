@@ -8,7 +8,7 @@ import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import { TcBadgePop } from "../../src/elements/badge-pop";
 import { BadgePop } from "../../src/elements/react/badge-pop";
-import { cleanup, finish, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle, pageStyles } from "./helpers";
 
 afterEach(cleanup);
 
@@ -107,7 +107,7 @@ describe("tc-badge-pop", () => {
 
   for (const theme of ["light", "dark"] as const) {
     test(`axe (${theme}): no violations`, async () => {
-      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 24px; background: var(--tc-surface-base); display: flex; gap: 24px">
+      const wrap = await fixture(html`<div data-tc-page data-tc-theme=${theme} style="padding: 24px; background: var(--tc-surface-base); display: flex; gap: 24px">${pageStyles}
         <tc-badge-pop count="5" label="unread"><button>Inbox</button></tc-badge-pop>
         <tc-badge-pop count="120" label="unread"><button>Queue</button></tc-badge-pop>
         <tc-badge-pop count="2" dot label="new"><button>Tabs</button></tc-badge-pop>

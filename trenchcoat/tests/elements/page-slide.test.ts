@@ -8,7 +8,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/page-slide";
 import type { TcPageSlide } from "../../src/elements/page-slide";
 import { PageSlide } from "../../src/elements/react/page-slide";
-import { cleanup, finish, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle, pageStyles } from "./helpers";
 
 afterEach(() => {
   cleanup();
@@ -183,7 +183,7 @@ describe("tc-page-slide", () => {
 
   for (const theme of ["light", "dark"]) {
     test(`axe (${theme}): no violations mid-slide (contrast aside) and after it`, async () => {
-      const wrap = await fixture<HTMLDivElement>(html`<div data-tc-theme=${theme}><tc-page-slide view="scope" duration="150">
+      const wrap = await fixture<HTMLDivElement>(html`<div data-tc-page data-tc-theme=${theme}>${pageStyles}<tc-page-slide view="scope" duration="150">
         <section data-view="scope"><h3>Scope</h3><button type="button">Edit</button></section>
         <section data-view="evidence"><h3>Evidence</h3><button type="button">Add</button></section>
       </tc-page-slide></div>`);

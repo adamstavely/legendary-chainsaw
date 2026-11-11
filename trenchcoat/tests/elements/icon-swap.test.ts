@@ -9,7 +9,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/icon-swap";
 import type { IconSwapStateChange, TcIconSwap } from "../../src/elements/icon-swap";
 import { IconSwap } from "../../src/elements/react/icon-swap";
-import { cleanup, finish, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle, pageStyles } from "./helpers";
 
 afterEach(cleanup);
 
@@ -133,7 +133,7 @@ describe("tc-icon-swap", () => {
 
   for (const theme of ["light", "dark"] as const) {
     test(`axe: no violations inside a button (${theme})`, async () => {
-      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base); color: var(--tc-text-primary)">
+      const wrap = await fixture(html`<div data-tc-page data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base); color: var(--tc-text-primary)">${pageStyles}
         <button type="button"><tc-icon-swap state="done" announce>${icons}</tc-icon-swap> Copy link</button>
       </div>`);
       await finish(wrap);

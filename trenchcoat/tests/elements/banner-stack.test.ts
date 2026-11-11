@@ -9,7 +9,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/banner-stack";
 import type { BannerStackDismiss, BannerStackExpandedChange, TcBannerStack } from "../../src/elements/banner-stack";
 import { BannerStack } from "../../src/elements/react/banner-stack";
-import { cleanup, finish, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle, pageStyles } from "./helpers";
 
 afterEach(cleanup);
 
@@ -209,7 +209,7 @@ describe("tc-banner-stack", () => {
 
   for (const theme of ["light", "dark"] as const) {
     test(`axe: no violations, gathered and spread (${theme})`, async () => {
-      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; width: 360px; background: var(--tc-surface-base)">
+      const wrap = await fixture(html`<div data-tc-page data-tc-theme=${theme} style="padding: 16px; width: 360px; background: var(--tc-surface-base)">${pageStyles}
         <tc-banner-stack label="System notices">${NOTICES.map(banner)}</tc-banner-stack>
       </div>`);
       await finish(wrap);
