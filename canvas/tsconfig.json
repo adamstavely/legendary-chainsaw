@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "useDefineForClassFields": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["vite/client", "node"],
+    "paths": {
+      "~tc/*": ["../trenchcoat/*"],
+      "@adamstavely/trenchcoat": ["../trenchcoat/src/elements/index.ts"],
+      "@adamstavely/trenchcoat/*": ["../trenchcoat/src/elements/*"],
+      "lit": ["./node_modules/lit"],
+      "lit/*": ["./node_modules/lit/*"],
+      "@lit/context": ["./node_modules/@lit/context"]
+    }
+  },
+  "include": ["src", "tests", "plugins", "vite.config.ts"]
+}
