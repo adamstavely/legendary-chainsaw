@@ -9,7 +9,7 @@
 The top of a dashboard – three trend cards, an overview chart that compares this period with the last, and a focus card; hover shows any day's value and every number rolls when the range changes (uses `button`)
 
 - **Element:** `<tc-kpi-board>`
-- **Size:** 15.5 KB gzip · 54.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.6 KB gzip · 54.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -489,15 +489,15 @@ number, and reads the final one afterwards.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 33.9 KB | 10.3 KB |
+| **This piece alone** | 33.9 KB | 10.2 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -505,8 +505,8 @@ number, and reads the final one afterwards.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **54.3 KB** | **15.6 KB** |
-| With Lit – the first component on a page | 76.1 KB | 22.8 KB |
+| **Added to a page that already has Lit** | **54.5 KB** | **15.6 KB** |
+| With Lit – the first component on a page | 76.3 KB | 22.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -514,9 +514,9 @@ number, and reads the final one afterwards.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.2 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
+| First render | **0.4 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 1.9 ms | default properties; includes adding its CSS to the document |
+| First on the page | 4.3 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

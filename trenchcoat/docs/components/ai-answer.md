@@ -9,7 +9,7 @@
 Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
 
 - **Element:** `<tc-ai-answer>`
-- **Size:** 16.7 KB gzip · 68.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.7 KB gzip · 68.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -479,23 +479,23 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 58.9 KB | 13.9 KB |
+| **This component alone** | 58.9 KB | 13.8 KB |
 | Lit · the library every element is built on, the parts it uses | 19.9 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **68.1 KB** | **16.8 KB** |
-| With Lit – the first component on a page | 89.1 KB | 23.7 KB |
+| **Added to a page that already has Lit** | **68.2 KB** | **16.7 KB** |
+| With Lit – the first component on a page | 89.3 KB | 23.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -503,13 +503,13 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.5 ms** | the gallery demo's data, 102 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of feedbackReasons replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.8 ms | feedbackReasons: first render, 198 nodes; update 0.3 ms |
-| 1,000 items | 6.8 ms | feedbackReasons: first render, 1,098 nodes; update 0.9 ms |
+| First render | **4.3 ms** | the gallery demo's data, 102 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of feedbackReasons replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.9 ms | feedbackReasons: first render, 198 nodes; update 0.5 ms |
+| 1,000 items | 14 ms | feedbackReasons: first render, 1,098 nodes; update 1.6 ms |
 
-1,000 items of feedbackReasons: 6.8 ms, 1,098 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of feedbackReasons: 14 ms, 1,098 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 28 React commits (clean), 25 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

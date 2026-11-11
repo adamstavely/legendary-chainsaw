@@ -1,0 +1,662 @@
+{
+ "elements": [
+  {
+   "tag": "tc-stage-bars",
+   "className": "TcStageBars",
+   "description": "A funnel as a list: a pill per stage sized to its share of the first, the counts and shares beside it, a headline that\nfollows the pointer, stat tiles, an optional period switch and a table view.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Stages\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "stages",
+     "attribute": null,
+     "type": "StageBarsStage[]",
+     "default": "[]",
+     "description": "The stages, top of the funnel first – used when there are no `ranges`",
+     "readonly": false
+    },
+    {
+     "name": "ranges",
+     "attribute": null,
+     "type": "StageBarsRange[] | undefined",
+     "default": "undefined",
+     "description": "Periods, each with its own stages and change – adds a switch to the header",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The chosen range's id; unset is the first",
+     "readonly": false
+    },
+    {
+     "name": "delta",
+     "attribute": "delta",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Change in the first stage against the period before, in percent – a range's own `delta` wins",
+     "readonly": false
+    },
+    {
+     "name": "stage",
+     "attribute": "stage",
+     "type": "number | null",
+     "default": "null",
+     "description": "The picked stage's index, or null for none – it stays emphasised while nothing else is pointed at",
+     "readonly": false
+    },
+    {
+     "name": "mono",
+     "attribute": "mono",
+     "type": "boolean",
+     "default": "false",
+     "description": "Draws every pill in one ink instead of a colour per stage",
+     "readonly": false
+    },
+    {
+     "name": "showIcons",
+     "attribute": "show-icons",
+     "type": "boolean",
+     "default": "true",
+     "description": "Draws the stages' icons at the pills' left ends; show-icons=\"false\" hides them",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "(value: number) => string",
+     "default": null,
+     "description": "Formats every count",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "StageBarsView",
+     "default": "\"chart\"",
+     "description": "The list or the table",
+     "readonly": false
+    },
+    {
+     "name": "still",
+     "attribute": "still",
+     "type": "boolean",
+     "default": "false",
+     "description": "Draws everything where it ends, with no entrance",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<StageBarsLabels>",
+     "default": "{}",
+     "description": "Words the page can rename, merged over `defaultStageBarsLabels`",
+     "readonly": false
+    },
+    {
+     "name": "shownStages",
+     "attribute": null,
+     "type": "StageBarsStage[]",
+     "default": null,
+     "description": "The stages shown: the chosen range's, else `stages`",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "detail": "",
+     "description": "A period was picked ({ range }: StageBarsRangeChange); cancelable – prevented, `range` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-stage-change",
+     "detail": "",
+     "description": "A stage was picked with a click, Enter or Space, or let go ({ stage, item }: StageBarsStageChange); cancelable – prevented, `stage` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The Table button was pressed ({ view }: StageBarsViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "replay",
+     "params": "",
+     "returns": "void",
+     "description": "Plays the entrance again"
+    }
+   ],
+   "ui": "stgb",
+   "cssProperties": [
+    {
+     "name": "--tc-stgb-mono",
+     "value": "var(--tc-text-muted)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stgb-track",
+     "value": "var(--tc-fill-subtle)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stgb-pill-h",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stgb-surface",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-stgb-ink",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "StageBars",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name"
+    },
+    {
+     "name": "range",
+     "type": "string",
+     "optional": true,
+     "description": "The chosen range's id – controlled when given"
+    },
+    {
+     "name": "defaultRange",
+     "type": "string",
+     "optional": true,
+     "description": "The range on mount when `range` isn't controlled – by default the first"
+    },
+    {
+     "name": "onRangeChange",
+     "type": "(range: string) => void",
+     "optional": true,
+     "description": "A period was picked"
+    },
+    {
+     "name": "stage",
+     "type": "number | null",
+     "optional": true,
+     "description": "The picked stage's index, or null – controlled when given"
+    },
+    {
+     "name": "defaultStage",
+     "type": "number | null",
+     "optional": true,
+     "description": "The picked stage on mount when `stage` isn't controlled"
+    },
+    {
+     "name": "onStageChange",
+     "type": "(stage: number | null, item: StageBarsStage | null) => void",
+     "optional": true,
+     "description": "A stage was picked or let go"
+    },
+    {
+     "name": "view",
+     "type": "StageBarsView",
+     "optional": true,
+     "description": "The list or the table – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "StageBarsView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: StageBarsView) => void",
+     "optional": true,
+     "description": "The Table button was pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "range",
+    "stage",
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-range-change": null,
+    "tc-stage-change": null,
+    "tc-view-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-stage-bars",
+   "className": "TcStageBars",
+   "module": "@adamstavely/trenchcoat/stage-bars",
+   "data": [
+    "stages",
+    "ranges",
+    "format",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "range",
+     "attribute": "range"
+    },
+    {
+     "name": "delta",
+     "attribute": "delta"
+    },
+    {
+     "name": "stage",
+     "attribute": "stage"
+    },
+    {
+     "name": "mono",
+     "attribute": "mono"
+    },
+    {
+     "name": "showIcons",
+     "attribute": "show-icons"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "still",
+     "attribute": "still"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-stage-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "range",
+     "event": "tc-range-change"
+    },
+    {
+     "property": "stage",
+     "event": "tc-stage-change"
+    },
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame (internal/chart/motion › subscribeTick)",
+   "requestAnimationFrame (internal/chart/motion › loop)",
+   "requestAnimationFrame, cancelled (internal/controllers › RollingController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "IntersectionObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "performance.now() (internal/chart/motion-controller › clock)",
+   "performance.now() (internal/controllers › RollingController)"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "itself"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 39473,
+  "gzip": 12424
+ }
+}

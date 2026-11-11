@@ -9,7 +9,7 @@
 Isometric stack of five layers with a list beside it – the chosen entry lifts its layer out in color; steps through twice and rests (`rounds`)
 
 - **Element:** `<tc-layer-stack>`
-- **Size:** 7.2 KB gzip · 20.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.2 KB gzip · 20.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -433,22 +433,22 @@ have no panels: the change is visual only, so put anything people must read in t
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 13.6 KB | 5.1 KB |
+| **This piece alone** | 13.6 KB | 5.0 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **20.7 KB** | **7.2 KB** |
-| With Lit – the first component on a page | 40.3 KB | 13.6 KB |
+| **Added to a page that already has Lit** | **20.8 KB** | **7.2 KB** |
+| With Lit – the first component on a page | 40.4 KB | 13.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -456,11 +456,11 @@ have no panels: the change is visual only, so put anything people must read in t
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 72 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of items replaced |
-| First on the page | 9.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | items: first render, 72 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | items: first render, 72 nodes; update 0.1 ms |
+| First render | **2.3 ms** | the gallery demo's data, 72 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of items replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.0 ms | items: first render, 72 nodes; update 0.0 ms |
+| 1,000 items | 0.7 ms | items: first render, 72 nodes; update 0.2 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 

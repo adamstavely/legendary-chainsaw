@@ -9,7 +9,7 @@
 Where a work is cited – a donut of citing sections (Intro, Methods, Results, Discussion, Other) shaded darkest first, a legend with letter chips and counts, and the section under the pointer or focus with its share
 
 - **Element:** `<tc-citation-sections>`
-- **Size:** 6.8 KB gzip · 19.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 6.8 KB gzip · 19.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -317,23 +317,23 @@ readers. The details link reads its text, “See more details”.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 12.4 KB | 4.8 KB |
+| **This component alone** | 12.4 KB | 4.7 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **19.3 KB** | **6.8 KB** |
-| With Lit – the first component on a page | 38.9 KB | 13.2 KB |
+| **Added to a page that already has Lit** | **19.4 KB** | **6.8 KB** |
+| With Lit – the first component on a page | 39.0 KB | 13.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -341,13 +341,13 @@ readers. The details link reads its text, “See more details”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 44 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of sections replaced |
-| First on the page | 9.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.6 ms | sections: first render, 614 nodes; update 2.2 ms |
-| 1,000 items | 58 ms | sections: first render, 6,014 nodes; update 36 ms |
+| First render | **2.8 ms** | the gallery demo's data, 44 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of sections replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | sections: first render, 614 nodes; update 3.8 ms |
+| 1,000 items | 66 ms | sections: first render, 6,014 nodes; update 35 ms |
 
-1,000 items of sections: 58 ms. It renders every item, so a first render passes 50 ms (a long task) at about 860 items – page or filter longer lists.
+1,000 items of sections: 66 ms. It renders every item, so a first render passes 50 ms (a long task) at about 760 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

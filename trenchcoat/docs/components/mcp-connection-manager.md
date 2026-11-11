@@ -9,7 +9,7 @@
 MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
 
 - **Element:** `<tc-mcp-connection-manager>`
-- **Size:** 20.4 KB gzip · 83.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 20.4 KB gzip · 83.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -531,7 +531,7 @@ described by what goes with it. A polite status message says “Connecting to Da
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -539,15 +539,15 @@ described by what goes with it. A polite status message says “Connecting to Da
 | --- | --- | --- |
 | **This component alone** | 44.2 KB | 11.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **83.3 KB** | **20.4 KB** |
-| With Lit – the first component on a page | 105.5 KB | 27.8 KB |
+| **Added to a page that already has Lit** | **83.4 KB** | **20.4 KB** |
+| With Lit – the first component on a page | 105.7 KB | 27.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -555,13 +555,13 @@ described by what goes with it. A polite status message says “Connecting to Da
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 94 DOM nodes – to layout, median of 7 |
+| First render | **1.2 ms** | the gallery demo's data, 94 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of value replaced |
-| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.9 ms | value: first render, 1,646 nodes; update 0.8 ms |
-| 1,000 items | 64 ms | value: first render, 16,046 nodes; update 6.5 ms |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 18 ms | value: first render, 1,646 nodes; update 1.5 ms |
+| 1,000 items | 82 ms | value: first render, 16,046 nodes; update 6.1 ms |
 
-1,000 items of value: 64 ms. It renders every item, so a first render passes 50 ms (a long task) at about 780 items – page or filter longer lists.
+1,000 items of value: 82 ms. It renders every item, so a first render passes 50 ms (a long task) at about 610 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

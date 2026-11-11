@@ -27,7 +27,7 @@ Work from `trenchcoat/` (the package root). Paths below are relative to it.
 - **Pick the slug and prefix.** The slug is kebab-case and becomes `tc-<slug>`. The prefix is a short, unique
   `static ui` value, used as `ui-<prefix>__…` in CSS. Check the prefix is free:
   `grep -h 'static override ui = "' src/elements/*.ts`.
-- **Pick the gallery category.** The sections are in `app/src/registry.ts` under `categories`. A new section is fine
+- **Pick the gallery category.** The sections are in `app/src/catalog.ts` under each library's `categories`. A new section is fine
   when several components share a theme; the user approved "People & profiles", "Research & portfolio" and "Search"
   that way.
 - **Keep demo data fictional and neutral.** Use a fraud review, an audit or a research institute. Never covert

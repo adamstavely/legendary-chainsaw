@@ -9,7 +9,7 @@
 Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
 
 - **Element:** `<tc-reaction-bar>`
-- **Size:** 6.5 KB gzip · 20.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 6.6 KB gzip · 20.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -313,22 +313,22 @@ counts of 1,000 or more also get a tooltip with the full number (“1,299 likes�
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 13.4 KB | 4.7 KB |
+| **This component alone** | 13.4 KB | 4.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.7 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **20.0 KB** | **6.6 KB** |
-| With Lit – the first component on a page | 41.9 KB | 13.9 KB |
+| **Added to a page that already has Lit** | **20.1 KB** | **6.6 KB** |
+| With Lit – the first component on a page | 42.1 KB | 13.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -336,13 +336,13 @@ counts of 1,000 or more also get a tooltip with the full number (“1,299 likes�
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of actions replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 9.9 ms | actions: first render, 925 nodes; update 1.0 ms |
-| 1,000 items | 528 ms | actions: first render, 9,250 nodes; update 7.0 ms |
+| First render | **2.6 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of actions replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 23 ms | actions: first render, 925 nodes; update 1.5 ms |
+| 1,000 items | 455 ms | actions: first render, 9,250 nodes; update 6.2 ms |
 
-1,000 items of actions: 528 ms. It renders every item, so a first render passes 50 ms (a long task) at about 90 items – page or filter longer lists.
+1,000 items of actions: 455 ms. It renders every item, so a first render passes 50 ms (a long task) at about 110 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

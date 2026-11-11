@@ -9,7 +9,7 @@
 The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
 
 - **Element:** `<tc-session-context-bar>`
-- **Size:** 11.5 KB gzip · 36.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.7 KB gzip · 36.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -358,7 +358,7 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -366,16 +366,16 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 | --- | --- | --- |
 | **This component alone** | 20.7 KB | 6.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **36.5 KB** | **11.6 KB** |
-| With Lit – the first component on a page | 59.1 KB | 19.0 KB |
+| **Added to a page that already has Lit** | **36.9 KB** | **11.7 KB** |
+| With Lit – the first component on a page | 59.5 KB | 19.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -383,13 +383,13 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 66 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of terms replaced |
-| First on the page | 9.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.3 ms | terms: first render, 1,238 nodes; update 1.5 ms |
-| 1,000 items | 73 ms | terms: first render, 12,590 nodes; update 16 ms |
+| First render | **2.1 ms** | the gallery demo's data, 66 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of terms replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | terms: first render, 1,238 nodes; update 2.8 ms |
+| 1,000 items | 83 ms | terms: first render, 12,590 nodes; update 14 ms |
 
-1,000 items of terms: 73 ms. It renders every item, so a first render passes 50 ms (a long task) at about 680 items – page or filter longer lists.
+1,000 items of terms: 83 ms. It renders every item, so a first render passes 50 ms (a long task) at about 600 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

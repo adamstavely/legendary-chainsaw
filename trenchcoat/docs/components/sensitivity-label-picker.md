@@ -9,7 +9,7 @@
 Sets a file's classification – a mark and word on a small button, a list of labels with what each means, and a reason asked before lowering it
 
 - **Element:** `<tc-sensitivity-label-picker>`
-- **Size:** 9.5 KB gzip · 28.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.7 KB gzip · 28.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -453,7 +453,7 @@ the label's word, so colour is never the only cue. The reason is `aria-required`
 
 ## Performance
 
-*Measured 2026-11-01 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -461,15 +461,15 @@ the label's word, so colour is never the only cue. The reason is `aria-required`
 | --- | --- | --- |
 | **This component alone** | 13.2 KB | 4.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.3 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **28.1 KB** | **9.5 KB** |
-| With Lit – the first component on a page | 49.5 KB | 16.4 KB |
+| **Added to a page that already has Lit** | **28.4 KB** | **9.7 KB** |
+| With Lit – the first component on a page | 49.9 KB | 16.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -477,13 +477,13 @@ the label's word, so colour is never the only cue. The reason is `aria-required`
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of options replaced |
-| First on the page | 7.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.1 ms | options: first render, 105 nodes; update 0.1 ms |
-| 1,000 items | 4.8 ms | options: first render, 1,005 nodes; update 0.9 ms |
+| First render | **1.1 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of options replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.6 ms | options: first render, 105 nodes; update 0.4 ms |
+| 1,000 items | 14 ms | options: first render, 1,005 nodes; update 1.8 ms |
 
-1,000 items of options: 4.8 ms, 1,005 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of options: 14 ms, 1,005 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

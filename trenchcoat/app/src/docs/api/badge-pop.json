@@ -1,0 +1,370 @@
+{
+ "elements": [
+  {
+   "tag": "tc-badge-pop",
+   "className": "TcBadgePop",
+   "description": "A count badge that pops when the count rises and rolls its digits.",
+   "properties": [
+    {
+     "name": "count",
+     "attribute": "count",
+     "type": "number",
+     "default": "0",
+     "description": "The count; 0 hides the badge",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number",
+     "default": "99",
+     "description": "Above this it reads \"<max>+\"",
+     "readonly": false
+    },
+    {
+     "name": "dot",
+     "attribute": "dot",
+     "type": "boolean",
+     "default": "false",
+     "description": "A plain dot instead of the number",
+     "readonly": false
+    },
+    {
+     "name": "position",
+     "attribute": "position",
+     "type": "BadgePopPosition",
+     "default": "\"top-end\"",
+     "description": "Which corner it sits on",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"new\"",
+     "description": "The word after the count for screen readers: \"3 unread\"",
+     "readonly": false
+    },
+    {
+     "name": "announceDelay",
+     "attribute": "announce-delay",
+     "type": "number",
+     "default": "800",
+     "description": "How long the count must hold before it's announced, in ms",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for writing the number",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "bdp",
+   "cssProperties": [
+    {
+     "name": "--tc-badge-pop-bg",
+     "value": "var(--tc-status-danger-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-badge-pop-fg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-badge-pop-ring",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-badge-pop-size",
+     "value": "18px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-badge-pop-dot",
+     "value": "10px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-badge-pop-offset",
+     "value": "calc(var(--tc-badge-pop-size) / -3)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-bdp-from",
+    "--tc-bdp-to",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in",
+    "--tc-ease-out",
+    "--tc-ease-spring",
+    "--tc-font-size-2xs",
+    "--tc-font-weight-semibold",
+    "--tc-line-height-none",
+    "--tc-radius-full",
+    "--tc-space-1",
+    "--tc-status-danger-fg",
+    "--tc-surface-raised"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "BadgePop",
+   "exported": false,
+   "props": [],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-badge-pop",
+   "className": "TcBadgePop",
+   "module": "@adamstavely/trenchcoat/badge-pop",
+   "data": [],
+   "attributes": [
+    {
+     "name": "count",
+     "attribute": "count"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "dot",
+     "attribute": "dot"
+    },
+    {
+     "name": "position",
+     "attribute": "position"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "announceDelay",
+     "attribute": "announce-delay"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 16330,
+  "gzip": 5607
+ }
+}

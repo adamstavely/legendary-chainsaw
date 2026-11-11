@@ -9,7 +9,7 @@
 AI model names on a turning drum – the rows bend away at the edges and each model lands on a soft gray fill; turns once round the drum and rests (`turns`)
 
 - **Element:** `<tc-model-wheel>`
-- **Size:** 10.8 KB gzip · 25.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.8 KB gzip · 25.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -269,22 +269,22 @@ Decorative by default: the host is `aria-hidden="true"` and screen readers skip 
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 18.6 KB | 8.8 KB |
+| **This piece alone** | 18.6 KB | 8.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **25.2 KB** | **10.9 KB** |
-| With Lit – the first component on a page | 46.9 KB | 18.4 KB |
+| **Added to a page that already has Lit** | **25.3 KB** | **10.8 KB** |
+| With Lit – the first component on a page | 47.1 KB | 18.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -292,13 +292,13 @@ Decorative by default: the host is `aria-hidden="true"` and screen readers skip 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of models replaced |
-| First on the page | 6.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.6 ms | models: first render, 402 nodes; update 0.2 ms |
-| 1,000 items | 23 ms | models: first render, 4,002 nodes; update 1.9 ms |
+| First render | **1.8 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of models replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 8.7 ms | models: first render, 402 nodes; update 0.6 ms |
+| 1,000 items | 27 ms | models: first render, 4,002 nodes; update 2.0 ms |
 
-1,000 items of models: 23 ms, 4,002 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of models: 27 ms, 4,002 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

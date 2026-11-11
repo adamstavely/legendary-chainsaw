@@ -9,7 +9,7 @@
 Agent tasks placed into a week's sessions under usage limits – pinned first, big tasks split into linked parts, small ones filling gaps, and an Unscheduled list
 
 - **Element:** `<tc-scheduled-runs>`
-- **Size:** 15.9 KB gzip · 62.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.0 KB gzip · 62.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -441,7 +441,7 @@ Each session is a section named by its heading, and its meter is `role="progress
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -449,15 +449,15 @@ Each session is a section named by its heading, and its meter is `role="progress
 | --- | --- | --- |
 | **This component alone** | 24.4 KB | 7.8 KB |
 | Lit · the library every element is built on, the parts it uses | 22.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **62.5 KB** | **16.0 KB** |
-| With Lit – the first component on a page | 85.6 KB | 23.7 KB |
+| **Added to a page that already has Lit** | **62.7 KB** | **16.0 KB** |
+| With Lit – the first component on a page | 85.8 KB | 23.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -465,13 +465,13 @@ Each session is a section named by its heading, and its meter is `role="progress
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.7 ms** | the gallery demo's data, 219 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of tasks replaced |
-| First on the page | 8.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 17 ms | tasks: first render, 2,301 nodes; update 3.6 ms |
-| 1,000 items | 202 ms | tasks: first render, 21,561 nodes; update 74 ms |
+| First render | **4.2 ms** | the gallery demo's data, 219 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of tasks replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 26 ms | tasks: first render, 2,301 nodes; update 4.2 ms |
+| 1,000 items | 166 ms | tasks: first render, 21,561 nodes; update 63 ms |
 
-1,000 items of tasks: 202 ms. It renders every item, so a first render passes 50 ms (a long task) at about 250 items – page or filter longer lists.
+1,000 items of tasks: 166 ms. It renders every item, so a first render passes 50 ms (a long task) at about 300 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

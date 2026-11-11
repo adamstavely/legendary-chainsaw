@@ -15,8 +15,8 @@
     "columns": {
       "type": "number",
       "enum": [
-        2,
         1,
+        2,
         3
       ],
       "description": "Most columns on a wide container – narrower containers use fewer (2 below 740 px, 1 below 480 px)"

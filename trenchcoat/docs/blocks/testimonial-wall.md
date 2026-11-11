@@ -9,7 +9,7 @@
 The landing-page wall of quotes – columns that scroll endlessly in opposite directions, ease to a stop on hover and scrub with inertia, with a Pause / Play button (uses `button`)
 
 - **Element:** `<tc-testimonial-wall>`
-- **Size:** 12.4 KB gzip · 38.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.4 KB gzip · 38.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -442,15 +442,15 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 17.8 KB | 7.0 KB |
+| **This piece alone** | 17.8 KB | 6.9 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -460,8 +460,8 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **38.6 KB** | **12.4 KB** |
-| With Lit – the first component on a page | 58.7 KB | 18.9 KB |
+| **Added to a page that already has Lit** | **38.8 KB** | **12.4 KB** |
+| With Lit – the first component on a page | 58.8 KB | 18.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -469,9 +469,9 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | default properties, 21 DOM nodes – to layout, median of 7 |
+| First render | **0.9 ms** | default properties, 21 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 9.2 ms | default properties; includes adding its CSS to the document |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

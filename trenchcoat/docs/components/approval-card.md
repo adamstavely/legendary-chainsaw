@@ -9,7 +9,7 @@
 An agent asks before it acts – risk badge, preview with an optional diff or arguments, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 
 - **Element:** `<tc-approval-card>`
-- **Size:** 16.3 KB gzip · 58.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.3 KB gzip · 58.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -554,7 +554,7 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -562,15 +562,15 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 | --- | --- | --- |
 | **This component alone** | 49.9 KB | 13.5 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **58.6 KB** | **16.3 KB** |
-| With Lit – the first component on a page | 79.3 KB | 22.9 KB |
+| **Added to a page that already has Lit** | **58.7 KB** | **16.3 KB** |
+| With Lit – the first component on a page | 79.4 KB | 23.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -578,13 +578,13 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of details replaced |
-| First on the page | 27 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.4 ms | details: first render, 350 nodes; update 0.3 ms |
-| 1,000 items | 13 ms | details: first render, 3,050 nodes; update 1.4 ms |
+| First render | **2.5 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of details replaced |
+| First on the page | 30 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.1 ms | details: first render, 350 nodes; update 0.6 ms |
+| 1,000 items | 24 ms | details: first render, 3,050 nodes; update 1.7 ms |
 
-1,000 items of details: 13 ms, 3,050 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of details: 24 ms, 3,050 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

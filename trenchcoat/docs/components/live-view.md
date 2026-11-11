@@ -9,7 +9,7 @@
 Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 
 - **Element:** `<tc-live-view>`
-- **Size:** 11.7 KB gzip · 36.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.7 KB gzip · 37.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -470,15 +470,15 @@ again.” and, at the end, “Finished.” followed by the last caption.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 28.8 KB | 9.4 KB |
+| **This component alone** | 28.8 KB | 9.3 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
@@ -486,8 +486,8 @@ again.” and, at the end, “Finished.” followed by the last caption.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **36.9 KB** | **11.8 KB** |
-| With Lit – the first component on a page | 59.6 KB | 19.3 KB |
+| **Added to a page that already has Lit** | **37.0 KB** | **11.7 KB** |
+| With Lit – the first component on a page | 59.7 KB | 19.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -495,11 +495,11 @@ again.” and, at the end, “Finished.” followed by the last caption.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 41 DOM nodes – to layout, median of 7 |
+| First render | **2.4 ms** | the gallery demo's data, 41 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | one item of actions replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | actions: first render, 41 nodes; update 0.0 ms |
-| 1,000 items | 0.9 ms | actions: first render, 41 nodes; update 0.0 ms |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.2 ms | actions: first render, 41 nodes; update 0.3 ms |
+| 1,000 items | 1.6 ms | actions: first render, 41 nodes; update 0.1 ms |
 
 What it renders doesn't grow with actions (tested to 1,000 items).
 

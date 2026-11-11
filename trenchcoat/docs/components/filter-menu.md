@@ -9,7 +9,7 @@
 Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
 
 - **Element:** `<tc-filter-menu>`
-- **Size:** 11.8 KB gzip · 44.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.9 KB gzip · 44.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -468,22 +468,22 @@ active”, or “No filters”. `disabled` marks every option `aria-disabled`.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 33.7 KB | 8.8 KB |
+| **This component alone** | 33.7 KB | 8.7 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **44.2 KB** | **11.9 KB** |
-| With Lit – the first component on a page | 66.9 KB | 19.4 KB |
+| **Added to a page that already has Lit** | **44.4 KB** | **11.9 KB** |
+| With Lit – the first component on a page | 67.1 KB | 19.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -491,12 +491,12 @@ active”, or “No filters”. `disabled` marks every option `aria-disabled`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.5 ms** | the gallery demo's data, 142 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of groups replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 1279 ms | groups: first render, 260,038 nodes; update 116 ms |
+| First render | **4.3 ms** | the gallery demo's data, 142 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of groups replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 1205 ms | groups: first render, 260,038 nodes; update 125 ms |
 
-Windowed: 10,000 items of groups render 260,038 nodes in 1279 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of groups render 260,038 nodes in 1205 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

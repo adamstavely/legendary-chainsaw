@@ -9,7 +9,7 @@
 Inline markers for weak reasoning in an answer – circular, hedged then certain, self-contradicting or overconfident – each with an explanation
 
 - **Element:** `<tc-reasoning-flags>`
-- **Size:** 10.8 KB gzip · 32.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.9 KB gzip · 33.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -330,24 +330,24 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 17.1 KB | 6.0 KB |
+| **This component alone** | 17.1 KB | 5.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/selection` · Shared Trenchcoat code | 0.8 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **32.8 KB** | **10.8 KB** |
-| With Lit – the first component on a page | 52.3 KB | 17.1 KB |
+| **Added to a page that already has Lit** | **33.1 KB** | **10.9 KB** |
+| With Lit – the first component on a page | 52.7 KB | 17.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -355,9 +355,9 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.3 ms** | the gallery demo's data, 2 DOM nodes – to layout, median of 7 |
-| Typical update | **0.0 ms** | re-render with the same data |
-| First on the page | 1.7 ms | default properties; includes adding its CSS to the document |
+| First render | **0.8 ms** | the gallery demo's data, 2 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | re-render with the same data |
+| First on the page | 5.8 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

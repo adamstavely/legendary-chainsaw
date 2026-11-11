@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-active-days.json",
+  "title": "tc-active-days",
+  "description": "A month calendar of rings, each day filled to how much of its goal it met – with the month's goal days, best\nstreak and busiest weekday, and the day's value on hover or focus.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ActiveDaysDay"
+      },
+      "description": "The days with activity, \"YYYY-MM-DD\", in any order; a day not listed has no data"
+    },
+    "goal": {
+      "type": "number",
+      "description": "The daily goal: a day at or over it is a full ring"
+    },
+    "month": {
+      "type": "string",
+      "description": "The month in view first, \"YYYY-MM\"; by default the latest month in `days`"
+    },
+    "now": {
+      "type": "number",
+      "description": "Today, as epoch ms – days after it are blank; by default the clock"
+    },
+    "weekStart": {
+      "type": "number",
+      "description": "The first day of the week: 0 Sunday, 1 Monday … 6 Saturday"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the values count, after the number: \"12 reviews\""
+    },
+    "date": {
+      "type": "string",
+      "description": "The selected day, \"YYYY-MM-DD\". Changed by the user unless a tc-date-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for month, weekday and number names, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ActiveDaysDay": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "The day, \"YYYY-MM-DD\""
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How much happened; null means no data for the day"
+        }
+      },
+      "required": [
+        "date",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

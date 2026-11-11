@@ -9,7 +9,7 @@
 A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view
 
 - **Element:** `<tc-heatmap>`
-- **Size:** 12.1 KB gzip · 40.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.2 KB gzip · 40.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -486,7 +486,7 @@ In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `a
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -494,7 +494,7 @@ In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `a
 | --- | --- | --- |
 | **This component alone** | 32.2 KB | 9.6 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/chart/canvas` · Shared Trenchcoat code | 0.6 KB | – |
@@ -502,8 +502,8 @@ In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `a
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **40.1 KB** | **12.1 KB** |
-| With Lit – the first component on a page | 59.7 KB | 18.4 KB |
+| **Added to a page that already has Lit** | **40.3 KB** | **12.2 KB** |
+| With Lit – the first component on a page | 59.9 KB | 18.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -511,13 +511,13 @@ In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `a
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.7 ms** | the gallery demo's data, 251 DOM nodes – to layout, median of 7 |
-| Typical update | **1.2 ms** | one item of columns replaced |
-| First on the page | 8.2 ms | default properties; includes adding its CSS to the document |
-| 100 items | 10 ms | columns: first render, 1,659 nodes; update 2.3 ms |
-| 1,000 items | 2.9 ms | columns: first render, 155 nodes; update 0.5 ms |
+| First render | **4.7 ms** | the gallery demo's data, 251 DOM nodes – to layout, median of 7 |
+| Typical update | **2.1 ms** | one item of columns replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 19 ms | columns: first render, 1,659 nodes; update 3.3 ms |
+| 1,000 items | 2.0 ms | columns: first render, 155 nodes; update 0.6 ms |
 
-1,000 items of columns: 2.9 ms, 155 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of columns: 2.0 ms, 155 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

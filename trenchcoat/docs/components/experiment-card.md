@@ -9,7 +9,7 @@
 An A/B test in two lines that quietly unfolds on hover – variants linked to a tiny chart, a metric switch with rolling numbers, and a winner you pick with a click
 
 - **Element:** `<tc-experiment-card>`
-- **Size:** 11.8 KB gzip · 48.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.8 KB gzip · 48.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -465,15 +465,15 @@ try again” when the action's promise rejects; while it runs the action button 
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 40.9 KB | 9.6 KB |
+| **This component alone** | 40.9 KB | 9.5 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -481,8 +481,8 @@ try again” when the action's promise rejects; while it runs the action button 
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **48.6 KB** | **11.8 KB** |
-| With Lit – the first component on a page | 71.3 KB | 19.3 KB |
+| **Added to a page that already has Lit** | **48.8 KB** | **11.8 KB** |
+| With Lit – the first component on a page | 71.5 KB | 19.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -490,13 +490,13 @@ try again” when the action's promise rejects; while it runs the action button 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of variants replaced |
-| First on the page | 8.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 9.7 ms | variants: first render, 1,263 nodes; update 1.5 ms |
-| 1,000 items | 116 ms | variants: first render, 12,363 nodes; update 34 ms |
+| First render | **3.1 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of variants replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 22 ms | variants: first render, 1,263 nodes; update 2.2 ms |
+| 1,000 items | 119 ms | variants: first render, 12,363 nodes; update 21 ms |
 
-1,000 items of variants: 116 ms. It renders every item, so a first render passes 50 ms (a long task) at about 430 items – page or filter longer lists.
+1,000 items of variants: 119 ms. It renders every item, so a first render passes 50 ms (a long task) at about 420 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

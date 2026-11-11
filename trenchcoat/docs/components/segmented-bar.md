@@ -9,7 +9,7 @@
 Shares of one whole as a single bar cut into parts, with a list of names, values and shares – largest first in the accent, the rest in quiet shades or chart inks, tall or thin, parts that grow and glide
 
 - **Element:** `<tc-segmented-bar>`
-- **Size:** 15.8 KB gzip · 44.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.8 KB gzip · 45.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -444,7 +444,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -454,7 +454,7 @@ No slots: everything it shows comes from its properties.
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
 | `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -469,8 +469,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **44.9 KB** | **15.8 KB** |
-| With Lit – the first component on a page | 64.3 KB | 21.9 KB |
+| **Added to a page that already has Lit** | **45.0 KB** | **15.8 KB** |
+| With Lit – the first component on a page | 64.4 KB | 22.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -478,15 +478,19 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| First render | **1.3 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of data replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.2 ms | data: first render, 204 nodes; update 1.0 ms |
+| 1,000 items | 8.5 ms | data: first render, 204 nodes; update 3.0 ms |
+
+1,000 items of data: 8.5 ms, 204 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
 ### Runtime
 
-- At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **58 frames/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
 - Stops or pauses off screen and under reduced motion.

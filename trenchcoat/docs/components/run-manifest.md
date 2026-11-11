@@ -9,7 +9,7 @@
 What it takes to reproduce a run – model, settings, instruction hash, sources, intent and the verification summary, ready to export
 
 - **Element:** `<tc-run-manifest>`
-- **Size:** 9.7 KB gzip · 33.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.8 KB gzip · 33.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -356,23 +356,23 @@ reviewed”. The actions are a `toolbar` named “Manifest actions”.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 25.1 KB | 7.3 KB |
+| **This component alone** | 25.1 KB | 7.2 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **33.6 KB** | **9.8 KB** |
-| With Lit – the first component on a page | 56.2 KB | 17.3 KB |
+| **Added to a page that already has Lit** | **33.7 KB** | **9.8 KB** |
+| With Lit – the first component on a page | 56.3 KB | 17.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -380,11 +380,11 @@ reviewed”. The actions are a `toolbar` named “Manifest actions”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of sources replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.3 ms | sources: first render, 126 nodes; update 0.2 ms |
-| 1,000 items | 1.1 ms | sources: first render, 126 nodes; update 0.1 ms |
+| First render | **3.6 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of sources replaced |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.7 ms | sources: first render, 126 nodes; update 0.4 ms |
+| 1,000 items | 3.2 ms | sources: first render, 126 nodes; update 0.2 ms |
 
 What it renders doesn't grow with sources (tested to 1,000 items).
 

@@ -9,7 +9,7 @@
 results of a search across files, grouped by file with the matched text marked, with match case, whole word and regular expression toggles, collapse all, and an optional replace preview.
 
 - **Element:** `<tc-search-results>`
-- **Size:** 10.7 KB gzip · 33.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.8 KB gzip · 33.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -485,22 +485,22 @@ is a `role="status"`, so a finished search is announced; an error is an alert. T
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 24.6 KB | 8.1 KB |
+| **This component alone** | 24.6 KB | 8.0 KB |
 | Lit · the library every element is built on, the parts it uses | 20.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **33.6 KB** | **10.8 KB** |
-| With Lit – the first component on a page | 55.0 KB | 17.8 KB |
+| **Added to a page that already has Lit** | **33.7 KB** | **10.8 KB** |
+| With Lit – the first component on a page | 55.2 KB | 17.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -508,12 +508,12 @@ is a `role="status"`, so a finished search is announced; an error is an alert. T
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 172 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of results replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 4.8 ms | results: first render, 709 nodes; update 1.4 ms |
+| First render | **3.6 ms** | the gallery demo's data, 172 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of results replaced |
+| First on the page | 28 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 5.6 ms | results: first render, 709 nodes; update 1.9 ms |
 
-Windowed: 10,000 items of results render 709 nodes in 4.8 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of results render 709 nodes in 5.6 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

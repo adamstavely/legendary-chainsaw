@@ -9,7 +9,7 @@
 An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
 
 - **Element:** `<tc-parallel-attempts>`
-- **Size:** 9.4 KB gzip · 37.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.4 KB gzip · 37.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -441,7 +441,7 @@ of 4 done, best: Attempt A. Using Attempt A.”
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -449,15 +449,15 @@ of 4 done, best: Attempt A. Using Attempt A.”
 | --- | --- | --- |
 | **This component alone** | 29.4 KB | 7.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **37.4 KB** | **9.4 KB** |
-| With Lit – the first component on a page | 58.4 KB | 16.3 KB |
+| **Added to a page that already has Lit** | **37.5 KB** | **9.4 KB** |
+| With Lit – the first component on a page | 58.5 KB | 16.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -465,13 +465,13 @@ of 4 done, best: Attempt A. Using Attempt A.”
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 82 DOM nodes – to layout, median of 7 |
+| First render | **2.4 ms** | the gallery demo's data, 82 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of attempts replaced |
-| First on the page | 9.4 ms | default properties; includes adding its CSS to the document |
-| 100 items | 17 ms | attempts: first render, 1,618 nodes; update 2.5 ms |
-| 1,000 items | 191 ms | attempts: first render, 16,018 nodes; update 29 ms |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 29 ms | attempts: first render, 1,618 nodes; update 2.9 ms |
+| 1,000 items | 201 ms | attempts: first render, 16,018 nodes; update 23 ms |
 
-1,000 items of attempts: 191 ms. It renders every item, so a first render passes 50 ms (a long task) at about 260 items – page or filter longer lists.
+1,000 items of attempts: 201 ms. It renders every item, so a first render passes 50 ms (a long task) at about 250 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 11 React commits (clean), 11 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

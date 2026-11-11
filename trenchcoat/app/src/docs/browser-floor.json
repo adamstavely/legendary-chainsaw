@@ -11,31 +11,31 @@
    "features": [
     "light-dark"
    ],
-   "elements": 413
+   "elements": 431
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 413
+   "elements": 431
   },
   "firefox": {
    "features": [
     "has"
    ],
-   "elements": 96
+   "elements": 98
   },
   "safari": {
    "features": [
     "light-dark"
    ],
-   "elements": 413
+   "elements": 431
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 413
+   "elements": 431
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 413
+   "elements": 431
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 413
+   "elements": 431
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 413
+   "elements": 431
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 412
+   "elements": 430
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 300
+   "elements": 307
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 189
+   "elements": 199
   },
   {
    "id": "resize-observer",
@@ -140,7 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 178
+   "elements": 183
   },
   {
    "id": "intersection-observer",
@@ -154,7 +154,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 158
+   "elements": 162
   },
   {
    "id": "inert",
@@ -169,7 +169,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 156
+   "elements": 157
   },
   {
    "id": "has",
@@ -184,7 +184,21 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 96
+   "elements": 98
+  },
+  {
+   "id": "individual-transforms",
+   "name": "translate, scale and rotate properties",
+   "bcd": "css.properties.translate",
+   "versions": {
+    "chrome": "104",
+    "edge": "104",
+    "firefox": "72",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   },
+   "progressive": false,
+   "elements": 67
   },
   {
    "id": "aspect-ratio",
@@ -201,20 +215,6 @@
    "elements": 65
   },
   {
-   "id": "individual-transforms",
-   "name": "translate, scale and rotate properties",
-   "bcd": "css.properties.translate",
-   "versions": {
-    "chrome": "104",
-    "edge": "104",
-    "firefox": "72",
-    "safari": "14.1",
-    "safari_ios": "14.1"
-   },
-   "progressive": false,
-   "elements": 61
-  },
-  {
    "id": "mask",
    "name": "CSS masks",
    "bcd": "css.properties.mask-image",
@@ -227,7 +227,7 @@
    },
    "progressive": false,
    "note": "with the -webkit- prefix",
-   "elements": 57
+   "elements": 58
   },
   {
    "id": "object-hasown",
@@ -271,7 +271,7 @@
    },
    "progressive": false,
    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
-   "elements": 33
+   "elements": 34
   },
   {
    "id": "container-units",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 413
+   "elements": 431
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 412
+   "elements": 430
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 118
+   "elements": 121
   },
   {
    "id": "overscroll-contain",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 74
+   "elements": 75
   },
   {
    "id": "popover",
@@ -447,7 +447,7 @@
    },
    "progressive": true,
    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
-   "elements": 33
+   "elements": 35
   },
   {
    "id": "at-property",

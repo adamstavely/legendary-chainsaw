@@ -9,7 +9,7 @@
 A run's restore points on a timeline – what each one captured, what going back discards, and “go back to step 4 and try again”, with earlier attempts kept as branches
 
 - **Element:** `<tc-run-checkpoints>`
-- **Size:** 14.4 KB gzip · 53.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.5 KB gzip · 53.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -481,7 +481,7 @@ earlier attempt, First attempt: 6 steps.”
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -489,14 +489,14 @@ earlier attempt, First attempt: 6 steps.”
 | --- | --- | --- |
 | **This component alone** | 45.0 KB | 11.9 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **53.7 KB** | **14.4 KB** |
-| With Lit – the first component on a page | 76.4 KB | 21.9 KB |
+| **Added to a page that already has Lit** | **53.8 KB** | **14.5 KB** |
+| With Lit – the first component on a page | 76.5 KB | 22.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -504,13 +504,13 @@ earlier attempt, First attempt: 6 steps.”
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.8 ms** | the gallery demo's data, 164 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of checkpoints replaced |
-| First on the page | 9.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 10 ms | checkpoints: first render, 1,491 nodes; update 1.2 ms |
-| 1,000 items | 113 ms | checkpoints: first render, 14,241 nodes; update 7.2 ms |
+| First render | **3.9 ms** | the gallery demo's data, 164 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of checkpoints replaced |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 100 items | 21 ms | checkpoints: first render, 1,491 nodes; update 1.5 ms |
+| 1,000 items | 122 ms | checkpoints: first render, 14,241 nodes; update 6.7 ms |
 
-1,000 items of checkpoints: 113 ms. It renders every item, so a first render passes 50 ms (a long task) at about 440 items – page or filter longer lists.
+1,000 items of checkpoints: 122 ms. It renders every item, so a first render passes 50 ms (a long task) at about 410 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

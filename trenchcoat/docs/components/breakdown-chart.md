@@ -9,7 +9,7 @@
 Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
 
 - **Element:** `<tc-breakdown-chart>`
-- **Size:** 12.5 KB gzip · 47.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.6 KB gzip · 47.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -452,7 +452,7 @@ The table has row and column headers, and when it is wider than the card it beco
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -460,14 +460,14 @@ The table has row and column headers, and when it is wider than the card it beco
 | --- | --- | --- |
 | **This component alone** | 40.0 KB | 10.3 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **47.7 KB** | **12.6 KB** |
-| With Lit – the first component on a page | 70.3 KB | 20.1 KB |
+| **Added to a page that already has Lit** | **47.8 KB** | **12.6 KB** |
+| With Lit – the first component on a page | 70.4 KB | 20.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -475,13 +475,13 @@ The table has row and column headers, and when it is wider than the card it beco
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.8 ms** | the gallery demo's data, 207 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of records replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.8 ms | records: first render, 206 nodes; update 0.4 ms |
-| 1,000 items | 1.9 ms | records: first render, 207 nodes; update 0.5 ms |
+| First render | **3.5 ms** | the gallery demo's data, 207 DOM nodes – to layout, median of 7 |
+| Typical update | **1.1 ms** | one item of records replaced |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.1 ms | records: first render, 206 nodes; update 0.8 ms |
+| 1,000 items | 2.5 ms | records: first render, 207 nodes; update 0.7 ms |
 
-1,000 items of records: 1.9 ms, 207 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of records: 2.5 ms, 207 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

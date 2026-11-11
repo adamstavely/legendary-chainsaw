@@ -1,0 +1,377 @@
+{
+ "elements": [
+  {
+   "tag": "tc-sliding-indicator",
+   "className": "TcSlidingIndicator",
+   "description": "A highlight that slides to the selected item of the buttons or links inside it.",
+   "properties": [
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "SlidingIndicatorVariant",
+     "default": "\"underline\"",
+     "description": "\"underline\" draws a bar under the selected item (beside it when vertical); \"pill\" fills its box behind the text",
+     "readonly": false
+    },
+    {
+     "name": "orientation",
+     "attribute": "orientation",
+     "type": "SlidingIndicatorOrientation",
+     "default": "\"horizontal\"",
+     "description": "Which way the items run – a vertical underline sits at the items' start edge",
+     "readonly": false
+    },
+    {
+     "name": "hoverPreview",
+     "attribute": "hover-preview",
+     "type": "boolean",
+     "default": "false",
+     "description": "A faint ghost follows the pointer over the items, sliding the same way",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": "items",
+     "type": "string",
+     "default": "'[role=\"tab\"], [role=\"option\"], [role=\"radio\"], [role=\"menuitemradio\"], a[href], button'",
+     "description": "A CSS selector for the items inside it; the default takes tabs, options, radios, links and buttons",
+     "readonly": false
+    },
+    {
+     "name": "place",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Places the highlight on the selected item and the ghost on the hovered one",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [
+    {
+     "name": "selectedItem",
+     "params": "",
+     "returns": "HTMLElement | null",
+     "description": "The item that's selected now, if any"
+    }
+   ],
+   "ui": "sind",
+   "cssProperties": [
+    {
+     "name": "--tc-sind-thickness",
+     "value": "2px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sind-underline",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sind-pill-bg",
+     "value": "var(--tc-seg-thumb-bg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sind-pill-shadow",
+     "value": "var(--tc-seg-thumb-shadow)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sind-pill-radius",
+     "value": "var(--tc-control-radius-sm)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sind-ghost-bg",
+     "value": "var(--tc-fill-subtle)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sind-duration",
+     "value": "var(--tc-duration-base)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultSlidingIndicatorItems",
+   "signature": "defaultSlidingIndicatorItems: string",
+   "description": "The page's items, when `items` isn't given"
+  }
+ ],
+ "react": [
+  {
+   "component": "SlidingIndicator",
+   "exported": false,
+   "props": [],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-sliding-indicator",
+   "className": "TcSlidingIndicator",
+   "module": "@adamstavely/trenchcoat/sliding-indicator",
+   "data": [
+    "place"
+   ],
+   "attributes": [
+    {
+     "name": "variant",
+     "attribute": "variant"
+    },
+    {
+     "name": "orientation",
+     "attribute": "orientation"
+    },
+    {
+     "name": "hoverPreview",
+     "attribute": "hover-preview"
+    },
+    {
+     "name": "items",
+     "attribute": "items"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "window resize"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 15585,
+  "gzip": 5543
+ }
+}

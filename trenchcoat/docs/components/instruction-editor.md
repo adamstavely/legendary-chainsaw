@@ -9,7 +9,7 @@
 System and developer instructions with variable chips, missing and unused warnings, an app-supplied token count, versions and a word diff
 
 - **Element:** `<tc-instruction-editor>`
-- **Size:** 27.1 KB gzip · 116.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.1 KB gzip · 116.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -522,7 +522,7 @@ button reads “Insert {{company}} 1×, Trading name”. A status region announc
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -530,7 +530,7 @@ button reads “Insert {{company}} 1×, Trading name”. A status region announc
 | --- | --- | --- |
 | **This component alone** | 35.6 KB | 9.9 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
@@ -539,8 +539,8 @@ button reads “Insert {{company}} 1×, Trading name”. A status region announc
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **116.3 KB** | **27.2 KB** |
-| With Lit – the first component on a page | 139.2 KB | 34.7 KB |
+| **Added to a page that already has Lit** | **116.4 KB** | **27.1 KB** |
+| With Lit – the first component on a page | 139.3 KB | 34.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -548,13 +548,13 @@ button reads “Insert {{company}} 1×, Trading name”. A status region announc
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.3 ms** | the gallery demo's data, 171 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of variables replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.1 ms | variables: first render, 747 nodes; update 0.7 ms |
-| 1,000 items | 35 ms | variables: first render, 6,147 nodes; update 5.5 ms |
+| First render | **3.9 ms** | the gallery demo's data, 171 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of variables replaced |
+| First on the page | 33 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.7 ms | variables: first render, 747 nodes; update 0.8 ms |
+| 1,000 items | 41 ms | variables: first render, 6,147 nodes; update 3.1 ms |
 
-1,000 items of variables: 35 ms, 6,147 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of variables: 41 ms, 6,147 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

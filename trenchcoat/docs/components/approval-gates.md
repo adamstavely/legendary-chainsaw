@@ -9,7 +9,7 @@
 The approval requests of one agent run as a stack of cards – the one to decide now on top with who asks, the diff or arguments and the steps it holds; approve, reject or ask for changes with a note, and it drops into the decided list while the next rises
 
 - **Element:** `<tc-approval-gates>`
-- **Size:** 23.5 KB gzip · 89.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 23.6 KB gzip · 89.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -475,7 +475,7 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -483,7 +483,7 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 | --- | --- | --- |
 | **This component alone** | 33.2 KB | 9.6 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -491,8 +491,8 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | [approval-card](approval-card.md) · Element it renders | 47.5 KB | – |
-| **Added to a page that already has Lit** | **89.5 KB** | **23.5 KB** |
-| With Lit – the first component on a page | 111.8 KB | 30.8 KB |
+| **Added to a page that already has Lit** | **89.7 KB** | **23.6 KB** |
+| With Lit – the first component on a page | 111.9 KB | 30.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -500,13 +500,13 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of gates replaced |
-| First on the page | 9.7 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.6 ms | gates: first render, 510 nodes; update 0.3 ms |
-| 1,000 items | 13 ms | gates: first render, 4,110 nodes; update 2.1 ms |
+| First render | **1.9 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of gates replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 8.6 ms | gates: first render, 510 nodes; update 0.7 ms |
+| 1,000 items | 25 ms | gates: first render, 4,110 nodes; update 3.0 ms |
 
-1,000 items of gates: 13 ms, 4,110 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of gates: 25 ms, 4,110 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

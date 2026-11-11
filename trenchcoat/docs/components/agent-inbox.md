@@ -9,7 +9,7 @@
 All your background agent tasks in one calm list – live clocks and status tags, filter tabs with rolling counts, rows that unfold to the last steps with Approve, Reject, Retry or Open, and glide to their new place – or a recap of what changed while you were away, with Undo
 
 - **Element:** `<tc-agent-inbox>`
-- **Size:** 14.9 KB gzip · 59.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.9 KB gzip · 59.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -481,7 +481,7 @@ its task (“Undo Tagged new datasets”); after it, the card says “Undone” 
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -489,15 +489,15 @@ its task (“Undo Tagged new datasets”); after it, the card says “Undone” 
 | --- | --- | --- |
 | **This component alone** | 51.0 KB | 12.4 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **59.4 KB** | **14.9 KB** |
-| With Lit – the first component on a page | 82.0 KB | 22.3 KB |
+| **Added to a page that already has Lit** | **59.6 KB** | **14.9 KB** |
+| With Lit – the first component on a page | 82.1 KB | 22.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -505,13 +505,13 @@ its task (“Undo Tagged new datasets”); after it, the card says “Undone” 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.3 ms** | the gallery demo's data, 272 DOM nodes – to layout, median of 7 |
+| First render | **3.4 ms** | the gallery demo's data, 272 DOM nodes – to layout, median of 7 |
 | Typical update | **0.5 ms** | one item of tasks replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 25 ms | tasks: first render, 4,376 nodes; update 2.7 ms |
-| 1,000 items | 239 ms | tasks: first render, 43,256 nodes; update 18 ms |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
+| 100 items | 34 ms | tasks: first render, 4,376 nodes; update 3.0 ms |
+| 1,000 items | 229 ms | tasks: first render, 43,256 nodes; update 17 ms |
 
-1,000 items of tasks: 239 ms. It renders every item, so a first render passes 50 ms (a long task) at about 210 items – page or filter longer lists.
+1,000 items of tasks: 229 ms. It renders every item, so a first render passes 50 ms (a long task) at about 220 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (clean), 3 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

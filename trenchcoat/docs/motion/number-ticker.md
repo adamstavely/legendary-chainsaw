@@ -9,7 +9,7 @@
 Odometer-style numbers – every digit rolls to its new value and counts in from zero when it scrolls into view; each new value is announced once
 
 - **Element:** `<tc-number-ticker>`
-- **Size:** 5.6 KB gzip · 14.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 5.7 KB gzip · 14.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -278,7 +278,7 @@ interrupt, and give people a way to pause the updates.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -286,14 +286,14 @@ interrupt, and give people a way to pause the updates.
 | --- | --- | --- |
 | **This piece alone** | 7.9 KB | 3.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **14.5 KB** | **5.6 KB** |
-| With Lit – the first component on a page | 36.3 KB | 12.8 KB |
+| **Added to a page that already has Lit** | **14.7 KB** | **5.7 KB** |
+| With Lit – the first component on a page | 36.5 KB | 12.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -301,9 +301,9 @@ interrupt, and give people a way to pause the updates.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 82 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 4.4 ms | default properties; includes adding its CSS to the document |
+| First render | **2.4 ms** | the gallery demo's data, 82 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | re-render with the same data |
+| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

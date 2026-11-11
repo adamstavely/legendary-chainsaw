@@ -9,7 +9,7 @@
 Where a team decides what its flags mean – each flag's colour, name, meaning and order, with a check on names and a question before removing a flag that's on files.
 
 - **Element:** `<tc-team-flag-editor>`
-- **Size:** 9.1 KB gzip · 29.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.2 KB gzip · 29.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -421,7 +421,7 @@ name includes the flag it acts on. A refused name is tied to its field with `ari
 
 ## Performance
 
-*Measured 2026-10-31 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -429,7 +429,7 @@ name includes the flag it acts on. A refused name is tied to its field with `ari
 | --- | --- | --- |
 | **This component alone** | 19.3 KB | 6.0 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/list-motion` · Shared Trenchcoat code | 1.7 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -437,8 +437,8 @@ name includes the flag it acts on. A refused name is tied to its field with `ari
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **29.1 KB** | **9.1 KB** |
-| With Lit – the first component on a page | 52.1 KB | 16.7 KB |
+| **Added to a page that already has Lit** | **29.2 KB** | **9.2 KB** |
+| With Lit – the first component on a page | 52.3 KB | 16.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -446,13 +446,13 @@ name includes the flag it acts on. A refused name is tied to its field with `ari
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 118 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of palette replaced |
-| First on the page | 8.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.5 ms | palette: first render, 394 nodes; update 0.7 ms |
-| 1,000 items | 17 ms | palette: first render, 3,094 nodes; update 5.4 ms |
+| First render | **3.0 ms** | the gallery demo's data, 118 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of palette replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.6 ms | palette: first render, 394 nodes; update 1.4 ms |
+| 1,000 items | 28 ms | palette: first render, 3,094 nodes; update 6.6 ms |
 
-1,000 items of palette: 17 ms, 3,094 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of palette: 28 ms, 3,094 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields that convert as you type, an eyedropper where the browser has one, swatches, Copy, and the previous colour one press away
 
 - **Element:** `<tc-color-picker>`
-- **Size:** 17.9 KB gzip · 66.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.0 KB gzip · 66.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -513,23 +513,23 @@ the new half an image with the colour's hex. Copy announces what it copied.
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 28.7 KB | 9.8 KB |
+| **This component alone** | 28.7 KB | 9.7 KB |
 | Lit · the library every element is built on, the parts it uses | 21.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **66.8 KB** | **18.0 KB** |
-| With Lit – the first component on a page | 89.1 KB | 25.4 KB |
+| **Added to a page that already has Lit** | **66.9 KB** | **18.0 KB** |
+| With Lit – the first component on a page | 89.3 KB | 25.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -537,11 +537,11 @@ the new half an image with the colour's hex. Copy announces what it copied.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 69 DOM nodes – to layout, median of 7 |
+| First render | **2.2 ms** | the gallery demo's data, 69 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of swatches replaced |
-| First on the page | 15 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.3 ms | swatches: first render, 69 nodes; update 0.1 ms |
-| 1,000 items | 1.3 ms | swatches: first render, 69 nodes; update 0.2 ms |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.9 ms | swatches: first render, 69 nodes; update 0.2 ms |
+| 1,000 items | 2.0 ms | swatches: first render, 69 nodes; update 0.5 ms |
 
 What it renders doesn't grow with swatches (tested to 1,000 items).
 

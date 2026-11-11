@@ -9,7 +9,7 @@
 The top of a person's or an account's page – picture or initials, name, status and tags, other names as chips, a line of key facts, the page's actions and a row of section tabs
 
 - **Element:** `<tc-profile-header>`
-- **Size:** 8.2 KB gzip · 27.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.3 KB gzip · 27.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -439,7 +439,7 @@ reads its label and count, and the selected tab is `aria-selected`. Give a tab `
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -447,7 +447,7 @@ reads its label and count, and the selected tab is `aria-selected`. Give a tab `
 | --- | --- | --- |
 | **This component alone** | 20.0 KB | 6.2 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -456,8 +456,8 @@ reads its label and count, and the selected tab is `aria-selected`. Give a tab `
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **27.1 KB** | **8.3 KB** |
-| With Lit – the first component on a page | 48.8 KB | 15.5 KB |
+| **Added to a page that already has Lit** | **27.2 KB** | **8.3 KB** |
+| With Lit – the first component on a page | 49.0 KB | 15.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -465,13 +465,13 @@ reads its label and count, and the selected tab is `aria-selected`. Give a tab `
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 52 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of tabs replaced |
-| First on the page | 2.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.4 ms | tabs: first render, 190 nodes; update 0.4 ms |
-| 1,000 items | 15 ms | tabs: first render, 1,540 nodes; update 2.1 ms |
+| First render | **2.6 ms** | the gallery demo's data, 52 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of tabs replaced |
+| First on the page | 6.8 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.7 ms | tabs: first render, 190 nodes; update 0.8 ms |
+| 1,000 items | 23 ms | tabs: first render, 1,540 nodes; update 2.6 ms |
 
-1,000 items of tabs: 15 ms, 1,540 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of tabs: 23 ms, 1,540 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

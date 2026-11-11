@@ -9,7 +9,7 @@
 Gaps or risks and whether anyone is working on them – severity in words and a mark, the item and its priority, coverage, owner and what's invested, with the severe uncovered ones called out, grouping by priority or severity and an uncovered-only switch
 
 - **Element:** `<tc-gap-exposure>`
-- **Size:** 9.0 KB gzip · 31.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.1 KB gzip · 31.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -444,7 +444,7 @@ switch. Each group is a region named by its tier or severity.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -452,15 +452,15 @@ switch. Each group is a region named by its tier or severity.
 | --- | --- | --- |
 | **This component alone** | 23.8 KB | 6.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **31.2 KB** | **9.1 KB** |
-| With Lit – the first component on a page | 53.0 KB | 16.3 KB |
+| **Added to a page that already has Lit** | **31.3 KB** | **9.1 KB** |
+| With Lit – the first component on a page | 53.1 KB | 16.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -468,13 +468,13 @@ switch. Each group is a region named by its tier or severity.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.0 ms** | the gallery demo's data, 289 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of gaps replaced |
-| First on the page | 9.4 ms | default properties; includes adding its CSS to the document |
-| 100 items | 11 ms | gaps: first render, 2,413 nodes; update 2.3 ms |
-| 1,000 items | 116 ms | gaps: first render, 23,653 nodes; update 19 ms |
+| First render | **4.9 ms** | the gallery demo's data, 289 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of gaps replaced |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 100 items | 20 ms | gaps: first render, 2,413 nodes; update 3.2 ms |
+| 1,000 items | 126 ms | gaps: first render, 23,653 nodes; update 17 ms |
 
-1,000 items of gaps: 116 ms. It renders every item, so a first render passes 50 ms (a long task) at about 430 items – page or filter longer lists.
+1,000 items of gaps: 126 ms. It renders every item, so a first render passes 50 ms (a long task) at about 400 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

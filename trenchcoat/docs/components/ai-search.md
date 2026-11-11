@@ -9,7 +9,7 @@
 One search box with an AI mode – recent and suggested searches as you type, a multi-line prompt with example prompts in AI mode, Search within file contents, removable scope chips, Clear and ⌘K
 
 - **Element:** `<tc-ai-search>`
-- **Size:** 10.1 KB gzip · 36.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.1 KB gzip · 36.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -438,7 +438,7 @@ Files”. Searching, asking, switching mode and removing a scope are confirmed i
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -446,15 +446,15 @@ Files”. Searching, asking, switching mode and removing a scope are confirmed i
 | --- | --- | --- |
 | **This component alone** | 28.2 KB | 7.7 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **36.2 KB** | **10.1 KB** |
-| With Lit – the first component on a page | 56.9 KB | 16.9 KB |
+| **Added to a page that already has Lit** | **36.3 KB** | **10.1 KB** |
+| With Lit – the first component on a page | 57.0 KB | 16.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -462,11 +462,11 @@ Files”. Searching, asking, switching mode and removing a scope are confirmed i
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 29 DOM nodes – to layout, median of 7 |
+| First render | **1.4 ms** | the gallery demo's data, 29 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of suggestions replaced |
-| First on the page | 26 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.7 ms | suggestions: first render, 29 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | suggestions: first render, 29 nodes; update 0.2 ms |
+| First on the page | 30 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.0 ms | suggestions: first render, 29 nodes; update 0.2 ms |
+| 1,000 items | 1.8 ms | suggestions: first render, 29 nodes; update 0.3 ms |
 
 What it renders doesn't grow with suggestions (tested to 1,000 items).
 

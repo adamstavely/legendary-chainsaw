@@ -9,7 +9,7 @@
 Where to begin, and what to ask next – suggestions for an empty chat and follow-ups after an answer, from the conversation's context
 
 - **Element:** `<tc-prompt-starters>`
-- **Size:** 8.6 KB gzip · 26.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.7 KB gzip · 26.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -334,7 +334,7 @@ pencil are hidden from screen readers; → does the same.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -342,14 +342,14 @@ pencil are hidden from screen readers; → does the same.
 | --- | --- | --- |
 | **This component alone** | 17.8 KB | 6.2 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **26.1 KB** | **8.7 KB** |
-| With Lit – the first component on a page | 46.8 KB | 15.5 KB |
+| **Added to a page that already has Lit** | **26.2 KB** | **8.7 KB** |
+| With Lit – the first component on a page | 46.9 KB | 15.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -357,13 +357,13 @@ pencil are hidden from screen readers; → does the same.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 88 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of groups replaced |
-| First on the page | 1.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 15 ms | groups: first render, 2,292 nodes; update 1.7 ms |
-| 1,000 items | 161 ms | groups: first render, 22,692 nodes; update 19 ms |
+| First render | **3.2 ms** | the gallery demo's data, 88 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of groups replaced |
+| First on the page | 5.5 ms | default properties; includes adding its CSS to the document |
+| 100 items | 30 ms | groups: first render, 2,292 nodes; update 2.2 ms |
+| 1,000 items | 175 ms | groups: first render, 22,692 nodes; update 17 ms |
 
-1,000 items of groups: 161 ms. It renders every item, so a first render passes 50 ms (a long task) at about 310 items – page or filter longer lists.
+1,000 items of groups: 175 ms. It renders every item, so a first render passes 50 ms (a long task) at about 290 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

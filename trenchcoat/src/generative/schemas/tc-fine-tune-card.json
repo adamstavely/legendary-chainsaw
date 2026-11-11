@@ -1,0 +1,287 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-fine-tune-card.json",
+  "title": "tc-fine-tune-card",
+  "description": "An inspector where an agent tunes a design's properties and the person can take over: numbers, a percentage, a choice and swatches, a live preview, Agent markers and a revert.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "What's being tuned, such as \"Findings summary\"; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FineTuneSection"
+      },
+      "description": "The fields, in sections"
+    },
+    "values": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number"
+        ]
+      },
+      "description": "Each field's value by its id. Changed by the fields unless a tc-values-change listener calls preventDefault()"
+    },
+    "agentChanges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FineTuneAgentChange"
+      },
+      "description": "Changes the agent made; each new list is applied, counted in and marked"
+    },
+    "adjusting": {
+      "type": "boolean",
+      "description": "The agent is working: Adjust says so and waits"
+    },
+    "preview": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "string"
+        },
+        "height": {
+          "type": "string"
+        },
+        "radius": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "string"
+        },
+        "fill": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Which fields the preview follows, by id; an empty object hides the preview"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "adjust": {
+          "type": "string"
+        },
+        "adjusting": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "revert": {
+          "type": "string"
+        },
+        "preview": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FineTuneSection": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FineTuneField"
+          }
+        }
+      },
+      "required": [
+        "label",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "FineTuneField": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "color"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FineTuneOption"
+              }
+            },
+            "id": {
+              "type": "string",
+              "description": "The key in `values`"
+            },
+            "label": {
+              "type": "string",
+              "description": "The short label shown, such as \"W\""
+            },
+            "name": {
+              "type": "string",
+              "description": "The full name screen readers hear, such as \"Width\"; by default the label"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "label",
+            "options"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "number"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number"
+            },
+            "id": {
+              "type": "string",
+              "description": "The key in `values`"
+            },
+            "label": {
+              "type": "string",
+              "description": "The short label shown, such as \"W\""
+            },
+            "name": {
+              "type": "string",
+              "description": "The full name screen readers hear, such as \"Width\"; by default the label"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "label"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "percent"
+            },
+            "id": {
+              "type": "string",
+              "description": "The key in `values`"
+            },
+            "label": {
+              "type": "string",
+              "description": "The short label shown, such as \"W\""
+            },
+            "name": {
+              "type": "string",
+              "description": "The full name screen readers hear, such as \"Width\"; by default the label"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "label"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "select"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FineTuneOption"
+              }
+            },
+            "id": {
+              "type": "string",
+              "description": "The key in `values`"
+            },
+            "label": {
+              "type": "string",
+              "description": "The short label shown, such as \"W\""
+            },
+            "name": {
+              "type": "string",
+              "description": "The full name screen readers hear, such as \"Width\"; by default the label"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "label",
+            "options"
+          ]
+        }
+      ]
+    },
+    "FineTuneOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FineTuneAgentChange": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "to": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "to"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

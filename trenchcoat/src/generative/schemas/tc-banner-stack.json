@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-banner-stack.json",
+  "title": "tc-banner-stack",
+  "description": "Stacked notices – the newest on top, older ones peeking behind – that spread into a list on hover or focus.",
+  "type": "object",
+  "properties": {
+    "limit": {
+      "type": "number",
+      "description": "How many banners show while gathered – the newest and the ones peeking behind it"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Spread into a full list; hover and focus set it, and a page can too"
+    },
+    "label": {
+      "type": "string",
+      "description": "The region's name"
+    },
+    "quiet": {
+      "type": "boolean",
+      "description": "Don't read out banners that arrive"
+    }
+  },
+  "additionalProperties": false
+}

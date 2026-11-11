@@ -9,7 +9,7 @@
 A native modal with interactive content and restored focus
 
 - **Element:** `<tc-dialog>`
-- **Size:** 8.4 KB gzip · 29.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.4 KB gzip · 29.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -442,24 +442,24 @@ through `aria-describedby` when there is one. Close is a button named by `close-
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 7.3 KB | 3.1 KB |
+| **This component alone** | 7.3 KB | 3.0 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/modal` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **29.7 KB** | **8.4 KB** |
-| With Lit – the first component on a page | 49.3 KB | 14.7 KB |
+| **Added to a page that already has Lit** | **29.8 KB** | **8.4 KB** |
+| With Lit – the first component on a page | 49.4 KB | 14.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -467,9 +467,9 @@ through `aria-describedby` when there is one. Close is a button named by `close-
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| First render | **0.5 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 6.7 ms | default properties; includes adding its CSS to the document |
+| First on the page | 6.9 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

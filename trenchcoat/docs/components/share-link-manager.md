@@ -9,7 +9,7 @@
 The links that already share something – status in words, expiry, opens and who made them, with Copy, Change expiry and Revoke, which says how many opens it's had
 
 - **Element:** `<tc-share-link-manager>`
-- **Size:** 7.5 KB gzip · 22.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.5 KB gzip · 22.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -413,7 +413,7 @@ The links are a list named by the heading. Status is in words. Each button's nam
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -421,7 +421,7 @@ The links are a list named by the heading. Status is in words. Each button's nam
 | --- | --- | --- |
 | **This component alone** | 14.3 KB | 4.9 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.5 KB | – |
@@ -429,8 +429,8 @@ The links are a list named by the heading. Status is in words. Each button's nam
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **22.3 KB** | **7.5 KB** |
-| With Lit – the first component on a page | 44.6 KB | 14.9 KB |
+| **Added to a page that already has Lit** | **22.4 KB** | **7.5 KB** |
+| With Lit – the first component on a page | 44.8 KB | 14.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -438,13 +438,13 @@ The links are a list named by the heading. Status is in words. Each button's nam
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 80 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of links replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 13 ms | links: first render, 1,664 nodes; update 5.6 ms |
-| 1,000 items | 138 ms | links: first render, 16,514 nodes; update 58 ms |
+| First render | **3.0 ms** | the gallery demo's data, 80 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of links replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 17 ms | links: first render, 1,664 nodes; update 6.4 ms |
+| 1,000 items | 137 ms | links: first render, 16,514 nodes; update 56 ms |
 
-1,000 items of links: 138 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
+1,000 items of links: 137 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

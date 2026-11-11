@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-week-bars.json",
+  "title": "tc-week-bars",
+  "description": "A week of daily totals as bars against a goal line, with the week's total and average, a week switcher and a table view.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the plot's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "weeks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WeekBarsWeek"
+      },
+      "description": "The weeks, oldest first, each with its days"
+    },
+    "week": {
+      "type": "number",
+      "description": "The shown week's index; unset is the last (latest) week"
+    },
+    "goal": {
+      "type": "number",
+      "description": "The daily goal, drawn as a dashed line; days at or over it take the accent"
+    },
+    "today": {
+      "type": "number",
+      "description": "The index of today in the last week, marked under its bar"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "chart",
+        "table"
+      ],
+      "description": "The bars or the table"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws everything where it ends, with no entrance or glide"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string"
+        },
+        "perDay": {
+          "type": "string"
+        },
+        "goal": {
+          "type": "string"
+        },
+        "met": {
+          "type": "string"
+        },
+        "missed": {
+          "type": "string"
+        },
+        "today": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over `defaultWeekBarsLabels`"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WeekBarsWeek": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The switcher's word for the week: \"Mar 3–9\""
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeekBarsDay"
+          },
+          "description": "Its days, in order – usually seven"
+        }
+      },
+      "required": [
+        "label",
+        "days"
+      ],
+      "additionalProperties": false
+    },
+    "WeekBarsDay": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The day's name: \"Mon\""
+        },
+        "value": {
+          "type": "number"
+        },
+        "short": {
+          "type": "string",
+          "description": "The narrow name – by default the first letter of `label`"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -9,7 +9,7 @@
 Several people signing off in order – who's next and who's overdue in words, with Approve, Decline with a note, and Delegate for the person it's waiting on
 
 - **Element:** `<tc-approval-chain>`
-- **Size:** 7.6 KB gzip · 24.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.7 KB gzip · 24.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -408,7 +408,7 @@ The steps are an ordered list named by the heading, and the current one has `ari
 
 ## Performance
 
-*Measured 2026-11-01 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -416,15 +416,15 @@ The steps are an ordered list named by the heading, and the current one has `ari
 | --- | --- | --- |
 | **This component alone** | 16.5 KB | 5.3 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **24.1 KB** | **7.6 KB** |
-| With Lit – the first component on a page | 44.7 KB | 14.4 KB |
+| **Added to a page that already has Lit** | **24.2 KB** | **7.7 KB** |
+| With Lit – the first component on a page | 44.9 KB | 14.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -432,13 +432,13 @@ The steps are an ordered list named by the heading, and the current one has `ari
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 54 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of steps replaced |
-| First on the page | 8.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.2 ms | steps: first render, 990 nodes; update 2.3 ms |
-| 1,000 items | 66 ms | steps: first render, 9,765 nodes; update 28 ms |
+| First render | **2.5 ms** | the gallery demo's data, 54 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of steps replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | steps: first render, 990 nodes; update 3.8 ms |
+| 1,000 items | 78 ms | steps: first render, 9,765 nodes; update 31 ms |
 
-1,000 items of steps: 66 ms. It renders every item, so a first render passes 50 ms (a long task) at about 760 items – page or filter longer lists.
+1,000 items of steps: 78 ms. It renders every item, so a first render passes 50 ms (a long task) at about 640 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 
 - **Element:** `<tc-answer-arena>`
-- **Size:** 9.3 KB gzip · 31.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.4 KB gzip · 32.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -477,7 +477,7 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -485,14 +485,14 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 | --- | --- | --- |
 | **This component alone** | 23.2 KB | 6.8 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **31.8 KB** | **9.4 KB** |
-| With Lit – the first component on a page | 52.1 KB | 15.9 KB |
+| **Added to a page that already has Lit** | **32.0 KB** | **9.4 KB** |
+| With Lit – the first component on a page | 52.2 KB | 15.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -500,11 +500,11 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of reasons replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | reasons: first render, 37 nodes; update 0.0 ms |
-| 1,000 items | 0.7 ms | reasons: first render, 37 nodes; update 0.0 ms |
+| First render | **2.2 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of reasons replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.1 ms | reasons: first render, 37 nodes; update 0.2 ms |
+| 1,000 items | 1.8 ms | reasons: first render, 37 nodes; update 0.1 ms |
 
 What it renders doesn't grow with reasons (tested to 1,000 items).
 

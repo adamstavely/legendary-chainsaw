@@ -9,7 +9,7 @@
 A rail of ticks beside a long chat, one per message you sent, longer for longer ones – the one in view lit, the message on hover or with the arrow keys, a click to jump back to it – following the chat as it scrolls
 
 - **Element:** `<tc-chat-minimap>`
-- **Size:** 6.0 KB gzip · 16.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 6.1 KB gzip · 16.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -429,7 +429,7 @@ The ticks and the hover bubble repeat that, so they're hidden.
 
 ## Performance
 
-*Measured 2026-10-30 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -437,14 +437,14 @@ The ticks and the hover bubble repeat that, so they're hidden.
 | --- | --- | --- |
 | **This component alone** | 10.2 KB | 4.1 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **16.8 KB** | **6.0 KB** |
-| With Lit – the first component on a page | 36.4 KB | 12.4 KB |
+| **Added to a page that already has Lit** | **16.9 KB** | **6.1 KB** |
+| With Lit – the first component on a page | 36.6 KB | 12.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -452,13 +452,13 @@ The ticks and the hover bubble repeat that, so they're hidden.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 73 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of items replaced |
-| First on the page | 7.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.9 ms | items: first render, 601 nodes; update 0.4 ms |
-| 1,000 items | 21 ms | items: first render, 6,001 nodes; update 3.0 ms |
+| First render | **2.2 ms** | the gallery demo's data, 73 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of items replaced |
+| First on the page | 9.8 ms | default properties; includes adding its CSS to the document |
+| 100 items | 8.3 ms | items: first render, 601 nodes; update 1.1 ms |
+| 1,000 items | 33 ms | items: first render, 6,001 nodes; update 3.3 ms |
 
-1,000 items of items: 21 ms, 6,001 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of items: 33 ms, 6,001 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

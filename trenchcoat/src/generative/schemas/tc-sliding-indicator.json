@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-sliding-indicator.json",
+  "title": "tc-sliding-indicator",
+  "description": "A highlight that slides to the selected item of the buttons or links inside it.",
+  "type": "object",
+  "properties": {
+    "variant": {
+      "type": "string",
+      "enum": [
+        "pill",
+        "underline"
+      ],
+      "description": "\"underline\" draws a bar under the selected item (beside it when vertical); \"pill\" fills its box behind the text"
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "description": "Which way the items run – a vertical underline sits at the items' start edge"
+    },
+    "hoverPreview": {
+      "type": "boolean",
+      "description": "A faint ghost follows the pointer over the items, sliding the same way"
+    },
+    "items": {
+      "type": "string",
+      "description": "A CSS selector for the items inside it; the default takes tabs, options, radios, links and buttons"
+    }
+  },
+  "additionalProperties": false
+}

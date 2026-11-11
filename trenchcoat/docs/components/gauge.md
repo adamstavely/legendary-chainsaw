@@ -9,7 +9,7 @@
 One value against its range as a 270° dial, a half dial or a bar – the value in big type with the band it's in, bands and ticks round it, a target line and the change since last time; optionally a slider you drag or move with the keys
 
 - **Element:** `<tc-gauge>`
-- **Size:** 8.8 KB gzip · 28.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.8 KB gzip · 28.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -491,7 +491,7 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -499,14 +499,14 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 | --- | --- | --- |
 | **This component alone** | 21.8 KB | 6.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **28.5 KB** | **8.8 KB** |
-| With Lit – the first component on a page | 48.0 KB | 15.1 KB |
+| **Added to a page that already has Lit** | **28.6 KB** | **8.8 KB** |
+| With Lit – the first component on a page | 48.1 KB | 15.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -514,11 +514,11 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 22 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of bands replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | bands: first render, 24 nodes; update 0.2 ms |
-| 1,000 items | 0.9 ms | bands: first render, 24 nodes; update 0.3 ms |
+| First render | **2.0 ms** | the gallery demo's data, 22 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of bands replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.7 ms | bands: first render, 24 nodes; update 0.3 ms |
+| 1,000 items | 0.9 ms | bands: first render, 24 nodes; update 0.6 ms |
 
 1,000 items of bands: 0.9 ms, 24 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 

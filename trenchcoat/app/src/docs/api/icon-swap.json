@@ -1,0 +1,339 @@
+{
+ "elements": [
+  {
+   "tag": "tc-icon-swap",
+   "className": "TcIconSwap",
+   "description": "One icon turning into the next – rotate, scale and blur – by `state`, optionally turning back after a while.",
+   "properties": [
+    {
+     "name": "state",
+     "attribute": "state",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The icon to show: the `data-state` of one of its icons; unset, or unknown, shows the first",
+     "readonly": false
+    },
+    {
+     "name": "rest",
+     "attribute": "rest",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The resting state `revert-after` goes back to; by default the first icon's",
+     "readonly": false
+    },
+    {
+     "name": "revertAfter",
+     "attribute": "revert-after",
+     "type": "number",
+     "default": "0",
+     "description": "Go back to the resting state this many ms after a change away from it; 0 never does",
+     "readonly": false
+    },
+    {
+     "name": "announce",
+     "attribute": "announce",
+     "type": "boolean",
+     "default": "false",
+     "description": "Read each change's word out politely – the icon's `data-label`, else its state",
+     "readonly": false
+    },
+    {
+     "name": "icons",
+     "attribute": null,
+     "type": "IconSwapIcon[]",
+     "default": null,
+     "description": "Its icons: the children with a data-state",
+     "readonly": true
+    },
+    {
+     "name": "current",
+     "attribute": null,
+     "type": "string | undefined",
+     "default": null,
+     "description": "The state showing – `state` when one of the icons has it, else the first icon's",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-state-change",
+     "detail": "",
+     "description": "Going back to the resting state after `revert-after` ({ state }: IconSwapStateChange); cancelable – prevented, the icon stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "iswp",
+   "cssProperties": [
+    {
+     "name": "--tc-iswp-turn",
+     "value": "90deg",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iswp-shrink",
+     "value": "0.5",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iswp-blur",
+     "value": "4px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-moderate",
+    "--tc-ease-move"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "IconSwap",
+   "exported": true,
+   "props": [
+    {
+     "name": "state",
+     "type": "string",
+     "optional": true,
+     "description": "The icon to show, by its data-state – controlled when given"
+    },
+    {
+     "name": "defaultState",
+     "type": "string",
+     "optional": true,
+     "description": "The state to start in, uncontrolled"
+    },
+    {
+     "name": "onStateChange",
+     "type": "(state: string) => void",
+     "optional": true,
+     "description": "The element is going back to its resting state after `revertAfter`"
+    }
+   ],
+   "hides": [
+    "state"
+   ],
+   "events": {
+    "tc-state-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-icon-swap",
+   "className": "TcIconSwap",
+   "module": "@adamstavely/trenchcoat/icon-swap",
+   "data": [],
+   "attributes": [
+    {
+     "name": "state",
+     "attribute": "state"
+    },
+    {
+     "name": "rest",
+     "attribute": "rest"
+    },
+    {
+     "name": "revertAfter",
+     "attribute": "revert-after"
+    },
+    {
+     "name": "announce",
+     "attribute": "announce"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-state-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "state",
+     "event": "tc-state-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 13535,
+  "gzip": 5017
+ }
+}

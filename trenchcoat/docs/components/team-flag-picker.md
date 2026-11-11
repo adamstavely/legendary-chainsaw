@@ -9,7 +9,7 @@
 Picks one of a team's flags for a file – a small button with the flag's colour and name, opening a list of flags with what each one means.
 
 - **Element:** `<tc-team-flag-picker>`
-- **Size:** 8.8 KB gzip · 25.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.0 KB gzip · 26.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -468,7 +468,7 @@ announces a pick.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -476,16 +476,16 @@ announces a pick.
 | --- | --- | --- |
 | **This component alone** | 10.2 KB | 4.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/team-flag` · Shared Trenchcoat code | 0.8 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **25.9 KB** | **8.9 KB** |
-| With Lit – the first component on a page | 46.5 KB | 15.6 KB |
+| **Added to a page that already has Lit** | **26.2 KB** | **9.0 KB** |
+| With Lit – the first component on a page | 46.9 KB | 15.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -493,11 +493,11 @@ announces a pick.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of flags replaced |
-| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.3 ms | flags: first render, 7 nodes; update 0.1 ms |
-| 1,000 items | 0.2 ms | flags: first render, 7 nodes; update 0.0 ms |
+| First render | **0.5 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of flags replaced |
+| First on the page | 8.9 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.7 ms | flags: first render, 7 nodes; update 0.2 ms |
+| 1,000 items | 0.5 ms | flags: first render, 7 nodes; update 0.2 ms |
 
 What it renders doesn't grow with flags (tested to 1,000 items).
 

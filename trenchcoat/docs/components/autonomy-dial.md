@@ -9,7 +9,7 @@
 How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
 
 - **Element:** `<tc-autonomy-dial>`
-- **Size:** 9.2 KB gzip · 31.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.3 KB gzip · 31.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -426,22 +426,22 @@ stays on its lock.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 23.0 KB | 6.9 KB |
+| **This component alone** | 23.0 KB | 6.8 KB |
 | Lit · the library every element is built on, the parts it uses | 20.7 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **31.2 KB** | **9.3 KB** |
-| With Lit – the first component on a page | 53.1 KB | 16.5 KB |
+| **Added to a page that already has Lit** | **31.4 KB** | **9.3 KB** |
+| With Lit – the first component on a page | 53.3 KB | 16.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -449,13 +449,13 @@ stays on its lock.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 145 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of actions replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.2 ms | actions: first render, 1,680 nodes; update 1.9 ms |
-| 1,000 items | 54 ms | actions: first render, 16,599 nodes; update 20 ms |
+| First render | **3.4 ms** | the gallery demo's data, 145 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of actions replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 13 ms | actions: first render, 1,680 nodes; update 3.2 ms |
+| 1,000 items | 76 ms | actions: first render, 16,599 nodes; update 16 ms |
 
-1,000 items of actions: 54 ms. It renders every item, so a first render passes 50 ms (a long task) at about 930 items – page or filter longer lists.
+1,000 items of actions: 76 ms. It renders every item, so a first render passes 50 ms (a long task) at about 660 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (clean), 4 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

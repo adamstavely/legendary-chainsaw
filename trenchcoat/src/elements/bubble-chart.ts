@@ -1,8 +1,8 @@
-import { nothing, svg } from "lit";
-import { property } from "lit/decorators.js";
+import { html, nothing, svg } from "lit";
+import { property, state } from "lit/decorators.js";
 import { gridY, txt, yAxisWidth } from "./internal/chart/axis";
 import { canvasUnderlay, paintCanvas } from "./internal/chart/canvas";
-import { AXIS_FONT, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./internal/chart/element";
+import { AXIS_FONT, categoricalInk, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./internal/chart/element";
 import { numGetter, strGetter } from "./internal/chart/accessor";
 import { makeTickFormatter, type FormatSpec, type ValueFormatter } from "./internal/chart/format";
 import { areaPath, linePath } from "./internal/chart/geometry";
@@ -22,7 +22,11 @@ import type { Accessor, ChartEvent, Row, TooltipData } from "./internal/chart/ty
  * when the chart comes on screen and glide when the data changes. Above `canvas-threshold` points (1500) they're
  * painted on a canvas under the SVG, which keeps the axes and the active point. `trend` fits a line through them –
  * least squares ("linear", with its r² beside it and, with `trend-band`, its 95% confidence band) or LOESS ("smooth").
+ * With `group`, points of a group share a categorical ink and the header holds a legend: pointing at or focusing a
+ * group mutes the others, and pressing it hides or shows the group (`groups`; the axes stay put). `stats` adds a row of
+ * stat tiles under the chart.
  *   · one tab stop: arrows move point to point in data order, each read with x, y and size
+ *   · the legend is a toolbar of toggle buttons with one tab stop: arrows move, Enter or Space shows or hides
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-bubble-chart heading="Grants" .data=${[{ x: 3, y: 12, size: 40, label: "Genomics" }]}></tc-bubble-chart>
@@ -31,7 +35,7 @@ import type { Accessor, ChartEvent, Row, TooltipData } from "./internal/chart/ty
 /** Circles of different sizes: Lucide's "chart-scatter" (ISC, lucide.dev), with sized dots */
 const bubbleIcon = svg`<circle cx="8.5" cy="14.5" r="2.5"></circle><circle cx="16" cy="8" r="3"></circle><circle cx="17.5" cy="16.5" r="1"></circle><path d="M3 3v16a2 2 0 0 0 2 2h16"></path>`;
 
-type Dot = { i: number; x: number; y: number; r: number; vx: number; vy: number; vs: number; label: string; hi: boolean };
+type Dot = { i: number; x: number; y: number; r: number; vx: number; vy: number; vs: number; label: string; hi: boolean; g: number };
 /** A circle, or null for the canvas's single progress mark */
 type DotMark = Dot | null;
 type Label = { d: Dot; x: number; y: number; anchor: "start" | "end" | "middle" };
@@ -39,6 +43,10 @@ type Label = { d: Dot; x: number; y: number; anchor: "start" | "end" | "middle" 
 type Trend = { xs: number[]; ys: number[]; lo: number[] | null; up: number[] | null; label: { text: string; x: number; y: number } | null };
 
 export type BubbleTrend = "none" | "linear" | "smooth";
+/** A stat tile under the chart: its name, its value (a number is written in the chart's format) and its change in % */
+export type BubbleStat = { label: string; value: string | number; change?: number };
+/** The groups shown after a legend button was pressed */
+export type BubbleGroupsChange = { groups: string[] };
 
 /** Samples along a trend line */
 const TS = 48;
@@ -53,6 +61,7 @@ const drawOrder = (a: Dot, b: Dot) => Number(a.hi) - Number(b.hi) || b.r - a.r;
  * @fires tc-view-change - The Table button was pressed ({ view }: ChartViewChange); cancelable – prevented, `view` stays as it was
  * @fires tc-mark-hover - The pointer or keyboard moved to a point, or off them ({ event }: ChartMarkHover)
  * @fires tc-mark-click - A point was clicked, or picked with Enter or Space ({ event }: ChartMarkClick)
+ * @fires tc-groups-change - A legend button hid or showed a group ({ groups }: BubbleGroupsChange); cancelable – prevented, `groups` stays as it was
  */
 export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
   static override ui = "bbl";
@@ -83,15 +92,28 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
   @property() accessor trend: BubbleTrend = "none";
   /** Shades the 95% confidence band round a linear trend */
   @property({ type: Boolean, attribute: "trend-band" }) accessor trendBand = false;
+  /** The group field: points of a group share an ink, and the header's legend can isolate, hide and show each group */
+  @property({ attribute: false }) accessor group: Accessor<T, string> | undefined = undefined;
+  /** The groups shown; by default all of them. Changed by the legend unless a tc-groups-change listener calls preventDefault() */
+  @property({ attribute: false }) accessor groups: string[] | undefined = undefined;
+  /** Stat tiles under the chart: { label, value, change? } */
+  @property({ attribute: false }) accessor stats: BubbleStat[] = [];
+
+  /** @internal The group the legend is pointing at or focused on: the others are muted */
+  @state() accessor isolated: string | null = null;
+  /** @internal The legend button that holds the tab stop */
+  @state() accessor legendFocus = 0;
 
   protected override get kind() {
     return this.size !== undefined ? "Bubble chart" : "Scatter plot";
   }
   protected override readonly icon = bubbleIcon;
   protected override defaultDuration = 800;
-  protected override modelKeys = ["x", "y", "size", "label", "sizeRange", "xLabel", "yLabel", "zero", "maxLabels", "canvasThreshold", "xFormat", "trend", "trendBand"];
+  protected override modelKeys = ["x", "y", "size", "label", "sizeRange", "xLabel", "yLabel", "zero", "maxLabels", "canvasThreshold", "xFormat", "trend", "trendBand", "group", "groups"];
 
   private dots: Dot[] = [];
+  /** Every group in the data, in order of first appearance */
+  private groupList: string[] = [];
   private grid = { cells: new Map<string, number[]>(), cell: 24 };
   private geo = {
     left: 0,
@@ -118,6 +140,16 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
     return "Point";
   }
 
+  protected override seriesHeader() {
+    return "Group";
+  }
+
+  /** A point's ink: its group's, muted while the legend isolates another group; else the emphasis ink */
+  private ink(d: Dot) {
+    if (d.g < 0) return emphasisInk(d.hi);
+    return this.isolated !== null && this.groupList[d.g] !== this.isolated ? "var(--tc-bbl-muted)" : categoricalInk(d.g);
+  }
+
   private nth(i: number) {
     return `#${i}`;
   }
@@ -129,16 +161,25 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
     const gy = numGetter(this.y, "y");
     const gs = hasSize ? numGetter(this.size, "size") : null;
     const gl = strGetter(this.label, "label");
-    const raw = this.data
-      .map((d, i) => ({ d, x: gx(d, i), y: gy(d, i), s: gs ? Math.max(0, gs(d, i) || 0) : 1, label: gl(d, i) }))
+    const gg = this.group !== undefined ? strGetter(this.group, "group") : null;
+    const all = this.data
+      .map((d, i) => ({ d, x: gx(d, i), y: gy(d, i), s: gs ? Math.max(0, gs(d, i) || 0) : 1, label: gl(d, i), group: gg ? gg(d, i) : "" }))
       .filter((r) => Number.isFinite(r.x) && Number.isFinite(r.y));
+    const groupList = gg ? [...new Set(all.map((r) => r.group))] : [];
+    this.groupList = groupList;
+    if (this.legendFocus >= groupList.length) this.legendFocus = 0;
+    // A hidden group's points leave, but the axes are fitted to every point, so the others stay where they were
+    const shown = this.groups ? new Set(this.groups) : null;
+    const raw = shown ? all.filter((r) => shown.has(r.group)) : all;
     const n = raw.length;
     const canvas = n > this.canvasThreshold;
     const [xmn, xmx] = extent(n ? raw.map((r) => r.x) : [0, 1]);
     const [ymn, ymx] = extent(n ? raw.map((r) => r.y) : [0, 1]);
-    const [smn, smx] = extent(n ? raw.map((r) => r.s) : [0, 1]);
-    const yDom = fitDomain(ymn, ymx, Math.max(2, Math.round(H / 70)), { zero: this.zero, pad: 0.08 });
-    const xDom = fitDomain(xmn, xmx, Math.max(2, Math.round(W / 110)), { zero: this.zero, pad: 0.06 });
+    const fx = extent(all.length ? all.map((r) => r.x) : [0, 1]);
+    const fy = extent(all.length ? all.map((r) => r.y) : [0, 1]);
+    const [smn, smx] = extent(all.length ? all.map((r) => r.s) : [0, 1]);
+    const yDom = fitDomain(fy[0], fy[1], Math.max(2, Math.round(H / 70)), { zero: this.zero, pad: 0.08 });
+    const xDom = fitDomain(fx[0], fx[1], Math.max(2, Math.round(W / 110)), { zero: this.zero, pad: 0.06 });
     const yFmt = makeTickFormatter(this.format, f.locale, Math.max(Math.abs(yDom[0]), Math.abs(yDom[1])));
     const xFmt = makeTickFormatter(this.xFormat, f.locale, Math.max(Math.abs(xDom[0]), Math.abs(xDom[1])));
     const yTicks = scaleLinear(yDom, [0, 1]).ticks(Math.max(2, Math.round(H / 70)));
@@ -150,8 +191,9 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
     const xs = scaleLinear(xDom, [left + 6 + pad, W - 8 - pad]);
     const ys = scaleLinear(yDom, [H - bottom - pad, top + pad]);
     const rs = hasSize ? scaleSqrt([Math.min(0, smn), smx || 1], [rMin, rMax]) : () => rMin;
-    const hi = resolveHighlight(this.highlight, raw.map((r) => r.d), raw.map((r) => r.label), raw.map((r) => (hasSize ? r.s : r.y)), hasSize ? "max" : "none");
-    const dots: Dot[] = raw.map((r, k) => ({ i: k, x: xs(r.x), y: ys(r.y), r: rs(r.s), vx: r.x, vy: r.y, vs: r.s, label: r.label, hi: hi.has(k) }));
+    // Grouped, the inks tell the groups apart: nothing is emphasised unless `highlight` says so
+    const hi = resolveHighlight(this.highlight, raw.map((r) => r.d), raw.map((r) => r.label), raw.map((r) => (hasSize ? r.s : r.y)), hasSize && !gg ? "max" : "none");
+    const dots: Dot[] = raw.map((r, k) => ({ i: k, x: xs(r.x), y: ys(r.y), r: rs(r.s), vx: r.x, vy: r.y, vs: r.s, label: r.label, hi: hi.has(k), g: gg ? groupList.indexOf(r.group) : -1 }));
     this.dots = dots;
 
     // A grid of 24px cells for finding the point under the pointer quickly
@@ -248,9 +290,11 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
     const { fv, fmt } = f;
     const events: ChartEvent<T>[] = lazyArray(n, (k) => {
       const d = dots[k];
-      return { datum: raw[k].d, index: k, key: `${k}`, label: d.label || this.nth(k + 1), value: hasSize ? d.vs : d.vy, formatted: `x ${xFmt(d.vx)}, y ${fv(d.vy)}${hasSize ? `, size ${fmt(d.vs)}` : ""}` };
+      const series = gg ? raw[k].group : undefined;
+      return { datum: raw[k].d, index: k, key: `${k}`, label: d.label || this.nth(k + 1), series, value: hasSize ? d.vs : d.vy, formatted: `x ${xFmt(d.vx)}, y ${fv(d.vy)}${hasSize ? `, size ${fmt(d.vs)}` : ""}` };
     });
-    const summary = `${plural(n, "point")}. x from ${xFmt(xmn)} to ${xFmt(xmx)}, y from ${yFmt(ymn)} to ${yFmt(ymx)}.${trendWords}`;
+    const groupWords = gg ? ` ${plural(groupList.length, "group")}${shown ? `, ${shown.size < groupList.length ? `showing ${groupList.filter((g) => shown.has(g)).join(", ")}` : "all shown"}` : ""}.` : "";
+    const summary = `${plural(n, "point")}.${groupWords} x from ${xFmt(xmn)} to ${xFmt(xmx)}, y from ${yFmt(ymn)} to ${yFmt(ymx)}.${trendWords}`;
     return { marks, events, summary };
   }
 
@@ -295,6 +339,7 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
       y: d.y - d.r,
       title: d.label || this.nth(d.i + 1),
       rows: [
+        ...(d.g >= 0 ? [{ label: "Group", value: this.groupList[d.g], color: categoricalInk(d.g) }] : []),
         { label: this.xLabel || "x", value: this.geo.xFmt(d.vx) },
         { label: this.yLabel || "y", value: f.fv(d.vy) },
         ...(this.size !== undefined ? [{ label: "Size", value: f.fmt(d.vs), color: emphasisInk(d.hi) }] : []),
@@ -311,12 +356,30 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
     const t = this.motion.get("__p")?.[0] ?? 1;
     const { width: W, height: H } = f;
     // Hover and focus re-render the element: the canvas is painted again only when the points or the entrance moved
-    const sig = `${t}|${W}x${H}`;
+    const sig = `${t}|${W}x${H}|${this.isolated ?? ""}`;
     const cv = plot.querySelector(".tc-chart__canvas");
     if (this.painted === sig && cv?.getAttribute("data-painted") === sig) return;
     const dots = this.dots;
     paintCanvas(plot, W, H, (ctx, color) => {
       const xr = W || 1;
+      if (this.groupList.length) {
+        // Grouped: each point in its group's ink, muted ones first so the isolated group sits on top
+        const inks = new Map<string, string>();
+        const order = [...dots].sort((a, b) => Number(this.ink(a) !== "var(--tc-bbl-muted)") - Number(this.ink(b) !== "var(--tc-bbl-muted)"));
+        ctx.globalAlpha = 0.75;
+        for (const d of order) {
+          const k = Math.max(0, Math.min(1, (t * 1.4 - (d.x / xr) * 0.4) * 2.5));
+          if (k <= 0) continue;
+          const ink = this.ink(d);
+          if (!inks.has(ink)) inks.set(ink, color(ink));
+          ctx.fillStyle = inks.get(ink)!;
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r * k, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        return;
+      }
       ctx.globalAlpha = 0.55;
       ctx.fillStyle = color("var(--tc-plot-rest)");
       for (const d of dots) {
@@ -376,13 +439,87 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
             const isA = this.active === d.i;
             const h = this.hover(d.i);
             return svg`<circle class="tc-chart__mark ui-bbl__dot" ?data-active=${isA} ?data-sized=${hasSize} cx=${cx} cy=${cy} r=${Math.max(0, r)}
-              style=${`fill: ${emphasisInk(d.hi)}`} fill-opacity=${d.hi ? 0.92 : hasSize ? 0.85 : 0.7}
+              style=${`fill: ${this.ink(d)}`} fill-opacity=${d.hi ? 0.92 : hasSize ? 0.85 : 0.7}
               opacity=${it.exiting ? 0.3 : this.active === null || isA ? 1 : 0.55}
               @pointerenter=${h.enter} @click=${h.click}></circle>`;
           })}
       ${trendLine}
       ${labels.map((l) => txt(l.x, l.y, l.d.label, { anchor: l.anchor, cls: "value", strong: l.d.hi, opacity: fade }))}
       ${trend?.label ? this.trendLabel(trend.label, m.fade(D * 0.9, 300)) : nothing}`;
+  }
+
+  /* ---------- The legend: one toggle button per group ---------- */
+
+  protected override headerLegend() {
+    const list = this.groupList;
+    if (!list.length) return nothing;
+    const shown = this.groups ? new Set(this.groups) : null;
+    return html`<div class="tc-chart__legend ui-bbl__legend" role="toolbar" aria-label="Groups" @keydown=${this.legendKey}>
+      ${list.map((g, i) => {
+        const on = !shown || shown.has(g);
+        return html`<button type="button" class="tc-chart__key ui-bbl__key" data-group=${g} aria-pressed=${on ? "true" : "false"} tabindex=${i === this.legendFocus ? 0 : -1}
+          ?data-isolated=${this.isolated === g}
+          @click=${() => this.toggleGroup(g)}
+          @pointerenter=${() => this.isolate(on ? g : null)} @pointerleave=${() => this.isolate(null)}
+          @focus=${() => {
+            this.legendFocus = i;
+            this.isolate(on ? g : null);
+          }}
+          @blur=${() => this.isolate(null)}>
+          <span class="tc-chart__swatch ui-bbl__swatch" aria-hidden="true" style=${`--tc-bbl-key: ${categoricalInk(i)}`}></span>${g}
+        </button>`;
+      })}
+    </div>`;
+  }
+
+  private isolate(g: string | null) {
+    if (this.isolated !== g) this.isolated = g;
+  }
+
+  private legendKey = (e: KeyboardEvent) => {
+    const n = this.groupList.length;
+    const cur = this.legendFocus;
+    const next = e.key === "ArrowRight" || e.key === "ArrowDown" ? (cur + 1) % n : e.key === "ArrowLeft" || e.key === "ArrowUp" ? (cur - 1 + n) % n : e.key === "Home" ? 0 : e.key === "End" ? n - 1 : null;
+    if (next === null) return;
+    e.preventDefault();
+    this.legendFocus = next;
+    void this.updateComplete.then(() => this.querySelectorAll<HTMLButtonElement>(".ui-bbl__key")[next]?.focus());
+  };
+
+  /** Hides or shows a group; the last group shown stays */
+  private toggleGroup(g: string) {
+    const list = this.groupList;
+    const cur = (this.groups ?? list).filter((x) => list.includes(x));
+    const on = cur.includes(g);
+    if (on && cur.length <= 1) return;
+    const groups = on ? cur.filter((x) => x !== g) : list.filter((x) => x === g || cur.includes(x));
+    if (!this.emit<BubbleGroupsChange>("tc-groups-change", { groups }, { cancelable: true })) return;
+    this.groups = groups;
+    if (on) this.isolate(null);
+  }
+
+  /** A change in %, signed: the sign carries the direction as well as the tone */
+  private change(v: number) {
+    const abs = Math.abs(v).toLocaleString(this.locale, { maximumFractionDigits: 1 });
+    return `${v > 0 ? "+" : v < 0 ? "−" : ""}${abs}%`;
+  }
+
+  protected override render() {
+    const chart = super.render();
+    if (!this.stats.length) return chart;
+    return html`${chart}
+      <dl class="ui-bbl__stats">
+        ${this.stats.map(
+          (s) => html`<div class="ui-bbl__stat">
+            <dt class="ui-bbl__stat-label">${s.label}</dt>
+            <dd class="ui-bbl__stat-value">
+              ${typeof s.value === "number" ? this.frame.fmt(s.value) : s.value}${s.change !== undefined && Number.isFinite(s.change)
+                ? html` <span class="ui-bbl__stat-change" data-dir=${s.change > 0 ? "up" : s.change < 0 ? "down" : "flat"}>${this.change(s.change)}</span>`
+                : nothing}
+            </dd>
+          </div>`,
+        )}
+      </dl>`;
   }
 
   /** r² on a chip of the card's colour: on a canvas, past the threshold, it may sit over painted points */
@@ -394,6 +531,9 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
   static override css = /* css */ `
 [data-ui="bbl"] {
   --tc-bbl-trend: var(--tc-text-primary);
+  /* Points of the groups the legend isn't isolating */
+  --tc-bbl-muted: var(--tc-border-default);
+  --tc-bbl-stat-min: 120px;
 }
 /* Circles are parted by a line of the card's colour; the active one is ringed */
 .ui-bbl__dot { stroke: var(--tc-plot-bg); stroke-width: 0.6; }
@@ -403,8 +543,26 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
 .ui-bbl__trend { fill: none; stroke: var(--tc-bbl-trend); stroke-width: 1.8; stroke-dasharray: 6 4; stroke-linecap: round; pointer-events: none; }
 .ui-bbl__band { fill: var(--tc-bbl-trend); fill-opacity: 0.08; stroke: none; pointer-events: none; }
 .ui-bbl__trend-back { fill: var(--tc-plot-bg); opacity: 0.94; }
+/* The legend: a toggle button per group – a hidden group's swatch is an outline and its name struck through */
+.ui-bbl__key { margin: 0; padding: var(--tc-space-0-5) var(--tc-space-1); border: 0; border-radius: var(--tc-radius-sm); background: none; color: inherit; font: inherit; cursor: pointer; }
+.ui-bbl__key:hover, .ui-bbl__key[data-isolated] { background: var(--tc-surface-sunken); color: var(--tc-text-primary); }
+.ui-bbl__key:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-bbl__swatch { background: var(--tc-bbl-key); box-shadow: inset 0 0 0 1.5px var(--tc-bbl-key); }
+.ui-bbl__key[aria-pressed="false"] { color: var(--tc-text-muted); text-decoration: line-through; }
+.ui-bbl__key[aria-pressed="false"] .ui-bbl__swatch { background: none; }
+/* Stat tiles under the chart: white tiles on the Standard tray, wells inside the Clean card */
+.ui-bbl__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--tc-bbl-stat-min), 1fr)); gap: var(--tc-space-2); margin: var(--tc-space-2) 0 0; padding: 0; }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="bbl"]:not([bare]) .ui-bbl__stats { margin: 0; padding: 0 var(--tc-space-4) var(--tc-space-4); }
+.ui-bbl__stat { min-width: 0; padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-md); background: var(--tc-surface-sunken); }
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="bbl"] .ui-bbl__stat { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
+.ui-bbl__stat-label { overflow: hidden; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); text-overflow: ellipsis; white-space: nowrap; }
+.ui-bbl__stat-value { margin: var(--tc-space-0-5) 0 0; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
+.ui-bbl__stat-change { font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
+.ui-bbl__stat-change[data-dir="up"] { color: var(--tc-status-success-fg); }
+.ui-bbl__stat-change[data-dir="down"] { color: var(--tc-status-danger-fg); }
 @media (forced-colors: active) {
   .ui-bbl__dot { forced-color-adjust: none; }
+  .ui-bbl__swatch { forced-color-adjust: none; }
 }
 `;
 }

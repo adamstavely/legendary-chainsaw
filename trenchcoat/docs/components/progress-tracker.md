@@ -9,7 +9,7 @@
 Onboarding checklist with an animated progress bar, ticks that draw themselves and auto play
 
 - **Element:** `<tc-progress-tracker>`
-- **Size:** 9.1 KB gzip · 31.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.1 KB gzip · 31.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -451,22 +451,22 @@ says the same.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 23.2 KB | 6.9 KB |
+| **This component alone** | 23.2 KB | 6.8 KB |
 | Lit · the library every element is built on, the parts it uses | 19.9 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **31.1 KB** | **9.1 KB** |
-| With Lit – the first component on a page | 52.1 KB | 16.0 KB |
+| **Added to a page that already has Lit** | **31.2 KB** | **9.1 KB** |
+| With Lit – the first component on a page | 52.2 KB | 16.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -474,11 +474,11 @@ says the same.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 77 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of steps replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.5 ms | steps: first render, 923 nodes; update 1.3 ms |
-| 1,000 items | 61 ms | steps: first render, 9,023 nodes; update 24 ms |
+| First render | **4.1 ms** | the gallery demo's data, 77 DOM nodes – to layout, median of 7 |
+| Typical update | **1.1 ms** | one item of steps replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 14 ms | steps: first render, 923 nodes; update 2.3 ms |
+| 1,000 items | 61 ms | steps: first render, 9,023 nodes; update 14 ms |
 
 1,000 items of steps: 61 ms. It renders every item, so a first render passes 50 ms (a long task) at about 820 items – page or filter longer lists.
 

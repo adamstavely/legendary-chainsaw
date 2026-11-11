@@ -9,7 +9,7 @@
 Ask for access to one piece of data – the resource with its owner and classification in words, the level, how long, a required justification and the fields needed – then where it stands: pending with who decides, approved with the time left, denied with the reason, or expired
 
 - **Element:** `<tc-access-request>`
-- **Size:** 11.4 KB gzip · 39.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.5 KB gzip · 39.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -478,7 +478,7 @@ problem. Sending, cancelling and the status line are announced politely: "Reques
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -486,15 +486,15 @@ problem. Sending, cancelling and the status line are announced politely: "Reques
 | --- | --- | --- |
 | **This component alone** | 30.4 KB | 8.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **39.0 KB** | **11.5 KB** |
-| With Lit – the first component on a page | 58.5 KB | 17.8 KB |
+| **Added to a page that already has Lit** | **39.1 KB** | **11.5 KB** |
+| With Lit – the first component on a page | 58.7 KB | 17.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -502,13 +502,13 @@ problem. Sending, cancelling and the status line are announced politely: "Reques
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 81 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of fields replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.8 ms | fields: first render, 363 nodes; update 0.3 ms |
-| 1,000 items | 11 ms | fields: first render, 3,063 nodes; update 1.5 ms |
+| First render | **3.5 ms** | the gallery demo's data, 81 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of fields replaced |
+| First on the page | 28 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.1 ms | fields: first render, 363 nodes; update 0.6 ms |
+| 1,000 items | 21 ms | fields: first render, 3,063 nodes; update 2.1 ms |
 
-1,000 items of fields: 11 ms, 3,063 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of fields: 21 ms, 3,063 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

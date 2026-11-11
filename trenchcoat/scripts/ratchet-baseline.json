@@ -88,6 +88,9 @@
   "src/elements/access-request.ts": {
     "clock/environment read": 1
   },
+  "src/elements/active-days.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/agent-cursors.ts": {
     "clock/environment read": 2,
     "literal line-height": 3,
@@ -367,6 +370,9 @@
   "src/elements/person-hovercard.ts": {
     "clock/environment read": 1
   },
+  "src/elements/pixel-loader.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/plan-vs-actual.ts": {
     "clock/environment read": 1,
     "literal spacing": 21
@@ -431,6 +437,9 @@
     "literal line-height": 1
   },
   "src/elements/session-list.ts": {
+    "clock/environment read": 1
+  },
+  "src/elements/signature-pad.ts": {
     "clock/environment read": 1
   },
   "src/elements/stepper-form.ts": {

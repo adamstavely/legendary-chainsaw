@@ -9,7 +9,7 @@
 Pick one or many from a searchable, grouped list – chips with avatars, highlighted matches, create-on-the-fly and full keyboard support
 
 - **Element:** `<tc-combobox>`
-- **Size:** 14.8 KB gzip · 51.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.8 KB gzip · 52.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -506,7 +506,7 @@ selected”), and the first Backspace says which chip it marked (“Bug – pres
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -514,7 +514,7 @@ selected”), and the first Backspace says which chip it marked (“Bug – pres
 | --- | --- | --- |
 | **This component alone** | 44.1 KB | 12.4 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
@@ -524,8 +524,8 @@ selected”), and the first Backspace says which chip it marked (“Bug – pres
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **51.9 KB** | **14.8 KB** |
-| With Lit – the first component on a page | 74.6 KB | 22.3 KB |
+| **Added to a page that already has Lit** | **52.0 KB** | **14.8 KB** |
+| With Lit – the first component on a page | 74.7 KB | 22.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -533,11 +533,11 @@ selected”), and the first Backspace says which chip it marked (“Bug – pres
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 27 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of options replaced |
-| First on the page | 9.7 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.9 ms | options: first render, 27 nodes; update 0.3 ms |
-| 1,000 items | 1.3 ms | options: first render, 27 nodes; update 0.3 ms |
+| First render | **2.8 ms** | the gallery demo's data, 27 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of options replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.9 ms | options: first render, 27 nodes; update 1.0 ms |
+| 1,000 items | 3.5 ms | options: first render, 27 nodes; update 1.0 ms |
 
 What it renders doesn't grow with options (tested to 1,000 items).
 

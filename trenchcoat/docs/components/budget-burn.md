@@ -9,7 +9,7 @@
 How fast each budget is being spent – spent against budget, the burn as a bar with a pace marker and Ahead, On or Behind pace in words, people and team, totals in the header and a sort by budget or burn
 
 - **Element:** `<tc-budget-burn>`
-- **Size:** 7.9 KB gzip · 25.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.9 KB gzip · 25.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -412,7 +412,7 @@ are a description list.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -420,15 +420,15 @@ are a description list.
 | --- | --- | --- |
 | **This component alone** | 17.9 KB | 5.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **25.3 KB** | **7.9 KB** |
-| With Lit – the first component on a page | 47.1 KB | 15.2 KB |
+| **Added to a page that already has Lit** | **25.4 KB** | **7.9 KB** |
+| With Lit – the first component on a page | 47.3 KB | 15.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -436,13 +436,13 @@ are a description list.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.1 ms** | the gallery demo's data, 195 DOM nodes – to layout, median of 7 |
-| Typical update | **1.0 ms** | one item of items replaced |
-| First on the page | 8.4 ms | default properties; includes adding its CSS to the document |
-| 100 items | 18 ms | items: first render, 2,402 nodes; update 9.7 ms |
-| 1,000 items | 233 ms | items: first render, 23,744 nodes; update 139 ms |
+| First render | **3.4 ms** | the gallery demo's data, 195 DOM nodes – to layout, median of 7 |
+| Typical update | **1.5 ms** | one item of items replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 30 ms | items: first render, 2,402 nodes; update 12 ms |
+| 1,000 items | 236 ms | items: first render, 23,744 nodes; update 132 ms |
 
-1,000 items of items: 233 ms. It renders every item, so a first render passes 50 ms (a long task) at about 210 items – page or filter longer lists.
+1,000 items of items: 236 ms. It renders every item, so a first render passes 50 ms (a long task) at about 210 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

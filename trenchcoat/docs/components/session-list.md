@@ -9,7 +9,7 @@
 sessions in a sidebar, pinned first and grouped by project or status, with status, unread dot, branch, time, Pin and Archive.
 
 - **Element:** `<tc-session-list>`
-- **Size:** 9.3 KB gzip · 28.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.3 KB gzip · 28.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -458,7 +458,7 @@ Pinning and archiving are announced through `role="status"`. The spinner is deco
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -466,15 +466,15 @@ Pinning and archiving are announced through `role="status"`. The spinner is deco
 | --- | --- | --- |
 | **This component alone** | 20.0 KB | 6.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
-| **Added to a page that already has Lit** | **28.5 KB** | **9.3 KB** |
-| With Lit – the first component on a page | 50.8 KB | 16.6 KB |
+| **Added to a page that already has Lit** | **28.6 KB** | **9.3 KB** |
+| With Lit – the first component on a page | 50.9 KB | 16.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -482,13 +482,13 @@ Pinning and archiving are announced through `role="status"`. The spinner is deco
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.5 ms** | the gallery demo's data, 180 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of sessions replaced |
-| First on the page | 8.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 9.9 ms | sessions: first render, 2,530 nodes; update 1.8 ms |
-| 1,000 items | 97 ms | sessions: first render, 25,030 nodes; update 19 ms |
+| First render | **4.0 ms** | the gallery demo's data, 180 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of sessions replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 21 ms | sessions: first render, 2,530 nodes; update 2.9 ms |
+| 1,000 items | 118 ms | sessions: first render, 25,030 nodes; update 13 ms |
 
-1,000 items of sessions: 97 ms. It renders every item, so a first render passes 50 ms (a long task) at about 520 items – page or filter longer lists.
+1,000 items of sessions: 118 ms. It renders every item, so a first render passes 50 ms (a long task) at about 420 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

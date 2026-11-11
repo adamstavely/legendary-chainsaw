@@ -6,33 +6,33 @@ Each component page has a **Performance** section: what the component costs to d
 and update, how far it scales, and what it does when nobody's using it. The numbers come from `npm run measure:perf`
 and live in `app/src/docs/perf.json`; each page says when it was measured.
 
-*413 components measured, between 2026-10-27 and 2026-11-08, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
+*431 components measured, between 2026-10-27 and 2026-11-11, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
 
 ### Largest, on a page that has Lit
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 2421.4 KB | 9712.2 KB | 10.6 KB |
-| [ai-side-pane](../blocks/ai-side-pane.md) | 156.0 KB | 656.1 KB | 11.3 KB |
-| [small-multiples](../components/small-multiples.md) | 142.0 KB | 444.1 KB | 6.0 KB |
-| [chart](../components/chart.md) | 138.6 KB | 434.2 KB | 2.4 KB |
-| [ai-workspace](../blocks/ai-workspace.md) | 97.8 KB | 418.0 KB | 13.7 KB |
-| [chat-composer](../components/chat-composer.md) | 82.8 KB | 356.5 KB | 31.0 KB |
-| [trigger-builder](../components/trigger-builder.md) | 40.5 KB | 171.8 KB | 10.6 KB |
-| [output-schema-builder](../components/output-schema-builder.md) | 39.9 KB | 159.2 KB | 12.3 KB |
+| [generated-ui](../components/generated-ui.md) | 2488.6 KB | 9977.5 KB | 10.6 KB |
+| [ai-side-pane](../blocks/ai-side-pane.md) | 155.2 KB | 656.4 KB | 11.2 KB |
+| [small-multiples](../components/small-multiples.md) | 146.4 KB | 457.5 KB | 6.0 KB |
+| [chart](../components/chart.md) | 143.0 KB | 447.5 KB | 2.4 KB |
+| [ai-workspace](../blocks/ai-workspace.md) | 97.6 KB | 418.3 KB | 13.6 KB |
+| [chat-composer](../components/chat-composer.md) | 82.7 KB | 356.9 KB | 30.9 KB |
+| [trigger-builder](../components/trigger-builder.md) | 40.4 KB | 172.0 KB | 10.5 KB |
+| [output-schema-builder](../components/output-schema-builder.md) | 39.8 KB | 159.4 KB | 12.3 KB |
 
 ### Slowest first render
 
 | Component | First render | Update | DOM nodes |
 | --- | --- | --- | --- |
-| [activity-calendar](../components/activity-calendar.md) | 15.5 ms | 12.3 ms | 964 |
-| [eval-scorecard](../components/eval-scorecard.md) | 9.3 ms | 1.4 ms | 1989 |
-| [multi-calendar](../components/multi-calendar.md) | 8.9 ms | 1.5 ms | 1368 |
-| [retrieval-inspector](../components/retrieval-inspector.md) | 8.8 ms | 0.7 ms | 1336 |
-| [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 7.4 ms | 2.2 ms | 1049 |
-| [network-graph](../components/network-graph.md) | 6.9 ms | 3.8 ms | 156 |
-| [fan-out-grid](../components/fan-out-grid.md) | 5.1 ms | 0.9 ms | 176 |
-| [agent-gallery](../blocks/agent-gallery.md) | 5 ms | 0.6 ms | 865 |
+| [activity-calendar](../components/activity-calendar.md) | 14.4 ms | 11.6 ms | 964 |
+| [eval-scorecard](../components/eval-scorecard.md) | 9.7 ms | 1.3 ms | 1989 |
+| [retrieval-inspector](../components/retrieval-inspector.md) | 9.7 ms | 0.6 ms | 1336 |
+| [multi-calendar](../components/multi-calendar.md) | 9.1 ms | 1.5 ms | 1368 |
+| [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 8.3 ms | 2.4 ms | 1049 |
+| [active-days](../components/active-days.md) | 7.9 ms | 5.2 ms | 718 |
+| [network-graph](../components/network-graph.md) | 7.2 ms | 4 ms | 157 |
+| [fan-out-grid](../components/fan-out-grid.md) | 6.6 ms | 0.7 ms | 176 |
 
 ## Bundle
 

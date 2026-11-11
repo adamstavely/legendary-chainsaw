@@ -9,7 +9,7 @@
 Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
 
 - **Element:** `<tc-evaluation-dataset-editor>`
-- **Size:** 19.4 KB gzip · 73.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.4 KB gzip · 74.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -550,7 +550,7 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -558,15 +558,15 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 | --- | --- | --- |
 | **This component alone** | 63.9 KB | 16.1 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **73.9 KB** | **19.5 KB** |
-| With Lit – the first component on a page | 97.0 KB | 26.9 KB |
+| **Added to a page that already has Lit** | **74.1 KB** | **19.4 KB** |
+| With Lit – the first component on a page | 97.2 KB | 27.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -574,12 +574,12 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **7.4 ms** | the gallery demo's data, 1,049 DOM nodes – to layout, median of 7 |
-| Typical update | **2.2 ms** | one item of assertionTypes replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 9.0 ms | assertionTypes: first render, 1,049 nodes; update 3.1 ms |
+| First render | **8.3 ms** | the gallery demo's data, 1,049 DOM nodes – to layout, median of 7 |
+| Typical update | **2.4 ms** | one item of assertionTypes replaced |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 9.5 ms | assertionTypes: first render, 1,049 nodes; update 2.9 ms |
 
-Windowed: 10,000 items of assertionTypes render 1,049 nodes in 9.0 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of assertionTypes render 1,049 nodes in 9.5 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

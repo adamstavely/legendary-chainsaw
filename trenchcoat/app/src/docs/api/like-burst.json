@@ -1,0 +1,433 @@
+{
+ "elements": [
+  {
+   "tag": "tc-like-burst",
+   "className": "TcLikeBurst",
+   "description": "A like or save toggle whose icon fills with a spring and a small burst.",
+   "properties": [
+    {
+     "name": "pressed",
+     "attribute": "pressed",
+     "type": "boolean",
+     "default": "false",
+     "description": "On (liked) or off",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Like\"",
+     "description": "The button's name: \"Like\", \"Save finding\"",
+     "readonly": false
+    },
+    {
+     "name": "showLabel",
+     "attribute": "show-label",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the label beside the icon; otherwise it's only the name",
+     "readonly": false
+    },
+    {
+     "name": "count",
+     "attribute": "count",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "A count beside the icon; a press moves it by one",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Can't be pressed",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for writing the count",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-pressed-change",
+     "detail": "",
+     "description": "The press turned on or off ({ pressed, count }: LikeBurstPressedChange); cancelable – prevented, it stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [
+    {
+     "name": "icon",
+     "description": "An icon in place of the heart"
+    }
+   ],
+   "methods": [],
+   "ui": "lkb",
+   "cssProperties": [
+    {
+     "name": "--tc-like-burst-color",
+     "value": "var(--tc-status-danger-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-like-burst-idle",
+     "value": "var(--tc-text-secondary)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-like-burst-size",
+     "value": "20px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-like-burst-reach",
+     "value": "18px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-chart-1",
+    "--tc-chart-2",
+    "--tc-chart-4",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-out",
+    "--tc-ease-spring",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-size-sm",
+    "--tc-lkb-from",
+    "--tc-lkb-to",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-status-danger-solid",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "LikeBurst",
+   "exported": true,
+   "props": [
+    {
+     "name": "pressed",
+     "type": "boolean",
+     "optional": true,
+     "description": "On or off – controlled when given; then pass the matching `count` too"
+    },
+    {
+     "name": "defaultPressed",
+     "type": "boolean",
+     "optional": true,
+     "description": "Where it starts when the element keeps its own state"
+    },
+    {
+     "name": "onPressedChange",
+     "type": "(pressed: boolean) => void",
+     "optional": true,
+     "description": "Called with the new state when it's pressed"
+    }
+   ],
+   "hides": [
+    "pressed"
+   ],
+   "events": {
+    "tc-pressed-change": "onPressedChange"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-like-burst",
+   "className": "TcLikeBurst",
+   "module": "@adamstavely/trenchcoat/like-burst",
+   "data": [],
+   "attributes": [
+    {
+     "name": "pressed",
+     "attribute": "pressed"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "showLabel",
+     "attribute": "show-label"
+    },
+    {
+     "name": "count",
+     "attribute": "count"
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-pressed-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "pressed",
+     "event": "tc-pressed-change"
+    }
+   ],
+   "form": null,
+   "slots": [
+    "icon"
+   ]
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 17416,
+  "gzip": 5864
+ }
+}

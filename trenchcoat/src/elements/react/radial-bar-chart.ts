@@ -5,6 +5,7 @@ import type { ChartMarkClick, ChartMarkHover, ChartView, ChartViewChange } from 
 import type { ChartEvent } from "../internal/chart/types";
 import { h, useControlled } from "./internal";
 
+export type { RadialBarVariant } from "../radial-bar-chart";
 
 const RawRadialBarChart = createComponent({
   tagName: "tc-radial-bar-chart",

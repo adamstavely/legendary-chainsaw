@@ -9,7 +9,7 @@
 AI working panel with a live timer, searched sources and thinking steps that appear one by one
 
 - **Element:** `<tc-thinking-state>`
-- **Size:** 10.7 KB gzip · 41.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.7 KB gzip · 41.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -448,7 +448,7 @@ readers. “+N more” is a button with `aria-expanded`.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -456,15 +456,15 @@ readers. “+N more” is a button with `aria-expanded`.
 | --- | --- | --- |
 | **This component alone** | 34.2 KB | 8.5 KB |
 | Lit · the library every element is built on, the parts it uses | 19.9 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **41.6 KB** | **10.7 KB** |
-| With Lit – the first component on a page | 62.6 KB | 17.7 KB |
+| **Added to a page that already has Lit** | **41.7 KB** | **10.7 KB** |
+| With Lit – the first component on a page | 62.8 KB | 17.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -472,11 +472,11 @@ readers. “+N more” is a button with `aria-expanded`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of steps replaced |
-| First on the page | 7.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.6 ms | steps: first render, 10 nodes; update 0.1 ms |
-| 1,000 items | 1.1 ms | steps: first render, 10 nodes; update 0.1 ms |
+| First render | **1.0 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of steps replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.1 ms | steps: first render, 10 nodes; update 0.1 ms |
+| 1,000 items | 1.9 ms | steps: first render, 10 nodes; update 0.2 ms |
 
 What it renders doesn't grow with steps (tested to 1,000 items).
 

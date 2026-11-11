@@ -9,7 +9,7 @@
 What an adversarial test broke – a findings list, then the picked one's severity, failed invariants, scenario, evidence and a response timeline with undo (uses `@adamstavely/trenchcoat/react`: `agent-ledger`, `button`)
 
 - **Element:** `<tc-red-team-finding>`
-- **Size:** 18.3 KB gzip · 72.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.4 KB gzip · 72.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -467,7 +467,7 @@ not only colours; the failed-invariant marks are hidden, the rule ids are read.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -475,7 +475,7 @@ not only colours; the failed-invariant marks are hidden, the rule ids are read.
 | --- | --- | --- |
 | **This piece alone** | 19.6 KB | 6.2 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -484,8 +484,8 @@ not only colours; the failed-invariant marks are hidden, the rule ids are read.
 | [agent-ledger](../components/agent-ledger.md) · Element it renders | 29.4 KB | – |
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **72.0 KB** | **18.4 KB** |
-| With Lit – the first component on a page | 94.3 KB | 25.8 KB |
+| **Added to a page that already has Lit** | **72.1 KB** | **18.4 KB** |
+| With Lit – the first component on a page | 94.5 KB | 25.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -493,9 +493,9 @@ not only colours; the failed-invariant marks are hidden, the rule ids are read.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | default properties, 13 DOM nodes – to layout, median of 7 |
+| First render | **1.0 ms** | default properties, 13 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 
 - **Element:** `<tc-plan-vs-actual>`
-- **Size:** 12.5 KB gzip · 45.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.6 KB gzip · 45.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -330,22 +330,22 @@ from assistive technology. Nothing is announced as the run moves on.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 38.4 KB | 10.5 KB |
+| **This component alone** | 38.4 KB | 10.4 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **45.4 KB** | **12.6 KB** |
-| With Lit – the first component on a page | 68.0 KB | 20.1 KB |
+| **Added to a page that already has Lit** | **45.5 KB** | **12.6 KB** |
+| With Lit – the first component on a page | 68.1 KB | 20.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -353,13 +353,13 @@ from assistive technology. Nothing is announced as the run moves on.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.9 ms** | the gallery demo's data, 110 DOM nodes – to layout, median of 7 |
+| First render | **2.7 ms** | the gallery demo's data, 110 DOM nodes – to layout, median of 7 |
 | Typical update | **0.5 ms** | one item of steps replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 20 ms | steps: first render, 1,082 nodes; update 1.8 ms |
-| 1,000 items | 113 ms | steps: first render, 10,466 nodes; update 8.2 ms |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 18 ms | steps: first render, 1,082 nodes; update 1.5 ms |
+| 1,000 items | 111 ms | steps: first render, 10,466 nodes; update 7.9 ms |
 
-1,000 items of steps: 113 ms. It renders every item, so a first render passes 50 ms (a long task) at about 440 items – page or filter longer lists.
+1,000 items of steps: 111 ms. It renders every item, so a first render passes 50 ms (a long task) at about 450 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 51 React commits (clean), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

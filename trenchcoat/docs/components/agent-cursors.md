@@ -9,7 +9,7 @@
 Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
 
 - **Element:** `<tc-agent-cursors>`
-- **Size:** 22.3 KB gzip · 84.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 22.4 KB gzip · 85.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -498,15 +498,15 @@ starts a comment (“Ada is writing a comment”). Tabs, when set, follow the ta
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 76.1 KB | 19.6 KB |
+| **This component alone** | 76.1 KB | 19.5 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -514,8 +514,8 @@ starts a comment (“Ada is writing a comment”). Tabs, when set, follow the ta
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **84.8 KB** | **22.4 KB** |
-| With Lit – the first component on a page | 108.1 KB | 29.9 KB |
+| **Added to a page that already has Lit** | **85.0 KB** | **22.4 KB** |
+| With Lit – the first component on a page | 108.3 KB | 29.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -523,13 +523,13 @@ starts a comment (“Ada is writing a comment”). Tabs, when set, follow the ta
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 82 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of blocks replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.6 ms | blocks: first render, 315 nodes; update 0.4 ms |
-| 1,000 items | 21 ms | blocks: first render, 2,565 nodes; update 2.7 ms |
+| First render | **1.8 ms** | the gallery demo's data, 82 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of blocks replaced |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.4 ms | blocks: first render, 315 nodes; update 0.4 ms |
+| 1,000 items | 25 ms | blocks: first render, 2,565 nodes; update 5.1 ms |
 
-1,000 items of blocks: 21 ms, 2,565 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of blocks: 25 ms, 2,565 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 50 React commits (clean), 50 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

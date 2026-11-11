@@ -9,7 +9,7 @@
 diagnostics from a build, type check or linter, grouped by file, with a severity filter with counts, a text filter, severity marks that aren't colour alone, and quick fixes.
 
 - **Element:** `<tc-problem-list>`
-- **Size:** 9.5 KB gzip · 30.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.6 KB gzip · 31.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -453,7 +453,7 @@ problems are shown, or that a check is running, and the list is `aria-busy` whil
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -461,14 +461,14 @@ problems are shown, or that a check is running, and the list is `aria-busy` whil
 | --- | --- | --- |
 | **This component alone** | 23.5 KB | 7.4 KB |
 | Lit · the library every element is built on, the parts it uses | 20.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **30.8 KB** | **9.6 KB** |
-| With Lit – the first component on a page | 52.3 KB | 16.6 KB |
+| **Added to a page that already has Lit** | **31.0 KB** | **9.6 KB** |
+| With Lit – the first component on a page | 52.5 KB | 16.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -476,13 +476,13 @@ problems are shown, or that a check is running, and the list is `aria-busy` whil
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 201 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of problems replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.2 ms | problems: first render, 1,857 nodes; update 1.2 ms |
-| 1,000 items | 55 ms | problems: first render, 17,607 nodes; update 13 ms |
+| First render | **2.6 ms** | the gallery demo's data, 201 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of problems replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | problems: first render, 1,857 nodes; update 2.3 ms |
+| 1,000 items | 77 ms | problems: first render, 17,607 nodes; update 7.5 ms |
 
-1,000 items of problems: 55 ms. It renders every item, so a first render passes 50 ms (a long task) at about 900 items – page or filter longer lists.
+1,000 items of problems: 77 ms. It renders every item, so a first render passes 50 ms (a long task) at about 650 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

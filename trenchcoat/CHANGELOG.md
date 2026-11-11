@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.19.0 – Charts, AI pieces, a signature pad and transitions
+
+- **Charts:** Stage Bars (a funnel as a list of pills, with stat tiles and a period switch), Week Bars (a week of daily
+  totals against a goal, with a week switcher), Score Ring (one score from weighted sub-scores) and Active Days (a daily
+  goal month by month, a small ring per day).
+- **Bubble Chart:** points by group, with a legend that isolates, hides and shows each group, and stat tiles under it.
+- **Radial Bar Chart:** `variant="rings"` – activity rings with a lap past each target and a tile per ring.
+- **AI:** Diff Table (an AI's proposed edits to a table, reviewed in place), Pixel Loader (a pixel-grid working row with
+  the time elapsed) and Fine-tune Card (an inspector where an agent tunes a design and the person takes over).
+- **Signature Pad:** a form field for signing – drawn or typed, undo and clear, exported as SVG or an image.
+- **Motion:** Badge Pop, Banner Stack, Dissolve Clear, Error Shake, Icon Swap, Like Burst, Menu Morph, Page Slide,
+  Sliding Indicator and Stack Spread.
+- **Standalone gallery and `docs/`:** rebuilt with every new piece – 471 Markdown pages, and a 27 MB single-file gallery.
+- **new-component skill:** `add-to-gallery.mjs` writes categories to `app/src/catalog.ts`, where they moved in 0.18.0.
+
 ## 0.18.0 – The gallery's pages as Markdown
 
 - **`docs/`:** every page of the gallery as a Markdown file – 453 of them: the overview, one index per library, each

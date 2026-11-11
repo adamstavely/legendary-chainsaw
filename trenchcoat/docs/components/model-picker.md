@@ -9,7 +9,7 @@
 The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
 
 - **Element:** `<tc-model-picker>`
-- **Size:** 11.7 KB gzip · 46.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.8 KB gzip · 46.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -509,7 +509,7 @@ tokens”), and the chosen one is `aria-selected`. Extended thinking and Web sea
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -517,14 +517,14 @@ tokens”), and the chosen one is `aria-selected`. Extended thinking and Web sea
 | --- | --- | --- |
 | **This component alone** | 38.6 KB | 9.6 KB |
 | Lit · the library every element is built on, the parts it uses | 19.9 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **46.0 KB** | **11.8 KB** |
-| With Lit – the first component on a page | 67.0 KB | 18.7 KB |
+| **Added to a page that already has Lit** | **46.1 KB** | **11.8 KB** |
+| With Lit – the first component on a page | 67.2 KB | 18.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -532,13 +532,13 @@ tokens”), and the chosen one is `aria-selected`. Extended thinking and Web sea
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 147 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of models replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 11 ms | models: first render, 2,235 nodes; update 3.2 ms |
-| 1,000 items | 105 ms | models: first render, 21,810 nodes; update 21 ms |
+| First render | **5.0 ms** | the gallery demo's data, 147 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of models replaced |
+| First on the page | 30 ms | default properties; includes adding its CSS to the document |
+| 100 items | 22 ms | models: first render, 2,235 nodes; update 3.8 ms |
+| 1,000 items | 115 ms | models: first render, 21,810 nodes; update 18 ms |
 
-1,000 items of models: 105 ms. It renders every item, so a first render passes 50 ms (a long task) at about 480 items – page or filter longer lists.
+1,000 items of models: 115 ms. It renders every item, so a first render passes 50 ms (a long task) at about 440 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

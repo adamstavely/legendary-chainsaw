@@ -9,7 +9,7 @@
 Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
 
 - **Element:** `<tc-dropzone>`
-- **Size:** 15.0 KB gzip · 55.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.1 KB gzip · 56.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -502,7 +502,7 @@ or why a file was refused (“video.mov: .mov files aren't supported”, “scan
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -510,14 +510,14 @@ or why a file was refused (“video.mov: .mov files aren't supported”, “scan
 | --- | --- | --- |
 | **This component alone** | 48.1 KB | 12.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **55.8 KB** | **15.1 KB** |
-| With Lit – the first component on a page | 78.6 KB | 22.6 KB |
+| **Added to a page that already has Lit** | **56.0 KB** | **15.1 KB** |
+| With Lit – the first component on a page | 78.7 KB | 22.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -525,11 +525,11 @@ or why a file was refused (“video.mov: .mov files aren't supported”, “scan
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 30 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of accept replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | accept: first render, 30 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | accept: first render, 30 nodes; update 0.2 ms |
+| First render | **2.6 ms** | the gallery demo's data, 30 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of accept replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.2 ms | accept: first render, 30 nodes; update 0.2 ms |
+| 1,000 items | 2.7 ms | accept: first render, 30 nodes; update 0.5 ms |
 
 What it renders doesn't grow with accept (tested to 1,000 items).
 

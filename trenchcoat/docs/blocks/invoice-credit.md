@@ -9,7 +9,7 @@
 An invoice and its credit note stacked like paper – switch between them, pick lines to credit, adjust amounts and issue (uses `button`, `segmented-control`)
 
 - **Element:** `<tc-invoice-credit>`
-- **Size:** 19.3 KB gzip · 78.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.3 KB gzip · 78.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -460,7 +460,7 @@ for <line>". A status region, there from the start, announces "Issued"; an error
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -468,7 +468,7 @@ for <line>". A status region, there from the start, announces "Issued"; an error
 | --- | --- | --- |
 | **This piece alone** | 27.2 KB | 8.5 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -478,8 +478,8 @@ for <line>". A status region, there from the start, announces "Issued"; an error
 | [segmented-control](../components/segmented-control.md) · Element it renders | 29.8 KB | – |
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **78.1 KB** | **19.3 KB** |
-| With Lit – the first component on a page | 100.2 KB | 26.7 KB |
+| **Added to a page that already has Lit** | **78.2 KB** | **19.3 KB** |
+| With Lit – the first component on a page | 100.3 KB | 26.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,9 +487,9 @@ for <line>". A status region, there from the start, announces "Issued"; an error
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.6 ms** | default properties, 185 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | re-render with the same data |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| First render | **3.4 ms** | default properties, 185 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | re-render with the same data |
+| First on the page | 29 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

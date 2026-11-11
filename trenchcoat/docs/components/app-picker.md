@@ -9,7 +9,7 @@
 The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 
 - **Element:** `<tc-app-picker>`
-- **Size:** 16.2 KB gzip · 53.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.3 KB gzip · 53.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -493,16 +493,16 @@ A tile is a link named by the app's name, described by its `description`; the cu
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 36.1 KB | 10.8 KB |
+| **This component alone** | 36.2 KB | 10.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
@@ -512,8 +512,8 @@ A tile is a link named by the app's name, described by its `description`; the cu
 | `internal/trigger-tip` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **53.1 KB** | **16.1 KB** |
-| With Lit – the first component on a page | 75.7 KB | 23.6 KB |
+| **Added to a page that already has Lit** | **53.6 KB** | **16.3 KB** |
+| With Lit – the first component on a page | 76.1 KB | 23.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -522,10 +522,10 @@ A tile is a link named by the app's name, described by its `description`; the cu
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **1.3 ms** | the gallery demo's data, 13 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of pinned replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.4 ms | pinned: first render, 13 nodes; update 0.2 ms |
-| 1,000 items | 1.4 ms | pinned: first render, 13 nodes; update 0.1 ms |
+| Typical update | **0.2 ms** | one item of pinned replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.7 ms | pinned: first render, 13 nodes; update 0.1 ms |
+| 1,000 items | 1.5 ms | pinned: first render, 13 nodes; update 0.2 ms |
 
 What it renders doesn't grow with pinned (tested to 1,000 items).
 

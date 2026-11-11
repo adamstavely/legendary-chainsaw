@@ -4,11 +4,11 @@
 
 A UI kit for AI-native products. Components, illustrations and motion are moving to Lit web components that any framework can use, packaged with one stylesheet, `tokens.css`. Blocks and Screens are single React files you can copy.
 
-- [Components](components/README.md): 326
+- [Components](components/README.md): 334
 - [Blocks](blocks/README.md): 23
 - [Screens](screens/README.md): 22
 - [Illustrations](illustrations/README.md): 46
-- [Motion](motion/README.md): 18
+- [Motion](motion/README.md): 28
 
 ## What's inside
 
@@ -18,7 +18,7 @@ Motion → Components → Blocks → Screens, + Illustrations
 
 ### [Components](components/README.md)
 
-326 items · 326 files
+334 items · 334 files
 
 **Interactive building blocks for AI-native products**
 
@@ -58,13 +58,13 @@ Accessibility Principles · Agent Scene · Agent Team · All Done · Atomic Desi
 
 ### [Motion](motion/README.md)
 
-18 items · 18 files
+28 items · 28 files
 
 **Low-level animation primitives**
 
 Text and number effects, backgrounds, loaders and tilt – small wrappers that add motion to anything. Other libraries use the same techniques.
 
-Attention Pulse · Blur Crossfade · Collapse · Drag Lift · Gradient Floor …
+Attention Pulse · Badge Pop · Banner Stack · Blur Crossfade · Collapse …
 
 ## Standard and Clean
 

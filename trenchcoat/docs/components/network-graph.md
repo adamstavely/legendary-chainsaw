@@ -9,7 +9,7 @@
 Any nodes and links laid out by force, so clusters and bridges show for themselves, with groups in their own inks, the most-linked named, a node's neighbourhood lit on hover or focus, and nodes that can be dragged into place.
 
 - **Element:** `<tc-network-graph>`
-- **Size:** 20.6 KB gzip · 57.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 20.7 KB gzip · 57.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -490,7 +490,7 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -501,7 +501,7 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 | `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/chart/force` · Shared Trenchcoat code | 4.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -517,8 +517,8 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **57.3 KB** | **20.6 KB** |
-| With Lit – the first component on a page | 76.7 KB | 26.8 KB |
+| **Added to a page that already has Lit** | **57.5 KB** | **20.7 KB** |
+| With Lit – the first component on a page | 76.9 KB | 26.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -526,11 +526,11 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **6.9 ms** | the gallery demo's data, 156 DOM nodes – to layout, median of 7 |
-| Typical update | **3.8 ms** | one item of links replaced |
-| First on the page | 24 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.5 ms | links: first render, 156 nodes; update 3.7 ms |
-| 1,000 items | 7.4 ms | links: first render, 156 nodes; update 4.2 ms |
+| First render | **7.2 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
+| Typical update | **4.0 ms** | one item of links replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.2 ms | links: first render, 157 nodes; update 3.5 ms |
+| 1,000 items | 6.8 ms | links: first render, 157 nodes; update 4.2 ms |
 
 What it renders doesn't grow with links (tested to 1,000 items).
 

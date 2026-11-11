@@ -21,6 +21,22 @@
       "type": "number",
       "description": "How far round a ring goes, in degrees (30–360); by default 270"
     },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "bars",
+        "rings"
+      ],
+      "description": "\"bars\" (open rings named where they start) or \"rings\" (activity rings with a tile each)"
+    },
+    "target": {
+      "type": "string",
+      "description": "Each item's own target – a full ring – for the rings variant; by default `max`"
+    },
+    "glyph": {
+      "type": "string",
+      "description": "The short mark drawn where each activity ring starts; by default the first letter of its label"
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"

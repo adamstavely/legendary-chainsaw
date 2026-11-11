@@ -29,13 +29,13 @@
         "paused": {
           "type": "string"
         },
+        "review": {
+          "type": "string"
+        },
         "blocked": {
           "type": "string"
         },
         "active": {
-          "type": "string"
-        },
-        "review": {
           "type": "string"
         }
       },

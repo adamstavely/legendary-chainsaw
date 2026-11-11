@@ -9,7 +9,7 @@
 The images behind a set of claims – filter by attestation, compare and download in the image grid, and each item's attestation and linked-claim count in a sortable table beside it (uses `@adamstavely/trenchcoat/react`: `segmented-control`, `image-grid`, `data-table`)
 
 - **Element:** `<tc-evidence-gallery>`
-- **Size:** 34.7 KB gzip · 142.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 34.8 KB gzip · 143.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -431,7 +431,7 @@ announce themselves as they do on their own; each tile's badge says its attestat
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -440,7 +440,7 @@ announce themselves as they do on their own; each tile's badge says its attestat
 | **This piece alone** | 7.3 KB | 3.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 4.7 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -450,8 +450,8 @@ announce themselves as they do on their own; each tile's badge says its attestat
 | [data-table](../components/data-table.md) · Element it renders | 49.5 KB | – |
 | [image-grid](../components/image-grid.md) · Element it renders | 43.1 KB | – |
 | [segmented-control](../components/segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **142.9 KB** | **34.7 KB** |
-| With Lit – the first component on a page | 165.5 KB | 42.4 KB |
+| **Added to a page that already has Lit** | **143.0 KB** | **34.8 KB** |
+| With Lit – the first component on a page | 165.7 KB | 42.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -459,9 +459,9 @@ announce themselves as they do on their own; each tile's badge says its attestat
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.8 ms** | default properties, 100 DOM nodes – to layout, median of 7 |
+| First render | **2.1 ms** | default properties, 100 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| First on the page | 32 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

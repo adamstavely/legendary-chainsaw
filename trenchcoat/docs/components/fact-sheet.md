@@ -9,7 +9,7 @@
 What's known and how far to trust it – facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence, with conflicting readings side by side and unknowns said plainly
 
 - **Element:** `<tc-fact-sheet>`
-- **Size:** 8.2 KB gzip · 25.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.3 KB gzip · 26.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -345,7 +345,7 @@ grades work”. Copying is confirmed in a polite status message, “Full name co
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -353,15 +353,15 @@ grades work”. Copying is confirmed in a polite status message, “Full name co
 | --- | --- | --- |
 | **This component alone** | 18.4 KB | 6.1 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **25.9 KB** | **8.3 KB** |
-| With Lit – the first component on a page | 47.7 KB | 15.5 KB |
+| **Added to a page that already has Lit** | **26.0 KB** | **8.3 KB** |
+| With Lit – the first component on a page | 47.9 KB | 15.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -369,13 +369,13 @@ grades work”. Copying is confirmed in a polite status message, “Full name co
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 180 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of sections replaced |
-| First on the page | 8.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 34 ms | sections: first render, 8,167 nodes; update 4.5 ms |
-| 1,000 items | 313 ms | sections: first render, 81,517 nodes; update 30 ms |
+| First render | **3.6 ms** | the gallery demo's data, 180 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of sections replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 52 ms | sections: first render, 8,167 nodes; update 7.8 ms |
+| 1,000 items | 301 ms | sections: first render, 81,517 nodes; update 28 ms |
 
-1,000 items of sections: 313 ms. It renders every item, so a first render passes 50 ms (a long task) at about 160 items – page or filter longer lists.
+1,000 items of sections: 301 ms. It renders every item, so a first render passes 50 ms (a long task) at about 170 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

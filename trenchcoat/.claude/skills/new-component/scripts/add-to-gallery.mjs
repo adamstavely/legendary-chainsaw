@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Registers new components in the gallery: a line in src/components/README.md, in alphabetical order, and the slug in
-// its category in app/src/registry.ts – in alphabetical place when the category is already alphabetical, else at the
+// its category in app/src/catalog.ts – in alphabetical place when the category is already alphabetical, else at the
 // end, so a category kept in a deliberate order stays that way. A new category is added before "Trust & calibration".
 // Both files are worked out first and written only when every component fits. Run from trenchcoat/.
 //
@@ -41,8 +41,8 @@ for (const e of entries) {
   console.log(`README: added ${e.name}`);
 }
 
-// The registry: the slug in its category; a new category before Trust & calibration. A category's list may span lines
-const registry = "app/src/registry.ts";
+// The catalog: the slug in its category; a new category before Trust & calibration. A category's list may span lines
+const registry = "app/src/catalog.ts";
 let src = readFileSync(registry, "utf8");
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 for (const e of entries) {

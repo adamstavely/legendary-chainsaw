@@ -9,7 +9,7 @@
 The formatting bar that floats over selected text: quick actions, toggles like bold and italic that show what's on, menus for text style, colour and list, and a link – it fires commands for the page's editor to apply.
 
 - **Element:** `<tc-selection-toolbar>`
-- **Size:** 11.1 KB gzip · 33.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.3 KB gzip · 33.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -493,7 +493,7 @@ and the option it shows ("List: Bulleted list"); its options are `menuitemradio`
 
 ## Performance
 
-*Measured 2026-11-05 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -501,15 +501,15 @@ and the option it shows ("List: Bulleted list"); its options are `menuitemradio`
 | --- | --- | --- |
 | **This component alone** | 17.8 KB | 6.3 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **33.6 KB** | **11.2 KB** |
-| With Lit – the first component on a page | 54.2 KB | 18.0 KB |
+| **Added to a page that already has Lit** | **33.9 KB** | **11.3 KB** |
+| With Lit – the first component on a page | 54.6 KB | 18.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -517,11 +517,11 @@ and the option it shows ("List: Bulleted list"); its options are `menuitemradio`
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.5 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of items replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.5 ms | items: first render, 0 nodes; update 0.0 ms |
-| 1,000 items | 13 ms | items: first render, 0 nodes; update 0.0 ms |
+| First render | **2.0 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **0.0 ms** | one item of items replaced |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.1 ms | items: first render, 0 nodes; update 0.0 ms |
+| 1,000 items | 25 ms | items: first render, 0 nodes; update 0.0 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 

@@ -2,8 +2,10 @@
  * <tc-bubble-chart> in real browsers: the shared chart behaviour (chart-kit), circles placed by x and y and sized by
  * area with the largest emphasised and named, a scatter plot without `size`, the pointer picking the circle on top,
  * the canvas past the threshold (painted, no SVG circles, keyboard and tooltip still reach the points), a data change
- * and the React wrapper.
+ * and the React wrapper; and grouped points – their inks, the legend that isolates, hides and shows groups, the
+ * controlled `groups` – and the stat tiles.
  */
+import axe from "axe-core";
 import { html } from "lit";
 import * as React from "react";
 import { act } from "react";
@@ -13,7 +15,7 @@ import "../../src/elements/bubble-chart";
 import type { TcBubbleChart } from "../../src/elements/bubble-chart";
 import { BubbleChart } from "../../src/elements/react/bubble-chart";
 import { chartBasics, drawn, key, plot } from "./chart-kit";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -210,4 +212,191 @@ describe("tc-bubble-chart", () => {
     await act(async () => root.unmount());
     host.remove();
   });
+});
+
+const TEAMS = [
+  { label: "R1", team: "Fraud", hours: 12, findings: 9 },
+  { label: "R2", team: "Audit", hours: 20, findings: 6 },
+  { label: "R3", team: "Fraud", hours: 7, findings: 4 },
+  { label: "R4", team: "Compliance", hours: 15, findings: 11 },
+  { label: "R5", team: "Audit", hours: 30, findings: 8 },
+];
+const STATS = [
+  { label: "Reviews", value: 48 },
+  { label: "Findings", value: 212, change: 8.5 },
+  { label: "Per hour", value: "0.61", change: -2 },
+];
+const grouped = (o: { look?: "standard" | "clean"; still?: boolean; data?: Record<string, unknown>[]; canvas?: boolean } = {}) =>
+  fixture<TcBubbleChart>(
+    html`<div style="width: 600px"><tc-bubble-chart look=${o.look ?? "standard"} ?still=${o.still} heading="Review hours and findings" canvas-threshold=${o.canvas ? 2 : 1500}
+      .data=${o.data ?? TEAMS} .x=${"hours"} .y=${"findings"} .group=${"team"} .stats=${STATS}></tc-bubble-chart></div>`,
+  ).then((w) => w.querySelector("tc-bubble-chart")!);
+const keys = (el: Element) => [...el.querySelectorAll<HTMLButtonElement>(".ui-bbl__key")];
+const fills = (el: Element) => [...el.querySelectorAll<SVGCircleElement>(".ui-bbl__dot")].map((c) => c.style.fill);
+
+describe("tc-bubble-chart: groups and stat tiles", () => {
+  test("each group takes the next categorical ink; nothing is emphasised; the legend has a toggle per group", async () => {
+    const el = await drawn(await grouped({ still: true }));
+    expect(new Set(fills(el))).toEqual(new Set(["var(--tc-plot-ink-1)", "var(--tc-plot-ink-2)", "var(--tc-plot-ink-3)"]));
+    const bar = el.querySelector(".ui-bbl__legend")!;
+    expect(bar.getAttribute("role")).toBe("toolbar");
+    expect(bar.getAttribute("aria-label")).toBe("Groups");
+    expect(keys(el).map((b) => [b.textContent!.trim(), b.getAttribute("aria-pressed"), b.tabIndex])).toEqual([
+      ["Fraud", "true", 0],
+      ["Audit", "true", -1],
+      ["Compliance", "true", -1],
+    ]);
+    expect(el.querySelector(".tc-chart__value[data-strong]")).toBeNull();
+    expect(document.getElementById(plot(el).getAttribute("aria-describedby")!)!.textContent).toMatch(/^5 points\. 3 groups\. /);
+    // The table names each point's group
+    expect([...el.querySelectorAll(".tc-sr-only table th[scope=row]")].map((t) => t.textContent)).toContain("R1 · Fraud");
+    // The tooltip names it too
+    key(plot(el), "ArrowRight");
+    await settle();
+    expect([...el.querySelectorAll(".tc-chart__tip-label")].map((l) => l.textContent)).toContain("Group");
+  });
+
+  test("pointing at or focusing a legend button isolates its group: the others turn to the muted ink", async () => {
+    const el = await drawn(await grouped({ still: true }));
+    keys(el)[1].dispatchEvent(new PointerEvent("pointerenter"));
+    await settle();
+    const muted = fills(el).filter((f) => f === "var(--tc-bbl-muted)").length;
+    expect(muted).toBe(3);
+    expect(fills(el).filter((f) => f === "var(--tc-plot-ink-2)")).toHaveLength(2);
+    expect(keys(el)[1].hasAttribute("data-isolated")).toBe(true);
+    keys(el)[1].dispatchEvent(new PointerEvent("pointerleave"));
+    await settle();
+    expect(fills(el)).not.toContain("var(--tc-bbl-muted)");
+    keys(el)[0].focus();
+    await settle();
+    expect(fills(el).filter((f) => f === "var(--tc-bbl-muted)")).toHaveLength(3);
+    keys(el)[0].blur();
+    await settle();
+    expect(fills(el)).not.toContain("var(--tc-bbl-muted)");
+  });
+
+  test("the legend's arrows move its one tab stop; Enter hides and shows a group, keeping the axes; the last group stays", async () => {
+    const el = await drawn(await grouped({ still: true }));
+    const changes: string[][] = [];
+    el.addEventListener("tc-groups-change", (e) => changes.push((e as CustomEvent).detail.groups));
+    const ticks = () => [...el.querySelectorAll(".tc-chart__tick")].map((t) => t.textContent).join(",");
+    const before = ticks();
+    keys(el)[0].focus();
+    keys(el)[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true }));
+    await settle();
+    await expect.poll(() => document.activeElement).toBe(keys(el)[1]);
+    expect(keys(el).map((b) => b.tabIndex)).toEqual([-1, 0, -1]);
+    keys(el)[1].dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true }));
+    await settle();
+    await expect.poll(() => document.activeElement).toBe(keys(el)[2]);
+    // A button's Enter is its click
+    keys(el)[1].click();
+    await settle();
+    expect(changes).toEqual([["Fraud", "Compliance"]]);
+    expect(el.groups).toEqual(["Fraud", "Compliance"]);
+    expect(keys(el)[1].getAttribute("aria-pressed")).toBe("false");
+    expect(el.querySelectorAll(".ui-bbl__dot")).toHaveLength(3);
+    expect(ticks()).toBe(before);
+    expect(document.getElementById(plot(el).getAttribute("aria-describedby")!)!.textContent).toContain("showing Fraud, Compliance");
+    keys(el)[0].click();
+    await settle();
+    keys(el)[2].click();
+    await settle();
+    // Compliance is the only one left: it can't be hidden
+    expect(el.groups).toEqual(["Compliance"]);
+    expect(changes).toHaveLength(2);
+    keys(el)[1].click();
+    await settle();
+    expect(el.groups).toEqual(["Audit", "Compliance"]);
+  });
+
+  test("a prevented tc-groups-change keeps the groups; set from outside, groups is followed", async () => {
+    const el = await drawn(await grouped({ still: true }));
+    el.addEventListener("tc-groups-change", (e) => e.preventDefault());
+    keys(el)[0].click();
+    await settle();
+    expect(el.groups).toBeUndefined();
+    expect(el.querySelectorAll(".ui-bbl__dot")).toHaveLength(5);
+    el.groups = ["Audit"];
+    await settle();
+    expect(el.querySelectorAll(".ui-bbl__dot")).toHaveLength(2);
+    expect(keys(el).map((b) => b.getAttribute("aria-pressed"))).toEqual(["false", "true", "false"]);
+  });
+
+  test("grouped on a canvas: painted, and the isolated group repaints it", async () => {
+    const el = await drawn(await grouped({ still: true, canvas: true }));
+    const cv = () => el.querySelector("canvas")!;
+    await expect.poll(() => cv()?.getAttribute("data-painted") ?? "").not.toBe("");
+    const first = cv().getAttribute("data-painted");
+    keys(el)[0].dispatchEvent(new PointerEvent("pointerenter"));
+    await settle();
+    await expect.poll(() => cv().getAttribute("data-painted")).not.toBe(first);
+  });
+
+  test("stat tiles: a description list under the chart, numbers in the chart's format, a signed change with its tone", async () => {
+    const el = await drawn(await grouped({ still: true }));
+    const dl = el.querySelector(".ui-bbl__stats")!;
+    expect(dl.tagName).toBe("DL");
+    expect(dl.previousElementSibling!.classList.contains("tc-chart__card")).toBe(true);
+    expect([...el.querySelectorAll(".ui-bbl__stat-label")].map((d) => d.textContent)).toEqual(["Reviews", "Findings", "Per hour"]);
+    expect([...el.querySelectorAll(".ui-bbl__stat-value")].map((d) => d.textContent!.replace(/\s+/g, " ").trim())).toEqual(["48", "212 +8.5%", "0.61 −2%"]);
+    expect([...el.querySelectorAll(".ui-bbl__stat-change")].map((c) => c.getAttribute("data-dir"))).toEqual(["up", "down"]);
+    el.stats = [];
+    await settle();
+    expect(el.querySelector(".ui-bbl__stats")).toBeNull();
+  });
+
+  test("narrow: the stat tiles wrap", async () => {
+    const el = await drawn(await grouped({ still: true }));
+    el.parentElement!.style.width = "300px";
+    await settle();
+    const tops = [...el.querySelectorAll(".ui-bbl__stat")].map((t) => Math.round(t.getBoundingClientRect().top));
+    expect(new Set(tops).size).toBeGreaterThan(1);
+  });
+
+  test("React wrapper: groups uncontrolled survive re-renders; controlled ones stay until the parent changes them", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    host.style.width = "600px";
+    const root = createRoot(host);
+    const seen: string[][] = [];
+    const base = { title: "Reviews", data: TEAMS, x: "hours", y: "findings", group: "team", still: true, stats: STATS };
+    await act(async () => root.render(React.createElement(BubbleChart, { ...base, onGroupsChange: (g: string[]) => seen.push(g) })));
+    await settle();
+    const el = host.querySelector<TcBubbleChart>("tc-bubble-chart")!;
+    await drawn(el);
+    keys(el)[0].click();
+    await settle();
+    expect(seen).toEqual([["Audit", "Compliance"]]);
+    await act(async () => root.render(React.createElement(BubbleChart, { ...base, description: "Again", onGroupsChange: (g: string[]) => seen.push(g) })));
+    await settle();
+    expect(el.groups).toEqual(["Audit", "Compliance"]);
+    // Controlled: the click is reported, the element keeps the parent's groups
+    await act(async () => root.render(React.createElement(BubbleChart, { ...base, groups: ["Fraud", "Audit"], onGroupsChange: (g: string[]) => seen.push(g) })));
+    await settle();
+    keys(el)[0].click();
+    await settle();
+    expect(seen.at(-1)).toEqual(["Audit"]);
+    expect(el.groups).toEqual(["Fraud", "Audit"]);
+    await act(async () => root.render(React.createElement(BubbleChart, { ...base, groups: ["Audit"] })));
+    await settle();
+    expect(el.groups).toEqual(["Audit"]);
+    await act(async () => root.unmount());
+    host.remove();
+  });
+
+  for (const look of ["standard", "clean"] as const)
+    test(`axe: ${look}, light and dark, grouped with a group hidden, isolated and stat tiles`, async () => {
+      for (const scheme of ["light", "dark"]) {
+        const el = await drawn(await grouped({ look, still: true }));
+        const wrap = el.parentElement!;
+        wrap.style.colorScheme = scheme;
+        keys(el)[2].click();
+        await settle();
+        keys(el)[0].focus();
+        await finish(wrap);
+        const r = await axe.run(wrap);
+        expect(r.violations.flatMap((v) => v.nodes.map((n) => `${scheme} ${v.id} ${n.html.slice(0, 90)}`))).toEqual([]);
+        wrap.remove();
+      }
+    });
 });

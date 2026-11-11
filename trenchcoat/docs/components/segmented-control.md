@@ -9,7 +9,7 @@
 Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 
 - **Element:** `<tc-segmented-control>`
-- **Size:** 9.7 KB gzip · 39.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.7 KB gzip · 39.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -483,7 +483,7 @@ The options sit in a `radiogroup`, each a `radio` with `aria-checked`; with `kin
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -491,14 +491,14 @@ The options sit in a `radiogroup`, each a `radio` with `aria-checked`; with `kin
 | --- | --- | --- |
 | **This component alone** | 32.1 KB | 7.5 KB |
 | Lit · the library every element is built on, the parts it uses | 20.7 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **39.4 KB** | **9.7 KB** |
-| With Lit – the first component on a page | 61.3 KB | 16.9 KB |
+| **Added to a page that already has Lit** | **39.6 KB** | **9.7 KB** |
+| With Lit – the first component on a page | 61.5 KB | 16.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -506,13 +506,13 @@ The options sit in a `radiogroup`, each a `radio` with `aria-checked`; with `kin
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 25 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of options replaced |
-| First on the page | 4.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.8 ms | options: first render, 553 nodes; update 0.4 ms |
-| 1,000 items | 63 ms | options: first render, 5,503 nodes; update 4.4 ms |
+| First render | **1.7 ms** | the gallery demo's data, 25 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of options replaced |
+| First on the page | 6.6 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | options: first render, 553 nodes; update 0.6 ms |
+| 1,000 items | 72 ms | options: first render, 5,503 nodes; update 4.6 ms |
 
-1,000 items of options: 63 ms. It renders every item, so a first render passes 50 ms (a long task) at about 790 items – page or filter longer lists.
+1,000 items of options: 72 ms. It renders every item, so a first render passes 50 ms (a long task) at about 700 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run
 
 - **Element:** `<tc-playbook-canvas>`
-- **Size:** 27.5 KB gzip · 111.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.6 KB gzip · 112.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -544,15 +544,15 @@ dry run's result, “Dry run: 4 of 6 steps run · 1 skipped · pauses at Lead si
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 48.2 KB | 13.4 KB |
+| **This component alone** | 48.2 KB | 13.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.8 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -560,8 +560,8 @@ dry run's result, “Dry run: 4 of 6 steps run · 1 skipped · pauses at Lead si
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
 | [gate-config](gate-config.md) · Element it renders | 23.4 KB | – |
-| **Added to a page that already has Lit** | **111.8 KB** | **27.6 KB** |
-| With Lit – the first component on a page | 134.6 KB | 35.2 KB |
+| **Added to a page that already has Lit** | **112.0 KB** | **27.6 KB** |
+| With Lit – the first component on a page | 134.7 KB | 35.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -569,13 +569,13 @@ dry run's result, “Dry run: 4 of 6 steps run · 1 skipped · pauses at Lead si
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.8 ms** | the gallery demo's data, 425 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of stepTypes replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.1 ms | stepTypes: first render, 477 nodes; update 0.3 ms |
-| 1,000 items | 11 ms | stepTypes: first render, 992 nodes; update 3.4 ms |
+| First render | **5.6 ms** | the gallery demo's data, 425 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of stepTypes replaced |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.1 ms | stepTypes: first render, 477 nodes; update 0.3 ms |
+| 1,000 items | 12 ms | stepTypes: first render, 992 nodes; update 3.7 ms |
 
-1,000 items of stepTypes: 11 ms, 992 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of stepTypes: 12 ms, 992 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

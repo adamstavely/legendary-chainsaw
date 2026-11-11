@@ -9,7 +9,7 @@
 A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields, Copy and Download – inline or as a dialog
 
 - **Element:** `<tc-json-viewer>`
-- **Size:** 17.3 KB gzip · 59.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.4 KB gzip · 59.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -487,7 +487,7 @@ Follows the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tab
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -495,7 +495,7 @@ Follows the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tab
 | --- | --- | --- |
 | **This component alone** | 50.1 KB | 14.3 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/modal` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -504,8 +504,8 @@ Follows the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tab
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **59.6 KB** | **17.4 KB** |
-| With Lit – the first component on a page | 80.3 KB | 24.1 KB |
+| **Added to a page that already has Lit** | **59.8 KB** | **17.4 KB** |
+| With Lit – the first component on a page | 80.5 KB | 24.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -513,13 +513,13 @@ Follows the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tab
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.1 ms** | the gallery demo's data, 461 DOM nodes – to layout, median of 7 |
-| Typical update | **0.9 ms** | one item of flags replaced |
-| First on the page | 9.7 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.7 ms | flags: first render, 560 nodes; update 1.0 ms |
-| 1,000 items | 9.4 ms | flags: first render, 1,460 nodes; update 2.8 ms |
+| First render | **5.0 ms** | the gallery demo's data, 461 DOM nodes – to layout, median of 7 |
+| Typical update | **1.3 ms** | one item of flags replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.9 ms | flags: first render, 560 nodes; update 1.4 ms |
+| 1,000 items | 13 ms | flags: first render, 1,460 nodes; update 3.2 ms |
 
-1,000 items of flags: 9.4 ms, 1,460 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of flags: 13 ms, 1,460 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

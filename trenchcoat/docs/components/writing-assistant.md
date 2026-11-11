@@ -9,7 +9,7 @@
 AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
 - **Element:** `<tc-writing-assistant>`
-- **Size:** 12.8 KB gzip · 50.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.9 KB gzip · 50.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -444,7 +444,7 @@ blocked.”, “Dictation isn't supported in this browser.” New chat moves foc
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -452,14 +452,14 @@ blocked.”, “Dictation isn't supported in this browser.” New chat moves foc
 | --- | --- | --- |
 | **This component alone** | 43.1 KB | 10.7 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **50.8 KB** | **12.9 KB** |
-| With Lit – the first component on a page | 73.2 KB | 20.3 KB |
+| **Added to a page that already has Lit** | **50.9 KB** | **12.9 KB** |
+| With Lit – the first component on a page | 73.3 KB | 20.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -467,13 +467,13 @@ blocked.”, “Dictation isn't supported in this browser.” New chat moves foc
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 33 DOM nodes – to layout, median of 7 |
+| First render | **1.0 ms** | the gallery demo's data, 33 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of suggestions replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.5 ms | suggestions: first render, 130 nodes; update 0.2 ms |
-| 1,000 items | 6.6 ms | suggestions: first render, 1,030 nodes; update 0.8 ms |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.5 ms | suggestions: first render, 130 nodes; update 0.3 ms |
+| 1,000 items | 12 ms | suggestions: first render, 1,030 nodes; update 1.2 ms |
 
-1,000 items of suggestions: 6.6 ms, 1,030 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of suggestions: 12 ms, 1,030 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

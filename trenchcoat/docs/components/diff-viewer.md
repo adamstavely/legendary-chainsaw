@@ -9,7 +9,7 @@
 The changes to a set of files – totals, a row per file with its status and lines added and removed, opening to a line diff
 
 - **Element:** `<tc-diff-viewer>`
-- **Size:** 25.7 KB gzip · 95.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 25.7 KB gzip · 96.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -416,15 +416,15 @@ when a file opens or closes.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 13.1 KB | 5.1 KB |
+| **This component alone** | 13.1 KB | 5.0 KB |
 | Lit · the library every element is built on, the parts it uses | 21.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
@@ -432,8 +432,8 @@ when a file opens or closes.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
 | [code-block](code-block.md) · Element it renders | 32.3 KB | – |
-| **Added to a page that already has Lit** | **95.9 KB** | **25.8 KB** |
-| With Lit – the first component on a page | 118.4 KB | 33.3 KB |
+| **Added to a page that already has Lit** | **96.0 KB** | **25.7 KB** |
+| With Lit – the first component on a page | 118.6 KB | 33.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -441,13 +441,13 @@ when a file opens or closes.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 233 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of files replaced |
-| First on the page | 8.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 26 ms | files: first render, 5,345 nodes; update 2.2 ms |
-| 1,000 items | 237 ms | files: first render, 53,270 nodes; update 19 ms |
+| First render | **4.3 ms** | the gallery demo's data, 233 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of files replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 41 ms | files: first render, 5,345 nodes; update 2.4 ms |
+| 1,000 items | 188 ms | files: first render, 53,270 nodes; update 16 ms |
 
-1,000 items of files: 237 ms. It renders every item, so a first render passes 50 ms (a long task) at about 210 items – page or filter longer lists.
+1,000 items of files: 188 ms. It renders every item, so a first render passes 50 ms (a long task) at about 270 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

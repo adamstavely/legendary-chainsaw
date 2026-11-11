@@ -9,7 +9,7 @@
 A piece of content grows into its detail view, with focus moving along and Escape to close, so people keep their place
 
 - **Element:** `<tc-shared-element>`
-- **Size:** 4.5 KB gzip · 11.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 4.6 KB gzip · 11.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -369,7 +369,7 @@ The part that isn't showing is `hidden`, so it's skipped. Toggles get `aria-expa
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -377,14 +377,14 @@ The part that isn't showing is `hidden`, so it's skipped. Toggles get `aria-expa
 | --- | --- | --- |
 | **This piece alone** | 5.0 KB | 2.4 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **11.6 KB** | **4.5 KB** |
-| With Lit – the first component on a page | 31.2 KB | 10.9 KB |
+| **Added to a page that already has Lit** | **11.7 KB** | **4.6 KB** |
+| With Lit – the first component on a page | 31.3 KB | 10.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -392,9 +392,9 @@ The part that isn't showing is `hidden`, so it's skipped. Toggles get `aria-expa
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.1 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| First render | **0.4 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 1.0 ms | default properties; includes adding its CSS to the document |
+| First on the page | 2.8 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

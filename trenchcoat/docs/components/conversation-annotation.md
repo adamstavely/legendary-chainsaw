@@ -9,7 +9,7 @@
 Label and redact spans in a conversation, rate turns, correct answers as a diff, and send the reviewed example to a dataset
 
 - **Element:** `<tc-conversation-annotation>`
-- **Size:** 24.9 KB gzip · 96.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 25.0 KB gzip · 96.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -523,23 +523,23 @@ changed makes the control invalid.
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 44.5 KB | 12.9 KB |
+| **This component alone** | 44.5 KB | 12.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.1 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
-| **Added to a page that already has Lit** | **96.2 KB** | **25.0 KB** |
-| With Lit – the first component on a page | 118.3 KB | 32.4 KB |
+| **Added to a page that already has Lit** | **96.3 KB** | **25.0 KB** |
+| With Lit – the first component on a page | 118.5 KB | 32.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -547,13 +547,13 @@ changed makes the control invalid.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 139 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of messages replaced |
-| First on the page | 9.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 8.2 ms | messages: first render, 1,051 nodes; update 1.2 ms |
-| 1,000 items | 68 ms | messages: first render, 9,601 nodes; update 8.1 ms |
+| First render | **3.5 ms** | the gallery demo's data, 139 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of messages replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 19 ms | messages: first render, 1,051 nodes; update 2.1 ms |
+| 1,000 items | 86 ms | messages: first render, 9,601 nodes; update 6.8 ms |
 
-1,000 items of messages: 68 ms. It renders every item, so a first render passes 50 ms (a long task) at about 730 items – page or filter longer lists.
+1,000 items of messages: 86 ms. It renders every item, so a first render passes 50 ms (a long task) at about 580 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

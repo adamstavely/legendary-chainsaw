@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-like-burst.json",
+  "title": "tc-like-burst",
+  "description": "A like or save toggle whose icon fills with a spring and a small burst.",
+  "type": "object",
+  "properties": {
+    "pressed": {
+      "type": "boolean",
+      "description": "On (liked) or off"
+    },
+    "label": {
+      "type": "string",
+      "description": "The button's name: \"Like\", \"Save finding\""
+    },
+    "showLabel": {
+      "type": "boolean",
+      "description": "Shows the label beside the icon; otherwise it's only the name"
+    },
+    "count": {
+      "type": "number",
+      "description": "A count beside the icon; a press moves it by one"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Can't be pressed"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for writing the count"
+    }
+  },
+  "additionalProperties": false
+}

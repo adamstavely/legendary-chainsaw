@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-page-slide.json",
+  "title": "tc-page-slide",
+  "description": "Moves between views by sliding them side by side as `view` changes, the height gliding along.",
+  "type": "object",
+  "properties": {
+    "view": {
+      "type": "string",
+      "description": "The key of the view on show – change it to slide to another view"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "back",
+        "forward"
+      ],
+      "description": "Which way to slide: \"forward\" brings the new view in from the end, \"back\" from the start; \"auto\" works it out from `order`"
+    },
+    "order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The views' keys in order, for \"auto\" (an attribute takes a comma-separated list); default: the data-view children's order"
+    },
+    "focusHeading": {
+      "type": "boolean",
+      "description": "Move focus to the new view's heading after each change"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Length of the slide in ms; default the --tc-duration-slow token"
+    }
+  },
+  "additionalProperties": false
+}

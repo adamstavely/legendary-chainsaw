@@ -9,7 +9,7 @@
 A card that introduces a whole collection and links into it – up to three previews, the title with its counts, a bold line, a description, the names inside as many as fit in two lines, and Browse →; the whole card is one target and its words stay selectable
 
 - **Element:** `<tc-collection-card>`
-- **Size:** 6.4 KB gzip · 18.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 6.4 KB gzip · 18.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -331,7 +331,7 @@ use their `alt`; give `alt=""` when the words say the same. Live previews are in
 
 ## Performance
 
-*Measured 2026-11-05 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -339,14 +339,14 @@ use their `alt`; give `alt=""` when the words say the same. Live previews are in
 | --- | --- | --- |
 | **This component alone** | 11.5 KB | 4.5 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **18.1 KB** | **6.4 KB** |
-| With Lit – the first component on a page | 37.7 KB | 12.8 KB |
+| **Added to a page that already has Lit** | **18.2 KB** | **6.4 KB** |
+| With Lit – the first component on a page | 37.8 KB | 12.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -354,13 +354,13 @@ use their `alt`; give `alt=""` when the words say the same. Live previews are in
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of items replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.2 ms | items: first render, 215 nodes; update 0.4 ms |
-| 1,000 items | 6.4 ms | items: first render, 2,015 nodes; update 2.3 ms |
+| First render | **2.5 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of items replaced |
+| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.6 ms | items: first render, 215 nodes; update 1.1 ms |
+| 1,000 items | 13 ms | items: first render, 2,015 nodes; update 3.8 ms |
 
-1,000 items of items: 6.4 ms, 2,015 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of items: 13 ms, 2,015 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

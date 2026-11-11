@@ -1,0 +1,562 @@
+{
+ "elements": [
+  {
+   "tag": "tc-week-bars",
+   "className": "TcWeekBars",
+   "description": "A week of daily totals as bars against a goal line, with the week's total and average, a week switcher and a table view.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Daily totals\"",
+     "description": "The heading, and the plot's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "weeks",
+     "attribute": null,
+     "type": "WeekBarsWeek[]",
+     "default": "[]",
+     "description": "The weeks, oldest first, each with its days",
+     "readonly": false
+    },
+    {
+     "name": "week",
+     "attribute": "week",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The shown week's index; unset is the last (latest) week",
+     "readonly": false
+    },
+    {
+     "name": "goal",
+     "attribute": "goal",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The daily goal, drawn as a dashed line; days at or over it take the accent",
+     "readonly": false
+    },
+    {
+     "name": "today",
+     "attribute": "today",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The index of today in the last week, marked under its bar",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "(value: number) => string",
+     "default": null,
+     "description": "Formats every value",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "WeekBarsView",
+     "default": "\"chart\"",
+     "description": "The bars or the table",
+     "readonly": false
+    },
+    {
+     "name": "still",
+     "attribute": "still",
+     "type": "boolean",
+     "default": "false",
+     "description": "Draws everything where it ends, with no entrance or glide",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<WeekBarsLabels>",
+     "default": "{}",
+     "description": "Words the page can rename, merged over `defaultWeekBarsLabels`",
+     "readonly": false
+    },
+    {
+     "name": "shownWeek",
+     "attribute": null,
+     "type": "number",
+     "default": null,
+     "description": "The shown week's index (the last when `week` is unset or out of range)",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-week-change",
+     "detail": "",
+     "description": "The switcher or PageUp/PageDown moved to another week ({ week }: WeekBarsWeekChange); cancelable – prevented, `week` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The Table button was pressed ({ view }: WeekBarsViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "replay",
+     "params": "",
+     "returns": "void",
+     "description": "Plays the entrance again"
+    }
+   ],
+   "ui": "wkb",
+   "cssProperties": [
+    {
+     "name": "--tc-wkb-met",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-wkb-rest",
+     "value": "var(--tc-chart-neutral)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-wkb-goal",
+     "value": "var(--tc-text-muted)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-wkb-plot-h",
+     "value": "168px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-neutral",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-icon-muted",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-radius",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "WeekBars",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the plot's name"
+    },
+    {
+     "name": "week",
+     "type": "number",
+     "optional": true,
+     "description": "The shown week's index – controlled when given"
+    },
+    {
+     "name": "defaultWeek",
+     "type": "number",
+     "optional": true,
+     "description": "The week on mount when `week` isn't controlled – by default the last"
+    },
+    {
+     "name": "onWeekChange",
+     "type": "(week: number) => void",
+     "optional": true,
+     "description": "The switcher or PageUp/PageDown moved to another week"
+    },
+    {
+     "name": "view",
+     "type": "WeekBarsView",
+     "optional": true,
+     "description": "The bars or the table – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "WeekBarsView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: WeekBarsView) => void",
+     "optional": true,
+     "description": "The Table button was pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "week",
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-week-change": null,
+    "tc-view-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-week-bars",
+   "className": "TcWeekBars",
+   "module": "@adamstavely/trenchcoat/week-bars",
+   "data": [
+    "weeks",
+    "format",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "week",
+     "attribute": "week"
+    },
+    {
+     "name": "goal",
+     "attribute": "goal"
+    },
+    {
+     "name": "today",
+     "attribute": "today"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "still",
+     "attribute": "still"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-week-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "week",
+     "event": "tc-week-change"
+    },
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame (internal/chart/motion › subscribeTick)",
+   "requestAnimationFrame (internal/chart/motion › loop)",
+   "requestAnimationFrame, cancelled (internal/controllers › RollingController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "IntersectionObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "performance.now() (internal/chart/motion-controller › clock)",
+   "performance.now() (internal/controllers › RollingController)"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "itself"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 36426,
+  "gzip": 11889
+ }
+}

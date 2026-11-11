@@ -9,7 +9,7 @@
 Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
 
 - **Element:** `<tc-image-grid>`
-- **Size:** 15.2 KB gzip · 54.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.3 KB gzip · 54.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -484,7 +484,7 @@ says how much of each image shows (“50% Variation 1, 50% Variation 2”).
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -492,7 +492,7 @@ says how much of each image shows (“50% Variation 1, 50% Variation 2”).
 | --- | --- | --- |
 | **This component alone** | 45.6 KB | 12.5 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -500,8 +500,8 @@ says how much of each image shows (“50% Variation 1, 50% Variation 2”).
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **54.7 KB** | **15.2 KB** |
-| With Lit – the first component on a page | 78.0 KB | 22.9 KB |
+| **Added to a page that already has Lit** | **54.8 KB** | **15.3 KB** |
+| With Lit – the first component on a page | 78.1 KB | 22.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -509,13 +509,13 @@ says how much of each image shows (“50% Variation 1, 50% Variation 2”).
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 69 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of tiles replaced |
-| First on the page | 8.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 12 ms | tiles: first render, 1,197 nodes; update 1.1 ms |
-| 1,000 items | 141 ms | tiles: first render, 11,772 nodes; update 7.7 ms |
+| First render | **2.3 ms** | the gallery demo's data, 69 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of tiles replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 20 ms | tiles: first render, 1,197 nodes; update 1.5 ms |
+| 1,000 items | 139 ms | tiles: first render, 11,772 nodes; update 6.9 ms |
 
-1,000 items of tiles: 141 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
+1,000 items of tiles: 139 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

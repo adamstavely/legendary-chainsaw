@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-icon-swap.json",
+  "title": "tc-icon-swap",
+  "description": "One icon turning into the next – rotate, scale and blur – by `state`, optionally turning back after a while.",
+  "type": "object",
+  "properties": {
+    "state": {
+      "type": "string",
+      "description": "The icon to show: the `data-state` of one of its icons; unset, or unknown, shows the first"
+    },
+    "rest": {
+      "type": "string",
+      "description": "The resting state `revert-after` goes back to; by default the first icon's"
+    },
+    "revertAfter": {
+      "type": "number",
+      "description": "Go back to the resting state this many ms after a change away from it; 0 never does"
+    },
+    "announce": {
+      "type": "boolean",
+      "description": "Read each change's word out politely – the icon's `data-label`, else its state"
+    }
+  },
+  "additionalProperties": false
+}

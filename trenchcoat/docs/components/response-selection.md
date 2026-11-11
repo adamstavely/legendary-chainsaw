@@ -9,7 +9,7 @@
 Select part of a model's answer and act on it – reply quoting it, ask why, or request an edit that comes back as a diff to accept or reject
 
 - **Element:** `<tc-response-selection>`
-- **Size:** 26.8 KB gzip · 100.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 26.9 KB gzip · 101.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -475,17 +475,17 @@ named after its quote. A polite status region says what happened:
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 31.2 KB | 9.1 KB |
+| **This component alone** | 31.2 KB | 9.0 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
 | `internal/selection` · Shared Trenchcoat code | 10.2 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/selection-toolbar` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -493,8 +493,8 @@ named after its quote. A polite status region says what happened:
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
-| **Added to a page that already has Lit** | **100.9 KB** | **27.0 KB** |
-| With Lit – the first component on a page | 123.1 KB | 34.1 KB |
+| **Added to a page that already has Lit** | **101.3 KB** | **26.9 KB** |
+| With Lit – the first component on a page | 123.5 KB | 34.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -502,11 +502,11 @@ named after its quote. A polite status region says what happened:
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.5 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of actions replaced |
-| First on the page | 3.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | actions: first render, 5 nodes; update 0.0 ms |
-| 1,000 items | 0.5 ms | actions: first render, 5 nodes; update 0.2 ms |
+| First render | **1.4 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of actions replaced |
+| First on the page | 7.8 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.0 ms | actions: first render, 5 nodes; update 0.3 ms |
+| 1,000 items | 1.3 ms | actions: first render, 5 nodes; update 0.4 ms |
 
 What it renders doesn't grow with actions (tested to 1,000 items).
 

@@ -9,7 +9,7 @@
 Open decisions with two quick answers each – answered ones confirm and fold away
 
 - **Element:** `<tc-decision-inbox>`
-- **Size:** 8.1 KB gzip · 26.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.1 KB gzip · 26.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -417,7 +417,7 @@ When nothing is left, the card says “Nothing waiting on you – new decisions 
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -425,14 +425,14 @@ When nothing is left, the card says “Nothing waiting on you – new decisions 
 | --- | --- | --- |
 | **This component alone** | 18.5 KB | 5.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **26.8 KB** | **8.1 KB** |
-| With Lit – the first component on a page | 48.5 KB | 15.3 KB |
+| **Added to a page that already has Lit** | **26.9 KB** | **8.1 KB** |
+| With Lit – the first component on a page | 48.7 KB | 15.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -440,13 +440,13 @@ When nothing is left, the card says “Nothing waiting on you – new decisions 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 52 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of decisions replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.4 ms | decisions: first render, 1,012 nodes; update 0.7 ms |
-| 1,000 items | 52 ms | decisions: first render, 10,012 nodes; update 5.2 ms |
+| First render | **2.9 ms** | the gallery demo's data, 52 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of decisions replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | decisions: first render, 1,012 nodes; update 1.2 ms |
+| 1,000 items | 65 ms | decisions: first render, 10,012 nodes; update 5.0 ms |
 
-1,000 items of decisions: 52 ms. It renders every item, so a first render passes 50 ms (a long task) at about 970 items – page or filter longer lists.
+1,000 items of decisions: 65 ms. It renders every item, so a first render passes 50 ms (a long task) at about 770 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

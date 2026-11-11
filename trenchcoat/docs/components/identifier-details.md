@@ -9,7 +9,7 @@
 DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, found, checked and marked – hover, focus or right-click one for its normalised value with Copy, its range, algorithm, year or carrier, doi.org and NVD links, and what your sources know (severity, owner, status)
 
 - **Element:** `<tc-identifier-details>`
-- **Size:** 15.7 KB gzip · 46.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.9 KB gzip · 46.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -365,16 +365,16 @@ status the app returned, "Nothing more known.", "Couldn't load the details." and
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 28.7 KB | 10.1 KB |
+| **This component alone** | 28.7 KB | 10.0 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/inline-details` · Shared Trenchcoat code | 1.3 KB | – |
@@ -384,8 +384,8 @@ status the app returned, "Nothing more known.", "Couldn't load the details." and
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **46.1 KB** | **15.9 KB** |
-| With Lit – the first component on a page | 65.7 KB | 22.1 KB |
+| **Added to a page that already has Lit** | **46.5 KB** | **15.9 KB** |
+| With Lit – the first component on a page | 66.1 KB | 22.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -393,11 +393,11 @@ status the app returned, "Nothing more known.", "Couldn't load the details." and
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of kinds replaced |
-| First on the page | 2.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | kinds: first render, 14 nodes; update 0.1 ms |
-| 1,000 items | 0.6 ms | kinds: first render, 14 nodes; update 0.0 ms |
+| First render | **2.1 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of kinds replaced |
+| First on the page | 5.8 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.9 ms | kinds: first render, 14 nodes; update 0.1 ms |
+| 1,000 items | 2.1 ms | kinds: first render, 14 nodes; update 0.4 ms |
 
 What it renders doesn't grow with kinds (tested to 1,000 items).
 

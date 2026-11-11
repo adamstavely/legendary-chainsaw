@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-diff-table.json",
+  "title": "tc-diff-table",
+  "description": "An AI's proposed edits to a table, reviewed in place: struck and new values per cell, added and removed rows, and accept, reject and undo per edit, per row or for all.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DiffTableColumn"
+      },
+      "description": "The columns, in order; the first one names each row"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DiffTableRow"
+      },
+      "description": "The rows, in order"
+    },
+    "edits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DiffTableEdit"
+      },
+      "description": "The proposed edits to single cells"
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/DiffTableVerdict"
+          },
+          {
+            "not": {}
+          }
+        ]
+      },
+      "description": "The verdicts so far. Changed by the buttons and keys unless a tc-decisions-change listener calls preventDefault()"
+    },
+    "streaming": {
+      "type": "boolean",
+      "description": "The edits are still arriving: they sweep in a row at a time, and Accept all waits until they're all in"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "pending": {
+          "type": "string"
+        },
+        "allReviewed": {
+          "type": "string"
+        },
+        "accept": {
+          "type": "string"
+        },
+        "reject": {
+          "type": "string"
+        },
+        "acceptAll": {
+          "type": "string"
+        },
+        "rejectAll": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "accepted": {
+          "type": "string"
+        },
+        "rejected": {
+          "type": "string"
+        },
+        "was": {
+          "type": "string"
+        },
+        "now": {
+          "type": "string"
+        },
+        "review": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DiffTableColumn": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "DiffTableRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "cells": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "The values by column key, as they are now (an added row: as proposed)"
+        },
+        "change": {
+          "type": "string",
+          "enum": [
+            "added",
+            "removed"
+          ],
+          "description": "The AI proposes adding or removing the whole row"
+        }
+      },
+      "required": [
+        "id",
+        "cells"
+      ],
+      "additionalProperties": false
+    },
+    "DiffTableEdit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "row": {
+          "type": "string",
+          "description": "The row's id"
+        },
+        "column": {
+          "type": "string",
+          "description": "The column's key"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why the AI proposes it"
+        }
+      },
+      "required": [
+        "id",
+        "row",
+        "column",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "DiffTableVerdict": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "rejected"
+      ]
+    }
+  }
+}

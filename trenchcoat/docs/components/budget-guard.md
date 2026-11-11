@@ -9,7 +9,7 @@
 Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
 
 - **Element:** `<tc-budget-guard>`
-- **Size:** 10.6 KB gzip · 37.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.6 KB gzip · 37.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -426,7 +426,7 @@ on.”).
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -434,7 +434,7 @@ on.”).
 | --- | --- | --- |
 | **This component alone** | 29.4 KB | 8.2 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
@@ -442,8 +442,8 @@ on.”).
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **37.7 KB** | **10.6 KB** |
-| With Lit – the first component on a page | 60.4 KB | 18.1 KB |
+| **Added to a page that already has Lit** | **37.8 KB** | **10.6 KB** |
+| With Lit – the first component on a page | 60.5 KB | 18.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -451,13 +451,13 @@ on.”).
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 46 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of limits replaced |
-| First on the page | 9.3 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.1 ms | limits: first render, 725 nodes; update 1.1 ms |
-| 1,000 items | 34 ms | limits: first render, 7,025 nodes; update 16 ms |
+| First render | **2.9 ms** | the gallery demo's data, 46 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of limits replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 13 ms | limits: first render, 725 nodes; update 2.2 ms |
+| 1,000 items | 48 ms | limits: first render, 7,025 nodes; update 18 ms |
 
-1,000 items of limits: 34 ms, 7,025 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of limits: 48 ms, 7,025 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

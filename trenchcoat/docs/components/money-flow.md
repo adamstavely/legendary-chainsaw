@@ -9,7 +9,7 @@
 How money moved between entities – people, companies, shells and banks in columns, transfers as bands sized by amount with flag chips, an entity's or a transfer's flows lit with a readout in words, a list of every transfer and a table view
 
 - **Element:** `<tc-money-flow>`
-- **Size:** 11.0 KB gzip · 36.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.0 KB gzip · 36.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -459,7 +459,7 @@ status message, and clearing with “Selection cleared”. The table has a capti
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -467,15 +467,15 @@ status message, and clearing with “Selection cleared”. The table has a capti
 | --- | --- | --- |
 | **This component alone** | 28.6 KB | 8.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **36.1 KB** | **11.0 KB** |
-| With Lit – the first component on a page | 58.0 KB | 18.3 KB |
+| **Added to a page that already has Lit** | **36.3 KB** | **11.0 KB** |
+| With Lit – the first component on a page | 58.1 KB | 18.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -483,13 +483,13 @@ status message, and clearing with “Selection cleared”. The table has a capti
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 161 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of nodes replaced |
-| First on the page | 8.3 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.5 ms | nodes: first render, 1,238 nodes; update 1.3 ms |
-| 1,000 items | 57 ms | nodes: first render, 11,588 nodes; update 22 ms |
+| First render | **4.7 ms** | the gallery demo's data, 161 DOM nodes – to layout, median of 7 |
+| Typical update | **1.3 ms** | one item of nodes replaced |
+| First on the page | 10 ms | default properties; includes adding its CSS to the document |
+| 100 items | 14 ms | nodes: first render, 1,238 nodes; update 2.5 ms |
+| 1,000 items | 73 ms | nodes: first render, 11,588 nodes; update 20 ms |
 
-1,000 items of nodes: 57 ms. It renders every item, so a first render passes 50 ms (a long task) at about 870 items – page or filter longer lists.
+1,000 items of nodes: 73 ms. It renders every item, so a first render passes 50 ms (a long task) at about 680 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

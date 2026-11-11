@@ -9,7 +9,7 @@
 Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened
 
 - **Element:** `<tc-friction-profile>`
-- **Size:** 15.3 KB gzip · 63.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.4 KB gzip · 63.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -440,7 +440,7 @@ message each (“Say why deadline mode is needed.”) and focus moves to the fir
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -448,15 +448,15 @@ message each (“Say why deadline mode is needed.”) and focus moves to the fir
 | --- | --- | --- |
 | **This component alone** | 25.0 KB | 7.5 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **63.2 KB** | **15.4 KB** |
-| With Lit – the first component on a page | 84.9 KB | 22.6 KB |
+| **Added to a page that already has Lit** | **63.3 KB** | **15.4 KB** |
+| With Lit – the first component on a page | 85.0 KB | 22.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -464,13 +464,13 @@ message each (“Say why deadline mode is needed.”) and focus moves to the fir
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 65 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of safeguards replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.9 ms | safeguards: first render, 540 nodes; update 0.4 ms |
-| 1,000 items | 28 ms | safeguards: first render, 5,040 nodes; update 2.9 ms |
+| First render | **3.9 ms** | the gallery demo's data, 65 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of safeguards replaced |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | safeguards: first render, 540 nodes; update 0.7 ms |
+| 1,000 items | 42 ms | safeguards: first render, 5,040 nodes; update 3.1 ms |
 
-1,000 items of safeguards: 28 ms, 5,040 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of safeguards: 42 ms, 5,040 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 
 - **Element:** `<tc-verification-queue>`
-- **Size:** 18.2 KB gzip · 63.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.2 KB gzip · 63.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -499,16 +499,16 @@ is described by the gate's message.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 33.3 KB | 9.9 KB |
+| **This component alone** | 33.3 KB | 9.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/source-line` · Shared Trenchcoat code | 0.5 KB | – |
@@ -516,8 +516,8 @@ is described by the gate's message.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | [validity-badge](validity-badge.md) · Element it renders | 17.8 KB | – |
-| **Added to a page that already has Lit** | **63.1 KB** | **18.3 KB** |
-| With Lit – the first component on a page | 85.3 KB | 25.6 KB |
+| **Added to a page that already has Lit** | **63.2 KB** | **18.2 KB** |
+| With Lit – the first component on a page | 85.5 KB | 25.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -525,12 +525,12 @@ is described by the gate's message.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 145 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of claims replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 6.1 ms | claims: first render, 687 nodes; update 1.9 ms |
+| First render | **2.6 ms** | the gallery demo's data, 145 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of claims replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 10 ms | claims: first render, 687 nodes; update 2.7 ms |
 
-Windowed: 10,000 items of claims render 687 nodes in 6.1 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of claims render 687 nodes in 10 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

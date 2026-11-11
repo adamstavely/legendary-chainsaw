@@ -9,7 +9,7 @@
 How an agent finds out why something failed, as a fault tree – hypotheses with their evidence ruled out one by one, OR and AND branches, and the way from the confirmed cause up to the failure lit
 
 - **Element:** `<tc-root-cause-tree>`
-- **Size:** 9.5 KB gzip · 30.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.6 KB gzip · 30.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -447,7 +447,7 @@ words carry them.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -455,14 +455,14 @@ words carry them.
 | --- | --- | --- |
 | **This component alone** | 22.7 KB | 7.5 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **30.0 KB** | **9.5 KB** |
-| With Lit – the first component on a page | 51.8 KB | 16.8 KB |
+| **Added to a page that already has Lit** | **30.1 KB** | **9.6 KB** |
+| With Lit – the first component on a page | 52.0 KB | 16.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -470,13 +470,13 @@ words carry them.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 103 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of hypotheses replaced |
-| First on the page | 8.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.5 ms | hypotheses: first render, 1,414 nodes; update 1.1 ms |
-| 1,000 items | 78 ms | hypotheses: first render, 13,834 nodes; update 6.9 ms |
+| First render | **2.4 ms** | the gallery demo's data, 103 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of hypotheses replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 17 ms | hypotheses: first render, 1,414 nodes; update 1.5 ms |
+| 1,000 items | 87 ms | hypotheses: first render, 13,834 nodes; update 6.6 ms |
 
-1,000 items of hypotheses: 78 ms. It renders every item, so a first render passes 50 ms (a long task) at about 640 items – page or filter longer lists.
+1,000 items of hypotheses: 87 ms. It renders every item, so a first render passes 50 ms (a long task) at about 570 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

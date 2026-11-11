@@ -9,7 +9,7 @@
 What fills the model's context, as a field of cells – hover a part to light it up, remove files, and compact the conversation while its cells shimmer and clear
 
 - **Element:** `<tc-context-window>`
-- **Size:** 13.8 KB gzip · 55.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.9 KB gzip · 55.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -364,22 +364,22 @@ billing-spec.md”, “Context window is almost full” and “Context window is
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 46.4 KB | 11.3 KB |
+| **This component alone** | 46.4 KB | 11.2 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **55.4 KB** | **13.9 KB** |
-| With Lit – the first component on a page | 78.1 KB | 21.4 KB |
+| **Added to a page that already has Lit** | **55.5 KB** | **13.9 KB** |
+| With Lit – the first component on a page | 78.2 KB | 21.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -387,13 +387,13 @@ billing-spec.md”, “Context window is almost full” and “Context window is
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.6 ms** | the gallery demo's data, 359 DOM nodes – to layout, median of 7 |
-| Typical update | **1.0 ms** | one item of parts replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 12 ms | parts: first render, 2,468 nodes; update 2.3 ms |
-| 1,000 items | 102 ms | parts: first render, 22,448 nodes; update 17 ms |
+| First render | **4.6 ms** | the gallery demo's data, 359 DOM nodes – to layout, median of 7 |
+| Typical update | **1.3 ms** | one item of parts replaced |
+| First on the page | 27 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | parts: first render, 2,468 nodes; update 2.2 ms |
+| 1,000 items | 117 ms | parts: first render, 22,448 nodes; update 8.8 ms |
 
-1,000 items of parts: 102 ms. It renders every item, so a first render passes 50 ms (a long task) at about 490 items – page or filter longer lists.
+1,000 items of parts: 117 ms. It renders every item, so a first render passes 50 ms (a long task) at about 430 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (clean), 3 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -1,4 +1,4 @@
-import { render as litRender, type TemplateResult } from "lit";
+import { html, render as litRender, type TemplateResult } from "lit";
 import { userEvent } from "vitest/browser";
 
 /** Renders a template into a fresh container on the page and waits until every Trenchcoat element in it is updated */
@@ -48,3 +48,13 @@ export async function parkPointer() {
   await userEvent.hover(spot);
   spot.remove();
 }
+
+/**
+ * The page's own colours for a fixture marked data-tc-page: its surface and text, and native buttons in tokens. Under
+ * data-tc-theme="dark" (color-scheme: dark) unstyled buttons and text take the platform's dark defaults, which fail
+ * contrast in Linux WebKit – a real page styles them, so axe should see them styled.
+ */
+export const pageStyles = html`<style>
+  [data-tc-page] { background: var(--tc-surface-base); color: var(--tc-text-primary); }
+  [data-tc-page] button { color: var(--tc-text-primary); background: var(--tc-surface-raised); border: 1px solid var(--tc-border-default); }
+</style>`;

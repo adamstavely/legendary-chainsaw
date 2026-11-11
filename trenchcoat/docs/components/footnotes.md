@@ -9,7 +9,7 @@
 A quiet card of caveats and notes under a page's charts – numbered or bulleted, each with an optional link an app's router can take, and nothing at all when there are none
 
 - **Element:** `<tc-footnotes>`
-- **Size:** 5.3 KB gzip · 14.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 5.3 KB gzip · 14.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -311,7 +311,7 @@ notes there's no region to land on.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -319,15 +319,15 @@ notes there's no region to land on.
 | --- | --- | --- |
 | **This component alone** | 6.5 KB | 2.8 KB |
 | Lit · the library every element is built on, the parts it uses | 20.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **14.0 KB** | **5.3 KB** |
-| With Lit – the first component on a page | 35.8 KB | 12.6 KB |
+| **Added to a page that already has Lit** | **14.2 KB** | **5.3 KB** |
+| With Lit – the first component on a page | 36.0 KB | 12.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -335,10 +335,10 @@ notes there's no region to land on.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 22 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of notes replaced |
-| First on the page | 2.4 ms | default properties; includes adding its CSS to the document |
-| 100 items | 8.6 ms | notes: first render, 262 nodes; update 0.5 ms |
+| First render | **0.5 ms** | the gallery demo's data, 22 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | one item of notes replaced |
+| First on the page | 3.7 ms | default properties; includes adding its CSS to the document |
+| 100 items | 9.7 ms | notes: first render, 262 nodes; update 0.5 ms |
 | 1,000 items | 29 ms | notes: first render, 2,512 nodes; update 1.8 ms |
 
 1,000 items of notes: 29 ms, 2,512 nodes. It renders every item – past a few thousand, page through them or use a windowed list.

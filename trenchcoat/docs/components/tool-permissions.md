@@ -9,7 +9,7 @@
 Which agent may use which tools – allow, ask or deny per cell, presets for the common setups, and a summary of what you changed
 
 - **Element:** `<tc-tool-permissions>`
-- **Size:** 12.1 KB gzip · 45.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.1 KB gzip · 45.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -520,7 +520,7 @@ section headed “Changes” or “No changes”; Reset and Save are `aria-disab
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -528,15 +528,15 @@ section headed “Changes” or “No changes”; Reset and Save are `aria-disab
 | --- | --- | --- |
 | **This component alone** | 36.7 KB | 9.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **45.0 KB** | **12.1 KB** |
-| With Lit – the first component on a page | 66.8 KB | 19.3 KB |
+| **Added to a page that already has Lit** | **45.2 KB** | **12.1 KB** |
+| With Lit – the first component on a page | 66.9 KB | 19.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -544,13 +544,13 @@ section headed “Changes” or “No changes”; Reset and Save are `aria-disab
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.2 ms** | the gallery demo's data, 515 DOM nodes – to layout, median of 7 |
-| Typical update | **0.9 ms** | one item of presets replaced |
-| First on the page | 8.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.3 ms | presets: first render, 611 nodes; update 1.4 ms |
-| 1,000 items | 16 ms | presets: first render, 1,511 nodes; update 9.4 ms |
+| First render | **4.9 ms** | the gallery demo's data, 515 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of presets replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.6 ms | presets: first render, 611 nodes; update 1.2 ms |
+| 1,000 items | 15 ms | presets: first render, 1,511 nodes; update 5.1 ms |
 
-1,000 items of presets: 16 ms, 1,511 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of presets: 15 ms, 1,511 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

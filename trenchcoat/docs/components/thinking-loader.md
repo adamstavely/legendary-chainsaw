@@ -9,7 +9,7 @@
 A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 
 - **Element:** `<tc-thinking-loader>`
-- **Size:** 7.0 KB gzip · 22.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.1 KB gzip · 22.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -416,7 +416,7 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -424,14 +424,14 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 | --- | --- | --- |
 | **This component alone** | 15.2 KB | 5.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **22.2 KB** | **7.1 KB** |
-| With Lit – the first component on a page | 42.4 KB | 13.7 KB |
+| **Added to a page that already has Lit** | **22.3 KB** | **7.1 KB** |
+| With Lit – the first component on a page | 42.6 KB | 13.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -439,10 +439,10 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 17 DOM nodes – to layout, median of 7 |
+| First render | **0.8 ms** | the gallery demo's data, 17 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of phases replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | phases: first render, 17 nodes; update 0.0 ms |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.7 ms | phases: first render, 17 nodes; update 0.1 ms |
 | 1,000 items | 0.6 ms | phases: first render, 17 nodes; update 0.0 ms |
 
 What it renders doesn't grow with phases (tested to 1,000 items).
