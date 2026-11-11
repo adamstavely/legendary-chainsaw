@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-recap.json",
+  "title": "tc-agent-recap",
+  "description": "What your agents did while you were away – a chart of the period with a marker per notable event, then Needs you,\nFailed and Done, acted on in place.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "since": {
+      "type": "number",
+      "description": "When the period began – when you left – in epoch ms; unset starts at the first event"
+    },
+    "now": {
+      "type": "number",
+      "description": "When it ends, in epoch ms; unset reads the clock once"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RecapEvent"
+      },
+      "description": "Everything that happened, for the chart"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RecapItem"
+      },
+      "description": "What's on the board, in any order – grouped by status, newest first"
+    },
+    "binMinutes": {
+      "type": "number",
+      "description": "Minutes per bar; unset is 15 for six hours or less, else 30 (wider when it would pass 64 bars)"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws the chart at once, without the entrance"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "needsYou": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "approve": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "clearDone": {
+          "type": "string"
+        },
+        "since": {
+          "type": "string"
+        },
+        "yesterday": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "events": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can change, merged over defaultAgentRecapLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RecapEvent": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "type": "number",
+          "description": "When it happened, in epoch ms"
+        },
+        "kind": {
+          "$ref": "#/definitions/RecapKind"
+        },
+        "label": {
+          "type": "string",
+          "description": "What happened, for its marker: \"Tax ID check timed out\""
+        },
+        "notable": {
+          "type": "boolean",
+          "description": "Gets a marker over the chart – by default failed and needs-you events do, done ones don't"
+        }
+      },
+      "required": [
+        "at",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "RecapKind": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "needs-you"
+      ]
+    },
+    "RecapItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What happened, in a few words"
+        },
+        "status": {
+          "$ref": "#/definitions/RecapKind"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line: why, or what came of it"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Which agent"
+        },
+        "at": {
+          "type": "number",
+          "description": "When, in epoch ms"
+        },
+        "href": {
+          "type": "string",
+          "description": "Where Open goes",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

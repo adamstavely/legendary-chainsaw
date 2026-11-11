@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-confetti.json",
+  "title": "tc-confetti",
+  "description": "A celebration burst of confetti for a finished milestone.",
+  "type": "object",
+  "properties": {
+    "fireKey": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "Change this to fire once; never fires on first render"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "click",
+        "none"
+      ],
+      "description": "\"click\" fires when the wrapped content is clicked"
+    },
+    "count": {
+      "type": "number",
+      "description": "Pieces per burst (capped at 300)"
+    },
+    "spread": {
+      "type": "number",
+      "description": "Width of the cone the pieces leave in, in degrees"
+    },
+    "origin": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "string",
+          "const": "self"
+        },
+        {
+          "type": "string",
+          "const": "viewport-top"
+        }
+      ],
+      "description": "Where a burst starts: \"self\" (the wrapped content; the viewport's top when bare), \"viewport-top\", or \"x,y\" in viewport pixels"
+    },
+    "colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "CSS colours for the pieces; by default the chart tokens and the success colour"
+    },
+    "seed": {
+      "type": "number",
+      "description": "Seed for the pattern; each burst uses the next one"
+    },
+    "announce": {
+      "type": "string",
+      "description": "Said politely once per burst, e.g. \"Review closed\""
+    }
+  },
+  "additionalProperties": false
+}

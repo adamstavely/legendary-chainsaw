@@ -15,6 +15,7 @@ Some files import another Trenchcoat component from `@/components/ui/<name>` –
 - **Banner Stack** (`banner-stack.tsx`) – Notices that pile up instead of pushing the page down – the newest on top, older ones peeking smaller and dimmed behind it, spreading into a list on hover or focus and sliding away when dismissed
 - **Blur Crossfade** (`blur-crossfade.tsx`) – Swaps content with a soft blur while the box glides smoothly to the size of what comes next
 - **Collapse** (`collapse.tsx`) – Content that glides open and shut to its real height, with nothing to measure, and can't be reached while shut
+- **Confetti** (`confetti.tsx`) – A celebration for a finished milestone – paper that bursts out of what it wraps or rains from the top of the viewport, flutters and falls in the theme's chart colours on one canvas that's gone when it settles, with words for screen readers and a brief tint instead under reduced motion
 - **Dissolve Clear** (`dissolve-clear.tsx`) – A clear button for a text input – the field empties at once and keeps focus while the old text dissolves letter by letter, with Escape to clear too
 - **Drag Lift** (`drag-lift.tsx`) – Lifts its child while it's dragged – it follows the pointer and leaves a gap, Escape cancels and it glides home, and where it lands is the page's call
 - **Error Shake** (`error-shake.tsx`) – Wraps a field and shakes it once when it turns invalid, with an error outline that pulses and stays and a message that slides in and is announced, never on first load

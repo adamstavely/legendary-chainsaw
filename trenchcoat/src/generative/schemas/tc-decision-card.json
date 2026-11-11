@@ -1,0 +1,188 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-decision-card.json",
+  "title": "tc-decision-card",
+  "description": "One question an agent needs answered before it carries on – numbered options with one recommended, or Approve /\nDecline – docked above the composer, folding into a receipt with Undo once sent.",
+  "type": "object",
+  "properties": {
+    "agent": {
+      "type": "string",
+      "description": "Who is asking: the agent's name"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "The agent's picture (an image URL); unset shows its initials",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "question": {
+      "type": "string",
+      "description": "The question, as the agent asks it"
+    },
+    "context": {
+      "type": "string",
+      "description": "A line or two of context: what the agent found, why it can't go on alone"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "choose"
+      ],
+      "description": "\"choose\" (default): numbered options; \"approve\": Approve and Decline"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DecisionCardOption"
+      },
+      "description": "The options for kind=\"choose\", in the agent's order"
+    },
+    "allowOther": {
+      "type": "boolean",
+      "description": "Offers \"Something else…\" with a short field"
+    },
+    "value": {
+      "type": "string",
+      "description": "The picked option's id (\"other\" for Something else), or null"
+    },
+    "otherText": {
+      "type": "string",
+      "description": "The text of Something else"
+    },
+    "since": {
+      "type": "number",
+      "description": "When the agent asked, in epoch ms – the header says how long it has waited"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, in epoch ms; unset reads the clock, once a minute"
+    },
+    "queue": {
+      "type": "number",
+      "description": "How many decisions wait in all; above 1 the header shows \"1 of 3\" with previous / next"
+    },
+    "position": {
+      "type": "number",
+      "description": "Which of the waiting decisions this is, from 0"
+    },
+    "sent": {
+      "type": "boolean",
+      "description": "Sent: the card shows its receipt"
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "other": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "choice"
+      ],
+      "additionalProperties": false,
+      "description": "What was sent – the receipt reads it"
+    },
+    "undoMs": {
+      "type": "number",
+      "description": "How long Undo stays on the receipt, in ms (0 hides it)"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "later": {
+          "type": "string"
+        },
+        "approve": {
+          "type": "string"
+        },
+        "decline": {
+          "type": "string"
+        },
+        "confirmDecline": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        },
+        "other": {
+          "type": "string"
+        },
+        "otherPlaceholder": {
+          "type": "string"
+        },
+        "reasonPlaceholder": {
+          "type": "string"
+        },
+        "recommended": {
+          "type": "string"
+        },
+        "chose": {
+          "type": "string"
+        },
+        "approved": {
+          "type": "string"
+        },
+        "declined": {
+          "type": "string"
+        },
+        "sent": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        },
+        "pick": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can change, merged over defaultDecisionCardLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DecisionCardOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line under the label: what this option means or costs"
+        },
+        "recommended": {
+          "type": "boolean",
+          "description": "The agent's suggestion – at most one; shows a Recommended chip and takes the first focus"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

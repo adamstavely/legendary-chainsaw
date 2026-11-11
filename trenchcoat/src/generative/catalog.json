@@ -177,6 +177,15 @@
     ]
   },
   {
+    "tag": "tc-agent-recap",
+    "name": "AgentRecap",
+    "description": "What your agents did while you were away – a chart of the period with a marker per notable event, then Needs you,",
+    "events": [
+      "tc-item-action",
+      "tc-clear-done"
+    ]
+  },
+  {
     "tag": "tc-agent-scene",
     "name": "AgentScene",
     "description": "The assistant in a small scene, for all clear, working and offline.",
@@ -419,6 +428,16 @@
     "name": "AwaitingReview",
     "description": "A document with an hourglass on it, for content that's held until someone approves it.",
     "events": []
+  },
+  {
+    "tag": "tc-away-summary",
+    "name": "AwaySummary",
+    "description": "The \"while you were away\" card for a chat thread: how long you were gone, then what needs you, what failed and",
+    "events": [
+      "tc-item-action",
+      "tc-expanded-change",
+      "tc-seen"
+    ]
   },
   {
     "tag": "tc-badge-pop",
@@ -882,6 +901,14 @@
     ]
   },
   {
+    "tag": "tc-confetti",
+    "name": "Confetti",
+    "description": "A celebration burst of confetti for a finished milestone.",
+    "events": [
+      "tc-confetti-done"
+    ]
+  },
+  {
     "tag": "tc-confidence-brief",
     "name": "ConfidenceBrief",
     "description": "An answer explained for someone who wasn't in the session: the conclusion, the kind of uncertainty, what would",
@@ -1079,6 +1106,18 @@
     "description": "A typical day as a strip of blocks by kind of place or activity, one row per kind of day, with hour ticks, a legend,",
     "events": [
       "tc-select"
+    ]
+  },
+  {
+    "tag": "tc-decision-card",
+    "name": "DecisionCard",
+    "description": "One question an agent needs answered before it carries on – numbered options with one recommended, or Approve /",
+    "events": [
+      "tc-value-change",
+      "tc-decision",
+      "tc-defer",
+      "tc-undo",
+      "tc-position-change"
     ]
   },
   {
@@ -1763,6 +1802,15 @@
       "tc-open-change",
       "tc-copy",
       "tc-download"
+    ]
+  },
+  {
+    "tag": "tc-judge-bracket",
+    "name": "JudgeBracket",
+    "description": "An LLM judge picking the best of several attempts as a single-elimination bracket – rounds of matches that fill as",
+    "events": [
+      "tc-match-change",
+      "tc-accept"
     ]
   },
   {
@@ -2770,6 +2818,15 @@
     "events": [
       "tc-copy",
       "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-running-now",
+    "name": "RunningNow",
+    "description": "A live status of agents' background tasks for a header or sidebar – a quiet pill with how many are running and how",
+    "events": [
+      "tc-task-action",
+      "tc-open-change"
     ]
   },
   {
