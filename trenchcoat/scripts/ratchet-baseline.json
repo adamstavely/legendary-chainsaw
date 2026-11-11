@@ -132,6 +132,9 @@
     "literal line-height": 7,
     "literal spacing": 11
   },
+  "src/elements/agent-recap.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/agent-steering.ts": {
     "clock/environment read": 3,
     "literal spacing": 2
@@ -167,6 +170,9 @@
   },
   "src/elements/autonomy-dial.ts": {
     "literal spacing": 1
+  },
+  "src/elements/away-summary.ts": {
+    "clock/environment read": 1
   },
   "src/elements/billing-schedule.ts": {
     "literal spacing": 19
@@ -233,6 +239,9 @@
     "clock/environment read": 1,
     "literal line-height": 3,
     "literal spacing": 5
+  },
+  "src/elements/decision-card.ts": {
+    "clock/environment read": 1
   },
   "src/elements/decision-inbox.ts": {
     "literal spacing": 2
@@ -425,6 +434,9 @@
     "clock/environment read": 1
   },
   "src/elements/routine-form.ts": {
+    "clock/environment read": 1
+  },
+  "src/elements/running-now.ts": {
     "clock/environment read": 1
   },
   "src/elements/saved-search-alerts.ts": {

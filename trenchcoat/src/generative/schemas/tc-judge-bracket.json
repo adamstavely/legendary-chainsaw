@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-judge-bracket.json",
+  "title": "tc-judge-bracket",
+  "description": "An LLM judge picking the best of several attempts as a single-elimination bracket – rounds of matches that fill as\nverdicts stream in, a comparison of any match with the judge's reason and confidence, and the champion to use.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "task": {
+      "type": "string",
+      "description": "What every attempt tried to do – the quiet line under the heading"
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JudgeAttempt"
+      },
+      "description": "The attempts, 2 to 16, in seeding order – the first ones get the byes"
+    },
+    "verdicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JudgeMatch"
+      },
+      "description": "The judge's matches so far – one verdict per match – streamed in as they're judged (`matches` is the DOM's)"
+    },
+    "match": {
+      "type": "string",
+      "description": "The match whose comparison is open – its key, \"<round>-<match>\" (both from 1) – or null"
+    },
+    "accepted": {
+      "type": "string",
+      "description": "The id of the attempt in use, once \"Use this answer\" was chosen"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "round": {
+          "not": {}
+        },
+        "final": {
+          "type": "string"
+        },
+        "semiFinal": {
+          "type": "string"
+        },
+        "quarterFinal": {
+          "type": "string"
+        },
+        "bye": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "upNext": {
+          "type": "string"
+        },
+        "judging": {
+          "type": "string"
+        },
+        "champion": {
+          "type": "string"
+        },
+        "championWaiting": {
+          "type": "string"
+        },
+        "use": {
+          "type": "string"
+        },
+        "inUse": {
+          "type": "string"
+        },
+        "picked": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultJudgeBracketLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "JudgeAttempt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short name – \"Attempt C\""
+        },
+        "model": {
+          "type": "string",
+          "description": "The model behind it, shown under the name"
+        },
+        "summary": {
+          "type": "string",
+          "description": "What it answered, in a sentence or two – shown in the comparison and on the champion's card"
+        },
+        "score": {
+          "type": "number",
+          "description": "A score the judge or a grader gave it, if any"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "JudgeMatch": {
+      "type": "object",
+      "properties": {
+        "round": {
+          "type": "number",
+          "description": "1 for the first round, counting up to the final"
+        },
+        "a": {
+          "type": "string",
+          "description": "The two attempts' ids, in either order"
+        },
+        "b": {
+          "type": "string"
+        },
+        "winner": {
+          "type": "string",
+          "description": "The id of the attempt the judge preferred; left out while it's judging"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why, in the judge's words"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the judge was, 0–1"
+        }
+      },
+      "required": [
+        "round",
+        "a",
+        "b"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

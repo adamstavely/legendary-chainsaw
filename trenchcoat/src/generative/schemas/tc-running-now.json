@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-running-now.json",
+  "title": "tc-running-now",
+  "description": "A live status of agents' background tasks for a header or sidebar – a quiet pill with how many are running and how\nmany need you, opening a panel of the tasks grouped by Needs you, Running and Recently done.",
+  "type": "object",
+  "properties": {
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunningTask"
+      },
+      "description": "The tasks, in any order – the panel groups them and keeps their order within a group"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The panel's title, and the start of the pill's description"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the panel is open"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; leave it unset and the element keeps its own clock while the panel is open"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "needsYou": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "allDone": {
+          "type": "string"
+        },
+        "idle": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "review": {
+          "type": "string"
+        },
+        "stop": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "working": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultRunningNowLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RunningTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What the task is, in a few words: \"Check vendor records\""
+        },
+        "agent": {
+          "type": "string",
+          "description": "The agent doing it"
+        },
+        "status": {
+          "$ref": "#/definitions/RunningTaskStatus"
+        },
+        "progress": {
+          "type": "number",
+          "description": "0–1 while it runs; left out, its ring turns"
+        },
+        "started": {
+          "type": "number",
+          "description": "When it started, epoch ms – for the elapsed time"
+        },
+        "ended": {
+          "type": "number",
+          "description": "When it finished, epoch ms – stops its clock"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "RunningTaskStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "needs-you",
+        "running"
+      ]
+    }
+  }
+}

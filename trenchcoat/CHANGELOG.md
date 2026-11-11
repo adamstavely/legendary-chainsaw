@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.20.0 – Agent attention pieces and confetti
+
+- **Decision Card:** one question an agent needs answered, docked above the composer – numbered options with one
+  recommended, 1–9 to pick, Approve / Decline with a reason, a queue, and a receipt with Undo.
+- **Away Summary:** the "while you were away" card at the top of a chat thread – what needs you, what failed, what's done.
+- **Agent Recap:** the same for a home page – a stacked chart of the period with notable events marked, and Needs you,
+  Failed and Done acted on in place. Agent Inbox's recap view is part of its inbox; this is a card of its own.
+- **Judge Bracket:** how an LLM judge picks the best of several attempts, as a tournament that fills as verdicts stream in.
+- **Running Now:** a header pill, "3 running · 2 need you", opening a panel of agents' background tasks.
+- **Confetti (motion):** a celebration burst from what it wraps or the top of the viewport, on one canvas that's removed
+  when it settles; a brief tint instead under reduced motion.
+- **Standalone gallery and `docs/`:** rebuilt with the new pieces.
+
 ## 0.19.0 – Charts, AI pieces, a signature pad and transitions
 
 - **Charts:** Stage Bars (a funnel as a list of pills, with stat tiles and a period switch), Week Bars (a week of daily

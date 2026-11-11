@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-away-summary.json",
+  "title": "tc-away-summary",
+  "description": "The \"while you were away\" card for a chat thread: how long you were gone, then what needs you, what failed and\nwhat's done – acted on in place.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "since": {
+      "type": "number",
+      "description": "When the person left, in epoch ms"
+    },
+    "now": {
+      "type": "number",
+      "description": "When they came back, in epoch ms; unset reads the clock once"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AwayItem"
+      },
+      "description": "What happened, in any order – grouped by status, newest first within a group"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "The Done group is open"
+    },
+    "seen": {
+      "type": "boolean",
+      "description": "Mark all seen was pressed: the card folds to one line"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for times of day"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "away": {
+          "type": "string"
+        },
+        "since": {
+          "type": "string"
+        },
+        "needsYou": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "review": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "markSeen": {
+          "type": "string"
+        },
+        "nothing": {
+          "type": "string"
+        },
+        "caughtUp": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can change, merged over defaultAwaySummaryLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AwayItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What happened, in a few words: \"Vendor check needs a tax ID\""
+        },
+        "status": {
+          "$ref": "#/definitions/AwayItemStatus"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line: why, or what came of it"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Which agent did it"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened, in epoch ms"
+        },
+        "href": {
+          "type": "string",
+          "description": "Where Open goes (done) – also the action link of a needs-you item",
+          "format": "uri-reference"
+        },
+        "action": {
+          "type": "string",
+          "description": "The needs-you button's label – \"Review\" by default"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AwayItemStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "needs-you"
+      ]
+    }
+  }
+}
