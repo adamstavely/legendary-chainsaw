@@ -9,7 +9,7 @@
 System posture and the emergency stop – what's running, a confirmed Stop that says what it halts, and resume
 
 - **Element:** `<tc-kill-switch>`
-- **Size:** 9.9 KB gzip · 35.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.0 KB gzip · 35.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -347,22 +347,22 @@ Billing agent”.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 26.7 KB | 7.7 KB |
+| **This component alone** | 26.7 KB | 7.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **35.0 KB** | **10.0 KB** |
-| With Lit – the first component on a page | 56.7 KB | 17.2 KB |
+| **Added to a page that already has Lit** | **35.1 KB** | **10.0 KB** |
+| With Lit – the first component on a page | 56.9 KB | 17.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -370,13 +370,13 @@ Billing agent”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 71 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of running replaced |
-| First on the page | 9.3 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.5 ms | running: first render, 743 nodes; update 0.4 ms |
-| 1,000 items | 37 ms | running: first render, 7,043 nodes; update 4.1 ms |
+| First render | **3.0 ms** | the gallery demo's data, 71 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of running replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 14 ms | running: first render, 743 nodes; update 1.0 ms |
+| 1,000 items | 49 ms | running: first render, 7,043 nodes; update 4.9 ms |
 
-1,000 items of running: 37 ms, 7,043 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of running: 49 ms, 7,043 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

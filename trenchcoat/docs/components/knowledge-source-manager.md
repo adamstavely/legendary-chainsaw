@@ -9,7 +9,7 @@
 Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
 
 - **Element:** `<tc-knowledge-source-manager>`
-- **Size:** 13.3 KB gzip · 45.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.3 KB gzip · 46.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -459,7 +459,7 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -467,15 +467,15 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 | --- | --- | --- |
 | **This component alone** | 35.8 KB | 10.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **45.9 KB** | **13.3 KB** |
-| With Lit – the first component on a page | 69.0 KB | 21.0 KB |
+| **Added to a page that already has Lit** | **46.0 KB** | **13.3 KB** |
+| With Lit – the first component on a page | 69.1 KB | 20.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -483,12 +483,12 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 160 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of sources replaced |
-| First on the page | 9.2 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 6.4 ms | sources: first render, 820 nodes; update 2.4 ms |
+| First render | **3.7 ms** | the gallery demo's data, 160 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of sources replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 9.3 ms | sources: first render, 820 nodes; update 2.8 ms |
 
-Windowed: 10,000 items of sources render 820 nodes in 6.4 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of sources render 820 nodes in 9.3 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

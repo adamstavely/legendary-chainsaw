@@ -9,7 +9,7 @@
 A moment to think before relying on AI – state the task and what's at stake, say what you believe, restate the answer, or name what you'll verify
 
 - **Element:** `<tc-reflection-gate>`
-- **Size:** 12.5 KB gzip · 44.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.5 KB gzip · 44.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -513,22 +513,22 @@ In the short version the form's name includes “Short version”, the one field
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 36.5 KB | 10.3 KB |
+| **This component alone** | 36.5 KB | 10.2 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **44.1 KB** | **12.5 KB** |
-| With Lit – the first component on a page | 64.7 KB | 19.3 KB |
+| **Added to a page that already has Lit** | **44.2 KB** | **12.5 KB** |
+| With Lit – the first component on a page | 64.9 KB | 19.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -536,11 +536,11 @@ In the short version the form's name includes “Short version”, the one field
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 40 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of claims replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | claims: first render, 40 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | claims: first render, 40 nodes; update 0.0 ms |
+| First render | **2.3 ms** | the gallery demo's data, 40 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of claims replaced |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.3 ms | claims: first render, 40 nodes; update 0.2 ms |
+| 1,000 items | 1.9 ms | claims: first render, 40 nodes; update 0.2 ms |
 
 What it renders doesn't grow with claims (tested to 1,000 items).
 

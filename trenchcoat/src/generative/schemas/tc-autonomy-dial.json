@@ -16,8 +16,8 @@
       "type": "number",
       "enum": [
         0,
-        2,
-        1
+        1,
+        2
       ],
       "description": "0 Ask every time · 1 Ask before risky actions · 2 Full auto"
     },

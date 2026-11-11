@@ -9,7 +9,7 @@
 Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 
 - **Element:** `<tc-background-tasks>`
-- **Size:** 14.8 KB gzip · 48.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.0 KB gzip · 48.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -462,7 +462,7 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -470,16 +470,16 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 | --- | --- | --- |
 | **This component alone** | 29.0 KB | 9.1 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **48.0 KB** | **14.9 KB** |
-| With Lit – the first component on a page | 70.5 KB | 22.4 KB |
+| **Added to a page that already has Lit** | **48.3 KB** | **15.0 KB** |
+| With Lit – the first component on a page | 70.9 KB | 22.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,12 +487,12 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of tasks replaced |
-| First on the page | 7.1 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 4.4 ms | tasks: first render, 10 nodes; update 1.7 ms |
+| First render | **1.1 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of tasks replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 9.1 ms | tasks: first render, 10 nodes; update 3.7 ms |
 
-Windowed: 10,000 items of tasks render 10 nodes in 4.4 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of tasks render 10 nodes in 9.1 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

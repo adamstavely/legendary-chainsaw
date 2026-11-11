@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-pixel-loader.json",
+  "title": "tc-pixel-loader",
+  "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "What the work is, in a few words"
+    },
+    "pattern": {
+      "type": "string",
+      "enum": [
+        "dots",
+        "drive",
+        "orbit",
+        "wave"
+      ],
+      "description": "How the dots move: a diagonal \"wave\", a lit dot that \"drive\"s a snake path, a seeded \"dots\" twinkle, or an \"orbit\" round the edge"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "done",
+        "error",
+        "working"
+      ],
+      "description": "\"working\" animates and counts; \"done\" settles into a check and stops the clock; \"error\" into a cross"
+    },
+    "started": {
+      "type": "number",
+      "description": "When the work started, in epoch ms; by default when the loader connected (or went back to working)"
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time, in epoch ms – given, the loader keeps no clock of its own and shows the time up to it"
+    },
+    "hideTime": {
+      "type": "boolean",
+      "description": "Hides the elapsed time"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "md",
+        "sm"
+      ],
+      "description": "\"md\" is the default; \"sm\" fits inside a chat bubble or a row"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "done": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename the words for how it ended, over the defaults"
+    }
+  },
+  "additionalProperties": false
+}

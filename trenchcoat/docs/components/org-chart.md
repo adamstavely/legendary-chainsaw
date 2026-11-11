@@ -9,7 +9,7 @@
 Who reports to whom – people's cards joined by reporting lines, branches that fold, search that opens the way to matches, a picked person's manager and reports, pan and zoom, and an outline when narrow
 
 - **Element:** `<tc-org-chart>`
-- **Size:** 11.4 KB gzip · 39.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.4 KB gzip · 39.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -431,7 +431,7 @@ Follows the WAI-ARIA [Tree view pattern](https://www.w3.org/WAI/ARIA/apg/pattern
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -439,7 +439,7 @@ Follows the WAI-ARIA [Tree view pattern](https://www.w3.org/WAI/ARIA/apg/pattern
 | --- | --- | --- |
 | **This component alone** | 31.3 KB | 9.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -448,8 +448,8 @@ Follows the WAI-ARIA [Tree view pattern](https://www.w3.org/WAI/ARIA/apg/pattern
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **39.1 KB** | **11.4 KB** |
-| With Lit – the first component on a page | 59.8 KB | 18.1 KB |
+| **Added to a page that already has Lit** | **39.2 KB** | **11.4 KB** |
+| With Lit – the first component on a page | 59.9 KB | 18.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -457,13 +457,13 @@ Follows the WAI-ARIA [Tree view pattern](https://www.w3.org/WAI/ARIA/apg/pattern
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of people replaced |
-| First on the page | 9.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.1 ms | people: first render, 267 nodes; update 0.2 ms |
-| 1,000 items | 8.3 ms | people: first render, 1,451 nodes; update 1.4 ms |
+| First render | **3.6 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of people replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.4 ms | people: first render, 267 nodes; update 0.7 ms |
+| 1,000 items | 17 ms | people: first render, 1,451 nodes; update 2.2 ms |
 
-1,000 items of people: 8.3 ms, 1,451 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of people: 17 ms, 1,451 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

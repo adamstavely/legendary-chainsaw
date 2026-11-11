@@ -9,7 +9,7 @@
 The exhibits behind a matter – reference, title, type, source with its grade, date, holder and a status in words, each opening onto its chain of custody with every step's hash, copyable, and whether the hashes agree
 
 - **Element:** `<tc-evidence-list>`
-- **Size:** 10.0 KB gzip · 32.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.1 KB gzip · 32.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -441,7 +441,7 @@ Opening, closing and copying are confirmed in a polite status message.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -449,15 +449,15 @@ Opening, closing and copying are confirmed in a polite status message.
 | --- | --- | --- |
 | **This component alone** | 24.9 KB | 7.8 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **32.8 KB** | **10.1 KB** |
-| With Lit – the first component on a page | 54.6 KB | 17.3 KB |
+| **Added to a page that already has Lit** | **32.9 KB** | **10.1 KB** |
+| With Lit – the first component on a page | 54.7 KB | 17.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -465,13 +465,13 @@ Opening, closing and copying are confirmed in a polite status message.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.1 ms** | the gallery demo's data, 236 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of exhibits replaced |
-| First on the page | 9.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 15 ms | exhibits: first render, 3,043 nodes; update 5.6 ms |
-| 1,000 items | 156 ms | exhibits: first render, 29,893 nodes; update 56 ms |
+| First render | **4.6 ms** | the gallery demo's data, 236 DOM nodes – to layout, median of 7 |
+| Typical update | **1.3 ms** | one item of exhibits replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 28 ms | exhibits: first render, 3,043 nodes; update 7.4 ms |
+| 1,000 items | 153 ms | exhibits: first render, 29,893 nodes; update 54 ms |
 
-1,000 items of exhibits: 156 ms. It renders every item, so a first render passes 50 ms (a long task) at about 320 items – page or filter longer lists.
+1,000 items of exhibits: 153 ms. It renders every item, so a first render passes 50 ms (a long task) at about 330 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

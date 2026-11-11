@@ -9,7 +9,7 @@
 The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 
 - **Element:** `<tc-mention-picker>`
-- **Size:** 13.0 KB gzip · 40.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.0 KB gzip · 40.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -368,7 +368,7 @@ readers – the status says the note. The picker gives back the field's own attr
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -376,7 +376,7 @@ readers – the status says the note. The picker gives back the field's own attr
 | --- | --- | --- |
 | **This component alone** | 32.3 KB | 10.5 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 1.1 KB | – |
@@ -385,8 +385,8 @@ readers – the status says the note. The picker gives back the field's own attr
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **40.4 KB** | **13.0 KB** |
-| With Lit – the first component on a page | 62.3 KB | 20.3 KB |
+| **Added to a page that already has Lit** | **40.5 KB** | **13.0 KB** |
+| With Lit – the first component on a page | 62.5 KB | 20.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -394,11 +394,11 @@ readers – the status says the note. The picker gives back the field's own attr
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of triggers replaced |
-| First on the page | 2.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.4 ms | triggers: first render, 16 nodes; update 0.0 ms |
-| 1,000 items | 0.4 ms | triggers: first render, 16 nodes; update 0.0 ms |
+| First render | **0.9 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of triggers replaced |
+| First on the page | 5.2 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.9 ms | triggers: first render, 16 nodes; update 0.1 ms |
+| 1,000 items | 0.9 ms | triggers: first render, 16 nodes; update 0.1 ms |
 
 What it renders doesn't grow with triggers (tested to 1,000 items).
 

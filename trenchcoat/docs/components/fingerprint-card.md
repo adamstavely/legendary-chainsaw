@@ -9,7 +9,7 @@
 A ten-print card – each finger's print and status in ANSI/NIST positions, captured with its NFIQ quality, poor, not captured, unable to print or bandaged, and a finger's detail
 
 - **Element:** `<tc-fingerprint-card>`
-- **Size:** 9.9 KB gzip · 31.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.0 KB gzip · 31.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -432,15 +432,15 @@ detail”. The drawn prints, marks and quality bars are hidden; the words read.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 22.6 KB | 7.3 KB |
+| **This component alone** | 22.6 KB | 7.2 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
@@ -449,8 +449,8 @@ detail”. The drawn prints, marks and quality bars are hidden; the words read.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **31.4 KB** | **10.0 KB** |
-| With Lit – the first component on a page | 51.0 KB | 16.3 KB |
+| **Added to a page that already has Lit** | **31.5 KB** | **10.0 KB** |
+| With Lit – the first component on a page | 51.1 KB | 16.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -458,11 +458,11 @@ detail”. The drawn prints, marks and quality bars are hidden; the words read.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 276 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of prints replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.9 ms | prints: first render, 276 nodes; update 0.2 ms |
-| 1,000 items | 1.8 ms | prints: first render, 276 nodes; update 0.2 ms |
+| First render | **3.5 ms** | the gallery demo's data, 276 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of prints replaced |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.9 ms | prints: first render, 276 nodes; update 0.5 ms |
+| 1,000 items | 3.0 ms | prints: first render, 276 nodes; update 0.5 ms |
 
 What it renders doesn't grow with prints (tested to 1,000 items).
 

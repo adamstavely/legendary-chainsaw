@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-badge-pop.json",
+  "title": "tc-badge-pop",
+  "description": "A count badge that pops when the count rises and rolls its digits.",
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "number",
+      "description": "The count; 0 hides the badge"
+    },
+    "max": {
+      "type": "number",
+      "description": "Above this it reads \"<max>+\""
+    },
+    "dot": {
+      "type": "boolean",
+      "description": "A plain dot instead of the number"
+    },
+    "position": {
+      "type": "string",
+      "enum": [
+        "bottom-end",
+        "bottom-start",
+        "top-end",
+        "top-start"
+      ],
+      "description": "Which corner it sits on"
+    },
+    "label": {
+      "type": "string",
+      "description": "The word after the count for screen readers: \"3 unread\""
+    },
+    "announceDelay": {
+      "type": "number",
+      "description": "How long the count must hold before it's announced, in ms"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for writing the number"
+    }
+  },
+  "additionalProperties": false
+}

@@ -9,7 +9,7 @@
 Where every agent is right now – a live timeline with a lane per agent, tasks growing into “now”, hand-offs drawn between agents and approvals right on the block
 
 - **Element:** `<tc-agent-lanes>`
-- **Size:** 13.3 KB gzip · 45.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.4 KB gzip · 45.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -465,7 +465,7 @@ moves.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -473,14 +473,14 @@ moves.
 | --- | --- | --- |
 | **This component alone** | 37.0 KB | 10.9 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **45.4 KB** | **13.4 KB** |
-| With Lit – the first component on a page | 67.9 KB | 20.9 KB |
+| **Added to a page that already has Lit** | **45.5 KB** | **13.4 KB** |
+| With Lit – the first component on a page | 68.1 KB | 20.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -488,13 +488,13 @@ moves.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 115 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of tasks replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.1 ms | tasks: first render, 856 nodes; update 2.3 ms |
-| 1,000 items | 42 ms | tasks: first render, 7,876 nodes; update 22 ms |
+| First render | **3.5 ms** | the gallery demo's data, 115 DOM nodes – to layout, median of 7 |
+| Typical update | **1.4 ms** | one item of tasks replaced |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | tasks: first render, 856 nodes; update 3.9 ms |
+| 1,000 items | 51 ms | tasks: first render, 7,876 nodes; update 24 ms |
 
-1,000 items of tasks: 42 ms, 7,876 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of tasks: 51 ms. It renders every item, so a first render passes 50 ms (a long task) at about 980 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 5 React commits (clean), 5 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 
 - **Element:** `<tc-permission-request>`
-- **Size:** 14.0 KB gzip · 55.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.1 KB gzip · 55.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -496,7 +496,7 @@ Review due by Fri 31 Oct”. The time left is on screen, not announced, as with 
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -504,14 +504,14 @@ Review due by Fri 31 Oct”. The time left is on screen, not announced, as with 
 | --- | --- | --- |
 | **This component alone** | 46.7 KB | 11.6 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **55.1 KB** | **14.1 KB** |
-| With Lit – the first component on a page | 77.8 KB | 21.6 KB |
+| **Added to a page that already has Lit** | **55.3 KB** | **14.1 KB** |
+| With Lit – the first component on a page | 78.0 KB | 21.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -519,11 +519,11 @@ Review due by Fri 31 Oct”. The time left is on screen, not announced, as with 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
+| First render | **1.3 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of preview replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.1 ms | preview: first render, 68 nodes; update 0.1 ms |
-| 1,000 items | 1.0 ms | preview: first render, 68 nodes; update 0.3 ms |
+| First on the page | 29 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.7 ms | preview: first render, 68 nodes; update 0.8 ms |
+| 1,000 items | 2.6 ms | preview: first render, 68 nodes; update 0.8 ms |
 
 What it renders doesn't grow with preview (tested to 1,000 items).
 

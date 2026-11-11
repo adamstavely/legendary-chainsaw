@@ -9,7 +9,7 @@
 The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 
 - **Element:** `<tc-notifications>`
-- **Size:** 18.0 KB gzip · 60.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.0 KB gzip · 61.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -519,16 +519,16 @@ and “Notification dismissed” after those actions.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 43.4 KB | 12.5 KB |
+| **This component alone** | 43.5 KB | 12.4 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -538,8 +538,8 @@ and “Notification dismissed” after those actions.
 | `internal/trigger-tip` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **60.8 KB** | **18.0 KB** |
-| With Lit – the first component on a page | 82.7 KB | 25.1 KB |
+| **Added to a page that already has Lit** | **61.3 KB** | **18.0 KB** |
+| With Lit – the first component on a page | 83.2 KB | 25.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -547,11 +547,11 @@ and “Notification dismissed” after those actions.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 8 DOM nodes – to layout, median of 7 |
+| First render | **1.0 ms** | the gallery demo's data, 8 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of items replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.5 ms | items: first render, 8 nodes; update 0.3 ms |
-| 1,000 items | 2.0 ms | items: first render, 8 nodes; update 0.8 ms |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.3 ms | items: first render, 8 nodes; update 0.3 ms |
+| 1,000 items | 2.6 ms | items: first render, 8 nodes; update 0.8 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 

@@ -9,7 +9,7 @@
 A calendar of calendars: many people's Google, Outlook, Exchange and iCal calendars in one Day, Week, Month, Agenda or People view, with show/hide per calendar, conflicts across a person's calendars, and create, edit, drag-to-move and delete on writable ones
 
 - **Element:** `<tc-multi-calendar>`
-- **Size:** 27.0 KB gzip · 101.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.2 KB gzip · 101.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -533,16 +533,16 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 82.5 KB | 21.0 KB |
+| **This component alone** | 82.5 KB | 20.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/calendar-layout` · Shared Trenchcoat code | 2.6 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -552,8 +552,8 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **101.0 KB** | **27.1 KB** |
-| With Lit – the first component on a page | 122.8 KB | 34.2 KB |
+| **Added to a page that already has Lit** | **101.4 KB** | **27.2 KB** |
+| With Lit – the first component on a page | 123.1 KB | 34.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -561,13 +561,13 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **8.9 ms** | the gallery demo's data, 1,368 DOM nodes – to layout, median of 7 |
+| First render | **9.1 ms** | the gallery demo's data, 1,368 DOM nodes – to layout, median of 7 |
 | Typical update | **1.5 ms** | one item of events replaced |
-| First on the page | 21 ms | default properties; includes adding its CSS to the document |
-| 100 items | 14 ms | events: first render, 2,008 nodes; update 2.1 ms |
-| 1,000 items | 85 ms | events: first render, 9,208 nodes; update 8.9 ms |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | events: first render, 2,008 nodes; update 2.0 ms |
+| 1,000 items | 82 ms | events: first render, 9,208 nodes; update 9.0 ms |
 
-1,000 items of events: 85 ms. It renders every item, so a first render passes 50 ms (a long task) at about 590 items – page or filter longer lists.
+1,000 items of events: 82 ms. It renders every item, so a first render passes 50 ms (a long task) at about 610 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

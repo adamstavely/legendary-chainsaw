@@ -9,7 +9,7 @@
 Animated scene of a client task branching into subtasks, notes and assigned roles; follows the page theme (light or dark scene); `theme` pins one
 
 - **Element:** `<tc-project-flow>`
-- **Size:** 26.2 KB gzip · 94.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 26.3 KB gzip · 94.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -270,7 +270,7 @@ scene is off screen or the tab is hidden.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -278,14 +278,14 @@ scene is off screen or the tab is hidden.
 | --- | --- | --- |
 | **This piece alone** | 87.2 KB | 23.7 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **94.3 KB** | **26.5 KB** |
-| With Lit – the first component on a page | 115.1 KB | 34.0 KB |
+| **Added to a page that already has Lit** | **94.4 KB** | **26.3 KB** |
+| With Lit – the first component on a page | 115.3 KB | 33.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -293,9 +293,9 @@ scene is off screen or the tab is hidden.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.2 ms** | the gallery demo's data, 213 DOM nodes – to layout, median of 7 |
+| First render | **2.1 ms** | the gallery demo's data, 213 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

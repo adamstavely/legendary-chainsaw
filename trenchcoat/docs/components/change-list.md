@@ -9,7 +9,7 @@
 Proposed code changes as compact rows – state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.
 
 - **Element:** `<tc-change-list>`
-- **Size:** 12.3 KB gzip · 42.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.5 KB gzip · 42.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -417,7 +417,7 @@ and the checks in words. More is named for its row, says it opens a menu and whe
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -425,16 +425,16 @@ and the checks in words. More is named for its row, says it opens a menu and whe
 | --- | --- | --- |
 | **This component alone** | 14.9 KB | 5.3 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [check-status](check-status.md) · Element it renders | 10.4 KB | – |
-| **Added to a page that already has Lit** | **42.0 KB** | **12.4 KB** |
-| With Lit – the first component on a page | 63.7 KB | 19.4 KB |
+| **Added to a page that already has Lit** | **42.4 KB** | **12.5 KB** |
+| With Lit – the first component on a page | 64.0 KB | 19.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -442,11 +442,11 @@ and the checks in words. More is named for its row, says it opens a menu and whe
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of items replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.3 ms | items: first render, 157 nodes; update 0.2 ms |
-| 1,000 items | 1.2 ms | items: first render, 157 nodes; update 0.3 ms |
+| First render | **4.0 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of items replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.6 ms | items: first render, 157 nodes; update 0.8 ms |
+| 1,000 items | 2.6 ms | items: first render, 157 nodes; update 0.4 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 

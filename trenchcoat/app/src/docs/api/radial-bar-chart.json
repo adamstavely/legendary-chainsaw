@@ -38,6 +38,30 @@
      "readonly": false
     },
     {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "RadialBarVariant",
+     "default": "\"bars\"",
+     "description": "\"bars\" (open rings named where they start) or \"rings\" (activity rings with a tile each)",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": null,
+     "type": "Accessor<T, number> | undefined",
+     "default": "undefined",
+     "description": "Each item's own target – a full ring – for the rings variant; by default `max`",
+     "readonly": false
+    },
+    {
+     "name": "glyph",
+     "attribute": null,
+     "type": "Accessor<T, string> | undefined",
+     "default": "undefined",
+     "description": "The short mark drawn where each activity ring starts; by default the first letter of its label",
+     "readonly": false
+    },
+    {
      "name": "heading",
      "attribute": "heading",
      "type": "string",
@@ -217,12 +241,66 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-rbr-ring-tint",
+     "value": "18%",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rbr-lap-mix",
+     "value": "70%",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rbr-lap-ink",
+     "value": "var(--tc-zinc-950)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rbr-tile-min",
+     "value": "112px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-size-lg",
     "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-strong",
+    "--tc-plot-bg",
     "--tc-plot-focus",
-    "--tc-plot-grid"
+    "--tc-plot-grid",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-rbr-ink",
+    "--tc-space-0-5",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-on-tray",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-zinc-950"
    ]
   }
  ],
@@ -292,6 +370,8 @@
    "data": [
     "label",
     "value",
+    "target",
+    "glyph",
     "data",
     "highlight",
     "format",
@@ -305,6 +385,10 @@
     {
      "name": "sweep",
      "attribute": "sweep"
+    },
+    {
+     "name": "variant",
+     "attribute": "variant"
     },
     {
      "name": "heading",
@@ -436,6 +520,7 @@
     "progressive": false,
     "why": "Tints and washes mixed from the tokens.",
     "via": [
+     "itself",
      "internal/chart/element",
      "tokens.css"
     ]
@@ -471,6 +556,7 @@
     "progressive": false,
     "why": "Focus rings for keyboard users.",
     "via": [
+     "itself",
      "internal/kit",
      "internal/chart/element"
     ]
@@ -505,6 +591,7 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
+     "itself",
      "internal/base",
      "internal/chart/element",
      "tokens.css"
@@ -631,7 +718,7 @@
   "windowed": false
  },
  "size": {
-  "min": 45140,
-  "gzip": 15757
+  "min": 52273,
+  "gzip": 17560
  }
 }

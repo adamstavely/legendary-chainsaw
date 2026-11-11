@@ -9,7 +9,7 @@
 Saved prompt templates with variables – type straight into the sentence, watch the finished prompt assemble below, and use it once every variable is filled
 
 - **Element:** `<tc-prompt-library>`
-- **Size:** 13.4 KB gzip · 57.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.4 KB gzip · 57.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -512,7 +512,7 @@ prompt”. A status region announces “All variables filled”, “Prompt copie
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -520,7 +520,7 @@ prompt”. A status region announces “All variables filled”, “Prompt copie
 | --- | --- | --- |
 | **This component alone** | 50.2 KB | 11.3 KB |
 | Lit · the library every element is built on, the parts it uses | 21.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -528,8 +528,8 @@ prompt”. A status region announces “All variables filled”, “Prompt copie
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **57.5 KB** | **13.4 KB** |
-| With Lit – the first component on a page | 80.0 KB | 20.8 KB |
+| **Added to a page that already has Lit** | **57.6 KB** | **13.4 KB** |
+| With Lit – the first component on a page | 80.1 KB | 20.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -537,13 +537,13 @@ prompt”. A status region announces “All variables filled”, “Prompt copie
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 89 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of templates replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.9 ms | templates: first render, 374 nodes; update 0.4 ms |
-| 1,000 items | 22 ms | templates: first render, 3,074 nodes; update 5.1 ms |
+| First render | **4.3 ms** | the gallery demo's data, 89 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of templates replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 9.6 ms | templates: first render, 374 nodes; update 1.3 ms |
+| 1,000 items | 33 ms | templates: first render, 3,074 nodes; update 6.1 ms |
 
-1,000 items of templates: 22 ms, 3,074 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of templates: 33 ms, 3,074 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

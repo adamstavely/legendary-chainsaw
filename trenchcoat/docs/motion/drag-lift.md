@@ -9,7 +9,7 @@
 Lifts its child while it's dragged – it follows the pointer and leaves a gap, Escape cancels and it glides home, and where it lands is the page's call
 
 - **Element:** `<tc-drag-lift>`
-- **Size:** 4.7 KB gzip · 12.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 4.8 KB gzip · 12.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -277,7 +277,7 @@ It adds no role and announces nothing. Announce what a drag did with a `role="st
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -285,14 +285,14 @@ It adds no role and announces nothing. Announce what a drag did with a `role="st
 | --- | --- | --- |
 | **This piece alone** | 6.1 KB | 2.6 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **12.8 KB** | **4.7 KB** |
-| With Lit – the first component on a page | 32.3 KB | 11.1 KB |
+| **Added to a page that already has Lit** | **12.9 KB** | **4.8 KB** |
+| With Lit – the first component on a page | 32.5 KB | 11.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -300,9 +300,9 @@ It adds no role and announces nothing. Announce what a drag did with a `role="st
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.2 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.0 ms** | re-render with the same data |
-| First on the page | 1.0 ms | default properties; includes adding its CSS to the document |
+| First render | **0.3 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 2.7 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

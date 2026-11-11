@@ -9,7 +9,7 @@
 A 5 × 5 likelihood × impact heat grid with counts and moves since the last review, beside a sortable register whose risks open with their mitigation and can be rescored
 
 - **Element:** `<tc-risk-register>`
-- **Size:** 11.4 KB gzip · 39.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.5 KB gzip · 39.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -455,23 +455,23 @@ Follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/gri
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 30.8 KB | 9.0 KB |
+| **This component alone** | 30.8 KB | 8.9 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **39.1 KB** | **11.5 KB** |
-| With Lit – the first component on a page | 61.5 KB | 18.9 KB |
+| **Added to a page that already has Lit** | **39.3 KB** | **11.5 KB** |
+| With Lit – the first component on a page | 61.7 KB | 18.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -479,13 +479,13 @@ Follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/gri
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.4 ms** | the gallery demo's data, 298 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of risks replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 8.2 ms | risks: first render, 1,745 nodes; update 0.8 ms |
-| 1,000 items | 83 ms | risks: first render, 16,045 nodes; update 9.0 ms |
+| First render | **4.1 ms** | the gallery demo's data, 298 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of risks replaced |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | risks: first render, 1,745 nodes; update 1.4 ms |
+| 1,000 items | 91 ms | risks: first render, 16,045 nodes; update 5.2 ms |
 
-1,000 items of risks: 83 ms. It renders every item, so a first render passes 50 ms (a long task) at about 600 items – page or filter longer lists.
+1,000 items of risks: 91 ms. It renders every item, so a first render passes 50 ms (a long task) at about 550 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

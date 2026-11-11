@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-signature-pad.json",
+  "title": "tc-signature-pad",
+  "description": "A signature field: draw with a mouse, pen or finger, or type the name instead, with undo, clear, the signer, the\ndate and a statement – a form control that exports SVG or an image.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The title above the pad"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the title: what is being signed"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "drawn"
+            },
+            "strokes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SignatureStroke"
+              }
+            },
+            "text": {
+              "not": {}
+            }
+          },
+          "required": [
+            "kind",
+            "strokes"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "typed"
+            },
+            "text": {
+              "type": "string"
+            },
+            "strokes": {
+              "not": {}
+            }
+          },
+          "required": [
+            "kind",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "The signature: drawn strokes or typed text; null when empty"
+    },
+    "allowTyped": {
+      "type": "boolean",
+      "description": "Shows the “Type instead” toggle to pointer users; keyboard users can always reach it"
+    },
+    "signer": {
+      "type": "string",
+      "description": "The signer's name, under the pad – also the suggestion when typing"
+    },
+    "date": {
+      "type": "number",
+      "description": "The date shown beside the name (epoch ms); by default today"
+    },
+    "now": {
+      "type": "number",
+      "description": "“Now” for today's date (epoch ms); by default the element's own clock"
+    },
+    "statement": {
+      "type": "string",
+      "description": "What signing means, under the name: a short legal statement"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Blocks an empty form submit"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "No input, the buttons disabled"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Shows the signature with no way to change it: no buttons, no drawing"
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the field as wrong and shows `error-message`"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "The message under the pad while `invalid`"
+    },
+    "name": {
+      "type": "string",
+      "description": "The form field's name; the value is submitted as JSON"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "placeholder": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "typeInstead": {
+          "type": "string"
+        },
+        "drawInstead": {
+          "type": "string"
+        },
+        "typedLabel": {
+          "type": "string"
+        },
+        "signed": {
+          "type": "string"
+        },
+        "notSigned": {
+          "type": "string"
+        },
+        "cleared": {
+          "type": "string"
+        },
+        "undone": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename (merged over defaultSignatureLabels)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for the date, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SignatureStroke": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SignaturePoint"
+          }
+        }
+      },
+      "required": [
+        "points"
+      ],
+      "additionalProperties": false
+    },
+    "SignaturePoint": {
+      "type": "array",
+      "minItems": 4,
+      "items": [
+        {
+          "type": "number",
+          "title": "x"
+        },
+        {
+          "type": "number",
+          "title": "y"
+        },
+        {
+          "type": "number",
+          "title": "t"
+        },
+        {
+          "type": "number",
+          "title": "p"
+        }
+      ],
+      "maxItems": 4,
+      "description": "One sample of a stroke: x and y across the pad (0–1), milliseconds since the stroke began, pressure (0–1)"
+    }
+  }
+}

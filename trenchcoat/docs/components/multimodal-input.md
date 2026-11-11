@@ -9,7 +9,7 @@
 Attach mixed media with local previews, upload state, format limits, and token estimates.
 
 - **Element:** `<tc-multimodal-input>`
-- **Size:** 11.4 KB gzip · 36.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.5 KB gzip · 36.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -501,15 +501,15 @@ the budget”.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 28.6 KB | 9.2 KB |
+| **This component alone** | 28.6 KB | 9.1 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
@@ -518,8 +518,8 @@ the budget”.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **36.5 KB** | **11.5 KB** |
-| With Lit – the first component on a page | 59.6 KB | 19.2 KB |
+| **Added to a page that already has Lit** | **36.6 KB** | **11.5 KB** |
+| With Lit – the first component on a page | 59.8 KB | 19.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -527,11 +527,11 @@ the budget”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.5 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of accept replaced |
-| First on the page | 9.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | accept: first render, 14 nodes; update 0.1 ms |
-| 1,000 items | 0.4 ms | accept: first render, 14 nodes; update 0.1 ms |
+| First render | **1.6 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of accept replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.7 ms | accept: first render, 14 nodes; update 0.2 ms |
+| 1,000 items | 1.2 ms | accept: first render, 14 nodes; update 0.1 ms |
 
 What it renders doesn't grow with accept (tested to 1,000 items).
 

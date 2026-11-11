@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-stage-bars.json",
+  "title": "tc-stage-bars",
+  "description": "A funnel as a list: a pill per stage sized to its share of the first, the counts and shares beside it, a headline that\nfollows the pointer, stat tiles, an optional period switch and a table view.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StageBarsStage"
+      },
+      "description": "The stages, top of the funnel first – used when there are no `ranges`"
+    },
+    "ranges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StageBarsRange"
+      },
+      "description": "Periods, each with its own stages and change – adds a switch to the header"
+    },
+    "range": {
+      "type": "string",
+      "description": "The chosen range's id; unset is the first"
+    },
+    "delta": {
+      "type": "number",
+      "description": "Change in the first stage against the period before, in percent – a range's own `delta` wins"
+    },
+    "stage": {
+      "type": "number",
+      "description": "The picked stage's index, or null for none – it stays emphasised while nothing else is pointed at"
+    },
+    "mono": {
+      "type": "boolean",
+      "description": "Draws every pill in one ink instead of a colour per stage"
+    },
+    "showIcons": {
+      "type": "boolean",
+      "description": "Draws the stages' icons at the pills' left ends; show-icons=\"false\" hides them"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "chart",
+        "table"
+      ],
+      "description": "The list or the table"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws everything where it ends, with no entrance"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "stage": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "ofFirst": {
+          "type": "string"
+        },
+        "up": {
+          "type": "string"
+        },
+        "down": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over `defaultStageBarsLabels`"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "StageBarsStage": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "color": {
+          "type": "string",
+          "description": "The pill's colour: any CSS colour or token – by default the chart colour for the stage's place"
+        },
+        "icon": {
+          "type": "string",
+          "description": "SVG path data for a 24×24 stroked icon, drawn at 14px at the pill's left end"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "StageBarsRange": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The switch's word for it: \"7 days\""
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StageBarsStage"
+          }
+        },
+        "delta": {
+          "type": "number",
+          "description": "Change in the first stage against the period before, in percent"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "stages"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

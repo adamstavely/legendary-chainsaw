@@ -9,7 +9,7 @@
 A distribution point by point – every value a dot pushed clear of the others, in one row or a row per group with its median marked – the highest group emphasised, dots that grow in, and a canvas for thousands of points
 
 - **Element:** `<tc-beeswarm-chart>`
-- **Size:** 18.0 KB gzip · 50.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.1 KB gzip · 50.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -460,7 +460,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -470,7 +470,7 @@ No slots: everything it shows comes from its properties.
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
 | `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -490,8 +490,8 @@ No slots: everything it shows comes from its properties.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **50.3 KB** | **18.0 KB** |
-| With Lit – the first component on a page | 69.7 KB | 24.2 KB |
+| **Added to a page that already has Lit** | **50.5 KB** | **18.1 KB** |
+| With Lit – the first component on a page | 69.9 KB | 24.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -499,15 +499,19 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 19 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| First render | **2.1 ms** | the gallery demo's data, 207 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of data replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.8 ms | data: first render, 207 nodes; update 0.5 ms |
+| 1,000 items | 4.7 ms | data: first render, 207 nodes; update 1.6 ms |
+
+What it renders doesn't grow with data (tested to 1,000 items).
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
 ### Runtime
 
-- At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **60 frames/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
 - Stops or pauses off screen and under reduced motion.
@@ -537,7 +541,7 @@ No slots: everything it shows comes from its properties.
 
 ## Related
 
-- [Bubble Chart](bubble-chart.md) – Points by two values with a third as the circle's area, or a scatter plot without it – the largest emphasised and named where names fit, the circle under the pointer picked, and a canvas for thousands of points
+- [Bubble Chart](bubble-chart.md) – Points by two values with a third as the circle's area, or a scatter plot without it – the largest emphasised and named where names fit, points by group with a legend that isolates, hides and shows each group, stat tiles under it, and a canvas for thousands of points
 - [Bar Chart](bar-chart.md) – Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – the highest one emphasised, values at the bars' ends, bars that grow in and glide when the data changes, and a table view
 - [Line Chart](line-chart.md) – Values over time as lines – one emphasised against quiet others or each in its own ink – with names at their ends, reference lines and the nearest point read across every series
 - [Heatmap](heatmap.md) – A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view

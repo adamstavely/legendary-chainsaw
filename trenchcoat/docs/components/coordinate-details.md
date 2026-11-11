@@ -9,7 +9,7 @@
 Coordinates in text, checked and marked – hover, focus or right-click one for the place, decimal and DMS with Copy, mapping links and a map that loads only on request
 
 - **Element:** `<tc-coordinate-details>`
-- **Size:** 18.8 KB gzip · 62.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.0 KB gzip · 62.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -374,7 +374,7 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -382,8 +382,8 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 | --- | --- | --- |
 | **This component alone** | 26.3 KB | 9.3 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/selection` · Shared Trenchcoat code | 0.9 KB | – |
@@ -394,8 +394,8 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [geo-location](geo-location.md) · Element it renders | 18.8 KB | – |
-| **Added to a page that already has Lit** | **62.4 KB** | **18.9 KB** |
-| With Lit – the first component on a page | 83.9 KB | 26.0 KB |
+| **Added to a page that already has Lit** | **62.7 KB** | **19.0 KB** |
+| With Lit – the first component on a page | 84.3 KB | 26.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -405,9 +405,9 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 | --- | --- | --- |
 | First render | **0.5 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | one item of providers replaced |
-| First on the page | 6.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | providers: first render, 6 nodes; update 0.0 ms |
-| 1,000 items | 0.4 ms | providers: first render, 6 nodes; update 0.0 ms |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.6 ms | providers: first render, 6 nodes; update 0.2 ms |
+| 1,000 items | 1.1 ms | providers: first render, 6 nodes; update 0.2 ms |
 
 What it renders doesn't grow with providers (tested to 1,000 items).
 

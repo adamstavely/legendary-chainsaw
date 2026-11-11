@@ -9,7 +9,7 @@
 The side panel of a working session – tools, where it runs, how full its context is, its connectors, outputs, subagents and background tasks, and the changes it has made (uses `tc-panel-card`, `tc-subagent-list`).
 
 - **Element:** `<tc-session-panel>`
-- **Size:** 26.6 KB gzip · 104.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 26.8 KB gzip · 105.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -438,7 +438,7 @@ announced.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -447,8 +447,8 @@ announced.
 | **This piece alone** | 8.2 KB | 3.2 KB |
 | Lit · the library every element is built on, the parts it uses | 22.1 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.3 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
@@ -463,8 +463,8 @@ announced.
 | [meter-row](../components/meter-row.md) · Element it renders | 6.3 KB | – |
 | [panel-card](../components/panel-card.md) · Element it renders | 6.1 KB | – |
 | [switch](../components/switch.md) · Element it renders | 0.7 KB | – |
-| **Added to a page that already has Lit** | **104.8 KB** | **26.6 KB** |
-| With Lit – the first component on a page | 126.9 KB | 34.0 KB |
+| **Added to a page that already has Lit** | **105.2 KB** | **26.8 KB** |
+| With Lit – the first component on a page | 127.3 KB | 34.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -472,9 +472,9 @@ announced.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.3 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 2.0 ms | default properties; includes adding its CSS to the document |
+| First render | **0.4 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | re-render with the same data |
+| First on the page | 5.4 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

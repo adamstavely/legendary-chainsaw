@@ -9,7 +9,7 @@
 An amount per day on a grid of weeks, each day shaded from light to the full accent, the busiest outlined, a year per row over several years, a scale legend, weeks that fade in, a canvas for long ranges, and a table view
 
 - **Element:** `<tc-calendar-heatmap>`
-- **Size:** 18.4 KB gzip · 52.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.4 KB gzip · 52.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -464,7 +464,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -474,7 +474,7 @@ No slots: everything it shows comes from its properties.
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
 | `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/format` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -492,8 +492,8 @@ No slots: everything it shows comes from its properties.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **52.1 KB** | **18.4 KB** |
-| With Lit – the first component on a page | 72.1 KB | 24.7 KB |
+| **Added to a page that already has Lit** | **52.2 KB** | **18.4 KB** |
+| With Lit – the first component on a page | 72.3 KB | 24.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -501,9 +501,13 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 23 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
+| First render | **2.2 ms** | the gallery demo's data, 221 DOM nodes – to layout, median of 7 |
+| Typical update | **2.0 ms** | one item of data replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.1 ms | data: first render, 221 nodes; update 0.5 ms |
+| 1,000 items | 2.4 ms | data: first render, 221 nodes; update 1.1 ms |
+
+What it renders doesn't grow with data (tested to 1,000 items).
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

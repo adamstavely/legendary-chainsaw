@@ -9,7 +9,7 @@
 The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
 
 - **Element:** `<tc-watchlist>`
-- **Size:** 7.4 KB gzip · 22.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.4 KB gzip · 22.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -428,15 +428,15 @@ count, “Critical 2”.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 14.7 KB | 5.1 KB |
+| **This component alone** | 14.7 KB | 5.0 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -445,8 +445,8 @@ count, “Critical 2”.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **22.5 KB** | **7.4 KB** |
-| With Lit – the first component on a page | 44.3 KB | 14.6 KB |
+| **Added to a page that already has Lit** | **22.6 KB** | **7.4 KB** |
+| With Lit – the first component on a page | 44.4 KB | 14.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -454,13 +454,13 @@ count, “Critical 2”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 117 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of items replaced |
-| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.7 ms | items: first render, 1,326 nodes; update 0.6 ms |
-| 1,000 items | 46 ms | items: first render, 13,026 nodes; update 5.5 ms |
+| First render | **1.4 ms** | the gallery demo's data, 117 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of items replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 8.5 ms | items: first render, 1,326 nodes; update 1.1 ms |
+| 1,000 items | 60 ms | items: first render, 13,026 nodes; update 6.5 ms |
 
-1,000 items of items: 46 ms, 13,026 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of items: 60 ms. It renders every item, so a first render passes 50 ms (a long task) at about 830 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

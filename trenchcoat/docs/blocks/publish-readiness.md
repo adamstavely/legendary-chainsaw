@@ -9,7 +9,7 @@
 What must pass before something is released – a summary card that opens a dialog with the checks as a progress tracker, sign-offs to give, and each blocker linked (uses `@adamstavely/trenchcoat/react`: `dialog`, `progress-tracker`, `button`)
 
 - **Element:** `<tc-publish-readiness>`
-- **Size:** 21.0 KB gzip · 81.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.0 KB gzip · 81.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -455,16 +455,16 @@ off”). Blocker links read the blocker and where it is.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 17.5 KB | 6.1 KB |
+| **This piece alone** | 17.5 KB | 6.0 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/modal` · Shared Trenchcoat code | 1.5 KB | – |
@@ -475,8 +475,8 @@ off”). Blocker links read the blocker and where it is.
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | [dialog](../components/dialog.md) · Element it renders | 5.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **81.4 KB** | **21.0 KB** |
-| With Lit – the first component on a page | 103.6 KB | 28.5 KB |
+| **Added to a page that already has Lit** | **81.5 KB** | **21.0 KB** |
+| With Lit – the first component on a page | 103.8 KB | 28.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -484,9 +484,9 @@ off”). Blocker links read the blocker and where it is.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | default properties, 57 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| First render | **1.3 ms** | default properties, 57 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | re-render with the same data |
+| First on the page | 28 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

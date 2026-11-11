@@ -9,7 +9,7 @@
 A form the server describes – a HAL-FORMS document drawn as controls, every type and inline or linked options, checked by its rules and sent as its template asks, as JSON, form encoding or a query string
 
 - **Element:** `<tc-hal-form>`
-- **Size:** 24.9 KB gzip · 89.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 24.9 KB gzip · 89.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -451,7 +451,7 @@ with `aria-invalid` and `aria-describedby`. Radios and checkboxes are a `fieldse
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -460,7 +460,7 @@ with `aria-invalid` and `aria-describedby`. Radios and checkboxes are a `fieldse
 | **This component alone** | 24.9 KB | 8.7 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
@@ -471,8 +471,8 @@ with `aria-invalid` and `aria-describedby`. Radios and checkboxes are a `fieldse
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [combobox](combobox.md) · Element it renders | 41.5 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **89.8 KB** | **24.9 KB** |
-| With Lit – the first component on a page | 112.8 KB | 32.5 KB |
+| **Added to a page that already has Lit** | **89.9 KB** | **24.9 KB** |
+| With Lit – the first component on a page | 113.0 KB | 32.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -480,9 +480,9 @@ with `aria-invalid` and `aria-describedby`. Radios and checkboxes are a `fieldse
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 69 DOM nodes – to layout, median of 7 |
+| First render | **3.7 ms** | the gallery demo's data, 69 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | re-render with the same data |
-| First on the page | 9.4 ms | default properties; includes adding its CSS to the document |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

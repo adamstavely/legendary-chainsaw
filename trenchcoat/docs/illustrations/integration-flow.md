@@ -9,7 +9,7 @@
 Integration pills rotating along a dashed arc, each beaming its data into a central analysis hub – once round the integrations, then it rests
 
 - **Element:** `<tc-integration-flow>`
-- **Size:** 19.5 KB gzip · 61.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.5 KB gzip · 61.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -301,22 +301,22 @@ something more specific.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 53.9 KB | 17.2 KB |
+| **This piece alone** | 53.9 KB | 17.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **61.0 KB** | **19.6 KB** |
-| With Lit – the first component on a page | 81.7 KB | 26.6 KB |
+| **Added to a page that already has Lit** | **61.1 KB** | **19.5 KB** |
+| With Lit – the first component on a page | 81.8 KB | 26.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -324,9 +324,9 @@ something more specific.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.7 ms** | the gallery demo's data, 243 DOM nodes – to layout, median of 7 |
+| First render | **2.5 ms** | the gallery demo's data, 243 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

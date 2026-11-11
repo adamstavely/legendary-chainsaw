@@ -9,7 +9,7 @@
 Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
 
 - **Element:** `<tc-attestation-check>`
-- **Size:** 10.8 KB gzip · 38.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.9 KB gzip · 38.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -427,23 +427,23 @@ A verify that throws shows an alert, “Couldn't check this package.”, with Tr
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 30.1 KB | 8.4 KB |
+| **This component alone** | 30.1 KB | 8.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **38.6 KB** | **10.9 KB** |
-| With Lit – the first component on a page | 58.2 KB | 17.2 KB |
+| **Added to a page that already has Lit** | **38.7 KB** | **10.9 KB** |
+| With Lit – the first component on a page | 58.3 KB | 17.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -451,11 +451,11 @@ A verify that throws shows an alert, “Couldn't check this package.”, with Tr
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 30 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of accept replaced |
-| First on the page | 114 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.9 ms | accept: first render, 30 nodes; update 0.0 ms |
-| 1,000 items | 1.0 ms | accept: first render, 30 nodes; update 0.0 ms |
+| First render | **2.1 ms** | the gallery demo's data, 30 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of accept replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.3 ms | accept: first render, 30 nodes; update 0.2 ms |
+| 1,000 items | 1.2 ms | accept: first render, 30 nodes; update 0.2 ms |
 
 What it renders doesn't grow with accept (tested to 1,000 items).
 

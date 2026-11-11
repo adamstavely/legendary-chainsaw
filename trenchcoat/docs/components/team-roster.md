@@ -9,7 +9,7 @@
 A team directory with everyone's local time – status, role and team, how far ahead or behind you they are, whether they're working, skills – grouped and filtered as a list or a grid, with the team's best hour to meet
 
 - **Element:** `<tc-team-roster>`
-- **Size:** 11.8 KB gzip · 38.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.8 KB gzip · 38.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -432,15 +432,15 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 31.0 KB | 9.6 KB |
+| **This component alone** | 31.0 KB | 9.5 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -449,8 +449,8 @@ No slots: everything it shows comes from its properties.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **38.8 KB** | **11.9 KB** |
-| With Lit – the first component on a page | 59.5 KB | 18.6 KB |
+| **Added to a page that already has Lit** | **38.9 KB** | **11.8 KB** |
+| With Lit – the first component on a page | 59.6 KB | 18.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -458,13 +458,13 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.9 ms** | the gallery demo's data, 361 DOM nodes – to layout, median of 7 |
-| Typical update | **3.0 ms** | one item of members replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 22 ms | members: first render, 3,025 nodes; update 12 ms |
-| 1,000 items | 217 ms | members: first render, 29,325 nodes; update 104 ms |
+| First render | **4.6 ms** | the gallery demo's data, 361 DOM nodes – to layout, median of 7 |
+| Typical update | **2.5 ms** | one item of members replaced |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 100 items | 27 ms | members: first render, 3,025 nodes; update 13 ms |
+| 1,000 items | 219 ms | members: first render, 29,325 nodes; update 104 ms |
 
-1,000 items of members: 217 ms. It renders every item, so a first render passes 50 ms (a long task) at about 230 items – page or filter longer lists.
+1,000 items of members: 219 ms. It renders every item, so a first render passes 50 ms (a long task) at about 230 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

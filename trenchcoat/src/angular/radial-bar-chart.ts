@@ -31,6 +31,18 @@ export class RadialBarChart {
   @Input() set sweep(v: TcRadialBarChart["sweep"] | `${number}`) {
     this.#el.sweep = typeof v === "string" ? Number(v) : v;
   }
+  /** "bars" (open rings named where they start) or "rings" (activity rings with a tile each) */
+  @Input() set variant(v: TcRadialBarChart["variant"]) {
+    this.#el.variant = v;
+  }
+  /** Each item's own target – a full ring – for the rings variant; by default `max` */
+  @Input() set target(v: TcRadialBarChart["target"]) {
+    this.#el.target = v;
+  }
+  /** The short mark drawn where each activity ring starts; by default the first letter of its label */
+  @Input() set glyph(v: TcRadialBarChart["glyph"]) {
+    this.#el.glyph = v;
+  }
   /** The heading, and the chart's name */
   @Input() set heading(v: TcRadialBarChart["heading"]) {
     this.#el.heading = v;

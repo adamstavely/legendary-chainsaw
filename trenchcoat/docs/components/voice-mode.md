@@ -9,7 +9,7 @@
 A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 
 - **Element:** `<tc-voice-mode>`
-- **Size:** 14.4 KB gzip · 44.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.5 KB gzip · 44.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -457,24 +457,24 @@ streams in. The orb is hidden from assistive technology.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 20.3 KB | 6.5 KB |
+| **This component alone** | 20.3 KB | 6.4 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
 | `internal/voice-orb-painters` · Shared Trenchcoat code | 3.7 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [voice-orb](../illustrations/voice-orb.md) · Element it renders | 11.8 KB | – |
-| **Added to a page that already has Lit** | **44.7 KB** | **14.5 KB** |
-| With Lit – the first component on a page | 66.5 KB | 21.7 KB |
+| **Added to a page that already has Lit** | **44.8 KB** | **14.5 KB** |
+| With Lit – the first component on a page | 66.6 KB | 21.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -482,13 +482,13 @@ streams in. The orb is hidden from assistive technology.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
+| First render | **3.1 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | one item of turns replaced |
-| First on the page | 26 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.7 ms | turns: first render, 328 nodes; update 0.2 ms |
-| 1,000 items | 40 ms | turns: first render, 3,028 nodes; update 1.6 ms |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| 100 items | 13 ms | turns: first render, 328 nodes; update 0.5 ms |
+| 1,000 items | 55 ms | turns: first render, 3,028 nodes; update 1.6 ms |
 
-1,000 items of turns: 40 ms, 3,028 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of turns: 55 ms. It renders every item, so a first render passes 50 ms (a long task) at about 910 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

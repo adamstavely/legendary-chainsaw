@@ -9,7 +9,7 @@
 Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 
 - **Element:** `<tc-handoff-brief>`
-- **Size:** 9.2 KB gzip · 31.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.3 KB gzip · 31.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -456,7 +456,7 @@ accepted. The work is yours now.”
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -464,14 +464,14 @@ accepted. The work is yours now.”
 | --- | --- | --- |
 | **This component alone** | 22.5 KB | 6.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **31.2 KB** | **9.3 KB** |
-| With Lit – the first component on a page | 53.0 KB | 16.5 KB |
+| **Added to a page that already has Lit** | **31.3 KB** | **9.3 KB** |
+| With Lit – the first component on a page | 53.2 KB | 16.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -479,13 +479,13 @@ accepted. The work is yours now.”
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 80 DOM nodes – to layout, median of 7 |
+| First render | **1.6 ms** | the gallery demo's data, 80 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of unresolved replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.2 ms | unresolved: first render, 501 nodes; update 0.3 ms |
-| 1,000 items | 25 ms | unresolved: first render, 4,401 nodes; update 1.9 ms |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.7 ms | unresolved: first render, 501 nodes; update 0.4 ms |
+| 1,000 items | 36 ms | unresolved: first render, 4,401 nodes; update 2.2 ms |
 
-1,000 items of unresolved: 25 ms, 4,401 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of unresolved: 36 ms, 4,401 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Connected teammates – a cursor drags a new one into the empty slot, the line turns solid and they go online
 
 - **Element:** `<tc-team-invite>`
-- **Size:** 7.3 KB gzip · 22.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.4 KB gzip · 22.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -289,7 +289,7 @@ hidden from assistive technology. Nothing in it can be operated.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -297,7 +297,7 @@ hidden from assistive technology. Nothing in it can be operated.
 | --- | --- | --- |
 | **This piece alone** | 14.6 KB | 4.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
@@ -305,8 +305,8 @@ hidden from assistive technology. Nothing in it can be operated.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **22.1 KB** | **7.4 KB** |
-| With Lit – the first component on a page | 41.6 KB | 13.8 KB |
+| **Added to a page that already has Lit** | **22.3 KB** | **7.4 KB** |
+| With Lit – the first component on a page | 41.8 KB | 13.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -314,11 +314,11 @@ hidden from assistive technology. Nothing in it can be operated.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 26 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of avatars replaced |
-| First on the page | 3.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.7 ms | avatars: first render, 26 nodes; update 0.0 ms |
-| 1,000 items | 0.6 ms | avatars: first render, 26 nodes; update 0.0 ms |
+| First render | **1.0 ms** | the gallery demo's data, 26 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of avatars replaced |
+| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.0 ms | avatars: first render, 26 nodes; update 0.0 ms |
+| 1,000 items | 1.0 ms | avatars: first render, 26 nodes; update 0.0 ms |
 
 What it renders doesn't grow with avatars (tested to 1,000 items).
 

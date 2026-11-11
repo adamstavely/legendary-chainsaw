@@ -9,7 +9,7 @@
 One piece of work as a card – status in words, a note, progress, a due date marked when overdue, people, what it delivers, spent against budget, effort and a "Synced · read-only" source, the whole card opening it
 
 - **Element:** `<tc-work-item>`
-- **Size:** 7.4 KB gzip · 23.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.5 KB gzip · 23.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -348,7 +348,7 @@ is always in words.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -356,7 +356,7 @@ is always in words.
 | --- | --- | --- |
 | **This component alone** | 16.3 KB | 5.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -365,8 +365,8 @@ is always in words.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **23.6 KB** | **7.5 KB** |
-| With Lit – the first component on a page | 43.2 KB | 13.9 KB |
+| **Added to a page that already has Lit** | **23.7 KB** | **7.5 KB** |
+| With Lit – the first component on a page | 43.3 KB | 13.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -374,13 +374,13 @@ is always in words.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 40 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of people replaced |
-| First on the page | 9.7 ms | default properties; includes adding its CSS to the document |
+| First render | **1.1 ms** | the gallery demo's data, 40 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of people replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
 | 100 items | 0.7 ms | people: first render, 43 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | people: first render, 43 nodes; update 0.1 ms |
+| 1,000 items | 0.9 ms | people: first render, 43 nodes; update 0.1 ms |
 
-1,000 items of people: 0.7 ms, 43 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of people: 0.9 ms, 43 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

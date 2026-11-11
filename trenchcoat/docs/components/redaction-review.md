@@ -9,7 +9,7 @@
 Checking what's been redacted before a document's shared – solid bars with reasons, reveal one at a time, approve or reject, and Share once none are left
 
 - **Element:** `<tc-redaction-review>`
-- **Size:** 7.1 KB gzip · 21.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.1 KB gzip · 21.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -400,7 +400,7 @@ Each span is a button named "Redacted", its reason and its status, and the picke
 
 ## Performance
 
-*Measured 2026-11-01 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -408,14 +408,14 @@ Each span is a button named "Redacted", its reason and its status, and the picke
 | --- | --- | --- |
 | **This component alone** | 14.1 KB | 4.9 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **21.4 KB** | **7.1 KB** |
-| With Lit – the first component on a page | 42.1 KB | 13.8 KB |
+| **Added to a page that already has Lit** | **21.5 KB** | **7.1 KB** |
+| With Lit – the first component on a page | 42.2 KB | 13.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -423,13 +423,13 @@ Each span is a button named "Redacted", its reason and its status, and the picke
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 52 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of redactions replaced |
-| First on the page | 8.3 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.9 ms | redactions: first render, 532 nodes; update 0.4 ms |
-| 1,000 items | 20 ms | redactions: first render, 5,032 nodes; update 3.1 ms |
+| First render | **2.6 ms** | the gallery demo's data, 52 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of redactions replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 9.2 ms | redactions: first render, 532 nodes; update 1.0 ms |
+| 1,000 items | 33 ms | redactions: first render, 5,032 nodes; update 6.7 ms |
 
-1,000 items of redactions: 20 ms, 5,032 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of redactions: 33 ms, 5,032 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

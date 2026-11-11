@@ -110,6 +110,30 @@
      "readonly": false
     },
     {
+     "name": "group",
+     "attribute": null,
+     "type": "Accessor<T, string> | undefined",
+     "default": "undefined",
+     "description": "The group field: points of a group share an ink, and the header's legend can isolate, hide and show each group",
+     "readonly": false
+    },
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "The groups shown; by default all of them. Changed by the legend unless a tc-groups-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "stats",
+     "attribute": null,
+     "type": "BubbleStat[]",
+     "default": "[]",
+     "description": "Stat tiles under the chart: { label, value, change? }",
+     "readonly": false
+    },
+    {
      "name": "heading",
      "attribute": "heading",
      "type": "string",
@@ -264,6 +288,12 @@
      "detail": "",
      "description": "A point was clicked, or picked with Enter or Space ({ event }: ChartMarkClick)",
      "cancelable": false
+    },
+    {
+     "name": "tc-groups-change",
+     "detail": "",
+     "description": "A legend button hid or showed a group ({ groups }: BubbleGroupsChange); cancelable – prevented, `groups` stays as it was",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -289,12 +319,50 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-bbl-muted",
+     "value": "var(--tc-border-default)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-bbl-stat-min",
+     "value": "120px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
+    "--tc-bbl-key",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-size-lg",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-line-height-tight",
     "--tc-plot-bg",
     "--tc-plot-focus",
-    "--tc-text-primary"
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
    ]
   }
  ],
@@ -339,17 +407,37 @@
      "type": "(event: ChartEvent) => void",
      "optional": true,
      "description": "A mark was clicked, or picked with Enter or Space"
+    },
+    {
+     "name": "groups",
+     "type": "string[]",
+     "optional": true,
+     "description": "The groups shown – controlled when given; by default all of them"
+    },
+    {
+     "name": "defaultGroups",
+     "type": "string[]",
+     "optional": true,
+     "description": "The groups shown on mount when `groups` isn't controlled; by default all of them"
+    },
+    {
+     "name": "onGroupsChange",
+     "type": "(groups: string[]) => void",
+     "optional": true,
+     "description": "A legend button hid or showed a group"
     }
    ],
    "hides": [
     "heading",
     "view",
+    "groups",
     "children"
    ],
    "events": {
     "tc-view-change": null,
     "tc-mark-hover": "onMarkHover",
-    "tc-mark-click": "onMarkClick"
+    "tc-mark-click": "onMarkClick",
+    "tc-groups-change": null
    }
   }
  ],
@@ -368,6 +456,9 @@
     "label",
     "sizeRange",
     "xFormat",
+    "group",
+    "groups",
+    "stats",
     "data",
     "highlight",
     "format",
@@ -463,9 +554,17 @@
     {
      "name": "tc-mark-click",
      "cancelable": false
+    },
+    {
+     "name": "tc-groups-change",
+     "cancelable": true
     }
    ],
    "controlled": [
+    {
+     "property": "groups",
+     "event": "tc-groups-change"
+    },
     {
      "property": "view",
      "event": "tc-view-change"
@@ -567,6 +666,7 @@
     "progressive": false,
     "why": "Focus rings for keyboard users.",
     "via": [
+     "itself",
      "internal/kit",
      "internal/chart/element"
     ]
@@ -601,6 +701,7 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
+     "itself",
      "internal/base",
      "internal/chart/element",
      "tokens.css"
@@ -727,7 +828,7 @@
   "windowed": false
  },
  "size": {
-  "min": 56572,
-  "gzip": 20487
+  "min": 63173,
+  "gzip": 22336
  }
 }

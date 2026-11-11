@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-score-ring.json",
+  "title": "tc-score-ring",
+  "description": "One overall score from weighted sub-scores – a ring with a segment per sub-score, the score and its band in the\nmiddle, a row per sub-score that isolates its segment, and the metrics behind it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "subscores": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScoreRingSubscore"
+      },
+      "description": "The parts of the score, in the order they go round the ring from the top"
+    },
+    "score": {
+      "type": "number",
+      "description": "The overall score, 0–100; by default the sub-scores' average weighted by `weight`"
+    },
+    "bands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScoreRingBand"
+      },
+      "description": "The words for score ranges, any order; by default Good (80+), Fair (60+) and Needs attention"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The line under the band word"
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScoreRingMetric"
+      },
+      "description": "The facts behind the score, as rows under the ring"
+    },
+    "subscore": {
+      "type": "string",
+      "description": "The selected sub-score's id, isolated until cleared. Changed by the user unless a tc-subscore-change listener calls preventDefault()"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draw without motion"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ScoreRingSubscore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number",
+          "description": "Its own score, 0–100"
+        },
+        "weight": {
+          "type": "number",
+          "description": "How much it counts towards the overall score; the segment's length. By default 1"
+        },
+        "color": {
+          "type": "string",
+          "description": "The segment's colour, any CSS colour; by default the chart palette in turn"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "score"
+      ],
+      "additionalProperties": false
+    },
+    "ScoreRingBand": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number",
+          "description": "The lowest overall score in the band"
+        },
+        "label": {
+          "type": "string",
+          "description": "The band's word, under the score"
+        },
+        "tone": {
+          "$ref": "#/definitions/ScoreRingTone"
+        }
+      },
+      "required": [
+        "min",
+        "label",
+        "tone"
+      ],
+      "additionalProperties": false
+    },
+    "ScoreRingTone": {
+      "type": "string",
+      "enum": [
+        "danger",
+        "info",
+        "neutral",
+        "success",
+        "warning"
+      ]
+    },
+    "ScoreRingMetric": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "The value as a number (formatted for `locale`) or as written"
+        },
+        "unit": {
+          "type": "string",
+          "description": "After the value: \"%\", \"days\""
+        },
+        "change": {
+          "type": "string",
+          "description": "The change since last time, as written: \"+4%\", \"−2 days\""
+        },
+        "trend": {
+          "type": "string",
+          "enum": [
+            "bad",
+            "good",
+            "neutral"
+          ],
+          "description": "Whether the change is good news; colours it, beside its sign"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

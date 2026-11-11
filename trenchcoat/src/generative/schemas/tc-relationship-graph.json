@@ -34,8 +34,8 @@
     "depth": {
       "type": "number",
       "enum": [
-        2,
-        1
+        1,
+        2
       ],
       "description": "How far out to draw: 1 (direct connections) or 2 (theirs too). Changed by the user unless tc-depth-change is prevented"
     },

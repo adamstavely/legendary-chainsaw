@@ -6,10 +6,10 @@
 
 **Charts** · New
 
-Points by two values with a third as the circle's area, or a scatter plot without it – the largest emphasised and named where names fit, the circle under the pointer picked, and a canvas for thousands of points
+Points by two values with a third as the circle's area, or a scatter plot without it – the largest emphasised and named where names fit, points by group with a legend that isolates, hides and shows each group, stat tiles under it, and a canvas for thousands of points
 
 - **Element:** `<tc-bubble-chart>`
-- **Size:** 20.0 KB gzip · 55.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.8 KB gzip · 61.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -40,11 +40,20 @@ the active point. Ported from ztd-charts (MIT).
 on a chip of the card's colour, and `trend-band` shades the 95% confidence band of the fit. `trend="smooth"` draws a
 LOESS curve instead, for a relationship that bends. The summary says which trend is drawn and its r².
 
+`group` names a field that sorts the points into groups – teams, sites, cohorts. Each group takes the next categorical
+ink, nothing is emphasised unless `highlight` says so, and the header holds a legend with a toggle button per group.
+Pointing at a button, or focusing it, isolates its group: the other groups' points turn a quiet gray. Pressing it hides
+or shows the group, firing a cancelable `tc-groups-change` with the groups now shown; set `groups` to own that state.
+The axes are fitted to every point, so the others stay put while a group is hidden, and the last group shown can't be
+hidden. `stats` adds a row of tiles under the chart – `{ label, value, change? }`, a number written in the chart's
+format and a change in % with its sign.
+
 ### When to use
 
 - Showing how two measures relate across a set of items – staff and papers, cost and speed.
 - Adding a third measure as size, when its rough order is enough.
 - Thousands of points as a scatter plot.
+- Comparing a few groups' spread on the same two measures – a scatter by group – with headline numbers beside it.
 
 ### When not to use
 
@@ -62,7 +71,9 @@ LOESS curve instead, for a relationship that bends. The summary says which trend
 4. **Axis** `.tc-chart__grid` – the y grid lines and their values, the x values below, and the axes' names
 5. **Trend** `.ui-bbl__trend` – the fitted line, with its r² and, with `trend-band`, its band `.ui-bbl__band`
 6. **Canvas** `.tc-chart__canvas` – the circles, painted, past the threshold
-7. **Tooltip** `.tc-chart__tip` – the point's name, x, y and size
+7. **Tooltip** `.tc-chart__tip` – the point's name, its group, x, y and size
+8. **Legend** `.ui-bbl__legend` – with `group`, a toggle button `.ui-bbl__key` per group, its swatch `.ui-bbl__swatch`
+9. **Stat tile** `.ui-bbl__stat` – with `stats`, a name `.ui-bbl__stat-label` and value `.ui-bbl__stat-value`, and its
 
 ## Looks
 
@@ -70,7 +81,10 @@ Standard puts the header on the gray tray above a white card; Clean is one white
 row; `bare` drops both, for a chart inside another component. Inks come from the chart tokens through overridable
 component tokens on the element: `--tc-plot-accent` and `--tc-plot-rest` for emphasis, `--tc-plot-grid` for grid
 lines, `--tc-plot-bg` for the line parting overlapping circles, and `--tc-bbl-trend` for the trend line and its band. The canvas reads the same tokens, so it follows the
-look and the theme. Names are written in the text inks beside the circles, never on them. `still` (or the system's
+look and the theme. Groups take `--tc-plot-ink-1` to `--tc-plot-ink-6`; the points the legend isn't isolating take
+`--tc-bbl-muted`. A hidden group's swatch turns to an outline and its name is struck through, so it doesn't rest on
+colour. Stat tiles are white tiles on the Standard tray and wells in the Clean card, at least `--tc-bbl-stat-min` wide,
+wrapping on narrow cards. Names are written in the text inks beside the circles, never on them. `still` (or the system's
 reduced-motion setting) draws everything at once.
 
 ## Usage
@@ -92,12 +106,27 @@ reduced-motion setting) draws everything at once.
     { label: "Imaging", staff: 12, papers: 18, grants: 1.4 },
     { label: "Neuro", staff: 20, papers: 33, grants: 4.5 },
   ];
+
+  // A scatter by group, with stat tiles under it
+  const byTeam = document.querySelector("#by-team");
+  byTeam.x = "hours";
+  byTeam.y = "findings";
+  byTeam.group = "team";
+  byTeam.stats = [{ label: "Reviews", value: 48 }, { label: "Findings", value: 212, change: 8.5 }];
+  byTeam.data = [
+    { label: "Review 1", team: "Fraud", hours: 12, findings: 9 },
+    { label: "Review 2", team: "Audit", hours: 20, findings: 6 },
+    { label: "Review 3", team: "Fraud", hours: 7, findings: 4 },
+  ];
+  byTeam.addEventListener("tc-groups-change", (e) => console.log(e.detail.groups));
 </script>
+<tc-bubble-chart id="by-team" heading="Review hours and findings" x-label="Hours" y-label="Findings"></tc-bubble-chart>
 ```
 
 ### React / Next.js
 
 ```tsx
+import { useState } from "react";
 import { BubbleChart } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
@@ -106,6 +135,28 @@ const data = [
   { label: "Imaging", staff: 12, papers: 18, grants: 1.4 },
   { label: "Neuro", staff: 20, papers: 33, grants: 4.5 },
 ];
+
+const reviews = [
+  { label: "Review 1", team: "Fraud", hours: 12, findings: 9 },
+  { label: "Review 2", team: "Audit", hours: 20, findings: 6 },
+  { label: "Review 3", team: "Fraud", hours: 7, findings: 4 },
+];
+
+export function ReviewsByTeam() {
+  const [groups, setGroups] = useState<string[] | undefined>(undefined);
+  return (
+    <BubbleChart
+      title="Review hours and findings"
+      data={reviews}
+      x="hours"
+      y="findings"
+      group="team"
+      groups={groups}
+      onGroupsChange={setGroups}
+      stats={[{ label: "Reviews", value: 48 }, { label: "Findings", value: 212, change: 8.5 }]}
+    />
+  );
+}
 
 export function Labs() {
   return <BubbleChart title="Labs by size and output" data={data} x="staff" y="papers" size="grants" xLabel="Staff" yLabel="Papers" onMarkClick={(e) => console.log(e.label)} />;
@@ -196,6 +247,9 @@ export class BubbleChartExample {
 | `xFormat` | – | `FormatSpec \| undefined` | `undefined` | How x values are written; `format` writes y |
 | `trend` | `trend` | `BubbleTrend` | `"none"` | A line fitted through the points: "linear" (least squares, its r² beside it) or "smooth" (LOESS); none by default |
 | `trendBand` | `trend-band` | `boolean` | `false` | Shades the 95% confidence band round a linear trend |
+| `group` | – | `Accessor<T, string> \| undefined` | `undefined` | The group field: points of a group share an ink, and the header's legend can isolate, hide and show each group |
+| `groups` | – | `string[] \| undefined` | `undefined` | The groups shown; by default all of them. Changed by the legend unless a tc-groups-change listener calls preventDefault() |
+| `stats` | – | `BubbleStat[]` | `[]` | Stat tiles under the chart: { label, value, change? } |
 | `heading` | `heading` | `string` | `""` | The heading, and the chart's name |
 | `description` | `description` | `string \| undefined` | `undefined` | One line under the heading |
 | `data` | – | `readonly T[]` | `[]` | The rows to draw |
@@ -221,6 +275,7 @@ export class BubbleChartExample {
 | `tc-view-change` | – | Yes | The Table button was pressed ({ view }: ChartViewChange); cancelable – prevented, `view` stays as it was |
 | `tc-mark-hover` | – | No | The pointer or keyboard moved to a point, or off them ({ event }: ChartMarkHover) |
 | `tc-mark-click` | – | No | A point was clicked, or picked with Enter or Space ({ event }: ChartMarkClick) |
+| `tc-groups-change` | – | Yes | A legend button hid or showed a group ({ groups }: BubbleGroupsChange); cancelable – prevented, `groups` stays as it was |
 
 #### Methods
 
@@ -236,10 +291,12 @@ export class BubbleChartExample {
 | Custom property | Value | Look |
 | --- | --- | --- |
 | `--tc-bbl-trend` | `var(--tc-text-primary)` | both |
+| `--tc-bbl-muted` | `var(--tc-border-default)` | both |
+| `--tc-bbl-stat-min` | `120px` | both |
 
-#### Design tokens it reads (3)
+#### Design tokens it reads (27)
 
-`--tc-plot-bg`, `--tc-plot-focus`, `--tc-text-primary`
+`--tc-bbl-key`, `--tc-border-default`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-size-lg`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-strong`, `--tc-line-height-tight`, `--tc-plot-bg`, `--tc-plot-focus`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-status-danger-fg`, `--tc-status-success-fg`, `--tc-surface-on-tray`, `--tc-surface-sunken`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`
 
 ## Frameworks
 
@@ -265,6 +322,9 @@ export class BubbleChartExample {
 | `label` | `el.label = …;` | `<… label={…} />` | `<tc-bubble-chart :label="…">` | `<tc-bubble-chart [label]="…">` | `<tc-bubble-chart {label}>` |
 | `sizeRange` | `el.sizeRange = …;` | `<… sizeRange={…} />` | `<tc-bubble-chart :sizeRange="…">` | `<tc-bubble-chart [sizeRange]="…">` | `<tc-bubble-chart {sizeRange}>` |
 | `xFormat` | `el.xFormat = …;` | `<… xFormat={…} />` | `<tc-bubble-chart :xFormat="…">` | `<tc-bubble-chart [xFormat]="…">` | `<tc-bubble-chart {xFormat}>` |
+| `group` | `el.group = …;` | `<… group={…} />` | `<tc-bubble-chart :group="…">` | `<tc-bubble-chart [group]="…">` | `<tc-bubble-chart {group}>` |
+| `groups` | `el.groups = …;` | `<… groups={…} />` | `<tc-bubble-chart :groups="…">` | `<tc-bubble-chart [groups]="…">` | `<tc-bubble-chart {groups}>` |
+| `stats` | `el.stats = …;` | `<… stats={…} />` | `<tc-bubble-chart :stats="…">` | `<tc-bubble-chart [stats]="…">` | `<tc-bubble-chart {stats}>` |
 | `data` | `el.data = …;` | `<… data={…} />` | `<tc-bubble-chart :data="…">` | `<tc-bubble-chart [data]="…">` | `<tc-bubble-chart {data}>` |
 | `highlight` | `el.highlight = …;` | `<… highlight={…} />` | `<tc-bubble-chart :highlight="…">` | `<tc-bubble-chart [highlight]="…">` | `<tc-bubble-chart {highlight}>` |
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-bubble-chart :format="…">` | `<tc-bubble-chart [format]="…">` | `<tc-bubble-chart {format}>` |
@@ -279,12 +339,13 @@ export class BubbleChartExample {
 | `tc-view-change` | Yes | `el.addEventListener("tc-view-change", (e) => …)` | `ref.current.addEventListener("tc-view-change", …)` | `@tc-view-change="…"` | `(tc-view-change)="…($event)"` | `el.addEventListener("tc-view-change", …)` |
 | `tc-mark-hover` | No | `el.addEventListener("tc-mark-hover", (e) => …)` | `onMarkHover={…}` | `@tc-mark-hover="…"` | `(tc-mark-hover)="…($event)"` | `el.addEventListener("tc-mark-hover", …)` |
 | `tc-mark-click` | No | `el.addEventListener("tc-mark-click", (e) => …)` | `onMarkClick={…}` | `@tc-mark-click="…"` | `(tc-mark-click)="…($event)"` | `el.addEventListener("tc-mark-click", …)` |
+| `tc-groups-change` | Yes | `el.addEventListener("tc-groups-change", (e) => …)` | `ref.current.addEventListener("tc-groups-change", …)` | `@tc-groups-change="…"` | `(tc-groups-change)="…($event)"` | `el.addEventListener("tc-groups-change", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-The element changes `view` itself unless a listener calls `preventDefault()` on `tc-view-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `groups` and `view` itself unless a listener calls `preventDefault()` on `tc-groups-change` or `tc-view-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -295,9 +356,9 @@ The element changes `view` itself unless a listener calls `preventDefault()` on 
   import "@adamstavely/trenchcoat/bubble-chart";
 
   const el = document.querySelector("#bubble-chart");
-  el.addEventListener("tc-view-change", (e) => {
-    e.preventDefault(); // the element keeps its view…
-    if (allowed(e.detail.view)) el.view = e.detail.view; // …until the app sets it
+  el.addEventListener("tc-groups-change", (e) => {
+    e.preventDefault(); // the element keeps its groups…
+    if (allowed(e.detail.groups)) el.groups = e.detail.groups; // …until the app sets it
   });
   const allowed = (next) => true; // your rule
 </script>
@@ -315,17 +376,17 @@ import { shallowRef } from "vue";
 import "@adamstavely/trenchcoat/bubble-chart";
 import type { TcBubbleChart } from "@adamstavely/trenchcoat/bubble-chart";
 
-const props = defineProps<{ initial: TcBubbleChart["view"] }>();
-const view = shallowRef(props.initial);
+const props = defineProps<{ initial: TcBubbleChart["groups"] }>();
+const groups = shallowRef(props.initial);
 // Controlled: the element proposes, the app decides
-const onViewChange = (e: CustomEvent<{ view: TcBubbleChart["view"] }>) => {
+const onGroupsChange = (e: CustomEvent<{ groups: TcBubbleChart["groups"] }>) => {
   e.preventDefault();
-  view.value = e.detail.view;
+  groups.value = e.detail.groups;
 };
 </script>
 
 <template>
-  <tc-bubble-chart :view="view" @tc-view-change="onViewChange"></tc-bubble-chart>
+  <tc-bubble-chart :groups="groups" @tc-groups-change="onGroupsChange"></tc-bubble-chart>
 </template>
 ```
 
@@ -339,15 +400,15 @@ import type { TcBubbleChart } from "@adamstavely/trenchcoat/bubble-chart";
 @Component({
   selector: "app-controlled-bubble-chart",
   imports: [BubbleChart],
-  template: `<tc-bubble-chart [view]="view()" (tc-view-change)="onViewChange($event)"></tc-bubble-chart>`,
+  template: `<tc-bubble-chart [groups]="groups()" (tc-groups-change)="onGroupsChange($event)"></tc-bubble-chart>`,
 })
 export class ControlledBubbleChart {
-  readonly initial = input.required<TcBubbleChart["view"]>();
-  readonly view = linkedSignal(() => this.initial());
+  readonly initial = input.required<TcBubbleChart["groups"]>();
+  readonly groups = linkedSignal(() => this.initial());
   // Controlled: the element proposes, the app decides
-  onViewChange(e: CustomEvent<{ view: TcBubbleChart["view"] }>) {
+  onGroupsChange(e: CustomEvent<{ groups: TcBubbleChart["groups"] }>) {
     e.preventDefault();
-    this.view.set(e.detail.view);
+    this.groups.set(e.detail.groups);
   }
 }
 ```
@@ -359,22 +420,22 @@ export class ControlledBubbleChart {
   import "@adamstavely/trenchcoat/bubble-chart";
   import type { TcBubbleChart } from "@adamstavely/trenchcoat/bubble-chart";
 
-  let { initial }: { initial: TcBubbleChart["view"] } = $props();
+  let { initial }: { initial: TcBubbleChart["groups"] } = $props();
   // A derived the handler can overwrite: it follows initial, and holds the app's value between changes
-  let view = $derived(initial);
+  let groups = $derived(initial);
   let el: TcBubbleChart;
   // Controlled: the element proposes, the app decides
   $effect(() => {
     const on = (e: Event) => {
       e.preventDefault();
-      view = (e as CustomEvent<{ view: TcBubbleChart["view"] }>).detail.view;
+      groups = (e as CustomEvent<{ groups: TcBubbleChart["groups"] }>).detail.groups;
     };
-    el.addEventListener("tc-view-change", on);
-    return () => el.removeEventListener("tc-view-change", on);
+    el.addEventListener("tc-groups-change", on);
+    return () => el.removeEventListener("tc-groups-change", on);
   });
 </script>
 
-<tc-bubble-chart bind:this={el} {view}></tc-bubble-chart>
+<tc-bubble-chart bind:this={el} {groups}></tc-bubble-chart>
 ```
 
 ### Slots and children
@@ -409,8 +470,11 @@ No slots: everything it shows comes from its properties.
 | `onViewChange` | `(view: ChartView) => void` | The Table button was pressed |
 | `onMarkHover` | `(event: ChartEvent \| null) => void` | The pointer or keyboard moved to a mark (null: off them) |
 | `onMarkClick` | `(event: ChartEvent) => void` | A mark was clicked, or picked with Enter or Space |
+| `groups` | `string[]` | The groups shown – controlled when given; by default all of them |
+| `defaultGroups` | `string[]` | The groups shown on mount when `groups` isn't controlled; by default all of them |
+| `onGroupsChange` | `(groups: string[]) => void` | A legend button hid or showed a group |
 
-*Renamed or hidden on the wrapper: `heading`, `view`, `children`*
+*Renamed or hidden on the wrapper: `heading`, `view`, `groups`, `children`*
 
 ## Accessibility
 
@@ -424,12 +488,23 @@ No slots: everything it shows comes from its properties.
 | Enter / Space | Picks the point (fires `tc-mark-click`) |
 | Escape | Lets go of the point; pressed again, it's the page's |
 
+The legend, with `group`, is a toolbar with one tab stop of its own:
+
+| Key | Does |
+| --- | --- |
+| Tab | Reaches the legend's last focused button, which isolates its group |
+| Arrow keys / Home / End | Move between the groups' buttons |
+| Enter / Space | Hides or shows the group (fires `tc-groups-change`) |
+
 ### Screen readers
 
 - The plot is a group named by the heading, described in words: how many points and the range of x and y.
 - A table of the points is always there for screen readers (the first 60, and how many more); the Table button shows
   it to everyone.
 - Moving with the arrows announces the point with its values and position ("Genomics: x 24, y 41, size 3.2, 1 of 8").
+- With `group`, the description says how many groups there are and which are shown; the table has a Group column; the
+  legend is a toolbar named "Groups" of toggle buttons, each pressed while its group is shown.
+- Stat tiles are a description list: each name a term, its value the definition.
 - The drawing itself is hidden; nothing is said by colour alone.
 
 ### Every component
@@ -457,9 +532,9 @@ No slots: everything it shows comes from its properties.
 | light-dark() | 123 | 120 | 17.5 | 17.5 | tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
 | color-mix() | 111 | 113 | 16.2 | 16.2 | internal/chart/element, tokens.css | Tints and washes mixed from the tokens. |
 | Container size queries | 105 | 110 | 16 | 16 | internal/chart/element | Components adapt to the width they're given, not the window's. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/kit, internal/chart/element | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit, internal/chart/element | Focus rings for keyboard users. |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | internal/chart/accessor | – |
-| :is() and :where() | 88 | 78 | 14 | 14 | internal/base, internal/chart/element, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, internal/chart/element, tokens.css | Every rule is keyed on :where() so the page can override it. |
 | ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | internal/chart/element | – |
 | IntersectionObserver | 51 (Edge 15) | 55 | 12.1 | 12.2 | internal/chart/element | – |
 
@@ -475,17 +550,17 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 13.1 KB | 6.0 KB |
+| **This component alone** | 19.4 KB | 8.1 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/chart/format` · Shared Trenchcoat code | 1.4 KB | – |
@@ -505,8 +580,8 @@ No slots: everything it shows comes from its properties.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **55.2 KB** | **20.0 KB** |
-| With Lit – the first component on a page | 74.7 KB | 26.2 KB |
+| **Added to a page that already has Lit** | **61.7 KB** | **21.8 KB** |
+| With Lit – the first component on a page | 81.1 KB | 28.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -514,15 +589,19 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 17 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| First render | **1.2 ms** | the gallery demo's data, 47 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of data replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.5 ms | data: first render, 205 nodes; update 1.3 ms |
+| 1,000 items | 8.0 ms | data: first render, 205 nodes; update 3.0 ms |
+
+1,000 items of data: 8.0 ms, 205 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
 ### Runtime
 
-- At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **60 frames/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
 - Stops or pauses off screen and under reduced motion.
@@ -538,6 +617,8 @@ No slots: everything it shows comes from its properties.
 - Give each point a `label` so it can be named; without one it's numbered.
 - Use `x-format` and `format` for the two axes' numbers.
 - Draw a trend only where a straight (or smooth) relationship is the point; say in the description what it shows.
+- Keep groups to six or fewer – the inks repeat after six – and name them in a word or two.
+- Give stat tiles short names and the numbers the chart's reader would ask for next: totals, averages, the change.
 
 ## Do and don't
 

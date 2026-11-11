@@ -9,7 +9,7 @@
 A role's home dashboard – the headline that needs doing, the one thing first, KPI charts against last week and the service posture table with a state filter; switch roles at the top (uses `@adamstavely/trenchcoat/react`: `segmented-control`, `kpi-chart`, `data-table`, `button`)
 
 - **Element:** `<tc-oversight-home>`
-- **Size:** 33.8 KB gzip · 142.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 33.9 KB gzip · 142.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -346,7 +346,7 @@ is a word in the table, never only a colour.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -355,7 +355,7 @@ is a word in the table, never only a colour.
 | **This piece alone** | 12.3 KB | 4.6 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 4.7 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -367,8 +367,8 @@ is a word in the table, never only a colour.
 | [kpi-chart](../components/kpi-chart.md) · Element it renders | 25.3 KB | – |
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **142.7 KB** | **33.8 KB** |
-| With Lit – the first component on a page | 164.5 KB | 41.1 KB |
+| **Added to a page that already has Lit** | **142.8 KB** | **33.9 KB** |
+| With Lit – the first component on a page | 164.6 KB | 41.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -376,9 +376,9 @@ is a word in the table, never only a colour.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.2 ms** | default properties, 0 DOM nodes – to layout, median of 7 |
+| First render | **0.3 ms** | default properties, 0 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 1.9 ms | default properties; includes adding its CSS to the document |
+| First on the page | 2.8 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

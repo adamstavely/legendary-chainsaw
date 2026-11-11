@@ -9,7 +9,7 @@
 What agents say to each other in a run, as a quiet chat – who to whom on every message, handoffs as slim rows, questions for you with an answer box, files that preview, details with tool calls, filter tabs and an @-composer
 
 - **Element:** `<tc-collaboration-stream>`
-- **Size:** 21.9 KB gzip · 77.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.9 KB gzip · 77.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -473,7 +473,7 @@ hidden.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -481,7 +481,7 @@ hidden.
 | --- | --- | --- |
 | **This component alone** | 36.6 KB | 10.2 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
@@ -492,8 +492,8 @@ hidden.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [mention-picker](mention-picker.md) · Element it renders | 29.9 KB | – |
-| **Added to a page that already has Lit** | **77.0 KB** | **21.9 KB** |
-| With Lit – the first component on a page | 98.7 KB | 28.9 KB |
+| **Added to a page that already has Lit** | **77.2 KB** | **21.9 KB** |
+| With Lit – the first component on a page | 98.9 KB | 29.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -501,13 +501,13 @@ hidden.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.6 ms** | the gallery demo's data, 256 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of messages replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 13 ms | messages: first render, 2,149 nodes; update 1.2 ms |
-| 1,000 items | 143 ms | messages: first render, 20,949 nodes; update 8.4 ms |
+| First render | **4.8 ms** | the gallery demo's data, 256 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of messages replaced |
+| First on the page | 27 ms | default properties; includes adding its CSS to the document |
+| 100 items | 23 ms | messages: first render, 2,149 nodes; update 1.7 ms |
+| 1,000 items | 133 ms | messages: first render, 20,949 nodes; update 6.8 ms |
 
-1,000 items of messages: 143 ms. It renders every item, so a first render passes 50 ms (a long task) at about 350 items – page or filter longer lists.
+1,000 items of messages: 133 ms. It renders every item, so a first render passes 50 ms (a long task) at about 380 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
 - **Element:** `<tc-trigger-builder>`
-- **Size:** 40.4 KB gzip · 171.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 40.4 KB gzip · 172.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -511,15 +511,15 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 34.5 KB | 10.6 KB |
+| **This component alone** | 34.5 KB | 10.5 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -532,8 +532,8 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 | [combobox](combobox.md) · Element it renders | 41.5 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **171.8 KB** | **40.5 KB** |
-| With Lit – the first component on a page | 194.4 KB | 48.0 KB |
+| **Added to a page that already has Lit** | **172.0 KB** | **40.4 KB** |
+| With Lit – the first component on a page | 194.5 KB | 47.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -541,11 +541,11 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.3 ms** | the gallery demo's data, 135 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of events replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.2 ms | events: first render, 135 nodes; update 0.3 ms |
-| 1,000 items | 2.4 ms | events: first render, 135 nodes; update 0.3 ms |
+| First render | **3.5 ms** | the gallery demo's data, 135 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of events replaced |
+| First on the page | 35 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.6 ms | events: first render, 135 nodes; update 0.4 ms |
+| 1,000 items | 3.1 ms | events: first render, 135 nodes; update 0.3 ms |
 
 What it renders doesn't grow with events (tested to 1,000 items).
 

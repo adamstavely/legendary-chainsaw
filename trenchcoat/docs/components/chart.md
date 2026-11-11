@@ -9,7 +9,7 @@
 Any of the library's charts from a JSON spec – checked first, then drawn with the chart the spec names; what's wrong shown instead of a chart; the same specs draw as SVG on a server
 
 - **Element:** `<tc-chart>`
-- **Size:** 138.6 KB gzip · 434.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 143.0 KB gzip · 447.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -292,7 +292,7 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -311,8 +311,8 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 | `internal/chart/parse` · Shared Trenchcoat code | 3.3 KB | – |
 | `internal/chart/geometry` · Shared Trenchcoat code | 3.2 KB | – |
 | `internal/chart/scale` · Shared Trenchcoat code | 3.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.1 KB | – |
 | `internal/chart/sankey` · Shared Trenchcoat code | 3.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
 | `internal/chart/series` · Shared Trenchcoat code | 2.5 KB | – |
 | `internal/chart/format` · Shared Trenchcoat code | 2.4 KB | – |
 | `internal/chart/loaders` · Shared Trenchcoat code | 2.3 KB | – |
@@ -337,12 +337,13 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | [heatmap](heatmap.md) · Element it renders | 30.1 KB | – |
 | [gauge](gauge.md) · Element it renders | 19.9 KB | – |
+| [bubble-chart](bubble-chart.md) · Element it renders | 16.8 KB | – |
 | [candlestick-chart](candlestick-chart.md) · Element it renders | 15.5 KB | – |
 | [sparkline](sparkline.md) · Element it renders | 14.4 KB | – |
 | [radar-chart](radar-chart.md) · Element it renders | 14.4 KB | – |
 | [network-graph](network-graph.md) · Element it renders | 12.8 KB | – |
+| [radial-bar-chart](radial-bar-chart.md) · Element it renders | 10.9 KB | – |
 | [calendar-heatmap](calendar-heatmap.md) · Element it renders | 10.6 KB | – |
-| [bubble-chart](bubble-chart.md) · Element it renders | 10.5 KB | – |
 | [combo-chart](combo-chart.md) · Element it renders | 10.5 KB | – |
 | [venn-diagram](venn-diagram.md) · Element it renders | 9.3 KB | – |
 | [hexbin-chart](hexbin-chart.md) · Element it renders | 8.2 KB | – |
@@ -369,14 +370,13 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 | [funnel-chart](funnel-chart.md) · Element it renders | 4.9 KB | – |
 | [segmented-bar](segmented-bar.md) · Element it renders | 4.7 KB | – |
 | [marimekko-chart](marimekko-chart.md) · Element it renders | 4.5 KB | – |
-| [radial-bar-chart](radial-bar-chart.md) · Element it renders | 4.1 KB | – |
 | [donut-chart](donut-chart.md) · Element it renders | 1.4 KB | – |
 | [area-chart](area-chart.md) · Element it renders | 0.8 KB | – |
 | [line-chart](line-chart.md) · Element it renders | 0.8 KB | – |
 | [pie-chart](pie-chart.md) · Element it renders | 0.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **434.2 KB** | **138.6 KB** |
-| With Lit – the first component on a page | 451.3 KB | 143.7 KB |
+| **Added to a page that already has Lit** | **447.5 KB** | **143.0 KB** |
+| With Lit – the first component on a page | 464.5 KB | 148.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -384,9 +384,9 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.2 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 1.0 ms | default properties; includes adding its CSS to the document |
+| First render | **0.5 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **1.1 ms** | re-render with the same data |
+| First on the page | 2.0 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

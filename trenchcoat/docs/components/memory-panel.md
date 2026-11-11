@@ -9,7 +9,7 @@
 What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 
 - **Element:** `<tc-memory-panel>`
-- **Size:** 16.6 KB gzip · 73.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.7 KB gzip · 73.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -467,22 +467,22 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 65.3 KB | 14.3 KB |
+| **This component alone** | 65.3 KB | 14.2 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **73.7 KB** | **16.8 KB** |
-| With Lit – the first component on a page | 95.6 KB | 23.9 KB |
+| **Added to a page that already has Lit** | **73.8 KB** | **16.7 KB** |
+| With Lit – the first component on a page | 95.8 KB | 23.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -490,13 +490,13 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.2 ms** | the gallery demo's data, 248 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of memories replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 11 ms | memories: first render, 1,996 nodes; update 1.5 ms |
-| 1,000 items | 111 ms | memories: first render, 19,096 nodes; update 11 ms |
+| First render | **4.8 ms** | the gallery demo's data, 248 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of memories replaced |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 21 ms | memories: first render, 1,996 nodes; update 2.0 ms |
+| 1,000 items | 127 ms | memories: first render, 19,096 nodes; update 11 ms |
 
-1,000 items of memories: 111 ms. It renders every item, so a first render passes 50 ms (a long task) at about 450 items – page or filter longer lists.
+1,000 items of memories: 127 ms. It renders every item, so a first render passes 50 ms (a long task) at about 390 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

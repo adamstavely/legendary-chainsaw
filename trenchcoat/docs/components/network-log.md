@@ -9,7 +9,7 @@
 The requests a web page made: status, method, name, size, time and a waterfall, with type chips and a detail of headers and response.
 
 - **Element:** `<tc-network-log>`
-- **Size:** 21.9 KB gzip · 78.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.9 KB gzip · 78.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -439,15 +439,15 @@ are hidden from screen readers, since the time column says the same. A `role="st
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 21.1 KB | 6.8 KB |
+| **This component alone** | 21.1 KB | 6.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/modal` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -457,8 +457,8 @@ are hidden from screen readers, since the time column says the same. A `role="st
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | [json-viewer](json-viewer.md) · Element it renders | 47.6 KB | – |
-| **Added to a page that already has Lit** | **78.6 KB** | **22.0 KB** |
-| With Lit – the first component on a page | 100.0 KB | 28.9 KB |
+| **Added to a page that already has Lit** | **78.7 KB** | **21.9 KB** |
+| With Lit – the first component on a page | 100.1 KB | 28.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -466,13 +466,13 @@ are hidden from screen readers, since the time column says the same. A `role="st
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 176 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of requests replaced |
-| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.2 ms | requests: first render, 1,188 nodes; update 2.3 ms |
-| 1,000 items | 55 ms | requests: first render, 11,088 nodes; update 21 ms |
+| First render | **2.7 ms** | the gallery demo's data, 176 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of requests replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 14 ms | requests: first render, 1,188 nodes; update 4.0 ms |
+| 1,000 items | 71 ms | requests: first render, 11,088 nodes; update 22 ms |
 
-1,000 items of requests: 55 ms. It renders every item, so a first render passes 50 ms (a long task) at about 910 items – page or filter longer lists.
+1,000 items of requests: 71 ms. It renders every item, so a first render passes 50 ms (a long task) at about 700 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

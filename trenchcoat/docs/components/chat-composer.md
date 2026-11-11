@@ -9,7 +9,7 @@
 Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 
 - **Element:** `<tc-chat-composer>`
-- **Size:** 82.5 KB gzip · 356.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 82.7 KB gzip · 356.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -681,17 +681,17 @@ the token's tint is hidden from screen readers.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 134.1 KB | 31.0 KB |
+| **This component alone** | 134.1 KB | 30.9 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 1.1 KB | – |
@@ -708,8 +708,8 @@ the token's tint is hidden from screen readers.
 | [context-tray](context-tray.md) · Element it renders | 25.2 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **356.5 KB** | **82.8 KB** |
-| With Lit – the first component on a page | 377.9 KB | 89.7 KB |
+| **Added to a page that already has Lit** | **356.9 KB** | **82.7 KB** |
+| With Lit – the first component on a page | 378.3 KB | 89.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -717,11 +717,11 @@ the token's tint is hidden from screen readers.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.1 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of skills replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.3 ms | skills: first render, 304 nodes; update 0.2 ms |
-| 1,000 items | 4.4 ms | skills: first render, 304 nodes; update 0.3 ms |
+| First render | **6.2 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of skills replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.3 ms | skills: first render, 304 nodes; update 0.3 ms |
+| 1,000 items | 5.2 ms | skills: first render, 304 nodes; update 0.3 ms |
 
 What it renders doesn't grow with skills (tested to 1,000 items).
 

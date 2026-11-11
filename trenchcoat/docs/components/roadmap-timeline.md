@@ -9,7 +9,7 @@
 Workstreams on a calendar, Gantt style – lanes, bars with progress and status, milestones, a Today line and dependency arrows (red when dates clash), at week, month or quarter scale, with details for the work you select
 
 - **Element:** `<tc-roadmap-timeline>`
-- **Size:** 11.9 KB gzip · 40.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.0 KB gzip · 40.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -450,22 +450,22 @@ Follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/gri
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 32.5 KB | 9.5 KB |
+| **This component alone** | 32.5 KB | 9.4 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **40.7 KB** | **12.0 KB** |
-| With Lit – the first component on a page | 62.6 KB | 19.2 KB |
+| **Added to a page that already has Lit** | **40.9 KB** | **12.0 KB** |
+| With Lit – the first component on a page | 62.7 KB | 19.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -473,13 +473,13 @@ Follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/gri
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.7 ms** | the gallery demo's data, 273 DOM nodes – to layout, median of 7 |
-| Typical update | **2.2 ms** | one item of items replaced |
-| First on the page | 9.9 ms | default properties; includes adding its CSS to the document |
-| 100 items | 20 ms | items: first render, 1,019 nodes; update 15 ms |
-| 1,000 items | 702 ms | items: first render, 8,333 nodes; update 679 ms |
+| First render | **4.8 ms** | the gallery demo's data, 273 DOM nodes – to layout, median of 7 |
+| Typical update | **2.8 ms** | one item of items replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 25 ms | items: first render, 1,019 nodes; update 19 ms |
+| 1,000 items | 661 ms | items: first render, 8,333 nodes; update 638 ms |
 
-1,000 items of items: 702 ms. It renders every item, so a first render passes 50 ms (a long task) at about 70 items – page or filter longer lists.
+1,000 items of items: 661 ms. It renders every item, so a first render passes 50 ms (a long task) at about 80 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

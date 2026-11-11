@@ -9,7 +9,7 @@
 Organization data handling as a lifecycle – retention, logs and redaction, memory, training, deletion – led by the effective policy, with locked stages and deletion requests
 
 - **Element:** `<tc-data-handling-policy>`
-- **Size:** 20.3 KB gzip · 83.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 20.4 KB gzip · 83.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -524,23 +524,23 @@ named “Request deletion?”. A polite status message confirms “Deletion of c
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 45.6 KB | 12.1 KB |
+| **This component alone** | 45.6 KB | 12.0 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
-| **Added to a page that already has Lit** | **83.8 KB** | **20.4 KB** |
-| With Lit – the first component on a page | 105.5 KB | 27.6 KB |
+| **Added to a page that already has Lit** | **83.9 KB** | **20.4 KB** |
+| With Lit – the first component on a page | 105.6 KB | 27.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -548,11 +548,11 @@ named “Request deletion?”. A polite status message confirms “Deletion of c
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 104 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of retentionOptions replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.1 ms | retentionOptions: first render, 104 nodes; update 0.1 ms |
-| 1,000 items | 0.8 ms | retentionOptions: first render, 104 nodes; update 0.1 ms |
+| First render | **3.5 ms** | the gallery demo's data, 104 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of retentionOptions replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.6 ms | retentionOptions: first render, 104 nodes; update 0.2 ms |
+| 1,000 items | 1.2 ms | retentionOptions: first render, 104 nodes; update 0.2 ms |
 
 What it renders doesn't grow with retentionOptions (tested to 1,000 items).
 

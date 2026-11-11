@@ -9,7 +9,7 @@
 Parallel coordinates: rows as lines across a vertical axis per measure, each on its own scale, axes that can run upside down, one row emphasised and named, gaps for missing values, a canvas for many rows, and a table view
 
 - **Element:** `<tc-parallel-chart>`
-- **Size:** 17.5 KB gzip · 49.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.5 KB gzip · 49.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -465,7 +465,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -475,7 +475,7 @@ No slots: everything it shows comes from its properties.
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
 | `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -493,8 +493,8 @@ No slots: everything it shows comes from its properties.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **49.3 KB** | **17.5 KB** |
-| With Lit – the first component on a page | 68.7 KB | 23.6 KB |
+| **Added to a page that already has Lit** | **49.4 KB** | **17.5 KB** |
+| With Lit – the first component on a page | 68.9 KB | 23.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -502,19 +502,19 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 17 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of invert replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.0 ms | invert: first render, 17 nodes; update 0.0 ms |
-| 1,000 items | 0.9 ms | invert: first render, 17 nodes; update 0.2 ms |
+| First render | **2.4 ms** | the gallery demo's data, 53 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of data replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.7 ms | data: first render, 205 nodes; update 0.9 ms |
+| 1,000 items | 8.0 ms | data: first render, 205 nodes; update 4.1 ms |
 
-What it renders doesn't grow with invert (tested to 1,000 items).
+1,000 items of data: 8.0 ms, 205 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
 ### Runtime
 
-- At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **60 frames/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
 - Stops or pauses off screen and under reduced motion.

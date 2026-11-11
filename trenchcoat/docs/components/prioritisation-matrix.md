@@ -9,7 +9,7 @@
 Value against effort as a 2 × 2 – numbered points you drag or move with the arrow keys, gathered when they overlap, and the items listed by quadrant beside it
 
 - **Element:** `<tc-prioritisation-matrix>`
-- **Size:** 8.7 KB gzip · 28.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.7 KB gzip · 28.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -430,7 +430,7 @@ Follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/b
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -438,14 +438,14 @@ Follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/b
 | --- | --- | --- |
 | **This component alone** | 20.8 KB | 6.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **28.1 KB** | **8.7 KB** |
-| With Lit – the first component on a page | 49.9 KB | 16.0 KB |
+| **Added to a page that already has Lit** | **28.2 KB** | **8.7 KB** |
+| With Lit – the first component on a page | 50.0 KB | 16.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -453,13 +453,13 @@ Follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/b
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 146 DOM nodes – to layout, median of 7 |
+| First render | **4.1 ms** | the gallery demo's data, 146 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | one item of items replaced |
-| First on the page | 8.7 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.7 ms | items: first render, 876 nodes; update 0.6 ms |
-| 1,000 items | 39 ms | items: first render, 8,076 nodes; update 9.3 ms |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 13 ms | items: first render, 876 nodes; update 1.0 ms |
+| 1,000 items | 53 ms | items: first render, 8,076 nodes; update 9.8 ms |
 
-1,000 items of items: 39 ms, 8,076 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of items: 53 ms. It renders every item, so a first render passes 50 ms (a long task) at about 950 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Integrations page of a command menu – search, a list of services and the picked one with its connection on two tiles
 
 - **Element:** `<tc-integration-picker>`
-- **Size:** 16.9 KB gzip · 59.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.9 KB gzip · 59.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -475,22 +475,22 @@ pending; a failure is an alert: “Couldn't connect Linear – try again”. Wit
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 51.4 KB | 14.6 KB |
+| **This component alone** | 51.4 KB | 14.5 KB |
 | Lit · the library every element is built on, the parts it uses | 22.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **59.3 KB** | **17.0 KB** |
-| With Lit – the first component on a page | 82.6 KB | 24.7 KB |
+| **Added to a page that already has Lit** | **59.4 KB** | **16.9 KB** |
+| With Lit – the first component on a page | 82.7 KB | 24.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -498,13 +498,13 @@ pending; a failure is an alert: “Couldn't connect Linear – try again”. Wit
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.5 ms** | the gallery demo's data, 141 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of integrations replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.7 ms | integrations: first render, 771 nodes; update 0.6 ms |
-| 1,000 items | 36 ms | integrations: first render, 7,071 nodes; update 4.0 ms |
+| First render | **3.2 ms** | the gallery demo's data, 141 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of integrations replaced |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | integrations: first render, 771 nodes; update 1.1 ms |
+| 1,000 items | 53 ms | integrations: first render, 7,071 nodes; update 4.6 ms |
 
-1,000 items of integrations: 36 ms, 7,071 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of integrations: 53 ms. It renders every item, so a first render passes 50 ms (a long task) at about 950 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

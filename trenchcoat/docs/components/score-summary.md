@@ -9,7 +9,7 @@
 NPS or CSAT results – the score in big type, the change since last time with a sparkline, the target, the bands with shares and counts, and a bar per score you can pick to filter comments
 
 - **Element:** `<tc-score-summary>`
-- **Size:** 13.3 KB gzip · 48.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.3 KB gzip · 48.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -446,7 +446,7 @@ share and its count. The distribution is a `toolbar` named “Answers by score�
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -454,15 +454,15 @@ share and its count. The distribution is a `toolbar` named “Answers by score�
 | --- | --- | --- |
 | **This component alone** | 22.0 KB | 7.2 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [score-survey](score-survey.md) · Element it renders | 18.0 KB | – |
-| **Added to a page that already has Lit** | **48.6 KB** | **13.4 KB** |
-| With Lit – the first component on a page | 69.1 KB | 20.1 KB |
+| **Added to a page that already has Lit** | **48.7 KB** | **13.3 KB** |
+| With Lit – the first component on a page | 69.2 KB | 20.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -470,11 +470,11 @@ share and its count. The distribution is a `toolbar` named “Answers by score�
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 127 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of responses replaced |
-| First on the page | 21 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.3 ms | responses: first render, 127 nodes; update 0.4 ms |
-| 1,000 items | 1.5 ms | responses: first render, 127 nodes; update 0.4 ms |
+| First render | **3.1 ms** | the gallery demo's data, 127 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of responses replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.5 ms | responses: first render, 127 nodes; update 0.4 ms |
+| 1,000 items | 1.3 ms | responses: first render, 127 nodes; update 0.4 ms |
 
 What it renders doesn't grow with responses (tested to 1,000 items).
 

@@ -9,7 +9,7 @@
 Unanswered chat messages marked as read, with a thumbs-down reply on hover; the red shine sweeps three times
 
 - **Element:** `<tc-ghosted-chat>`
-- **Size:** 6.8 KB gzip · 20.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 6.9 KB gzip · 20.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -278,7 +278,7 @@ clearing `label` makes it decorative again.
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -286,14 +286,14 @@ clearing `label` makes it decorative again.
 | --- | --- | --- |
 | **This piece alone** | 13.4 KB | 4.7 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **20.5 KB** | **6.8 KB** |
-| With Lit – the first component on a page | 40.1 KB | 13.2 KB |
+| **Added to a page that already has Lit** | **20.6 KB** | **6.9 KB** |
+| With Lit – the first component on a page | 40.2 KB | 13.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -301,9 +301,9 @@ clearing `label` makes it decorative again.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 15 DOM nodes – to layout, median of 7 |
-| Typical update | **0.9 ms** | re-render with the same data |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| First render | **1.7 ms** | the gallery demo's data, 15 DOM nodes – to layout, median of 7 |
+| Typical update | **1.1 ms** | re-render with the same data |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

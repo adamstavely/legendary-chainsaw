@@ -117,6 +117,24 @@
       "type": "boolean",
       "description": "Shades the 95% confidence band round a linear trend"
     },
+    "group": {
+      "type": "string",
+      "description": "The group field: points of a group share an ink, and the header's legend can isolate, hide and show each group"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The groups shown; by default all of them. Changed by the legend unless a tc-groups-change listener calls preventDefault()"
+    },
+    "stats": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BubbleStat"
+      },
+      "description": "Stat tiles under the chart: { label, value, change? }"
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"
@@ -304,6 +322,29 @@
     "Intl.NumberFormatOptionsCurrencyDisplay": {},
     "Intl.NumberFormatOptionsUseGrouping": {
       "type": "boolean"
+    },
+    "BubbleStat": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "change": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A stat tile under the chart: its name, its value (a number is written in the chart's format) and its change in %"
     },
     "Row": {
       "type": "object",

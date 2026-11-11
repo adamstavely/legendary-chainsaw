@@ -9,7 +9,7 @@
 Reads a passage aloud with the browser's voices – the sentence and the spoken word marked as it goes, click a sentence to read from there, play, pause, skip and stop, and a voice, speed and pitch picker
 
 - **Element:** `<tc-text-to-speech>`
-- **Size:** 10.1 KB gzip · 33.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.2 KB gzip · 33.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -453,7 +453,7 @@ as "1.5 times".
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -461,14 +461,14 @@ as "1.5 times".
 | --- | --- | --- |
 | **This component alone** | 25.2 KB | 7.8 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **33.5 KB** | **10.2 KB** |
-| With Lit – the first component on a page | 54.2 KB | 17.0 KB |
+| **Added to a page that already has Lit** | **33.6 KB** | **10.2 KB** |
+| With Lit – the first component on a page | 54.3 KB | 16.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -476,9 +476,9 @@ as "1.5 times".
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.8 ms** | the gallery demo's data, 354 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | re-render with the same data |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| First render | **4.5 ms** | the gallery demo's data, 354 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | re-render with the same data |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Try an action against the policy before it's real – allow, needs approval, deny or hard stop, the rule that decided it and why
 
 - **Element:** `<tc-policy-simulator>`
-- **Size:** 11.8 KB gzip · 43.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.9 KB gzip · 43.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -355,23 +355,23 @@ shows an alert with `errorLabel`.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 33.6 KB | 9.1 KB |
+| **This component alone** | 33.6 KB | 9.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.1 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.2 KB | – |
-| **Added to a page that already has Lit** | **43.0 KB** | **11.9 KB** |
-| With Lit – the first component on a page | 63.7 KB | 18.6 KB |
+| **Added to a page that already has Lit** | **43.1 KB** | **11.9 KB** |
+| With Lit – the first component on a page | 63.8 KB | 18.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -379,13 +379,13 @@ shows an alert with `errorLabel`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 132 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of ruleClasses replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.1 ms | ruleClasses: first render, 227 nodes; update 0.1 ms |
-| 1,000 items | 7.9 ms | ruleClasses: first render, 1,127 nodes; update 1.0 ms |
+| First render | **3.6 ms** | the gallery demo's data, 132 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of ruleClasses replaced |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.8 ms | ruleClasses: first render, 227 nodes; update 0.4 ms |
+| 1,000 items | 15 ms | ruleClasses: first render, 1,127 nodes; update 1.5 ms |
 
-1,000 items of ruleClasses: 7.9 ms, 1,127 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of ruleClasses: 15 ms, 1,127 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

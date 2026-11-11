@@ -9,7 +9,7 @@
 A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs
 
 - **Element:** `<tc-tool-configuration>`
-- **Size:** 34.4 KB gzip · 135.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 34.4 KB gzip · 135.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -523,15 +523,15 @@ example, “2 problems to fix · 1 suggestion”; each link starts “Problem:�
 
 ## Performance
 
-*Measured 2026-10-29 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 52.7 KB | 13.4 KB |
+| **This component alone** | 52.7 KB | 13.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
@@ -539,8 +539,8 @@ example, “2 problems to fix · 1 suggestion”; each link starts “Problem:�
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
 | [code-block](code-block.md) · Element it renders | 32.3 KB | – |
-| **Added to a page that already has Lit** | **135.6 KB** | **34.5 KB** |
-| With Lit – the first component on a page | 158.8 KB | 42.3 KB |
+| **Added to a page that already has Lit** | **135.8 KB** | **34.4 KB** |
+| With Lit – the first component on a page | 158.9 KB | 42.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -548,11 +548,11 @@ example, “2 problems to fix · 1 suggestion”; each link starts “Problem:�
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 184 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of types replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.7 ms | types: first render, 184 nodes; update 0.1 ms |
-| 1,000 items | 1.5 ms | types: first render, 184 nodes; update 0.2 ms |
+| First render | **3.3 ms** | the gallery demo's data, 184 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of types replaced |
+| First on the page | 34 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.7 ms | types: first render, 184 nodes; update 0.3 ms |
+| 1,000 items | 3.0 ms | types: first render, 184 nodes; update 0.3 ms |
 
 What it renders doesn't grow with types (tested to 1,000 items).
 

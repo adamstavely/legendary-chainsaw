@@ -6,10 +6,10 @@
 
 **Charts** · New
 
-A few ratios as rings round a centre, each filled towards its target – the largest emphasised, each named with its value where its ring starts, or the emphasised value in a full circle's middle – rings that sweep round in turn
+A few ratios as rings round a centre, each filled towards its target – the largest emphasised, each named with its value where its ring starts, or activity rings with a lap past each target and a tile per ring – rings that sweep round in turn
 
 - **Element:** `<tc-radial-bar-chart>`
-- **Size:** 15.4 KB gzip · 44.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.1 KB gzip · 51.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -36,10 +36,18 @@ value in the middle.
 Values are written as percentages by default. The rings sweep round one after another when the chart scrolls into
 view and glide to new values when the data changes. Ported from ztd-charts (MIT).
 
+`variant="rings"` draws activity rings: thick full circles, each in the next categorical ink on a track tinted with
+it, filling towards its own `target` (a field; `max` when it's missing). A ring past its target wraps round again in a
+darker lap, up to twice round. Each ring starts at the top with a glyph – the label's first letter, or `glyph` – and
+under the chart a tile per ring gives its name and its value against its target ("6 / 8"). Pointing at or focusing a
+tile isolates its ring, and pointing at a ring marks its tile. Values are plain numbers in this variant unless
+`format` says otherwise; `unit` follows the target in the tiles.
+
 ### When to use
 
 - Progress of three to eight items towards the same kind of target – milestones met, budget spent, checks passed.
 - A compact, eye-catching summary where a bar chart would feel heavy.
+- Daily or weekly goals with different targets, where going past a target is worth showing – `variant="rings"`.
 
 ### When not to use
 
@@ -55,7 +63,10 @@ view and glide to new values when the data changes. Ported from ztd-charts (MIT)
 2. **Track** `.ui-rbr__track` – the full sweep each ring could fill
 3. **Ring** `.ui-rbr__bar` – the value, filled round the track; the emphasised one in the accent
 4. **Name** `.tc-chart__value` – the item and its value where its ring starts (or the value in the middle)
-5. **Tooltip** `.tc-chart__tip` – the item, its value and its share of the target
+5. **Tooltip** `.tc-chart__tip` – the item, its value and its share of the target (and the target, for rings)
+6. **Lap** `.ui-rbr__lap` – rings: the darker second lap past the target
+7. **Glyph** `.ui-rbr__glyph` – rings: the mark where each ring starts
+8. **Tile** `.ui-rbr__tile` – rings: one per ring under the chart, its name `.ui-rbr__tile-name` and its value against
 
 ## Looks
 
@@ -64,6 +75,11 @@ row; `bare` drops both, for a chart inside another component. Inks come from the
 component tokens on the element: `--tc-plot-accent` and `--tc-plot-rest` for emphasis, and `--tc-rbr-track` (the
 grid ink) for the tracks. Names are written in the text inks beside the rings rather than on them, so they stay
 legible whatever the inks are. `still` (or the system's reduced-motion setting) draws everything at once.
+
+Activity rings take `--tc-plot-ink-1` onwards; `--tc-rbr-ring-tint` sets how much of a ring's ink tints its track,
+and `--tc-rbr-lap-mix` and `--tc-rbr-lap-ink` the darker lap past the target. Tiles are white tiles on the Standard
+tray and wells in the Clean card, at least `--tc-rbr-tile-min` wide and wrapping on narrow cards; the active tile is
+outlined in its ring's ink.
 
 ## Usage
 
@@ -80,7 +96,16 @@ legible whatever the inks are. `still` (or the system's reduced-motion setting) 
     { label: "Imaging", value: 64 },
     { label: "Proteomics", value: 91 },
   ];
+
+  // Activity rings: each goal against its own target
+  document.querySelector("#goals").data = [
+    { label: "Reviews", value: 6, target: 8 },
+    { label: "Interviews", value: 4, target: 3 },
+    { label: "Hours logged", value: 5.5, target: 7 },
+  ];
+  document.querySelector("#goals").target = "target";
 </script>
+<tc-radial-bar-chart id="goals" heading="Today's goals" variant="rings"></tc-radial-bar-chart>
 ```
 
 ### React / Next.js
@@ -94,6 +119,16 @@ const data = [
   { label: "Imaging", value: 64 },
   { label: "Proteomics", value: 91 },
 ];
+
+const goals = [
+  { label: "Reviews", value: 6, target: 8 },
+  { label: "Interviews", value: 4, target: 3 },
+  { label: "Hours logged", value: 5.5, target: 7 },
+];
+
+export function Goals() {
+  return <RadialBarChart title="Today's goals" variant="rings" data={goals} target="target" />;
+}
 
 export function Milestones() {
   return <RadialBarChart title="Grant milestones" description="Deliverables met, of target" data={data} onMarkClick={(e) => console.log(e.label)} />;
@@ -175,6 +210,9 @@ export class RadialBarChartExample {
 | `value` | – | `Accessor<T, number> \| undefined` | `undefined` | The value field; by default "value" |
 | `max` | `max` | `number` | `100` | The value of a full ring – the target; by default 100 |
 | `sweep` | `sweep` | `number` | `270` | How far round a ring goes, in degrees (30–360); by default 270 |
+| `variant` | `variant` | `RadialBarVariant` | `"bars"` | "bars" (open rings named where they start) or "rings" (activity rings with a tile each) |
+| `target` | – | `Accessor<T, number> \| undefined` | `undefined` | Each item's own target – a full ring – for the rings variant; by default `max` |
+| `glyph` | – | `Accessor<T, string> \| undefined` | `undefined` | The short mark drawn where each activity ring starts; by default the first letter of its label |
 | `heading` | `heading` | `string` | `""` | The heading, and the chart's name |
 | `description` | `description` | `string \| undefined` | `undefined` | One line under the heading |
 | `data` | – | `readonly T[]` | `[]` | The rows to draw |
@@ -215,10 +253,14 @@ export class RadialBarChartExample {
 | Custom property | Value | Look |
 | --- | --- | --- |
 | `--tc-rbr-track` | `var(--tc-plot-grid)` | both |
+| `--tc-rbr-ring-tint` | `18%` | both |
+| `--tc-rbr-lap-mix` | `70%` | both |
+| `--tc-rbr-lap-ink` | `var(--tc-zinc-950)` | both |
+| `--tc-rbr-tile-min` | `112px` | both |
 
-#### Design tokens it reads (3)
+#### Design tokens it reads (29)
 
-`--tc-font-size-xl`, `--tc-plot-focus`, `--tc-plot-grid`
+`--tc-card-radius`, `--tc-card-shadow`, `--tc-control-h-sm`, `--tc-duration-fast`, `--tc-ease-standard`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-size-lg`, `--tc-font-size-xl`, `--tc-font-size-xs`, `--tc-font-weight-strong`, `--tc-plot-bg`, `--tc-plot-focus`, `--tc-plot-grid`, `--tc-radius-full`, `--tc-radius-md`, `--tc-rbr-ink`, `--tc-space-0-5`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-surface-on-tray`, `--tc-surface-sunken`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-zinc-950`
 
 ## Frameworks
 
@@ -240,12 +282,14 @@ export class RadialBarChartExample {
 | --- | --- | --- | --- | --- | --- |
 | `label` | `el.label = …;` | `<… label={…} />` | `<tc-radial-bar-chart :label="…">` | `<tc-radial-bar-chart [label]="…">` | `<tc-radial-bar-chart {label}>` |
 | `value` | `el.value = …;` | `<… value={…} />` | `<tc-radial-bar-chart :value="…">` | `<tc-radial-bar-chart [value]="…">` | `<tc-radial-bar-chart {value}>` |
+| `target` | `el.target = …;` | `<… target={…} />` | `<tc-radial-bar-chart :target="…">` | `<tc-radial-bar-chart [target]="…">` | `<tc-radial-bar-chart {target}>` |
+| `glyph` | `el.glyph = …;` | `<… glyph={…} />` | `<tc-radial-bar-chart :glyph="…">` | `<tc-radial-bar-chart [glyph]="…">` | `<tc-radial-bar-chart {glyph}>` |
 | `data` | `el.data = …;` | `<… data={…} />` | `<tc-radial-bar-chart :data="…">` | `<tc-radial-bar-chart [data]="…">` | `<tc-radial-bar-chart {data}>` |
 | `highlight` | `el.highlight = …;` | `<… highlight={…} />` | `<tc-radial-bar-chart :highlight="…">` | `<tc-radial-bar-chart [highlight]="…">` | `<tc-radial-bar-chart {highlight}>` |
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-radial-bar-chart :format="…">` | `<tc-radial-bar-chart [format]="…">` | `<tc-radial-bar-chart {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-radial-bar-chart :labels="…">` | `<tc-radial-bar-chart [labels]="…">` | `<tc-radial-bar-chart {labels}>` |
 
-*Also attributes: `max`, `sweep`, `heading`, `description`, `unit`, `locale`, `height`, `still` and 6 more – see the API table.*
+*Also attributes: `max`, `sweep`, `variant`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
 
 ### Events
 
@@ -399,11 +443,22 @@ No slots: everything it shows comes from its properties.
 | Enter / Space | Picks the ring (fires `tc-mark-click`) |
 | Escape | Lets go of the ring; pressed again, it's the page's |
 
+With `variant="rings"`, the tiles are a second tab stop:
+
+| Key | Does |
+| --- | --- |
+| Tab | Reaches the last focused tile, which isolates its ring |
+| Arrow keys / Home / End | Move between the tiles, each ring announced as you go |
+| Enter / Space | Picks the ring (fires `tc-mark-click`) |
+| Escape | Lets go of the ring |
+
 ### Screen readers
 
 - The plot is a group named by the heading, with the chart described in words (each item and its value).
 - A table of every value is always there for screen readers; the Table button shows it to everyone.
 - Moving with the arrows announces the ring with its value and position ("Imaging: 64%, 2 of 5").
+- Rings: the description and each announcement give the value against the target ("Reviews 6 of 8"); the tiles are a
+  list named "Rings" of buttons, each named by its label and its value against its target.
 - The drawing itself is hidden; nothing is said by colour alone.
 
 ### Every component
@@ -429,11 +484,11 @@ No slots: everything it shows comes from its properties.
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Why |
 | --- | --- | --- | --- | --- | --- | --- |
 | light-dark() | 123 | 120 | 17.5 | 17.5 | tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
-| color-mix() | 111 | 113 | 16.2 | 16.2 | internal/chart/element, tokens.css | Tints and washes mixed from the tokens. |
+| color-mix() | 111 | 113 | 16.2 | 16.2 | itself, internal/chart/element, tokens.css | Tints and washes mixed from the tokens. |
 | Container size queries | 105 | 110 | 16 | 16 | internal/chart/element | Components adapt to the width they're given, not the window's. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/kit, internal/chart/element | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit, internal/chart/element | Focus rings for keyboard users. |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | internal/chart/accessor | – |
-| :is() and :where() | 88 | 78 | 14 | 14 | internal/base, internal/chart/element, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, internal/chart/element, tokens.css | Every rule is keyed on :where() so the page can override it. |
 | ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | internal/chart/element | – |
 | IntersectionObserver | 51 (Edge 15) | 55 | 12.1 | 12.2 | internal/chart/element | – |
 
@@ -449,17 +504,17 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-07 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 6.4 KB | 3.1 KB |
-| Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
+| **This component alone** | 13.3 KB | 5.3 KB |
+| Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -474,8 +529,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **44.1 KB** | **15.4 KB** |
-| With Lit – the first component on a page | 63.5 KB | 21.6 KB |
+| **Added to a page that already has Lit** | **51.0 KB** | **17.1 KB** |
+| With Lit – the first component on a page | 70.5 KB | 23.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -483,15 +538,19 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| First render | **1.7 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of data replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.9 ms | data: first render, 204 nodes; update 0.9 ms |
+| 1,000 items | 8.2 ms | data: first render, 204 nodes; update 3.1 ms |
+
+1,000 items of data: 8.2 ms, 204 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
 ### Runtime
 
-- At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **60 frames/s** on screen, **2 frames/s** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
 - Stops or pauses off screen and under reduced motion.
@@ -506,6 +565,7 @@ No slots: everything it shows comes from its properties.
 - Keep labels short – they share the corner left of the rings' start.
 - Use the same kind of target for every ring; set `max` when it isn't 100.
 - Set `format` (or `unit`) when the values aren't percentages.
+- For rings, give each item its own `target` and a unit that reads after it (" h", " calls").
 
 ## Do and don't
 
@@ -517,7 +577,7 @@ No slots: everything it shows comes from its properties.
 ### Don't
 
 - Compare rings by length – the outer ones are longer for the same value.
-- Use it for values that can exceed the target by a lot; a ring stops at full.
+- Use it for values that can exceed the target by a lot; a ring stops at full (activity rings at twice round).
 
 ## Related
 

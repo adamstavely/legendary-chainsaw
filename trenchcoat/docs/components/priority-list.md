@@ -9,7 +9,7 @@
 A portfolio's topics or projects by priority – a tier badge, owner and team, health in words, momentum as a line with its change, coverage as a bar, what's open and the work in flight, with health filters and groups per priority
 
 - **Element:** `<tc-priority-list>`
-- **Size:** 11.4 KB gzip · 38.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.6 KB gzip · 39.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -477,15 +477,15 @@ that's pressed while its health is shown. With `grouped`, each group is a region
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 30.1 KB | 8.9 KB |
+| **This component alone** | 31.5 KB | 9.3 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -493,8 +493,8 @@ that's pressed while its health is shown. With `grouped`, each group is a region
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **37.8 KB** | **11.2 KB** |
-| With Lit – the first component on a page | 59.6 KB | 18.4 KB |
+| **Added to a page that already has Lit** | **39.3 KB** | **11.6 KB** |
+| With Lit – the first component on a page | 61.1 KB | 18.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -502,13 +502,13 @@ that's pressed while its health is shown. With `grouped`, each group is a region
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.7 ms** | the gallery demo's data, 363 DOM nodes – to layout, median of 7 |
+| First render | **4.4 ms** | the gallery demo's data, 363 DOM nodes – to layout, median of 7 |
 | Typical update | **1.3 ms** | one item of items replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 30 ms | items: first render, 3,730 nodes; update 7.7 ms |
-| 1,000 items | 195 ms | items: first render, 37,030 nodes; update 48 ms |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 31 ms | items: first render, 3,730 nodes; update 7.7 ms |
+| 1,000 items | 183 ms | items: first render, 37,030 nodes; update 46 ms |
 
-1,000 items of items: 195 ms. It renders every item, so a first render passes 50 ms (a long task) at about 260 items – page or filter longer lists.
+1,000 items of items: 183 ms. It renders every item, so a first render passes 50 ms (a long task) at about 270 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

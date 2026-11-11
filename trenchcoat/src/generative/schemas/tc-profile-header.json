@@ -12,8 +12,8 @@
     "level": {
       "type": "number",
       "enum": [
-        2,
-        1
+        1,
+        2
       ],
       "description": "The heading's level – 1 when the header tops the page, 2 (the default) inside a layout that has its own h1"
     },

@@ -9,7 +9,7 @@
 dev servers and background jobs with status, port link, uptime, CPU and memory, and last output, with Stop, Start, Restart and View output.
 
 - **Element:** `<tc-process-list>`
-- **Size:** 11.0 KB gzip · 32.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.0 KB gzip · 33.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -449,7 +449,7 @@ icons show. Stop, Start, Restart and Stop all are announced through a polite sta
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -457,16 +457,16 @@ icons show. Stop, Start, Restart and Stop all are announced through a polite sta
 | --- | --- | --- |
 | **This component alone** | 21.5 KB | 7.1 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/ansi` · Shared Trenchcoat code | 2.9 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **32.9 KB** | **11.1 KB** |
-| With Lit – the first component on a page | 55.5 KB | 18.5 KB |
+| **Added to a page that already has Lit** | **33.0 KB** | **11.0 KB** |
+| With Lit – the first component on a page | 55.6 KB | 18.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -474,13 +474,13 @@ icons show. Stop, Start, Restart and Stop all are announced through a polite sta
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 153 DOM nodes – to layout, median of 7 |
+| First render | **1.9 ms** | the gallery demo's data, 153 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of processes replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 14 ms | processes: first render, 3,441 nodes; update 3.3 ms |
-| 1,000 items | 152 ms | processes: first render, 34,266 nodes; update 24 ms |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 29 ms | processes: first render, 3,441 nodes; update 4.5 ms |
+| 1,000 items | 139 ms | processes: first render, 34,266 nodes; update 21 ms |
 
-1,000 items of processes: 152 ms. It renders every item, so a first render passes 50 ms (a long task) at about 330 items – page or filter longer lists.
+1,000 items of processes: 139 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 An organisational unit at a glance – code, name, lead, On track / Watch / At risk counts, the page's stats with a spent-of-budget bar, and teams that fold open onto their topics' priority, coverage, open gaps and momentum
 
 - **Element:** `<tc-org-unit-card>`
-- **Size:** 9.5 KB gzip · 34.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.5 KB gzip · 34.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -475,15 +475,15 @@ momentum, “Down 8%”. The marks, arrows and bars are hidden; their meaning is
 
 ## Performance
 
-*Measured 2026-11-08 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 26.4 KB | 7.3 KB |
+| **This component alone** | 26.4 KB | 7.2 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -492,8 +492,8 @@ momentum, “Down 8%”. The marks, arrows and bars are hidden; their meaning is
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **34.2 KB** | **9.5 KB** |
-| With Lit – the first component on a page | 56.0 KB | 16.8 KB |
+| **Added to a page that already has Lit** | **34.3 KB** | **9.5 KB** |
+| With Lit – the first component on a page | 56.1 KB | 16.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -501,13 +501,13 @@ momentum, “Down 8%”. The marks, arrows and bars are hidden; their meaning is
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.7 ms** | the gallery demo's data, 184 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of stats replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.9 ms | stats: first render, 605 nodes; update 0.6 ms |
-| 1,000 items | 32 ms | stats: first render, 4,655 nodes; update 2.8 ms |
+| First render | **1.8 ms** | the gallery demo's data, 184 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of stats replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.5 ms | stats: first render, 605 nodes; update 0.7 ms |
+| 1,000 items | 35 ms | stats: first render, 4,655 nodes; update 3.3 ms |
 
-1,000 items of stats: 32 ms, 4,655 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of stats: 35 ms, 4,655 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

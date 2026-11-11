@@ -9,7 +9,7 @@
 Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits
 
 - **Element:** `<tc-terms-dialog>`
-- **Size:** 13.8 KB gzip · 50.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.9 KB gzip · 50.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -521,23 +521,23 @@ While saving, the dialog is `aria-busy`.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 40.8 KB | 11.3 KB |
+| **This component alone** | 40.8 KB | 11.2 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/modal` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **50.0 KB** | **13.9 KB** |
-| With Lit – the first component on a page | 72.3 KB | 21.2 KB |
+| **Added to a page that already has Lit** | **50.1 KB** | **13.9 KB** |
+| With Lit – the first component on a page | 72.4 KB | 21.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -545,13 +545,13 @@ While saving, the dialog is `aria-busy`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 156 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of sections replaced |
-| First on the page | 3.3 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.7 ms | sections: first render, 1,147 nodes; update 0.6 ms |
-| 1,000 items | 16 ms | sections: first render, 10,820 nodes; update 4.8 ms |
+| First render | **1.0 ms** | the gallery demo's data, 156 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of sections replaced |
+| First on the page | 5.9 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.4 ms | sections: first render, 1,147 nodes; update 1.1 ms |
+| 1,000 items | 23 ms | sections: first render, 10,820 nodes; update 5.8 ms |
 
-1,000 items of sections: 16 ms, 10,820 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of sections: 23 ms, 10,820 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

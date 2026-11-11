@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-menu-morph.json",
+  "title": "tc-menu-morph",
+  "description": "A button that grows into its menu and shrinks back into itself.",
+  "type": "object",
+  "properties": {
+    "open": {
+      "type": "boolean",
+      "description": "Whether the menu is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "align": {
+      "type": "string",
+      "enum": [
+        "center",
+        "end",
+        "start"
+      ],
+      "description": "Where the menu lines up with the trigger"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "bottom",
+        "top"
+      ],
+      "description": "The side the menu prefers – it flips when there's no room"
+    },
+    "gap": {
+      "type": "number",
+      "description": "Space between the trigger and the menu, px"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Length of the morph in ms; default the --tc-duration-base token"
+    }
+  },
+  "additionalProperties": false
+}

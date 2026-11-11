@@ -37,6 +37,14 @@
     ]
   },
   {
+    "tag": "tc-active-days",
+    "name": "ActiveDays",
+    "description": "A month calendar of rings, each day filled to how much of its goal it met – with the month's goal days, best",
+    "events": [
+      "tc-date-change"
+    ]
+  },
+  {
     "tag": "tc-activity-calendar",
     "name": "ActivityCalendar",
     "description": "A year of activity, a square per day in a column per week, shaded by how much happened – with month and weekday",
@@ -413,6 +421,21 @@
     "events": []
   },
   {
+    "tag": "tc-badge-pop",
+    "name": "BadgePop",
+    "description": "A count badge that pops when the count rises and rolls its digits.",
+    "events": []
+  },
+  {
+    "tag": "tc-banner-stack",
+    "name": "BannerStack",
+    "description": "Stacked notices – the newest on top, older ones peeking behind – that spread into a list on hover or focus.",
+    "events": [
+      "tc-dismiss",
+      "tc-expanded-change"
+    ]
+  },
+  {
     "tag": "tc-bar-chart",
     "name": "BarChart",
     "description": "Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – with the highest one",
@@ -522,7 +545,8 @@
     "events": [
       "tc-view-change",
       "tc-mark-hover",
-      "tc-mark-click"
+      "tc-mark-click",
+      "tc-groups-change"
     ]
   },
   {
@@ -1084,6 +1108,15 @@
     ]
   },
   {
+    "tag": "tc-diff-table",
+    "name": "DiffTable",
+    "description": "An AI's proposed edits to a table, reviewed in place: struck and new values per cell, added and removed rows, and accept, reject and undo per edit, per row or for all.",
+    "events": [
+      "tc-edit-change",
+      "tc-decisions-change"
+    ]
+  },
+  {
     "tag": "tc-diff-viewer",
     "name": "DiffViewer",
     "description": "The changes to a set of files: a row per file with its status and line counts, opening to a line diff.",
@@ -1108,6 +1141,14 @@
       "tc-expanded-change",
       "tc-dismiss",
       "tc-open-session"
+    ]
+  },
+  {
+    "tag": "tc-dissolve-clear",
+    "name": "DissolveClear",
+    "description": "A clear button for a text input whose text dissolves as it's cleared.",
+    "events": [
+      "tc-clear"
     ]
   },
   {
@@ -1218,6 +1259,12 @@
       "tc-action",
       "tc-toggles-change"
     ]
+  },
+  {
+    "tag": "tc-error-shake",
+    "name": "ErrorShake",
+    "description": "Wraps a field and shakes it once, with an error outline and message, when it turns invalid.",
+    "events": []
   },
   {
     "tag": "tc-eval-scorecard",
@@ -1377,6 +1424,15 @@
     "events": [
       "tc-value-change",
       "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-fine-tune-card",
+    "name": "FineTuneCard",
+    "description": "An inspector where an agent tunes a design's properties and the person can take over: numbers, a percentage, a choice and swatches, a live preview, Agent markers and a revert.",
+    "events": [
+      "tc-values-change",
+      "tc-adjust-request"
     ]
   },
   {
@@ -1555,6 +1611,14 @@
     "events": [
       "tc-selected-change",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-icon-swap",
+    "name": "IconSwap",
+    "description": "One icon turning into the next – rotate, scale and blur – by `state`, optionally turning back after a while.",
+    "events": [
+      "tc-state-change"
     ]
   },
   {
@@ -1768,6 +1832,14 @@
     ]
   },
   {
+    "tag": "tc-like-burst",
+    "name": "LikeBurst",
+    "description": "A like or save toggle whose icon fills with a spring and a small burst.",
+    "events": [
+      "tc-pressed-change"
+    ]
+  },
+  {
     "tag": "tc-limit-reached",
     "name": "LimitReached",
     "description": "A gauge at the end of its range with a clock beside it, for work that's stopped until a quota or rate limit resets.",
@@ -1858,6 +1930,14 @@
       "tc-memories-change",
       "tc-enabled-change",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-menu-morph",
+    "name": "MenuMorph",
+    "description": "A button that grows into its menu and shrinks back into itself.",
+    "events": [
+      "tc-open-change"
     ]
   },
   {
@@ -2070,6 +2150,12 @@
     ]
   },
   {
+    "tag": "tc-page-slide",
+    "name": "PageSlide",
+    "description": "Moves between views by sliding them side by side as `view` changes, the height gliding along.",
+    "events": []
+  },
+  {
     "tag": "tc-panel-card",
     "name": "PanelCard",
     "description": "A compact card for one section of a side panel, which folds or opens something else.",
@@ -2152,6 +2238,12 @@
       "tc-mark-hover",
       "tc-mark-click"
     ]
+  },
+  {
+    "tag": "tc-pixel-loader",
+    "name": "PixelLoader",
+    "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends.",
+    "events": []
   },
   {
     "tag": "tc-place-list",
@@ -2728,6 +2820,14 @@
     ]
   },
   {
+    "tag": "tc-score-ring",
+    "name": "ScoreRing",
+    "description": "One overall score from weighted sub-scores – a ring with a segment per sub-score, the score and its band in the",
+    "events": [
+      "tc-subscore-change"
+    ]
+  },
+  {
     "tag": "tc-score-summary",
     "name": "ScoreSummary",
     "description": "NPS or CSAT results: the score, the bands, the answers per score, the change and the target.",
@@ -2909,6 +3009,14 @@
     ]
   },
   {
+    "tag": "tc-signature-pad",
+    "name": "SignaturePad",
+    "description": "A signature field: draw with a mouse, pen or finger, or type the name instead, with undo, clear, the signer, the",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
     "tag": "tc-sla-status",
     "name": "SlaStatus",
     "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,",
@@ -2923,6 +3031,12 @@
     "events": [
       "tc-value-change"
     ]
+  },
+  {
+    "tag": "tc-sliding-indicator",
+    "name": "SlidingIndicator",
+    "description": "A highlight that slides to the selected item of the buttons or links inside it.",
+    "events": []
   },
   {
     "tag": "tc-slope-chart",
@@ -2983,6 +3097,22 @@
       "tc-chunk-change",
       "tc-position-change",
       "tc-finish"
+    ]
+  },
+  {
+    "tag": "tc-stack-spread",
+    "name": "StackSpread",
+    "description": "An overlapping stack – avatars, file chips, tags – that fans apart on hover or focus, with \"+N\" past `max`.",
+    "events": []
+  },
+  {
+    "tag": "tc-stage-bars",
+    "name": "StageBars",
+    "description": "A funnel as a list: a pill per stage sized to its share of the first, the counts and shares beside it, a headline that",
+    "events": [
+      "tc-range-change",
+      "tc-stage-change",
+      "tc-view-change"
     ]
   },
   {
@@ -3421,6 +3551,15 @@
     "description": "Core Web Vitals for a page: a tile per measure with its value, a rating word, a three-zone track and earlier readings.",
     "events": [
       "tc-device-change"
+    ]
+  },
+  {
+    "tag": "tc-week-bars",
+    "name": "WeekBars",
+    "description": "A week of daily totals as bars against a goal line, with the week's total and average, a week switcher and a table view.",
+    "events": [
+      "tc-week-change",
+      "tc-view-change"
     ]
   },
   {

@@ -9,7 +9,7 @@
 Draws the eye once – a soft ring passes around something new a single time, and never on page load
 
 - **Element:** `<tc-attention-pulse>`
-- **Size:** 3.9 KB gzip · 10.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 4.0 KB gzip · 10.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -238,7 +238,7 @@ It says nothing, because it's only a visual cue. Announce anything important in 
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -246,14 +246,14 @@ It says nothing, because it's only a visual cue. Announce anything important in 
 | --- | --- | --- |
 | **This piece alone** | 3.8 KB | 1.8 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **10.4 KB** | **3.9 KB** |
-| With Lit – the first component on a page | 30.0 KB | 10.3 KB |
+| **Added to a page that already has Lit** | **10.5 KB** | **4.0 KB** |
+| With Lit – the first component on a page | 30.1 KB | 10.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -261,9 +261,9 @@ It says nothing, because it's only a visual cue. Announce anything important in 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.2 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 0.9 ms | default properties; includes adding its CSS to the document |
+| First render | **0.3 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **0.0 ms** | re-render with the same data |
+| First on the page | 3.2 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 One paper's impact on one card – venue, topic, grade and authors, downloads, views, citations and attention with a reads sparkline, mentions, who is reading, and peer, reader and sponsor feedback with a sentiment each
 
 - **Element:** `<tc-publication-impact>`
-- **Size:** 11.8 KB gzip · 43.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.9 KB gzip · 43.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -447,7 +447,7 @@ reads its kind, who and where, its sentiment in words, the quote and its date.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -455,7 +455,7 @@ reads its kind, who and where, its sentiment in words, the quote and its date.
 | --- | --- | --- |
 | **This component alone** | 23.6 KB | 6.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -465,8 +465,8 @@ reads its kind, who and where, its sentiment in words, the quote and its date.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [audience-mix](audience-mix.md) · Element it renders | 11.8 KB | – |
-| **Added to a page that already has Lit** | **43.6 KB** | **11.9 KB** |
-| With Lit – the first component on a page | 63.0 KB | 18.2 KB |
+| **Added to a page that already has Lit** | **43.7 KB** | **11.9 KB** |
+| With Lit – the first component on a page | 63.1 KB | 18.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -474,11 +474,11 @@ reads its kind, who and where, its sentiment in words, the quote and its date.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.2 ms** | the gallery demo's data, 173 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of reads replaced |
-| First on the page | 2.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.2 ms | reads: first render, 173 nodes; update 0.3 ms |
-| 1,000 items | 2.3 ms | reads: first render, 173 nodes; update 0.4 ms |
+| First render | **4.1 ms** | the gallery demo's data, 173 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of reads replaced |
+| First on the page | 4.9 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.5 ms | reads: first render, 173 nodes; update 0.6 ms |
+| 1,000 items | 4.0 ms | reads: first render, 173 nodes; update 1.0 ms |
 
 What it renders doesn't grow with reads (tested to 1,000 items).
 

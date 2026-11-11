@@ -9,7 +9,7 @@
 One section of a side panel – a heading, a short value and content that glides open and shut, or a row that opens something else.
 
 - **Element:** `<tc-panel-card>`
-- **Size:** 5.3 KB gzip · 14.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 5.4 KB gzip · 15.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -396,7 +396,7 @@ isn't drawn, so it's neither read nor reached.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -404,15 +404,15 @@ isn't drawn, so it's neither read nor reached.
 | --- | --- | --- |
 | **This component alone** | 8.2 KB | 3.4 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **14.9 KB** | **5.4 KB** |
-| With Lit – the first component on a page | 34.5 KB | 11.7 KB |
+| **Added to a page that already has Lit** | **15.1 KB** | **5.4 KB** |
+| With Lit – the first component on a page | 34.6 KB | 11.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -420,9 +420,9 @@ isn't drawn, so it's neither read nor reached.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.3 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
+| First render | **0.7 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 4.5 ms | default properties; includes adding its CSS to the document |
+| First on the page | 12 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

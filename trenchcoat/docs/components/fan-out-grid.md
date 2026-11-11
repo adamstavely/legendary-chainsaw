@@ -9,7 +9,7 @@
 One agent hands a big job to many workers – every task a cell on a live grid that fills in as they get through it, with retries, failures, cost and the time left, and the details of any task on hover
 
 - **Element:** `<tc-fan-out-grid>`
-- **Size:** 12.1 KB gzip · 41.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.1 KB gzip · 41.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -451,23 +451,23 @@ toggle buttons in a group named “Show only”. A polite live region reports pr
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 32.2 KB | 9.5 KB |
+| **This component alone** | 32.2 KB | 9.4 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.7 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **41.3 KB** | **12.1 KB** |
-| With Lit – the first component on a page | 64.0 KB | 19.6 KB |
+| **Added to a page that already has Lit** | **41.4 KB** | **12.1 KB** |
+| With Lit – the first component on a page | 64.1 KB | 19.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -475,13 +475,13 @@ toggle buttons in a group named “Show only”. A polite live region reports pr
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **5.1 ms** | the gallery demo's data, 176 DOM nodes – to layout, median of 7 |
-| Typical update | **0.9 ms** | one item of tasks replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.0 ms | tasks: first render, 136 nodes; update 0.3 ms |
-| 1,000 items | 32 ms | tasks: first render, 1,036 nodes; update 3.2 ms |
+| First render | **6.6 ms** | the gallery demo's data, 176 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of tasks replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.5 ms | tasks: first render, 136 nodes; update 0.4 ms |
+| 1,000 items | 35 ms | tasks: first render, 1,036 nodes; update 2.5 ms |
 
-1,000 items of tasks: 32 ms, 1,036 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of tasks: 35 ms, 1,036 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 36 React commits (clean), 36 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

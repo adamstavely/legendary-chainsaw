@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-error-shake.json",
+  "title": "tc-error-shake",
+  "description": "Wraps a field and shakes it once, with an error outline and message, when it turns invalid.",
+  "type": "object",
+  "properties": {
+    "invalid": {
+      "type": "boolean",
+      "description": "Shows the error: the outline and the message; turning it on shakes the content once"
+    },
+    "message": {
+      "type": "string",
+      "description": "The error message under the content, announced when it appears"
+    },
+    "shakeKey": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "Change this while invalid to shake again"
+    }
+  },
+  "additionalProperties": false
+}

@@ -9,7 +9,7 @@
 The quiet row under a sent message – a read receipt from sending to delivered to read (or Not sent with Retry), a relative time that keeps itself fresh, and Copy, Send again, Branch into a new chat and Edit
 
 - **Element:** `<tc-message-status>`
-- **Size:** 8.5 KB gzip · 26.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.5 KB gzip · 26.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -348,7 +348,7 @@ visible word. Below 220px the time steps out of sight but is still read.
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -356,14 +356,14 @@ visible word. Below 220px the time steps out of sight but is still read.
 | --- | --- | --- |
 | **This component alone** | 19.4 KB | 6.7 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **26.0 KB** | **8.5 KB** |
-| With Lit – the first component on a page | 46.2 KB | 15.1 KB |
+| **Added to a page that already has Lit** | **26.1 KB** | **8.5 KB** |
+| With Lit – the first component on a page | 46.3 KB | 15.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -371,11 +371,11 @@ visible word. Below 220px the time steps out of sight but is still read.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of actions replaced |
-| First on the page | 9.5 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | actions: first render, 34 nodes; update 0.2 ms |
-| 1,000 items | 0.7 ms | actions: first render, 34 nodes; update 0.0 ms |
+| First render | **2.5 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of actions replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.9 ms | actions: first render, 34 nodes; update 0.5 ms |
+| 1,000 items | 2.3 ms | actions: first render, 34 nodes; update 0.4 ms |
 
 What it renders doesn't grow with actions (tested to 1,000 items).
 

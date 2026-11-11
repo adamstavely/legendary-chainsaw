@@ -9,7 +9,7 @@
 Email addresses, phone numbers, links and @handles in text, found and marked – hover, focus or right-click one for its domain, country or site (with an http warning), Copy, Write email / Call / Open, and what your directory knows about it
 
 - **Element:** `<tc-entity-details>`
-- **Size:** 14.9 KB gzip · 43.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.1 KB gzip · 43.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -360,16 +360,16 @@ known.", "Couldn't load the details." and "Copied …".
 
 ## Performance
 
-*Measured 2026-11-06 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 25.8 KB | 9.4 KB |
+| **This component alone** | 25.8 KB | 9.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.3 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/inline-details` · Shared Trenchcoat code | 1.3 KB | – |
@@ -380,8 +380,8 @@ known.", "Couldn't load the details." and "Copied …".
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **43.3 KB** | **15.0 KB** |
-| With Lit – the first component on a page | 62.9 KB | 21.3 KB |
+| **Added to a page that already has Lit** | **43.7 KB** | **15.1 KB** |
+| With Lit – the first component on a page | 63.2 KB | 21.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -389,11 +389,11 @@ known.", "Couldn't load the details." and "Copied …".
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of kinds replaced |
-| First on the page | 3.8 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.6 ms | kinds: first render, 14 nodes; update 0.1 ms |
-| 1,000 items | 0.6 ms | kinds: first render, 14 nodes; update 0.1 ms |
+| First render | **2.4 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of kinds replaced |
+| First on the page | 7.2 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.2 ms | kinds: first render, 14 nodes; update 0.2 ms |
+| 1,000 items | 2.0 ms | kinds: first render, 14 nodes; update 0.3 ms |
 
 What it renders doesn't grow with kinds (tested to 1,000 items).
 

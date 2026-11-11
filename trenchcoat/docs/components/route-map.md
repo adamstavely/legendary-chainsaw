@@ -9,7 +9,7 @@
 An app's routes as an indented list with :params picked out, a status mark and word, load time and last visit; status chips filter it, and pressing a route opens it.
 
 - **Element:** `<tc-route-map>`
-- **Size:** 7.7 KB gzip · 22.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.8 KB gzip · 22.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -423,7 +423,7 @@ route is announced through a polite status.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -431,14 +431,14 @@ route is announced through a polite status.
 | --- | --- | --- |
 | **This component alone** | 15.4 KB | 5.6 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **22.7 KB** | **7.8 KB** |
-| With Lit – the first component on a page | 43.5 KB | 14.6 KB |
+| **Added to a page that already has Lit** | **22.9 KB** | **7.8 KB** |
+| With Lit – the first component on a page | 43.6 KB | 14.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -446,13 +446,13 @@ route is announced through a polite status.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 143 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of routes replaced |
-| First on the page | 9.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 9.6 ms | routes: first render, 2,543 nodes; update 3.1 ms |
-| 1,000 items | 96 ms | routes: first render, 25,043 nodes; update 32 ms |
+| First render | **3.1 ms** | the gallery demo's data, 143 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of routes replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 16 ms | routes: first render, 2,543 nodes; update 4.1 ms |
+| 1,000 items | 110 ms | routes: first render, 25,043 nodes; update 24 ms |
 
-1,000 items of routes: 96 ms. It renders every item, so a first render passes 50 ms (a long task) at about 520 items – page or filter longer lists.
+1,000 items of routes: 110 ms. It renders every item, so a first render passes 50 ms (a long task) at about 460 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
 
 - **Element:** `<tc-message-actions>`, `<tc-message-text>`
-- **Size:** 14.1 KB gzip · 54.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.2 KB gzip · 54.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -500,7 +500,7 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -508,15 +508,15 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 | --- | --- | --- |
 | **This component alone** | 46.9 KB | 11.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **54.6 KB** | **14.2 KB** |
-| With Lit – the first component on a page | 76.5 KB | 21.4 KB |
+| **Added to a page that already has Lit** | **54.7 KB** | **14.2 KB** |
+| With Lit – the first component on a page | 76.6 KB | 21.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -524,13 +524,13 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 87 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of actions replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 8.7 ms | actions: first render, 1,671 nodes; update 1.2 ms |
-| 1,000 items | 88 ms | actions: first render, 16,521 nodes; update 11 ms |
+| First render | **4.1 ms** | the gallery demo's data, 87 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of actions replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 21 ms | actions: first render, 1,671 nodes; update 1.8 ms |
+| 1,000 items | 106 ms | actions: first render, 16,521 nodes; update 6.7 ms |
 
-1,000 items of actions: 88 ms. It renders every item, so a first render passes 50 ms (a long task) at about 570 items – page or filter longer lists.
+1,000 items of actions: 106 ms. It renders every item, so a first render passes 50 ms (a long task) at about 470 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -9,7 +9,7 @@
 Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
 
 - **Element:** `<tc-integration-settings>`
-- **Size:** 13.8 KB gzip · 53.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.8 KB gzip · 53.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -441,7 +441,7 @@ clipboard.”, “Changes saved.”, “Changes discarded.” – and failures a
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -449,14 +449,14 @@ clipboard.”, “Changes saved.”, “Changes discarded.” – and failures a
 | --- | --- | --- |
 | **This component alone** | 45.3 KB | 11.3 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **53.7 KB** | **13.8 KB** |
-| With Lit – the first component on a page | 76.0 KB | 21.2 KB |
+| **Added to a page that already has Lit** | **53.8 KB** | **13.8 KB** |
+| With Lit – the first component on a page | 76.1 KB | 21.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -464,11 +464,11 @@ clipboard.”, “Changes saved.”, “Changes discarded.” – and failures a
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 47 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of timeZones replaced |
-| First on the page | 9.7 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.9 ms | timeZones: first render, 47 nodes; update 0.0 ms |
-| 1,000 items | 0.8 ms | timeZones: first render, 47 nodes; update 0.2 ms |
+| First render | **2.5 ms** | the gallery demo's data, 47 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of timeZones replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.2 ms | timeZones: first render, 47 nodes; update 0.4 ms |
+| 1,000 items | 2.3 ms | timeZones: first render, 47 nodes; update 0.6 ms |
 
 What it renders doesn't grow with timeZones (tested to 1,000 items).
 

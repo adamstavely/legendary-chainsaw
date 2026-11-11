@@ -23,8 +23,8 @@
     "columns": {
       "type": "number",
       "enum": [
-        2,
-        1
+        1,
+        2
       ],
       "description": "2 puts sections side by side when there's room (from about 720 px); 1 keeps them stacked"
     },

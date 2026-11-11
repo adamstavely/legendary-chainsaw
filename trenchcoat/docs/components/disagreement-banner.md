@@ -9,7 +9,7 @@
 When today's answer contradicts an earlier one on the same question – both side by side, the difference marked
 
 - **Element:** `<tc-disagreement-banner>`
-- **Size:** 17.1 KB gzip · 69.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.2 KB gzip · 69.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -431,7 +431,7 @@ to the page.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -439,15 +439,15 @@ to the page.
 | --- | --- | --- |
 | **This component alone** | 20.2 KB | 6.4 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.2 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
-| **Added to a page that already has Lit** | **69.3 KB** | **17.3 KB** |
-| With Lit – the first component on a page | 88.8 KB | 23.6 KB |
+| **Added to a page that already has Lit** | **69.5 KB** | **17.2 KB** |
+| With Lit – the first component on a page | 88.9 KB | 23.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -455,9 +455,9 @@ to the page.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 9.0 ms | default properties; includes adding its CSS to the document |
+| First render | **4.0 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | re-render with the same data |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

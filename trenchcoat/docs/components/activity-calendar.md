@@ -9,7 +9,7 @@
 A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
 
 - **Element:** `<tc-activity-calendar>`
-- **Size:** 8.9 KB gzip · 26.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.0 KB gzip · 26.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -443,7 +443,7 @@ readers.
 
 ## Performance
 
-*Measured 2026-10-28 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -451,7 +451,7 @@ readers.
 | --- | --- | --- |
 | **This component alone** | 19.1 KB | 6.6 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -459,8 +459,8 @@ readers.
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/activity-scale` · Shared Trenchcoat code | 0.2 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **26.8 KB** | **9.0 KB** |
-| With Lit – the first component on a page | 46.4 KB | 15.3 KB |
+| **Added to a page that already has Lit** | **26.9 KB** | **9.0 KB** |
+| With Lit – the first component on a page | 46.5 KB | 15.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -468,13 +468,13 @@ readers.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **16 ms** | the gallery demo's data, 964 DOM nodes – to layout, median of 7 |
+| First render | **14 ms** | the gallery demo's data, 964 DOM nodes – to layout, median of 7 |
 | Typical update | **12 ms** | one item of days replaced |
-| First on the page | 8.4 ms | default properties; includes adding its CSS to the document |
-| 100 items | 16 ms | days: first render, 962 nodes; update 13 ms |
-| 1,000 items | 16 ms | days: first render, 964 nodes; update 14 ms |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 14 ms | days: first render, 962 nodes; update 13 ms |
+| 1,000 items | 15 ms | days: first render, 964 nodes; update 12 ms |
 
-1,000 items of days: 16 ms, 964 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of days: 15 ms, 964 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

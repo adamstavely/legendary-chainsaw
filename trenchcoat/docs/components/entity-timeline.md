@@ -9,7 +9,7 @@
 What happened to a person, account or case, in order – events under month headers, each with a category, its source and Admiralty grade tinted by confidence, an optional flag and a detail that opens in place, filtered by category chips with counts
 
 - **Element:** `<tc-entity-timeline>`
-- **Size:** 12.0 KB gzip · 44.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.1 KB gzip · 44.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -428,15 +428,15 @@ confirmed in a polite status message, “2 events, Payment”.
 
 ## Performance
 
-*Measured 2026-11-04 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 20.2 KB | 6.6 KB |
+| **This component alone** | 20.2 KB | 6.5 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/card-head` · Shared Trenchcoat code | 2.9 KB | – |
+| `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.6 KB | – |
@@ -445,8 +445,8 @@ confirmed in a polite status message, “2 events, Payment”.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | [fact-sheet](fact-sheet.md) · Element it renders | 16.1 KB | – |
-| **Added to a page that already has Lit** | **44.5 KB** | **12.1 KB** |
-| With Lit – the first component on a page | 66.1 KB | 19.2 KB |
+| **Added to a page that already has Lit** | **44.6 KB** | **12.1 KB** |
+| With Lit – the first component on a page | 66.2 KB | 19.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -454,13 +454,13 @@ confirmed in a polite status message, “2 events, Payment”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 179 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of events replaced |
-| First on the page | 9.2 ms | default properties; includes adding its CSS to the document |
-| 100 items | 14 ms | events: first render, 2,140 nodes; update 5.5 ms |
-| 1,000 items | 133 ms | events: first render, 20,890 nodes; update 53 ms |
+| First render | **4.0 ms** | the gallery demo's data, 179 DOM nodes – to layout, median of 7 |
+| Typical update | **1.3 ms** | one item of events replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 18 ms | events: first render, 2,140 nodes; update 5.4 ms |
+| 1,000 items | 149 ms | events: first render, 20,890 nodes; update 48 ms |
 
-1,000 items of events: 133 ms. It renders every item, so a first render passes 50 ms (a long task) at about 380 items – page or filter longer lists.
+1,000 items of events: 149 ms. It renders every item, so a first render passes 50 ms (a long task) at about 340 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
