@@ -3,9 +3,8 @@
 Every Trenchcoat piece on one infinite canvas. Pan and zoom around ~390 components, blocks and motion pieces, switch
 between layouts, and open any piece live, running from its own docs example.
 
-This is phase 1 of the plan in [`PLAN.md`](PLAN.md):
-the canvas itself, with the Grid and Free layouts. Sorting by visual similarity, and riffing on variants with Claude, come
-next.
+This covers phases 1 and 2 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts, and
+the Similar layout, which sorts pieces by how they look. Riffing on variants with Claude comes next.
 
 ```bash
 npm install
@@ -17,6 +16,10 @@ Then open http://localhost:5210.
 ## What it does
 
 - **Grid.** Each category is a section, in the gallery's order.
+- **Similar.** Pieces that look alike sit together, in groups named after their most typical piece ("Like Sankey
+  Chart"), with similar groups near each other. Pieces that look almost the same as another carry a **Look-alike**
+  badge. On any other layout, **More like this** on the current card shows it here, among its look-alikes. The List
+  view groups by look too.
 - **Free.** Drag a card by its title bar, or move it with its arrow buttons or Alt + arrow keys. Positions are kept in
   this browser; **Reset layout** puts them back.
 - **Zoom in** past 125% and the cards in view swap their thumbnail for the running piece. At most 12 run at once.
@@ -43,6 +46,23 @@ module. `src/data/examples.ts` mounts an example inside its card:
 - its `document` is scoped to the card;
 - its `fetch` gets an empty reply.
 
+## How it sorts by look
+
+`npm run similarity` (`scripts/similarity.mjs`) writes `src/data/similarity.json` and
+[`reports/near-duplicates.md`](reports/near-duplicates.md). Run it when thumbnails change; a unit test fails until you
+do.
+
+1. It embeds each piece's light thumbnail with CLIP (`Xenova/clip-vit-base-patch32`), run locally with
+   `@huggingface/transformers`. The model, about 100 MB, downloads once into `node_modules/.cache/clip`, and embeddings
+   are cached by thumbnail hash, so a rerun only embeds what changed.
+2. UMAP lays the embeddings out in 2-D, and k-means groups neighbouring pieces on that map, about 22 to a group. Both
+   use a fixed seed, so the same thumbnails always give the same map.
+3. Each group becomes a block of cards near the groups it resembles (`src/canvas/similarity.ts`).
+4. Pairs of pieces with a cosine similarity of 0.92 or more are listed as near-duplicates: candidates to merge or to
+   make more distinct.
+
+The JSON is committed, so the canvas itself needs no model.
+
 Four docs examples rely on something the docs page around them provides: Agent Recap, Header Brand, Stories and
 Structured Output. Those cards show their thumbnail. `tests/browser/examples.test.ts` lists them, and it fails if
 any other example stops mounting.
@@ -59,8 +79,8 @@ The canvas targets WCAG 2.2 AA:
 - **No dragging needed** (2.5.7). Panning and moving cards both have button and keyboard equivalents: the zoom
   buttons, Jump to a piece, the cards' arrow buttons and Alt + arrows.
 - **Focus not obscured** (2.4.11). Moving to a card pans just enough to show it clear of the edges.
-- **Announcements.** A status region announces zoom changes once they settle, opening and closing pieces, and
-  filter changes.
+- **Announcements.** A status region announces zoom changes once they settle, opening and closing pieces, filter
+  changes, and moving to the Similar layout. A card's description says which pieces it looks most like.
 - **Reduced motion.** The view jumps instead of gliding.
 - **Colour and contrast.** Colours, focus rings and type are Trenchcoat tokens, in light and dark.
 - **List view.** It gives everything in reading order, and reflows down to 320 px.
@@ -82,7 +102,8 @@ npm run ci   # typecheck, lint (incl. vuejs-accessibility), format, tests, build
 
 The tests have two parts:
 
-- **Unit tests** (Node): the viewport maths, the layouts, arrow-key navigation, and the snippet parser.
-- **Browser tests** (Chromium): keyboard use, opening and closing pieces, the Free layout, filters and the list
-  view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
+- **Unit tests** (Node): the viewport maths, the layouts, arrow-key navigation, the snippet parser, the similarity
+  maths, and that `similarity.json` still matches the thumbnails.
+- **Browser tests** (Chromium): keyboard use, opening and closing pieces, the Free and Similar layouts, More like
+  this, filters and the list view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
   mounted.

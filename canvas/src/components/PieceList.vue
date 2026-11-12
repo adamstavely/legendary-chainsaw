@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import type { LayoutName } from "../App.vue";
+import { similarGroups } from "../data/lookalikes";
 import { CATEGORIES, thumbOf, type Look, type Piece, type Theme } from "../data/pieces";
 
 // The canvas as a plain list: every piece under its category heading, for screen readers, small screens and anyone
-// who would rather scroll than pan
-const props = defineProps<{ pieces: readonly Piece[]; theme: Theme; look: Look; summary: string }>();
+// who would rather scroll than pan. In the Similar layout it groups them by look, as the canvas does
+const props = defineProps<{ pieces: readonly Piece[]; layout: LayoutName; theme: Theme; look: Look; summary: string }>();
 const emit = defineEmits<{ show: [id: string] }>();
 
-const sections = computed(() =>
-  CATEGORIES.map((label) => ({
-    label,
-    id: `list-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-    pieces: props.pieces.filter((p) => p.category === label),
-  })).filter((s) => s.pieces.length),
-);
+const sections = computed(() => {
+  const byId = new Map(props.pieces.map((p) => [p.id, p]));
+  const groups =
+    props.layout === "similar"
+      ? similarGroups(props.pieces.map((p) => p.id))
+      : CATEGORIES.map((label) => ({ label, ids: props.pieces.filter((p) => p.category === label).map((p) => p.id) }));
+  return groups
+    .map(({ label, ids }) => ({ label, id: `list-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`, pieces: ids.map((id) => byId.get(id)!) }))
+    .filter((s) => s.pieces.length);
+});
 </script>
 
 <template>

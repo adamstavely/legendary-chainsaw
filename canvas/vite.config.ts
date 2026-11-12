@@ -18,7 +18,8 @@ export default defineConfig({
   esbuild: { target: "es2022" },
   // Thumbnails stay files (~900 of them, a few KB each), loaded as cards come into view – inlined, they would put
   // megabytes of base64 in the first script
-  // The app's own script is ~170 KB gzipped (Vue, Lit, five toolbar elements, the catalogue); pieces load on their own
+  // The app's own script is ~190 KB gzipped (Vue, Lit, five toolbar elements, the catalogue, the similarity map); pieces
+  // load on their own
   build: { target: "es2022", assetsInlineLimit: 0, chunkSizeWarningLimit: 700 },
   server: { fs: { allow: [here("."), TRENCHCOAT] } },
   // Pre-bundle all of Lit up front: otherwise the dev server finds a directive the first time a piece using it opens,
