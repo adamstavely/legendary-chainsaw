@@ -4,7 +4,7 @@ Every Trenchcoat piece on one infinite canvas. Pan and zoom around ~390 componen
 between layouts, and open any piece live, running from its own docs example.
 
 This covers phases 1 to 5 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
-Similar layout, which sorts pieces by how they look; riffing on a component's variants with Claude; the Graph layout,
+Similar layout, which sorts pieces by how they look; riffing on a component's variants with a model – Claude by default, or any OpenAI-compatible one; the Graph layout,
 which shows which pieces are built from which; and tuning a component by hand on DialKit's dials.
 
 ```bash
@@ -54,22 +54,39 @@ with Motion, only once a piece is opened.
 ### Riff
 
 Say what should change – or pick one of the
-ideas – and Claude proposes three or four variants. They appear live around the piece, so you can compare them, and
+ideas – and the model proposes three or four variants. They appear live around the piece, so you can compare them, and
 the panel lists each one with why it differs:
 
 - **Show** zooms to it. **Riff on this** starts the next request from that variant instead of the piece.
 - **Keep** saves it to `trenchcoat/app/src/variants/<slug>.json`: a name, the prompt, and the props and tokens that
-  differ. Kept variants come back around the piece whenever it's opened. A variant Claude marks **Needs new code** also
+  differ. Kept variants come back around the piece whenever it's opened. A variant the model marks **Needs new code** also
   gets a brief in `trenchcoat/audit/variant-requests/`, to build as a normal pull request. The canvas never edits a
   component's code.
 - **Discard** drops it; **Remove** un-keeps a kept one. Commit what you keep like any other change.
 
-Riffing runs in the dev server only (`npm run dev`), with `ANTHROPIC_API_KEY` set (or an `ant auth login` profile).
-`plugins/riff.ts` holds the key and calls `claude-opus-5-5`, with adaptive thinking and the server-side refusal
-fallback; the browser only talks to the dev server, which accepts requests from the canvas's own origin alone. A built
-canvas has no riffing.
+Riffing runs in the dev server only (`npm run dev`). The browser only talks to the dev server, which holds the key and
+accepts requests from the canvas's own origin alone; a built canvas has no riffing. The model is your choice –
+`plugins/providers.ts` reads it from the environment when the dev server starts:
 
-What Claude writes is checked before anything is shown or saved:
+| Variable            | What it sets                                                                                                                                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CANVAS_PROVIDER`   | `anthropic` (the default) or `openai`: any server that speaks OpenAI's Chat Completions API – OpenAI, Azure OpenAI, Google Gemini's OpenAI endpoint, OpenRouter, or a local Ollama or LM Studio |
+| `CANVAS_MODEL`      | The model id. For `anthropic` it defaults to `claude-opus-5-5`; for `openai` it must be set                                                                                                     |
+| `CANVAS_BASE_URL`   | `openai` only: the API's base URL. Defaults to `https://api.openai.com/v1`; Ollama is `http://localhost:11434/v1`                                                                               |
+| `CANVAS_API_KEY`    | `openai` only: the key, if the server wants one (`OPENAI_API_KEY` also works). Anthropic reads its own: `ANTHROPIC_API_KEY`, or an `ant auth login` profile                                     |
+| `CANVAS_MODEL_NAME` | What the panel calls the model, as in “Ask …”. Defaults to Claude, or the model id                                                                                                              |
+
+```bash
+CANVAS_PROVIDER=openai CANVAS_MODEL=llama3.3 CANVAS_BASE_URL=http://localhost:11434/v1 npm run dev
+```
+
+Every provider gets the same prompt and the same `propose_variants` tool, and what comes back goes through the same
+checks. With Claude the request also uses adaptive thinking, streams its progress, and falls back to Anthropic's
+recommended model if Claude declines; with an OpenAI-compatible server it's one function call, and a model that
+answers in text instead still works if the text holds the JSON. A setting that can't work (`openai` without a model,
+say) shows in the Riff tab instead of the form.
+
+What the model writes is checked before anything is shown or saved:
 
 - **Props** go through Trenchcoat's generative-UI checks (`checkProps`), against the component's JSON Schema: a prop
   that isn't allowed is left out, and the panel says which and why.
@@ -77,8 +94,8 @@ What Claude writes is checked before anything is shown or saved:
   tokens – and each must be set to another token as `var(--tc-…)`. No literal colours or sizes, so kept variants
   keep to the token rules.
 
-Each request is one call to Claude Opus 5.5: roughly 5–10K input tokens (the schema, the docs page, the props, and the
-token list, which is cached), plus the thinking and the answer.
+Each request is one call to the model – with the default, Claude Opus 5.5 – of roughly 5–10K input tokens (the
+schema, the docs page, the props, and the token list, which Claude caches), plus the answer.
 
 ## How it gets the pieces
 
@@ -156,7 +173,7 @@ The tests have two parts:
 
 - **Unit tests** (Node): the viewport maths, the layouts, arrow-key navigation, the snippet parser, the similarity
   maths, that `similarity.json` still matches the thumbnails, and the riff endpoint's request, checks and origin rule
-  (against a fake Claude client – no test calls the API).
+  and providers (against a fake Claude client and a fake `fetch` – no test calls a model).
 - **Browser tests** (Chromium): keyboard use, opening and closing pieces, the Free and Similar layouts, More like
   this, riffing (with the endpoints stubbed), filters and the list view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
   mounted.

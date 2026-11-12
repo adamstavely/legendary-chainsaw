@@ -7,7 +7,7 @@ import type { Point } from "./canvas/geometry";
 import { useMedia } from "./composables/media";
 import { oneOf, persisted } from "./composables/persisted";
 import { LIBRARY_LABELS, PIECES, type Look, type Theme } from "./data/pieces";
-import { riffable as loadRiffable } from "./riff/api";
+import { NO_RIFF, riffSetup } from "./riff/api";
 
 export type LayoutName = "grid" | "similar" | "graph" | "free";
 export type ViewName = "canvas" | "list";
@@ -23,9 +23,9 @@ const moved = persisted<Record<string, Point>>(
   (v): v is Record<string, Point> => typeof v === "object" && v !== null && Object.values(v).every((p) => typeof p?.x === "number" && typeof p?.y === "number"),
 );
 const filters = ref<Filters>({});
-// Which components Claude can riff on: asked of the dev server, so none in a built canvas
-const riffable = shallowRef<ReadonlySet<string>>(new Set());
-onMounted(async () => (riffable.value = await loadRiffable()));
+// Which components can be riffed on, and with which model: asked of the dev server, so none in a built canvas
+const riff = shallowRef(NO_RIFF);
+onMounted(async () => (riff.value = await riffSetup()));
 
 watchEffect(() => {
   document.documentElement.dataset.tcTheme = theme.value;
@@ -105,7 +105,7 @@ function resetLayout() {
           :theme="theme"
           :look="look"
           :summary="summary"
-          :riffable="riffable"
+          :riff-setup="riff"
           @announce="announce"
           @similar="showSimilar"
         />
