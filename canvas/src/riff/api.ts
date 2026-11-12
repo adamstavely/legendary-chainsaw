@@ -9,19 +9,24 @@ async function ok<T>(res: Response): Promise<T> {
   return data as T;
 }
 
-/** Which pieces can be riffed on; empty in a built canvas, which has no dev server */
-export async function riffable(): Promise<Set<string>> {
-  if (!import.meta.env.DEV) return new Set();
+/** What the dev server can riff with: the pieces, the model's name, and what's wrong with its setting, if anything */
+export type RiffSetup = { slugs: ReadonlySet<string>; model: string; problem: string };
+export const NO_RIFF: RiffSetup = { slugs: new Set(), model: "", problem: "" };
+
+/** Empty in a built canvas, which has no dev server */
+export async function riffSetup(): Promise<RiffSetup> {
+  if (!import.meta.env.DEV) return NO_RIFF;
   try {
-    return new Set((await ok<{ riffable: string[] }>(await fetch(RIFF))).riffable);
+    const data = await ok<{ riffable: string[]; label: string; problem?: string }>(await fetch(RIFF));
+    return { slugs: new Set(data.riffable), model: data.label, problem: data.problem ?? "" };
   } catch {
-    return new Set();
+    return NO_RIFF;
   }
 }
 
 export type RiffRequest = { slug: string; prompt: string; props: Record<string, unknown>; tokens: Record<string, string> };
 
-/** Asks for variants; `progress` hears what Claude is doing. Rejects with a message to show */
+/** Asks for variants; `progress` hears what the model is doing. Rejects with a message to show */
 export async function requestVariants(request: RiffRequest, progress: (text: string) => void, signal?: AbortSignal): Promise<Variant[]> {
   const res = await fetch(RIFF, { method: "POST", headers: json, body: JSON.stringify(request), signal });
   if (!res.ok || !res.body) await ok(res);
@@ -38,7 +43,7 @@ export async function requestVariants(request: RiffRequest, progress: (text: str
       else if (event.type === "variants") return event.variants;
       else throw new Error(event.message);
     }
-    if (done) throw new Error("The dev server stopped before Claude answered.");
+    if (done) throw new Error("The dev server stopped before the model answered.");
   }
 }
 

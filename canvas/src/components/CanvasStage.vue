@@ -29,7 +29,7 @@ import { useReducedMotion } from "../composables/media";
 import { LINKS, compositionText } from "../data/composition";
 import { SIMILARITY, compared, lookAlikesOf, neighboursOf } from "../data/lookalikes";
 import { CATEGORIES, PIECES, type Look, type Piece, type Theme } from "../data/pieces";
-import { keepVariant, keptVariants, removeVariant, requestVariants } from "../riff/api";
+import { keepVariant, keptVariants, removeVariant, requestVariants, type RiffSetup } from "../riff/api";
 import { propsOf } from "../riff/apply";
 import { addRound, discard, riffsOf, shownVariants, type Round } from "../riff/session";
 import type { Kept, Variant } from "../riff/types";
@@ -42,8 +42,8 @@ const props = defineProps<{
   theme: Theme;
   look: Look;
   summary: string;
-  /** Slugs of the components Claude can riff on (dev server only) */
-  riffable: ReadonlySet<string>;
+  /** The components a model can riff on, and its name (dev server only) */
+  riffSetup: RiffSetup;
 }>();
 const moved = defineModel<Record<string, Point>>("moved", { required: true });
 const emit = defineEmits<{ announce: [text: string]; similar: [id: string] }>();
@@ -222,7 +222,7 @@ async function open(id: string) {
   const tuning = canTune(piece);
   glide(fit(variantBounds.value ?? rect, screen.value, INSETS, 3));
   say(
-    `${piece.name} is open. Tab into it to use it${tuning ? `, or ${riffing ? "tune it and riff on it with Claude" : "tune it"} in the panel beside the canvas` : ""}; press Escape to go back to the canvas.`,
+    `${piece.name} is open. Tab into it to use it${tuning ? `, or ${riffing ? `tune it and riff on it with ${props.riffSetup.model || "a model"}` : "tune it"} in the panel beside the canvas` : ""}; press Escape to go back to the canvas.`,
   );
 }
 async function close() {
@@ -257,11 +257,11 @@ async function jump(id: string) {
 defineExpose({ jump });
 
 // Tuning and riffing ------------------------------------------------------------------------------------------------
-// An open component gets a panel: dials to tune it by hand, and – in the dev server – Claude proposing variants, drawn
+// An open component gets a panel: dials to tune it by hand, and – in the dev server – a model proposing variants, drawn
 // around it on the canvas and listed in the panel
 
 const canTune = (piece: Piece | undefined) => !!piece && piece.library === "components" && piece.live;
-const canRiff = (piece: Piece | undefined) => canTune(piece) && props.riffable.has(piece!.slug);
+const canRiff = (piece: Piece | undefined) => canTune(piece) && props.riffSetup.slugs.has(piece!.slug);
 const openPiece = computed(() => (opened.value ? byId.value.get(opened.value) : undefined));
 const panelPiece = computed(() => (canTune(openPiece.value) ? openPiece.value! : null));
 const riffPiece = computed(() => (canRiff(openPiece.value) ? openPiece.value! : null));
@@ -306,7 +306,7 @@ async function riff(prompt: string, from: Round["from"]) {
   const base = el ? propsOf(el) : {};
   riffing.value = true;
   riffError.value = "";
-  riffStatus.value = "Asking Claude…";
+  riffStatus.value = `Asking ${props.riffSetup.model}…`;
   riffAbort = new AbortController();
   try {
     const result = await requestVariants(
@@ -602,6 +602,8 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
         :riffs="riffsOf(panelPiece.slug)"
         :theme="theme"
         :can-riff="!!riffPiece"
+        :model="riffSetup.model"
+        :riff-problem="riffSetup.problem"
         :find-element="() => liveElement(panelPiece!)"
         :busy="riffing"
         :status="riffStatus"

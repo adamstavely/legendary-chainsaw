@@ -6,7 +6,7 @@ import type { Piece, Theme } from "../data/pieces";
 import type { PieceRiffs, Round } from "../riff/session";
 import type { Kept, Variant } from "../riff/types";
 
-// Beside an open component, in two tabs: Riff asks Claude for variants (in the dev server) and keeps or discards each
+// Beside an open component, in two tabs: Riff asks a model for variants (in the dev server) and keeps or discards each
 // one; Tune sets its props and tokens by hand on DialKit's dials. Without the dev server there's only Tune, and no tabs. The variants themselves are drawn around the piece on the canvas; this panel names
 // them and acts on them, so everything here works by keyboard
 const props = defineProps<{
@@ -16,8 +16,12 @@ const props = defineProps<{
   status: string;
   error: string;
   theme: Theme;
-  /** The dev server is there: Claude can riff, and variants can be kept */
+  /** The dev server is there: a model can riff, and variants can be kept */
   canRiff: boolean;
+  /** What the panel calls the model: "Claude", or the model's id */
+  model: string;
+  /** What's wrong with the dev server's model setting, if anything */
+  riffProblem: string;
   findElement: () => HTMLElement | null;
 }>();
 const emit = defineEmits<{
@@ -136,7 +140,8 @@ function onTabKey(e: KeyboardEvent, i: number) {
     <p v-if="error" role="alert" class="riff__error">{{ error }}</p>
 
     <div v-if="canRiff" v-show="tab === 'riff'" :id="`${id}-panel-riff`" role="tabpanel" class="riff__panel" :aria-labelledby="`${id}-tab-riff`">
-      <form class="riff__form" @submit.prevent="send()">
+      <p v-if="riffProblem" class="riff__error">Riffing isn't set up: {{ riffProblem }}</p>
+      <form v-else class="riff__form" @submit.prevent="send()">
         <p v-if="from" class="riff__from">
           <span
             >Starting from <strong>{{ from.name }}</strong></span
@@ -155,9 +160,9 @@ function onTabKey(e: KeyboardEvent, i: number) {
           :aria-describedby="`${id}-hint`"
           @keydown.enter.exact.prevent="send()"
         ></textarea>
-        <p :id="`${id}-hint`" class="riff__hint">Enter asks Claude for variants; Shift + Enter adds a line.</p>
+        <p :id="`${id}-hint`" class="riff__hint">Enter asks {{ model }} for variants; Shift + Enter adds a line.</p>
         <div class="riff__actions">
-          <tc-button type="submit" variant="primary" size="sm" :loading="busy" :disabled="!prompt.trim() || busy" label="Ask Claude">
+          <tc-button type="submit" variant="primary" size="sm" :loading="busy" :disabled="!prompt.trim() || busy" :label="`Ask ${model}`">
             <Sparkles slot="icon" :size="16" aria-hidden="true" />
           </tc-button>
           <tc-button v-if="busy" variant="ghost" size="sm" label="Stop" @click="emit('cancel')"></tc-button>
@@ -165,7 +170,7 @@ function onTabKey(e: KeyboardEvent, i: number) {
       </form>
 
       <tc-prompt-starters
-        v-if="!riffs.rounds.length && !busy"
+        v-if="!riffProblem && !riffs.rounds.length && !busy"
         class="riff__ideas"
         heading="Ideas"
         :items.prop="ideas"

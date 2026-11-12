@@ -1,14 +1,14 @@
-// Riffing with Claude, in the dev server only. The browser never sees the API key: it posts to these endpoints, and
-// this file calls Claude and writes files.
+// Riffing, in the dev server only. The browser never sees an API key: it posts to these endpoints, and this file asks
+// the configured model (plugins/providers.ts – Claude by default, or any OpenAI-compatible server) and writes files.
 //
-//   GET    /__canvas/riff              which pieces can be riffed on
+//   GET    /__canvas/riff              which pieces can be riffed on, and which model riffs
 //   POST   /__canvas/riff              { slug, prompt, props } → NDJSON: status lines, then the checked variants
 //   GET    /__canvas/variants?slug=…   the variants kept for a piece
 //   POST   /__canvas/variants          { slug, prompt, variant } → keeps it in trenchcoat/app/src/variants/<slug>.json;
 //                                      a structural one also gets a brief in trenchcoat/audit/variant-requests/
 //   DELETE /__canvas/variants          { slug, name } → removes a kept variant
 //
-// Claude proposes variants through one tool, propose_variants. What it writes is untrusted: props go through the
+// The model proposes variants through one tool, propose_variants. What it writes is untrusted: props go through the
 // generative-UI checks (checkProps, the same as any model-written props), and tokens may only set the component's own
 // design tokens to other tokens – never a literal – so a kept variant can't break the token rules.
 import Anthropic from "@anthropic-ai/sdk";
@@ -18,6 +18,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 import { checkProps, type Schema } from "../../trenchcoat/src/generative/validate";
+import type { Provider } from "./providers";
 import { componentTokens, definedTokens } from "./tokens";
 import { RIFF, VARIANTS, type Issue, type Kept, type Proposal, type RiffEvent, type Variant } from "../src/riff/types";
 
@@ -142,25 +143,11 @@ ${[...defined].sort().join(" ")}`;
 export type RiffInput = { slug: string; prompt: string; props: Record<string, unknown>; tokens?: Record<string, string> };
 export type Piece = { tag: string; schema: Schema & { description?: string }; docs: string; tokens: string[] };
 
-/** The request for one riff: the component, what it has now, and the change */
-export function riffRequest(piece: Piece, input: RiffInput, defined: ReadonlySet<string>): BetaMessageStreamParams {
+/** The user message: the component, what it has now, and the change. Every provider sends the same one */
+export function userPrompt(piece: Piece, input: RiffInput): string {
   const { $schema: _s, $id: _i, title: _t, ...schema } = piece.schema as Schema & Record<string, unknown>;
   const json = (v: unknown) => `\`\`\`json\n${JSON.stringify(v, null, 2)}\n\`\`\``;
-  return {
-    model: MODEL,
-    max_tokens: 64000,
-    thinking: { type: "adaptive" as const, display: "summarized" as const },
-    output_config: { effort: "medium" as const },
-    // A declined request is re-run on Anthropic's recommended fallback model rather than coming back refused
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default" as const,
-    system: [{ type: "text" as const, text: systemPrompt(defined), cache_control: { type: "ephemeral" as const } }],
-    tools: [TOOL],
-    tool_choice: { type: "auto" as const },
-    messages: [
-      {
-        role: "user" as const,
-        content: `Component: <${piece.tag}> – ${piece.schema.description ?? ""}
+  return `Component: <${piece.tag}> – ${piece.schema.description ?? ""}
 
 ## Props schema
 ${json(schema)}
@@ -175,9 +162,23 @@ ${input.tokens && Object.keys(input.tokens).length ? `\n## Token overrides it ha
 ${piece.docs}
 
 ## The change
-${input.prompt}`,
-      },
-    ],
+${input.prompt}`;
+}
+
+/** Claude's request for one riff: the shared prompt, with adaptive thinking, streaming and the refusal fallback */
+export function riffRequest(piece: Piece, input: RiffInput, defined: ReadonlySet<string>): BetaMessageStreamParams {
+  return {
+    model: MODEL,
+    max_tokens: 64000,
+    thinking: { type: "adaptive" as const, display: "summarized" as const },
+    output_config: { effort: "medium" as const },
+    // A declined request is re-run on Anthropic's recommended fallback model rather than coming back refused
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default" as const,
+    system: [{ type: "text" as const, text: systemPrompt(defined), cache_control: { type: "ephemeral" as const } }],
+    tools: [TOOL],
+    tool_choice: { type: "auto" as const },
+    messages: [{ role: "user" as const, content: userPrompt(piece, input) }],
   };
 }
 
@@ -186,18 +187,18 @@ type Stream = AsyncIterable<{ type: string; content_block?: { type: string } }> 
 export type Client = { beta: { messages: { stream(params: BetaMessageStreamParams): Stream } } };
 
 /** Runs a riff: says what Claude is doing as it goes, and resolves with its proposals */
-export async function runRiff(client: Client, params: BetaMessageStreamParams, say: (text: string) => void): Promise<Proposal[]> {
+export async function runRiff(client: Client, params: BetaMessageStreamParams, say: (text: string) => void, label = "Claude"): Promise<Proposal[]> {
   const stream = client.beta.messages.stream(params);
   for await (const event of stream) {
     if (event.type !== "content_block_start") continue;
-    if (event.content_block?.type === "thinking") say("Claude is thinking it through…");
-    if (event.content_block?.type === "tool_use") say("Claude is writing the variants…");
+    if (event.content_block?.type === "thinking") say(`${label} is thinking it through…`);
+    if (event.content_block?.type === "tool_use") say(`${label} is writing the variants…`);
   }
   const message = await stream.finalMessage();
-  if (message.stop_reason === "refusal") throw new Error("Claude declined this request. Try putting the change another way.");
-  if (message.stop_reason === "max_tokens") throw new Error("Claude's answer was cut off before it finished. Try a narrower change.");
+  if (message.stop_reason === "refusal") throw new Error(`${label} declined this request. Try putting the change another way.`);
+  if (message.stop_reason === "max_tokens") throw new Error(`${label}'s answer was cut off before it finished. Try a narrower change.`);
   const call = message.content.find((b) => b.type === "tool_use" && b.name === TOOL.name);
-  if (!call || call.type !== "tool_use") throw new Error("Claude answered without proposing variants. Try again, or put the change another way.");
+  if (!call || call.type !== "tool_use") throw new Error(`${label} answered without proposing variants. Try again, or put the change another way.`);
   // With eager input streaming the API doesn't check the input: parseProposals does
   return parseProposals(call.input);
 }
@@ -276,9 +277,10 @@ export function sameOrigin(req: Pick<IncomingMessage, "method" | "headers">): bo
   return !!origin && (req.headers["content-type"] ?? "").startsWith("application/json");
 }
 
-export type Options = { root: string; client?: () => Client };
+/** `provider` says which model riffs – plugins/providers.ts reads it from the environment */
+export type Options = { root: string; provider: () => Provider | { problem: string } };
 
-export function riff({ root, client = () => new Anthropic() }: Options): Plugin {
+export function riff({ root, provider }: Options): Plugin {
   const schemas = join(root, "src/generative/schemas");
   const variants = join(root, "app/src/variants");
   const briefs = join(root, "audit/variant-requests");
@@ -314,7 +316,8 @@ export function riff({ root, client = () => new Anthropic() }: Options): Plugin 
             const riffable = readdirSync(schemas)
               .map((f) => /^tc-(.+)\.json$/.exec(f)?.[1])
               .filter((s): s is string => !!s && exists(s));
-            return send(res, 200, { riffable, model: MODEL });
+            const p = provider();
+            return send(res, 200, "problem" in p ? { riffable, label: "", problem: p.problem } : { riffable, label: p.label, provider: p.id, model: p.model });
           }
           if (url.pathname === RIFF && req.method === "POST") {
             const input = (await body(req)) as RiffInput;
@@ -327,15 +330,18 @@ export function riff({ root, client = () => new Anthropic() }: Options): Plugin 
             res.setHeader("content-type", "application/x-ndjson");
             const line = (e: RiffEvent) => res.write(`${JSON.stringify(e)}\n`);
             try {
-              line({ type: "status", text: "Asking Claude…" });
+              const model = provider();
+              if ("problem" in model) throw new Error(model.problem);
+              line({ type: "status", text: `Asking ${model.label}…` });
               const allowed = new Set(p.tokens);
               const current = checkTokens(input.tokens, allowed, tokens).tokens;
-              const params = riffRequest(
-                p,
-                { slug: input.slug, prompt: input.prompt.trim().slice(0, 2000), props: isObject(input.props) ? input.props : {}, tokens: current },
-                tokens,
-              );
-              const proposals = await runRiff(client(), params, (text) => line({ type: "status", text }));
+              const riffInput: RiffInput = {
+                slug: input.slug,
+                prompt: input.prompt.trim().slice(0, 2000),
+                props: isObject(input.props) ? input.props : {},
+                tokens: current,
+              };
+              const proposals = await model.propose(p, riffInput, tokens, (text) => line({ type: "status", text }));
               line({ type: "variants", variants: proposals.map((v) => checkProposal(v, p.schema, allowed, tokens)) });
             } catch (error) {
               line({ type: "error", message: failure(error) });
