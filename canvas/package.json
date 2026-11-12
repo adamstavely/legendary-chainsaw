@@ -1,0 +1,41 @@
+{
+  "name": "trenchcoat-canvas",
+  "private": true,
+  "version": "0.1.0",
+  "description": "An infinite canvas of every Trenchcoat piece: pan, zoom, switch layouts, and open any piece live.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5210",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --port 5211 --strictPort",
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "ci": "npm run typecheck && npm run lint && npm run format:check && npm test && vite build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@lit/context": "1.1.6",
+    "@lucide/vue": "1.61.0",
+    "lit": "3.3.3",
+    "vue": "3.5.44"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.0",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vitest/browser": "5.0.5",
+    "@vitest/browser-playwright": "5.0.5",
+    "axe-core": "4.14.0",
+    "eslint": "9.30.1",
+    "eslint-plugin-vue": "10.11.1",
+    "eslint-plugin-vuejs-accessibility": "2.6.3",
+    "playwright": "1.64.0",
+    "prettier": "3.6.2",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.35.1",
+    "vite": "6.4.5",
+    "vitest": "5.0.5",
+    "vue-tsc": "3.3.13"
+  }
+}
