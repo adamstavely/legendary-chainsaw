@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vite";
+import { create } from "./plugins/create";
 import { providerFromEnv } from "./plugins/providers";
 import { riff } from "./plugins/riff";
 import { trenchcoat } from "./plugins/trenchcoat";
@@ -17,6 +18,7 @@ export default defineConfig({
   plugins: [
     trenchcoat(TRENCHCOAT),
     riff({ root: TRENCHCOAT, provider: () => providerFromEnv() }),
+    create({ root: TRENCHCOAT }),
     vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith("tc-") } } }),
   ],
   // Trenchcoat's elements import Lit; dedupe makes them share the app's copy (the same versions Trenchcoat pins)
@@ -25,9 +27,9 @@ export default defineConfig({
   esbuild: { target: "es2022" },
   // Thumbnails stay files (~900 of them, a few KB each), loaded as cards come into view – inlined, they would put
   // megabytes of base64 in the first script
-  // The app's own script is ~190 KB gzipped (Vue, Lit, five toolbar elements, the catalogue, the similarity map); pieces
-  // load on their own
-  build: { target: "es2022", assetsInlineLimit: 0, chunkSizeWarningLimit: 700 },
+  // The app's own script is ~205 KB gzipped (Vue, Lit, the toolbar's elements, the catalogue, the similarity map);
+  // pieces, the piece panel with DialKit, and the create panel load on their own
+  build: { target: "es2022", assetsInlineLimit: 0, chunkSizeWarningLimit: 750 },
   server: { fs: { allow: [here("."), TRENCHCOAT] } },
   // Pre-bundle all of Lit up front: otherwise the dev server finds a directive the first time a piece using it opens,
   // and reloads the page to add it

@@ -369,6 +369,100 @@ describe("riffing", () => {
   });
 });
 
+// The dev server's create endpoints, stubbed: no agent runs and no worktree is made. The app is mounted again after
+// stubbing, so it asks the stub which agent builds
+describe("creating a component", () => {
+  let posted: { url: string; method: string; body: unknown }[];
+  let polls: number;
+
+  beforeEach(async () => {
+    posted = [];
+    polls = 0;
+    const real = window.fetch.bind(window);
+    vi.spyOn(window, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (!url.includes("/__canvas/create")) return real(input, init);
+      const method = init?.method ?? "GET";
+      if (method !== "GET") posted.push({ url, method, body: init?.body ? JSON.parse(String(init.body)) : undefined });
+      if (url.endsWith("/__canvas/create") && method === "GET") return Response.json({ agent: "Claude Code", problem: "" });
+      if (url.endsWith("/__canvas/create")) return Response.json({ id: "j1" });
+      if (url.includes("/file?")) return Response.json({ path: "trenchcoat/src/elements/fancy-thing.ts", code: "export class FancyThing {}\n" });
+      if (url.endsWith("/pull-request")) return Response.json({ url: "https://github.com/example/repo/pull/1" });
+      const done = ++polls > 1;
+      return Response.json({
+        id: "j1",
+        brief: { name: "Fancy Thing", slug: "fancy-thing", description: "Shows things", category: "Agents" },
+        agent: "Claude Code",
+        branch: "canvas/new-fancy-thing-j1",
+        dir: "/tmp/w",
+        state: done ? "done" : "running",
+        log: done ? ["→ Write src/elements/fancy-thing.ts", "Done: 1 files changed."] : ["Claude Code is building Fancy Thing."],
+        next: done ? 3 : 1,
+        files: done ? ["trenchcoat/src/elements/fancy-thing.ts"] : [],
+        preview: null,
+        pullRequest: null,
+        error: "",
+      });
+    });
+    app?.unmount();
+    app = createApp(App);
+    app.mount(host);
+    await settle(800);
+  });
+
+  async function openPanel() {
+    button("New component").click();
+    await settle(600);
+    return host.querySelector<HTMLElement>("#create-panel")!;
+  }
+
+  it("opens a labelled form beside the pieces, which passes axe", async () => {
+    const panel = await openPanel();
+    expect(button("New component").getAttribute("aria-expanded")).toBe("true");
+    expect(panel.querySelector("h2")!.textContent!.trim()).toBe("New component");
+    for (const field of panel.querySelectorAll("input, select, textarea")) expect(panel.querySelector(`label[for="${field.id}"]`)).not.toBeNull();
+    expect(panel.textContent).toContain("edits files and runs commands on this computer");
+    expect(await violations()).toEqual([]);
+  });
+
+  it("builds it, shows the progress, the code, and opens a pull request", async () => {
+    const panel = await openPanel();
+    const fill = (selector: string, value: string) => {
+      const el = panel.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector)!;
+      el.value = value;
+      el.dispatchEvent(new Event("input"));
+    };
+    fill("input[type=text]", "Fancy Thing");
+    fill("textarea", "Shows things");
+    await nextTick();
+    button("Build it", panel).click();
+    await settle(2500);
+    expect(posted[0].body).toMatchObject({ name: "Fancy Thing", description: "Shows things", reference: null });
+    expect([...panel.querySelectorAll("[role=log] li")].map((li) => li.textContent)).toEqual([
+      "Claude Code is building Fancy Thing.",
+      "→ Write src/elements/fancy-thing.ts",
+      "Done: 1 files changed.",
+    ]);
+    expect(panel.querySelector("[role=status]")!.textContent).toMatch(/^Fancy Thing is built: 1 files changed/);
+    button("src/elements/fancy-thing.ts", panel).click();
+    await settle();
+    expect(panel.querySelector<HTMLElement & { code: string }>("tc-code-block")!.code).toBe("export class FancyThing {}\n");
+    expect(await violations()).toEqual([]);
+    button("Open a pull request", panel).click();
+    await settle();
+    expect(posted.at(-1)!.url).toMatch(/\/pull-request$/);
+    expect(panel.querySelector<HTMLAnchorElement>('a[href="https://github.com/example/repo/pull/1"]')).not.toBeNull();
+  });
+
+  it("closes with Escape, focus back on the button", async () => {
+    const panel = await openPanel();
+    key(panel.querySelector("textarea")!, "Escape");
+    await settle();
+    expect(host.querySelector("#create-panel")).toBeNull();
+    expect(document.activeElement).toBe(button("New component"));
+  });
+});
+
 describe("the toolbar", () => {
   it("opens the filters as a disclosure; Escape closes them and returns focus", async () => {
     const button = host.querySelector<HTMLButtonElement>(".filter tc-button button")!;

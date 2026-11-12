@@ -3,9 +3,10 @@
 Every Trenchcoat piece on one infinite canvas. Pan and zoom around ~390 components, blocks and motion pieces, switch
 between layouts, and open any piece live, running from its own docs example.
 
-This covers phases 1 to 5 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
+This covers phases 1 to 6 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
 Similar layout, which sorts pieces by how they look; riffing on a component's variants with a model – Claude by default, or any OpenAI-compatible one; the Graph layout,
-which shows which pieces are built from which; and tuning a component by hand on DialKit's dials.
+which shows which pieces are built from which; tuning a component by hand on DialKit's dials; and building new components from the canvas with the repo's own
+new-component skill, through the coding agent of your choice.
 
 ```bash
 npm install
@@ -97,6 +98,36 @@ What the model writes is checked before anything is shown or saved:
 Each request is one call to the model – with the default, Claude Opus 5.5 – of roughly 5–10K input tokens (the
 schema, the docs page, the props, and the token list, which Claude caches), plus the answer.
 
+## Creating components
+
+**New component** in the toolbar (dev server only) opens a panel: a name, a gallery section, what the component is and
+what it's for, and optionally a reference picture. **Build it** hands that to a coding agent, which follows the repo's
+`new-component` skill (`trenchcoat/.claude/skills/new-component`) through its steps 1 to 4 – the element in both looks,
+the React wrapper, the demo, the docs page, the tests, and the integration pass with every check – and stops short of
+committing.
+
+- **In a worktree of its own.** Each build gets a new git worktree and branch (`canvas/new-<slug>-<id>`), under
+  `~/.trenchcoat-canvas/worktrees` (outside iCloud-synced folders; `CANVAS_WORKTREES` moves it). It shares this
+  checkout's installed packages, and nothing changes in this checkout.
+- **Live progress.** The agent's output streams into the panel as it works; **Stop** ends it.
+- **Then review it.** The files it changed are listed; each opens in Trenchcoat's code block. **Preview on a canvas**
+  starts a second canvas on the worktree, with the new piece in it. **Open a pull request** commits what changed under
+  `trenchcoat/`, pushes the branch and opens the PR with `gh`.
+
+The agent is your choice, set when the dev server starts:
+
+| Agent            | `CANVAS_AGENT` | How it runs                                                                                       |
+| ---------------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| Claude Code      | `claude`       | `claude -p` – edits allowed; commands limited to npm, npx, node and read-only git (the default)   |
+| OpenAI Codex CLI | `codex`        | `codex exec --sandbox workspace-write` – edits and commands inside the worktree                   |
+| Gemini CLI       | `gemini`       | `gemini -p --approval-mode yolo` – it has no narrower setting, so every tool is allowed           |
+| opencode         | `opencode`     | `opencode run` – with opencode's own permission settings                                          |
+| Your own         | –              | `CANVAS_AGENT_COMMAND`, a JSON array with `"{prompt}"` in it: `["my-agent", "--yes", "{prompt}"]` |
+
+Each agent brings its own model and its own sign-in. The agent edits files and runs commands on this computer while it
+works – that's what the panel says before anything starts. A setting that can't work (an agent that isn't installed,
+say) shows in the panel instead of the form.
+
 ## How it gets the pieces
 
 It reads Trenchcoat from source in `../trenchcoat`, so it always shows this branch's elements:
@@ -173,7 +204,9 @@ The tests have two parts:
 
 - **Unit tests** (Node): the viewport maths, the layouts, arrow-key navigation, the snippet parser, the similarity
   maths, that `similarity.json` still matches the thumbnails, and the riff endpoint's request, checks and origin rule
-  and providers (against a fake Claude client and a fake `fetch` – no test calls a model).
+  and providers (against a fake Claude client and a fake `fetch` – no test calls a model), and creating components: the
+  agents' commands and output, and a real build in a throwaway git repo and worktree, with a short Node script as the
+  agent.
 - **Browser tests** (Chromium): keyboard use, opening and closing pieces, the Free and Similar layouts, More like
-  this, riffing (with the endpoints stubbed), filters and the list view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
+  this, riffing and creating (with the endpoints stubbed), filters and the list view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
   mounted.

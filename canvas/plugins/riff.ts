@@ -247,7 +247,7 @@ Build it with the new-component skill's conventions, as a normal pull request.
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-async function body(req: IncomingMessage, limit = 1_000_000): Promise<unknown> {
+export async function body(req: IncomingMessage, limit = 1_000_000): Promise<unknown> {
   let size = 0;
   const chunks: Buffer[] = [];
   for await (const chunk of req) {
@@ -258,7 +258,7 @@ async function body(req: IncomingMessage, limit = 1_000_000): Promise<unknown> {
   return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 }
 
-function send(res: ServerResponse, status: number, data: unknown) {
+export function send(res: ServerResponse, status: number, data: unknown) {
   res.statusCode = status;
   res.setHeader("content-type", "application/json");
   res.end(JSON.stringify(data));
