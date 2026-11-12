@@ -8,6 +8,7 @@ import "../../src/elements";
 const NEEDS_THE_PAGE: Record<string, string> = {
   "agent-recap": "uses the app's lastSeenAt",
   "header-brand": "reads a <template> defined elsewhere on the page",
+  "image-generation": "drives the app's own generation job",
   stories: "uses the app's own story data",
   "structured-output": "reads the app's model stream",
 };

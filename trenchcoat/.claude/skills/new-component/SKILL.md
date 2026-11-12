@@ -86,6 +86,11 @@ When a fork reports back, note:
      lists any other copy for you to look at – iCloud's copy can be the newer one;
    - regenerates the element index, docs, Angular wrappers and generative schemas;
    - measures performance and captures thumbnails for anything new;
+   - exports every gallery page to `docs/` as Markdown. CI fails a PR whose `docs/` is out of date, and a merge to
+     `main` mirrors `docs/` to the [trenchcoat-docs](https://github.com/adamstavely/trenchcoat-docs) repo, so commit
+     the new and changed pages under `docs/` with the component;
+   - re-sorts the canvas's Similar layout (`canvas/src/data/similarity.json`) for the new thumbnails, since Canvas CI
+     runs on every Trenchcoat change and fails when a thumbnail isn't in it;
    - runs every check;
    - runs the new components' tests in Chromium, Firefox and WebKit, plus the React suite;
    - stops at the first failure, saying what to fix.
@@ -116,7 +121,8 @@ or mid-animation can look broken when nothing is; check the DOM before chasing a
 
 ## 5. Commit, PR, merge
 
-- **Stage only Trenchcoat.** Stage only `trenchcoat/` and, when changed, `.github/workflows/trenchcoat-ci.yml`.
+- **Stage only Trenchcoat.** Stage only `trenchcoat/`, the canvas's `src/data/similarity.json` and
+  `reports/near-duplicates.md`, and, when changed, `.github/workflows/trenchcoat-ci.yml`.
   Never `git add -A` at the repo root, and never touch `icon-composer/`. Before committing, check that nothing named
   `* 2.*` is staged.
 - **Branch from `main`.** If the work is already in your working tree, stash it, switch, then pop. Commit with a
@@ -129,6 +135,10 @@ or mid-animation can look broken when nothing is; check the DOM before chasing a
   `expect.poll` or `finish()`, not a longer wait.
 
 ## Things that have bitten before
+
+- **Docs snippets that need the page.** The canvas mounts every docs page's first HTML example. One that reads
+  something only the app has (a `job`, a template elsewhere on the page) fails its test: add the slug to
+  `NEEDS_THE_PAGE` in `canvas/tests/browser/examples.test.ts` with the reason.
 
 - **iCloud copies.** The repo lives under `~/Documents`, which iCloud syncs. It keeps creating `name 2.ts`,
   `name 3.json` copies, and an older copy can shadow a newer file in generated indexes. `integrate.mjs` removes the

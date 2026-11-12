@@ -2,6 +2,13 @@
 
 # Changelog
 
+## Unreleased – Markdown docs kept in step
+
+- **`docs/` checked in CI:** a PR fails when `docs/` doesn't match the gallery (`npm run check:docs-md`), and the
+  new-component integration pass now exports it, so every new component's page is in `docs/`.
+- **Mirrored to trenchcoat-docs:** a merge to `main` that changes `docs/` or the standalone gallery copies both to the
+  [trenchcoat-docs](https://github.com/adamstavely/trenchcoat-docs) repo.
+
 ## 0.21.0 – Image Generation
 
 - **Image Generation:** one image while it's generated – its place in the queue, then the picture taking shape in a

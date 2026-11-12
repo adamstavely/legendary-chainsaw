@@ -1,0 +1,72 @@
+name: Trenchcoat docs sync
+
+# Mirrors trenchcoat/docs/ (every gallery page as Markdown) and the standalone gallery to the trenchcoat-docs repo on a
+# merge to main, so a new component's page appears there with no manual steps. CI's "Markdown docs" check keeps docs/
+# current on every PR, so main's copy is always the one to publish. The repo is replaced wholesale: a page removed here
+# is removed there.
+#
+# Pushes with a deploy key: TRENCHCOAT_DOCS_DEPLOY_KEY is the private half, and trenchcoat-docs has the public half as
+# a deploy key with write access. Run it by hand (Actions → Trenchcoat docs sync → Run workflow) to resync everything.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "trenchcoat/docs/**"
+      - "trenchcoat/standalone/trenchcoat-gallery.html"
+      - ".github/workflows/trenchcoat-docs-sync.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: trenchcoat-docs-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Deploy key
+        id: key
+        env:
+          KEY: ${{ secrets.TRENCHCOAT_DOCS_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::warning::TRENCHCOAT_DOCS_DEPLOY_KEY isn't set, so trenchcoat-docs wasn't updated"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: steps.key.outputs.ok == 'true'
+        with:
+          path: source
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: steps.key.outputs.ok == 'true'
+        with:
+          repository: adamstavely/trenchcoat-docs
+          ssh-key: ${{ secrets.TRENCHCOAT_DOCS_DEPLOY_KEY }}
+          path: docs
+      - name: Copy the pages and the standalone gallery
+        if: steps.key.outputs.ok == 'true'
+        run: |
+          rsync -a --delete --exclude .git --exclude trenchcoat-gallery.html source/trenchcoat/docs/ docs/
+          cp source/trenchcoat/standalone/trenchcoat-gallery.html docs/
+      - name: Commit and push
+        if: steps.key.outputs.ok == 'true'
+        working-directory: docs
+        env:
+          SHA: ${{ github.sha }}
+          SUBJECT: ${{ github.event.head_commit.message }}
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "trenchcoat-docs is already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          subject="$(printf '%s' "${SUBJECT:-Resync}" | head -n 1)"
+          git commit -q -m "$subject" -m "From adamstavely/legendary-chainsaw@$SHA"
+          git push -q origin HEAD
+          git show --stat --format='%s' HEAD | tail -1
