@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useTemplateRef, watchEffect } from "vue";
+import { computed, nextTick, onMounted, ref, shallowRef, useTemplateRef, watchEffect } from "vue";
 import AppToolbar, { type Filters } from "./components/AppToolbar.vue";
 import CanvasStage from "./components/CanvasStage.vue";
 import PieceList from "./components/PieceList.vue";
@@ -7,6 +7,7 @@ import type { Point } from "./canvas/geometry";
 import { useMedia } from "./composables/media";
 import { oneOf, persisted } from "./composables/persisted";
 import { LIBRARY_LABELS, PIECES, type Look, type Theme } from "./data/pieces";
+import { riffable as loadRiffable } from "./riff/api";
 
 export type LayoutName = "grid" | "similar" | "free";
 export type ViewName = "canvas" | "list";
@@ -22,6 +23,9 @@ const moved = persisted<Record<string, Point>>(
   (v): v is Record<string, Point> => typeof v === "object" && v !== null && Object.values(v).every((p) => typeof p?.x === "number" && typeof p?.y === "number"),
 );
 const filters = ref<Filters>({});
+// Which components Claude can riff on: asked of the dev server, so none in a built canvas
+const riffable = shallowRef<ReadonlySet<string>>(new Set());
+onMounted(async () => (riffable.value = await loadRiffable()));
 
 watchEffect(() => {
   document.documentElement.dataset.tcTheme = theme.value;
@@ -101,6 +105,7 @@ function resetLayout() {
           :theme="theme"
           :look="look"
           :summary="summary"
+          :riffable="riffable"
           @announce="announce"
           @similar="showSimilar"
         />

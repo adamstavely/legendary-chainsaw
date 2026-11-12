@@ -1,8 +1,10 @@
 import axe from "axe-core";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createApp, nextTick, type App as VueApp } from "vue";
 import App from "../../src/App.vue";
 import "../../src/elements";
+import { resetRiffs } from "../../src/riff/session";
+import type { Kept, RiffEvent, Variant } from "../../src/riff/types";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 let app: VueApp | undefined;
@@ -38,6 +40,8 @@ beforeEach(async () => {
   await settle(800);
 });
 afterEach(() => {
+  vi.restoreAllMocks();
+  resetRiffs();
   app?.unmount();
   host.remove();
   delete document.documentElement.dataset.tcTheme;
@@ -161,6 +165,135 @@ describe("the Similar layout", () => {
     const headings = [...host.querySelectorAll(".list__heading")].map((h) => h.textContent!.trim());
     expect(headings[0]).toMatch(/^Like /);
     expect(await violations()).toEqual([]);
+  });
+});
+
+// The dev server's riff endpoints, stubbed: no request reaches Claude, and nothing is written to Trenchcoat
+describe("riffing", () => {
+  const variants: Variant[] = [
+    {
+      name: "Failed call",
+      rationale: "Shows the error state.",
+      props: { status: "error", error: "Timed out" },
+      tokens: {},
+      structural: false,
+      note: "",
+      issues: [],
+    },
+    {
+      name: "Inline diff",
+      rationale: "Shows the arguments as a diff.",
+      props: { open: true },
+      tokens: { "--tc-space-2": "var(--tc-space-1)" },
+      structural: true,
+      note: "A diff view for arguments",
+      issues: [{ path: "duration", message: "should be number, not string – left out" }],
+    },
+  ];
+  let reply: RiffEvent[];
+  let kept: Kept[];
+  let posted: { url: string; body: unknown }[];
+
+  beforeEach(() => {
+    reply = [
+      { type: "status", text: "Claude is thinking it through…" },
+      { type: "variants", variants },
+    ];
+    kept = [];
+    posted = [];
+    const real = window.fetch.bind(window);
+    vi.spyOn(window, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (!url.includes("/__canvas/variants") && !(url.includes("/__canvas/riff") && init?.method === "POST")) return real(input, init);
+      const body = init?.body ? JSON.parse(String(init.body)) : undefined;
+      if (init?.method) posted.push({ url, body });
+      if (url.includes("/__canvas/riff"))
+        return new Response(reply.map((e) => JSON.stringify(e)).join("\n") + "\n", { headers: { "content-type": "application/x-ndjson" } });
+      if (init?.method === "POST") {
+        const k = { name: body.variant.name, rationale: body.variant.rationale, prompt: body.prompt, props: body.variant.props, tokens: body.variant.tokens };
+        kept = [...kept, k];
+        return Response.json({ kept: k, file: "app/src/variants/tool-call-card.json", request: null });
+      }
+      if (init?.method === "DELETE") return Response.json({ variants: (kept = kept.filter((k) => k.name !== body.name)) });
+      return Response.json({ variants: kept });
+    });
+  });
+
+  async function openToolCallCard() {
+    key(currentTitle(), "1");
+    await settle(900);
+    const title = host.querySelector<HTMLButtonElement>('[data-piece="tool-call-card"] .card__title')!;
+    title.focus();
+    title.click();
+    await settle(1200);
+    return host.querySelector<HTMLElement>("aside.riff")!;
+  }
+  async function riff(panel: HTMLElement, prompt: string) {
+    const field = panel.querySelector<HTMLTextAreaElement>("textarea")!;
+    field.value = prompt;
+    field.dispatchEvent(new Event("input"));
+    await nextTick();
+    button("Riff", panel).click();
+    await settle(1500);
+  }
+
+  for (const theme of ["Light", "Dark"])
+    it(`opens a panel beside a component, which passes axe in ${theme}`, async () => {
+      segment("Theme", theme).click();
+      const panel = await openToolCallCard();
+      expect(panel.querySelector("h2")!.textContent).toContain("Riff on Tool Call Card");
+      expect(panel.querySelector("tc-prompt-starters")).not.toBeNull();
+      expect(await violations()).toEqual([]);
+    });
+
+  it("asks for variants with the piece's props, and draws them live around it", async () => {
+    const panel = await openToolCallCard();
+    await riff(panel, "Show it failing");
+    const request = posted.find((p) => p.url.includes("/__canvas/riff"))!.body as { slug: string; prompt: string; props: Record<string, unknown> };
+    expect(request).toMatchObject({ slug: "tool-call-card", prompt: "Show it failing" });
+    expect(request.props.name).toBeTypeOf("string");
+    const cards = host.querySelectorAll<HTMLElement>("article.variant");
+    expect(cards).toHaveLength(2);
+    await expect.poll(() => cards[0].querySelector<HTMLElement & { status: string }>("tc-tool-call-card")?.status).toBe("error");
+    await expect.poll(() => cards[1].querySelector<HTMLElement>("tc-tool-call-card")?.style.getPropertyValue("--tc-space-2")).toBe("var(--tc-space-1)");
+    expect(cards[1].textContent).toContain("Needs new code");
+    expect(panel.querySelector("[role=status]")!.textContent).toMatch(/^2 variants of Tool Call Card/);
+    expect(panel.querySelector("details summary")!.textContent).toBe("1 change left out");
+    expect(await violations()).toEqual([]);
+  });
+
+  it("keeps a variant, discards another, and removes a kept one", async () => {
+    const panel = await openToolCallCard();
+    await riff(panel, "Show it failing");
+    button("Keep", panel).click();
+    await settle();
+    expect(posted.at(-1)!.body).toMatchObject({ slug: "tool-call-card", prompt: "Show it failing", variant: { name: "Failed call" } });
+    expect(panel.querySelector("[role=status]")!.textContent).toContain("Kept Failed call in trenchcoat/app/src/variants/tool-call-card.json");
+    expect([...host.querySelectorAll("article.variant")].map((c) => c.textContent)).toEqual([
+      expect.stringContaining("Kept"),
+      expect.stringContaining("Inline diff"),
+    ]);
+    button("Discard", panel).click();
+    await settle();
+    expect(host.querySelectorAll("article.variant")).toHaveLength(1);
+    button("Remove", panel).click();
+    await settle();
+    expect(host.querySelectorAll("article.variant")).toHaveLength(0);
+  });
+
+  it("says what went wrong", async () => {
+    reply = [{ type: "error", message: "Claude couldn't be reached: no valid Anthropic credentials." }];
+    const panel = await openToolCallCard();
+    await riff(panel, "Denser");
+    expect(panel.querySelector("[role=alert]")!.textContent).toContain("no valid Anthropic credentials");
+  });
+
+  it("goes back to the canvas with Escape, focus on the piece", async () => {
+    const panel = await openToolCallCard();
+    key(panel.querySelector("textarea")!, "Escape");
+    await settle();
+    expect(host.querySelector("aside.riff")).toBeNull();
+    expect(document.activeElement).toBe(host.querySelector('[data-piece="tool-call-card"] .card__title'));
   });
 });
 

@@ -3,8 +3,8 @@
 Every Trenchcoat piece on one infinite canvas. Pan and zoom around ~390 components, blocks and motion pieces, switch
 between layouts, and open any piece live, running from its own docs example.
 
-This covers phases 1 and 2 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts, and
-the Similar layout, which sorts pieces by how they look. Riffing on variants with Claude comes next.
+This covers phases 1 to 3 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
+Similar layout, which sorts pieces by how they look; and riffing on a component's variants with Claude.
 
 ```bash
 npm install
@@ -27,6 +27,35 @@ Then open http://localhost:5210.
 - **Jump to a piece** (⌘K or Ctrl K) finds any piece by name or description. You can also filter by library and
   category, switch the look (Standard or Clean) and the theme (light or dark), and use a **List** view that shows the
   same pieces as a plain, scrollable list.
+
+## Riffing with Claude
+
+Open a component (Enter, or click its title) and a panel opens beside it. Say what should change – or pick one of the
+ideas – and Claude proposes three or four variants. They appear live around the piece, so you can compare them, and
+the panel lists each one with why it differs:
+
+- **Show** zooms to it. **Riff on this** starts the next request from that variant instead of the piece.
+- **Keep** saves it to `trenchcoat/app/src/variants/<slug>.json`: a name, the prompt, and the props and tokens that
+  differ. Kept variants come back around the piece whenever it's opened. A variant Claude marks **Needs new code** also
+  gets a brief in `trenchcoat/audit/variant-requests/`, to build as a normal pull request. The canvas never edits a
+  component's code.
+- **Discard** drops it; **Remove** un-keeps a kept one. Commit what you keep like any other change.
+
+Riffing runs in the dev server only (`npm run dev`), with `ANTHROPIC_API_KEY` set (or an `ant auth login` profile).
+`plugins/riff.ts` holds the key and calls `claude-opus-5-5`, with adaptive thinking and the server-side refusal
+fallback; the browser only talks to the dev server, which accepts requests from the canvas's own origin alone. A built
+canvas has no riffing.
+
+What Claude writes is checked before anything is shown or saved:
+
+- **Props** go through Trenchcoat's generative-UI checks (`checkProps`), against the component's JSON Schema: a prop
+  that isn't allowed is left out, and the panel says which and why.
+- **Tokens** may only be the component's own – the shared tokens its source uses and its `--tc-<slug>-…` component
+  tokens – and each must be set to another token as `var(--tc-…)`. No literal colours or sizes, so kept variants
+  keep to the token rules.
+
+Each request is one call to Claude Opus 5.5: roughly 5–10K input tokens (the schema, the docs page, the props, and the
+token list, which is cached), plus the thinking and the answer.
 
 ## How it gets the pieces
 
@@ -103,7 +132,8 @@ npm run ci   # typecheck, lint (incl. vuejs-accessibility), format, tests, build
 The tests have two parts:
 
 - **Unit tests** (Node): the viewport maths, the layouts, arrow-key navigation, the snippet parser, the similarity
-  maths, and that `similarity.json` still matches the thumbnails.
+  maths, that `similarity.json` still matches the thumbnails, and the riff endpoint's request, checks and origin rule
+  (against a fake Claude client – no test calls the API).
 - **Browser tests** (Chromium): keyboard use, opening and closing pieces, the Free and Similar layouts, More like
-  this, filters and the list view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
+  this, riffing (with the endpoints stubbed), filters and the list view. axe checks the WCAG 2.2 AA and best-practice rules in both themes and both looks, and every docs example is
   mounted.
