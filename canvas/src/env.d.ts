@@ -17,3 +17,15 @@ declare module "virtual:tc-graph" {
   const edges: [string, string][];
   export default edges;
 }
+
+declare module "virtual:tc-tokens/*" {
+  /** The element's tokens that sit on a scale (space, radius, type size …), each with the scale's steps */
+  const tokens: { token: string; options: string[] }[];
+  export default tokens;
+}
+
+declare module "virtual:tc-tokens" {
+  /** Each element's tunable tokens, loaded on demand */
+  const tokens: Record<string, () => Promise<{ default: { token: string; options: string[] }[] }>>;
+  export default tokens;
+}

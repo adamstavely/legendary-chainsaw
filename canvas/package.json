@@ -19,7 +19,10 @@
   "dependencies": {
     "@lit/context": "1.1.6",
     "@lucide/vue": "1.61.0",
+    "dialkit": "2.1.0",
     "lit": "3.3.3",
+    "motion": "14.7.1",
+    "motion-v": "2.9.0",
     "vue": "3.5.44"
   },
   "devDependencies": {

@@ -159,9 +159,17 @@ Zoom into a card, or press Enter on it, and a side panel opens next to the live 
 
    What's left of this phase moves on: screenshots in the structural-variant briefs come with the next one.
 
-5. **Tune** (next). DialKit in the riff panel: a dial for each of the open component's props (sliders, toggles,
-   selects, text) and for its tokens (each a choice of other tokens), applied to the live piece as they move. Keep saves
-   the result as a variant, with the same checks as a riff. Also screenshots for structural-variant briefs.
+5. **Tune** (done). The panel beside an open component has two tabs, Riff and Tune. Tune is DialKit, inline: a dial
+   for each simple prop (toggles, selects, sliders, text, colours) and a select for each token on a scale, offering
+   its other steps. Moves apply to the live piece; Keep saves them as a variant with the same checks as a riff.
+   - DialKit's title bar and versions toolbar are hidden – the panel has its own, and the title bar's ARIA failed axe.
+   - A whole-number slider steps by 1: DialKit snaps values to the step, which otherwise moved them on their own.
+   - The tabs are a small WAI-ARIA tabs control: Trenchcoat has no tabs element, and tc-segmented-control is a radio
+     group.
+
+6. **Create** (proposed). New components from the canvas, built by the repo's own `new-component` skill: the Claude
+   Agent SDK in the dev server, one git worktree per component, progress streamed to the panel, and the new piece
+   live on the canvas when it's done. Also screenshots for structural-variant briefs.
 
 ## Decisions to confirm
 
