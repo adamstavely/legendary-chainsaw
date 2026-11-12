@@ -2,8 +2,8 @@ name: Trenchcoat docs sync
 
 # Mirrors trenchcoat/docs/ (every gallery page as Markdown) and the standalone gallery to the trenchcoat-docs repo on a
 # merge to main, so a new component's page appears there with no manual steps. CI's "Markdown docs" check keeps docs/
-# current on every PR, so main's copy is always the one to publish. The repo is replaced wholesale: a page removed here
-# is removed there.
+# current on every PR, so main's copy is always the one to publish. The repo is replaced wholesale – a page removed here
+# is removed there – except presentations/, which is added to trenchcoat-docs directly and kept.
 #
 # Pushes with a deploy key: TRENCHCOAT_DOCS_DEPLOY_KEY is the private half, and trenchcoat-docs has the public half as
 # a deploy key with write access. Run it by hand (Actions → Trenchcoat docs sync → Run workflow) to resync everything.
@@ -50,7 +50,7 @@ jobs:
       - name: Copy the pages and the standalone gallery
         if: steps.key.outputs.ok == 'true'
         run: |
-          rsync -a --delete --exclude .git --exclude trenchcoat-gallery.html source/trenchcoat/docs/ docs/
+          rsync -a --delete --exclude .git --exclude trenchcoat-gallery.html --filter 'P presentations/' source/trenchcoat/docs/ docs/
           cp source/trenchcoat/standalone/trenchcoat-gallery.html docs/
       - name: Commit and push
         if: steps.key.outputs.ok == 'true'
