@@ -138,16 +138,25 @@ Zoom into a card, or press Enter on it, and a side panel opens next to the live 
    - **Matrix is deferred.** Only light and dark thumbnails are captured, not Clean, so it would show two of its four
      columns. It needs Clean thumbnails from Trenchcoat first.
 
-3. **Riff.**
-   - Focus mode, the dev middleware and Claude call, and variant cards;
-   - validation, promote and discard, `trenchcoat/app/src/variants/`;
-   - presets in the docs and demos.
+3. **Riff** (done).
+   - the riff panel beside an open component, the dev-server endpoints and the Claude call, and variant cards in a
+     ring around the piece;
+   - validation, keep and discard, `trenchcoat/app/src/variants/<slug>.json`, and briefs for structural variants in
+     `trenchcoat/audit/variant-requests/`.
+
+   What changed from the plan, and why:
+   - **Presets in the gallery demos and docs pages are left for a Trenchcoat PR.** They change Trenchcoat itself (a
+     version bump and changelog), and are better built once some variants have been kept to design them around.
+   - **Kept variants show in the dev server only.** A built canvas has no riffing, and reading them at build time would
+     reload the page whenever one is kept.
+   - **Briefs have no screenshot yet**, only the prompt, rationale, what to build and the closest props and tokens.
+   - **The variants are previews**, not interactive: the panel acts on them, so they never take focus.
+
 4. **Graph and structural hand-off.**
    - the composition graph layout;
    - the structural-variant briefs.
 
 ## Decisions to confirm
 
-- **What "promote" writes.** Recommended: presets in `trenchcoat/app/src/variants/` first, and code only through a brief and a PR.
 - **Scope of pieces.** Components, blocks and motion. Illustrations and screens are left out, since they don't riff
   well.

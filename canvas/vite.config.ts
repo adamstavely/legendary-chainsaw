@@ -4,14 +4,15 @@ import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vite";
+import { riff } from "./plugins/riff";
 import { trenchcoat } from "./plugins/trenchcoat";
 
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 const TRENCHCOAT = here("../trenchcoat");
 
 export default defineConfig({
-  // tc-* are Trenchcoat's custom elements, not Vue components
-  plugins: [trenchcoat(TRENCHCOAT), vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith("tc-") } } })],
+  // tc-* are Trenchcoat's custom elements, not Vue components. riff() adds the dev server's Claude endpoints
+  plugins: [trenchcoat(TRENCHCOAT), riff({ root: TRENCHCOAT }), vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith("tc-") } } })],
   // Trenchcoat's elements import Lit; dedupe makes them share the app's copy (the same versions Trenchcoat pins)
   resolve: { alias: { "~tc": TRENCHCOAT }, dedupe: ["lit", "lit-html", "lit-element", "@lit/reactive-element", "@lit/context"] },
   // Trenchcoat's elements use standard decorators, which no browser ships yet: esbuild lowers them

@@ -138,3 +138,27 @@ export function nearestIn(from: Rect, direction: Direction, cards: ReadonlyMap<s
   }
   return best;
 }
+
+/**
+ * Places for `count` cards around `centre` (a piece's variants): the nearest ring first – right, left, below, above,
+ * then the corners – then the next ring out
+ */
+export function ring(centre: Rect, count: number): Rect[] {
+  const slots: [number, number][] = [];
+  for (let r = 1; slots.length < count; r++) {
+    const here: [number, number][] = [];
+    for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) if (Math.max(Math.abs(dx), Math.abs(dy)) === r) here.push([dx, dy]);
+    const key = ([dx, dy]: [number, number]) => [Math.abs(dx) + Math.abs(dy), dy === 0 ? 0 : dx === 0 ? 1 : 2, -dx, -dy];
+    here.sort((a, b) => {
+      const [ka, kb] = [key(a), key(b)];
+      return ka[0] - kb[0] || ka[1] - kb[1] || ka[2] - kb[2] || ka[3] - kb[3];
+    });
+    slots.push(...here);
+  }
+  return slots.slice(0, count).map(([dx, dy]) => ({
+    x: centre.x + dx * (CARD.width + GAP),
+    y: centre.y + dy * (CARD.height + GAP),
+    width: CARD.width,
+    height: CARD.height,
+  }));
+}

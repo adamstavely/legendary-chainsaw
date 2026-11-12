@@ -14,6 +14,7 @@ import {
   intersects,
   nearestIn,
   reveal,
+  ring,
   visibleWorld,
   zoomAt,
   type Direction,
@@ -26,9 +27,23 @@ import { similarLayout } from "../canvas/similarity";
 import { useReducedMotion } from "../composables/media";
 import { SIMILARITY, compared, lookAlikesOf, neighboursOf } from "../data/lookalikes";
 import { CATEGORIES, PIECES, type Look, type Piece, type Theme } from "../data/pieces";
+import { keepVariant, keptVariants, removeVariant, requestVariants } from "../riff/api";
+import { propsOf } from "../riff/apply";
+import { addRound, discard, riffsOf, shownVariants, type Round } from "../riff/session";
+import type { Kept, Variant } from "../riff/types";
 import PieceCard from "./PieceCard.vue";
+import RiffPanel from "./RiffPanel.vue";
+import VariantCard from "./VariantCard.vue";
 
-const props = defineProps<{ pieces: readonly Piece[]; layout: LayoutName; theme: Theme; look: Look; summary: string }>();
+const props = defineProps<{
+  pieces: readonly Piece[];
+  layout: LayoutName;
+  theme: Theme;
+  look: Look;
+  summary: string;
+  /** Slugs of the components Claude can riff on (dev server only) */
+  riffable: ReadonlySet<string>;
+}>();
 const moved = defineModel<Record<string, Point>>("moved", { required: true });
 const emit = defineEmits<{ announce: [text: string]; similar: [id: string] }>();
 
@@ -174,12 +189,17 @@ async function open(id: string) {
     return;
   }
   opened.value = id;
-  glide(fit(rect, screen.value, INSETS, 3));
-  say(`${piece.name} is open. Tab into it to use it; press Escape to go back to the canvas.`);
+  const riffing = canRiff(piece);
+  if (riffing) void loadKept(piece.slug);
+  glide(fit(variantBounds.value ?? rect, screen.value, INSETS, 3));
+  say(
+    `${piece.name} is open. Tab into it to use it${riffing ? ", or riff on it with Claude in the panel beside the canvas" : ""}; press Escape to go back to the canvas.`,
+  );
 }
 async function close() {
   const id = opened.value;
   if (!id) return;
+  stopRiff();
   opened.value = null;
   say(`Back on the canvas at ${byId.value.get(id)?.name}.`);
   await focusCard(id);
@@ -206,6 +226,129 @@ async function jump(id: string) {
   say(`${byId.value.get(id)?.name ?? "Piece"}.`);
 }
 defineExpose({ jump });
+
+// Riffing -------------------------------------------------------------------------------------------------------------
+// An open component can be riffed on: Claude proposes variants, drawn around it on the canvas and listed in the panel
+
+const canRiff = (piece: Piece | undefined) => !!piece && piece.library === "components" && props.riffable.has(piece.slug);
+const riffPiece = computed(() => {
+  const piece = opened.value ? byId.value.get(opened.value) : undefined;
+  return canRiff(piece) ? piece! : null;
+});
+const variants = computed(() => {
+  const piece = riffPiece.value;
+  const rect = piece && layout.value.cards.get(piece.id);
+  if (!piece || !rect) return [];
+  const shown = shownVariants(piece.slug);
+  const rects = ring(rect, shown.length);
+  return shown.map((variant, i) => ({ variant, rect: rects[i] }));
+});
+const variantBounds = computed(() => {
+  const rect = riffPiece.value && layout.value.cards.get(riffPiece.value.id);
+  return rect && variants.value.length ? bounds([rect, ...variants.value.map((v) => v.rect)]) : null;
+});
+const shownVariant = ref<string | null>(null);
+const riffing = ref(false);
+const riffStatus = ref("");
+const riffError = ref("");
+let riffAbort: AbortController | null = null;
+
+async function loadKept(slug: string) {
+  const riffs = riffsOf(slug);
+  if (riffs.keptLoaded) return;
+  try {
+    riffs.kept = await keptVariants(slug);
+    riffs.keptLoaded = true;
+  } catch {
+    // Kept variants are a nicety: the piece still opens and riffs without them
+  }
+}
+
+/** The open piece's live element, whose props a riff starts from */
+function liveElement(piece: Piece): HTMLElement | null {
+  return stage.value?.querySelector<HTMLElement>(`[data-piece="${CSS.escape(piece.id)}"] .live__piece tc-${piece.slug}`) ?? null;
+}
+
+async function riff(prompt: string, from: Round["from"]) {
+  const piece = riffPiece.value;
+  if (!piece || riffing.value) return;
+  const el = liveElement(piece);
+  const base = el ? propsOf(el) : {};
+  riffing.value = true;
+  riffError.value = "";
+  riffStatus.value = "Asking Claude…";
+  riffAbort = new AbortController();
+  try {
+    const result = await requestVariants(
+      { slug: piece.slug, prompt, props: { ...base, ...from?.props }, tokens: from?.tokens ?? {} },
+      (text) => (riffStatus.value = text),
+      riffAbort.signal,
+    );
+    addRound(piece.slug, prompt, from, result);
+    shownVariant.value = null;
+    riffStatus.value = `${result.length} ${result.length === 1 ? "variant" : "variants"} of ${piece.name}, around it on the canvas.`;
+    if (variantBounds.value) glide(fit(variantBounds.value, screen.value, INSETS, 3));
+  } catch (error) {
+    riffStatus.value = "";
+    if ((error as Error).name !== "AbortError") riffError.value = (error as Error).message;
+  } finally {
+    riffing.value = false;
+    riffAbort = null;
+  }
+}
+
+function stopRiff() {
+  riffAbort?.abort();
+  if (riffing.value) riffStatus.value = "Stopped.";
+}
+
+function showVariant(id: string, round?: string) {
+  const piece = riffPiece.value;
+  if (!piece) return;
+  if (round) riffsOf(piece.slug).shown = round;
+  void nextTick(() => {
+    const target = variants.value.find((v) => v.variant.id === id);
+    if (!target) return;
+    shownVariant.value = id;
+    glide(fit(target.rect, screen.value, INSETS, 2.5));
+    riffStatus.value = `Showing ${target.variant.name}.`;
+  });
+}
+
+async function keep(variant: Variant & { id: string }, prompt: string) {
+  const piece = riffPiece.value;
+  if (!piece) return;
+  riffError.value = "";
+  try {
+    const saved = await keepVariant(piece.slug, prompt, variant);
+    const riffs = riffsOf(piece.slug);
+    riffs.kept = [...riffs.kept.filter((k) => k.name !== saved.kept.name), saved.kept];
+    discard(piece.slug, variant.id);
+    riffStatus.value = `Kept ${saved.kept.name} in trenchcoat/${saved.file}${saved.request ? `, with a brief for the new code in trenchcoat/${saved.request}` : ""}.`;
+  } catch (error) {
+    riffError.value = (error as Error).message;
+  }
+}
+
+function discardVariant(id: string) {
+  const piece = riffPiece.value;
+  if (!piece) return;
+  const name = variants.value.find((v) => v.variant.id === id)?.variant.name;
+  discard(piece.slug, id);
+  riffStatus.value = `Discarded ${name ?? "the variant"}.`;
+}
+
+async function remove(kept: Kept) {
+  const piece = riffPiece.value;
+  if (!piece) return;
+  riffError.value = "";
+  try {
+    riffsOf(piece.slug).kept = await removeVariant(piece.slug, kept.name);
+    riffStatus.value = `Removed ${kept.name} from the kept variants.`;
+  } catch (error) {
+    riffError.value = (error as Error).message;
+  }
+}
 
 // Keyboard: shortcuts work while focus is on the canvas, never inside an open piece or a text field (WCAG 2.1.4)
 
@@ -332,6 +475,10 @@ onMounted(() => {
     if (first) {
       view.value = fit(world.value, screen.value, INSETS, 1);
       current.value = props.pieces[0]?.id ?? null;
+    } else if (opened.value) {
+      // The riff panel opening (or the window resizing) changes the room: keep the open piece and its variants in view
+      const rect = variantBounds.value ?? layout.value.cards.get(opened.value);
+      if (rect) glide(fit(rect, screen.value, INSETS, 3));
     }
   });
   observer.observe(el);
@@ -349,50 +496,77 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
 
 <template>
   <div class="canvas">
-    <!-- The stage only pans and zooms under the pointer; keyboard and single-pointer users get the same from the cards'
+    <div class="canvas__body">
+      <!-- The stage only pans and zooms under the pointer; keyboard and single-pointer users get the same from the cards'
          own buttons (arrows, Enter) and the zoom buttons below, and keydown here is delegated from those buttons -->
-    <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-    <section
-      ref="stage"
-      class="stage"
-      :class="{ 'stage--panning': drag?.kind === 'pan' && drag.moved }"
-      aria-roledescription="canvas"
-      aria-label="Pieces"
-      aria-describedby="canvas-keys"
-      @keydown="onKeydown"
-      @pointerdown="onPointerDown"
-      @pointermove="onPointerMove"
-      @pointerup="onPointerUp"
-      @pointercancel="onPointerUp"
-    >
-      <div ref="world" class="world" :class="{ 'world--glide': gliding }" :style="worldStyle">
-        <section v-for="group in rendered" :key="group.label ?? 'free'" class="group" :aria-label="group.label ?? undefined">
-          <h3 v-if="group.label && group.rect" class="group__title" :style="{ transform: `translate(${group.rect.x}px, ${group.rect.y}px)` }">
-            {{ group.label }}
-          </h3>
-          <PieceCard
-            v-for="piece in group.pieces"
-            :key="piece.id"
-            :piece="piece"
-            :rect="layout.cards.get(piece.id)!"
-            :live="live.has(piece.id)"
-            :open="opened === piece.id"
-            :current="current === piece.id"
-            :movable="props.layout === 'free'"
-            :look-alikes="alike(lookAlikesOf(piece.id))"
-            :most-like="props.layout === 'similar' ? alike(neighboursOf(piece.id).slice(0, 3)) : []"
-            :can-find-similar="props.layout !== 'similar' && compared(piece.id)"
-            :theme="theme"
-            :look="look"
-            @select="current = piece.id"
-            @open="opened === piece.id ? close() : open(piece.id)"
-            @move="(d) => move(piece.id, d)"
-            @similar="emit('similar', piece.id)"
-          />
-        </section>
-      </div>
-      <p v-if="!pieces.length" class="empty">No pieces match the filters.</p>
-    </section>
+      <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
+      <section
+        ref="stage"
+        class="stage"
+        :class="{ 'stage--panning': drag?.kind === 'pan' && drag.moved }"
+        aria-roledescription="canvas"
+        aria-label="Pieces"
+        aria-describedby="canvas-keys"
+        @keydown="onKeydown"
+        @pointerdown="onPointerDown"
+        @pointermove="onPointerMove"
+        @pointerup="onPointerUp"
+        @pointercancel="onPointerUp"
+      >
+        <div ref="world" class="world" :class="{ 'world--glide': gliding }" :style="worldStyle">
+          <section v-for="group in rendered" :key="group.label ?? 'free'" class="group" :aria-label="group.label ?? undefined">
+            <h3 v-if="group.label && group.rect" class="group__title" :style="{ transform: `translate(${group.rect.x}px, ${group.rect.y}px)` }">
+              {{ group.label }}
+            </h3>
+            <PieceCard
+              v-for="piece in group.pieces"
+              :key="piece.id"
+              :piece="piece"
+              :rect="layout.cards.get(piece.id)!"
+              :live="live.has(piece.id)"
+              :open="opened === piece.id"
+              :current="current === piece.id"
+              :movable="props.layout === 'free'"
+              :look-alikes="alike(lookAlikesOf(piece.id))"
+              :most-like="props.layout === 'similar' ? alike(neighboursOf(piece.id).slice(0, 3)) : []"
+              :can-find-similar="props.layout !== 'similar' && compared(piece.id)"
+              :theme="theme"
+              :look="look"
+              @select="current = piece.id"
+              @open="opened === piece.id ? close() : open(piece.id)"
+              @move="(d) => move(piece.id, d)"
+              @similar="emit('similar', piece.id)"
+            />
+          </section>
+          <section v-if="riffPiece && variants.length" class="variants" :aria-label="`Variants of ${riffPiece.name}`">
+            <VariantCard
+              v-for="v in variants"
+              :key="v.variant.id"
+              :variant="v.variant"
+              :slug="riffPiece.slug"
+              :rect="v.rect"
+              :current="shownVariant === v.variant.id"
+            />
+          </section>
+        </div>
+        <p v-if="!pieces.length" class="empty">No pieces match the filters.</p>
+      </section>
+      <RiffPanel
+        v-if="riffPiece"
+        :piece="riffPiece"
+        :riffs="riffsOf(riffPiece.slug)"
+        :busy="riffing"
+        :status="riffStatus"
+        :error="riffError"
+        @riff="riff"
+        @cancel="stopRiff"
+        @keep="keep"
+        @discard="discardVariant"
+        @remove="remove"
+        @show="showVariant"
+        @close="close"
+      />
+    </div>
 
     <footer class="foot">
       <p class="foot__count">{{ summary }}</p>
@@ -421,6 +595,13 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-height: 0;
+}
+
+/* The stage, and the riff panel beside it when one is open */
+.canvas__body {
+  display: flex;
+  flex: 1;
   min-height: 0;
 }
 
@@ -511,6 +692,10 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
 
 /* Touch-sized screens rarely have a keyboard: the hints step aside, and still describe the canvas to screen readers */
 @media (max-width: 48rem) {
+  .canvas__body {
+    flex-direction: column;
+  }
+
   .foot__keys {
     display: none;
   }
