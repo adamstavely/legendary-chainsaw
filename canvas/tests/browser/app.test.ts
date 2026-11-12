@@ -115,6 +115,55 @@ describe("the canvas", () => {
   });
 });
 
+describe("the Similar layout", () => {
+  for (const theme of ["Light", "Dark"])
+    it(`groups pieces by look and passes axe in ${theme}`, async () => {
+      segment("Theme", theme).click();
+      segment("Layout", "Similar").click();
+      await settle();
+      key(currentTitle(), "1");
+      await settle(900);
+      const titles = [...host.querySelectorAll(".group__title")].map((h) => h.textContent!.trim());
+      expect(titles.length).toBeGreaterThan(5);
+      expect(titles.every((t) => t.startsWith("Like ") || t === "Not compared yet")).toBe(true);
+      expect(await violations()).toEqual([]);
+    });
+
+  it("marks look-alikes, and says which pieces they look like", async () => {
+    segment("Layout", "Similar").click();
+    await settle();
+    key(currentTitle(), "1");
+    await settle(900);
+    const badge = host.querySelector(".card__badge")!;
+    expect(badge.textContent).toBe("Look-alike");
+    const title = badge.closest("[data-piece]")!.querySelector(".card__title")!;
+    const about = document.getElementById(title.getAttribute("aria-describedby")!)!.textContent!;
+    expect(about).toMatch(/Looks almost the same as .+ \(\d+% alike\)\./);
+    expect(about).toMatch(/Most like .+, .+, .+\./);
+  });
+
+  it("shows the current piece among its look-alikes with More like this", async () => {
+    const title = currentTitle();
+    const id = title.closest<HTMLElement>("[data-piece]")!.dataset.piece!;
+    title.focus();
+    button("More like this", title.closest("[data-piece]")!).click();
+    await settle(900);
+    expect(segment("Layout", "Similar").getAttribute("aria-checked")).toBe("true");
+    expect(currentTitle().closest<HTMLElement>("[data-piece]")!.dataset.piece).toBe(id);
+    expect(document.activeElement).toBe(currentTitle());
+    expect(host.querySelector("[data-announcer]")!.textContent).toMatch(/^Similar layout\./);
+  });
+
+  it("groups the list by look too", async () => {
+    segment("Layout", "Similar").click();
+    segment("View", "List").click();
+    await settle();
+    const headings = [...host.querySelectorAll(".list__heading")].map((h) => h.textContent!.trim());
+    expect(headings[0]).toMatch(/^Like /);
+    expect(await violations()).toEqual([]);
+  });
+});
+
 describe("the toolbar", () => {
   it("opens the filters as a disclosure; Escape closes them and returns focus", async () => {
     const button = host.querySelector<HTMLButtonElement>(".filter tc-button button")!;

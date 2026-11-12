@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from "@lucide/vue";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Shapes } from "@lucide/vue";
 import { computed, ref } from "vue";
 import type { Direction, Rect } from "../canvas/geometry";
 import { thumbOf, type Look, type Piece, type Theme } from "../data/pieces";
@@ -16,10 +16,25 @@ const props = defineProps<{
   current: boolean;
   /** Free layout: the card can be moved */
   movable: boolean;
+  /** Pieces that look almost the same as this one */
+  lookAlikes: readonly Alike[];
+  /** Similar layout: the pieces this one looks most like, said to screen readers (sighted users see them around it) */
+  mostLike: readonly Alike[];
+  /** Offer "More like this", which shows the piece in the Similar layout */
+  canFindSimilar: boolean;
   theme: Theme;
   look: Look;
 }>();
-const emit = defineEmits<{ select: []; open: []; move: [direction: Direction] }>();
+const emit = defineEmits<{ select: []; open: []; move: [direction: Direction]; similar: [] }>();
+
+type Alike = { name: string; similarity: number };
+const percent = (a: Alike) => `${a.name} (${Math.round(a.similarity * 100)}% alike)`;
+const alikeText = computed(() =>
+  [
+    props.lookAlikes.length ? `Looks almost the same as ${props.lookAlikes.map(percent).join(", ")}.` : "",
+    props.mostLike.length ? `Most like ${props.mostLike.map(percent).join(", ")}.` : "",
+  ].join(" "),
+);
 
 const domId = computed(() => `piece-${props.piece.id.replace(/[^a-z0-9-]/gi, "-")}`);
 const thumb = computed(() => thumbOf(props.piece, props.theme, props.look));
@@ -65,7 +80,13 @@ const nudges: { direction: Direction; label: string; icon: typeof ArrowUp }[] = 
       <span :id="`${domId}-about`" class="sr-only">
         {{ piece.category }}. {{ piece.description }}
         {{ piece.live && !failed ? "Press Enter to open it live." : "Preview image only." }}
+        {{ alikeText }}
       </span>
+      <!-- Said in the description above -->
+      <span v-if="lookAlikes.length" class="card__badge" aria-hidden="true">Look-alike</span>
+      <tc-button v-if="canFindSimilar && current" variant="ghost" size="sm" hide-label label="More like this" @click="emit('similar')">
+        <Shapes slot="icon" :size="16" aria-hidden="true" />
+      </tc-button>
       <span v-if="movable && current" class="card__nudge" role="group" :aria-label="`Move ${piece.name}`">
         <tc-button v-for="n in nudges" :key="n.direction" variant="ghost" size="sm" hide-label :label="`Move ${n.label}`" @click="emit('move', n.direction)">
           <component :is="n.icon" slot="icon" :size="16" aria-hidden="true" />
@@ -139,6 +160,18 @@ const nudges: { direction: Direction; label: string; icon: typeof ArrowUp }[] = 
 
 .card__title:hover {
   background: var(--tc-surface-sunken);
+}
+
+.card__badge {
+  flex: none;
+  padding: 0 var(--tc-space-2);
+  border-radius: var(--tc-radius-full);
+  background: var(--tc-status-warning-bg);
+  color: var(--tc-status-warning-fg);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  line-height: 20px;
+  white-space: nowrap;
 }
 
 .card__nudge {

@@ -1,3 +1,5 @@
 dist
 node_modules
 package-lock.json
+# Written by npm run similarity, one line per piece
+src/data/similarity.json

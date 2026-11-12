@@ -17,8 +17,12 @@ const emit = defineEmits<{ jump: [id: string]; "reset-layout": [] }>();
 
 const layoutOptions: SegmentOption[] = [
   { value: "grid", label: "Grid" },
+  { value: "similar", label: "Similar" },
   { value: "free", label: "Free" },
 ];
+// The list groups by category or by look too; Free is the canvas's alone, and the list shows it by category
+const layoutChoices = computed(() => (view.value === "list" ? layoutOptions.filter((o) => o.value !== "free") : layoutOptions));
+const layoutValue = computed(() => (view.value === "list" && layout.value === "free" ? "grid" : layout.value));
 const viewOptions: SegmentOption[] = [
   { value: "canvas", label: "Canvas" },
   { value: "list", label: "List" },
@@ -115,14 +119,13 @@ const picked = <T extends string>(e: Event) => (e as CustomEvent<{ value: string
 
     <div class="group">
       <tc-segmented-control
-        v-if="view === 'canvas'"
         aria-label="Layout"
         size="sm"
-        :options.prop="layoutOptions"
-        :value.prop="layout"
+        :options.prop="layoutChoices"
+        :value.prop="layoutValue"
         @tc-value-change="layout = picked($event)"
       ></tc-segmented-control>
-      <tc-button v-if="canReset" variant="ghost" size="sm" label="Reset layout" @click="emit('reset-layout')">
+      <tc-button v-if="canReset && view === 'canvas'" variant="ghost" size="sm" label="Reset layout" @click="emit('reset-layout')">
         <RotateCcw slot="icon" :size="16" aria-hidden="true" />
       </tc-button>
 

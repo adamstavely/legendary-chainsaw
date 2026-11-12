@@ -67,17 +67,15 @@ Layout changes animate cards from old to new positions, as a FLIP transition on 
 A build-time script, `canvas/scripts/similarity.mjs`, writes `canvas/src/data/similarity.json`:
 
 1. **Embed each light thumbnail.** Use a CLIP image model run locally with `@huggingface/transformers`. That's about
-   90 MB of weights, cached outside the repo and never shipped. Blend the image vector with a small structural vector
-   from the rendered DOM: aspect ratio, number of buttons, inputs, charts and tables, and text density. That way
-   "looks like a list" and "is a list" both count.
+   100 MB of weights, cached outside the repo and never shipped.
 2. **Lay out in 2-D** with UMAP (`umap-js`) under a fixed seed, so the layout is the same on every run. Snap the result
    to a loose grid so cards don't overlap.
-3. **Cluster** with k-means on the embeddings, and name each cluster from its members' categories.
-4. **Find near-duplicates.** List pairs above a similarity threshold, such as Agent Recap and Agent Inbox's recap view,
-   in `audit/near-duplicates.md` as candidates to merge.
+3. **Cluster** with k-means on the 2-D map, and name each cluster after its most typical piece.
+4. **Find near-duplicates.** List pairs above a similarity threshold in `canvas/reports/near-duplicates.md` as
+   candidates to merge.
 
-Trenchcoat's `integrate.mjs` reruns the script whenever thumbnails change. The output is a few KB of coordinates and is committed,
-so the canvas itself needs no model.
+A unit test fails when the output no longer matches the thumbnails; `npm run similarity` brings it up to date. The
+output is committed, so the canvas itself needs no model.
 
 ## Riffing with Claude (Focus)
 
@@ -124,10 +122,22 @@ Zoom into a card, or press Enter on it, and a side panel opens next to the live 
 
    Tests cover keyboard movement, LOD caps, axe, and a pan/zoom performance budget.
 
-2. **Similarity.**
-   - the similarity script, and the Similar and Matrix layouts;
-   - cluster labels and the near-duplicate report;
-   - the integrate.mjs hook.
+2. **Similarity** (done).
+   - the similarity script, the Similar layout, and More like this;
+   - Look-alike badges and the near-duplicate report, `canvas/reports/near-duplicates.md`;
+   - a unit test that fails when `similarity.json` no longer matches the thumbnails, in place of an `integrate.mjs`
+     hook, so Trenchcoat itself is unchanged.
+
+   What changed from the plan, and why:
+   - **Groups are named after their most typical piece** ("Like Sankey Chart"). Naming them by category mixed
+     unrelated pieces, and naming them with CLIP's text side ("bar charts", "forms") was often wrong. A piece's name is
+     always true.
+   - **Groups come from the 2-D map**, not the raw embeddings, so each group is one place on the map and they're about
+     the same size.
+   - **No structural vector yet.** CLIP alone sorts well; counting buttons and inputs would need every piece rendered.
+   - **Matrix is deferred.** Only light and dark thumbnails are captured, not Clean, so it would show two of its four
+     columns. It needs Clean thumbnails from Trenchcoat first.
+
 3. **Riff.**
    - Focus mode, the dev middleware and Claude call, and variant cards;
    - validation, promote and discard, `trenchcoat/app/src/variants/`;
@@ -138,8 +148,6 @@ Zoom into a card, or press Enter on it, and a side panel opens next to the live 
 
 ## Decisions to confirm
 
-- **Similarity model.** Local CLIP (recommended) costs about 90 MB of cached devDependency weights. The alternative is
-  asking Claude to describe each thumbnail, which needs no download but spends tokens on every rebuild.
 - **What "promote" writes.** Recommended: presets in `trenchcoat/app/src/variants/` first, and code only through a brief and a PR.
 - **Scope of pieces.** Components, blocks and motion. Illustrations and screens are left out, since they don't riff
   well.

@@ -22,13 +22,15 @@ import {
   type Rect,
   type Viewport,
 } from "../canvas/geometry";
+import { similarLayout } from "../canvas/similarity";
 import { useReducedMotion } from "../composables/media";
-import { CATEGORIES, type Look, type Piece, type Theme } from "../data/pieces";
+import { SIMILARITY, compared, lookAlikesOf, neighboursOf } from "../data/lookalikes";
+import { CATEGORIES, PIECES, type Look, type Piece, type Theme } from "../data/pieces";
 import PieceCard from "./PieceCard.vue";
 
 const props = defineProps<{ pieces: readonly Piece[]; layout: LayoutName; theme: Theme; look: Look; summary: string }>();
 const moved = defineModel<Record<string, Point>>("moved", { required: true });
-const emit = defineEmits<{ announce: [text: string] }>();
+const emit = defineEmits<{ announce: [text: string]; similar: [id: string] }>();
 
 const INSETS: Insets = { top: 24, right: 24, bottom: 24, left: 24 };
 const STEP = 1.25;
@@ -48,8 +50,16 @@ const opened = ref<string | null>(null);
 
 const groups = computed(() => CATEGORIES.map((label) => ({ label, ids: props.pieces.filter((p) => p.category === label).map((p) => p.id) })));
 const grid = computed(() => gridLayout(groups.value));
-const layout = computed(() => (props.layout === "free" ? freeLayout(grid.value, moved.value) : grid.value));
+const similar = computed(() =>
+  similarLayout(
+    SIMILARITY,
+    props.pieces.map((p) => p.id),
+  ),
+);
+const layout = computed(() => (props.layout === "free" ? freeLayout(grid.value, moved.value) : props.layout === "similar" ? similar.value : grid.value));
 const byId = computed(() => new Map(props.pieces.map((p) => [p.id, p])));
+const names = new Map(PIECES.map((p) => [p.id, p.name]));
+const alike = (list: readonly { id: string; similarity: number }[]) => list.map((a) => ({ name: names.get(a.id) ?? a.id, similarity: a.similarity }));
 const world = computed(() => bounds([...layout.value.cards.values()]));
 
 // What to render: cards in or near view (a quarter of a screen around it), plus the current and open cards. In
@@ -70,10 +80,7 @@ const rendered = computed(() => {
   };
   if (props.layout === "free") return [{ label: null, rect: null, pieces: props.pieces.filter(keep) }];
   for (const section of layout.value.sections) {
-    const pieces = groups.value
-      .find((g) => g.label === section.label)!
-      .ids.map((id) => byId.value.get(id)!)
-      .filter(keep);
+    const pieces = section.ids.map((id) => byId.value.get(id)!).filter(keep);
     if (pieces.length || intersects(section.rect, near.value)) out.push({ label: section.label, rect: section.rect, pieces });
   }
   return out;
@@ -117,16 +124,22 @@ const percent = computed(() => `${Math.round(view.value.zoom * 100)}%`);
 
 function fitAll() {
   glide(fit(world.value, screen.value, INSETS, 1));
-  emit("announce", `Showing all ${props.pieces.length} pieces.`);
+  say(`Showing all ${props.pieces.length} pieces.`);
 }
 function resetZoom() {
   glide(zoomAt(view.value, 1, centre()));
 }
-// Said once the zoom settles, not at every wheel step
+// Said once the zoom settles, not at every wheel step – and not when the zoom came with something just said (a jump
+// or an open names the piece; the zoom would talk over it)
 let zoomTimer: ReturnType<typeof setTimeout> | undefined;
+let lastSaid = 0;
+function say(text: string) {
+  lastSaid = Date.now();
+  emit("announce", text);
+}
 watch(percent, (p) => {
   clearTimeout(zoomTimer);
-  zoomTimer = setTimeout(() => emit("announce", `Zoom ${p}`), 600);
+  zoomTimer = setTimeout(() => Date.now() - lastSaid < 1000 || emit("announce", `Zoom ${p}`), 600);
 });
 
 // A new layout or filter can leave the view empty: fit everything again
@@ -157,18 +170,18 @@ async function open(id: string) {
   current.value = id;
   if (!piece.live) {
     glide(fit(rect, screen.value, INSETS, 2.5));
-    emit("announce", `${piece.name} has no live example; showing its preview.`);
+    say(`${piece.name} has no live example; showing its preview.`);
     return;
   }
   opened.value = id;
   glide(fit(rect, screen.value, INSETS, 3));
-  emit("announce", `${piece.name} is open. Tab into it to use it; press Escape to go back to the canvas.`);
+  say(`${piece.name} is open. Tab into it to use it; press Escape to go back to the canvas.`);
 }
 async function close() {
   const id = opened.value;
   if (!id) return;
   opened.value = null;
-  emit("announce", `Back on the canvas at ${byId.value.get(id)?.name}.`);
+  say(`Back on the canvas at ${byId.value.get(id)?.name}.`);
   await focusCard(id);
 }
 
@@ -190,7 +203,7 @@ async function jump(id: string) {
   opened.value = null;
   glide(fit(rect, screen.value, INSETS, 1.5));
   await focusCard(id);
-  emit("announce", `${byId.value.get(id)?.name ?? "Piece"}.`);
+  say(`${byId.value.get(id)?.name ?? "Piece"}.`);
 }
 defineExpose({ jump });
 
@@ -366,11 +379,15 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
             :open="opened === piece.id"
             :current="current === piece.id"
             :movable="props.layout === 'free'"
+            :look-alikes="alike(lookAlikesOf(piece.id))"
+            :most-like="props.layout === 'similar' ? alike(neighboursOf(piece.id).slice(0, 3)) : []"
+            :can-find-similar="props.layout !== 'similar' && compared(piece.id)"
             :theme="theme"
             :look="look"
             @select="current = piece.id"
             @open="opened === piece.id ? close() : open(piece.id)"
             @move="(d) => move(piece.id, d)"
+            @similar="emit('similar', piece.id)"
           />
         </section>
       </div>

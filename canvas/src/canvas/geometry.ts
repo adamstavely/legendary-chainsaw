@@ -66,7 +66,8 @@ export const bounds = (rects: readonly Rect[]): Rect => {
   return { x, y, width: Math.max(...rects.map((r) => r.x + r.width)) - x, height: Math.max(...rects.map((r) => r.y + r.height)) - y };
 };
 
-export type Section = { label: string; rect: Rect };
+/** A labelled block of cards; `ids` are its cards in reading order */
+export type Section = { label: string; rect: Rect; ids: readonly string[] };
 export type Layout = { cards: Map<string, Rect>; sections: Section[] };
 
 /**
@@ -91,7 +92,7 @@ export function gridLayout(groups: readonly { label: string; ids: readonly strin
       y += shelf + GAP * 4;
       shelf = 0;
     }
-    sections.push({ label, rect: { x, y, width, height } });
+    sections.push({ label, rect: { x, y, width, height }, ids });
     ids.forEach((id, i) => {
       cards.set(id, {
         x: x + (i % columns) * (CARD.width + GAP),

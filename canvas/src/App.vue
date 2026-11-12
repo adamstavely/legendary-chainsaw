@@ -8,11 +8,11 @@ import { useMedia } from "./composables/media";
 import { oneOf, persisted } from "./composables/persisted";
 import { LIBRARY_LABELS, PIECES, type Look, type Theme } from "./data/pieces";
 
-export type LayoutName = "grid" | "free";
+export type LayoutName = "grid" | "similar" | "free";
 export type ViewName = "canvas" | "list";
 
 const prefersDark = useMedia("(prefers-color-scheme: dark)");
-const layout = persisted<LayoutName>("layout", "grid", oneOf("grid", "free"));
+const layout = persisted<LayoutName>("layout", "grid", oneOf("grid", "similar", "free"));
 const view = persisted<ViewName>("view", "canvas", oneOf("canvas", "list"));
 const look = persisted<Look>("look", "standard", oneOf("standard", "clean"));
 const theme = persisted<Theme>("theme", prefersDark.value ? "dark" : "light", oneOf("light", "dark"));
@@ -57,6 +57,16 @@ async function jump(id: string) {
   stage.value?.jump(id);
 }
 
+/** "More like this": the Similar layout, at the piece */
+async function showSimilar(id: string) {
+  layout.value = "similar";
+  await nextTick();
+  // After the stage has named the piece, so this is what's heard
+  await stage.value?.jump(id);
+  const name = PIECES.find((p) => p.id === id)?.name;
+  announce(`Similar layout. ${name} among the pieces that look most like it.`);
+}
+
 function resetLayout() {
   moved.value = {};
   announce("Pieces moved back to the grid.");
@@ -92,8 +102,9 @@ function resetLayout() {
           :look="look"
           :summary="summary"
           @announce="announce"
+          @similar="showSimilar"
         />
-        <PieceList v-else :pieces="pieces" :theme="theme" :look="look" :summary="summary" @show="jump" />
+        <PieceList v-else :pieces="pieces" :layout="layout" :theme="theme" :look="look" :summary="summary" @show="jump" />
       </main>
       <p role="status" class="sr-only" data-announcer>{{ announcement }}</p>
     </div>
