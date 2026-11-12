@@ -86,6 +86,9 @@ When a fork reports back, note:
      lists any other copy for you to look at – iCloud's copy can be the newer one;
    - regenerates the element index, docs, Angular wrappers and generative schemas;
    - measures performance and captures thumbnails for anything new;
+   - exports every gallery page to `docs/` as Markdown. CI fails a PR whose `docs/` is out of date, and a merge to
+     `main` mirrors `docs/` to the [trenchcoat-docs](https://github.com/adamstavely/trenchcoat-docs) repo, so commit
+     the new and changed pages under `docs/` with the component;
    - runs every check;
    - runs the new components' tests in Chromium, Firefox and WebKit, plus the React suite;
    - stops at the first failure, saying what to fix.

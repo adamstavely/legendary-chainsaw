@@ -99,6 +99,9 @@ jobs:
         run: npm run check:dead-css
       - name: Docs pages
         run: npm run check:docs
+      # docs/ is every gallery page as Markdown, mirrored to the trenchcoat-docs repo: a new or changed page must be in it
+      - name: Markdown docs
+        run: npm run check:docs-md
       - name: Lit templates
         run: npm run check:lit
       - name: CLI and MCP server
