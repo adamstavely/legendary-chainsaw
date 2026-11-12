@@ -18,6 +18,7 @@ const emit = defineEmits<{ jump: [id: string]; "reset-layout": [] }>();
 const layoutOptions: SegmentOption[] = [
   { value: "grid", label: "Grid" },
   { value: "similar", label: "Similar" },
+  { value: "graph", label: "Graph" },
   { value: "free", label: "Free" },
 ];
 // The list groups by category or by look too; Free is the canvas's alone, and the list shows it by category

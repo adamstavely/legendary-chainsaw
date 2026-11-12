@@ -3,8 +3,9 @@
 Every Trenchcoat piece on one infinite canvas. Pan and zoom around ~390 components, blocks and motion pieces, switch
 between layouts, and open any piece live, running from its own docs example.
 
-This covers phases 1 to 3 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
-Similar layout, which sorts pieces by how they look; and riffing on a component's variants with Claude.
+This covers phases 1 to 4 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
+Similar layout, which sorts pieces by how they look; riffing on a component's variants with Claude; and the Graph
+layout, which shows which pieces are built from which.
 
 ```bash
 npm install
@@ -20,6 +21,11 @@ Then open http://localhost:5210.
   Chart"), with similar groups near each other. Pieces that look almost the same as another carry a **Look-alike**
   badge. On any other layout, **More like this** on the current card shows it here, among its look-alikes. The List
   view groups by look too.
+- **Graph.** Pieces joined by what they're built from: a line runs from each piece down to each part it uses, and the
+  current card's lines stand out. Rows go from the pieces built from the deepest stack of parts at the top to the
+  parts themselves at the bottom; pieces that neither use nor are used by another come last. The links come from the
+  elements' source – one element rendering `<tc-other>` or importing `./other` – and each card's description says the
+  same in words ("Built with … Used in …"), as does the List view.
 - **Free.** Drag a card by its title bar, or move it with its arrow buttons or Alt + arrow keys. Positions are kept in
   this browser; **Reset layout** puts them back.
 - **Zoom in** past 125% and the cards in view swap their thumbnail for the running piece. At most 12 run at once.

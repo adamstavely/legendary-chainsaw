@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Maximize, ZoomIn, ZoomOut } from "@lucide/vue";
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useTemplateRef, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useId, useTemplateRef, watch } from "vue";
 import type { LayoutName } from "../App.vue";
 import {
   CARD,
@@ -23,8 +23,10 @@ import {
   type Rect,
   type Viewport,
 } from "../canvas/geometry";
+import { graphLayout, linkPath } from "../canvas/graph";
 import { similarLayout } from "../canvas/similarity";
 import { useReducedMotion } from "../composables/media";
+import { LINKS, compositionText } from "../data/composition";
 import { SIMILARITY, compared, lookAlikesOf, neighboursOf } from "../data/lookalikes";
 import { CATEGORIES, PIECES, type Look, type Piece, type Theme } from "../data/pieces";
 import { keepVariant, keptVariants, removeVariant, requestVariants } from "../riff/api";
@@ -71,7 +73,31 @@ const similar = computed(() =>
     props.pieces.map((p) => p.id),
   ),
 );
-const layout = computed(() => (props.layout === "free" ? freeLayout(grid.value, moved.value) : props.layout === "similar" ? similar.value : grid.value));
+const graph = computed(() =>
+  graphLayout(
+    props.pieces.map((p) => p.id),
+    LINKS,
+  ),
+);
+const layout = computed(() =>
+  props.layout === "free"
+    ? freeLayout(grid.value, moved.value)
+    : props.layout === "similar"
+      ? similar.value
+      : props.layout === "graph"
+        ? graph.value
+        : grid.value,
+);
+// Graph: a line from each piece down to each part it's built with. The current card's links stand out, drawn last so
+// they're on top
+const linkMarker = `${useId()}-arrow`;
+const links = computed(() => {
+  if (props.layout !== "graph") return [];
+  const cards = graph.value.cards;
+  return graph.value.links
+    .map(([a, b]) => ({ key: `${a}>${b}`, d: linkPath(cards.get(a)!, cards.get(b)!), active: a === current.value || b === current.value }))
+    .sort((x, y) => Number(x.active) - Number(y.active));
+});
 const byId = computed(() => new Map(props.pieces.map((p) => [p.id, p])));
 const names = new Map(PIECES.map((p) => [p.id, p.name]));
 const alike = (list: readonly { id: string; similarity: number }[]) => list.map((a) => ({ name: names.get(a.id) ?? a.id, similarity: a.similarity }));
@@ -514,6 +540,15 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
         @pointercancel="onPointerUp"
       >
         <div ref="world" class="world" :class="{ 'world--glide': gliding }" :style="worldStyle">
+          <!-- The links are a picture of what each card's description says ("Built with … Used in …") -->
+          <svg v-if="links.length" class="links" :width="world.x + world.width" :height="world.y + world.height" aria-hidden="true">
+            <defs>
+              <marker :id="linkMarker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" class="links__head" />
+              </marker>
+            </defs>
+            <path v-for="link in links" :key="link.key" :d="link.d" class="link" :class="{ 'link--active': link.active }" :marker-end="`url(#${linkMarker})`" />
+          </svg>
           <section v-for="group in rendered" :key="group.label ?? 'free'" class="group" :aria-label="group.label ?? undefined">
             <h3 v-if="group.label && group.rect" class="group__title" :style="{ transform: `translate(${group.rect.x}px, ${group.rect.y}px)` }">
               {{ group.label }}
@@ -530,6 +565,7 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
               :look-alikes="alike(lookAlikesOf(piece.id))"
               :most-like="props.layout === 'similar' ? alike(neighboursOf(piece.id).slice(0, 3)) : []"
               :can-find-similar="props.layout !== 'similar' && compared(piece.id)"
+              :composition="props.layout === 'graph' ? compositionText(piece.id) : ''"
               :theme="theme"
               :look="look"
               @select="current = piece.id"
@@ -630,6 +666,29 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
 
 .world--glide {
   transition: transform var(--tc-duration-moderate) var(--tc-ease-standard);
+}
+
+.links {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.link {
+  fill: none;
+  stroke: var(--tc-border-strong);
+  stroke-width: 1.5;
+}
+
+.link--active {
+  stroke: var(--tc-border-selected);
+  stroke-width: 3;
+}
+
+.links__head {
+  fill: var(--tc-border-strong);
 }
 
 .group__title {

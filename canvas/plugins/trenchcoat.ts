@@ -6,12 +6,28 @@
 //   · "virtual:tc-examples" maps each piece's slug to a loader for its live example, made from the ```html block on
 //     its docs page (app/src/docs/<slug>.md). Each example becomes a module: the markup, plus a setup function that
 //     runs the snippet's script against the card it renders in (see src/data/examples.ts)
+//   · "virtual:tc-graph" lists which elements are built from which, for the Graph layout: an element that renders
+//     <tc-other> or imports "./other" uses it
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 
 const EXAMPLES = "virtual:tc-examples";
 const EXAMPLE = "virtual:tc-example/";
+const GRAPH = "virtual:tc-graph";
+
+/**
+ * Which elements use which: [user, used] pairs of element slugs, sorted. An element uses another when its source
+ * renders <tc-other> or imports "./other"; only elements in `sources` count, and never itself
+ */
+export function compositionEdges(sources: Readonly<Record<string, string>>): [string, string][] {
+  const edges: [string, string][] = [];
+  for (const [slug, source] of Object.entries(sources)) {
+    const used = new Set([...source.matchAll(/<tc-([a-z0-9-]+)/g), ...source.matchAll(/^import\s+["']\.\/([a-z0-9-]+)(?:\.js)?["'];?$/gm)].map((m) => m[1]));
+    for (const other of used) if (other !== slug && Object.hasOwn(sources, other)) edges.push([slug, other]);
+  }
+  return edges.sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
+}
 
 export type Example = { markup: string; imports: string[]; script: string };
 
@@ -82,6 +98,7 @@ export function trenchcoat(root: string): Plugin {
     enforce: "pre",
     resolveId(id) {
       if (id === EXAMPLES) return `\0${EXAMPLES}`;
+      if (id === GRAPH) return `\0${GRAPH}`;
       if (id.startsWith(EXAMPLE)) return `\0${id}`;
       if (id === "@adamstavely/trenchcoat") return join(elements, "index.ts");
       if (id === "@adamstavely/trenchcoat/tokens.css") return join(root, "tokens/tokens.css");
@@ -90,6 +107,12 @@ export function trenchcoat(root: string): Plugin {
       if (m && existsSync(join(elements, `${m[1]}.ts`))) return join(elements, `${m[1]}.ts`);
     },
     load(id) {
+      if (id === `\0${GRAPH}`) {
+        const files = readdirSync(elements).filter((f) => f.endsWith(".ts") && !/ \d+\.ts$/.test(f) && f !== "index.ts");
+        for (const f of files) this.addWatchFile(join(elements, f));
+        const sources = Object.fromEntries(files.map((f) => [f.slice(0, -3), readFileSync(join(elements, f), "utf8")]));
+        return `export default ${JSON.stringify(compositionEdges(sources))};`;
+      }
       if (id === `\0${EXAMPLES}`)
         return `export default {\n${examples()
           .map((s) => `  ${JSON.stringify(s)}: () => import(${JSON.stringify(EXAMPLE + s)}),`)

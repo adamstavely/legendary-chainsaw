@@ -152,9 +152,16 @@ Zoom into a card, or press Enter on it, and a side panel opens next to the live 
    - **Briefs have no screenshot yet**, only the prompt, rationale, what to build and the closest props and tokens.
    - **The variants are previews**, not interactive: the panel acts on them, so they never take focus.
 
-4. **Graph and structural hand-off.**
-   - the composition graph layout;
-   - the structural-variant briefs.
+4. **Graph** (done).
+   - the composition graph layout, from the elements' own source: an element that renders `<tc-other>` or imports
+     `./other` is built with it. A block shares its element's slug, so it shows its element's links;
+   - each card's description, and the List view, say the links in words.
+
+   What's left of this phase moves on: screenshots in the structural-variant briefs come with the next one.
+
+5. **Tune** (next). DialKit in the riff panel: a dial for each of the open component's props (sliders, toggles,
+   selects, text) and for its tokens (each a choice of other tokens), applied to the live piece as they move. Keep saves
+   the result as a variant, with the same checks as a riff. Also screenshots for structural-variant briefs.
 
 ## Decisions to confirm
 
