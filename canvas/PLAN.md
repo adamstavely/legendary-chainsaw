@@ -167,9 +167,12 @@ Zoom into a card, or press Enter on it, and a side panel opens next to the live 
    - The tabs are a small WAI-ARIA tabs control: Trenchcoat has no tabs element, and tc-segmented-control is a radio
      group.
 
-6. **Create** (proposed). New components from the canvas, built by the repo's own `new-component` skill: the Claude
-   Agent SDK in the dev server, one git worktree per component, progress streamed to the panel, and the new piece
-   live on the canvas when it's done. Also screenshots for structural-variant briefs.
+6. **Create** (done). New components from the canvas, built by the repo's own `new-component` skill through a coding
+   agent you choose – Claude Code, Codex, Gemini CLI, opencode or your own command – run headless in a worktree of its
+   own, with its progress streamed to the panel. The designer reads the changed files in Trenchcoat's code block,
+   previews the piece on a canvas running on the worktree, and opens the pull request from the panel.
+   - The agent stops before step 5 of the skill: the pull request is the designer's call, after review.
+   - Still to do: screenshots in structural-variant briefs.
 
 ## Decisions to confirm
 

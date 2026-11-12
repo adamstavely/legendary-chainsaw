@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Funnel, LayoutGrid, RotateCcw } from "@lucide/vue";
+import { Funnel, Hammer, LayoutGrid, RotateCcw } from "@lucide/vue";
 import type { CommandMenuGroup, FilterGroup, FilterValue, SegmentOption } from "@adamstavely/trenchcoat";
 import { computed, onBeforeUnmount, onMounted, ref, useId, useTemplateRef, watch } from "vue";
 import type { LayoutName, ViewName } from "../App.vue";
@@ -7,12 +7,20 @@ import { CATEGORIES, type Look, type Piece, type Theme } from "../data/pieces";
 
 export type Filters = FilterValue;
 
-const props = defineProps<{ pieces: readonly Piece[]; libraries: Readonly<Record<string, string>>; canReset: boolean }>();
+const props = defineProps<{
+  pieces: readonly Piece[];
+  libraries: Readonly<Record<string, string>>;
+  canReset: boolean;
+  /** The dev server can build new components */
+  canCreate: boolean;
+}>();
 const layout = defineModel<LayoutName>("layout", { required: true });
 const view = defineModel<ViewName>("view", { required: true });
 const look = defineModel<Look>("look", { required: true });
 const theme = defineModel<Theme>("theme", { required: true });
 const filters = defineModel<Filters>("filters", { required: true });
+/** The New component panel is open */
+const creating = defineModel<boolean>("creating", { default: false });
 const emit = defineEmits<{ jump: [id: string]; "reset-layout": [] }>();
 
 const layoutOptions: SegmentOption[] = [
@@ -156,6 +164,17 @@ const picked = <T extends string>(e: Event) => (e as CustomEvent<{ value: string
     </div>
 
     <div class="group group--end">
+      <tc-button
+        v-if="canCreate"
+        variant="secondary"
+        size="sm"
+        label="New component"
+        :aria-expanded="String(creating)"
+        aria-controls="create-panel"
+        @click="creating = !creating"
+      >
+        <Hammer slot="icon" :size="16" aria-hidden="true" />
+      </tc-button>
       <tc-segmented-control
         aria-label="View"
         size="sm"
