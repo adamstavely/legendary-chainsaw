@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import { Check, Shapes, Sparkles, Trash2, Undo2, View, X } from "@lucide/vue";
+import { Check, Shapes, SlidersHorizontal, Sparkles, Trash2, Undo2, View, X } from "@lucide/vue";
 import type { PromptStarter } from "@adamstavely/trenchcoat";
-import { computed, nextTick, ref, useId, useTemplateRef } from "vue";
-import type { Piece } from "../data/pieces";
+import { computed, defineAsyncComponent, nextTick, ref, useId, useTemplateRef, watch } from "vue";
+import type { Piece, Theme } from "../data/pieces";
 import type { PieceRiffs, Round } from "../riff/session";
 import type { Kept, Variant } from "../riff/types";
 
-// Beside an open piece: ask Claude for variants, then keep or discard each one. The variants themselves are drawn
-// around the piece on the canvas; this panel names them and acts on them, so everything here works by keyboard
-const props = defineProps<{ piece: Piece; riffs: PieceRiffs; busy: boolean; status: string; error: string }>();
+// Beside an open component, in two tabs: Riff asks Claude for variants (in the dev server) and keeps or discards each
+// one; Tune sets its props and tokens by hand on DialKit's dials. Without the dev server there's only Tune, and no tabs. The variants themselves are drawn around the piece on the canvas; this panel names
+// them and acts on them, so everything here works by keyboard
+const props = defineProps<{
+  piece: Piece;
+  riffs: PieceRiffs;
+  busy: boolean;
+  status: string;
+  error: string;
+  theme: Theme;
+  /** The dev server is there: Claude can riff, and variants can be kept */
+  canRiff: boolean;
+  findElement: () => HTMLElement | null;
+}>();
 const emit = defineEmits<{
   riff: [prompt: string, from: Round["from"]];
   cancel: [];
@@ -17,10 +28,13 @@ const emit = defineEmits<{
   remove: [kept: Kept];
   show: [id: string, round?: string];
   close: [];
+  keepTuned: [variant: { name: string; props: Record<string, unknown>; tokens: Record<string, string> }];
 }>();
 
 // Only the dev server riffs, so the panel's own element loads with it rather than in every canvas
 void import("@adamstavely/trenchcoat/prompt-starters");
+// Tuning (its token lists, DialKit and Motion) loads with the first piece opened
+const TuneSection = defineAsyncComponent(() => import("./TuneSection.vue"));
 
 const id = useId();
 const prompt = ref("");
@@ -58,6 +72,29 @@ function onKeydown(e: KeyboardEvent) {
 
 const roundsWithVariants = computed(() => props.riffs.rounds.filter((r) => r.variants.length));
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+// Tabs, as the WAI-ARIA pattern has them: one tab stop, arrow keys (and Home and End) move between tabs and show
+// their panel. Both panels stay mounted, so the dials and the riffs keep their state across a switch
+type Tab = "riff" | "tune";
+const TABS: { id: Tab; label: string; icon: typeof Sparkles }[] = [
+  { id: "riff", label: "Riff", icon: Sparkles },
+  { id: "tune", label: "Tune", icon: SlidersHorizontal },
+];
+const tabs = computed(() => (props.canRiff ? TABS : []));
+const tab = ref<Tab>(props.canRiff ? "riff" : "tune");
+watch(
+  () => props.canRiff,
+  (can) => !can && (tab.value = "tune"),
+);
+const tabButtons = useTemplateRef<HTMLButtonElement[]>("tabButtons");
+function onTabKey(e: KeyboardEvent, i: number) {
+  const n = tabs.value.length;
+  const next = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+  if (next === undefined) return;
+  e.preventDefault();
+  tab.value = tabs.value[next].id;
+  tabButtons.value?.[next]?.focus();
+}
 </script>
 
 <template>
@@ -67,108 +104,149 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
     <header class="riff__head">
       <h2 :id="`${id}-title`" class="riff__title">
         <Sparkles :size="16" aria-hidden="true" />
-        <span>Riff on {{ piece.name }}</span>
+        <span>{{ piece.name }}</span>
       </h2>
-      <tc-button variant="ghost" size="sm" hide-label label="Close the riff panel" @click="emit('close')">
+      <tc-button variant="ghost" size="sm" hide-label label="Close the panel" @click="emit('close')">
         <X slot="icon" :size="16" aria-hidden="true" />
       </tc-button>
     </header>
 
-    <form class="riff__form" @submit.prevent="send()">
-      <p v-if="from" class="riff__from">
-        <span
-          >Starting from <strong>{{ from.name }}</strong></span
-        >
-        <tc-button variant="ghost" size="sm" label="Start from the piece instead" @click="from = null">
-          <Undo2 slot="icon" :size="16" aria-hidden="true" />
-        </tc-button>
-      </p>
-      <label :for="`${id}-prompt`" class="riff__label">What should change?</label>
-      <textarea
-        :id="`${id}-prompt`"
-        ref="field"
-        v-model="prompt"
-        class="riff__prompt"
-        rows="3"
-        :aria-describedby="`${id}-hint`"
-        @keydown.enter.exact.prevent="send()"
-      ></textarea>
-      <p :id="`${id}-hint`" class="riff__hint">Enter asks Claude for variants; Shift + Enter adds a line.</p>
-      <div class="riff__actions">
-        <tc-button type="submit" variant="primary" size="sm" :loading="busy" :disabled="!prompt.trim() || busy" label="Riff">
-          <Sparkles slot="icon" :size="16" aria-hidden="true" />
-        </tc-button>
-        <tc-button v-if="busy" variant="ghost" size="sm" label="Stop" @click="emit('cancel')"></tc-button>
-      </div>
-    </form>
+    <div v-if="tabs.length" role="tablist" class="riff__tabs" :aria-label="`Ways to change ${piece.name}`">
+      <button
+        v-for="(t, i) in tabs"
+        :id="`${id}-tab-${t.id}`"
+        :key="t.id"
+        ref="tabButtons"
+        type="button"
+        role="tab"
+        class="riff__tab"
+        :aria-selected="tab === t.id"
+        :aria-controls="`${id}-panel-${t.id}`"
+        :tabindex="tab === t.id ? 0 : -1"
+        @click="tab = t.id"
+        @keydown="onTabKey($event, i)"
+      >
+        <component :is="t.icon" :size="16" aria-hidden="true" />
+        {{ t.label }}
+      </button>
+    </div>
 
-    <tc-prompt-starters
-      v-if="!riffs.rounds.length && !busy"
-      class="riff__ideas"
-      heading="Ideas"
-      :items.prop="ideas"
-      @tc-send="send(($event as CustomEvent<{ text: string }>).detail.text)"
-      @tc-fill="prompt = ($event as CustomEvent<{ text: string }>).detail.text"
-    ></tc-prompt-starters>
-
+    <!-- Outside the tabs, so a riff that finishes while Tune is showing is still announced -->
     <p role="status" class="riff__status">{{ status }}</p>
     <p v-if="error" role="alert" class="riff__error">{{ error }}</p>
 
-    <section v-if="riffs.kept.length" class="riff__group" :aria-labelledby="`${id}-kept`">
-      <h3 :id="`${id}-kept`" class="riff__heading">Kept</h3>
-      <ul class="riff__list">
-        <li v-for="k in riffs.kept" :key="k.name" class="riff__item">
-          <p class="riff__name">{{ k.name }}</p>
-          <p class="riff__why">{{ k.rationale }}</p>
-          <div class="riff__buttons" role="group" :aria-label="k.name">
-            <tc-button variant="secondary" size="sm" label="Show" @click="emit('show', `kept-${k.name}`)">
-              <View slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-            <tc-button variant="ghost" size="sm" label="Riff on this" @click="riffFrom(k)">
-              <Shapes slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-            <tc-button variant="ghost" size="sm" label="Remove" @click="emit('remove', k)">
-              <Trash2 slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-          </div>
-        </li>
-      </ul>
-    </section>
+    <div v-if="canRiff" v-show="tab === 'riff'" :id="`${id}-panel-riff`" role="tabpanel" class="riff__panel" :aria-labelledby="`${id}-tab-riff`">
+      <form class="riff__form" @submit.prevent="send()">
+        <p v-if="from" class="riff__from">
+          <span
+            >Starting from <strong>{{ from.name }}</strong></span
+          >
+          <tc-button variant="ghost" size="sm" label="Start from the piece instead" @click="from = null">
+            <Undo2 slot="icon" :size="16" aria-hidden="true" />
+          </tc-button>
+        </p>
+        <label :for="`${id}-prompt`" class="riff__label">What should change?</label>
+        <textarea
+          :id="`${id}-prompt`"
+          ref="field"
+          v-model="prompt"
+          class="riff__prompt"
+          rows="3"
+          :aria-describedby="`${id}-hint`"
+          @keydown.enter.exact.prevent="send()"
+        ></textarea>
+        <p :id="`${id}-hint`" class="riff__hint">Enter asks Claude for variants; Shift + Enter adds a line.</p>
+        <div class="riff__actions">
+          <tc-button type="submit" variant="primary" size="sm" :loading="busy" :disabled="!prompt.trim() || busy" label="Ask Claude">
+            <Sparkles slot="icon" :size="16" aria-hidden="true" />
+          </tc-button>
+          <tc-button v-if="busy" variant="ghost" size="sm" label="Stop" @click="emit('cancel')"></tc-button>
+        </div>
+      </form>
 
-    <section v-for="round in roundsWithVariants" :key="round.id" class="riff__group" :aria-labelledby="`${id}-${round.id}`">
-      <h3 :id="`${id}-${round.id}`" class="riff__heading">
-        “{{ round.prompt }}”<span v-if="round.from" class="riff__based"> from {{ round.from.name }}</span>
-      </h3>
-      <ul class="riff__list">
-        <li v-for="v in round.variants" :key="v.id" class="riff__item" :class="{ 'riff__item--shown': riffs.shown === round.id }">
-          <p class="riff__name">{{ v.name }}<span v-if="v.structural" class="riff__badge">Needs new code</span></p>
-          <p class="riff__why">{{ v.rationale }}</p>
-          <p v-if="v.structural && v.note" class="riff__note">To build: {{ v.note }}</p>
-          <details v-if="v.issues.length" class="riff__issues">
-            <summary>{{ plural(v.issues.length, "change") }} left out</summary>
-            <ul>
-              <li v-for="issue in v.issues" :key="issue.path">
-                <code>{{ issue.path }}</code> {{ issue.message }}
-              </li>
-            </ul>
-          </details>
-          <div class="riff__buttons" role="group" :aria-label="v.name">
-            <tc-button variant="secondary" size="sm" label="Show" @click="emit('show', v.id, round.id)">
-              <View slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-            <tc-button variant="ghost" size="sm" label="Keep" @click="emit('keep', v, round.prompt)">
-              <Check slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-            <tc-button variant="ghost" size="sm" label="Riff on this" @click="riffFrom(v)">
-              <Shapes slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-            <tc-button variant="ghost" size="sm" label="Discard" @click="emit('discard', v.id)">
-              <Trash2 slot="icon" :size="16" aria-hidden="true" />
-            </tc-button>
-          </div>
-        </li>
-      </ul>
-    </section>
+      <tc-prompt-starters
+        v-if="!riffs.rounds.length && !busy"
+        class="riff__ideas"
+        heading="Ideas"
+        :items.prop="ideas"
+        @tc-send="send(($event as CustomEvent<{ text: string }>).detail.text)"
+        @tc-fill="prompt = ($event as CustomEvent<{ text: string }>).detail.text"
+      ></tc-prompt-starters>
+
+      <section v-if="riffs.kept.length" class="riff__group" :aria-labelledby="`${id}-kept`">
+        <h3 :id="`${id}-kept`" class="riff__heading">Kept</h3>
+        <ul class="riff__list">
+          <li v-for="k in riffs.kept" :key="k.name" class="riff__item">
+            <p class="riff__name">{{ k.name }}</p>
+            <p class="riff__why">{{ k.rationale }}</p>
+            <div class="riff__buttons" role="group" :aria-label="k.name">
+              <tc-button variant="secondary" size="sm" label="Show" @click="emit('show', `kept-${k.name}`)">
+                <View slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+              <tc-button variant="ghost" size="sm" label="Riff on this" @click="riffFrom(k)">
+                <Shapes slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+              <tc-button variant="ghost" size="sm" label="Remove" @click="emit('remove', k)">
+                <Trash2 slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section v-for="round in roundsWithVariants" :key="round.id" class="riff__group" :aria-labelledby="`${id}-${round.id}`">
+        <h3 :id="`${id}-${round.id}`" class="riff__heading">
+          “{{ round.prompt }}”<span v-if="round.from" class="riff__based"> from {{ round.from.name }}</span>
+        </h3>
+        <ul class="riff__list">
+          <li v-for="v in round.variants" :key="v.id" class="riff__item" :class="{ 'riff__item--shown': riffs.shown === round.id }">
+            <p class="riff__name">{{ v.name }}<span v-if="v.structural" class="riff__badge">Needs new code</span></p>
+            <p class="riff__why">{{ v.rationale }}</p>
+            <p v-if="v.structural && v.note" class="riff__note">To build: {{ v.note }}</p>
+            <details v-if="v.issues.length" class="riff__issues">
+              <summary>{{ plural(v.issues.length, "change") }} left out</summary>
+              <ul>
+                <li v-for="issue in v.issues" :key="issue.path">
+                  <code>{{ issue.path }}</code> {{ issue.message }}
+                </li>
+              </ul>
+            </details>
+            <div class="riff__buttons" role="group" :aria-label="v.name">
+              <tc-button variant="secondary" size="sm" label="Show" @click="emit('show', v.id, round.id)">
+                <View slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+              <tc-button variant="ghost" size="sm" label="Keep" @click="emit('keep', v, round.prompt)">
+                <Check slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+              <tc-button variant="ghost" size="sm" label="Riff on this" @click="riffFrom(v)">
+                <Shapes slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+              <tc-button variant="ghost" size="sm" label="Discard" @click="emit('discard', v.id)">
+                <Trash2 slot="icon" :size="16" aria-hidden="true" />
+              </tc-button>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div
+      v-show="tab === 'tune'"
+      :id="`${id}-panel-tune`"
+      class="riff__panel"
+      :role="tabs.length ? 'tabpanel' : undefined"
+      :aria-labelledby="tabs.length ? `${id}-tab-tune` : undefined"
+    >
+      <TuneSection
+        :key="piece.id"
+        :piece="piece"
+        :theme="theme"
+        :can-keep="canRiff"
+        :heading-hidden="tabs.length > 0"
+        :find-element="findElement"
+        @keep="emit('keepTuned', $event)"
+      />
+    </div>
   </aside>
 </template>
 
@@ -276,6 +354,49 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
   margin: var(--tc-space-2) 0 0;
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-semibold);
+}
+
+.riff__tabs {
+  display: flex;
+  gap: var(--tc-space-1);
+  border-bottom: var(--tc-hairline) solid var(--tc-divider);
+}
+
+.riff__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1-5);
+  margin-bottom: calc(-1 * var(--tc-hairline));
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--tc-text-secondary);
+  font: inherit;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+}
+
+.riff__tab:hover {
+  color: var(--tc-text-primary);
+}
+
+.riff__tab[aria-selected="true"] {
+  border-bottom-color: var(--tc-border-selected);
+  color: var(--tc-text-primary);
+}
+
+.riff__tab:focus-visible {
+  border-radius: var(--tc-radius-sm);
+  outline: 2px solid var(--tc-focus-ring);
+  outline-offset: -2px;
+}
+
+.riff__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-3);
 }
 
 .riff__based {

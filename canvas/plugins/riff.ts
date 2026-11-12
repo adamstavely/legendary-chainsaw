@@ -18,6 +18,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 import { checkProps, type Schema } from "../../trenchcoat/src/generative/validate";
+import { componentTokens, definedTokens } from "./tokens";
 import { RIFF, VARIANTS, type Issue, type Kept, type Proposal, type RiffEvent, type Variant } from "../src/riff/types";
 
 export const MODEL = "claude-opus-5-5";
@@ -25,20 +26,9 @@ export const MAX_VARIANTS = 4;
 
 // Tokens --------------------------------------------------------------------------------------------------------------
 
-/** Every design token tokens.css defines */
-export const definedTokens = (css: string) => new Set([...css.matchAll(/(--tc-[\w-]+)\s*:/g)].map((m) => m[1]));
-
-/**
- * The tokens a component may override: the shared ones its source uses, and its own component tokens (--tc-<slug>-…,
- * which may live only in its source, with a fallback)
- */
-export function componentTokens(source: string, slug: string, defined: ReadonlySet<string>): string[] {
-  const own = (t: string) => t.startsWith(`--tc-${slug}-`);
-  const used = [...source.matchAll(/var\(\s*(--tc-[\w-]+)/g)].map((m) => m[1]);
-  return [...new Set([...used, ...[...defined].filter(own)])].filter((t) => defined.has(t) || own(t)).sort();
-}
-
 /** Keeps the overrides that set one of the component's tokens to another token, as var(--tc-…) */
+export { componentTokens, definedTokens };
+
 export function checkTokens(raw: unknown, allowed: ReadonlySet<string>, defined: ReadonlySet<string>): { tokens: Record<string, string>; issues: Issue[] } {
   const tokens: Record<string, string> = {};
   const issues: Issue[] = [];

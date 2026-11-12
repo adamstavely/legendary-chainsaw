@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Maximize, ZoomIn, ZoomOut } from "@lucide/vue";
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useId, useTemplateRef, watch } from "vue";
+import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, useId, useTemplateRef, watch } from "vue";
 import type { LayoutName } from "../App.vue";
 import {
   CARD,
@@ -34,7 +34,6 @@ import { propsOf } from "../riff/apply";
 import { addRound, discard, riffsOf, shownVariants, type Round } from "../riff/session";
 import type { Kept, Variant } from "../riff/types";
 import PieceCard from "./PieceCard.vue";
-import RiffPanel from "./RiffPanel.vue";
 import VariantCard from "./VariantCard.vue";
 
 const props = defineProps<{
@@ -48,6 +47,9 @@ const props = defineProps<{
 }>();
 const moved = defineModel<Record<string, Point>>("moved", { required: true });
 const emit = defineEmits<{ announce: [text: string]; similar: [id: string] }>();
+
+// The panel beside an open piece loads with the first one opened
+const RiffPanel = defineAsyncComponent(() => import("./RiffPanel.vue"));
 
 const INSETS: Insets = { top: 24, right: 24, bottom: 24, left: 24 };
 const STEP = 1.25;
@@ -217,9 +219,10 @@ async function open(id: string) {
   opened.value = id;
   const riffing = canRiff(piece);
   if (riffing) void loadKept(piece.slug);
+  const tuning = canTune(piece);
   glide(fit(variantBounds.value ?? rect, screen.value, INSETS, 3));
   say(
-    `${piece.name} is open. Tab into it to use it${riffing ? ", or riff on it with Claude in the panel beside the canvas" : ""}; press Escape to go back to the canvas.`,
+    `${piece.name} is open. Tab into it to use it${tuning ? `, or ${riffing ? "tune it and riff on it with Claude" : "tune it"} in the panel beside the canvas` : ""}; press Escape to go back to the canvas.`,
   );
 }
 async function close() {
@@ -253,14 +256,15 @@ async function jump(id: string) {
 }
 defineExpose({ jump });
 
-// Riffing -------------------------------------------------------------------------------------------------------------
-// An open component can be riffed on: Claude proposes variants, drawn around it on the canvas and listed in the panel
+// Tuning and riffing ------------------------------------------------------------------------------------------------
+// An open component gets a panel: dials to tune it by hand, and – in the dev server – Claude proposing variants, drawn
+// around it on the canvas and listed in the panel
 
-const canRiff = (piece: Piece | undefined) => !!piece && piece.library === "components" && props.riffable.has(piece.slug);
-const riffPiece = computed(() => {
-  const piece = opened.value ? byId.value.get(opened.value) : undefined;
-  return canRiff(piece) ? piece! : null;
-});
+const canTune = (piece: Piece | undefined) => !!piece && piece.library === "components" && piece.live;
+const canRiff = (piece: Piece | undefined) => canTune(piece) && props.riffable.has(piece!.slug);
+const openPiece = computed(() => (opened.value ? byId.value.get(opened.value) : undefined));
+const panelPiece = computed(() => (canTune(openPiece.value) ? openPiece.value! : null));
+const riffPiece = computed(() => (canRiff(openPiece.value) ? openPiece.value! : null));
 const variants = computed(() => {
   const piece = riffPiece.value;
   const rect = piece && layout.value.cards.get(piece.id);
@@ -354,6 +358,11 @@ async function keep(variant: Variant & { id: string }, prompt: string) {
   } catch (error) {
     riffError.value = (error as Error).message;
   }
+}
+
+/** A version tuned on the dials, kept like a riffed variant */
+function keepTuned(v: { name: string; props: Record<string, unknown>; tokens: Record<string, string> }) {
+  void keep({ ...v, id: "tuned", rationale: "Tuned by hand on the canvas.", structural: false, note: "", issues: [] }, "Tuned by hand");
 }
 
 function discardVariant(id: string) {
@@ -588,9 +597,12 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
         <p v-if="!pieces.length" class="empty">No pieces match the filters.</p>
       </section>
       <RiffPanel
-        v-if="riffPiece"
-        :piece="riffPiece"
-        :riffs="riffsOf(riffPiece.slug)"
+        v-if="panelPiece"
+        :piece="panelPiece"
+        :riffs="riffsOf(panelPiece.slug)"
+        :theme="theme"
+        :can-riff="!!riffPiece"
+        :find-element="() => liveElement(panelPiece!)"
         :busy="riffing"
         :status="riffStatus"
         :error="riffError"
@@ -601,6 +613,7 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
         @remove="remove"
         @show="showVariant"
         @close="close"
+        @keep-tuned="keepTuned"
       />
     </div>
 

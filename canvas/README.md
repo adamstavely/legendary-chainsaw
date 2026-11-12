@@ -3,9 +3,9 @@
 Every Trenchcoat piece on one infinite canvas. Pan and zoom around ~390 components, blocks and motion pieces, switch
 between layouts, and open any piece live, running from its own docs example.
 
-This covers phases 1 to 4 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
-Similar layout, which sorts pieces by how they look; riffing on a component's variants with Claude; and the Graph
-layout, which shows which pieces are built from which.
+This covers phases 1 to 5 of the plan in [`PLAN.md`](PLAN.md): the canvas itself, with the Grid and Free layouts; the
+Similar layout, which sorts pieces by how they look; riffing on a component's variants with Claude; the Graph layout,
+which shows which pieces are built from which; and tuning a component by hand on DialKit's dials.
 
 ```bash
 npm install
@@ -34,9 +34,26 @@ Then open http://localhost:5210.
   category, switch the look (Standard or Clean) and the theme (light or dark), and use a **List** view that shows the
   same pieces as a plain, scrollable list.
 
-## Riffing with Claude
+## The panel: Riff and Tune
 
-Open a component (Enter, or click its title) and a panel opens beside it. Say what should change – or pick one of the
+Open a component (Enter, or click its title) and a panel opens beside it, with two tabs. Without the dev server – in a
+built canvas – there's only Tune, and no tabs.
+
+### Tune
+
+[DialKit](https://www.dialkit.dev)'s dials, inline in the panel: one for each of the component's props the schema
+describes simply – a toggle, a choice, a number, a line of text or a colour – and a **Tokens** folder with one for each
+of its tokens that sits on a scale (space, radius, type size, weight, line height, shadow, duration), offering the
+other steps of that scale. The piece changes as a dial moves. **Reset** puts it back; closing the piece does too.
+**Keep tuned version** (dev server only) saves what the dials moved as a variant, checked and stored exactly like a
+riffed one.
+
+DialKit's own title bar and versions toolbar are hidden: the panel has the piece's name, and Keep and Reset. It loads,
+with Motion, only once a piece is opened.
+
+### Riff
+
+Say what should change – or pick one of the
 ideas – and Claude proposes three or four variants. They appear live around the piece, so you can compare them, and
 the panel lists each one with why it differs:
 

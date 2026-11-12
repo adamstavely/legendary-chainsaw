@@ -269,11 +269,11 @@ describe("riffing", () => {
     return host.querySelector<HTMLElement>("aside.riff")!;
   }
   async function riff(panel: HTMLElement, prompt: string) {
-    const field = panel.querySelector<HTMLTextAreaElement>("textarea")!;
+    const field = panel.querySelector<HTMLTextAreaElement>(".riff__prompt")!;
     field.value = prompt;
     field.dispatchEvent(new Event("input"));
     await nextTick();
-    button("Riff", panel).click();
+    button("Ask Claude", panel).click();
     await settle(1500);
   }
 
@@ -281,7 +281,8 @@ describe("riffing", () => {
     it(`opens a panel beside a component, which passes axe in ${theme}`, async () => {
       segment("Theme", theme).click();
       const panel = await openToolCallCard();
-      expect(panel.querySelector("h2")!.textContent).toContain("Riff on Tool Call Card");
+      expect(panel.querySelector("h2")!.textContent!.trim()).toBe("Tool Call Card");
+      await expect.poll(() => panel.querySelectorAll(".tune [role=slider]").length).toBeGreaterThan(0);
       expect(panel.querySelector("tc-prompt-starters")).not.toBeNull();
       expect(await violations()).toEqual([]);
     });
@@ -328,9 +329,40 @@ describe("riffing", () => {
     expect(panel.querySelector("[role=alert]")!.textContent).toContain("no valid Anthropic credentials");
   });
 
+  it("tunes the piece on DialKit's dials, and keeps the tuned version", async () => {
+    const panel = await openToolCallCard();
+    const tune = panel.querySelector<HTMLButtonElement>("[role=tab][aria-controls$=panel-tune]")!;
+    key(panel.querySelector("[role=tab][aria-selected=true]")!, "ArrowRight");
+    await settle();
+    expect(tune.getAttribute("aria-selected")).toBe("true");
+    expect(document.activeElement).toBe(tune);
+    await expect.poll(() => panel.querySelector(".tune [role=radiogroup][aria-labelledby]")).not.toBeNull();
+    const piece = () => host.querySelector<HTMLElement & { open: boolean }>('[data-piece="tool-call-card"] .live__piece tc-tool-call-card')!;
+    const open = [...panel.querySelectorAll<HTMLElement>(".tune [role=radiogroup]")].find(
+      (g) => document.getElementById(g.getAttribute("aria-labelledby")!)!.textContent!.trim() === "Open",
+    )!;
+    const on = [...open.querySelectorAll<HTMLElement>("[role=radio]")].find((r) => r.textContent!.trim() === "On")!;
+    expect(piece().open).toBe(false);
+    on.click();
+    await settle();
+    expect(piece().open).toBe(true);
+    expect(panel.querySelector(".tune [aria-live]")!.textContent).toBe("1 change from the original.");
+    button("Keep tuned version", panel).click();
+    await settle();
+    expect(posted.at(-1)!.body).toMatchObject({
+      slug: "tool-call-card",
+      prompt: "Tuned by hand",
+      variant: { name: "Tuned Tool Call Card", props: { open: true }, tokens: {} },
+    });
+    button("Reset", panel).click();
+    await settle();
+    expect(piece().open).toBe(false);
+    expect(await violations()).toEqual([]);
+  });
+
   it("goes back to the canvas with Escape, focus on the piece", async () => {
     const panel = await openToolCallCard();
-    key(panel.querySelector("textarea")!, "Escape");
+    key(panel.querySelector(".riff__prompt")!, "Escape");
     await settle();
     expect(host.querySelector("aside.riff")).toBeNull();
     expect(document.activeElement).toBe(host.querySelector('[data-piece="tool-call-card"] .card__title'));

@@ -6,15 +6,20 @@
 //   · "virtual:tc-examples" maps each piece's slug to a loader for its live example, made from the ```html block on
 //     its docs page (app/src/docs/<slug>.md). Each example becomes a module: the markup, plus a setup function that
 //     runs the snippet's script against the card it renders in (see src/data/examples.ts)
+//   · "virtual:tc-tokens" maps each element's slug to a loader for "virtual:tc-tokens/<slug>": its tokens that sit on
+//     a scale, with the steps to choose from, for the Tune dials
 //   · "virtual:tc-graph" lists which elements are built from which, for the Graph layout: an element that renders
 //     <tc-other> or imports "./other" uses it
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "vite";
+import { tunableTokens } from "./tokens";
 
 const EXAMPLES = "virtual:tc-examples";
 const EXAMPLE = "virtual:tc-example/";
 const GRAPH = "virtual:tc-graph";
+const TOKENS = "virtual:tc-tokens/";
+const TOKENS_INDEX = "virtual:tc-tokens";
 
 /**
  * Which elements use which: [user, used] pairs of element slugs, sorted. An element uses another when its source
@@ -99,6 +104,8 @@ export function trenchcoat(root: string): Plugin {
     resolveId(id) {
       if (id === EXAMPLES) return `\0${EXAMPLES}`;
       if (id === GRAPH) return `\0${GRAPH}`;
+      if (id === TOKENS_INDEX) return `\0${TOKENS_INDEX}`;
+      if (id.startsWith(TOKENS) && /^[a-z0-9-]+$/.test(id.slice(TOKENS.length))) return `\0${id}`;
       if (id.startsWith(EXAMPLE)) return `\0${id}`;
       if (id === "@adamstavely/trenchcoat") return join(elements, "index.ts");
       if (id === "@adamstavely/trenchcoat/tokens.css") return join(root, "tokens/tokens.css");
@@ -107,6 +114,20 @@ export function trenchcoat(root: string): Plugin {
       if (m && existsSync(join(elements, `${m[1]}.ts`))) return join(elements, `${m[1]}.ts`);
     },
     load(id) {
+      if (id === `\0${TOKENS_INDEX}`)
+        return `export default {\n${readdirSync(elements)
+          .filter((f) => /^[a-z0-9-]+\.ts$/.test(f) && f !== "index.ts")
+          .map((f) => `  ${JSON.stringify(f.slice(0, -3))}: () => import(${JSON.stringify(TOKENS + f.slice(0, -3))}),`)
+          .join("\n")}\n};`;
+      if (id.startsWith(`\0${TOKENS}`)) {
+        const slug = id.slice(TOKENS.length + 1);
+        const file = join(elements, `${slug}.ts`);
+        const css = join(root, "tokens/tokens.css");
+        if (!existsSync(file)) return "export default [];";
+        this.addWatchFile(file);
+        this.addWatchFile(css);
+        return `export default ${JSON.stringify(tunableTokens(readFileSync(file, "utf8"), slug, readFileSync(css, "utf8")))};`;
+      }
       if (id === `\0${GRAPH}`) {
         const files = readdirSync(elements).filter((f) => f.endsWith(".ts") && !/ \d+\.ts$/.test(f) && f !== "index.ts");
         for (const f of files) this.addWatchFile(join(elements, f));
