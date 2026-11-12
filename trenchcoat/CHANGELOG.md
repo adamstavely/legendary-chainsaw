@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.21.0 – Image Generation
+
+- **Image Generation:** one image while it's generated – its place in the queue, then the picture taking shape in a
+  frame of the image's own shape as a blurred preview or colour field clears, with the step, percentage and time left;
+  the image fading in when it's done, or why it failed with Try again; the prompt, and Cancel, Download, Regenerate and
+  Copy prompt. Image Grid shows variations; this is the one image on its way.
+- **Standalone gallery and `docs/`:** rebuilt with it.
+
 ## 0.20.0 – Agent attention pieces and confetti
 
 - **Decision Card:** one question an agent needs answered, docked above the composer – numbered options with one

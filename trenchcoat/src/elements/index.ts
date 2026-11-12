@@ -195,6 +195,7 @@ export * from "./histogram";
 export * from "./icon-rail";
 export * from "./icon-swap";
 export * from "./identifier-details";
+export * from "./image-generation";
 export * from "./image-grid";
 export * from "./in-coordination";
 export * from "./in-quality-control";

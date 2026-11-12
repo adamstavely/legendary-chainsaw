@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-image-generation.json",
+  "title": "tc-image-generation",
+  "description": "One image while it's generated: queued, a picture that sharpens as it progresses with the step and time left, then the image – or why it failed.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "Names the card – what the image is for"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "cancelled",
+        "done",
+        "failed",
+        "generating",
+        "queued"
+      ],
+      "description": "Where the job is: \"queued\", \"generating\", \"done\", \"failed\" or \"cancelled\""
+    },
+    "position": {
+      "type": "number",
+      "description": "The image's place in the queue while queued – 1 is next"
+    },
+    "progress": {
+      "type": "number",
+      "description": "How far along it is, 0 to 1, while generating; left out, the bar sweeps"
+    },
+    "step": {
+      "type": "number",
+      "description": "The step the model is on, while generating"
+    },
+    "steps": {
+      "type": "number",
+      "description": "How many steps the job takes"
+    },
+    "eta": {
+      "type": "number",
+      "description": "Seconds left, when the model estimates it"
+    },
+    "phase": {
+      "type": "string",
+      "description": "What it's doing while generating, in a word – \"Generating\", \"Refining\", \"Upscaling\""
+    },
+    "src": {
+      "type": "string",
+      "description": "The finished image's URL – a data: URL works too. Shown when done",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "alt": {
+      "type": "string",
+      "description": "What the finished image shows, for people who can't see it"
+    },
+    "preview": {
+      "type": "string",
+      "description": "An intermediate image the model sent, shown blurred while generating – the blur falls as the progress rises",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "error": {
+      "type": "string",
+      "description": "Why it failed, in a few words"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The prompt the image comes from"
+    },
+    "model": {
+      "type": "string",
+      "description": "The model's name, shown as a chip under the prompt"
+    },
+    "size": {
+      "type": "string",
+      "description": "The image's size, shown as a chip – \"1024 × 1536\""
+    },
+    "aspectRatio": {
+      "type": "string",
+      "description": "The frame's shape, so nothing jumps when the image arrives: \"1:1\", \"16:9\", \"3:4\" …"
+    },
+    "filename": {
+      "type": "string",
+      "description": "File name for Download – from the heading by default"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Whether a long prompt shows in full"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "queued": {
+          "type": "string"
+        },
+        "ready": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "cancelled": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "restart": {
+          "type": "string"
+        },
+        "download": {
+          "type": "string"
+        },
+        "regenerate": {
+          "type": "string"
+        },
+        "copyPrompt": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "showMore": {
+          "type": "string"
+        },
+        "showLess": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false
+}

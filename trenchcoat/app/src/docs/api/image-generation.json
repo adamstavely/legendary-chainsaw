@@ -1,0 +1,864 @@
+{
+ "elements": [
+  {
+   "tag": "tc-image-generation",
+   "className": "TcImageGeneration",
+   "description": "One image while it's generated: queued, a picture that sharpens as it progresses with the step and time left, then the image – or why it failed.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Image\"",
+     "description": "Names the card – what the image is for",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "ImageGenerationStatus",
+     "default": "\"generating\"",
+     "description": "Where the job is: \"queued\", \"generating\", \"done\", \"failed\" or \"cancelled\"",
+     "readonly": false
+    },
+    {
+     "name": "position",
+     "attribute": "position",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The image's place in the queue while queued – 1 is next",
+     "readonly": false
+    },
+    {
+     "name": "progress",
+     "attribute": "progress",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How far along it is, 0 to 1, while generating; left out, the bar sweeps",
+     "readonly": false
+    },
+    {
+     "name": "step",
+     "attribute": "step",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The step the model is on, while generating",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": "steps",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How many steps the job takes",
+     "readonly": false
+    },
+    {
+     "name": "eta",
+     "attribute": "eta",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Seconds left, when the model estimates it",
+     "readonly": false
+    },
+    {
+     "name": "phase",
+     "attribute": "phase",
+     "type": "string",
+     "default": "\"Generating\"",
+     "description": "What it's doing while generating, in a word – \"Generating\", \"Refining\", \"Upscaling\"",
+     "readonly": false
+    },
+    {
+     "name": "src",
+     "attribute": "src",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The finished image's URL – a data: URL works too. Shown when done",
+     "readonly": false
+    },
+    {
+     "name": "alt",
+     "attribute": "alt",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the finished image shows, for people who can't see it",
+     "readonly": false
+    },
+    {
+     "name": "preview",
+     "attribute": "preview",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "An intermediate image the model sent, shown blurred while generating – the blur falls as the progress rises",
+     "readonly": false
+    },
+    {
+     "name": "error",
+     "attribute": "error",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Why it failed, in a few words",
+     "readonly": false
+    },
+    {
+     "name": "prompt",
+     "attribute": "prompt",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The prompt the image comes from",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The model's name, shown as a chip under the prompt",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The image's size, shown as a chip – \"1024 × 1536\"",
+     "readonly": false
+    },
+    {
+     "name": "aspectRatio",
+     "attribute": "aspect-ratio",
+     "type": "string",
+     "default": "\"1:1\"",
+     "description": "The frame's shape, so nothing jumps when the image arrives: \"1:1\", \"16:9\", \"3:4\" …",
+     "readonly": false
+    },
+    {
+     "name": "filename",
+     "attribute": "filename",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "File name for Download – from the heading by default",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": "expanded",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether a long prompt shows in full",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ImageGenerationLabels>",
+     "default": "{}",
+     "description": "Rename any of the words, over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-cancel",
+     "detail": "",
+     "description": "Cancel while queued or generating. Cancelable: unless prevented, the card shows as cancelled ({ status }: ImageGenerationCancel)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-retry",
+     "detail": "",
+     "description": "Try again on a failed image; the app starts the job again ({ prompt }: ImageGenerationRequest)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-regenerate",
+     "detail": "",
+     "description": "Regenerate on a done image, or Start again after a cancel; the app starts a new job ({ prompt }: ImageGenerationRequest)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-download",
+     "detail": "",
+     "description": "Download on a done image. Cancelable: unless prevented, the image is saved ({ src, filename }: ImageGenerationDownload)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy-prompt",
+     "detail": "",
+     "description": "Copy prompt. Cancelable: unless prevented, the prompt is copied ({ prompt }: ImageGenerationRequest)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "Show more or Show less on a long prompt. Cancelable – prevented, `expanded` stays as it was ({ expanded }: ImageGenerationExpandedChange)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "igen",
+   "cssProperties": [
+    {
+     "name": "--tc-image-generation-blur",
+     "value": "26px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-image-generation-glyph",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-image-generation-bar",
+     "value": "2px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-image-generation-grain",
+     "value": "0.42",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-image-generation-cycle",
+     "value": "9s",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-igen-ratio",
+     "value": "1 / 1",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-igen-left",
+     "value": "1",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-2",
+    "--tc-chart-3",
+    "--tc-chart-5",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-ease-decelerate",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultImageGenerationLabels",
+   "signature": "defaultImageGenerationLabels: ImageGenerationLabels",
+   "description": "The words used when the page gives none"
+  },
+  {
+   "name": "parseAspectRatio",
+   "signature": "parseAspectRatio(value: string | undefined): string",
+   "description": "\"16:9\", \"16/9\", \"1.5\" → a CSS aspect-ratio; square when it can't be read"
+  },
+  {
+   "name": "formatEta",
+   "signature": "formatEta(seconds: number): string",
+   "description": "Seconds left in words: \"about 12 s left\", \"about 2 min left\", \"a moment left\""
+  }
+ ],
+ "react": [
+  {
+   "component": "ImageGenerationOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Names the card – what the image is for"
+    },
+    {
+     "name": "expanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether a long prompt shows in full. Controlled when defined"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether a long prompt starts in full when uncontrolled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: boolean) => void",
+     "optional": true,
+     "description": "Show more or Show less on a long prompt"
+    },
+    {
+     "name": "onCancel",
+     "type": "(status: ImageGenerationStatus, event: Event) => void",
+     "optional": true,
+     "description": "Cancel while queued or generating – stop the job. Call event.preventDefault() to keep the card as it is until your status arrives"
+    },
+    {
+     "name": "onRetry",
+     "type": "(prompt: string) => void",
+     "optional": true,
+     "description": "Try again on a failed image – start the job again"
+    },
+    {
+     "name": "onRegenerate",
+     "type": "(prompt: string) => void",
+     "optional": true,
+     "description": "Regenerate on a done image, or Start again after a cancel – start a new job"
+    },
+    {
+     "name": "onDownload",
+     "type": "(src: string, filename: string, event: Event) => void",
+     "optional": true,
+     "description": "Download on a done image; it's saved unless you call event.preventDefault()"
+    },
+    {
+     "name": "onCopyPrompt",
+     "type": "(prompt: string, event: Event) => void",
+     "optional": true,
+     "description": "Copy prompt; it's copied unless you call event.preventDefault()"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-cancel": "onTcCancel",
+    "tc-retry": "onTcRetry",
+    "tc-regenerate": "onTcRegenerate",
+    "tc-download": "onTcDownload",
+    "tc-copy-prompt": "onTcCopyPrompt",
+    "tc-expanded-change": "onTcExpandedChange"
+   }
+  },
+  {
+   "component": "ImageGeneration",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Names the card – what the image is for"
+    },
+    {
+     "name": "expanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether a long prompt shows in full. Controlled when defined"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether a long prompt starts in full when uncontrolled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: boolean) => void",
+     "optional": true,
+     "description": "Show more or Show less on a long prompt"
+    },
+    {
+     "name": "onCancel",
+     "type": "(status: ImageGenerationStatus, event: Event) => void",
+     "optional": true,
+     "description": "Cancel while queued or generating – stop the job. Call event.preventDefault() to keep the card as it is until your status arrives"
+    },
+    {
+     "name": "onRetry",
+     "type": "(prompt: string) => void",
+     "optional": true,
+     "description": "Try again on a failed image – start the job again"
+    },
+    {
+     "name": "onRegenerate",
+     "type": "(prompt: string) => void",
+     "optional": true,
+     "description": "Regenerate on a done image, or Start again after a cancel – start a new job"
+    },
+    {
+     "name": "onDownload",
+     "type": "(src: string, filename: string, event: Event) => void",
+     "optional": true,
+     "description": "Download on a done image; it's saved unless you call event.preventDefault()"
+    },
+    {
+     "name": "onCopyPrompt",
+     "type": "(prompt: string, event: Event) => void",
+     "optional": true,
+     "description": "Copy prompt; it's copied unless you call event.preventDefault()"
+    }
+   ],
+   "hides": [
+    "heading"
+   ],
+   "events": {
+    "tc-cancel": "onCancel",
+    "tc-retry": "onRetry",
+    "tc-regenerate": "onRegenerate",
+    "tc-download": "onDownload",
+    "tc-copy-prompt": "onCopyPrompt",
+    "tc-expanded-change": "onExpandedChange"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-image-generation",
+   "className": "TcImageGeneration",
+   "module": "@adamstavely/trenchcoat/image-generation",
+   "data": [
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "position",
+     "attribute": "position"
+    },
+    {
+     "name": "progress",
+     "attribute": "progress"
+    },
+    {
+     "name": "step",
+     "attribute": "step"
+    },
+    {
+     "name": "steps",
+     "attribute": "steps"
+    },
+    {
+     "name": "eta",
+     "attribute": "eta"
+    },
+    {
+     "name": "phase",
+     "attribute": "phase"
+    },
+    {
+     "name": "src",
+     "attribute": "src"
+    },
+    {
+     "name": "alt",
+     "attribute": "alt"
+    },
+    {
+     "name": "preview",
+     "attribute": "preview"
+    },
+    {
+     "name": "error",
+     "attribute": "error"
+    },
+    {
+     "name": "prompt",
+     "attribute": "prompt"
+    },
+    {
+     "name": "model",
+     "attribute": "model"
+    },
+    {
+     "name": "size",
+     "attribute": "size"
+    },
+    {
+     "name": "aspectRatio",
+     "attribute": "aspect-ratio"
+    },
+    {
+     "name": "filename",
+     "attribute": "filename"
+    },
+    {
+     "name": "expanded",
+     "attribute": "expanded"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-cancel",
+     "cancelable": true
+    },
+    {
+     "name": "tc-retry",
+     "cancelable": false
+    },
+    {
+     "name": "tc-regenerate",
+     "cancelable": false
+    },
+    {
+     "name": "tc-download",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy-prompt",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 4,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 35699,
+  "gzip": 11338
+ }
+}

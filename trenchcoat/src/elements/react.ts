@@ -206,6 +206,7 @@ export * from "./react/histogram";
 export * from "./react/icon-rail";
 export * from "./react/icon-swap";
 export * from "./react/identifier-details";
+export * from "./react/image-generation";
 export * from "./react/image-grid";
 export * from "./react/in-coordination";
 export * from "./react/in-quality-control";

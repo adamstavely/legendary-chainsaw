@@ -525,6 +525,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [knowledge-promotion](knowledge-promotion.md) · Element it renders | 25.0 KB | – |
 | [kill-switch](kill-switch.md) · Element it renders | 24.7 KB | – |
 | [file-summary](file-summary.md) · Element it renders | 24.4 KB | – |
+| [image-generation](image-generation.md) · Element it renders | 24.4 KB | – |
 | [org-unit-card](org-unit-card.md) · Element it renders | 24.3 KB | – |
 | [facet-sidebar](facet-sidebar.md) · Element it renders | 24.3 KB | – |
 | [coordinate-details](coordinate-details.md) · Element it renders | 24.2 KB | – |
@@ -571,8 +572,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [search-history](search-history.md) · Element it renders | 20.3 KB | – |
 | [agreement-tracker](agreement-tracker.md) · Element it renders | 20.2 KB | – |
 | [traceability-spine](traceability-spine.md) · Element it renders | 20.2 KB | – |
+| [gauge](gauge.md) · Element it renders | 20.1 KB | – |
 | [score-summary](score-summary.md) · Element it renders | 20.0 KB | – |
-| [gauge](gauge.md) · Element it renders | 20.0 KB | – |
 | [saved-search-alerts](saved-search-alerts.md) · Element it renders | 20.0 KB | – |
 | [profile-menu](profile-menu.md) · Element it renders | 19.8 KB | – |
 | [agent-findings](agent-findings.md) · Element it renders | 19.7 KB | – |
@@ -792,7 +793,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [line-chart](line-chart.md) · Element it renders | 0.8 KB | – |
 | [switch](switch.md) · Element it renders | 0.8 KB | – |
 | [pie-chart](pie-chart.md) · Element it renders | 0.7 KB | – |
-| `src/generative/registry.ts` · Dependency | 64.0 KB | – |
+| `src/generative/registry.ts` · Dependency | 64.2 KB | – |
 | `src/generative/schemas/tc-ai-side-pane.json` · Dependency | 14.2 KB | – |
 | `src/generative/schemas/tc-verification-queue.json` · Dependency | 9.2 KB | – |
 | `src/generative/schemas/tc-claim-answer.json` · Dependency | 8.8 KB | – |
@@ -943,6 +944,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-coverage-matrix.json` · Dependency | 2.7 KB | – |
 | `src/generative/schemas/tc-clarifying-questions.json` · Dependency | 2.7 KB | – |
 | `src/generative/schemas/tc-judge-bracket.json` · Dependency | 2.7 KB | – |
+| `src/generative/schemas/tc-image-generation.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-session-context-bar.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-branch-switcher.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-biometric-status.json` · Dependency | 2.6 KB | – |
@@ -1204,8 +1206,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/vendor/agent-face/element/no-dom.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
 | `src/vendor/agent-face/engine/index.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **10105.8 KB** | **2520.0 KB** |
-| With Lit – the first component on a page | 10042.6 KB | 2498.4 KB |
+| **Added to a page that already has Lit** | **10133.3 KB** | **2527.1 KB** |
+| With Lit – the first component on a page | 10069.8 KB | 2504.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -1213,9 +1215,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.8 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 4.2 ms | default properties; includes adding its CSS to the document |
+| First render | **1.3 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | re-render with the same data |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
