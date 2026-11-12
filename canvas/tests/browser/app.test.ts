@@ -168,6 +168,46 @@ describe("the Similar layout", () => {
   });
 });
 
+describe("the Graph layout", () => {
+  for (const theme of ["Light", "Dark"])
+    it(`draws rows of builders over their parts, with links, and passes axe in ${theme}`, async () => {
+      segment("Theme", theme).click();
+      segment("Layout", "Graph").click();
+      await settle();
+      key(currentTitle(), "1");
+      await settle(900);
+      const titles = [...host.querySelectorAll(".group__title")].map((h) => h.textContent!.trim());
+      expect(titles.at(-1)).toBe("Stands alone");
+      expect(titles).toContain("Parts – used inside other pieces");
+      expect(host.querySelectorAll(".link").length).toBeGreaterThan(50);
+      expect(host.querySelector("svg.links")!.getAttribute("aria-hidden")).toBe("true");
+      expect(await violations()).toEqual([]);
+    });
+
+  it("says in words what the links show, and highlights the current card's", async () => {
+    segment("Layout", "Graph").click();
+    await settle();
+    key(currentTitle(), "1");
+    await settle(900);
+    const title = host.querySelector<HTMLButtonElement>('[data-piece="blocks/ai-side-pane"] .card__title')!;
+    title.focus();
+    await settle();
+    const about = document.getElementById(title.getAttribute("aria-describedby")!)!.textContent!;
+    expect(about).toMatch(/Built with .*Chat Composer/);
+    expect(host.querySelectorAll(".link--active").length).toBeGreaterThan(2);
+  });
+
+  it("groups the list the same way, with each piece's parts", async () => {
+    segment("Layout", "Graph").click();
+    segment("View", "List").click();
+    await settle();
+    const headings = [...host.querySelectorAll(".list__heading")].map((h) => h.textContent!.trim());
+    expect(headings.at(-1)).toBe("Stands alone");
+    expect(host.querySelector(".list")!.textContent).toMatch(/Used in .*\./);
+    expect(await violations()).toEqual([]);
+  });
+});
+
 // The dev server's riff endpoints, stubbed: no request reaches Claude, and nothing is written to Trenchcoat
 describe("riffing", () => {
   const variants: Variant[] = [

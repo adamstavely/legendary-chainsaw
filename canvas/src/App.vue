@@ -9,11 +9,11 @@ import { oneOf, persisted } from "./composables/persisted";
 import { LIBRARY_LABELS, PIECES, type Look, type Theme } from "./data/pieces";
 import { riffable as loadRiffable } from "./riff/api";
 
-export type LayoutName = "grid" | "similar" | "free";
+export type LayoutName = "grid" | "similar" | "graph" | "free";
 export type ViewName = "canvas" | "list";
 
 const prefersDark = useMedia("(prefers-color-scheme: dark)");
-const layout = persisted<LayoutName>("layout", "grid", oneOf("grid", "similar", "free"));
+const layout = persisted<LayoutName>("layout", "grid", oneOf("grid", "similar", "graph", "free"));
 const view = persisted<ViewName>("view", "canvas", oneOf("canvas", "list"));
 const look = persisted<Look>("look", "standard", oneOf("standard", "clean"));
 const theme = persisted<Theme>("theme", prefersDark.value ? "dark" : "light", oneOf("light", "dark"));

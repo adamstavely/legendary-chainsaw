@@ -22,6 +22,8 @@ const props = defineProps<{
   mostLike: readonly Alike[];
   /** Offer "More like this", which shows the piece in the Similar layout */
   canFindSimilar: boolean;
+  /** Graph layout: what it's built with and where it's used, said to screen readers (the links show it) */
+  composition: string;
   theme: Theme;
   look: Look;
 }>();
@@ -80,7 +82,7 @@ const nudges: { direction: Direction; label: string; icon: typeof ArrowUp }[] = 
       <span :id="`${domId}-about`" class="sr-only">
         {{ piece.category }}. {{ piece.description }}
         {{ piece.live && !failed ? "Press Enter to open it live." : "Preview image only." }}
-        {{ alikeText }}
+        {{ alikeText }} {{ composition }}
       </span>
       <!-- Said in the description above -->
       <span v-if="lookAlikes.length" class="card__badge" aria-hidden="true">Look-alike</span>
