@@ -1,0 +1,288 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-receipt.json",
+  "title": "tc-run-receipt",
+  "description": "What one agent run cost and where it went, as a receipt: models, tools, lookups and retries, the subtotal, cache savings and the total, with the costliest step.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "agent": {
+      "type": "string",
+      "description": "The agent that ran – shown under the heading"
+    },
+    "runId": {
+      "type": "string",
+      "description": "The run's id – shown with a copy button, and in the CSV"
+    },
+    "at": {
+      "type": "number",
+      "description": "When the run started, epoch ms"
+    },
+    "duration": {
+      "type": "number",
+      "description": "How long it ran, in ms"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "cancelled",
+        "failed",
+        "running",
+        "succeeded"
+      ],
+      "description": "How it ended"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunReceiptModel"
+      },
+      "description": "A line per model: calls, tokens and cost"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunReceiptTool"
+      },
+      "description": "A line per tool: calls and cost"
+    },
+    "lookups": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "count",
+        "cost"
+      ],
+      "additionalProperties": false,
+      "description": "Web lookups: how many and what they cost; null leaves the line out"
+    },
+    "retries": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "count",
+        "cost"
+      ],
+      "additionalProperties": false,
+      "description": "Retries: how many and what they cost; null leaves the line out"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunReceiptStep"
+      },
+      "description": "The run's steps with their cost – the costliest is called out"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code for every amount"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for dates, numbers and amounts"
+    },
+    "hideTrace": {
+      "type": "boolean",
+      "description": "Hides Open trace"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "running": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "succeeded": {
+          "type": "string"
+        },
+        "cancelled": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "models": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "calls": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "run": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        },
+        "other": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "download": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "lookups": {
+          "type": "string"
+        },
+        "retries": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "cached": {
+          "type": "string"
+        },
+        "subtotal": {
+          "type": "string"
+        },
+        "savings": {
+          "type": "string"
+        },
+        "costliest": {
+          "type": "string"
+        },
+        "ofTotal": {
+          "type": "string"
+        },
+        "openTrace": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RunReceiptModel": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "description": "The model's name"
+        },
+        "calls": {
+          "type": "number",
+          "description": "How many calls the run made to it"
+        },
+        "inputTokens": {
+          "type": "number"
+        },
+        "outputTokens": {
+          "type": "number"
+        },
+        "cachedTokens": {
+          "type": "number",
+          "description": "Input tokens read from the cache"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What its calls cost before cache savings"
+        },
+        "cacheSavings": {
+          "type": "number",
+          "description": "What reading from the cache saved, taken off the subtotal"
+        }
+      },
+      "required": [
+        "model",
+        "calls",
+        "inputTokens",
+        "outputTokens",
+        "cost"
+      ],
+      "additionalProperties": false
+    },
+    "RunReceiptTool": {
+      "type": "object",
+      "properties": {
+        "tool": {
+          "type": "string"
+        },
+        "calls": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "tool",
+        "calls",
+        "cost"
+      ],
+      "additionalProperties": false
+    },
+    "RunReceiptStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "cost"
+      ],
+      "additionalProperties": false,
+      "description": "One step of the run, for the costliest-step callout"
+    }
+  }
+}

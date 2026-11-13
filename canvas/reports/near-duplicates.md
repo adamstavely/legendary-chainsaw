@@ -9,8 +9,13 @@ Written by `npm run similarity`; don't edit by hand.
 | Piece                             | Looks like                          | Similarity |
 | --------------------------------- | ----------------------------------- | ---------- |
 | Element Inspector (Components)    | Tool Call Card (Components)         | 0.940      |
+| Response Examples (Components)    | Tool Call Card (Components)         | 0.935      |
+| Element Inspector (Components)    | Response Examples (Components)      | 0.933      |
 | Artifact Panel (Components)       | Tool Call Card (Components)         | 0.929      |
+| Artifact Panel (Components)       | Quickstart (Components)             | 0.928      |
 | Number Field (Components)         | Secret Field (Components)           | 0.928      |
 | Case Review (Blocks)              | Red-team Finding (Blocks)           | 0.927      |
+| Artifact Panel (Components)       | Response Examples (Components)      | 0.925      |
+| Code Block (Components)           | Response Examples (Components)      | 0.923      |
 | Collaboration Stream (Components) | Correction Propagation (Components) | 0.923      |
 | Eval Criteria Editor (Components) | Review Queue (Components)           | 0.923      |

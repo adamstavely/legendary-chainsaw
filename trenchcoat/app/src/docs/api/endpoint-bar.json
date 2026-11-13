@@ -1,0 +1,552 @@
+{
+ "elements": [
+  {
+   "tag": "tc-endpoint-bar",
+   "className": "TcEndpointBar",
+   "description": "One API endpoint on one line – the method badge, the base URL or an environment select, the path with its\n{params} picked out and described, Copy URL and Try it, with Deprecated and Beta badges.",
+   "properties": [
+    {
+     "name": "method",
+     "attribute": "method",
+     "type": "EndpointMethod",
+     "default": "\"GET\"",
+     "description": "The HTTP method",
+     "readonly": false
+    },
+    {
+     "name": "path",
+     "attribute": "path",
+     "type": "string",
+     "default": "\"/\"",
+     "description": "The path, with parameters in braces, e.g. \"/v1/records/{record_id}\"",
+     "readonly": false
+    },
+    {
+     "name": "params",
+     "attribute": null,
+     "type": "EndpointParam[]",
+     "default": "[]",
+     "description": "The path parameters' descriptions, by name",
+     "readonly": false
+    },
+    {
+     "name": "environments",
+     "attribute": null,
+     "type": "EndpointEnvironment[]",
+     "default": "[]",
+     "description": "The environments to pick between; with one or none, the base URL is plain text",
+     "readonly": false
+    },
+    {
+     "name": "environment",
+     "attribute": "environment",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The picked environment's id; by default the first. Changed by the select unless a tc-environment-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "baseUrl",
+     "attribute": "base-url",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The base URL when there are no environments",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": "summary",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A short summary after the path, e.g. \"Get a record\"",
+     "readonly": false
+    },
+    {
+     "name": "deprecated",
+     "attribute": "deprecated",
+     "type": "boolean",
+     "default": "false",
+     "description": "Marks the endpoint deprecated",
+     "readonly": false
+    },
+    {
+     "name": "beta",
+     "attribute": "beta",
+     "type": "boolean",
+     "default": "false",
+     "description": "Marks the endpoint beta",
+     "readonly": false
+    },
+    {
+     "name": "hideTry",
+     "attribute": "hide-try",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Try it",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<EndpointBarLabels>",
+     "default": "{}",
+     "description": "The element's words, merged over defaultEndpointBarLabels",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": null,
+     "type": "EndpointEnvironment | null",
+     "default": null,
+     "description": "The environment in use, or null without environments",
+     "readonly": true
+    },
+    {
+     "name": "url",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The full URL: the base and the path, parameters left in braces",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-environment-change",
+     "detail": "",
+     "description": "An environment was picked ({ environment }: EndpointEnvironmentChange); cancelable – prevented, `environment` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy URL was pressed ({ text }: EndpointCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    },
+    {
+     "name": "tc-try",
+     "detail": "",
+     "description": "Try it was pressed ({ method, url, environment }: EndpointTry); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "epb",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-highlight",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-standard",
+    "--tc-epb-tone",
+    "--tc-epb-tone-bg",
+    "--tc-field-bg",
+    "--tc-field-shadow",
+    "--tc-field-shadow-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "endpointPathParts",
+   "signature": "endpointPathParts(path: string): void",
+   "description": "The path cut into text and {param} parts"
+  }
+ ],
+ "react": [
+  {
+   "component": "EndpointBar",
+   "exported": true,
+   "props": [
+    {
+     "name": "environment",
+     "type": "string",
+     "optional": true,
+     "description": "The picked environment's id – controlled when given"
+    },
+    {
+     "name": "defaultEnvironment",
+     "type": "string",
+     "optional": true,
+     "description": "The environment on mount, when `environment` isn't controlled; by default the first"
+    },
+    {
+     "name": "onEnvironmentChange",
+     "type": "(environment: string) => void",
+     "optional": true,
+     "description": "Called with the environment the user picked"
+    },
+    {
+     "name": "onCopyUrl",
+     "type": "(url: string) => boolean | void",
+     "optional": true,
+     "description": "Copy URL was pressed; return false to stop the copy"
+    },
+    {
+     "name": "onTry",
+     "type": "(request: EndpointTry) => void",
+     "optional": true,
+     "description": "Try it was pressed"
+    }
+   ],
+   "hides": [
+    "environment",
+    "children"
+   ],
+   "events": {
+    "tc-environment-change": null,
+    "tc-copy": "onCopyUrl",
+    "tc-try": "onTry"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-endpoint-bar",
+   "className": "TcEndpointBar",
+   "module": "@adamstavely/trenchcoat/endpoint-bar",
+   "data": [
+    "params",
+    "environments",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "method",
+     "attribute": "method"
+    },
+    {
+     "name": "path",
+     "attribute": "path"
+    },
+    {
+     "name": "environment",
+     "attribute": "environment"
+    },
+    {
+     "name": "baseUrl",
+     "attribute": "base-url"
+    },
+    {
+     "name": "summary",
+     "attribute": "summary"
+    },
+    {
+     "name": "deprecated",
+     "attribute": "deprecated"
+    },
+    {
+     "name": "beta",
+     "attribute": "beta"
+    },
+    {
+     "name": "hideTry",
+     "attribute": "hide-try"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-environment-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-try",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "environment",
+     "event": "tc-environment-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 22922,
+  "gzip": 7346
+ }
+}

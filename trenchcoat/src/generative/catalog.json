@@ -351,6 +351,17 @@
     ]
   },
   {
+    "tag": "tc-api-reference-nav",
+    "name": "ApiReferenceNav",
+    "description": "An API reference's side navigation: endpoints grouped by resource, with method badges, a filter and the current page.",
+    "events": [
+      "tc-navigate",
+      "tc-query-change",
+      "tc-show-paths-change",
+      "tc-collapsed-change"
+    ]
+  },
+  {
     "tag": "tc-app-directory",
     "name": "AppDirectory",
     "description": "Browse, search and connect integrations – categories, a filter menu and app cards with a connect flow.",
@@ -1131,6 +1142,18 @@
     ]
   },
   {
+    "tag": "tc-copy-page-menu",
+    "name": "CopyPageMenu",
+    "description": "A docs page's Copy page button: copy it as Markdown for a model, view it, copy its link, open it in an assistant, download it.",
+    "events": [
+      "tc-page-copy",
+      "tc-page-view",
+      "tc-assistant-open",
+      "tc-page-download",
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-correction-propagation",
     "name": "CorrectionPropagation",
     "description": "How far a correction reaches: every artifact and released package that cites the corrected claim, each sent for",
@@ -1395,6 +1418,16 @@
     "name": "EmptyCalendar",
     "description": "Stacked empty calendar cards – an illustration for an empty schedule.",
     "events": []
+  },
+  {
+    "tag": "tc-endpoint-bar",
+    "name": "EndpointBar",
+    "description": "One API endpoint on one line – the method badge, the base URL or an environment select, the path with its",
+    "events": [
+      "tc-environment-change",
+      "tc-copy",
+      "tc-try"
+    ]
   },
   {
     "tag": "tc-engagement-quality",
@@ -2881,6 +2914,16 @@
     ]
   },
   {
+    "tag": "tc-quickstart",
+    "name": "Quickstart",
+    "description": "A first API request with the key filled in – language tabs, four numbered steps, the key masked until revealed,",
+    "events": [
+      "tc-language-change",
+      "tc-copy",
+      "tc-run"
+    ]
+  },
+  {
     "tag": "tc-radar-chart",
     "name": "RadarChart",
     "description": "Values on three or more axes round a centre, joined into a shape – one series with its values on the axes, or up to",
@@ -2904,6 +2947,14 @@
     "description": "Radio group for AI product settings.",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-rate-limit-status",
+    "name": "RateLimitStatus",
+    "description": "Usage against each provider's rate limits – requests, input and output tokens a minute as meters, the headroom in",
+    "events": [
+      "tc-sort-change"
     ]
   },
   {
@@ -3007,6 +3058,27 @@
     "events": [
       "tc-review-level-change",
       "tc-episodes-open"
+    ]
+  },
+  {
+    "tag": "tc-request-log",
+    "name": "RequestLog",
+    "description": "Every request an app made to a model provider, one line each – time, model, endpoint, status, latency, tokens, cost and cache – with status and model filters and a detail of bodies and headers, secrets masked, and Copy as cURL.",
+    "events": [
+      "tc-classes-change",
+      "tc-models-change",
+      "tc-selected-change",
+      "tc-request-open",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-response-examples",
+    "name": "ResponseExamples",
+    "description": "An endpoint's example responses, one tab per status, each with its meaning, headers and a pretty-printed body to copy.",
+    "events": [
+      "tc-status-change",
+      "tc-media-type-change"
     ]
   },
   {
@@ -3183,12 +3255,35 @@
     ]
   },
   {
+    "tag": "tc-run-log",
+    "name": "RunLog",
+    "description": "Every agent run on one line – status, agent, trigger, when, duration, steps, tokens, cost and user – with filters, search, a time range, errors that open in place, and new runs held behind Show new.",
+    "events": [
+      "tc-filter-change",
+      "tc-query-change",
+      "tc-range-change",
+      "tc-expanded-change",
+      "tc-run-open",
+      "tc-show-new"
+    ]
+  },
+  {
     "tag": "tc-run-manifest",
     "name": "RunManifest",
     "description": "A run's reproducibility record: model, settings, instruction hash, sources, intent and the verification summary,",
     "events": [
       "tc-copy",
       "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-run-receipt",
+    "name": "RunReceipt",
+    "description": "What one agent run cost and where it went, as a receipt: models, tools, lookups and retries, the subtotal, cache savings and the total, with the costliest step.",
+    "events": [
+      "tc-copy",
+      "tc-trace-open",
+      "tc-download"
     ]
   },
   {
@@ -3258,6 +3353,16 @@
     "events": [
       "tc-placements-change",
       "tc-mode-change"
+    ]
+  },
+  {
+    "tag": "tc-schema-fields",
+    "name": "SchemaFields",
+    "description": "An API's fields from a JSON Schema: name, type in words, required, default, limits and meaning, with nested objects folding under their field.",
+    "events": [
+      "tc-expanded-change",
+      "tc-query-change",
+      "tc-anchor-copy"
     ]
   },
   {
@@ -3478,6 +3583,33 @@
     "description": "A signature field: draw with a mouse, pen or finger, or type the name instead, with undo, clear, the signer, the",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-skill-detail",
+    "name": "SkillDetail",
+    "description": "One skill: who made it and its version, when a model picks it, the tools it may use and what they can do, its files,",
+    "events": [
+      "tc-enabled-change",
+      "tc-file-change",
+      "tc-update",
+      "tc-export",
+      "tc-remove"
+    ]
+  },
+  {
+    "tag": "tc-skill-library",
+    "name": "SkillLibrary",
+    "description": "The skills a workspace has added, grouped by who made them – search, source and on/off filters, a switch per skill,",
+    "events": [
+      "tc-enabled-change",
+      "tc-skills-change",
+      "tc-query-change",
+      "tc-group-change",
+      "tc-show-change",
+      "tc-update",
+      "tc-add",
+      "tc-skill-open"
     ]
   },
   {

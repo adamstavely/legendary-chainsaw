@@ -1,0 +1,714 @@
+{
+ "elements": [
+  {
+   "tag": "tc-request-log",
+   "className": "TcRequestLog",
+   "description": "Every request an app made to a model provider, one line each – time, model, endpoint, status, latency, tokens, cost and cache – with status and model filters and a detail of bodies and headers, secrets masked, and Copy as cURL.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Requests\"",
+     "description": "The heading; empty leaves the header out",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small text under the heading",
+     "readonly": false
+    },
+    {
+     "name": "requests",
+     "attribute": null,
+     "type": "ProviderRequest[]",
+     "default": "[]",
+     "description": "The requests, in any order – the list shows the newest first",
+     "readonly": false
+    },
+    {
+     "name": "classes",
+     "attribute": null,
+     "type": "RequestStatusClass[]",
+     "default": "[]",
+     "description": "The status classes that show; empty shows them all",
+     "readonly": false
+    },
+    {
+     "name": "models",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The models that show; empty shows them all",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The open request's id",
+     "readonly": false
+    },
+    {
+     "name": "baseUrl",
+     "attribute": "base-url",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Put before each request's endpoint for Copy as cURL, when it has no `url`",
+     "readonly": false
+    },
+    {
+     "name": "redact",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"authorization\", \"proxy-authorization\", \"x-api-key\", \"api-key\", \"apikey\", \"token\", \"access-token\", \"secret\", \"client-secret\", \"password\", \"cookie\", \"set-cookie\"]",
+     "description": "Header and body keys to mask, compared without case, - or _",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "ISO 4217 currency code for costs",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Locale for times, numbers and amounts",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "360",
+     "description": "Height in px at which the list scrolls",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<RequestLogLabels>",
+     "default": "{}",
+     "description": "Renames the words it uses",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-classes-change",
+     "detail": "",
+     "description": "A status class chip was toggled ({ classes }: RequestLogClassesChange); empty means all; cancelable – prevented, `classes` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-models-change",
+     "detail": "",
+     "description": "A model chip was toggled ({ models }: RequestLogModelsChange); empty means all; cancelable – prevented, `models` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A request was opened or its details closed ({ selected, request }: RequestLogSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-request-open",
+     "detail": "",
+     "description": "A request was chosen, before tc-selected-change ({ id, request }: RequestLogOpen)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy as cURL was pressed ({ field, text, id }: RequestLogCopy); cancelable – prevent it to write the clipboard yourself",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rqlg",
+   "cssProperties": [
+    {
+     "name": "--tc-rqlg-cols",
+     "value": "5.5rem minmax(7rem, 1.2fr) minmax(6rem, 1fr) 8rem 7rem 7.5rem 4.5rem 3rem",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rqlg-cols-narrow",
+     "value": "5rem minmax(0, 1fr) 6.5rem 5rem",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rqlg-bar-h",
+     "value": "4px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rqlg-icon",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-pill-radius",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultRedactKeys",
+   "signature": "defaultRedactKeys: array",
+   "description": "Keys masked by default, in headers and bodies, compared without case, - or _"
+  },
+  {
+   "name": "statusClass",
+   "signature": "statusClass(status: number): RequestStatusClass",
+   "description": "The status class a code belongs to: 429 is its own; no response counts with the 5xx"
+  },
+  {
+   "name": "statusWords",
+   "signature": "statusWords(status: number): void",
+   "description": "An error status in words, \"\" for a success"
+  },
+  {
+   "name": "redact",
+   "signature": "redact(value: T, keys: string[]): T",
+   "description": "A copy of headers or a body with every key in `keys` masked, however deep"
+  },
+  {
+   "name": "curlCommand",
+   "signature": "curlCommand(r: ProviderRequest, baseUrl: unknown, keys: string[]): void",
+   "description": "The request as a cURL command, its secrets redacted"
+  }
+ ],
+ "react": [
+  {
+   "component": "RequestLog",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"\" leaves the header out"
+    },
+    {
+     "name": "classes",
+     "type": "RequestStatusClass[]",
+     "optional": true,
+     "description": "The status classes that show, empty for all – controlled when given"
+    },
+    {
+     "name": "defaultClasses",
+     "type": "RequestStatusClass[]",
+     "optional": true,
+     "description": "The classes that show at first, when `classes` isn't controlled"
+    },
+    {
+     "name": "onClassesChange",
+     "type": "(classes: RequestStatusClass[]) => void",
+     "optional": true,
+     "description": "A status class chip was toggled"
+    },
+    {
+     "name": "models",
+     "type": "string[]",
+     "optional": true,
+     "description": "The models that show, empty for all – controlled when given"
+    },
+    {
+     "name": "defaultModels",
+     "type": "string[]",
+     "optional": true,
+     "description": "The models that show at first, when `models` isn't controlled"
+    },
+    {
+     "name": "onModelsChange",
+     "type": "(models: string[]) => void",
+     "optional": true,
+     "description": "A model chip was toggled"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open request's id – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open request at first, when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, request?: ProviderRequest) => void",
+     "optional": true,
+     "description": "A request was opened or its details closed"
+    },
+    {
+     "name": "onRequestOpen",
+     "type": "(id: string, request: ProviderRequest) => void",
+     "optional": true,
+     "description": "A request was opened"
+    },
+    {
+     "name": "onCopyCurl",
+     "type": "(text: string, id: string) => void | boolean",
+     "optional": true,
+     "description": "Copy as cURL was pressed; return false to write the clipboard yourself"
+    }
+   ],
+   "hides": [
+    "heading",
+    "classes",
+    "models",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-classes-change": null,
+    "tc-models-change": null,
+    "tc-selected-change": "onSelectedChange",
+    "tc-request-open": "onRequestOpen",
+    "tc-copy": "onCopyCurl"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-request-log",
+   "className": "TcRequestLog",
+   "module": "@adamstavely/trenchcoat/request-log",
+   "data": [
+    "requests",
+    "classes",
+    "models",
+    "redact",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "baseUrl",
+     "attribute": "base-url"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-classes-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-models-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-request-open",
+     "cancelable": false
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "classes",
+     "event": "tc-classes-change"
+    },
+    {
+     "property": "models",
+     "event": "tc-models-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "json-viewer"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "json-viewer",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "json-viewer"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "json-viewer",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "json-viewer",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "json-viewer"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "json-viewer",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself",
+     "json-viewer"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout",
+   "setTimeout (json-viewer)"
+  ],
+  "frames": [
+   "requestAnimationFrame (json-viewer)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (json-viewer)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 85782,
+  "gzip": 24322
+ }
+}

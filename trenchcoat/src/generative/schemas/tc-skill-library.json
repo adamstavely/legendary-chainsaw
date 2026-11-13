@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-skill-library.json",
+  "title": "tc-skill-library",
+  "description": "The skills a workspace has added, grouped by who made them – search, source and on/off filters, a switch per skill,\nUpdate when a newer version is out, and Add skill.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LibrarySkill"
+      },
+      "description": "The skills. Changed by the switches unless a tc-enabled-change or tc-skills-change listener calls preventDefault()"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The order of the source groups; groups not named sort after Built-in and Your team, Community last"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text. Changed by typing unless a tc-query-change listener calls preventDefault()"
+    },
+    "group": {
+      "type": "string",
+      "description": "The source shown, or null for all. Changed by the Source select unless a tc-group-change listener calls preventDefault()"
+    },
+    "show": {
+      "type": "string",
+      "enum": [
+        "all",
+        "off",
+        "on"
+      ],
+      "description": "\"all\", \"on\" or \"off\". Changed by the Show select unless a tc-show-change listener calls preventDefault()"
+    },
+    "hideAdd": {
+      "type": "boolean",
+      "description": "Hide Add skill"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms, for \"3 h ago\"; without it, last used shows as a date"
+    },
+    "locale": {
+      "type": "string",
+      "description": "For dates and relative times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "allSources": {
+          "type": "string"
+        },
+        "show": {
+          "type": "string"
+        },
+        "showAll": {
+          "type": "string"
+        },
+        "showOn": {
+          "type": "string"
+        },
+        "showOff": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "upload": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "update": {
+          "type": "string"
+        },
+        "updateAvailable": {
+          "type": "string"
+        },
+        "usedAgo": {
+          "type": "string"
+        },
+        "neverUsed": {
+          "type": "string"
+        },
+        "triggers": {
+          "type": "string"
+        },
+        "turnOn": {
+          "type": "string"
+        },
+        "on": {
+          "type": "string"
+        },
+        "off": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "announceOn": {
+          "type": "string"
+        },
+        "announceOff": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words to rename, merged over defaultSkillLibraryLabels; {n}, {on}, {name}, {version} and {when} are filled in"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LibrarySkill": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it does, in a line"
+        },
+        "group": {
+          "type": "string",
+          "description": "Who made it: \"Built-in\", \"Your team\", a plugin's name, \"Community\""
+        },
+        "version": {
+          "type": "string",
+          "description": "Its version, e.g. \"1.4.0\""
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "It's on: agents may pick it"
+        },
+        "lastUsed": {
+          "type": "number",
+          "description": "When it last ran, epoch ms"
+        },
+        "triggers": {
+          "type": "string",
+          "description": "When a model picks it, in a phrase: \"Runs when asked to review a contract\""
+        },
+        "update": {
+          "type": "string",
+          "description": "A newer version that's available, e.g. \"1.5.0\""
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "group",
+        "enabled"
+      ],
+      "additionalProperties": false,
+      "description": "One skill in the library"
+    }
+  }
+}

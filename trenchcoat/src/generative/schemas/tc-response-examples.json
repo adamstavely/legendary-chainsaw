@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-response-examples.json",
+  "title": "tc-response-examples",
+  "description": "An endpoint's example responses, one tab per status, each with its meaning, headers and a pretty-printed body to copy.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading – often the endpoint, \"GET /records/{id}\""
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ResponseExample"
+      },
+      "description": "The example responses, one tab each, in the order given"
+    },
+    "status": {
+      "type": "string",
+      "description": "The tab showing, by its status (\"200\"); the first when empty or unknown. Changed by the tabs unless a tc-status-change listener calls preventDefault()"
+    },
+    "mediaType": {
+      "type": "string",
+      "description": "The body's media type; the status's first when empty or not among its bodies. Changed by the select unless a tc-media-type-change listener calls preventDefault()"
+    },
+    "headersOpen": {
+      "type": "boolean",
+      "description": "Shows the headers open"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The tallest the body gets before it scrolls, in px; 0 for no limit"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        },
+        "client": {
+          "type": "string"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "server": {
+          "type": "string"
+        },
+        "headers": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "noBody": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ResponseExample": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "description": "The tab's words after the code; the standard reason phrase when left out"
+        },
+        "description": {
+          "type": "string",
+          "description": "What the response means, in a sentence or two"
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "body": {
+          "description": "The body, for a single media type"
+        },
+        "mediaType": {
+          "type": "string",
+          "description": "The body's media type; application/json when left out"
+        },
+        "bodies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseExampleBody"
+          },
+          "description": "Bodies in several media types; wins over `body`"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "One status's example response"
+    },
+    "ResponseExampleBody": {
+      "type": "object",
+      "properties": {
+        "mediaType": {
+          "type": "string"
+        },
+        "body": {}
+      },
+      "required": [
+        "mediaType",
+        "body"
+      ],
+      "additionalProperties": false,
+      "description": "One body of a response, in one media type"
+    }
+  }
+}

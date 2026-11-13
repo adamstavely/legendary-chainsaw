@@ -1,0 +1,582 @@
+{
+ "elements": [
+  {
+   "tag": "tc-quickstart",
+   "className": "TcQuickstart",
+   "description": "A first API request with the key filled in – language tabs, four numbered steps, the key masked until revealed,\nCopy that warns when it copies the key, and Run it with the response the page passes back.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Quickstart\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "baseUrl",
+     "attribute": "base-url",
+     "type": "string",
+     "default": "\"https://api.example.com\"",
+     "description": "The API's base URL, e.g. \"https://api.example.com\"",
+     "readonly": false
+    },
+    {
+     "name": "endpoint",
+     "attribute": null,
+     "type": "QuickstartEndpoint",
+     "default": "{ method: \"GET\", path: \"/v1/status\" }",
+     "description": "The request to make: method, path and an optional JSON body",
+     "readonly": false
+    },
+    {
+     "name": "apiKey",
+     "attribute": "api-key",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The person's API key – shown masked until revealed, and copied whole",
+     "readonly": false
+    },
+    {
+     "name": "envVar",
+     "attribute": "env-var",
+     "type": "string",
+     "default": "\"API_KEY\"",
+     "description": "The environment variable the key goes into",
+     "readonly": false
+    },
+    {
+     "name": "language",
+     "attribute": "language",
+     "type": "QuickstartLanguage",
+     "default": "\"curl\"",
+     "description": "The language shown. Changed by the tabs unless a tc-language-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "languages",
+     "attribute": null,
+     "type": "QuickstartLanguage[]",
+     "default": "[\"curl\", \"python\", \"typescript\", \"go\"]",
+     "description": "The languages offered, in order",
+     "readonly": false
+    },
+    {
+     "name": "storageKey",
+     "attribute": "storage-key",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A localStorage key to remember the chosen language under; none by default",
+     "readonly": false
+    },
+    {
+     "name": "response",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The response to show in step 4, as text; null before a run",
+     "readonly": false
+    },
+    {
+     "name": "responseStatus",
+     "attribute": "response-status",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The response's status, e.g. \"200 OK\"",
+     "readonly": false
+    },
+    {
+     "name": "running",
+     "attribute": "running",
+     "type": "boolean",
+     "default": "false",
+     "description": "A request is on its way: Run it waits and the response area is busy",
+     "readonly": false
+    },
+    {
+     "name": "hideRun",
+     "attribute": "hide-run",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Run it and step 4",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "QuickstartLabelsInput",
+     "default": "{}",
+     "description": "The element's words, merged over defaultQuickstartLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-language-change",
+     "detail": "",
+     "description": "A language tab was picked ({ language }: QuickstartLanguageChange); cancelable – prevented, `language` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "A step's text was copied ({ step, text, containsKey }: QuickstartCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    },
+    {
+     "name": "tc-run",
+     "detail": "",
+     "description": "Run it was pressed ({ language, method, url, body }: QuickstartRun); cancelable – prevented, `running` isn't set",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "qks",
+   "cssProperties": [
+    {
+     "name": "--tc-qks-num",
+     "value": "22px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-pill-font-size",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-syntax-text",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "maskKey",
+   "signature": "maskKey(key: string): void",
+   "description": "The key with its middle masked: \"sk-test-••••••••4f2a\""
+  },
+  {
+   "name": "quickstartSnippet",
+   "signature": "quickstartSnippet(language: QuickstartLanguage, baseUrl: string, endpoint: QuickstartEndpoint, envVar: unknown): void",
+   "description": "The request in one language, reading the key from the `envVar` environment variable"
+  },
+  {
+   "name": "quickstartInstall",
+   "signature": "quickstartInstall(language: QuickstartLanguage): void",
+   "description": "The install step's command in one language"
+  }
+ ],
+ "react": [
+  {
+   "component": "Quickstart",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "language",
+     "type": "QuickstartLanguage",
+     "optional": true,
+     "description": "The language shown – controlled when given"
+    },
+    {
+     "name": "defaultLanguage",
+     "type": "QuickstartLanguage",
+     "optional": true,
+     "description": "The language on mount, when `language` isn't controlled"
+    },
+    {
+     "name": "onLanguageChange",
+     "type": "(language: QuickstartLanguage) => void",
+     "optional": true,
+     "description": "Called with the language the user picked"
+    },
+    {
+     "name": "onCopyStep",
+     "type": "(copy: QuickstartCopy) => boolean | void",
+     "optional": true,
+     "description": "A step's text was copied; return false to stop the copy"
+    },
+    {
+     "name": "onRun",
+     "type": "(run: QuickstartRun) => boolean | void",
+     "optional": true,
+     "description": "Run it was pressed: send the request, then pass `response` and clear `running`; return false to leave `running` off"
+    }
+   ],
+   "hides": [
+    "heading",
+    "language",
+    "children"
+   ],
+   "events": {
+    "tc-language-change": null,
+    "tc-copy": "onCopyStep",
+    "tc-run": "onRun"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-quickstart",
+   "className": "TcQuickstart",
+   "module": "@adamstavely/trenchcoat/quickstart",
+   "data": [
+    "endpoint",
+    "languages",
+    "response",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "baseUrl",
+     "attribute": "base-url"
+    },
+    {
+     "name": "apiKey",
+     "attribute": "api-key"
+    },
+    {
+     "name": "envVar",
+     "attribute": "env-var"
+    },
+    {
+     "name": "language",
+     "attribute": "language"
+    },
+    {
+     "name": "storageKey",
+     "attribute": "storage-key"
+    },
+    {
+     "name": "responseStatus",
+     "attribute": "response-status"
+    },
+    {
+     "name": "running",
+     "attribute": "running"
+    },
+    {
+     "name": "hideRun",
+     "attribute": "hide-run"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-language-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-run",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "language",
+     "event": "tc-language-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29300,
+  "gzip": 9999
+ }
+}

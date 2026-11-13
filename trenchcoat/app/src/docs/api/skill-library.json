@@ -1,0 +1,710 @@
+{
+ "elements": [
+  {
+   "tag": "tc-skill-library",
+   "className": "TcSkillLibrary",
+   "description": "The skills a workspace has added, grouped by who made them – search, source and on/off filters, a switch per skill,\nUpdate when a newer version is out, and Add skill.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "skills",
+     "attribute": null,
+     "type": "LibrarySkill[]",
+     "default": "[]",
+     "description": "The skills. Changed by the switches unless a tc-enabled-change or tc-skills-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The order of the source groups; groups not named sort after Built-in and Your team, Community last",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text. Changed by typing unless a tc-query-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "group",
+     "attribute": "group",
+     "type": "string | null",
+     "default": "null",
+     "description": "The source shown, or null for all. Changed by the Source select unless a tc-group-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "show",
+     "attribute": "show",
+     "type": "SkillLibraryShow",
+     "default": "\"all\"",
+     "description": "\"all\", \"on\" or \"off\". Changed by the Show select unless a tc-show-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "hideAdd",
+     "attribute": "hide-add",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hide Add skill",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, epoch ms, for \"3 h ago\"; without it, last used shows as a date",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "For dates and relative times",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<SkillLibraryLabels>",
+     "default": "{}",
+     "description": "Words to rename, merged over defaultSkillLibraryLabels; {n}, {on}, {name}, {version} and {when} are filled in",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-enabled-change",
+     "detail": "",
+     "description": "A skill's switch was flipped ({ id, enabled, skill }: SkillEnabledChange); cancelable – prevented, the switch stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skills-change",
+     "detail": "",
+     "description": "The list changed after a switch ({ skills, id }: SkillLibrarySkillsChange); cancelable – prevented, `skills` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search changed ({ query }: SkillLibraryQueryChange); cancelable – prevented, `query` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-group-change",
+     "detail": "",
+     "description": "Another source was picked ({ group }: SkillLibraryGroupChange); cancelable – prevented, `group` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-show-change",
+     "detail": "",
+     "description": "All, On or Off was picked ({ show }: SkillLibraryShowChange); cancelable – prevented, `show` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update",
+     "detail": "",
+     "description": "Update was pressed on a skill ({ id, version, skill }: SkillLibraryUpdate)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-add",
+     "detail": "",
+     "description": "Upload, From a URL or Create was picked in Add skill ({ source }: SkillLibraryAdd)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-skill-open",
+     "detail": "",
+     "description": "A skill's name was pressed ({ id, skill }: SkillLibraryOpen)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "skl",
+   "cssProperties": [
+    {
+     "name": "--tc-skl-menu-w",
+     "value": "176px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "skillGroups",
+   "signature": "skillGroups(skills: readonly LibrarySkill[], order: readonly string[]): string[]",
+   "description": "The groups in display order: Built-in, Your team, plugins as they appear, Community"
+  }
+ ],
+ "react": [
+  {
+   "component": "SkillLibrary",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"Skills\" by default"
+    },
+    {
+     "name": "skills",
+     "type": "LibrarySkill[]",
+     "optional": true,
+     "description": "The skills – controlled when given"
+    },
+    {
+     "name": "defaultSkills",
+     "type": "LibrarySkill[]",
+     "optional": true,
+     "description": "The skills on mount, when `skills` isn't controlled"
+    },
+    {
+     "name": "onSkillsChange",
+     "type": "(skills: LibrarySkill[], id: string) => void",
+     "optional": true,
+     "description": "Called with the whole list after a switch is flipped, and the skill that changed"
+    },
+    {
+     "name": "onEnabledChange",
+     "type": "(id: string, enabled: boolean, skill: LibrarySkill) => boolean | void",
+     "optional": true,
+     "description": "A switch was flipped; return false to keep it as it was"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text on mount, when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the search text as it's typed"
+    },
+    {
+     "name": "group",
+     "type": "string | null",
+     "optional": true,
+     "description": "The source shown, or null for all – controlled when given"
+    },
+    {
+     "name": "defaultGroup",
+     "type": "string | null",
+     "optional": true,
+     "description": "The source on mount, when `group` isn't controlled"
+    },
+    {
+     "name": "onGroupChange",
+     "type": "(group: string | null) => void",
+     "optional": true,
+     "description": "Called with the source picked"
+    },
+    {
+     "name": "show",
+     "type": "SkillLibraryShow",
+     "optional": true,
+     "description": "\"all\", \"on\" or \"off\" – controlled when given"
+    },
+    {
+     "name": "defaultShow",
+     "type": "SkillLibraryShow",
+     "optional": true,
+     "description": "Which skills show on mount, when `show` isn't controlled"
+    },
+    {
+     "name": "onShowChange",
+     "type": "(show: SkillLibraryShow) => void",
+     "optional": true,
+     "description": "Called with All, On or Off as it's picked"
+    },
+    {
+     "name": "onUpdate",
+     "type": "(id: string, version: string, skill: LibrarySkill) => void",
+     "optional": true,
+     "description": "Update was pressed on a skill: install `version`"
+    },
+    {
+     "name": "onAdd",
+     "type": "(source: SkillLibraryAddSource) => void",
+     "optional": true,
+     "description": "Upload, From a URL or Create was picked in Add skill"
+    },
+    {
+     "name": "onSkillOpen",
+     "type": "(id: string, skill: LibrarySkill) => void",
+     "optional": true,
+     "description": "A skill's name was pressed: open its detail"
+    }
+   ],
+   "hides": [
+    "heading",
+    "skills",
+    "query",
+    "group",
+    "show",
+    "children"
+   ],
+   "events": {
+    "tc-enabled-change": "onEnabledChange",
+    "tc-skills-change": "onSkillsChange",
+    "tc-query-change": "onQueryChange",
+    "tc-group-change": null,
+    "tc-show-change": "onShowChange",
+    "tc-update": "onUpdate",
+    "tc-add": "onAdd",
+    "tc-skill-open": "onSkillOpen"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-skill-library",
+   "className": "TcSkillLibrary",
+   "module": "@adamstavely/trenchcoat/skill-library",
+   "data": [
+    "skills",
+    "groups",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "group",
+     "attribute": "group"
+    },
+    {
+     "name": "show",
+     "attribute": "show"
+    },
+    {
+     "name": "hideAdd",
+     "attribute": "hide-add"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-enabled-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skills-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-group-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-show-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update",
+     "cancelable": false
+    },
+    {
+     "name": "tc-add",
+     "cancelable": false
+    },
+    {
+     "name": "tc-skill-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "skills",
+     "event": "tc-skills-change"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    },
+    {
+     "property": "group",
+     "event": "tc-group-change"
+    },
+    {
+     "property": "show",
+     "event": "tc-show-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 33388,
+  "gzip": 10372
+ }
+}

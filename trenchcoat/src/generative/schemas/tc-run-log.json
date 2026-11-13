@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-log.json",
+  "title": "tc-run-log",
+  "description": "Every agent run on one line – status, agent, trigger, when, duration, steps, tokens, cost and user – with filters, search, a time range, errors that open in place, and new runs held behind Show new.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading"
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunLogRun"
+      },
+      "description": "The runs, in any order – the list shows the newest first"
+    },
+    "filter": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RunLogStatus"
+          }
+        },
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "status",
+        "agents",
+        "triggers"
+      ],
+      "additionalProperties": false,
+      "description": "The status, agent and trigger chips that are on; an empty list means all"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text"
+    },
+    "range": {
+      "type": "string",
+      "enum": [
+        "1h",
+        "24h",
+        "30d",
+        "7d",
+        "all"
+      ],
+      "description": "How far back runs show, from `now` (or the newest run when `now` isn't given)"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The failed runs whose error is open"
+    },
+    "live": {
+      "type": "boolean",
+      "description": "Holds runs that arrive after the first render behind Show new"
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time, epoch ms – \"Started\" reads relative to it; without it, a date and time"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code for costs"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for dates, numbers and amounts"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the list scrolls"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "queued": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "succeeded": {
+          "type": "string"
+        },
+        "cancelled": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "7d": {
+          "type": "string"
+        },
+        "30d": {
+          "type": "string"
+        },
+        "1h": {
+          "type": "string"
+        },
+        "24h": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "agentFilter": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "runs": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "range": {
+          "type": "string"
+        },
+        "run": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "show": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "started": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "string"
+        },
+        "statusCol": {
+          "type": "string"
+        },
+        "statusFilter": {
+          "type": "string"
+        },
+        "triggerFilter": {
+          "type": "string"
+        },
+        "failedCount": {
+          "type": "string"
+        },
+        "newRun": {
+          "type": "string"
+        },
+        "newRuns": {
+          "type": "string"
+        },
+        "noError": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RunLogRun": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identity"
+        },
+        "status": {
+          "$ref": "#/definitions/RunLogStatus"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "What started it: \"Schedule\", \"Webhook\", \"Manual\"…"
+        },
+        "startedAt": {
+          "type": "number",
+          "description": "When it started, epoch ms"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long it ran, in ms; leave out while running"
+        },
+        "steps": {
+          "type": "number"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens in and out together"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "user": {
+          "type": "string",
+          "description": "Who it ran for"
+        },
+        "error": {
+          "type": "string",
+          "description": "Why a failed run failed – shown when its line opens"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "agent",
+        "trigger",
+        "startedAt"
+      ],
+      "additionalProperties": false
+    },
+    "RunLogStatus": {
+      "type": "string",
+      "enum": [
+        "cancelled",
+        "failed",
+        "queued",
+        "running",
+        "succeeded"
+      ]
+    }
+  }
+}

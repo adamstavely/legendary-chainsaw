@@ -12,6 +12,15 @@ let host: HTMLElement;
 
 const settle = (ms = 400) => new Promise((r) => setTimeout(r, ms));
 async function violations() {
+  // Contrast is measured on settled colours: finish entrance animations (a piece fading in) first; endless ones keep running
+  for (const a of document.getAnimations()) {
+    if (a.effect?.getComputedTiming().iterations === Infinity) continue;
+    try {
+      a.finish();
+    } catch {
+      // An animation that can't finish (no end time) is left as it is
+    }
+  }
   const { violations } = await axe.run(host, { runOnly: { type: "tag", values: TAGS } });
   return violations.map(
     (v) =>

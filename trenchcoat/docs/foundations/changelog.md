@@ -2,6 +2,34 @@
 
 # Changelog
 
+## 0.27.0 – Developer tools and skills
+
+- **Run Receipt:** what one agent run cost, as a receipt – models, tools, lookups and retries, the subtotal, cache
+  savings and total, the costliest step, Copy run ID, Open trace and Download CSV.
+- **Run Log:** every agent run on one line, with status, agent and trigger chips, search, a time range, failed runs that
+  open to their error, and live runs held behind Show new.
+- **Request Log:** every model-provider request on one line – status in words, latency bars, tokens, cost and cache –
+  with class and model filters, bodies and headers with secrets masked, and Copy as cURL.
+- **Rate Limit Status:** usage against each provider's rate limits – requests and tokens a minute as meters, headroom in
+  words with a reset countdown, 429s, tier and a peak sparkline, tightest first.
+- **Quickstart:** a first API request with the key filled in – four languages, four steps, the key masked in an
+  environment variable, Copy with a key warning, and Run it with the response.
+- **Endpoint Bar:** one endpoint on one line – method badge, environment select, path with described {params},
+  Deprecated and Beta, Copy URL and Try it.
+- **Schema Fields:** an API's fields from a JSON Schema – types, required, allowed values, defaults and limits in words,
+  nested objects folding with Expand all, a filter, and a copyable link to each field.
+- **Response Examples:** example responses one tab per status, with folded headers and a pretty-printed body to copy in
+  each media type.
+- **API Reference Nav:** endpoints grouped by resource with method badges, names or paths, a filter, the current page in
+  view, deprecated endpoints marked, and tree keys with type-ahead.
+- **Copy Page Menu:** copy a docs page as Markdown for a model – or view it, copy its link, open it in a chat assistant
+  with a prompt filled in, or download it as .md.
+- **Skill Library:** a workspace's skills grouped by who made them, each with a switch, its trigger, last use and
+  Update; search, source and on/off filters, and Add skill.
+- **Skill Detail:** one skill's maker, version, triggers, tools with their permissions in words, files and runs, with
+  Enable / Update / Export / Remove, confirming before turning on anything risky.
+- **Standalone gallery and `docs/`:** rebuilt with the above.
+
 ## 0.26.0 – Bulk runs and imports, and Downloading and Uploading
 
 - **File Import:** drop a CSV, TSV or Excel file and see what was read – rows, columns, delimiter and encoding, a

@@ -99,6 +99,9 @@
         "time": {
           "type": "string"
         },
+        "method": {
+          "type": "string"
+        },
         "request": {
           "type": "string"
         },
@@ -106,9 +109,6 @@
           "type": "string"
         },
         "types": {
-          "type": "string"
-        },
-        "method": {
           "type": "string"
         },
         "waterfall": {

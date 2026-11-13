@@ -1,0 +1,540 @@
+{
+ "elements": [
+  {
+   "tag": "tc-schema-fields",
+   "className": "TcSchemaFields",
+   "description": "An API's fields from a JSON Schema: name, type in words, required, default, limits and meaning, with nested objects folding under their field.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Fields\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "schema",
+     "attribute": null,
+     "type": "JsonSchema | undefined",
+     "default": "undefined",
+     "description": "A JSON Schema for an object; its properties become the fields",
+     "readonly": false
+    },
+    {
+     "name": "fields",
+     "attribute": null,
+     "type": "SchemaField[] | undefined",
+     "default": "undefined",
+     "description": "The fields themselves; wins over `schema`",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The paths of fields whose children are showing (\"owner\", \"owner.address\"). Changed by the toggles unless a tc-expanded-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The filter text. Changed by typing unless a tc-query-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "searchThreshold",
+     "attribute": "search-threshold",
+     "type": "number",
+     "default": "8",
+     "description": "How many fields bring up the filter box; 0 always shows it",
+     "readonly": false
+    },
+    {
+     "name": "idPrefix",
+     "attribute": "id-prefix",
+     "type": "string",
+     "default": "\"field\"",
+     "description": "What anchors start with: `<id-prefix>-owner.email`",
+     "readonly": false
+    },
+    {
+     "name": "anchorBase",
+     "attribute": "anchor-base",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The address Copy link puts before the anchor; the page's own address when empty",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<SchemaFieldsLabels>",
+     "default": "{}",
+     "description": "Rename any of the words, over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "resolvedFields",
+     "attribute": null,
+     "type": "SchemaField[]",
+     "default": null,
+     "description": "The fields drawn: `fields`, else the schema's",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "A field's children opened or closed, or Expand all / Collapse all was pressed ({ expanded, path, open }: SchemaFieldsExpandedChange); cancelable – prevented, `expanded` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The filter changed ({ query }: SchemaFieldsQueryChange); cancelable – prevented, `query` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-anchor-copy",
+     "detail": "",
+     "description": "Copy link was pressed ({ id, path, url }: SchemaFieldsAnchorCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "scf",
+   "cssProperties": [
+    {
+     "name": "--tc-scf-indent",
+     "value": "var(--tc-space-3)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-scf-depth",
+     "value": "0",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultSchemaFieldsLabels",
+   "signature": "defaultSchemaFieldsLabels: SchemaFieldsLabels",
+   "description": "The words used when the page gives none"
+  },
+  {
+   "name": "schemaConstraints",
+   "signature": "schemaConstraints(s: JsonSchema): string[]",
+   "description": "The limits of a schema node, in words"
+  },
+  {
+   "name": "schemaToFields",
+   "signature": "schemaToFields(schema: JsonSchema | undefined, root: JsonSchema | undefined, depth: unknown): SchemaField[]",
+   "description": "A JSON Schema's properties as fields – nested objects and arrays of objects as `fields`"
+  },
+  {
+   "name": "fieldTypeWords",
+   "signature": "fieldTypeWords(f: SchemaField): void",
+   "description": "A field's type in words: \"string · email\", \"array of Tag\", \"string or null\""
+  }
+ ],
+ "react": [
+  {
+   "component": "SchemaFields",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "expanded",
+     "type": "string[]",
+     "optional": true,
+     "description": "The paths of fields whose children are showing – controlled when given"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "string[]",
+     "optional": true,
+     "description": "On mount, when `expanded` isn't controlled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: string[], detail: SchemaFieldsExpandedChange) => void",
+     "optional": true,
+     "description": "Called with the open fields' paths when a field opens or closes, or Expand all / Collapse all is pressed"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The filter text – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "On mount, when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the filter text as it's typed"
+    },
+    {
+     "name": "onAnchorCopy",
+     "type": "(detail: SchemaFieldsAnchorCopy) => boolean | void",
+     "optional": true,
+     "description": "Copy link was pressed; return false to copy nothing (the page copies or shares it itself)"
+    }
+   ],
+   "hides": [
+    "heading",
+    "expanded",
+    "query",
+    "children"
+   ],
+   "events": {
+    "tc-expanded-change": null,
+    "tc-query-change": null,
+    "tc-anchor-copy": "onAnchorCopy"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-schema-fields",
+   "className": "TcSchemaFields",
+   "module": "@adamstavely/trenchcoat/schema-fields",
+   "data": [
+    "schema",
+    "fields",
+    "expanded",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "searchThreshold",
+     "attribute": "search-threshold"
+    },
+    {
+     "name": "idPrefix",
+     "attribute": "id-prefix"
+    },
+    {
+     "name": "anchorBase",
+     "attribute": "anchor-base"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-anchor-copy",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29778,
+  "gzip": 9904
+ }
+}

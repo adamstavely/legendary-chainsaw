@@ -8,9 +8,9 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-383 items · 383 files
+395 items · 395 files
 
-## Agents (58)
+## Agents (61)
 
 - [Agent Create](agent-create.md) – Describe an agent and get a working draft – a request with example chips, Generate, then the draft streamed in to edit: name, instructions, tools as switches, model, triggers, and the model's open questions to answer before Create
 - [Agent Cursors](agent-cursors.md) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
@@ -53,11 +53,14 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Parallel Attempts](parallel-attempts.md) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
 - [Permission Request](permission-request.md) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - [Plan vs Actual](plan-vs-actual.md) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
+- [Request Log](request-log.md) – Every request an app made to a model provider, one line each – time, provider and model, endpoint, status with errors in words ("429 Rate limited"), latency with a bar, tokens in and out, cost and cache hit; status-class and model chips, and a request that opens to its bodies and headers with secrets masked and Copy as cURL
 - [Review Center](review-center.md) – A focused workspace for what your agents want to do – the queue sorted by risk, one item at a time with the shaky spans marked, Approve, Edit, Reject and Skip on single keys, a stamp as each one leaves and the next one rising in
 - [Review Queue](review-queue.md) – Grade real outputs one at a time from the keyboard – the input, output and reference, pass or fail and 1–5 grades per criterion, a note and a suggested verdict, P / F / 1–5 / Enter / J / K / S / U shortcuts with a list on ?, progress with skipped ones counted, and Undo
 - [Root Cause Tree](root-cause-tree.md) – How an agent finds out why something failed, as a fault tree – hypotheses with their evidence ruled out one by one, OR and AND branches, and the way from the confirmed cause up to the failure lit
 - [Run Checkpoints](run-checkpoints.md) – A run's restore points on a timeline – what each one captured, what going back discards, and “go back to step 4 and try again”, with earlier attempts kept as branches
 - [Run Compare](run-compare.md) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
+- [Run Log](run-log.md) – Every agent run on one line – status as a mark and a word, agent, trigger, when, duration, steps, tokens, cost and user; status, agent and trigger chips, search and a time range, failed runs that open to their error, and in live mode new runs held behind "Show 3 new runs" instead of shifting the list
+- [Run Receipt](run-receipt.md) – What one agent run cost, set out like a receipt – run id with Copy, when, duration and status in words, line-item tables for models (calls, input, output and cached tokens), tools, web lookups and retries, the subtotal, cache savings and total, the costliest step with its share, and Open trace and Download CSV
 - [Running Now](running-now.md) – A live status of agents' background tasks for a header or sidebar – one quiet pill, "3 running · 2 need you", opening a panel of tasks under Needs you, Running and Recently done, each with a filling ring, its agent, elapsed time and Review, Stop or Open
 - [Sandbox Log](sandbox-log.md) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
 - [Schedule Card](schedule-card.md) – A recurring agent task at a glance – the schedule in words, a live countdown to the next run, the last runs as marks in words with when and how long, and Run now, Pause / Resume and Edit
@@ -71,7 +74,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trace Waterfall](trace-waterfall.md) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
 - [Trigger Builder](trigger-builder.md) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
-## AI configuration (26)
+## AI configuration (30)
 
 - [AI Column Create](ai-column-create.md) – One prompt filled in for every row of a table – the column's name and what it holds (text, number, yes or no, choices, link or JSON), the prompt with the table's columns as {{variables}} inserted from chips and unknown ones called out, the model and web search, Try on 3 rows with the answers shown, and Create column beside the run's estimate
 - [Channel Setup](channel-setup.md) – Connect one channel and set when an agent replies there – Connect, Where (a searchable pick of channels or inboxes), When it replies (every message, mentions, direct messages or business hours), Test and Go live, each checked in words before the next
@@ -92,8 +95,12 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Output Schema Builder](output-schema-builder.md) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
 - [Provider connection](provider-connection.md) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
 - [Quality Alerts](quality-alerts.md) – Alert rules that read as sentences – "Alert #ops-quality when Correctness drops below 3.5 over 24 hours on at least 50 chats", each slot a labelled field, with an on/off switch, when it last fired, how often it would have fired in the last 30 days, and problems in words
+- [Quickstart](quickstart.md) – A first API request with the key filled in – cURL, Python, TypeScript and Go tabs over four numbered steps (Install, Set your key, Send a request, See the response), the key in an environment variable shown masked until revealed, Copy that warns when it copies the key, and Run it with the response the page passes back
+- [Rate Limit Status](rate-limit-status.md) – How close each model is to its provider's rate limits – requests, input and output tokens a minute as meters, the headroom in words (Plenty, Near limit, Limited with a reset countdown), 429s in the last hour, the tier and a sparkline of the last hour's peak, tightest first
 - [Retrieval Settings](retrieval-settings.md) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
 - [Secrets Manager](secrets-manager.md) – The secrets agents run on, write-only – missing ones first with the agents that need them, expired and expiring next, Set value or Replace in a password field that's handed to the page and forgotten, Delete that names what will stop working, and new secrets by UPPER_SNAKE name
+- [Skill Detail](skill-detail.md) – One skill in full – who made it and its version with Update, when a model picks it, the tools it may use with what each can do in words (read-only, writes files, runs commands, uses the network), its files to read in a code block, recent runs, and Enable, Export and Remove – asking first before turning on anything risky or removing it
+- [Skill Library](skill-library.md) – The skills a workspace has added, grouped by who made them – Built-in, your team, each plugin, the community – with a switch each, when it runs and when it was last used, Update when a newer version is out, search and source and on/off filters, and Add skill (Upload, From a URL, Create)
 - [Step Inspector](step-inspector.md) – One workflow step's settings – its title and each input with where it comes from, typed in or mapped from an earlier step's output as a chip ("Extract fields › amount"), what's missing in words, Test with sample, and the last run's input and output as JSON
 - [Step Picker](step-picker.md) – What to add next to a workflow – a search over step kinds and tools grouped as Triggers, AI, Tools, Logic, People and Output, led by suggested steps with why and recent ones, inline or as a popover by the button that opened it
 - [Tool Configuration](tool-configuration.md) – A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs
@@ -426,8 +433,13 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Verification Queue](verification-queue.md) – Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 - [Version History](version-history.md) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 
-## Utilities (3)
+## Utilities (8)
 
+- [API Reference Nav](api-reference-nav.md) – An API reference's side navigation – endpoints grouped by resource, each a link with its method as a badge in a colour and a word, its name or (with the Paths switch) its path, deprecated ones struck through; a filter by name, path or method, the current page in view, and tree keys with type-ahead
 - [Breakpoint Overlay](breakpoint-overlay.md) – Which breakpoint the page is at – a corner badge that opens a scale and list of every breakpoint with its media query, and a ruler across the window; follows the window or an element – ⌥⇧O to open it
+- [Copy Page Menu](copy-page-menu.md) – A docs page's Copy page button, for handing the page to a model – copies it as Markdown, with a menu to view the Markdown in a dialog, copy the link, open the page in a chat assistant with a prompt filled in, or download it as a .md file
+- [Endpoint Bar](endpoint-bar.md) – One API endpoint on one line – the method as a badge in its colour and its word, the base URL or an environment select, the path with each {param} picked out and described on hover and focus, Deprecated and Beta badges, Copy URL and Try it
 - [Look Provider](look-provider.md) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
 - [Loupe](loupe.md) – A design-system inspector over the live page – components outlined with a card of their name, path and links, a breakpoint ruler, flex and grid containers listed – ⌘⇧L to turn it on
+- [Response Examples](response-examples.md) – An endpoint's example responses, one tab per status – the code, its reason and its class as a mark, a colour and a word, what the response means, its headers folded behind a disclosure, and the body pretty-printed with syntax colours and Copy, with a media-type pick when there are several
+- [Schema Fields](schema-fields.md) – The fields of an API's request or response from a JSON Schema – each field's name, type in words ("string · email", "array of Tag"), Required, Optional or Deprecated, allowed values, default and limits, and its meaning with code and links; nested objects folding under their field, Expand all, a filter, and a link to every field
