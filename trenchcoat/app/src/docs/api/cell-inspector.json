@@ -1,0 +1,700 @@
+{
+ "elements": [
+  {
+   "tag": "tc-cell-inspector",
+   "className": "TcCellInspector",
+   "description": "Why one AI-filled cell says what it says – the value and confidence, the prompt with the row filled in, reasoning,\nsources, tokens and cost, and history – with Accept, Edit value, Re-run and Mark as wrong.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Cell\"",
+     "description": "The heading – the column's name – and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quiet line under the heading – which row: \"Northwind Analytics · row 214\"",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The cell's value. Changed by Edit value unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "CellStatus",
+     "default": "\"new\"",
+     "description": "Where the cell stands. Changed by the actions unless a tc-status-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "prompt",
+     "attribute": "prompt",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The column's prompt, with {{variable}} where the row's values go",
+     "readonly": false
+    },
+    {
+     "name": "variables",
+     "attribute": null,
+     "type": "Record<string, string>",
+     "default": "{}",
+     "description": "This row's values, by variable name",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The model that filled the cell",
+     "readonly": false
+    },
+    {
+     "name": "at",
+     "attribute": "at",
+     "type": "number | null",
+     "default": "null",
+     "description": "When it was filled, epoch ms",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | null",
+     "default": "null",
+     "description": "The time now, epoch ms – turns times into \"3 min ago\"; unset shows dates",
+     "readonly": false
+    },
+    {
+     "name": "reasoning",
+     "attribute": "reasoning",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The model's reasoning summary, folded away until opened",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "CellSource[]",
+     "default": "[]",
+     "description": "The sources the model used",
+     "readonly": false
+    },
+    {
+     "name": "confidence",
+     "attribute": "confidence",
+     "type": "number | null",
+     "default": "null",
+     "description": "How sure the model was, 0–1; unset hides it",
+     "readonly": false
+    },
+    {
+     "name": "tokensIn",
+     "attribute": "tokens-in",
+     "type": "number | null",
+     "default": "null",
+     "description": "Input tokens this cell used",
+     "readonly": false
+    },
+    {
+     "name": "tokensOut",
+     "attribute": "tokens-out",
+     "type": "number | null",
+     "default": "null",
+     "description": "Output tokens this cell used",
+     "readonly": false
+    },
+    {
+     "name": "cost",
+     "attribute": "cost",
+     "type": "number | null",
+     "default": "null",
+     "description": "What this cell cost, in `currency`",
+     "readonly": false
+    },
+    {
+     "name": "history",
+     "attribute": null,
+     "type": "CellHistoryEntry[]",
+     "default": "[]",
+     "description": "Earlier values, newest first",
+     "readonly": false
+    },
+    {
+     "name": "closable",
+     "attribute": "closable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show a close button – the panel's own; Escape fires tc-close either way",
+     "readonly": false
+    },
+    {
+     "name": "statusLabels",
+     "attribute": null,
+     "type": "Partial<Record<CellStatus, string>>",
+     "default": "{}",
+     "description": "Words for each status",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "ISO 4217 currency of the cost",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for numbers, money and dates",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The value was edited and saved ({ value, previous }: CellValueChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-status-change",
+     "detail": "",
+     "description": "Accept, an edit, Re-run or Mark as wrong moved the cell on ({ status, previous }: CellStatusChange); cancelable – prevented, `status` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "detail": "",
+     "description": "Accept was pressed ({ value }: CellAccept); cancelable – prevented, nothing changes",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rerun",
+     "detail": "",
+     "description": "Re-run this cell was pressed ({ value }: CellRerun); cancelable – prevented, nothing changes",
+     "cancelable": true
+    },
+    {
+     "name": "tc-flag",
+     "detail": "",
+     "description": "Marked as wrong, with the reason ({ reason, value }: CellFlag); cancelable – prevented, nothing changes",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "Escape with nothing open inside, or the close button (detail: {})",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cin",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "cellConfidenceWord",
+   "signature": "cellConfidenceWord(c: number): void",
+   "description": "\"High\", \"Medium\" or \"Low\" for a confidence from 0 to 1"
+  }
+ ],
+ "react": [
+  {
+   "component": "CellInspector",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – the column's name – and the region's name"
+    },
+    {
+     "name": "value",
+     "type": "string",
+     "optional": true,
+     "description": "The cell's value – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string",
+     "optional": true,
+     "description": "Initial value when uncontrolled"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(value: string) => void",
+     "optional": true,
+     "description": "The value was edited and saved"
+    },
+    {
+     "name": "status",
+     "type": "CellStatus",
+     "optional": true,
+     "description": "Where the cell stands – controlled when given"
+    },
+    {
+     "name": "defaultStatus",
+     "type": "CellStatus",
+     "optional": true,
+     "description": "Initial status when uncontrolled"
+    },
+    {
+     "name": "onStatusChange",
+     "type": "(status: CellStatus) => void",
+     "optional": true,
+     "description": "Called with the next `status`"
+    },
+    {
+     "name": "onAccept",
+     "type": "(value: string) => void | boolean",
+     "optional": true,
+     "description": "Accept was pressed. Return false to stop it"
+    },
+    {
+     "name": "onRerun",
+     "type": "(value: string) => void | boolean",
+     "optional": true,
+     "description": "Re-run this cell was pressed – run it, then pass the new value and status back. Return false to stop it"
+    },
+    {
+     "name": "onFlag",
+     "type": "(reason: string, value: string) => void | boolean",
+     "optional": true,
+     "description": "Marked as wrong, with the reason. Return false to stop it"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Escape, or the close button – close the panel"
+    }
+   ],
+   "hides": [
+    "heading",
+    "value",
+    "status",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": null,
+    "tc-status-change": null,
+    "tc-accept": "onAccept",
+    "tc-rerun": "onRerun",
+    "tc-flag": "onFlag",
+    "tc-close": "onClose"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-cell-inspector",
+   "className": "TcCellInspector",
+   "module": "@adamstavely/trenchcoat/cell-inspector",
+   "data": [
+    "variables",
+    "sources",
+    "history",
+    "statusLabels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "prompt",
+     "attribute": "prompt"
+    },
+    {
+     "name": "model",
+     "attribute": "model"
+    },
+    {
+     "name": "at",
+     "attribute": "at"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "reasoning",
+     "attribute": "reasoning"
+    },
+    {
+     "name": "confidence",
+     "attribute": "confidence"
+    },
+    {
+     "name": "tokensIn",
+     "attribute": "tokens-in"
+    },
+    {
+     "name": "tokensOut",
+     "attribute": "tokens-out"
+    },
+    {
+     "name": "cost",
+     "attribute": "cost"
+    },
+    {
+     "name": "closable",
+     "attribute": "closable"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-status-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rerun",
+     "cancelable": true
+    },
+    {
+     "name": "tc-flag",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    },
+    {
+     "property": "status",
+     "event": "tc-status-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 37820,
+  "gzip": 10808
+ }
+}

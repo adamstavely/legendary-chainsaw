@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-376 items · 376 files
+383 items · 383 files
 
 ## Agents (58)
 
@@ -71,8 +71,9 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trace Waterfall](trace-waterfall.md) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
 - [Trigger Builder](trigger-builder.md) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
-## AI configuration (25)
+## AI configuration (26)
 
+- [AI Column Create](ai-column-create.md) – One prompt filled in for every row of a table – the column's name and what it holds (text, number, yes or no, choices, link or JSON), the prompt with the table's columns as {{variables}} inserted from chips and unknown ones called out, the model and web search, Try on 3 rows with the answers shown, and Create column beside the run's estimate
 - [Channel Setup](channel-setup.md) – Connect one channel and set when an agent replies there – Connect, Where (a searchable pick of channels or inboxes), When it replies (every message, mentions, direct messages or business hours), Test and Go live, each checked in words before the next
 - [Configuration release control](configuration-release-control.md) – A configuration version moving through environments: the pipeline, a gate on evidence and approvals, confirmed promote and rollback
 - [Conversation annotation](conversation-annotation.md) – Label and redact spans in a conversation, rate turns, correct answers as a diff, and send the reviewed example to a dataset
@@ -158,29 +159,35 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Voice Mode](voice-mode.md) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - [Writing Assistant](writing-assistant.md) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
-## Data & charts (26)
+## Data & charts (32)
 
 - [Active Days](active-days.md) – A daily goal month by month – each day's date in a small ring filled towards the goal, a check when it's met, months running on down with their names sticking, the month's days at goal, best streak and busiest weekday, and any day's value and share of the goal on hover or focus
 - [Activity Calendar](activity-calendar.md) – A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
 - [Activity Clock](activity-clock.md) – When activity happens, a clock per day – an AM ring and a PM ring of hour segments shaded by how busy each hour was, the weekday and date in the middle, and any hour's value there on hover or focus
 - [Billing Schedule](billing-schedule.md) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - [Breakdown Chart](breakdown-chart.md) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
+- [Cell Inspector](cell-inspector.md) – Why one AI-filled cell says what it says – the value with its confidence in a word and a percentage, the model and when, the column's prompt with the row's values marked, the reasoning folded away, sources with their site and quoted passage, tokens and cost, and earlier values with who set them; Accept, Edit value, Re-run this cell and Mark as wrong
 - [Change Impact](change-impact.md) – Did a change make the agent better or worse – before against after per judge criterion as a dumbbell, the difference and a verdict in words (Better, likely · No clear change · Worse, likely) from the counts, cost and latency, sample sizes, a summing-up line and a segment switch
 - [Change Summary](change-summary.md) – What moved since last time – one metric per row with a colored trend
+- [Column Mapper](column-mapper.md) – A model matches a file's columns to your fields – a select per column prefilled from its suggestion, "Suggested" with the confidence in a word, Use suggestion once changed, Accept all suggestions, and required fields left out or fields matched twice said in words before Continue
 - [Compact Breakdown](compact-breakdown.md) – A total split into its parts in one small card – numbers roll, the bar glides and the ranked rows trade places when the period changes
 - [Data Table](data-table.md) – Spreadsheet-style table: select cells and ranges, edit in place, copy and paste, undo and sort
 - [Day Rhythm](day-rhythm.md) – A typical day as a strip of blocks by kind of place or activity – Home, Work, Transit – one row per kind of day, with hour ticks, a now marker, a legend and the block under the pointer named in full
+- [Enrichment Grid](enrichment-grid.md) – A table a model fills in, cell by cell – source columns and sparkle-marked AI columns with their prompt on the header, each cell queued, filling, done with its confidence and source, failed with Retry, or to review; the run counted in words with the time left, Pause / Resume and Retry failed, and only the rows in view drawn
 - [Eval Scorecard](eval-scorecard.md) – Test cases run against prompt or model versions – pass and fail per case, the score across versions, and a failing case opened beside its expected answer
 - [Experiment Card](experiment-card.md) – An A/B test in two lines that quietly unfolds on hover – variants linked to a tiny chart, a metric switch with rolling numbers, and a winner you pick with a click
+- [File Import](file-import.md) – Drop a spreadsheet and see what was read – the rows and columns found, the delimiter and encoding, a "First row is headers" switch, the first rows with each column's type in words, problems in words (rows of the wrong length, empty columns, a header named twice), and Continue; CSV and TSV read in the browser, Excel through the page
 - [Footnotes](footnotes.md) – A quiet card of caveats and notes under a page's charts – numbered or bulleted, each with an optional link an app's router can take, and nothing at all when there are none
 - [Gauge](gauge.md) – One value against its range as a 270° dial, a half dial or a bar – the value in big type with the band it's in, bands and ticks round it, a target line and the change since last time; optionally a slider you drag or move with the keys
 - [Heatmap](heatmap.md) – A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view
+- [Import Review](import-review.md) – Rows of an import, checked before they land – cell problems in words (missing, not an email, not a date, not a number, or the page's own), duplicates by a key with Keep this and Merge, All / With problems / Duplicates tabs with counts, cells edited in place, skip and restore, and Import held with the reason until nothing's left to fix or problem rows are skipped
 - [KPI Chart](kpi-chart.md) – Metric card with a multi-line chart and a tooltip that follows the pointer
 - [Ops Overview](ops-overview.md) – An operations overview in one dense strip – a status line, a health pill and count tiles, each with its change since the last period in words and green or red by which way is good, an optional sparkline and tone, optionally opening what it counts
 - [Project Card](project-card.md) – A two-line project summary that quietly unfolds on hover – a progress ring with one segment per subtask, a people filter and a status picker, all linked by hover
 - [Quality Drop](quality-drop.md) – One drop in a judge score on live chats – what fell and since when, a small chart round it, the likely cause with how sure in words and failing chats as quotes, the topics it clusters in, and Roll back (after saying what reverts), Investigate or Dismiss as expected
 - [Quality Trend](quality-trend.md) – Judge scores on live chats day by day – a line per criterion with a band from its sample size, the changes pinned on the time axis, a sentence saying what moved since the latest one, a 7 / 30 / 90-day switch, criterion toggles and a table view
 - [Radar Chart](radar-chart.md) – A few measures on axes round a centre, joined into a shape – one series with its value on each axis, or up to three compared – as a cross of axes or a web of rings, with a table view
+- [Run Estimate](run-estimate.md) – What a bulk AI run will cost before it starts – the cost as a low–high range, cells, tokens, web lookups and time in words and figures, a table of where the money goes, the budget left with a warning when the run could go over it, Run on 50 rows first, a spend cap, and Start
 - [Score Ring](score-ring.md) – One overall score from weighted sub-scores – a ring with a segment per part as long as its weight and filled to its score, the score and its band in the middle, a row per part that isolates its segment, and the metrics behind the score
 - [Score Summary](score-summary.md) – NPS or CSAT results – the score in big type, the change since last time with a sparkline, the target, the bands with shares and counts, and a bar per score you can pick to filter comments
 - [SLA Status](sla-status.md) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser

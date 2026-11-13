@@ -15,6 +15,7 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Content Hidden** (`content-hidden.tsx`) – A photo pixelated to a person's outline with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
 - **Cover Flow** (`cover-flow.tsx`) – Browse covers in 3D – drag, flick or scrub the row, it springs to the nearest cover; images drift in their frames over a soft reflection
 - **DACH Region** (`region-dach.tsx`) – DACH map with fading neighbours and a pastel band along the border, switchable to the US, China, India, Brazil or Japan
+- **Downloading** (`downloading.tsx`) – A document with an arrow dropping into a tray on it, with the words Downloading, for a file or an export on its way to the person
 - **Empty Calendar** (`empty-calendar.tsx`) – Stack of calendar cards marked empty, fanning out on hover; the shimmer runs a few cycles and rests
 - **Enrichment Orbit** (`enrichment-orbit.tsx`) – Grok tile inside two rings with comets and data nodes orbiting around it – a few rounds, then they rest
 - **First Use** (`first-use.tsx`) – An empty workspace with one highlighted spot to start from, with the words Nothing here yet, for a new team or project
@@ -50,5 +51,6 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Tab Overload** (`tab-overload.tsx`) – Overlapping browser windows where the highlight follows the hovered tab
 - **Team Invite** (`team-invite.tsx`) – Connected teammates – a cursor drags a new one into the empty slot, the line turns solid and they go online
 - **Upload Failed** (`upload-failed.tsx`) – A file lifted above an open tray, its upload arrow stopping short, with a red cross badge and the words Upload failed, for a file that's too large, isn't accepted or didn't finish uploading
+- **Uploading** (`uploading.tsx`) – A document with an arrow rising out of a tray on it, with the words Uploading, for a file on its way up – the in-progress sibling of Upload Failed
 - **Voice Orb** (`voice-orb.tsx`) – The face of a voice assistant – a sphere of dots that breathes, catches sound, collapses into a spinning ring while thinking and ripples when it speaks
 - **World Map Continental** (`world-map.tsx`) – World map with one highlighted continent and a pastel band along its coastline, switchable between all six

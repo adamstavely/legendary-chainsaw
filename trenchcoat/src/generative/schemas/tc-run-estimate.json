@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-estimate.json",
+  "title": "tc-run-estimate",
+  "description": "What a bulk run will cost before it starts – cells, tokens, web lookups, a cost range and the time, where the money\ngoes, the budget left, a sample run and a spend cap.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – what the run is"
+    },
+    "rows": {
+      "type": "number",
+      "description": "How many rows the run fills"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunEstimateColumn"
+      },
+      "description": "The AI columns it fills, each with its own averages if they differ from the run's"
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "inputPrice": {
+          "type": "number"
+        },
+        "outputPrice": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "inputPrice",
+        "outputPrice"
+      ],
+      "additionalProperties": false,
+      "description": "The model and its prices per million tokens"
+    },
+    "tokensIn": {
+      "type": "number",
+      "description": "Average input tokens per cell"
+    },
+    "tokensOut": {
+      "type": "number",
+      "description": "Average output tokens per cell"
+    },
+    "lookups": {
+      "type": "number",
+      "description": "Web lookups per cell, for columns that don't say"
+    },
+    "lookupPrice": {
+      "type": "number",
+      "description": "Price of one web lookup"
+    },
+    "concurrency": {
+      "type": "number",
+      "description": "Cells worked on at once"
+    },
+    "secondsPerCell": {
+      "type": "number",
+      "description": "Average seconds one cell takes"
+    },
+    "spread": {
+      "type": "number",
+      "description": "How far the cost may land either side of the estimate, as a share (0.25 is ±25%)"
+    },
+    "budget": {
+      "type": "number",
+      "description": "The budget left, in `currency`; unset hides the budget"
+    },
+    "sample": {
+      "type": "boolean",
+      "description": "Run on the first `sampleRows` rows first. Changed by its checkbox unless a tc-sample-change listener calls preventDefault()"
+    },
+    "sampleRows": {
+      "type": "number",
+      "description": "How many rows the sample run takes"
+    },
+    "cap": {
+      "type": "number",
+      "description": "The spend cap – the run stops when it reaches it; null for none. Changed by its field unless a tc-cap-change listener calls preventDefault()"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Start can't be pressed – while the app is starting the run, say"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency of every price and amount"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers and money"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RunEstimateColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tokensIn": {
+          "type": "number",
+          "description": "Average input tokens per cell – the prompt with the row filled in, plus anything looked up"
+        },
+        "tokensOut": {
+          "type": "number",
+          "description": "Average output tokens per cell"
+        },
+        "lookups": {
+          "type": "number",
+          "description": "Web lookups per cell"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "One AI column of the run; its averages override the run's"
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ai-column-create.json",
+  "title": "tc-ai-column-create",
+  "description": "One prompt filled in for every row of a table: name, type, a prompt with column variables, model and web access,\na three-row preview and Create column.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/AiColumnType"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "web": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "options",
+        "prompt",
+        "model",
+        "web"
+      ],
+      "additionalProperties": false,
+      "description": "The column being written. Changed by editing unless a tc-value-change listener calls preventDefault()"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiColumnSource"
+      },
+      "description": "The table's columns – the prompt's variables"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiColumnModel"
+      },
+      "description": "The models to pick from; the first is the default"
+    },
+    "preview": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiColumnPreviewRow"
+      },
+      "description": "The preview's rows, from the page after tc-preview (null: none yet)"
+    },
+    "previewing": {
+      "type": "boolean",
+      "description": "A preview is running – set by Try unless prevented; clear it when `preview` is in"
+    },
+    "estimate": {
+      "type": "string",
+      "description": "What running the column will take, in words – \"2,000 rows · about 3 min · about $1.40\""
+    },
+    "createLabel": {
+      "type": "string",
+      "description": "The label of the button that creates the column"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AiColumnType": {
+      "type": "string",
+      "enum": [
+        "boolean",
+        "choice",
+        "json",
+        "number",
+        "text",
+        "url"
+      ]
+    },
+    "AiColumnSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A table column the prompt can use"
+    },
+    "AiColumnModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A model to pick"
+    },
+    "AiColumnPreviewRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "done",
+            "failed",
+            "running"
+          ]
+        },
+        "value": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One row of the preview"
+    }
+  }
+}

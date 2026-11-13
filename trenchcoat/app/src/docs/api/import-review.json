@@ -1,0 +1,653 @@
+{
+ "elements": [
+  {
+   "tag": "tc-import-review",
+   "className": "TcImportReview",
+   "description": "Rows of an import, checked before they land: cell problems in words, duplicates by a key with Keep this and Merge,\nfilter tabs with counts, cells edited in place, skip and restore, and Import once nothing's left to fix.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Review rows\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quiet line under the heading – the file, or where the rows go",
+     "readonly": false
+    },
+    {
+     "name": "columns",
+     "attribute": null,
+     "type": "ImportReviewColumn[]",
+     "default": "[]",
+     "description": "The columns, in order, with their type and whether they're required",
+     "readonly": false
+    },
+    {
+     "name": "rows",
+     "attribute": null,
+     "type": "ImportReviewRow[]",
+     "default": "[]",
+     "description": "The rows – the value. Changed by editing, skipping, keeping and merging unless a tc-rows-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "duplicateKey",
+     "attribute": "duplicate-key",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The column whose value makes rows duplicates – an email, an id. None: no duplicate check",
+     "readonly": false
+    },
+    {
+     "name": "validate",
+     "attribute": null,
+     "type": "ImportReviewValidator | undefined",
+     "default": "undefined",
+     "description": "The page's own check per cell, after the built-in ones: the problem in words, or null",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "ImportReviewFilter",
+     "default": "\"all\"",
+     "description": "Which rows the table shows. Changed by the tabs unless a tc-filter-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "skipProblems",
+     "attribute": "skip-problems",
+     "type": "boolean",
+     "default": "false",
+     "description": "Import leaves out rows with problems and extra duplicates instead of waiting for them. Changed by its checkbox unless a tc-skip-problems-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "pageSize",
+     "attribute": "page-size",
+     "type": "number",
+     "default": "50",
+     "description": "Rows shown at first, and added by Show more rows",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ImportReviewLabels>",
+     "default": "{}",
+     "description": "Words the page can rename, merged over defaultImportReviewLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-rows-change",
+     "detail": "",
+     "description": "A cell was edited, or a row skipped, restored, kept or merged ({ rows, change, id }: ImportReviewRowsChange); cancelable – prevented, `rows` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "A filter tab was chosen ({ filter }: ImportReviewFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skip-problems-change",
+     "detail": "",
+     "description": "\"Skip rows with problems\" was switched ({ skipProblems }: ImportReviewSkipProblemsChange); cancelable – prevented, `skipProblems` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-import",
+     "detail": "",
+     "description": "Import was pressed with nothing left to fix, or with rows with problems skipped ({ rows, skipped }: ImportReviewImport); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "imr",
+   "cssProperties": [
+    {
+     "name": "--tc-import-review-height",
+     "value": "420px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-import-review-cell-w",
+     "value": "170px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-h-sm",
+    "--tc-field-radius",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-imr-cols",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-full",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "cellProblem",
+   "signature": "cellProblem(value: string, column: ImportReviewColumn, row: ImportReviewRow, validate?: ImportReviewValidator, labels: Partial<ImportReviewLabels>): string | null",
+   "description": "A cell's problem in words, or null: required and empty, then the column's type, then the page's own check"
+  },
+  {
+   "name": "duplicateGroups",
+   "signature": "duplicateGroups(rows: ImportReviewRow[], key: string | undefined): ImportReviewRow[][]",
+   "description": "Groups of rows (not skipped) that share a key value, in the order they first appear; groups of one are left out"
+  }
+ ],
+ "react": [
+  {
+   "component": "ImportReviewOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "rows",
+     "type": "ImportReviewRow[]",
+     "optional": true,
+     "description": "The rows. Controlled when defined – pass back what onRowsChange reports"
+    },
+    {
+     "name": "defaultRows",
+     "type": "ImportReviewRow[]",
+     "optional": true,
+     "description": "The starting rows when uncontrolled"
+    },
+    {
+     "name": "onRowsChange",
+     "type": "(rows: ImportReviewRow[], change: ImportReviewChangeKind, id: string) => void",
+     "optional": true,
+     "description": "A cell was edited, or a row skipped, restored, kept or merged: every row, what was done and to which row"
+    },
+    {
+     "name": "filter",
+     "type": "ImportReviewFilter",
+     "optional": true,
+     "description": "Which rows the table shows. Controlled when defined"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "ImportReviewFilter",
+     "optional": true,
+     "description": "The starting tab when uncontrolled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: ImportReviewFilter) => void",
+     "optional": true,
+     "description": "A filter tab was chosen"
+    },
+    {
+     "name": "skipProblems",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether Import leaves out rows with problems and extra duplicates. Controlled when defined"
+    },
+    {
+     "name": "defaultSkipProblems",
+     "type": "boolean",
+     "optional": true,
+     "description": "The starting choice when uncontrolled"
+    },
+    {
+     "name": "onSkipProblemsChange",
+     "type": "(skipProblems: boolean) => void",
+     "optional": true,
+     "description": "\"Skip rows with problems\" was switched"
+    },
+    {
+     "name": "onImport",
+     "type": "(rows: ImportReviewRow[], skipped: ImportReviewRow[]) => boolean | void",
+     "optional": true,
+     "description": "Import was pressed: the rows to import and the rows left out. Return false to say it didn't happen"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-rows-change": "onTcRowsChange",
+    "tc-filter-change": "onTcFilterChange",
+    "tc-skip-problems-change": "onTcSkipProblemsChange",
+    "tc-import": "onTcImport"
+   }
+  },
+  {
+   "component": "ImportReview",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "rows",
+     "type": "ImportReviewRow[]",
+     "optional": true,
+     "description": "The rows. Controlled when defined – pass back what onRowsChange reports"
+    },
+    {
+     "name": "defaultRows",
+     "type": "ImportReviewRow[]",
+     "optional": true,
+     "description": "The starting rows when uncontrolled"
+    },
+    {
+     "name": "onRowsChange",
+     "type": "(rows: ImportReviewRow[], change: ImportReviewChangeKind, id: string) => void",
+     "optional": true,
+     "description": "A cell was edited, or a row skipped, restored, kept or merged: every row, what was done and to which row"
+    },
+    {
+     "name": "filter",
+     "type": "ImportReviewFilter",
+     "optional": true,
+     "description": "Which rows the table shows. Controlled when defined"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "ImportReviewFilter",
+     "optional": true,
+     "description": "The starting tab when uncontrolled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: ImportReviewFilter) => void",
+     "optional": true,
+     "description": "A filter tab was chosen"
+    },
+    {
+     "name": "skipProblems",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether Import leaves out rows with problems and extra duplicates. Controlled when defined"
+    },
+    {
+     "name": "defaultSkipProblems",
+     "type": "boolean",
+     "optional": true,
+     "description": "The starting choice when uncontrolled"
+    },
+    {
+     "name": "onSkipProblemsChange",
+     "type": "(skipProblems: boolean) => void",
+     "optional": true,
+     "description": "\"Skip rows with problems\" was switched"
+    },
+    {
+     "name": "onImport",
+     "type": "(rows: ImportReviewRow[], skipped: ImportReviewRow[]) => boolean | void",
+     "optional": true,
+     "description": "Import was pressed: the rows to import and the rows left out. Return false to say it didn't happen"
+    }
+   ],
+   "hides": [
+    "heading",
+    "Skip rows with problems"
+   ],
+   "events": {
+    "tc-rows-change": null,
+    "tc-filter-change": "onFilterChange",
+    "tc-skip-problems-change": "onSkipProblemsChange",
+    "tc-import": "onImport"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-import-review",
+   "className": "TcImportReview",
+   "module": "@adamstavely/trenchcoat/import-review",
+   "data": [
+    "columns",
+    "rows",
+    "validate",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "duplicateKey",
+     "attribute": "duplicate-key"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "skipProblems",
+     "attribute": "skip-problems"
+    },
+    {
+     "name": "pageSize",
+     "attribute": "page-size"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-rows-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skip-problems-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-import",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "rows",
+     "event": "tc-rows-change"
+    },
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "skipProblems",
+     "event": "tc-skip-problems-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 37649,
+  "gzip": 11826
+ }
+}

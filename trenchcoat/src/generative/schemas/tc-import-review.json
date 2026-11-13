@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-import-review.json",
+  "title": "tc-import-review",
+  "description": "Rows of an import, checked before they land: cell problems in words, duplicates by a key with Keep this and Merge,\nfilter tabs with counts, cells edited in place, skip and restore, and Import once nothing's left to fix.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – the file, or where the rows go"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ImportReviewColumn"
+      },
+      "description": "The columns, in order, with their type and whether they're required"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ImportReviewRow"
+      },
+      "description": "The rows – the value. Changed by editing, skipping, keeping and merging unless a tc-rows-change listener calls preventDefault()"
+    },
+    "duplicateKey": {
+      "type": "string",
+      "description": "The column whose value makes rows duplicates – an email, an id. None: no duplicate check"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "all",
+        "duplicates",
+        "problems"
+      ],
+      "description": "Which rows the table shows. Changed by the tabs unless a tc-filter-change listener calls preventDefault()"
+    },
+    "skipProblems": {
+      "type": "boolean",
+      "description": "Import leaves out rows with problems and extra duplicates instead of waiting for them. Changed by its checkbox unless a tc-skip-problems-change listener calls preventDefault()"
+    },
+    "pageSize": {
+      "type": "number",
+      "description": "Rows shown at first, and added by Show more rows"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "string"
+        },
+        "problems": {
+          "type": "string"
+        },
+        "duplicates": {
+          "type": "string"
+        },
+        "ready": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "skip": {
+          "type": "string"
+        },
+        "restore": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "merge": {
+          "type": "string"
+        },
+        "missing": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "skipProblems": {
+          "type": "string"
+        },
+        "skipHint": {
+          "type": "string"
+        },
+        "import": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "string"
+        },
+        "row": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultImportReviewLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ImportReviewColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ImportReviewColumnType",
+          "description": "What the column must hold; checked unless it's text (the default)"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "A row can't be imported with this cell empty"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ImportReviewColumnType": {
+      "type": "string",
+      "enum": [
+        "date",
+        "email",
+        "number",
+        "text"
+      ]
+    },
+    "ImportReviewRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "cells": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Column id → the cell's text"
+        },
+        "skip": {
+          "type": "boolean",
+          "description": "Left out of the import"
+        }
+      },
+      "required": [
+        "id",
+        "cells"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-column-mapper.json",
+  "title": "tc-column-mapper",
+  "description": "Match a file's columns to your fields: a model's suggestion per column with its confidence in words, a select of\nfields (or Don't import) per column, required fields left out and duplicates in words, and Accept all suggestions.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – the file, or what the rows become"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ColumnMapperColumn"
+      },
+      "description": "The file's columns, in order"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ColumnMapperField"
+      },
+      "description": "The fields the rows are imported into"
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ColumnMapperSuggestion"
+      },
+      "description": "The model's suggestion per column, with how sure it is"
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "description": "The value: column id → field id, null for \"Don't import\". Columns left out use their suggestion. Changed unless a tc-mapping-change listener calls preventDefault()"
+    },
+    "hideContinue": {
+      "type": "boolean",
+      "description": "Hides Continue, for a page with its own next step"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "skip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "string"
+        },
+        "suggested": {
+          "type": "string"
+        },
+        "useSuggestion": {
+          "type": "string"
+        },
+        "acceptAll": {
+          "type": "string"
+        },
+        "allInUse": {
+          "type": "string"
+        },
+        "continue": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        },
+        "low": {
+          "type": "string"
+        },
+        "noColumns": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultColumnMapperLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ColumnMapperColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The header as written in the file"
+        },
+        "samples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A few values from the column, to recognise it by"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "A column of the file"
+    },
+    "ColumnMapperField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "What the field holds, shown beside its name: \"text\", \"number\", \"date\", \"email\" …"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Rows can't be imported unless a column goes to it"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A field the rows will be imported into"
+    },
+    "ColumnMapperSuggestion": {
+      "type": "object",
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "field": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The field it goes to, or null for \"Don't import\""
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the model is, 0 to 1"
+        }
+      },
+      "required": [
+        "column",
+        "field",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "description": "The model's suggestion for one column"
+    }
+  }
+}

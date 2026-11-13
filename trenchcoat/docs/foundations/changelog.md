@@ -2,6 +2,28 @@
 
 # Changelog
 
+## 0.26.0 – Bulk runs and imports, and Downloading and Uploading
+
+- **File Import:** drop a CSV, TSV or Excel file and see what was read – rows, columns, delimiter and encoding, a
+  header-row switch, a preview with each column's type in words, problems in words, and Continue.
+- **Column Mapper:** a model's column matches to check – a select per column prefilled from its suggestion with the
+  confidence in a word, Use suggestion, Accept all, and missing or doubled fields in words before Continue.
+- **Import Review:** fix, deduplicate and check rows before import – cell problems in words, duplicates with Keep this
+  and Merge, filter tabs with counts, edits in place, skip and restore, and Import held until nothing's left to fix.
+- **Enrichment Grid:** a table a model fills in, cell by cell – AI columns marked with their prompt, each cell's state in
+  words with confidence and source, progress and time left, Pause / Resume and Retry failed, only the rows in view drawn.
+- **AI Column Create:** a column a prompt fills for every row – name, type and choices, {{column}} variables inserted
+  from chips and checked, model and web search, a three-row preview, and Create column with the run's estimate.
+- **Run Estimate:** what a bulk run will cost before it starts – a cost range, cells, tokens, lookups and time, where the
+  money goes, the budget left with a warning, a sample run and a spend cap (`estimateRun()` exported).
+- **Cell Inspector:** why one AI cell says what it says – value and confidence, the prompt with the row filled in,
+  reasoning, sources, tokens and cost, and history – with Accept, Edit value, Re-run and Mark as wrong.
+- **Downloading (illustration):** a document whose badge shows an arrow dropping into a tray, with the words
+  Downloading, for a file or export on its way to the person – beside the workflow stages.
+- **Uploading (illustration):** a document whose badge shows an arrow rising out of a tray, with the words Uploading –
+  the in-progress sibling of Upload Failed.
+- **Standalone gallery and `docs/`:** rebuilt with the above.
+
 ## 0.25.0 – Evals in production
 
 - **Test Run Panel:** try an agent while you edit it – draft or live badge, the conversation with its tool calls, test

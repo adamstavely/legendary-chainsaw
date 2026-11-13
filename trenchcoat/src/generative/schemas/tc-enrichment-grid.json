@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-enrichment-grid.json",
+  "title": "tc-enrichment-grid",
+  "description": "A table a model fills in, cell by cell, with the run's progress, Pause / Resume and Retry failed.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading – what's being enriched"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EnrichmentColumn"
+      },
+      "description": "The columns, in order – source columns and AI columns"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EnrichmentRow"
+      },
+      "description": "The rows – source text and AI cells by column id"
+    },
+    "running": {
+      "type": "boolean",
+      "description": "Whether the run is going. Changed by Pause and Resume unless a tc-run-change listener calls preventDefault()"
+    },
+    "remaining": {
+      "type": "number",
+      "description": "Time left in the run, in ms – the header says \"~4 min left\""
+    },
+    "selected": {
+      "type": "object",
+      "properties": {
+        "row": {
+          "type": "string"
+        },
+        "column": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "row",
+        "column"
+      ],
+      "additionalProperties": false,
+      "description": "The picked cell (null: none). Changed by picking a cell unless a tc-cell-select listener calls preventDefault()"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "Confidence below this (0–1) is called low"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for the counts and percentages"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EnrichmentColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "ai": {
+          "type": "boolean",
+          "description": "Filled by a model – marked with a sparkle, its cells carry a state"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "The prompt that fills an AI column – shown on its header"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A column: a source column the page has, or an AI column a prompt fills"
+    },
+    "EnrichmentRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "cells": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EnrichmentCell"
+              },
+              {
+                "not": {}
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "cells"
+      ],
+      "additionalProperties": false,
+      "description": "A row: the source columns' text, and each AI column's cell (missing: queued)"
+    },
+    "EnrichmentCell": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/EnrichmentCellState"
+        },
+        "value": {
+          "type": "string",
+          "description": "What the model wrote – shown when done or under review"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the model was, 0 to 1"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the value came from – a link on the cell"
+        },
+        "note": {
+          "type": "string",
+          "description": "What went wrong, for a failed cell; why to look, for one under review"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false,
+      "description": "One AI cell"
+    },
+    "EnrichmentCellState": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "queued",
+        "review",
+        "running"
+      ]
+    }
+  }
+}
