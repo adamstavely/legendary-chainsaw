@@ -9,7 +9,7 @@
 One comment with replies – an assistant reports what it did, folds open details and answers @mentions
 
 - **Element:** `<tc-comment-thread>`
-- **Size:** 11.9 KB gzip · 40.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.9 KB gzip · 40.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -50,7 +50,7 @@ fails, the thread says so and offers Try again. Times read as “12min ago” an
 
 2. **Message** `.ui-ct__msg` – avatar, name, time and text
 3. **Status line** `.ui-ct__status-btn` – what the assistant did; folds open its details
-4. **Reply field** `.ui-ct__composer` – the input and the send button
+4. **Reply field** `.ui-ct__composer` – the input and the send button; left out with `readonly`
 
 ## Looks
 
@@ -194,6 +194,7 @@ export class CommentThreadExample {
 | `assistant` | – | `ThreadAuthor \| undefined` | `undefined` | The assistant that answers – used for the thinking state |
 | `onReply` | – | `((text: string) => ThreadReplyResult) \| undefined` | `undefined` | Called with every new reply. Return a message (or a promise of one) to let the assistant answer; return nothing to just post the reply. |
 | `closable` | `closable` | `boolean` | `false` | Shows a close button, which fires tc-close |
+| `readonly` | `readonly` | `boolean` | `false` | Hides the reply field: for people who may read the thread but not reply |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -242,7 +243,7 @@ export class CommentThreadExample {
 | `assistant` | `el.assistant = …;` | `<… assistant={…} />` | `<tc-comment-thread :assistant="…">` | `<tc-comment-thread [assistant]="…">` | `<tc-comment-thread {assistant}>` |
 | `onReply` | `el.onReply = …;` | `<… onReply={…} />` | `<tc-comment-thread :onReply="…">` | `<tc-comment-thread [onReply]="…">` | `<tc-comment-thread {onReply}>` |
 
-*Also attributes: `heading`, `closable` – see the API table.*
+*Also attributes: `heading`, `closable`, `readonly` – see the API table.*
 
 ### Events
 
@@ -520,6 +521,7 @@ discount… Edited 3 cells in Pricing”), and a failure as
 - Set `assistant` so the field invites people to ask it (“Reply, or ask @Assistant…”) and the thinking state shows.
 - Return a promise from `onReply` and reject it when the assistant fails, so people get Try again.
 - Store the list from `tc-messages-change` and pass it back – ids keep replies from doubling.
+- Set `readonly` for people who may read the thread but not reply – the reply field goes away.
 
 ### Don't
 
