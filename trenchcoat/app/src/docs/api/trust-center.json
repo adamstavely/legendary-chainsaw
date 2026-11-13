@@ -1,0 +1,508 @@
+{
+ "elements": [
+  {
+   "tag": "tc-trust-center",
+   "className": "TcTrustCenter",
+   "description": "A vendor's trust center on one card – certifications with their status in words, security documents to view or\nrequest (NDA noted), the Data Processing Agreement to review and sign, and common questions.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Trust center\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "certifications",
+     "attribute": null,
+     "type": "TrustCertification[]",
+     "default": "[]",
+     "description": "Certifications and frameworks, in order",
+     "readonly": false
+    },
+    {
+     "name": "documents",
+     "attribute": null,
+     "type": "TrustDocument[]",
+     "default": "[]",
+     "description": "Security documents, in order",
+     "readonly": false
+    },
+    {
+     "name": "dpa",
+     "attribute": null,
+     "type": "TrustDpa | null",
+     "default": "null",
+     "description": "The Data Processing Agreement; null leaves its card out",
+     "readonly": false
+    },
+    {
+     "name": "faqs",
+     "attribute": null,
+     "type": "TrustFaq[]",
+     "default": "[]",
+     "description": "Common questions and their answers",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids of the open questions. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "lastUpdated",
+     "attribute": "last-updated",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the trust center was last updated, as epoch ms – shown in the header",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<TrustCenterLabels>",
+     "default": "{}",
+     "description": "The words used, merged over defaultTrustCenterLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-request",
+     "detail": "",
+     "description": "Request access was pressed on a document ({ id, document }: TrustRequest); cancelable – prevented, the document isn't marked Requested",
+     "cancelable": true
+    },
+    {
+     "name": "tc-document-open",
+     "detail": "",
+     "description": "A public or granted document's View was pressed ({ id, href, document }: TrustDocumentOpen); cancelable – prevented, a link isn't followed",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dpa-sign",
+     "detail": "",
+     "description": "Review and sign was pressed on the DPA ({ dpa }: TrustDpaSign)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A question was opened or closed ({ open, id, expanded }: TrustOpenChange); cancelable – prevented, `open` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tcn",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-fg",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultTrustCenterLabels",
+   "signature": "defaultTrustCenterLabels: object",
+   "description": "The words the element uses; any can be renamed through `labels`"
+  }
+ ],
+ "react": [
+  {
+   "component": "TrustCenter",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "open",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ids of the open questions – controlled when given"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "string[]",
+     "optional": true,
+     "description": "The questions open on mount when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: string[]) => void",
+     "optional": true,
+     "description": "A question was opened or closed; `open` is the new list"
+    },
+    {
+     "name": "onRequest",
+     "type": "(id: string, document: TrustDocument) => boolean | void",
+     "optional": true,
+     "description": "Request access was pressed; return false to leave the document unmarked"
+    },
+    {
+     "name": "onDocumentOpen",
+     "type": "(id: string, href: string | undefined, document: TrustDocument) => boolean | void",
+     "optional": true,
+     "description": "View was pressed on a public or granted document; return false to stop a link being followed"
+    },
+    {
+     "name": "onDpaSign",
+     "type": "(dpa: TrustDpa) => void",
+     "optional": true,
+     "description": "Review and sign was pressed on the DPA"
+    }
+   ],
+   "hides": [
+    "heading",
+    "open",
+    "children"
+   ],
+   "events": {
+    "tc-request": "onRequest",
+    "tc-document-open": "onDocumentOpen",
+    "tc-dpa-sign": "onDpaSign",
+    "tc-open-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-trust-center",
+   "className": "TcTrustCenter",
+   "module": "@adamstavely/trenchcoat/trust-center",
+   "data": [
+    "certifications",
+    "documents",
+    "dpa",
+    "faqs",
+    "open",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "lastUpdated",
+     "attribute": "last-updated"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-request",
+     "cancelable": true
+    },
+    {
+     "name": "tc-document-open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dpa-sign",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29515,
+  "gzip": 9269
+ }
+}

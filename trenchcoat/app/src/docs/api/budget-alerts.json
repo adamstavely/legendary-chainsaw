@@ -1,0 +1,518 @@
+{
+ "elements": [
+  {
+   "tag": "tc-budget-alerts",
+   "className": "TcBudgetAlerts",
+   "description": "Budget alerts: alert markers dragged along the month's budget bar – spent so far and the hatched forecast – with each\nalert's channel and recipients and when the forecast crosses it.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Budget alerts\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "budget",
+     "attribute": "budget",
+     "type": "number",
+     "default": "0",
+     "description": "The month's budget, in `currency`",
+     "readonly": false
+    },
+    {
+     "name": "spent",
+     "attribute": "spent",
+     "type": "number",
+     "default": "0",
+     "description": "Spent so far this month, in `currency`",
+     "readonly": false
+    },
+    {
+     "name": "forecast",
+     "attribute": "forecast",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The forecast for the month's end, in `currency`; unset leaves the hatched forecast out",
+     "readonly": false
+    },
+    {
+     "name": "alerts",
+     "attribute": null,
+     "type": "BudgetAlert[]",
+     "default": "[]",
+     "description": "The alerts. Changed by dragging, the keys and the fields unless a tc-alerts-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Now, as epoch ms; with `end` it dates the forecast's crossings",
+     "readonly": false
+    },
+    {
+     "name": "end",
+     "attribute": "end",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The period's last moment, as epoch ms",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The currency, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The time zone the crossing dates are given in, e.g. \"Europe/London\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-alerts-change",
+     "detail": "",
+     "description": "An alert was moved, added or removed, or its channel or recipients changed ({ alerts, change, id }: BudgetAlertsChange); cancelable – prevented, `alerts` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "valueText",
+     "params": "a: Pick<BudgetAlert, \"at\">",
+     "returns": "void",
+     "description": "\"Alert at $4,000, 80% of budget\""
+    },
+    {
+     "name": "crossingWords",
+     "params": "a: Pick<BudgetAlert, \"at\">",
+     "returns": "void",
+     "description": "\"Forecast crosses 80% around 24 Nov\", \"Already passed\", or \"\" when it can't be worked out or won't happen"
+    }
+   ],
+   "ui": "bal",
+   "cssProperties": [
+    {
+     "name": "--tc-bal-bar-h",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-bal-marker-w",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-field-bg",
+    "--tc-field-h-sm",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-solid",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "BUDGET_ALERT_MIN",
+   "signature": "BUDGET_ALERT_MIN: number",
+   "description": "The lowest and highest an alert may be set, as shares of the budget"
+  },
+  {
+   "name": "budgetCrossing",
+   "signature": "budgetCrossing(amount: number, { spent, forecast, now, end }: { spent: number; forecast: number; now: number; end: number }): number | null",
+   "description": "When spend reaches `amount`, drawing a straight line from `spent` at `now` to `forecast` at `end`; null when it\nnever does within the period, and `now` when it already has"
+  }
+ ],
+ "react": [
+  {
+   "component": "BudgetAlerts",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "alerts",
+     "type": "BudgetAlert[]",
+     "optional": true,
+     "description": "The alerts – controlled when given"
+    },
+    {
+     "name": "defaultAlerts",
+     "type": "BudgetAlert[]",
+     "optional": true,
+     "description": "The alerts on mount when `alerts` isn't controlled"
+    },
+    {
+     "name": "onAlertsChange",
+     "type": "(alerts: BudgetAlert[], change: BudgetAlertsChange[\"change\"], id: string) => void",
+     "optional": true,
+     "description": "An alert was moved, added or removed, or its channel or recipients changed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "alerts",
+    "children"
+   ],
+   "events": {
+    "tc-alerts-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-budget-alerts",
+   "className": "TcBudgetAlerts",
+   "module": "@adamstavely/trenchcoat/budget-alerts",
+   "data": [
+    "alerts"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "budget",
+     "attribute": "budget"
+    },
+    {
+     "name": "spent",
+     "attribute": "spent"
+    },
+    {
+     "name": "forecast",
+     "attribute": "forecast"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "end",
+     "attribute": "end"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-alerts-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "alerts",
+     "event": "tc-alerts-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28199,
+  "gzip": 8982
+ }
+}

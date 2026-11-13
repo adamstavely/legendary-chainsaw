@@ -45,13 +45,13 @@
         "empty": {
           "type": "string"
         },
+        "deleted": {
+          "type": "string"
+        },
         "added": {
           "type": "string"
         },
         "modified": {
-          "type": "string"
-        },
-        "deleted": {
           "type": "string"
         },
         "renamed": {

@@ -2,6 +2,36 @@
 
 # Changelog
 
+## 0.28.0 – Admin: spend, governance and data
+
+- **Spend Breakdown:** AI spend by model, feature, user or team – a ranked list with shares and the change on the period
+  before in words, a stacked bar per day or a table, a period switch, and picking a slice to filter.
+- **Spend Limits:** spend caps per member, team or API key – the workspace default, spent of each cap in words and a
+  meter, over-limit rows first, in-place editing, Block / Warn / Notify, and add and remove.
+- **Budget Alerts:** drag markers along the month's budget bar, with the forecast hatched beyond what's spent – keyboard
+  sliders, click to add, each alert's channel and recipients, and when the forecast crosses it.
+- **Top Spenders:** who is behind most of the spend, ranked – share bars, change in words, top model and a sparkline,
+  kind chips, and the long tail folded into one line.
+- **Seat Usage:** seats paid for against seats used – active, idle and unassigned in one bar with their cost, a breakdown
+  by plan or team, and idle members to reclaim after a confirmation.
+- **Cost Anomaly:** one spend spike – how far over expected, a chart with the expected band (or a table), what drove it
+  with shares, the evidence, and Set a limit, Investigate and Mark as expected with Undo.
+- **Model Access:** which models a workspace may use – allow or block each with Require approval, warnings for blocked
+  models agents still use, the default model and a rule for new models.
+- **Moderation Queue:** reported replies judged one at a time – report or classifier score, policy, the conversation with
+  the reply marked, and Keep, Remove, Restrict or Escalate by button or key, with required notes and Undo.
+- **Role Editor:** what each role can do – a grid of permissions by role with dependencies kept in step, a locked Owner,
+  custom roles, member counts, and Discard and Save over a summary of changes.
+- **Trust Center:** a vendor's security page – certifications with status in words, documents to view or request (NDA
+  noted), the DPA to review and sign, and common questions.
+- **Subprocessor List:** every vendor that touches customer data, with data categories, location, transfer mechanism and
+  status in words; filters, Export CSV (formula-safe) and Subscribe to changes.
+- **Data Region:** where a workspace's data lives, item by item in words, and a checked flow to move it – region, impact,
+  schedule, confirm by typing the workspace's name, and progress.
+- **Data Controls:** a person's own data – training, history and memory switches with what each means and when it
+  changed, Export my data with its status, and Delete all chats behind a confirmation.
+- **Standalone gallery and `docs/`:** rebuilt with the above.
+
 ## 0.27.0 – Developer tools and skills
 
 - **Run Receipt:** what one agent run cost, as a receipt – models, tools, lookups and retries, the subtotal, cache

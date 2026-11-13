@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-top-spenders.json",
+  "title": "tc-top-spenders",
+  "description": "Top spenders: who is behind most of the spend, ranked, with share bars, change in words, top model and a sparkline,\na kind filter and the long tail folded into one line.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading, e.g. the period"
+    },
+    "spenders": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Spender"
+      },
+      "description": "Everyone who spent in the period, in any order – the element ranks them"
+    },
+    "kind": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SpenderKind"
+        },
+        {
+          "type": "string",
+          "const": "all"
+        }
+      ],
+      "description": "Which kind to show. Changed by the chips unless a tc-kind-change listener calls preventDefault()"
+    },
+    "limit": {
+      "type": "number",
+      "description": "How many rows to show before the rest fold into \"and N others\""
+    },
+    "hideFilter": {
+      "type": "boolean",
+      "description": "Hide the kind chips"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The spend's currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "type": "object",
+          "properties": {
+            "one": {
+              "type": "string"
+            },
+            "many": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "one",
+            "many"
+          ],
+          "additionalProperties": false
+        },
+        "team": {
+          "type": "object",
+          "properties": {
+            "one": {
+              "type": "string"
+            },
+            "many": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "one",
+            "many"
+          ],
+          "additionalProperties": false
+        },
+        "key": {
+          "type": "object",
+          "properties": {
+            "one": {
+              "type": "string"
+            },
+            "many": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "one",
+            "many"
+          ],
+          "additionalProperties": false
+        },
+        "member": {
+          "type": "object",
+          "properties": {
+            "one": {
+              "type": "string"
+            },
+            "many": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "one",
+            "many"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words for each kind, merged over defaultSpenderKindLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Spender": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "A person, a team, an API key's name or an agent"
+        },
+        "kind": {
+          "$ref": "#/definitions/SpenderKind"
+        },
+        "spend": {
+          "type": "number",
+          "description": "Spend in the period, in `currency`"
+        },
+        "change": {
+          "type": "number",
+          "description": "The change against the previous period, as a fraction: 0.42 is up 42%, -0.1 down 10%"
+        },
+        "topModel": {
+          "type": "string",
+          "description": "The model it spent most on"
+        },
+        "daily": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Daily spend through the period, oldest first, for the sparkline"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "spend"
+      ],
+      "additionalProperties": false
+    },
+    "SpenderKind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "key",
+        "member",
+        "team"
+      ]
+    }
+  }
+}

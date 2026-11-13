@@ -1,0 +1,597 @@
+{
+ "elements": [
+  {
+   "tag": "tc-spend-breakdown",
+   "className": "TcSpendBreakdown",
+   "description": "Spend breakdown: AI spend by model, feature, user or team for a period – a ranked list with shares and the change on\nthe period before, a stacked bar per day, or a table – with picking a slice to filter.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"AI spend\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "entries",
+     "attribute": null,
+     "type": "SpendEntry[]",
+     "default": "[]",
+     "description": "The period's spend, one entry per day and slice",
+     "readonly": false
+    },
+    {
+     "name": "previous",
+     "attribute": null,
+     "type": "SpendEntry[] | null",
+     "default": "null",
+     "description": "The period before's spend, for the change in words; null leaves the change out",
+     "readonly": false
+    },
+    {
+     "name": "dimension",
+     "attribute": "dimension",
+     "type": "SpendDimension",
+     "default": "\"model\"",
+     "description": "What to split by. Changed by the switch unless a tc-dimension-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "dimensions",
+     "attribute": null,
+     "type": "SpendDimension[]",
+     "default": "[\"model\", \"feature\", \"user\", \"team\"]",
+     "description": "The dimensions the switch offers, in order",
+     "readonly": false
+    },
+    {
+     "name": "dimensionLabels",
+     "attribute": null,
+     "type": "Partial<Record<SpendDimension, string>>",
+     "default": "{}",
+     "description": "The switch's words for each dimension",
+     "readonly": false
+    },
+    {
+     "name": "period",
+     "attribute": "period",
+     "type": "string",
+     "default": "\"month\"",
+     "description": "The period shown. Changed by the select unless a tc-period-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "periods",
+     "attribute": null,
+     "type": "SpendPeriod[]",
+     "default": "[ { id: \"month\", label: \"This month\" }, { id: \"30d\", label: \"Last 30 days\" }, { id: \"quarter\", label: \"This quarter\" }, ]",
+     "description": "The periods the select offers",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "SpendView",
+     "default": "\"ranked\"",
+     "description": "Ranked bars, a stacked bar per day, or a table. Changed by the switch unless a tc-view-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The picked slice's id, or null for all. Changed by picking unless a tc-slice-select listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The currency, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-dimension-change",
+     "detail": "",
+     "description": "The dimension was switched ({ dimension }: SpendDimensionChange); cancelable – prevented, `dimension` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-period-change",
+     "detail": "",
+     "description": "Another period was picked ({ period }: SpendPeriodChange); cancelable – prevented, `period` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The view was switched ({ view }: SpendViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-slice-select",
+     "detail": "",
+     "description": "A slice was picked or cleared ({ dimension, id, selected }: SpendSliceSelect); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "spb",
+   "cssProperties": [
+    {
+     "name": "--tc-spb-chart-h",
+     "value": "140px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-2",
+    "--tc-chart-3",
+    "--tc-chart-4",
+    "--tc-chart-5",
+    "--tc-chart-neutral",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-h-sm",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-md",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "spendSlices",
+   "signature": "spendSlices(entries: SpendEntry[], dimension: SpendDimension, previous: SpendEntry[] | null): SpendSlice[]",
+   "description": "Each slice's cost and share in `entries`, biggest first, with its cost in `previous` (null when it had none)"
+  }
+ ],
+ "react": [
+  {
+   "component": "SpendBreakdown",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "dimension",
+     "type": "SpendDimension",
+     "optional": true,
+     "description": "What to split by – controlled when given"
+    },
+    {
+     "name": "defaultDimension",
+     "type": "SpendDimension",
+     "optional": true,
+     "description": "The dimension on mount when `dimension` isn't controlled"
+    },
+    {
+     "name": "onDimensionChange",
+     "type": "(dimension: SpendDimension) => void",
+     "optional": true,
+     "description": "The dimension was switched"
+    },
+    {
+     "name": "period",
+     "type": "string",
+     "optional": true,
+     "description": "The period's id – controlled when given"
+    },
+    {
+     "name": "defaultPeriod",
+     "type": "string",
+     "optional": true,
+     "description": "The period on mount when `period` isn't controlled"
+    },
+    {
+     "name": "onPeriodChange",
+     "type": "(period: string) => void",
+     "optional": true,
+     "description": "Another period was picked: pass that period's entries"
+    },
+    {
+     "name": "view",
+     "type": "SpendView",
+     "optional": true,
+     "description": "Ranked, daily or table – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "SpendView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: SpendView) => void",
+     "optional": true,
+     "description": "The view was switched"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The picked slice's id, or null for all – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The picked slice on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSliceSelect",
+     "type": "(selected: string | null, dimension: SpendDimension) => void",
+     "optional": true,
+     "description": "A slice was picked, or the pick cleared (null)"
+    }
+   ],
+   "hides": [
+    "heading",
+    "dimension",
+    "period",
+    "view",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-dimension-change": null,
+    "tc-period-change": null,
+    "tc-view-change": null,
+    "tc-slice-select": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-spend-breakdown",
+   "className": "TcSpendBreakdown",
+   "module": "@adamstavely/trenchcoat/spend-breakdown",
+   "data": [
+    "entries",
+    "previous",
+    "dimensions",
+    "dimensionLabels",
+    "periods"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "dimension",
+     "attribute": "dimension"
+    },
+    {
+     "name": "period",
+     "attribute": "period"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-dimension-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-period-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-slice-select",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "dimension",
+     "event": "tc-dimension-change"
+    },
+    {
+     "property": "period",
+     "event": "tc-period-change"
+    },
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-slice-select"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 30050,
+  "gzip": 9455
+ }
+}

@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-seat-usage.json",
+  "title": "tc-seat-usage",
+  "description": "Seat usage: seats paid for against seats used – active, idle and unassigned in one bar, their cost, a breakdown by\nplan or team, and idle members to reclaim after a confirmation.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading, e.g. the plan and renewal date"
+    },
+    "paid": {
+      "type": "number",
+      "description": "Seats paid for; by default the groups' sum"
+    },
+    "assigned": {
+      "type": "number",
+      "description": "Seats given to someone; by default the groups' sum"
+    },
+    "active": {
+      "type": "number",
+      "description": "Assigned seats used in the last 30 days; by default the groups' sum"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SeatGroup"
+      },
+      "description": "The split per plan or team; leave empty to hide the breakdown"
+    },
+    "groupLabel": {
+      "type": "string",
+      "description": "What the breakdown's first column is called: \"Plan\" or \"Team\""
+    },
+    "idle": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IdleMember"
+      },
+      "description": "Members holding a seat they haven't used in the last 30 days"
+    },
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ticked idle members' ids. Changed by the checkboxes unless a tc-selected-change listener calls preventDefault()"
+    },
+    "seatPrice": {
+      "type": "number",
+      "description": "What one seat costs per `period`, in `currency`; unset hides the cost line"
+    },
+    "period": {
+      "type": "string",
+      "description": "The period `seat-price` is for, in words: \"a month\", \"a year\""
+    },
+    "currency": {
+      "type": "string",
+      "description": "The price's currency, an ISO 4217 code"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time for \"47 days ago\", epoch ms; unset shows dates instead"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone for dates, e.g. \"Europe/London\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SeatGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A plan or a team, e.g. \"Business\" or \"Audit\""
+        },
+        "paid": {
+          "type": "number",
+          "description": "Seats paid for"
+        },
+        "assigned": {
+          "type": "number",
+          "description": "Seats given to someone"
+        },
+        "active": {
+          "type": "number",
+          "description": "Assigned seats used in the last 30 days"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "paid",
+        "assigned",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "IdleMember": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Their email or role, shown under the name"
+        },
+        "group": {
+          "type": "string",
+          "description": "The plan or team their seat is in"
+        },
+        "lastActive": {
+          "type": "number",
+          "description": "When they were last active, epoch ms; unset reads as \"Never active\""
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

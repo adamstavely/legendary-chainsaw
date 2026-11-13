@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-budget-alerts.json",
+  "title": "tc-budget-alerts",
+  "description": "Budget alerts: alert markers dragged along the month's budget bar – spent so far and the hatched forecast – with each\nalert's channel and recipients and when the forecast crosses it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "budget": {
+      "type": "number",
+      "description": "The month's budget, in `currency`"
+    },
+    "spent": {
+      "type": "number",
+      "description": "Spent so far this month, in `currency`"
+    },
+    "forecast": {
+      "type": "number",
+      "description": "The forecast for the month's end, in `currency`; unset leaves the hatched forecast out"
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BudgetAlert"
+      },
+      "description": "The alerts. Changed by dragging, the keys and the fields unless a tc-alerts-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "Now, as epoch ms; with `end` it dates the forecast's crossings"
+    },
+    "end": {
+      "type": "number",
+      "description": "The period's last moment, as epoch ms"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone the crossing dates are given in, e.g. \"Europe/London\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BudgetAlert": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "Where it fires, as a share of the budget: 0.8 is 80%"
+        },
+        "channel": {
+          "$ref": "#/definitions/BudgetAlertChannel"
+        },
+        "recipients": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Who it goes to: addresses, people or a chat channel"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "channel",
+        "recipients"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetAlertChannel": {
+      "type": "string",
+      "enum": [
+        "chat",
+        "email"
+      ]
+    }
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-data-region.json",
+  "title": "tc-data-region",
+  "description": "Where a workspace's data lives, item by item, and a flow to move it – choose a region, see the impact, schedule it,\nconfirm by typing the workspace's name, and follow the migration's progress.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "workspace": {
+      "type": "string",
+      "description": "The workspace's name: shown in the summary, and typed to confirm a move"
+    },
+    "current": {
+      "type": "string",
+      "description": "The id of the region the data lives in now"
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataRegionOption"
+      },
+      "description": "Every region, the current one included"
+    },
+    "stored": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataRegionItem"
+      },
+      "description": "What the current region holds, and what it doesn't"
+    },
+    "step": {
+      "type": "string",
+      "enum": [
+        "choose",
+        "confirm",
+        "impact",
+        "progress",
+        "schedule"
+      ],
+      "description": "The flow's step. Changed by the user unless a tc-step-change listener calls preventDefault()"
+    },
+    "target": {
+      "type": "string",
+      "description": "The region chosen to move to. Changed by the user unless a tc-target-change listener calls preventDefault()"
+    },
+    "impact": {
+      "type": "object",
+      "properties": {
+        "downtime": {
+          "type": "string"
+        },
+        "reindexed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unavailable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "description": "What the move means, from the page once a region is chosen"
+    },
+    "timeZones": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The time zones offered for the schedule"
+    },
+    "progress": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataRegionProgressStep"
+      },
+      "description": "The migration's steps and where each stands, from the page"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for the date in the summary, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "object",
+          "properties": {
+            "choose": {
+              "type": "string"
+            },
+            "impact": {
+              "type": "string"
+            },
+            "schedule": {
+              "type": "string"
+            },
+            "confirm": {
+              "type": "string"
+            },
+            "progress": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "problems": {
+          "type": "object",
+          "properties": {
+            "region": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "time": {
+              "type": "string"
+            },
+            "confirm": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "statuses": {
+          "type": "object",
+          "properties": {
+            "done": {
+              "type": "string"
+            },
+            "active": {
+              "type": "string"
+            },
+            "pending": {
+              "type": "string"
+            },
+            "failed": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "current": {
+          "type": "string"
+        },
+        "stored": {
+          "type": "string"
+        },
+        "notStored": {
+          "type": "string"
+        },
+        "chooseLegend": {
+          "type": "string"
+        },
+        "currentBadge": {
+          "type": "string"
+        },
+        "notAvailable": {
+          "type": "string"
+        },
+        "downtime": {
+          "type": "string"
+        },
+        "reindexed": {
+          "type": "string"
+        },
+        "unavailable": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "confirmLabel": {
+          "type": "string"
+        },
+        "confirmSummary": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        }
+      },
+      "description": "The card's words, merged over defaultDataRegionLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DataRegionOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The region's name, e.g. \"EU – Frankfurt\""
+        },
+        "latency": {
+          "type": "string",
+          "description": "Typical latency from the workspace's people, ready to show, e.g. \"About 40 ms\""
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line, e.g. \"Same jurisdiction as today\""
+        },
+        "unavailable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What isn't available there yet, e.g. [\"large-1\"] – said as \"large-1 not yet available in AP – Sydney\""
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Can't be chosen, with `note` saying why"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "DataRegionItem": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "What it is, e.g. \"Conversations\""
+        },
+        "inRegion": {
+          "type": "boolean",
+          "description": "Stored (or processed) in the region"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line more, e.g. \"Model calls are processed in the US\""
+        }
+      },
+      "required": [
+        "label",
+        "inRegion"
+      ],
+      "additionalProperties": false
+    },
+    "DataRegionProgressStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "done",
+            "failed",
+            "pending"
+          ]
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

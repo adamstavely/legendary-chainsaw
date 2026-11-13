@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-model-access.json",
+  "title": "tc-model-access",
+  "description": "Which models a workspace may use – grouped by provider, each allowed or blocked with an optional approval step, a\ndefault model and a rule for new models, and a warning when a blocked model is still used by agents.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModelAccessModel"
+      },
+      "description": "The models, listed under their provider in the order given"
+    },
+    "access": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ModelAccessRule"
+          }
+        },
+        "defaultModel": {
+          "type": "string"
+        },
+        "blockNew": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "models"
+      ],
+      "additionalProperties": false,
+      "description": "The policy. Changed by the controls unless a tc-access-change listener calls preventDefault()"
+    },
+    "changedBy": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who changed the policy last, shown in the footer"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "type": "string"
+        },
+        "blocked": {
+          "type": "string"
+        },
+        "approval": {
+          "type": "string"
+        },
+        "defaultModel": {
+          "type": "string"
+        },
+        "noDefault": {
+          "type": "string"
+        },
+        "blockNew": {
+          "type": "string"
+        },
+        "blockNewHint": {
+          "type": "string"
+        },
+        "isNew": {
+          "type": "string"
+        },
+        "usedBy": {
+          "type": "string"
+        },
+        "usedByMany": {
+          "type": "string"
+        },
+        "defaultBlocked": {
+          "type": "string"
+        },
+        "changedBy": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words, merged over defaultModelAccessLabels"
+    },
+    "locale": {
+      "type": "string",
+      "description": "For the footer's date"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ModelAccessModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "Shown name, e.g. \"large-1\""
+        },
+        "provider": {
+          "type": "string",
+          "description": "The group it's listed under, e.g. \"Provider A\""
+        },
+        "description": {
+          "type": "string",
+          "description": "One quiet line, e.g. \"Best for long reports\""
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelCapability"
+          }
+        },
+        "tier": {
+          "$ref": "#/definitions/ModelPriceTier"
+        },
+        "residency": {
+          "type": "string",
+          "description": "Where its data is processed and kept, e.g. \"EU\" or \"US, EU\""
+        },
+        "usedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Agents that use it – a blocked model with agents gets a warning"
+        },
+        "isNew": {
+          "type": "boolean",
+          "description": "Arrived since the policy was last changed: marked New"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "provider"
+      ],
+      "additionalProperties": false
+    },
+    "ModelCapability": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "audio",
+            "long-context",
+            "reasoning",
+            "tools",
+            "vision"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "What a model can do – the built-in ones have words, any other string is shown as it is"
+    },
+    "ModelPriceTier": {
+      "type": "string",
+      "enum": [
+        "high",
+        "low",
+        "medium"
+      ],
+      "description": "How much it costs, relative to the others"
+    },
+    "ModelAccessRule": {
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "type": "boolean",
+          "description": "May be used"
+        },
+        "approval": {
+          "type": "boolean",
+          "description": "Each use waits for an admin's approval (only meaningful while allowed)"
+        }
+      },
+      "required": [
+        "allowed"
+      ],
+      "additionalProperties": false,
+      "description": "One model's setting"
+    }
+  }
+}

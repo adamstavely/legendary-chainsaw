@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-moderation-queue.json",
+  "title": "tc-moderation-queue",
+  "description": "Reported replies, one decision each – the report or automatic flag, the policy, the conversation with the reported\nreply marked, and Keep, Remove reply, Restrict user or Escalate from buttons or keys, with Undo.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModerationItem"
+      },
+      "description": "The reported replies, oldest first"
+    },
+    "index": {
+      "type": "number",
+      "description": "The item on screen. Changed by deciding and moving unless a tc-index-change listener calls preventDefault()"
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ModerationVerdict"
+      },
+      "description": "Every decision so far, by item id. Changed by deciding and Undo unless a tc-decisions-change listener calls preventDefault()"
+    },
+    "decisionLabels": {
+      "type": "object",
+      "properties": {
+        "keep": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "restrict": {
+          "type": "string"
+        },
+        "escalate": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The buttons' words, merged over defaultModerationDecisionLabels"
+    },
+    "noShortcuts": {
+      "type": "boolean",
+      "description": "Turns off the single-letter keys"
+    },
+    "locale": {
+      "type": "string",
+      "description": "For dates"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ModerationItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why it's here, e.g. \"Unsafe advice\""
+        },
+        "reportedBy": {
+          "type": "string",
+          "description": "The person who reported it"
+        },
+        "automated": {
+          "type": "object",
+          "properties": {
+            "classifier": {
+              "type": "string"
+            },
+            "score": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "classifier",
+            "score"
+          ],
+          "additionalProperties": false,
+          "description": "An automatic flag: the classifier and its score from 0 to 1"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was reported (epoch ms)"
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "excerpt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "The policy it may break"
+        },
+        "turns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModerationTurn"
+          },
+          "description": "The conversation around the reported reply"
+        },
+        "user": {
+          "type": "string",
+          "description": "The user Restrict acts on"
+        },
+        "agent": {
+          "type": "string",
+          "description": "The agent that replied"
+        }
+      },
+      "required": [
+        "id",
+        "reason",
+        "turns"
+      ],
+      "additionalProperties": false
+    },
+    "ModerationTurn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "enum": [
+            "assistant",
+            "user"
+          ],
+          "description": "Who wrote it"
+        },
+        "author": {
+          "type": "string",
+          "description": "The name shown, e.g. a person or the agent; default \"User\" or \"Assistant\""
+        },
+        "text": {
+          "type": "string"
+        },
+        "reported": {
+          "type": "boolean",
+          "description": "The reply this item is about – marked in the conversation"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "ModerationVerdict": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "$ref": "#/definitions/ModerationDecision"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "additionalProperties": false
+    },
+    "ModerationDecision": {
+      "type": "string",
+      "enum": [
+        "escalate",
+        "keep",
+        "remove",
+        "restrict"
+      ]
+    }
+  }
+}

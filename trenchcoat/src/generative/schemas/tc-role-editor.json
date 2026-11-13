@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-role-editor.json",
+  "title": "tc-role-editor",
+  "description": "What each role can do – a grid of permissions against roles, with dependent permissions kept in step, a locked\nOwner, custom roles to add, rename and delete, member counts and a summary of unsaved changes.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RolePermissionGroup"
+      },
+      "description": "The rows: permissions, grouped"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Role"
+      },
+      "description": "The columns. Changed by the user unless a tc-roles-change listener calls preventDefault()"
+    },
+    "saved": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Role"
+      },
+      "description": "What was last saved – the summary lists the differences. Unset: the roles the element first showed"
+    },
+    "newRoleName": {
+      "type": "string",
+      "description": "The name a new role starts with"
+    },
+    "changesLimit": {
+      "type": "number",
+      "description": "Changes listed before \"N more\""
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RolePermissionGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RolePermission"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "permissions"
+      ],
+      "additionalProperties": false
+    },
+    "RolePermission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The row's words, e.g. \"Deploy agents\""
+        },
+        "description": {
+          "type": "string",
+          "description": "One quiet line under it"
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Permissions it needs – turned on with it, and it's turned off with them"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "members": {
+          "type": "number",
+          "description": "How many members have it"
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "Can't be changed, renamed or deleted (Owner)"
+        },
+        "custom": {
+          "type": "boolean",
+          "description": "Made in this workspace: can be renamed and deleted"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The permission ids it has"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "permissions"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

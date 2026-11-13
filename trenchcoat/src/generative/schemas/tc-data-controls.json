@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-data-controls.json",
+  "title": "tc-data-controls",
+  "description": "A person's own data – switches for training, chat history and memory with what each means, Export my data, Delete\nall chats behind a confirmation, and Delete account.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "history": {
+          "type": "boolean"
+        },
+        "training": {
+          "type": "boolean"
+        },
+        "memory": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "history",
+        "training",
+        "memory"
+      ],
+      "additionalProperties": false,
+      "description": "The switches. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "changed": {
+      "type": "object",
+      "properties": {
+        "history": {
+          "type": "number"
+        },
+        "training": {
+          "type": "number"
+        },
+        "memory": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "When each switch was last changed, epoch ms – the page records the change and passes it back"
+    },
+    "chatCount": {
+      "type": "number",
+      "description": "How many chats Delete all chats removes"
+    },
+    "memoryHref": {
+      "type": "string",
+      "description": "Where memories are managed; leave it unset and Manage memory isn't shown"
+    },
+    "deleteAccountHref": {
+      "type": "string",
+      "description": "Where deleting the account starts; unset, Delete account fires tc-delete-account"
+    },
+    "exportStatus": {
+      "type": "string",
+      "enum": [
+        "failed",
+        "idle",
+        "ready",
+        "requested"
+      ],
+      "description": "Where the export stands: idle, requested (a link will be emailed), ready or failed. Set to requested by Export my data unless prevented"
+    },
+    "exportHref": {
+      "type": "string",
+      "description": "The finished export's link, shown when `exportStatus` is ready"
+    },
+    "hideDeleteAccount": {
+      "type": "boolean",
+      "description": "Hides Delete account"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "training": {
+          "type": "string"
+        },
+        "trainingOn": {
+          "type": "string"
+        },
+        "trainingOff": {
+          "type": "string"
+        },
+        "history": {
+          "type": "string"
+        },
+        "historyOn": {
+          "type": "string"
+        },
+        "historyOff": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "memoryOn": {
+          "type": "string"
+        },
+        "memoryOff": {
+          "type": "string"
+        },
+        "manageMemory": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string"
+        },
+        "never": {
+          "type": "string"
+        },
+        "exportTitle": {
+          "type": "string"
+        },
+        "exportBody": {
+          "type": "string"
+        },
+        "exportButton": {
+          "type": "string"
+        },
+        "exportRequested": {
+          "type": "string"
+        },
+        "exportReady": {
+          "type": "string"
+        },
+        "exportDownload": {
+          "type": "string"
+        },
+        "exportFailed": {
+          "type": "string"
+        },
+        "deleteTitle": {
+          "type": "string"
+        },
+        "deleteBody": {
+          "type": "string"
+        },
+        "deleteButton": {
+          "type": "string"
+        },
+        "deleteConfirmTitle": {
+          "type": "string"
+        },
+        "deleteConfirmBody": {
+          "type": "string"
+        },
+        "deleteConfirm": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "string"
+        },
+        "deleteAccount": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The card's words, merged over defaultDataControlsLabels"
+    }
+  },
+  "additionalProperties": false
+}

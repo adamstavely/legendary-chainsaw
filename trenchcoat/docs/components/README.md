@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-395 items · 395 files
+408 items · 408 files
 
 ## Agents (61)
 
@@ -74,13 +74,16 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trace Waterfall](trace-waterfall.md) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
 - [Trigger Builder](trigger-builder.md) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
-## AI configuration (30)
+## AI configuration (35)
 
 - [AI Column Create](ai-column-create.md) – One prompt filled in for every row of a table – the column's name and what it holds (text, number, yes or no, choices, link or JSON), the prompt with the table's columns as {{variables}} inserted from chips and unknown ones called out, the model and web search, Try on 3 rows with the answers shown, and Create column beside the run's estimate
+- [Budget Alerts](budget-alerts.md) – Spend alerts set by dragging markers along the month's budget – spent so far and the forecast hatched beyond it, a line at the budget, each alert a slider ("Alert at $4,000, 80% of budget") moved by pointer or keys, added by clicking the bar, with its channel, recipients and when the forecast crosses it
 - [Channel Setup](channel-setup.md) – Connect one channel and set when an agent replies there – Connect, Where (a searchable pick of channels or inboxes), When it replies (every message, mentions, direct messages or business hours), Test and Go live, each checked in words before the next
 - [Configuration release control](configuration-release-control.md) – A configuration version moving through environments: the pipeline, a gate on evidence and approvals, confirmed promote and rollback
 - [Conversation annotation](conversation-annotation.md) – Label and redact spans in a conversation, rate turns, correct answers as a diff, and send the reviewed example to a dataset
+- [Data Controls](data-controls.md) – A person's own data in an AI product – switches for improving the model with their chats, saving chat history and memory, each saying what it means and when it last changed, Export my data with its status, Delete all chats behind a confirmation that names how many go, and Delete account
 - [Data handling policy](data-handling-policy.md) – Organization data handling as a lifecycle – retention, logs and redaction, memory, training, deletion – led by the effective policy, with locked stages and deletion requests
+- [Data Region](data-region.md) – Where a workspace's data lives, item by item in words, and a flow to move it – region cards with latency and what isn't available there, the move's impact, a date, time and time zone, a confirmation by typing the workspace's name, and the migration's steps as they happen
 - [Deploy Channels](deploy-channels.md) – Where an agent can be reached, one row per channel – live first, status as a mark and a word, the version it serves, last week's messages, and Set up, Configure, Pause or Resume
 - [Embed Configurator](embed-configurator.md) – Style a site's chat widget beside a live preview – title, greeting, up to four starter prompts to add, move and remove, an accent with its contrast in words, the corner, the radius, the launcher's words and the domains it may load on, with the install snippet to copy
 - [Embed Widget](embed-widget.md) – The chat a visitor opens on a website – a corner launcher with an unread count, and a panel with the agent's name and reply time, a greeting, starter questions, the conversation with a person taking over, a message field and a privacy line, styled by the site's accent, radius and side
@@ -89,6 +92,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Judge Sampling](judge-sampling.md) – How much of an agent's traffic an LLM judge reads, and what it costs – a stepped rate per segment, rules that always include a chat, the judge model, and live estimates of chats judged a day, the monthly cost and what the sample can see, with a budget cap that warns
 - [Knowledge Source Manager](knowledge-source-manager.md) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
 - [MCP connection manager](mcp-connection-manager.md) – MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
+- [Model Access](model-access.md) – Which models a workspace may use – grouped by provider with capabilities, price tier and where data is kept, a switch to allow or block each and Require approval, a warning in words when a blocked model is still used by agents, the default model picked from the allowed ones, a rule that blocks new models until an admin allows them, and who changed it last
 - [Model Routing](model-routing.md) – Routing rules as a route with a fallback chain, target health, breakers and residency, and a route test that lights up the path taken
 - [Model Settings](model-settings.md) – The parameters a model supports, explained, with presets, a value signature, incompatible-setting feedback and what differs from the defaults
 - [Multimodal input](multimodal-input.md) – Attach mixed media with local previews, upload state, format limits, and token estimates.
@@ -101,6 +105,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Secrets Manager](secrets-manager.md) – The secrets agents run on, write-only – missing ones first with the agents that need them, expired and expiring next, Set value or Replace in a password field that's handed to the page and forgotten, Delete that names what will stop working, and new secrets by UPPER_SNAKE name
 - [Skill Detail](skill-detail.md) – One skill in full – who made it and its version with Update, when a model picks it, the tools it may use with what each can do in words (read-only, writes files, runs commands, uses the network), its files to read in a code block, recent runs, and Enable, Export and Remove – asking first before turning on anything risky or removing it
 - [Skill Library](skill-library.md) – The skills a workspace has added, grouped by who made them – Built-in, your team, each plugin, the community – with a switch each, when it runs and when it was last used, Update when a newer version is out, search and source and on/off filters, and Add skill (Upload, From a URL, Create)
+- [Spend Limits](spend-limits.md) – Spend caps per member, team or API key – the workspace default on top, each row's spent of its cap in words and a meter, over-limit rows first, the cap edited in place, Block / Warn / Notify at the cap, Remove and Add limit
 - [Step Inspector](step-inspector.md) – One workflow step's settings – its title and each input with where it comes from, typed in or mapped from an earlier step's output as a chip ("Extract fields › amount"), what's missing in words, Test with sample, and the last run's input and output as JSON
 - [Step Picker](step-picker.md) – What to add next to a workflow – a search over step kinds and tools grouped as Triggers, AI, Tools, Logic, People and Output, led by suggested steps with why and recent ones, inline or as a popover by the button that opened it
 - [Tool Configuration](tool-configuration.md) – A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs
@@ -166,7 +171,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Voice Mode](voice-mode.md) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - [Writing Assistant](writing-assistant.md) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
-## Data & charts (32)
+## Data & charts (36)
 
 - [Active Days](active-days.md) – A daily goal month by month – each day's date in a small ring filled towards the goal, a check when it's met, months running on down with their names sticking, the month's days at goal, best streak and busiest weekday, and any day's value and share of the goal on hover or focus
 - [Activity Calendar](activity-calendar.md) – A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
@@ -178,6 +183,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Change Summary](change-summary.md) – What moved since last time – one metric per row with a colored trend
 - [Column Mapper](column-mapper.md) – A model matches a file's columns to your fields – a select per column prefilled from its suggestion, "Suggested" with the confidence in a word, Use suggestion once changed, Accept all suggestions, and required fields left out or fields matched twice said in words before Continue
 - [Compact Breakdown](compact-breakdown.md) – A total split into its parts in one small card – numbers roll, the bar glides and the ranked rows trade places when the period changes
+- [Cost Anomaly](cost-anomaly.md) – One spend spike and what caused it – how far over expected and when, daily spend with the normal range as a band and the spike marked (or as a table), what drove the extra cost with each one's share, the costliest runs as evidence, and Set a limit, Investigate and Mark as expected with Undo
 - [Data Table](data-table.md) – Spreadsheet-style table: select cells and ranges, edit in place, copy and paste, undo and sort
 - [Day Rhythm](day-rhythm.md) – A typical day as a strip of blocks by kind of place or activity – Home, Work, Transit – one row per kind of day, with hour ticks, a now marker, a legend and the block under the pointer named in full
 - [Enrichment Grid](enrichment-grid.md) – A table a model fills in, cell by cell – source columns and sparkle-marked AI columns with their prompt on the header, each cell queued, filling, done with its confidence and source, failed with Retry, or to review; the run counted in words with the time left, Pause / Resume and Retry failed, and only the rows in view drawn
@@ -197,8 +203,11 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Run Estimate](run-estimate.md) – What a bulk AI run will cost before it starts – the cost as a low–high range, cells, tokens, web lookups and time in words and figures, a table of where the money goes, the budget left with a warning when the run could go over it, Run on 50 rows first, a spend cap, and Start
 - [Score Ring](score-ring.md) – One overall score from weighted sub-scores – a ring with a segment per part as long as its weight and filled to its score, the score and its band in the middle, a row per part that isolates its segment, and the metrics behind the score
 - [Score Summary](score-summary.md) – NPS or CSAT results – the score in big type, the change since last time with a sparkline, the target, the bands with shares and counts, and a bar per score you can pick to filter comments
+- [Seat Usage](seat-usage.md) – Seats paid for against seats used – "112 of 150 seats used · 34 idle", one bar of active, idle and unassigned seats with their cost, a breakdown by plan or team, and idle members with when each was last active, to tick and reclaim after a confirmation that says who loses access
 - [SLA Status](sla-status.md) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - [Sparkline](sparkline.md) – A small trend chart that sits in text or a table cell – line, area, bars or win-loss, sized from the text – with markers, a reference line, a tone for which way it went and, when interactive, a tooltip per point
+- [Spend Breakdown](spend-breakdown.md) – AI spend split by model, feature, user or team for a period – a ranked list with each slice's cost, share and change on the period before in words, a stacked bar per day, or a table, with picking a slice to filter and the total in the header
+- [Top Spenders](top-spenders.md) – Who is behind most of the AI spend, ranked – members, teams, API keys and agents with their share as a bar, the amount, the change on the previous period in words ("Up 42%"), the model they used most and a daily sparkline; kind chips, the long tail folded into "and 38 others – $1,204", and a row that opens
 - [Usage Meter](usage-meter.md) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 
 ## Feedback & onboarding (10)
@@ -320,7 +329,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Saved Search Alerts](saved-search-alerts.md) – Saved searches that tell you about new matches – “12 new since Tue”, how often and where each one checks, pause, Run now, remove with Undo, and Add alert from the current search
 - [Search History](search-history.md) – Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and times, and Run again, a save star and Remove with Undo on each
 
-## Workspace & sessions (28)
+## Workspace & sessions (29)
 
 - [Branch Switcher](branch-switcher.md) – the current branch with ahead/behind counts and a filterable list of worktrees, local and remote branches to switch to or create from.
 - [Change List](change-list.md) – Proposed code changes as compact rows – state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.
@@ -343,6 +352,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Problem List](problem-list.md) – diagnostics from a build, type check or linter, grouped by file, with a severity filter with counts, a text filter, severity marks that aren't colour alone, and quick fixes.
 - [Process List](process-list.md) – dev servers and background jobs with status, port link, uptime, CPU and memory, and last output, with Stop, Start, Restart and View output.
 - [Pull Request](pull-request.md) – one pull request at a glance: branches, review, checks, whether it can merge, and the button its state calls for.
+- [Role Editor](role-editor.md) – What each role can do – permissions grouped as Agents, Data, Billing and Admin against roles as a grid of ticks, dependent permissions kept in step with a note saying what else changed, a locked Owner, member counts, custom roles to add, rename and delete, and a summary of unsaved changes with Discard and Save
 - [Route Map](route-map.md) – An app's routes as an indented list with :params picked out, a status mark and word, load time and last visit; status chips filter it, and pressing a route opens it.
 - [Search Results](search-results.md) – results of a search across files, grouped by file with the matched text marked, with match case, whole word and regular expression toggles, collapse all, and an optional replace preview.
 - [Session List](session-list.md) – sessions in a sidebar, pinned first and grouped by project or status, with status, unread dot, branch, time, Pin and Archive.
@@ -393,7 +403,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Waterfall Chart](waterfall-chart.md) – How a starting figure becomes an ending one – steps up and down bridged by dashed connectors, totals on the baseline, rises and falls in the status inks with a legend, signed changes beside each bar and a table view
 - [Week Bars](week-bars.md) – A week of daily totals as rounded bars against a dashed goal line – days that reach it in the accent, the week's total counting up with the average per day, a week switcher the bars glide between, today marked, and a table view
 
-## Trust & calibration (37)
+## Trust & calibration (40)
 
 - [Access Request](access-request.md) – Ask for access to one piece of data – the resource with its owner and classification in words, the level, how long, a required justification and the fields needed – then where it stands: pending with who decides, approved with the time left, denied with the reason, or expired
 - [Agreement Tracker](agreement-tracker.md) – How often the AI agreed with you versus pushed back this session – it turns amber on a run of agreement and points to the counter-argument
@@ -415,6 +425,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Knowledge Promotion](knowledge-promotion.md) – Promote a verified fact into shared team knowledge against a checklist, with disputed facts side by side
 - [Legal Hold Manager](legal-hold-manager.md) – Which items are on legal hold, who placed each hold, why and until when – overdue reviews marked, items added, and Release only with a written reason
 - [Lineage Graph](lineage-graph.md) – Where an output came from – run, turns, queries and tools, source chunks, claims and artifacts in columns, every node's record a click away
+- [Moderation Queue](moderation-queue.md) – Reported replies judged one at a time – who reported it or which classifier flagged it with its score in a word, the policy it may break, the conversation with the reported reply marked, and Keep, Remove reply, Restrict user or Escalate from buttons or single keys, a note required to remove or restrict, progress, the next waiting item opening, and Undo
 - [Playbook Canvas](playbook-canvas.md) – An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run
 - [Policy Simulator](policy-simulator.md) – Try an action against the policy before it's real – allow, needs approval, deny or hard stop, the rule that decided it and why
 - [Provenance Summary](provenance-summary.md) – What a document is made of – how much came from sources, from AI and from its authors, section by section
@@ -427,8 +438,10 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Scan Status](scan-status.md) – Where a file stands in malware scanning – queued, scanning, clean, suspicious, quarantined or failed, inline or as a card, with Rescan and Request review
 - [Session Context Bar](session-context-bar.md) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
 - [Share Link Manager](share-link-manager.md) – The links that already share something – status in words, expiry, opens and who made them, with Copy, Change expiry and Revoke, which says how many opens it's had
+- [Subprocessor List](subprocessor-list.md) – Every vendor that touches customer data – name, purpose, data categories as chips, location and transfer mechanism, when added, and Active, New (with when it takes effect) or Removed in words; search, data-category and location filters, Export CSV, and Subscribe to changes with the email checked in words
 - [Synthesis Notes](synthesis-notes.md) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from
 - [Transcript Review](transcript-review.md) – Recorded audio or video with a transcript that follows playback – speakers, timestamps, recognition confidence and low-confidence segments to verify
+- [Trust Center](trust-center.md) – A vendor's security page on one card – certifications and frameworks with their status in words (Certified, In progress, Planned), period and auditor; security documents to view or request, with NDA required noted; the Data Processing Agreement to review and sign, or when and by whom it was signed; and common questions as disclosures
 - [Validity Badge](validity-badge.md) – How fresh a piece of evidence is – a band from high to stale that ages over time, contested and superseded marks, and a margin strip for a document
 - [Verification Queue](verification-queue.md) – Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 - [Version History](version-history.md) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour

@@ -1,0 +1,568 @@
+{
+ "elements": [
+  {
+   "tag": "tc-subprocessor-list",
+   "className": "TcSubprocessorList",
+   "description": "Every vendor that touches customer data – purpose, data categories, location, transfer mechanism, when added and\nwhether it's active, new or removed – with search, category and location filters, Export CSV and Subscribe to\nchanges.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Subprocessors\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "subprocessors",
+     "attribute": null,
+     "type": "Subprocessor[]",
+     "default": "[]",
+     "description": "The vendors, in order",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text. Changed by typing unless a tc-query-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "category",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The data category shown, or null for all. Changed by the filter unless a tc-category-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "location",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The location shown, or null for all. Changed by the filter unless a tc-location-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "hideSubscribe",
+     "attribute": "hide-subscribe",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leaves out Subscribe to changes",
+     "readonly": false
+    },
+    {
+     "name": "filename",
+     "attribute": "filename",
+     "type": "string",
+     "default": "\"subprocessors.csv\"",
+     "description": "The name Export CSV saves as",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<SubprocessorListLabels>",
+     "default": "{}",
+     "description": "The words used, merged over defaultSubprocessorListLabels",
+     "readonly": false
+    },
+    {
+     "name": "shown",
+     "attribute": null,
+     "type": "Subprocessor[]",
+     "default": null,
+     "description": "The vendors that pass the search and filters",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search changed ({ query }: SubprocessorQueryChange); cancelable – prevented, `query` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-category-change",
+     "detail": "",
+     "description": "The data-category filter changed ({ category }: SubprocessorCategoryChange); cancelable – prevented, `category` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-location-change",
+     "detail": "",
+     "description": "The location filter changed ({ location }: SubprocessorLocationChange); cancelable – prevented, `location` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-subscribe",
+     "detail": "",
+     "description": "A valid email was submitted to Subscribe to changes ({ email }: SubprocessorSubscribe); cancelable – prevented, no confirmation is shown",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export CSV was pressed ({ csv, rows, filename }: SubprocessorExport); cancelable – prevented, nothing is downloaded",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "sbp",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-quick",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h-sm",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultSubprocessorListLabels",
+   "signature": "defaultSubprocessorListLabels: object",
+   "description": "The words the element uses; any can be renamed through `labels`"
+  },
+  {
+   "name": "isEmail",
+   "signature": "isEmail(s: string): void",
+   "description": "A plain email check: something@something.something, no spaces"
+  },
+  {
+   "name": "subprocessorCsv",
+   "signature": "subprocessorCsv(rows: Subprocessor[]): void",
+   "description": "The rows as CSV, with a header row, dates as YYYY-MM-DD"
+  }
+ ],
+ "react": [
+  {
+   "component": "SubprocessorList",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search on mount when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "The search changed"
+    },
+    {
+     "name": "category",
+     "type": "string | null",
+     "optional": true,
+     "description": "The data category shown, or null for all – controlled when given"
+    },
+    {
+     "name": "defaultCategory",
+     "type": "string | null",
+     "optional": true,
+     "description": "The category on mount when `category` isn't controlled"
+    },
+    {
+     "name": "onCategoryChange",
+     "type": "(category: string | null) => void",
+     "optional": true,
+     "description": "The data-category filter changed"
+    },
+    {
+     "name": "location",
+     "type": "string | null",
+     "optional": true,
+     "description": "The location shown, or null for all – controlled when given"
+    },
+    {
+     "name": "defaultLocation",
+     "type": "string | null",
+     "optional": true,
+     "description": "The location on mount when `location` isn't controlled"
+    },
+    {
+     "name": "onLocationChange",
+     "type": "(location: string | null) => void",
+     "optional": true,
+     "description": "The location filter changed"
+    },
+    {
+     "name": "onSubscribe",
+     "type": "(email: string) => boolean | void",
+     "optional": true,
+     "description": "A valid email was submitted to Subscribe to changes; return false to keep the form showing"
+    },
+    {
+     "name": "onExport",
+     "type": "(csv: string, rows: Subprocessor[]) => boolean | void",
+     "optional": true,
+     "description": "Export CSV was pressed; return false to download it yourself"
+    }
+   ],
+   "hides": [
+    "heading",
+    "query",
+    "category",
+    "location",
+    "children"
+   ],
+   "events": {
+    "tc-query-change": null,
+    "tc-category-change": null,
+    "tc-location-change": null,
+    "tc-subscribe": "onSubscribe",
+    "tc-export": "onExport"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-subprocessor-list",
+   "className": "TcSubprocessorList",
+   "module": "@adamstavely/trenchcoat/subprocessor-list",
+   "data": [
+    "subprocessors",
+    "category",
+    "location",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "hideSubscribe",
+     "attribute": "hide-subscribe"
+    },
+    {
+     "name": "filename",
+     "attribute": "filename"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-category-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-location-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-subscribe",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    },
+    {
+     "property": "category",
+     "event": "tc-category-change"
+    },
+    {
+     "property": "location",
+     "event": "tc-location-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29841,
+  "gzip": 9203
+ }
+}

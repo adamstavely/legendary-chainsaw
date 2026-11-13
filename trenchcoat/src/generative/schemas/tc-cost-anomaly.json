@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-cost-anomaly.json",
+  "title": "tc-cost-anomaly",
+  "description": "Cost anomaly: one spend spike – how far over expected, a chart of daily spend with the expected band, the likely\ncause and its share of the extra cost, the evidence, and Set a limit, Investigate and Mark as expected.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading, e.g. the workspace"
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CostDay"
+      },
+      "description": "Daily spend around the spike, oldest first"
+    },
+    "spike": {
+      "type": "number",
+      "description": "The spike's day, epoch ms; by default the day furthest above what was expected"
+    },
+    "causes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AnomalyCause"
+      },
+      "description": "What drove the extra cost, the likeliest first"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AnomalyEvidence"
+      },
+      "description": "The costliest runs or requests during the spike"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "expected",
+        "open"
+      ],
+      "description": "\"open\", or \"expected\" once marked. Changed by Mark as expected and Undo unless a tc-status-change listener calls preventDefault()"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The spend's currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone the days are counted in"
+    },
+    "causeLabels": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "feature": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "member": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words for each kind of cause, merged over defaultAnomalyCauseLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CostDay": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "number",
+          "description": "The day, epoch ms"
+        },
+        "spend": {
+          "type": "number",
+          "description": "What was spent that day, in `currency`"
+        },
+        "expected": {
+          "type": "number",
+          "description": "What was expected that day; drawn as a dashed line"
+        },
+        "low": {
+          "type": "number",
+          "description": "The low end of the normal range; with `high`, drawn as a band"
+        },
+        "high": {
+          "type": "number",
+          "description": "The high end of the normal range"
+        }
+      },
+      "required": [
+        "date",
+        "spend"
+      ],
+      "additionalProperties": false
+    },
+    "AnomalyCause": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/AnomalyCauseKind"
+        },
+        "name": {
+          "type": "string",
+          "description": "e.g. \"Invoice matcher\""
+        },
+        "share": {
+          "type": "number",
+          "description": "Its share of the extra cost, 0 to 1"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line on why, e.g. \"Retried every invoice 6 times after a parser change\""
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "share"
+      ],
+      "additionalProperties": false
+    },
+    "AnomalyCauseKind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "feature",
+        "key",
+        "member",
+        "model",
+        "team"
+      ]
+    },
+    "AnomalyEvidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A run or request, e.g. \"Run 8f2c · Invoice matcher\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "One line under it, e.g. \"large-1 · 412k tokens · 6 retries\""
+        },
+        "cost": {
+          "type": "number",
+          "description": "What it cost, in `currency`"
+        },
+        "at": {
+          "type": "number",
+          "description": "When, epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "cost"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
