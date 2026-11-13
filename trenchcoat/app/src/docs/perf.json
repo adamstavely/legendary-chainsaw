@@ -19109,7 +19109,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-13",
-   "hash": "9f69cb0fee79452e",
+   "hash": "0d83a70e57dae67b",
    "bundle": {
     "own": {
      "min": 34126,
@@ -20609,7 +20609,7 @@
      {
       "name": "thread-header",
       "kind": "element",
-      "min": 15660
+      "min": 15670
      },
      {
       "name": "atomic-design",
@@ -23508,19 +23508,19 @@
      }
     ],
     "withoutLit": {
-     "min": 10544730,
-     "gzip": 2628514
+     "min": 10544740,
+     "gzip": 2628518
     },
     "withLit": {
-     "min": 10478143,
-     "gzip": 2605842
+     "min": 10478153,
+     "gzip": 2605846
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 3.3,
+    "cold": 2.2,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -47621,11 +47621,11 @@
   },
   "thread-header": {
    "measuredAt": "2026-11-13",
-   "hash": "2d10836f2d8a2574",
+   "hash": "33dfefa54da1679c",
    "bundle": {
     "own": {
-     "min": 17633,
-     "gzip": 5683
+     "min": 17643,
+     "gzip": 5688
     },
     "shared": [
      {
@@ -47665,21 +47665,21 @@
      }
     ],
     "withoutLit": {
-     "min": 24556,
-     "gzip": 7640
+     "min": 24566,
+     "gzip": 7644
     },
     "withLit": {
-     "min": 45742,
-     "gzip": 14567
+     "min": 45752,
+     "gzip": 14570
     }
    },
    "render": {
     "tag": "tc-thread-header",
     "source": "demo",
     "runs": 7,
-    "cold": 19.3,
-    "first": 1.9,
-    "update": 0.3,
+    "cold": 9.1,
+    "first": 0.5,
+    "update": 0.1,
     "updateKind": "one item of actions replaced",
     "nodes": 44,
     "scale": {
@@ -47688,14 +47688,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.2,
+       "first": 0.6,
+       "update": 0,
        "nodes": 44
       },
       {
        "items": 1000,
-       "first": 2,
-       "update": 0.3,
+       "first": 0.6,
+       "update": 0.1,
        "nodes": 44
       }
      ]

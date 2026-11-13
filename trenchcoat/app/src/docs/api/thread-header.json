@@ -98,7 +98,7 @@
     {
      "name": "tc-title-change",
      "detail": "",
-     "description": "The title was renamed ({ title, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was",
+     "description": "The title was renamed ({ title, heading, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was",
      "cancelable": true
     },
     {
@@ -504,7 +504,7 @@
   "windowed": false
  },
  "size": {
-  "min": 24556,
-  "gzip": 7640
+  "min": 24566,
+  "gzip": 7644
  }
 }

@@ -190,7 +190,7 @@ export class ThreadHeaderExample {
 
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
-| `tc-title-change` | – | Yes | The title was renamed ({ title, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was |
+| `tc-title-change` | – | Yes | The title was renamed ({ title, heading, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was |
 | `tc-panels-change` | – | Yes | A panel toggle was pressed ({ panels, id, open }: ThreadHeaderPanelsChange); cancelable – prevented, `panels` stays as it was |
 | `tc-share` | – | No | Share was pressed (detail: {}) |
 | `tc-action` | – | No | A menu action was picked ({ action }: ThreadHeaderActionEvent) |
@@ -450,7 +450,7 @@ button named by its label. More has `aria-haspopup="menu"` and `aria-expanded`; 
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 17.2 KB | 5.5 KB |
+| **This component alone** | 17.2 KB | 5.6 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -467,11 +467,11 @@ button named by its label. More has `aria-haspopup="menu"` and `aria-expanded`; 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 44 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of actions replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.9 ms | actions: first render, 44 nodes; update 0.2 ms |
-| 1,000 items | 2.0 ms | actions: first render, 44 nodes; update 0.3 ms |
+| First render | **0.5 ms** | the gallery demo's data, 44 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | one item of actions replaced |
+| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.6 ms | actions: first render, 44 nodes; update 0.0 ms |
+| 1,000 items | 0.6 ms | actions: first render, 44 nodes; update 0.1 ms |
 
 What it renders doesn't grow with actions (tested to 1,000 items).
 

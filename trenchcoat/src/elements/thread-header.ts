@@ -45,7 +45,8 @@ export type ThreadHeaderLabels = {
 };
 
 /** Details of the events */
-export type ThreadHeaderTitleChange = { title: string; previous: string };
+/** `heading` repeats `title` under the property's own name, for frameworks that bind `heading` to its change event */
+export type ThreadHeaderTitleChange = { title: string; heading: string; previous: string };
 export type ThreadHeaderPanelsChange = { panels: string[]; id: string; open: boolean };
 export type ThreadHeaderActionEvent = { action: string };
 
@@ -84,7 +85,7 @@ let uidCount = 0;
 /**
  * The bar at the top of a chat thread – the title renamed in place, model and project chips, Share, side-panel toggles and a menu.
  * @tag tc-thread-header
- * @fires tc-title-change - The title was renamed ({ title, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was
+ * @fires tc-title-change - The title was renamed ({ title, heading, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was
  * @fires tc-panels-change - A panel toggle was pressed ({ panels, id, open }: ThreadHeaderPanelsChange); cancelable – prevented, `panels` stays as it was
  * @fires tc-share - Share was pressed (detail: {})
  * @fires tc-action - A menu action was picked ({ action }: ThreadHeaderActionEvent)
@@ -151,7 +152,7 @@ export class TcThreadHeader extends TcElement {
     this.editing = false;
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-thd__title-btn")?.focus());
     if (!save || !title || title === previous) return;
-    if (!this.emit<ThreadHeaderTitleChange>("tc-title-change", { title, previous }, { cancelable: true })) return;
+    if (!this.emit<ThreadHeaderTitleChange>("tc-title-change", { title, heading: title, previous }, { cancelable: true })) return;
     this.heading = title;
     this.announce = this.word("renamed").replace("{title}", () => title);
   }

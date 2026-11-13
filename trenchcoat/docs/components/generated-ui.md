@@ -9,7 +9,7 @@
 A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
 
 - **Element:** `<tc-generated-ui>`
-- **Size:** 2542.9 KB gzip · 10195.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 2566.9 KB gzip · 10297.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -1227,7 +1227,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | --- | --- | --- |
 | First render | **0.5 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 3.3 ms | default properties; includes adding its CSS to the document |
+| First on the page | 2.2 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

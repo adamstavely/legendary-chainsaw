@@ -58,7 +58,7 @@ describe("tc-thread-header", () => {
     key("Enter");
     await settle();
     expect(el.heading).toBe("Q3 reconciliation – final");
-    expect(seen).toEqual([{ title: "Q3 reconciliation – final", previous: "Q3 reconciliation" }]);
+    expect(seen).toEqual([{ title: "Q3 reconciliation – final", heading: "Q3 reconciliation – final", previous: "Q3 reconciliation" }]);
     expect(el.querySelector('[role="status"]')!.textContent).toBe("Renamed to Q3 reconciliation – final");
     await expect.poll(() => document.activeElement).toBe(el.querySelector(".ui-thd__title-btn"));
     // F2 starts it from the keyboard; Escape cancels
