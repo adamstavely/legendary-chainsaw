@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { SelectionToolbarCommand } from "../../../src/elements/react";
+import type { SelectionToolbarCommand, SelectionToolbarRewrite } from "../../../src/elements/react";
 import type { TcSelectionToolbar } from "../../../src/elements/selection-toolbar";
 import { caption, surface, textButton } from "../demo-kit";
 
@@ -36,6 +36,15 @@ function stateAt(editor: HTMLElement) {
   return { pressed, values };
 }
 
+/** A stand-in for a model: plain, predictable edits for each quick instruction */
+function fakeRewrite({ instruction, text }: SelectionToolbarRewrite) {
+  const t = text.trim();
+  if (/shorter/i.test(instruction)) return t.replace(/\s+with a second panel,?/i, "").replace(/,\s*so .*$/i, "");
+  if (/formal/i.test(instruction)) return t.replace(/\bso\b/i, "in order that").replace(/\babout\b/i, "concerning");
+  if (/grammar/i.test(instruction)) return t.charAt(0).toUpperCase() + t.slice(1).replace(/\s+/g, " ").replace(/([^.])$/, "$1.");
+  return t.replace(/\bSeparate\b/, "Split").replace(/\bdisputes about\b/i, "questions on");
+}
+
 /** A CSS colour (a token) as the rgb() execCommand needs */
 function resolved(color: string) {
   const probe = document.createElement("span");
@@ -55,6 +64,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [pressed, setPressed] = useState<string[]>(["bold"]);
   const [values, setValues] = useState<Record<string, string>>({ style: "p", list: "bullets" });
   const [note, setNote] = useState("");
+  /** The selection a rewrite was asked for, put back on Accept – focus moves to the rewrite field meanwhile */
+  const saved = useRef<Range | null>(null);
 
   useEffect(() => {
     const el = editor.current;
@@ -149,10 +160,41 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         onValuesChange={setValues}
         onTcCommand={(e) => run(e.detail)}
         onTcClose={() => setOpen(false)}
+        rewritable
+        selectedText={anchor instanceof Element ? (anchor.textContent ?? "") : ""}
+        rewrite={(request, signal) =>
+          new Promise<string>((resolve, reject) => {
+            const timer = window.setTimeout(() => resolve(fakeRewrite(request)), 700);
+            signal.addEventListener("abort", () => {
+              window.clearTimeout(timer);
+              reject(signal.reason);
+            });
+          })
+        }
+        onRewriteRequest={() => {
+          const sel = document.getSelection();
+          const pick = editor.current?.querySelector("[data-pick]");
+          if (pick) {
+            const range = document.createRange();
+            range.selectNodeContents(pick);
+            saved.current = range;
+          } else if (sel?.rangeCount && editor.current?.contains(sel.anchorNode)) saved.current = sel.getRangeAt(0).cloneRange();
+        }}
+        onRewriteAccept={(text) => {
+          const range = saved.current;
+          const sel = document.getSelection();
+          if (!range || !sel) return;
+          editor.current?.focus();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand("insertText", false, text);
+          saved.current = null;
+          setNote("Rewrite applied.");
+        }}
       />
       <style>{`.demo-stb-editor [data-pick] { background: var(--tc-accent-highlight); } .demo-stb-editor h3 { margin: 0 0 8px; font-size: var(--tc-font-size-md); } .demo-stb-editor ul { margin: 0 0 8px; padding-inline-start: 20px; } .demo-stb-editor code { font-family: var(--tc-font-mono); font-size: 0.92em; padding: 0 3px; border-radius: 4px; background: var(--tc-surface-well); }`}</style>
       <div style={caption}>
-        {note || "Select any text to format it – the bar shows what's on at the selection. Alt + F10 moves to the bar, Escape goes back."}{" "}
+        {note || "Select any text to format it – the bar shows what's on at the selection. The wand rewrites it: try Shorter. Alt + F10 moves to the bar, Escape goes back."}{" "}
         {note ? (
           <button type="button" style={textButton} onClick={() => setNote("")}>
             OK

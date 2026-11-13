@@ -2,7 +2,35 @@
 
 # Changelog
 
-## Unreleased – Markdown docs kept in step
+## 0.22.0 – Chat: tabs, a dock, ghost text, shared threads and recovery states
+
+- **Session Tabs:** open chats as tabs above a thread – status in a mark and a word, unread dots, close, drag or
+  Alt+Shift+arrows to reorder, and a menu of tabs scrolled out of view.
+- **Thread Header:** the bar at the top of a thread – rename in place, model and project chips, Share, side-panel
+  toggles and a menu of actions, folding into the menu when narrow.
+- **Panel Dock:** one side panel beside a chat with a tab per open item – resized from its edge, folded to a rail,
+  closed with Escape, and a full-width sheet when narrow.
+- **Ghost Completion:** dimmed suggestions after the caret – Tab takes them, Ctrl/⌘ + → takes a word, Escape dismisses.
+- **Multiplayer Thread:** one thread, several people and one model – presence and typing, @-mentions, and whether the
+  model answers every message or only when mentioned.
+- **Answer Arena** compares three or four models: columns or a tab pager, a pick-the-best vote with "All equally good"
+  and "All bad", and the winner's id in the event.
+- **AI Answer:** an interrupted state that keeps the text so far, with Continue and Retry, and an unavailable state with
+  a live retry countdown, Try now and a fallback model.
+- **Chat Composer:** `limit` holds sending back without losing the draft – a message limit with when it resets, or a
+  trial that's over – with a notice and an optional action.
+- **Cited Answer:** View in document opens the source's full text at the cited passage, with Previous and Next through
+  that document's passages (`documents` / `loadDocument`, `tc-source-open`).
+- **Message Actions:** `reportable` adds Report – flag a harmful reply for review with a reason, then Undo.
+- **Selection Toolbar:** `rewritable` adds Rewrite – rewrite the selection with an instruction or a quick chip, shown as
+  a word diff to accept, reject or try again.
+- **Mention Picker:** commands can take `args` (text, number or choice), asked for in a short form and inserted as the
+  assembled command.
+- **`docs/` checked in CI** (`npm run check:docs-md`) and exported by the new-component integration pass; a merge to
+  `main` mirrors it to [trenchcoat-docs](https://github.com/adamstavely/trenchcoat-docs), replacing only the folders it
+  copies, so files added there directly stay.
+- **Standalone gallery:** rebuilt with all of the above, now by `npm run build:standalone`, which the new-component
+  integration pass runs.
 
 - **`docs/` checked in CI:** a PR fails when `docs/` doesn't match the gallery (`npm run check:docs-md`), and the
   new-component integration pass now exports it, so every new component's page is in `docs/`.

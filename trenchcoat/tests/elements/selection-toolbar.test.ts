@@ -15,6 +15,8 @@ import {
   selectionRect,
   type SelectionToolbarCommand,
   type SelectionToolbarItem,
+  type SelectionToolbarRewrite,
+  type SelectionToolbarRewriteAccept,
   type TcSelectionToolbar,
 } from "../../src/elements/selection-toolbar";
 import { SelectionToolbar } from "../../src/elements/react/selection-toolbar";
@@ -343,3 +345,220 @@ describe("tc-selection-toolbar", () => {
     }
   }
 });
+
+/* ---------- Rewrite ---------- */
+
+const rwPanel = (el: Element) => el.querySelector<HTMLElement>(".ui-stb__rewrite");
+const rwField = (el: Element) => el.querySelector<HTMLInputElement>(".ui-stb__rw-field")!;
+const rwButton = (el: Element, text: RegExp) => [...el.querySelectorAll<HTMLButtonElement>(".ui-stb__rewrite button")].find((b) => text.test(b.textContent!))!;
+const typeInto = async (input: HTMLInputElement, text: string) => {
+  input.value = text;
+  input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  await settle();
+};
+
+for (const look of ["standard", "clean"] as const) {
+  describe(`tc-selection-toolbar (${look}) – rewrite`, () => {
+    test("off by default: the bar is the formatting bar it was", async () => {
+      const el = await inline(look);
+      expect(tool(el, "rewrite")).toBeNull();
+      expect(rwPanel(el)).toBeNull();
+    });
+
+    test("the wand opens a field; Enter fires tc-rewrite, the function's text shows as a diff, Accept fires tc-rewrite-accept", async () => {
+      const asked: SelectionToolbarRewrite[] = [];
+      const accepted: SelectionToolbarRewriteAccept[] = [];
+      const signals: AbortSignal[] = [];
+      const el = await fixture<TcSelectionToolbar>(html`<tc-selection-toolbar
+        look=${look}
+        .items=${ITEMS}
+        rewritable
+        selected-text="Separate method review from budget review"
+        .rewrite=${async (r: SelectionToolbarRewrite, signal: AbortSignal) => {
+          signals.push(signal);
+          return r.instruction === "Make it shorter" ? "Separate method and budget review" : "Split method review from budget review";
+        }}
+        @tc-rewrite=${(e: CustomEvent<SelectionToolbarRewrite>) => asked.push(e.detail)}
+        @tc-rewrite-accept=${(e: CustomEvent<SelectionToolbarRewriteAccept>) => accepted.push(e.detail)}
+      ></tc-selection-toolbar>`);
+      // The wand leads the bar and is one of its arrow-key stops
+      expect(ids(el, ".ui-stb__bar > .ui-stb__slot > .ui-stb__tool")[0]).toBe("rewrite");
+      const wand = tool(el, "rewrite");
+      expect(wand.getAttribute("aria-label")).toBe("Rewrite with AI");
+      expect(wand.getAttribute("aria-expanded")).toBe("false");
+      wand.focus();
+      wand.click();
+      await settle();
+      expect(wand.getAttribute("aria-expanded")).toBe("true");
+      expect(wand.getAttribute("aria-controls")).toBe(rwPanel(el)!.id);
+      await expect.poll(() => document.activeElement).toBe(rwField(el));
+      // Arrow keys in the field don't move along the bar
+      key(rwField(el), "ArrowLeft");
+      expect(document.activeElement).toBe(rwField(el));
+      const chips = [...el.querySelectorAll(".ui-stb__rw-chip")].map((c) => c.textContent!.trim());
+      expect(chips).toEqual(["Shorter", "Clearer", "More formal", "Fix grammar"]);
+      await typeInto(rwField(el), "Use plainer words");
+      rwField(el).form!.requestSubmit();
+      await settle();
+      expect(asked).toEqual([{ instruction: "Use plainer words", text: "Separate method review from budget review" }]);
+      await expect.poll(() => el.querySelector(".ui-stb__rw-diff")).not.toBeNull();
+      const diff = el.querySelector(".ui-stb__rw-diff")!;
+      expect([...diff.querySelectorAll("del")].map((d) => d.textContent)).toEqual(["removed: Separate"]);
+      expect([...diff.querySelectorAll("ins")].map((d) => d.textContent)).toEqual(["added: Split"]);
+      expect(el.querySelector(".ui-stb__rewrite [role=status]")!.textContent).toBe("Rewrite ready: 2 changes. Accept or reject it");
+      await expect.poll(() => document.activeElement?.textContent).toBe("Accept");
+      // Try again asks with the same instruction; a chip asks with its own
+      rwButton(el, /Try again/).click();
+      await settle();
+      expect(asked.at(-1)!.instruction).toBe("Use plainer words");
+      await expect.poll(() => el.querySelector(".ui-stb__rw-diff")).not.toBeNull();
+      rwButton(el, /Reject/).click();
+      await settle();
+      expect(rwPanel(el)).toBeNull();
+      expect(document.activeElement).toBe(wand);
+      wand.click();
+      await settle();
+      [...el.querySelectorAll<HTMLButtonElement>(".ui-stb__rw-chip")].find((c) => c.textContent === "Shorter")!.click();
+      await expect.poll(() => el.querySelector(".ui-stb__rw-diff")).not.toBeNull();
+      rwButton(el, /Accept/).click();
+      await settle();
+      expect(accepted).toEqual([{ text: "Separate method and budget review", instruction: "Make it shorter", original: "Separate method review from budget review" }]);
+      expect(rwPanel(el)).toBeNull();
+    });
+
+    test("a page that sets `rewrite` to the text in reply; prevented tc-rewrite asks nothing; a failure says so", async () => {
+      const el = await fixture<TcSelectionToolbar>(html`<tc-selection-toolbar look=${look} .items=${ITEMS} rewritable selected-text="Draft one"></tc-selection-toolbar>`);
+      let block = true;
+      el.addEventListener("tc-rewrite", (e) => {
+        if (block) e.preventDefault();
+      });
+      tool(el, "rewrite").click();
+      await settle();
+      await typeInto(rwField(el), "Shorter");
+      rwField(el).form!.requestSubmit();
+      await settle();
+      expect(el.querySelector(".ui-stb__rewrite")!.getAttribute("aria-busy")).toBe("false");
+      block = false;
+      rwField(el).form!.requestSubmit();
+      await settle();
+      expect(el.querySelector(".ui-stb__rewrite")!.getAttribute("aria-busy")).toBe("true");
+      expect(rwButton(el, /Rewriting/).disabled).toBe(true);
+      el.rewrite = "Draft";
+      await settle();
+      await expect.poll(() => el.querySelector(".ui-stb__rw-diff")?.textContent).toBe("Draftremoved:  one");
+      // A failing function: the error line and the field stay for another go
+      rwButton(el, /Reject/).click();
+      await settle();
+      el.rewrite = () => Promise.reject(new Error("offline"));
+      tool(el, "rewrite").click();
+      await settle();
+      await typeInto(rwField(el), "Shorter");
+      rwField(el).form!.requestSubmit();
+      await expect.poll(() => el.querySelector(".ui-stb__rw-error")?.textContent).toMatch(/Couldn't rewrite/);
+      expect(el.querySelector(".ui-stb__rewrite [role=status]")!.textContent).toBe("Couldn't rewrite the text");
+    });
+
+    test("Escape in the panel closes it and aborts the request, back on the wand; the floating bar stays open", async () => {
+      const editor = document.createElement("div");
+      editor.contentEditable = "true";
+      editor.textContent = "Separate method review from budget review.";
+      editor.style.margin = "120px 40px";
+      document.body.append(editor);
+      editor.focus();
+      document.getSelection()!.setBaseAndExtent(editor.firstChild!, 0, editor.firstChild!, 8);
+      const signals: AbortSignal[] = [];
+      const el = await fixture<TcSelectionToolbar>(html`<tc-selection-toolbar
+        look=${look}
+        .items=${ITEMS}
+        .editor=${editor}
+        .anchor=${selectionRect()}
+        open
+        rewritable
+        .rewrite=${(_r: SelectionToolbarRewrite, signal: AbortSignal) => {
+          signals.push(signal);
+          return new Promise<string>(() => {});
+        }}
+      ></tc-selection-toolbar>`);
+      await expect.poll(() => el.querySelector(".ui-stb__bar")?.hasAttribute("data-placed")).toBe(true);
+      tool(el, "rewrite").click();
+      await settle();
+      await expect.poll(() => document.activeElement).toBe(rwField(el));
+      // With no selected-text, the page's selection is the text – focus moved, but it was read when the panel opened
+      const asked: SelectionToolbarRewrite[] = [];
+      el.addEventListener("tc-rewrite", (e) => asked.push((e as CustomEvent<SelectionToolbarRewrite>).detail));
+      await typeInto(rwField(el), "Shorter");
+      rwField(el).form!.requestSubmit();
+      await settle();
+      expect(asked[0].text).toBe("Separate");
+      key(rwField(el), "Escape");
+      await settle();
+      expect(signals[0].aborted).toBe(true);
+      expect(rwPanel(el)).toBeNull();
+      expect(el.open).toBe(true);
+      await expect.poll(() => document.activeElement).toBe(tool(el, "rewrite"));
+      editor.remove();
+    });
+  });
+}
+
+test("React: onRewriteRequest can stop a rewrite; onRewriteAccept gets the text", async () => {
+  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  const seen: string[] = [];
+  let refuse = true;
+  await act(async () =>
+    root.render(
+      React.createElement(SelectionToolbar, {
+        items: ITEMS,
+        rewritable: true,
+        selectedText: "Old words",
+        rewrite: async () => "New words",
+        onRewriteRequest: (r) => {
+          seen.push(`ask ${r.instruction}`);
+          return refuse ? false : undefined;
+        },
+        onRewriteAccept: (text) => void seen.push(`accept ${text}`),
+      }),
+    ),
+  );
+  await settle();
+  const el = host.querySelector("tc-selection-toolbar")!;
+  tool(el, "rewrite").click();
+  await settle();
+  [...el.querySelectorAll<HTMLButtonElement>(".ui-stb__rw-chip")][0].click();
+  await settle();
+  expect(el.querySelector(".ui-stb__rw-diff")).toBeNull();
+  refuse = false;
+  [...el.querySelectorAll<HTMLButtonElement>(".ui-stb__rw-chip")][0].click();
+  await expect.poll(() => el.querySelector(".ui-stb__rw-diff")).not.toBeNull();
+  rwButton(el, /Accept/).click();
+  await settle();
+  expect(seen).toEqual(["ask Make it shorter", "ask Make it shorter", "accept New words"]);
+  await act(async () => root.unmount());
+  host.remove();
+});
+
+for (const theme of ["light", "dark"] as const) {
+  test(`axe (${theme}): the rewrite field and the diff in both looks`, async () => {
+    const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base); display: grid; gap: 16px">
+      <tc-selection-toolbar .items=${ITEMS} rewritable selected-text="Old words" .rewrite=${async () => "New words"}></tc-selection-toolbar>
+      <tc-selection-toolbar look="clean" .items=${ITEMS} rewritable selected-text="Old words" .rewrite=${async () => "New words"}></tc-selection-toolbar>
+      <tc-selection-toolbar .items=${ITEMS} rewritable selected-text="Old words" .rewrite=${async () => "New words"}></tc-selection-toolbar>
+      <tc-selection-toolbar look="clean" .items=${ITEMS} rewritable selected-text="Old words" .rewrite=${async () => "New words"}></tc-selection-toolbar>
+    </div>`);
+    const bars = [...wrap.querySelectorAll("tc-selection-toolbar")];
+    for (const el of bars) {
+      tool(el, "rewrite").click();
+      await settle();
+    }
+    for (const el of bars.slice(2)) {
+      [...el.querySelectorAll<HTMLButtonElement>(".ui-stb__rw-chip")][0].click();
+      await expect.poll(() => el.querySelector(".ui-stb__rw-diff")).not.toBeNull();
+    }
+    await finish(wrap);
+    const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+    expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+}

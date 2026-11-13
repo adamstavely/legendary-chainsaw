@@ -151,7 +151,7 @@
     "background-position animation": 1
   },
   "src/elements/ai-answer.ts": {
-    "clock/environment read": 4,
+    "clock/environment read": 2,
     "literal duration": 4,
     "literal easing": 7,
     "literal line-height": 7,
@@ -184,6 +184,7 @@
     "literal spacing": 7
   },
   "src/elements/chat-composer.ts": {
+    "clock/environment read": 1,
     "literal border-radius": 6,
     "literal spacing": 4
   },

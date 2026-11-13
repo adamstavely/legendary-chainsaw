@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-session-tabs.json",
+  "title": "tc-session-tabs",
+  "description": "Open chats as a row of tabs above a chat thread – status, unread, close, reorder by drag or keys, and a menu of the tabs out of view.",
+  "type": "object",
+  "properties": {
+    "tabs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionTab"
+      },
+      "description": "The open chats"
+    },
+    "active": {
+      "type": "string",
+      "description": "The open tab's id. Changed by the user unless a tc-active-change listener calls preventDefault()"
+    },
+    "order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The tabs' ids in the order shown; empty follows `tabs`. Changed by moving a tab unless a tc-order-change listener calls preventDefault()"
+    },
+    "hideCreate": {
+      "type": "boolean",
+      "description": "Hides the \"+\" button"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "running": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "tabs": {
+          "type": "string"
+        },
+        "unread": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "moved": {
+          "type": "string"
+        },
+        "closed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SessionTab": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/SessionTabStatus",
+          "description": "What the chat is doing; idle (the default) shows no mark"
+        },
+        "unread": {
+          "type": "boolean",
+          "description": "Something new since it was last open"
+        },
+        "closable": {
+          "type": "boolean",
+          "description": "false hides its close button and Delete does nothing"
+        },
+        "controls": {
+          "type": "string",
+          "description": "The id of the panel the tab shows, for aria-controls"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "SessionTabStatus": {
+      "type": "string",
+      "enum": [
+        "failed",
+        "idle",
+        "running",
+        "waiting"
+      ]
+    }
+  }
+}

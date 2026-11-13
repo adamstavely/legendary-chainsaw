@@ -69,6 +69,52 @@
     "hideActions": {
       "type": "boolean",
       "description": "Leave out the built-in actions under a finished answer (copy, regenerate, thumbs and the status beside them) – for an app that puts its own row there, such as `tc-message-actions`. Stop still shows while the answer is written"
+    },
+    "interrupted": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "$ref": "#/definitions/AnswerInterruptReason"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "The answer stopped part way – the text so far stays, with why and Continue / Retry (null: it didn't)"
+    },
+    "unavailable": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "busy",
+            "down"
+          ]
+        },
+        "retryAt": {
+          "type": "number"
+        },
+        "fallback": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The model can't answer right now – busy or down, when it tries again, Try now and a fallback (null: it can)"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time for the retry countdown, epoch ms – the element keeps its own clock when unset"
     }
   },
   "additionalProperties": false,
@@ -99,6 +145,15 @@
         "name"
       ],
       "additionalProperties": false
+    },
+    "AnswerInterruptReason": {
+      "type": "string",
+      "enum": [
+        "length",
+        "network",
+        "stopped"
+      ],
+      "description": "Why an answer stopped part way: the reader stopped it, the connection dropped, or it hit the length limit"
     }
   }
 }

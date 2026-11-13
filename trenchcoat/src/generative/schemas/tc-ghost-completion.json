@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ghost-completion.json",
+  "title": "tc-ghost-completion",
+  "description": "A text field with dimmed AI suggestions after the caret – Tab accepts, Ctrl/⌘ + → takes a word, Escape dismisses.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "label": {
+      "type": "string",
+      "description": "The field's visible label"
+    },
+    "value": {
+      "type": "string",
+      "description": "The text in the field"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Shown while the field is empty and there's no suggestion"
+    },
+    "rows": {
+      "type": "number",
+      "description": "The field's height in lines"
+    },
+    "suggestion": {
+      "type": "string",
+      "description": "A suggestion the page sets itself: the text to show after what's typed. Typing that matches it uses it up"
+    },
+    "debounce": {
+      "type": "number",
+      "description": "How long typing must pause before `suggest` is asked, in ms"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "No editing and no suggestions"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "hintKey": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        },
+        "suggestion": {
+          "type": "string"
+        },
+        "loading": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultGhostCompletionLabels"
+    }
+  },
+  "additionalProperties": false
+}

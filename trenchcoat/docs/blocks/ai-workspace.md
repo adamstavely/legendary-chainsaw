@@ -9,7 +9,7 @@
 Complete assistant app – sidebar, welcome, streaming chat and projects, built on the Chat Composer (uses `chat-composer`, `button`)
 
 - **Element:** `<tc-ai-workspace>`
-- **Size:** 97.6 KB gzip · 418.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 101.9 KB gzip · 434.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -448,7 +448,7 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 | Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | chat-composer | Sizes relative to the component's own width. |
 | Container size queries | 105 | 110 | 16 | 16 | itself, chat-composer, context-tray, model-picker, model-settings, prompt-library | Components adapt to the width they're given, not the window's. |
 | inert | 102 | 112 | 15.5 | 15.5 | itself, chat-composer, context-tray, internal/controllers, model-picker, prompt-library, internal/popover | Closed and leaving parts are out of the tab order and hidden from screen readers. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, button, internal/kit, chat-composer, context-tray, model-picker, model-settings, segmented-control, prompt-library | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, button, internal/kit, chat-composer, context-tray, mention-picker, model-picker, model-settings, segmented-control, prompt-library | Focus rings for keyboard users. |
 | :has() | 105 | 121 | 15.4 | 15.4 | itself, button, chat-composer, mention-picker | Layout and state that depend on what's inside a part (an icon present, a focused field). |
 | Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | itself | – |
 | inset | 87 | 66 | 14.1 | 14.1 | itself, button, chat-composer, mention-picker, prompt-library, internal/popover | – |
@@ -469,12 +469,12 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 | Popover API | 114 | 125 | 17 | 18.3 | mention-picker, internal/popover | Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
 | @property | 85 | 128 | 16.4 | 16.4 | segmented-control | The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, chat-composer, internal/popover, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, chat-composer, mention-picker, internal/popover, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | chat-composer, mention-picker, segmented-control | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -493,18 +493,18 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| [chat-composer](../components/chat-composer.md) · Element it renders | 131.4 KB | – |
+| [chat-composer](../components/chat-composer.md) · Element it renders | 137.4 KB | – |
 | [prompt-library](../components/prompt-library.md) · Element it renders | 47.7 KB | – |
+| [mention-picker](../components/mention-picker.md) · Element it renders | 39.8 KB | – |
 | [model-picker](../components/model-picker.md) · Element it renders | 36.3 KB | – |
 | [model-settings](../components/model-settings.md) · Element it renders | 30.7 KB | – |
-| [mention-picker](../components/mention-picker.md) · Element it renders | 29.9 KB | – |
 | [segmented-control](../components/segmented-control.md) · Element it renders | 29.8 KB | – |
 | [context-tray](../components/context-tray.md) · Element it renders | 25.2 KB | – |
 | [button](../components/button.md) · Element it renders | 12.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **418.3 KB** | **97.6 KB** |
-| With Lit – the first component on a page | 439.1 KB | 104.4 KB |
+| **Added to a page that already has Lit** | **434.2 KB** | **101.9 KB** |
+| With Lit – the first component on a page | 454.9 KB | 108.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -512,9 +512,9 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **5.3 ms** | default properties, 265 DOM nodes – to layout, median of 7 |
+| First render | **4.0 ms** | default properties, 265 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 29 ms | default properties; includes adding its CSS to the document |
+| First on the page | 36 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -527,7 +527,7 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 - Stops or pauses off screen and under reduced motion.
 - Observers: `ResizeObserver` (button), `MutationObserver` (button), `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `IntersectionObserver` (internal/controllers – OffScreenController), `ResizeObserver` (chat-composer), `MutationObserver` (internal/controllers – FocusRescueController), `ResizeObserver` (mention-picker), `ResizeObserver` (segmented-control), `ResizeObserver` (prompt-library), `ResizeObserver` (internal/popover – PopoverController).
 - Listens on the page: `window pointerdown`, `window keydown`, `document pointerdown` (chat-composer), `document pointerdown` (model-picker), `window resize` (model-picker).
-- Reads the clock: `performance.now()` (internal/controllers – RollingController), `performance.now()` (prompt-library).
+- Reads the clock: `Date.now()` (chat-composer), `performance.now()` (internal/controllers – RollingController), `performance.now()` (prompt-library).
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
 

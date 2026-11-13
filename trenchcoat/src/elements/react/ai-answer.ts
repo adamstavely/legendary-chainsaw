@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcAiAnswer, type AnswerFeedback, type AnswerSource as AnswerSourceData } from "../ai-answer";
+import { TcAiAnswer, type AnswerContinue, type AnswerFeedback, type AnswerRetry, type AnswerSource as AnswerSourceData } from "../ai-answer";
 import { h, isNode, useControlled, useStaged } from "./internal";
 
-export type { AnswerFeedback } from "../ai-answer";
+export type { AnswerContinue, AnswerFeedback, AnswerInterruptReason, AnswerInterruption, AnswerRetry, AnswerUnavailable } from "../ai-answer";
 /** A source: the icon may be a React node */
 export type AnswerSource = Omit<AnswerSourceData, "icon"> & {
   /** A favicon or logo, ideally square */
@@ -20,12 +20,14 @@ const RawAIAnswer = createComponent({
     onTcFollowUp: "tc-follow-up" as EventName<CustomEvent<{ question: string }>>,
     onTcStop: "tc-stop" as EventName<CustomEvent<null>>,
     onTcCopy: "tc-copy" as EventName<CustomEvent<{ text: string }>>,
+    onTcContinue: "tc-continue" as EventName<CustomEvent<AnswerContinue>>,
+    onTcRetry: "tc-retry" as EventName<CustomEvent<AnswerRetry>>,
   },
 });
 type RawAIAnswerProps = React.ComponentProps<typeof RawAIAnswer>;
 export type AIAnswerProps = Omit<
   RawAIAnswerProps,
-  "sources" | "feedback" | "animated" | "onCopy" | "onTcFeedbackChange" | "onTcFeedback" | "onTcFollowUp" | "onTcStop" | "onTcCopy"
+  "sources" | "feedback" | "animated" | "onCopy" | "onTcFeedbackChange" | "onTcFeedback" | "onTcFollowUp" | "onTcStop" | "onTcCopy" | "onTcContinue" | "onTcRetry"
 > & {
   /** The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first */
   sources: AnswerSource[];
@@ -47,9 +49,14 @@ export type AIAnswerProps = Omit<
   onFeedbackChange?: (feedback: AnswerFeedback | null) => void;
   /** Called with the copied text once the answer is on the clipboard */
   onCopy?: (text: string) => void;
+  /** Continue on an interrupted answer – carry on streaming and clear `interrupted` */
+  onContinue?: (reason: AnswerContinue["reason"]) => void;
+  /** Retry an interrupted answer, or Try now / Use <fallback> while unavailable – clear the state and ask again */
+  onRetry?: (retry: AnswerRetry) => void;
 };
 
-export function AIAnswer({ sources, animate = true, feedback, defaultFeedback = null, onFeedbackChange, onFeedback, onFollowUp, onStop, onCopy, ...props }: AIAnswerProps) {
+/** AI Answer – an assistant's answer with its sources, citation chips, actions, feedback and follow-ups; `interrupted` and `unavailable` are the page's to set and clear */
+export function AIAnswer({ sources, animate = true, feedback, defaultFeedback = null, onFeedbackChange, onFeedback, onFollowUp, onStop, onCopy, onContinue, onRetry, ...props }: AIAnswerProps) {
   const { stage, els } = useStaged(sources.map((s, i) => [String(i), s.icon] as [string, React.ReactNode]).filter(([, icon]) => isNode(icon)));
   const data = React.useMemo(() => sources.map((s, i) => (isNode(s.icon) ? { ...s, icon: els[String(i)] } : s)) as AnswerSourceData[], [sources, els]);
   const f = useControlled(feedback, defaultFeedback, onFeedbackChange);
@@ -63,5 +70,14 @@ export function AIAnswer({ sources, animate = true, feedback, defaultFeedback = 
     onTcFollowUp: (e: CustomEvent<{ question: string }>) => onFollowUp?.(e.detail.question),
     onTcStop: () => onStop?.(),
     onTcCopy: (e: CustomEvent<{ text: string }>) => onCopy?.(e.detail.text),
+    // The page owns `interrupted` and `unavailable` when it passes them: it clears them, not the element
+    onTcContinue: (e: CustomEvent<AnswerContinue>) => {
+      if (props.interrupted !== undefined) e.preventDefault();
+      onContinue?.(e.detail.reason);
+    },
+    onTcRetry: (e: CustomEvent<AnswerRetry>) => {
+      if ((e.detail.from === "interrupted" ? props.interrupted : props.unavailable) !== undefined) e.preventDefault();
+      onRetry?.(e.detail);
+    },
   }));
 }

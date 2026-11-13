@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { ChatModel, ChatPageContext, ChatSendDetails, ChatSkill, PromptTemplate } from "../../../src/elements/react";
-import { bubble, caption, surface } from "../demo-kit";
+import type { ChatLimit, ChatModel, ChatPageContext, ChatSendDetails, ChatSkill, PromptTemplate } from "../../../src/elements/react";
+import { bubble, caption, surface, textButton } from "../demo-kit";
 
 type Sent = { text: string; model: string; page: string; skill: string };
 
@@ -113,6 +113,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [page, setPage] = useState<ChatPageContext>({ title: "Q3 revenue report", connected: true, count: PAGE_ITEMS.length, items: PAGE_ITEMS });
   const [sent, setSent] = useState<Sent[]>([]);
   const [recent, setRecent] = useState<string[]>(["chart", "exec"]);
+  const [limit, setLimit] = useState<ChatLimit | null>(null);
+  const [limitNote, setLimitNote] = useState("");
   const remember = (skill: ChatSkill | null, reason: string) => {
     if (skill && (reason === "pick" || reason === "replace")) setRecent((r) => [skill.id, ...r.filter((id) => id !== skill.id)].slice(0, 4));
   };
@@ -156,8 +158,40 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             ))}
           </div>
         )}
-        <ChatComposer placeholder="Ask about this report…" skills={SKILLS} mentions={MENTIONS} {...shared} />
-        <p style={{ ...caption, margin: 0 }}>Type / for skills or @ for people and sections – or press the / button.</p>
+        <ChatComposer
+          placeholder="Ask about this report…"
+          skills={SKILLS}
+          mentions={MENTIONS}
+          {...shared}
+          limit={limit}
+          onLimitAction={() => setLimitNote("The plans page would open here.")}
+          onTrialAction={() => setLimitNote("Checkout would open here.")}
+        />
+        <p style={{ ...caption, margin: 0 }}>
+          Type / for skills or @ for people and sections – or press the / button. {limitNote ? `${limitNote} ` : ""}
+          {limit ? (
+            <button
+              type="button"
+              style={textButton}
+              onClick={() => {
+                setLimit(null);
+                setLimitNote("");
+              }}
+            >
+              Lift the limit
+            </button>
+          ) : (
+            <>
+              <button type="button" style={textButton} onClick={() => setLimit({ kind: "limit", resetsAt: Date.now() + 130 * 60_000, action: "Upgrade" })}>
+                Reach the message limit
+              </button>{" "}
+              ·{" "}
+              <button type="button" style={textButton} onClick={() => setLimit({ kind: "trial" })}>
+                End the trial
+              </button>
+            </>
+          )}
+        </p>
       </div>
       <div style={{ flex: "0 1 340px", minWidth: 0, display: "grid", gap: 6 }}>
         <p style={label}>Side pane width (340 px)</p>

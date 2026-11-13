@@ -9,7 +9,7 @@
 The formatting bar that floats over selected text: quick actions, toggles like bold and italic that show what's on, menus for text style, colour and list, and a link – it fires commands for the page's editor to apply.
 
 - **Element:** `<tc-selection-toolbar>`
-- **Size:** 11.3 KB gzip · 33.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.0 KB gzip · 44.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -32,10 +32,15 @@ such as bold and italic that show whether they're on, menus for text style, colo
 It doesn't edit anything: every press fires `tc-command`, the page's editor applies it, and the page tells the bar
 what's on at the selection (`pressed`) and which option each menu shows (`values`).
 
+With `rewritable`, a wand at the start of the bar rewrites the selected text with an instruction: people type “Make it
+shorter” or pick a chip, the page's model writes the new text, and the bar shows it as a word diff to accept, reject
+or try again. Accepting fires `tc-rewrite-accept`; the editor puts the text in place.
+
 ### When to use
 
 - Formatting in a rich-text editor, where the controls belong next to the text being changed.
 - A few quick actions on a selection beside the formatting, such as commenting.
+- Rewriting your own selected text with AI – shorter, clearer, more formal – and seeing exactly what changes first.
 
 ### When not to use
 
@@ -54,12 +59,16 @@ what's on at the selection (`pressed`) and which option each menu shows (`values
 4. **Separator** `.ui-stb__sep` – a divider between groups
 5. **Tooltip** `.ui-stb__tip` – the label, and a shortcut when given, on hover and focus
 6. **Menu** `.ui-stb__menu` – a menu's options, `.ui-stb__option`, with `.ui-stb__swatch` for a colour and `.ui-stb__check` on the chosen one
+7. **Rewrite panel** `.ui-stb__rewrite` – with `rewritable`: the instruction field (`.ui-stb__rw-field`), the quick
 
 ## Looks
 
 Both looks use the shared menu surface. Standard adds a hairline round the bar and shows a pressed toggle in gray with an
 edge; Clean has a rounder bar and shows a pressed toggle in the accent. A page can set `--tc-stb-size`, a control's size,
 `--tc-stb-glyph`, its icon's, `--tc-stb-swatch`, a colour swatch's, and `--tc-stb-menu`, a menu's least width.
+
+The rewrite panel opens as a row under the tools, inside the bar, in both looks. Removed words are struck through on a
+red tint and added ones underlined on a green tint, so the change reads without colour too.
 
 ## Usage
 
@@ -93,6 +102,11 @@ edge; Clean has a rounder bar and shows a pressed toggle in the accent. A page c
     if (e.detail.id === "bold" || e.detail.id === "italic") document.execCommand(e.detail.id);
     follow();
   });
+  // Rewrite: the page's model writes the text; Accept puts it in place
+  bar.rewritable = true;
+  bar.rewrite = ({ instruction, text }, signal) =>
+    fetch("/api/rewrite", { method: "POST", body: JSON.stringify({ instruction, text }), signal }).then((r) => r.text());
+  bar.addEventListener("tc-rewrite-accept", (e) => document.execCommand("insertText", false, e.detail.text));
 </script>
 ```
 
@@ -127,6 +141,11 @@ export function Memo() {
           follow();
         }}
         onTcClose={() => setAnchor(null)}
+        rewritable
+        rewrite={({ instruction, text }, signal) =>
+          fetch("/api/rewrite", { method: "POST", body: JSON.stringify({ instruction, text }), signal }).then((r) => r.text())
+        }
+        onRewriteAccept={(text) => document.execCommand("insertText", false, text)}
       />
     </>
   );
@@ -211,6 +230,10 @@ export class SelectionToolbarExample {
 | `open` | `open` | `boolean` | `false` | Whether the floating bar shows; it sets itself false when it closes itself. No effect without an `anchor` |
 | `editor` | – | `HTMLElement \| null` | `null` | The editor it formats: a click there doesn't close the bar, and Escape puts focus back in it |
 | `labels` | – | `Partial<SelectionToolbarLabels>` | `{}` | Words the page can change |
+| `rewritable` | `rewritable` | `boolean` | `false` | Adds Rewrite at the start of the bar: rewrite the selected text with an instruction, shown as a diff to accept or reject |
+| `selectedText` | `selected-text` | `string` | `""` | The text a rewrite works on – read from the page's selection when empty |
+| `rewrite` | – | `SelectionToolbarRewriter \| string \| null` | `null` | The rewrite's answer: a function the bar calls after tc-rewrite, or the new text the page sets in reply to it |
+| `quickRewrites` | – | `SelectionToolbarQuickRewrite[]` | `[ { label: "Shorter", instruction: "Make it shorter" }, { label: "Clearer", instruction: "Make it clearer" }, { label: "More formal", instruction: "Make it more formal" }, { label: "Fix grammar", instruction: "Fix spelling and grammar" }, ]` | The chips under the rewrite field |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -221,6 +244,8 @@ export class SelectionToolbarExample {
 | `tc-pressed-change` | – | Yes | A toggle was pressed ({ pressed, id }: SelectionToolbarPressedChange); cancelable – prevented, `pressed` stays as it was |
 | `tc-values-change` | – | Yes | A menu option was chosen ({ values, id, value }: SelectionToolbarValuesChange); cancelable – prevented, `values` stays as it was |
 | `tc-close` | – | No | The floating bar closed itself – Escape, or a click outside it and the editor ({ reason }: SelectionToolbarClose) |
+| `tc-rewrite` | – | Yes | A rewrite was asked for ({ instruction, text }: SelectionToolbarRewrite); cancelable – prevented, nothing is requested and the field stays |
+| `tc-rewrite-accept` | – | No | Accept was pressed on a rewrite ({ text, instruction, original }: SelectionToolbarRewriteAccept) – put `text` in place of the selection |
 
 #### Methods
 
@@ -239,9 +264,9 @@ export class SelectionToolbarExample {
 | `--tc-stb-swatch` | `var(--tc-space-3-5)` | both |
 | `--tc-stb-menu` | `calc(var(--tc-space-16) * 2.5)` | both |
 
-#### Design tokens it reads (42)
+#### Design tokens it reads (73)
 
-`--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-border-default`, `--tc-border-subtle`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-focus-outline`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-line-height-normal`, `--tc-menu-bg`, `--tc-menu-item-font-size`, `--tc-menu-item-h`, `--tc-menu-item-hover`, `--tc-menu-item-px`, `--tc-menu-item-radius`, `--tc-menu-item-selected-fg`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-sm`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-16`, `--tc-space-2`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-surface-inverse`, `--tc-surface-well`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-z-dropdown`
+`--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-subtle`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-strong`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-hairline`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-menu-bg`, `--tc-menu-item-font-size`, `--tc-menu-item-h`, `--tc-menu-item-hover`, `--tc-menu-item-px`, `--tc-menu-item-radius`, `--tc-menu-item-selected-fg`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-radius-2xs`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-sm`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-16`, `--tc-space-2`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-surface-inverse`, `--tc-surface-well`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-inverse`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-z-dropdown`
 
 #### Functions
 
@@ -276,8 +301,10 @@ export class SelectionToolbarExample {
 | `anchor` | `el.anchor = …;` | `<… anchor={…} />` | `<tc-selection-toolbar :anchor="…">` | `<tc-selection-toolbar [anchor]="…">` | `<tc-selection-toolbar {anchor}>` |
 | `editor` | `el.editor = …;` | `<… editor={…} />` | `<tc-selection-toolbar :editor="…">` | `<tc-selection-toolbar [editor]="…">` | `<tc-selection-toolbar {editor}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-selection-toolbar :labels="…">` | `<tc-selection-toolbar [labels]="…">` | `<tc-selection-toolbar {labels}>` |
+| `rewrite` | `el.rewrite = …;` | `<… rewrite={…} />` | `<tc-selection-toolbar :rewrite="…">` | `<tc-selection-toolbar [rewrite]="…">` | `<tc-selection-toolbar {rewrite}>` |
+| `quickRewrites` | `el.quickRewrites = …;` | `<… quickRewrites={…} />` | `<tc-selection-toolbar :quickRewrites="…">` | `<tc-selection-toolbar [quickRewrites]="…">` | `<tc-selection-toolbar {quickRewrites}>` |
 
-*Also attributes: `open` – see the API table.*
+*Also attributes: `open`, `rewritable`, `selected-text` – see the API table.*
 
 ### Events
 
@@ -287,6 +314,8 @@ export class SelectionToolbarExample {
 | `tc-pressed-change` | Yes | `el.addEventListener("tc-pressed-change", (e) => …)` | `ref.current.addEventListener("tc-pressed-change", …)` | `@tc-pressed-change="…"` | `(tc-pressed-change)="…($event)"` | `el.addEventListener("tc-pressed-change", …)` |
 | `tc-values-change` | Yes | `el.addEventListener("tc-values-change", (e) => …)` | `ref.current.addEventListener("tc-values-change", …)` | `@tc-values-change="…"` | `(tc-values-change)="…($event)"` | `el.addEventListener("tc-values-change", …)` |
 | `tc-close` | No | `el.addEventListener("tc-close", (e) => …)` | `onTcClose={…}` | `@tc-close="…"` | `(tc-close)="…($event)"` | `el.addEventListener("tc-close", …)` |
+| `tc-rewrite` | Yes | `el.addEventListener("tc-rewrite", (e) => …)` | `onTcRewrite={…}` | `@tc-rewrite="…"` | `(tc-rewrite)="…($event)"` | `el.addEventListener("tc-rewrite", …)` |
+| `tc-rewrite-accept` | No | `el.addEventListener("tc-rewrite-accept", (e) => …)` | `onTcRewriteAccept={…}` | `@tc-rewrite-accept="…"` | `(tc-rewrite-accept)="…($event)"` | `el.addEventListener("tc-rewrite-accept", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -417,6 +446,8 @@ No slots: everything it shows comes from its properties.
 | `values` | `Record<string, string>` | Each menu's chosen option – controlled when given |
 | `defaultValues` | `Record<string, string>` | The menus' options at first, when `values` isn't controlled |
 | `onValuesChange` | `(values: Record<string, string>, id: string, value: string) => void` | A menu option was chosen |
+| `onRewriteRequest` | `(request: SelectionToolbarRewrite) => void \| boolean` | A rewrite was asked for (with `rewritable`). Return false to stop it – nothing is requested |
+| `onRewriteAccept` | `(text: string, detail: SelectionToolbarRewriteAccept) => void` | Accept was pressed on a rewrite: put `text` in place of the selection |
 
 *Renamed or hidden on the wrapper: `pressed`, `values`, `children`*
 
@@ -438,6 +469,9 @@ One tab stop for the whole bar. The editor moves focus to it: call `focusToolbar
 | Enter / Space in a menu | Chooses the option and closes the menu |
 | Escape in a menu | Closes it, back on its button |
 | Escape on the bar | Closes the bar and puts focus back in `editor` |
+| Enter in the rewrite field | Asks for the rewrite |
+| Tab in the rewrite panel | Moves through the field, Rewrite, the chips – then Accept, Reject and Try again |
+| Escape in the rewrite panel | Closes it (and drops a rewrite in progress), back on the wand |
 
 A mouse-down on the bar doesn't take focus from the editor, so the selection stays painted while people click.
 
@@ -447,6 +481,11 @@ It's a `toolbar` named "Format" (`labels.toolbar`), and floats as one. Each cont
 whether they're pressed, and `keys` becomes `aria-keyshortcuts`. A menu's button says it opens a `menu`, whether it's open,
 and the option it shows ("List: Bulleted list"); its options are `menuitemradio`s that say which is chosen. Dividers are
 `separator`s. Tooltips repeat the names, so they're hidden from them.
+
+The wand is “Rewrite with AI”, with `aria-expanded` for its panel – a group of the same name, busy while the text is
+written. The field is labelled “How should it be rewritten?”; the chips are a group, “Quick instructions”. The diff is
+read with hidden “removed:” and “added:” before each change. A status line says “Rewriting…”, “Rewrite ready: 3
+changes. Accept or reject it” (focus moves to Accept) or “Couldn't rewrite the text”.
 
 ### Every component
 
@@ -493,13 +532,13 @@ and the option it shows ("List: Bulleted list"); its options are `menuitemradio`
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 17.8 KB | 6.3 KB |
+| **This component alone** | 28.4 KB | 9.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
@@ -508,8 +547,8 @@ and the option it shows ("List: Bulleted list"); its options are `menuitemradio`
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **33.9 KB** | **11.3 KB** |
-| With Lit – the first component on a page | 54.6 KB | 18.0 KB |
+| **Added to a page that already has Lit** | **44.5 KB** | **14.0 KB** |
+| With Lit – the first component on a page | 65.2 KB | 20.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -517,11 +556,11 @@ and the option it shows ("List: Bulleted list"); its options are `menuitemradio`
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.0 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.0 ms** | one item of items replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.1 ms | items: first render, 0 nodes; update 0.0 ms |
-| 1,000 items | 25 ms | items: first render, 0 nodes; update 0.0 ms |
+| First render | **2.4 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | one item of items replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.2 ms | items: first render, 0 nodes; update 0.0 ms |
+| 1,000 items | 27 ms | items: first render, 0 nodes; update 0.0 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 
@@ -550,6 +589,11 @@ Anchor it with `selectionRect()` after a selection is finished (on pointer-up or
 `selectionchange` while dragging; set `open` false when the selection collapses. When it closes itself it fires
 `tc-close` and sets `open` false – a React page that passes `open` should follow `onTcClose`.
 
+For Rewrite, give `rewrite` an async function `(request, signal) => newText` – the signal aborts on Reject or Escape –
+or listen for `tc-rewrite` and set `rewrite` to the new text. Pass `selectedText` when the editor knows the selection
+better than the page's selection does; save the selection's range on `tc-rewrite`, because focus moves to the field.
+Keep `quickRewrites` to three or four short chips.
+
 ## Do and don't
 
 ### Do
@@ -557,12 +601,14 @@ Anchor it with `selectionRect()` after a selection is finished (on pointer-up or
 - Apply every `tc-command` in the editor, then update `pressed` and `values` from what the text now is.
 - Keep the groups the editor really has; drop menus it can't apply.
 - Give the editor a key to reach the bar (`focusToolbar()`), and say so near the editor.
+- Apply an accepted rewrite as one undoable edit in the editor.
 
 ### Don't
 
 - Don't open it on a collapsed selection or while the pointer is still dragging.
 - Don't rely on colour alone in a colour menu: every option has a name.
 - Don't put an action that can't be undone on the bar without a confirmation.
+- Don't apply a rewrite before Accept – the diff is there so people check it.
 
 ## Related
 

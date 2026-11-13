@@ -6,18 +6,18 @@ Each component page has a **Performance** section: what the component costs to d
 and update, how far it scales, and what it does when nobody's using it. The numbers come from `npm run measure:perf`
 and live in `app/src/docs/perf.json`; each page says when it was measured.
 
-*438 components measured, between 2026-10-27 and 2026-11-11, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
+*443 components measured, between 2026-10-27 and 2026-11-13, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
 
 ### Largest, on a page that has Lit
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 2527.1 KB | 10133.3 KB | 10.6 KB |
-| [ai-side-pane](../blocks/ai-side-pane.md) | 155.2 KB | 656.4 KB | 11.2 KB |
+| [generated-ui](../components/generated-ui.md) | 2566.9 KB | 10297.6 KB | 10.6 KB |
+| [ai-side-pane](../blocks/ai-side-pane.md) | 163.1 KB | 687.1 KB | 11.2 KB |
 | [small-multiples](../components/small-multiples.md) | 146.4 KB | 457.5 KB | 6.0 KB |
 | [chart](../components/chart.md) | 143.0 KB | 447.5 KB | 2.4 KB |
-| [ai-workspace](../blocks/ai-workspace.md) | 97.6 KB | 418.3 KB | 13.6 KB |
-| [chat-composer](../components/chat-composer.md) | 82.7 KB | 356.9 KB | 30.9 KB |
+| [ai-workspace](../blocks/ai-workspace.md) | 101.9 KB | 434.2 KB | 13.6 KB |
+| [chat-composer](../components/chat-composer.md) | 86.8 KB | 372.7 KB | 32.1 KB |
 | [trigger-builder](../components/trigger-builder.md) | 40.4 KB | 172.0 KB | 10.5 KB |
 | [output-schema-builder](../components/output-schema-builder.md) | 39.8 KB | 159.4 KB | 12.3 KB |
 

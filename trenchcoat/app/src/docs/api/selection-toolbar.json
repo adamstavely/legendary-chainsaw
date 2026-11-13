@@ -62,6 +62,38 @@
      "readonly": false
     },
     {
+     "name": "rewritable",
+     "attribute": "rewritable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Adds Rewrite at the start of the bar: rewrite the selected text with an instruction, shown as a diff to accept or reject",
+     "readonly": false
+    },
+    {
+     "name": "selectedText",
+     "attribute": "selected-text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text a rewrite works on – read from the page's selection when empty",
+     "readonly": false
+    },
+    {
+     "name": "rewrite",
+     "attribute": null,
+     "type": "SelectionToolbarRewriter | string | null",
+     "default": "null",
+     "description": "The rewrite's answer: a function the bar calls after tc-rewrite, or the new text the page sets in reply to it",
+     "readonly": false
+    },
+    {
+     "name": "quickRewrites",
+     "attribute": null,
+     "type": "SelectionToolbarQuickRewrite[]",
+     "default": "[ { label: \"Shorter\", instruction: \"Make it shorter\" }, { label: \"Clearer\", instruction: \"Make it clearer\" }, { label: \"More formal\", instruction: \"Make it more formal\" }, { label: \"Fix grammar\", instruction: \"Fix spelling and grammar\" }, ]",
+     "description": "The chips under the rewrite field",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -93,6 +125,18 @@
      "name": "tc-close",
      "detail": "",
      "description": "The floating bar closed itself – Escape, or a click outside it and the editor ({ reason }: SelectionToolbarClose)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-rewrite",
+     "detail": "",
+     "description": "A rewrite was asked for ({ instruction, text }: SelectionToolbarRewrite); cancelable – prevented, nothing is requested and the field stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rewrite-accept",
+     "detail": "",
+     "description": "Accept was pressed on a rewrite ({ text, instruction, original }: SelectionToolbarRewriteAccept) – put `text` in place of the selection",
      "cancelable": false
     }
    ],
@@ -140,16 +184,41 @@
     "--tc-accent-subtle",
     "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
     "--tc-border-subtle",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
     "--tc-control-h-sm",
+    "--tc-control-px-sm",
     "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-strong",
     "--tc-focus-outline",
+    "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
+    "--tc-hairline",
     "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
     "--tc-menu-bg",
     "--tc-menu-item-font-size",
     "--tc-menu-item-h",
@@ -160,6 +229,7 @@
     "--tc-menu-padding",
     "--tc-menu-radius",
     "--tc-menu-shadow",
+    "--tc-radius-2xs",
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-sm",
@@ -171,11 +241,16 @@
     "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
     "--tc-surface-inverse",
     "--tc-surface-well",
     "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-on-inverse",
+    "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-z-dropdown"
@@ -234,6 +309,18 @@
      "type": "(values: Record<string, string>, id: string, value: string) => void",
      "optional": true,
      "description": "A menu option was chosen"
+    },
+    {
+     "name": "onRewriteRequest",
+     "type": "(request: SelectionToolbarRewrite) => void | boolean",
+     "optional": true,
+     "description": "A rewrite was asked for (with `rewritable`). Return false to stop it – nothing is requested"
+    },
+    {
+     "name": "onRewriteAccept",
+     "type": "(text: string, detail: SelectionToolbarRewriteAccept) => void",
+     "optional": true,
+     "description": "Accept was pressed on a rewrite: put `text` in place of the selection"
     }
    ],
    "hides": [
@@ -245,7 +332,9 @@
     "tc-command": "onTcCommand",
     "tc-pressed-change": null,
     "tc-values-change": null,
-    "tc-close": "onTcClose"
+    "tc-close": "onTcClose",
+    "tc-rewrite": "onTcRewrite",
+    "tc-rewrite-accept": "onTcRewriteAccept"
    }
   }
  ],
@@ -263,12 +352,22 @@
     "values",
     "anchor",
     "editor",
-    "labels"
+    "labels",
+    "rewrite",
+    "quickRewrites"
    ],
    "attributes": [
     {
      "name": "open",
      "attribute": "open"
+    },
+    {
+     "name": "rewritable",
+     "attribute": "rewritable"
+    },
+    {
+     "name": "selectedText",
+     "attribute": "selected-text"
     }
    ],
    "events": [
@@ -286,6 +385,14 @@
     },
     {
      "name": "tc-close",
+     "cancelable": false
+    },
+    {
+     "name": "tc-rewrite",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rewrite-accept",
      "cancelable": false
     }
    ],
@@ -582,7 +689,7 @@
   "windowed": false
  },
  "size": {
-  "min": 34739,
-  "gzip": 11581
+  "min": 45604,
+  "gzip": 14358
  }
 }

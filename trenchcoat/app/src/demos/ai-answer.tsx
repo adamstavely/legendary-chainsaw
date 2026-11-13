@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { AnswerSource } from "../../../src/elements/react";
-import { caption } from "../demo-kit";
+import type { AnswerSource, AnswerUnavailable } from "../../../src/elements/react";
+import { caption, textButton } from "../demo-kit";
 
 const Tile = ({ bg, ch }: { bg: string; ch: string }) => (
   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -75,20 +75,40 @@ function useStream(text: string) {
   return { shown, streaming: shown.length < text.length };
 }
 
+/** What the demo shows: the normal stream, an answer cut off by the network, the rest of it, or a busy model */
+type Mode = "live" | "interrupted" | "continued" | "unavailable";
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { AIAnswer } = ui;
   const [index, setIndex] = useState(0);
   const [note, setNote] = useState("");
+  const [mode, setMode] = useState<Mode>("live");
+  const [busy, setBusy] = useState<AnswerUnavailable | null>(null);
   const qa = QAS[index];
   const { shown, streaming } = useStream(qa.answer);
+  // An answer cut off a little past halfway, at a word
+  const cut = qa.answer.slice(0, qa.answer.lastIndexOf(" ", Math.floor(qa.answer.length * 0.55)));
+  const answer = mode === "interrupted" ? cut : mode === "continued" ? qa.answer : mode === "unavailable" ? "" : shown;
+  const restart = () => {
+    setMode("live");
+    setBusy(null);
+    setNote("");
+  };
 
   return (
     <div style={{ width: "100%", maxWidth: 600, display: "grid", gap: 8 }}>
       <AIAnswer
         question={qa.question}
         sources={SOURCES}
-        answer={shown}
-        streaming={streaming}
+        answer={answer}
+        streaming={mode === "live" && streaming}
+        interrupted={mode === "interrupted" ? { reason: "network" } : null}
+        unavailable={mode === "unavailable" ? busy : null}
+        onContinue={() => setMode("continued")}
+        onRetry={(r) => {
+          restart();
+          if (r.model && r.model !== busy?.model) setNote(`Answering with ${r.model}.`);
+        }}
         followUps={qa.followUps}
         onFollowUp={(q) => {
           const next = QAS.findIndex((x) => x.question === q);
@@ -98,7 +118,23 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         onFeedback={(v, reason) => setNote(v === "up" ? "Thanks for the feedback." : `Feedback: ${reason ?? "thumbs down"}`)}
         onCopy={() => setNote("Copied with sources.")}
       />
-      <div style={{ ...caption, textAlign: "center", minHeight: 16 }}>{note}</div>
+      <div style={{ ...caption, textAlign: "center", minHeight: 16 }}>
+        {note ? <>{note} · </> : null}
+        <button type="button" style={textButton} onClick={() => setMode("interrupted")}>
+          Cut it off
+        </button>{" "}
+        ·{" "}
+        <button
+          type="button"
+          style={textButton}
+          onClick={() => {
+            setBusy({ model: "Atlas", reason: "busy", retryAt: Date.now() + 42_000, fallback: "Nova" });
+            setMode("unavailable");
+          }}
+        >
+          Make the model busy
+        </button>
+      </div>
     </div>
   );
 }

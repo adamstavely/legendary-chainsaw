@@ -142,6 +142,22 @@
      "readonly": false
     },
     {
+     "name": "reportable",
+     "attribute": "reportable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Adds Report at the end of the bar: a short form to flag a harmful reply for human review",
+     "readonly": false
+    },
+    {
+     "name": "reportLabels",
+     "attribute": null,
+     "type": "Partial<Record<ReportReason, string>>",
+     "default": "{}",
+     "description": "Renames the report form's reasons, e.g. `{ other: \"Another problem\" }` – merged over `defaultReportLabels`",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -174,6 +190,18 @@
      "detail": "",
      "description": "Read aloud started or stopped; detail `{ playing: boolean }`",
      "cancelable": false
+    },
+    {
+     "name": "tc-report",
+     "detail": "",
+     "description": "The report form was sent (`reportable`); detail `{ reason, details }` (MessageReportDetail). Cancelable – prevented, the form stays open and nothing is confirmed",
+     "cancelable": true
+    },
+    {
+     "name": "tc-report-undo",
+     "detail": "",
+     "description": "Undo was pressed after a report; detail `{ reason, details }` (MessageReportDetail)",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -190,12 +218,17 @@
     }
    ],
    "tokens": [
+    "--tc-accent",
     "--tc-accent-subtle",
     "--tc-accent-text",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
     "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
     "--tc-border-selected",
     "--tc-card-radius",
@@ -313,12 +346,17 @@
     }
    ],
    "tokens": [
+    "--tc-accent",
     "--tc-accent-subtle",
     "--tc-accent-text",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
     "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
     "--tc-border-selected",
     "--tc-card-radius",
@@ -392,7 +430,13 @@
    ]
   }
  ],
- "functions": [],
+ "functions": [
+  {
+   "name": "defaultReportLabels",
+   "signature": "defaultReportLabels: Record<ReportReason, string>",
+   "description": "The report form's reasons, in order – `reportLabels` renames them"
+  }
+ ],
  "react": [
   {
    "component": "MessageActions",
@@ -415,6 +459,18 @@
      "type": "(playing: boolean) => void",
      "optional": true,
      "description": "Called with true when Read aloud starts and false when it stops – play your audio here. Without it (and without\n`speaking`) the browser's speech synthesis reads `text`"
+    },
+    {
+     "name": "onReport",
+     "type": "(report: MessageReportDetail) => void | boolean",
+     "optional": true,
+     "description": "Called when a report is sent (with `reportable`). Return false to keep the form open – nothing is confirmed"
+    },
+    {
+     "name": "onReportUndo",
+     "type": "(report: MessageReportDetail) => void",
+     "optional": true,
+     "description": "Called when Undo withdraws a report"
     }
    ],
    "hides": [
@@ -423,7 +479,9 @@
    "events": {
     "tc-version-change": "onVersionChange",
     "tc-copy": "onCopy",
-    "tc-speak": "onSpeak"
+    "tc-speak": "onSpeak",
+    "tc-report": "onReport",
+    "tc-report-undo": "onReportUndo"
    }
   },
   {
@@ -451,7 +509,9 @@
    "events": {
     "tc-version-change": "onTcVersionChange",
     "tc-copy": "onTcCopy",
-    "tc-speak": "onTcSpeak"
+    "tc-speak": "onTcSpeak",
+    "tc-report": "onTcReport",
+    "tc-report-undo": "onTcReportUndo"
    }
   }
  ],
@@ -470,7 +530,8 @@
     "onFeedback",
     "feedback",
     "defaultFeedback",
-    "reasons"
+    "reasons",
+    "reportLabels"
    ],
    "attributes": [
     {
@@ -512,6 +573,10 @@
     {
      "name": "label",
      "attribute": "label"
+    },
+    {
+     "name": "reportable",
+     "attribute": "reportable"
     }
    ],
    "events": [
@@ -529,6 +594,14 @@
     },
     {
      "name": "tc-speak",
+     "cancelable": false
+    },
+    {
+     "name": "tc-report",
+     "cancelable": true
+    },
+    {
+     "name": "tc-report-undo",
      "cancelable": false
     }
    ],
@@ -756,6 +829,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -789,7 +863,7 @@
   "windowed": false
  },
  "size": {
-  "min": 56004,
-  "gzip": 14493
+  "min": 64460,
+  "gzip": 16352
  }
 }

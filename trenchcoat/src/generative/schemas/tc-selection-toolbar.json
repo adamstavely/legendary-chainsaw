@@ -39,6 +39,25 @@
       },
       "additionalProperties": false,
       "description": "Words the page can change"
+    },
+    "rewritable": {
+      "type": "boolean",
+      "description": "Adds Rewrite at the start of the bar: rewrite the selected text with an instruction, shown as a diff to accept or reject"
+    },
+    "selectedText": {
+      "type": "string",
+      "description": "The text a rewrite works on – read from the page's selection when empty"
+    },
+    "rewrite": {
+      "type": "string",
+      "description": "The rewrite's answer: a function the bar calls after tc-rewrite, or the new text the page sets in reply to it"
+    },
+    "quickRewrites": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SelectionToolbarQuickRewrite"
+      },
+      "description": "The chips under the rewrite field"
     }
   },
   "additionalProperties": false,
@@ -245,6 +264,23 @@
         "label"
       ],
       "additionalProperties": false
+    },
+    "SelectionToolbarQuickRewrite": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "instruction"
+      ],
+      "additionalProperties": false,
+      "description": "The quick instructions under the rewrite field: the chip's words and the instruction it sends"
     }
   }
 }

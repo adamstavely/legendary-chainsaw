@@ -34,6 +34,13 @@
     "actionLabel": {
       "type": "string",
       "description": "A button on the tray that fires tc-action, e.g. \"Follow up\""
+    },
+    "documents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Full text of the sources' documents, by document id (a source's `document`, else its id) – turns on View in document"
     }
   },
   "additionalProperties": false,
@@ -94,6 +101,10 @@
             "type": "string"
           },
           "description": "Words or phrases of the quote to mark. Without it, words the quote shares with the citing sentences are marked"
+        },
+        "document": {
+          "type": "string",
+          "description": "Id of the full document the quote comes from, for the source viewer – sources that share one are its passages. Defaults to the source's id"
         }
       },
       "required": [

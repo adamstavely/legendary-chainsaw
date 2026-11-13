@@ -1,6 +1,6 @@
 {
   "name": "@adamstavely/trenchcoat",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "description": "Trenchcoat – Lit web components for AI-native products",
   "license": "UNLICENSED",
   "repository": {
@@ -128,6 +128,7 @@
     "measure:perf": "node scripts/measure-perf.mjs",
     "capture:thumbs": "node scripts/capture-thumbs.mjs",
     "export:docs-md": "node scripts/export-docs-md.mjs",
+    "build:standalone": "node scripts/build-standalone.mjs",
     "check:snippets": "node scripts/check-snippets.mjs",
     "check:angular": "node scripts/gen-angular.mjs --check && node scripts/check-angular.mjs",
     "tokens:dtcg": "node scripts/tokens-dtcg.mjs",

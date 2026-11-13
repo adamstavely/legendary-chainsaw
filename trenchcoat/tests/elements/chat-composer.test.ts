@@ -1317,3 +1317,138 @@ describe("tc-chat-composer – the message is measured again when its width chan
     await expect.poll(lines).toBeGreaterThan(1);
   });
 });
+
+describe("tc-chat-composer: limits – a message limit or a trial that's over", () => {
+  afterEach(cleanup);
+  const at = (h: number, m: number) => new Date(2026, 10, 12, h, m).getTime();
+  const time = (ms: number) => new Intl.DateTimeFormat("en-GB", { hour: "numeric", minute: "2-digit" }).format(ms);
+  const sendButton = (el: Element) => el.querySelector<HTMLButtonElement>('.ui-chat-composer__send[aria-label="Send message"]')!;
+  const live = (el: Element) => el.querySelector('[aria-live="polite"]')!.textContent!.trim();
+
+  for (const look of ["standard", "clean"] as const)
+    describe(look, () => {
+      test("a limit: the draft stays editable, Send is aria-disabled and described, the notice says when", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} locale="en-GB" value="Summarise the audit findings" .now=${at(11, 50)} .limit=${{ kind: "limit", resetsAt: at(14, 0), action: "Upgrade" }}></tc-chat-composer>`);
+        const notice = el.querySelector<HTMLElement>(".ui-chat-composer__limit")!;
+        expect(notice.dataset.kind).toBe("limit");
+        expect(notice.getAttribute("role")).toBe("group");
+        const text = el.querySelector(".ui-chat-composer__limit-text")!;
+        expect(text.textContent).toBe(`You've reached your message limit · resets at ${time(at(14, 0))} (in 2 h 10 min)`);
+        expect(notice.getAttribute("aria-labelledby")).toBe(text.id);
+        const send = sendButton(el);
+        expect(send.disabled).toBe(false);
+        expect(send.getAttribute("aria-disabled")).toBe("true");
+        expect(send.getAttribute("aria-describedby")).toBe(text.id);
+        expect(message(el).disabled).toBe(false);
+        expect(message(el).readOnly).toBe(false);
+        expect(live(el)).toBe(`You've reached your message limit. It resets at ${time(at(14, 0))}.`);
+        const sent = vi.fn();
+        el.addEventListener("tc-send", sent);
+        send.click();
+        key(message(el), "Enter");
+        await settle();
+        expect(sent).not.toHaveBeenCalled();
+        expect(el.value).toBe("Summarise the audit findings");
+        type(el, "Summarise the audit findings, briefly");
+        await settle();
+        expect(message(el).value).toBe("Summarise the audit findings, briefly");
+        el.now = at(13, 15);
+        await settle();
+        expect(text.textContent).toBe(`You've reached your message limit · resets at ${time(at(14, 0))} (in 45 min)`);
+        const actions: unknown[] = [];
+        el.addEventListener("tc-limit-action", (e) => actions.push((e as CustomEvent).detail));
+        button(el, "Upgrade")!.click();
+        expect(actions).toEqual([{ limit: { kind: "limit", resetsAt: at(14, 0), action: "Upgrade" } }]);
+        el.limit = null;
+        await settle();
+        expect(el.querySelector(".ui-chat-composer__limit")).toBeNull();
+        expect(live(el)).toBe("You can send messages again.");
+        expect(sendButton(el).hasAttribute("aria-disabled")).toBe(false);
+        sendButton(el).click();
+        await settle();
+        expect(sent).toHaveBeenCalledTimes(1);
+      });
+
+      test("a trial that's over: the draft stays, a primary action, its own words", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} value="Draft the summary" .limit=${{ kind: "trial" }}></tc-chat-composer>`);
+        expect(el.querySelector<HTMLElement>(".ui-chat-composer__limit")!.dataset.kind).toBe("trial");
+        expect(el.querySelector(".ui-chat-composer__limit-text")!.textContent).toBe("Your trial has ended. Your draft is kept – upgrade to send it.");
+        const action = button(el, "Upgrade")!;
+        expect(action.hasAttribute("data-primary")).toBe(true);
+        const seen: unknown[] = [];
+        el.addEventListener("tc-trial-action", (e) => seen.push((e as CustomEvent).detail));
+        action.click();
+        expect(seen).toEqual([{ limit: { kind: "trial" } }]);
+        expect(sendButton(el).getAttribute("aria-disabled")).toBe("true");
+        el.limit = { kind: "trial", message: "Your trial ended on 10 November.", action: "See plans" };
+        await settle();
+        expect(el.querySelector(".ui-chat-composer__limit-text")!.textContent).toBe("Your trial ended on 10 November.");
+        expect(button(el, "See plans")).toBeTruthy();
+      });
+
+      test("a limit with no reset time and no action; Enter says why again", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} value="Hello"></tc-chat-composer>`);
+        el.limit = { kind: "limit" };
+        await settle();
+        expect(el.querySelector(".ui-chat-composer__limit-text")!.textContent).toBe("You've reached your message limit");
+        expect(el.querySelector(".ui-chat-composer__limit-action")).toBeNull();
+        expect(live(el)).toBe("You've reached your message limit.");
+        key(message(el), "Enter");
+        await settle();
+        expect(live(el)).toBe("You've reached your message limit.");
+        expect(el.value).toBe("Hello");
+      });
+    });
+
+  test("its own clock: the countdown ticks without `now`, and stops when removed", async () => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+    try {
+      vi.setSystemTime(at(11, 50));
+      const el = await fixture<TcChatComposer>(html`<tc-chat-composer locale="en-GB" .limit=${{ kind: "limit", resetsAt: at(14, 0) }}></tc-chat-composer>`);
+      const text = el.querySelector(".ui-chat-composer__limit-text")!;
+      expect(text.textContent).toContain("(in 2 h 10 min)");
+      vi.advanceTimersByTime(70 * 60_000);
+      await settle();
+      expect(text.textContent).toContain("(in 1 h)");
+      el.remove();
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test("wrapper: limit and the actions", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const calls: string[] = [];
+    await act(async () =>
+      root.render(
+        React.createElement(ChatComposer, {
+          defaultValue: "Keep this",
+          limit: { kind: "trial" },
+          onTrialAction: (l) => calls.push(`trial:${l.kind}`),
+          onLimitAction: () => calls.push("limit"),
+        }),
+      ),
+    );
+    const el = host.querySelector("tc-chat-composer") as TcChatComposer;
+    await settle();
+    button(el, "Upgrade")!.click();
+    expect(calls).toEqual(["trial:trial"]);
+    expect(message(el).value).toBe("Keep this");
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"])
+    test(`axe: a limit and a trial, in both looks (${theme})`, async () => {
+      const wrap = await fixture<HTMLElement>(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 320px 8px 8px; display: grid; gap: 16px; width: 420px">
+        <tc-chat-composer demo value="Summarise" .now=${at(11, 50)} .limit=${{ kind: "limit", resetsAt: at(14, 0), action: "Upgrade" }}></tc-chat-composer>
+        <tc-chat-composer look="clean" demo value="Summarise" .limit=${{ kind: "trial" }}></tc-chat-composer>
+        <tc-chat-composer look="clean" demo .now=${at(11, 50)} .limit=${{ kind: "limit", resetsAt: at(14, 0), action: "Learn more" }}></tc-chat-composer>
+      </div>`);
+      await finish();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+});

@@ -1,0 +1,520 @@
+{
+ "elements": [
+  {
+   "tag": "tc-session-tabs",
+   "className": "TcSessionTabs",
+   "description": "Open chats as a row of tabs above a chat thread – status, unread, close, reorder by drag or keys, and a menu of the tabs out of view.",
+   "properties": [
+    {
+     "name": "tabs",
+     "attribute": null,
+     "type": "SessionTab[]",
+     "default": "[]",
+     "description": "The open chats",
+     "readonly": false
+    },
+    {
+     "name": "active",
+     "attribute": "active",
+     "type": "string | null",
+     "default": "null",
+     "description": "The open tab's id. Changed by the user unless a tc-active-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "order",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The tabs' ids in the order shown; empty follows `tabs`. Changed by moving a tab unless a tc-order-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "hideCreate",
+     "attribute": "hide-create",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the \"+\" button",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<SessionTabsLabels>",
+     "default": "{}",
+     "description": "Rename any of the words, over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-active-change",
+     "detail": "",
+     "description": "A tab was opened ({ active, tab }: SessionTabsActiveChange); cancelable – prevented, `active` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-order-change",
+     "detail": "",
+     "description": "A tab was moved ({ order, id }: SessionTabsOrderChange); cancelable – prevented, `order` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "A tab's close button or Delete was pressed ({ id, tab }: SessionTabsClose); cancelable – the page removes the tab",
+     "cancelable": true
+    },
+    {
+     "name": "tc-new",
+     "detail": "",
+     "description": "The \"+\" button was pressed (detail: {})",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "stab",
+   "cssProperties": [
+    {
+     "name": "--tc-stab-min",
+     "value": "96px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stab-max",
+     "value": "220px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stab-fade",
+     "value": "24px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stab-dot",
+     "value": "6px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stab-menu-w",
+     "value": "240px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-duration-fast",
+    "--tc-duration-reveal-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-icon-muted",
+    "--tc-line-height-snug",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-radius",
+    "--tc-z-drag",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultSessionTabsLabels",
+   "signature": "defaultSessionTabsLabels: SessionTabsLabels",
+   "description": "The words used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "SessionTabs",
+   "exported": true,
+   "props": [
+    {
+     "name": "active",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open tab's id – controlled when given"
+    },
+    {
+     "name": "defaultActive",
+     "type": "string | null",
+     "optional": true,
+     "description": "At first, when `active` isn't controlled"
+    },
+    {
+     "name": "onActiveChange",
+     "type": "(active: string | null, tab?: SessionTab) => void",
+     "optional": true,
+     "description": "Another tab was opened"
+    },
+    {
+     "name": "order",
+     "type": "string[]",
+     "optional": true,
+     "description": "The tabs' ids in the order shown – controlled when given"
+    },
+    {
+     "name": "defaultOrder",
+     "type": "string[]",
+     "optional": true,
+     "description": "At first, when `order` isn't controlled; empty follows `tabs`"
+    },
+    {
+     "name": "onOrderChange",
+     "type": "(order: string[], id: string) => void",
+     "optional": true,
+     "description": "A tab was moved"
+    }
+   ],
+   "hides": [
+    "active",
+    "order",
+    "children"
+   ],
+   "events": {
+    "tc-active-change": "onActiveChange",
+    "tc-order-change": "onOrderChange",
+    "tc-close": "onTcClose",
+    "tc-new": "onTcNew"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-session-tabs",
+   "className": "TcSessionTabs",
+   "module": "@adamstavely/trenchcoat/session-tabs",
+   "data": [
+    "tabs",
+    "order",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "active",
+     "attribute": "active"
+    },
+    {
+     "name": "hideCreate",
+     "attribute": "hide-create"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-active-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-order-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "cancelable": true
+    },
+    {
+     "name": "tc-new",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "active",
+     "event": "tc-active-change"
+    },
+    {
+     "property": "order",
+     "event": "tc-order-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "120",
+     "edge": "120",
+     "firefox": "53",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 1,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28675,
+  "gzip": 8957
+ }
+}

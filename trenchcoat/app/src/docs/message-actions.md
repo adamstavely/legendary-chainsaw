@@ -12,11 +12,16 @@ version, thumbs down opens a short “What went wrong?” row with reasons, Read
 plays. The bar stays quiet until the message is hovered or focused, so a long conversation doesn't fill with icons.
 `tc-message-text` (React: `MessageText`) crossfades the message itself when the version changes.
 
+With `reportable`, a flag at the end of the bar lets people report a harmful reply for human review: they pick why,
+add details if they like and send it. A line then says “Reported – a reviewer will look at this”, with Undo for a few
+seconds.
+
 ## When to use
 
 - Under every assistant message in a chat, or under the latest one.
 - When people should be able to retry an answer and move between its versions.
 - Collecting quick feedback on answers, with a reason when they're bad.
+- Letting people flag a reply that's harmful, unsafe or shares private data, so a person reviews it (`reportable`).
 
 ## When not to use
 
@@ -31,13 +36,17 @@ plays. The bar stays quiet until the message is hovered or focused, so a long co
 3. **Version switcher** `.ui-ma__versions` – “‹ 2 / 3 ›”, next to Regenerate from the second version on
 4. **Bad response** `.ui-ma__btn--down` – thumbs down, beside thumbs up; opens the “What went wrong?” row below
 5. **Read aloud** `.ui-ma__btn--speak` – becomes a small equalizer while it plays
+6. **Report** `.ui-ma__btn--report` – with `reportable`: a flag at the end of the bar, “Reported” once sent
+7. **Report form** `.ui-ma__report` – the reasons (`.ui-ma__reasons`), optional details (`.ui-ma__details`) and Send
+   report; after sending, the confirmation (`.ui-ma__reported`) with Undo (`.ui-ma__undo`)
 
 ## Looks
 
 Standard uses 30 px icon buttons with full-size line icons, and the feedback row is a small card with gray reason
 chips. Clean uses ghost icon buttons with thin or solid 16 px glyphs; a pressed action takes the selected-tab look,
 the reasons are tab-style buttons and Send is the dark chip. In both, the icons sit a step lighter until the
-message is hovered.
+message is hovered. The report form follows the feedback row: a small card in Standard, part of the message's card in
+Clean.
 
 ## Keyboard
 
@@ -47,6 +56,8 @@ message is hovered.
 | Enter / Space | Presses the focused action, reason or Send |
 | Escape | In the feedback row: closes it and returns focus to Bad response; elsewhere in the bar: hides the tooltip |
 | Enter (in the “Other” field) | Sends the feedback |
+| ↑ / ↓ (in the report reasons) | Moves between the reasons and picks one (native radio buttons) |
+| Escape | In the report form: closes it and returns focus to Report; after sending: ends the Undo window |
 
 ## Screen readers
 
@@ -59,17 +70,24 @@ feedback”. A polite live region says what happened: “Copied”, “Regenerat
 response. Tell us what went wrong below”, “Thanks for the feedback”, “Reading aloud”, “Finished reading” – and the
 failures, such as “Couldn't copy” or “Couldn't regenerate”.
 
+Report is a button named “Report reply” with `aria-expanded` for its form, and “Reported” once sent. The form is
+named “Report this reply”; its reasons are a radio group in a fieldset, “Why are you reporting it?”, and the details
+field is labelled “Details (optional)”. Sending moves focus to Undo and announces “Reported – a reviewer will look at
+this”; Undo announces “Report withdrawn”. Undo stays while focus is on it, so nobody loses it to the timer.
+
 ## Content
 
 - Keep `reasons` to three or four short phrases about the answer, not the person: “Not accurate”, “Too long”.
 - Keep “Other” last – it opens a field for people's own words.
 - Name the bar for its message when there are several on screen: `label="Actions for answer 3"`.
+- Rename the report reasons with `reportLabels` to match your policy's words; keep them about the reply.
 
 ## Do
 
 - Put `data-ui-message` on the message's wrapper so the bar lights up when the message is hovered.
 - Return a promise from `onRegenerate` and `onFeedback` so the bar can show progress, success and failure.
 - Pair the bar with `tc-message-text` so the message crossfades when people switch versions.
+- Send reports to a queue a person reads, and honour `tc-report-undo` (React: `onReportUndo`).
 
 ## Don't
 
@@ -77,6 +95,7 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 - Don't rely on the simulated Read aloud in production: listen for `tc-speak` (React: `onSpeak`) or let the browser
   read `text`; set `demo` only in galleries and prototypes.
 - Don't ask for a reason after every thumbs up – the bar only asks after thumbs down.
+- Don't use Report for “this answer was wrong” – that's thumbs down; Report is for replies that could do harm.
 
 ## Example
 
@@ -97,6 +116,8 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
   actions.text = versions[1];
   actions.versions = versions;
   actions.onFeedback = (kind, reason) => fetch("/api/feedback", { method: "POST", body: JSON.stringify({ kind, reason }) });
+  actions.reportable = true;
+  actions.addEventListener("tc-report", (e) => fetch("/api/reports", { method: "POST", body: JSON.stringify(e.detail) }));
   actions.addEventListener("tc-version-change", (e) => {
     answer.version = e.detail.version;
     answer.content = actions.text = versions[e.detail.version];
@@ -122,6 +143,8 @@ export function Answer({ versions, onRegenerate }: { versions: string[]; onRegen
         version={version}
         onVersionChange={setVersion}
         onRegenerate={onRegenerate}
+        reportable
+        onReport={(report) => void fetch("/api/reports", { method: "POST", body: JSON.stringify(report) })}
       />
     </div>
   );

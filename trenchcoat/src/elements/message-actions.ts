@@ -23,6 +23,10 @@ import { adoptStyles } from "./internal/styles";
  *
  * Clean uses ghost icon buttons with thin or solid 16px glyphs, a pressed action takes the selected-tab look, the
  * feedback reasons are tab buttons and Send is the dark chip.
+ *
+ * Report (opt-in with `reportable`): a flag at the end of the bar opens a short form – why (harmful, unsafe advice,
+ * private data, hateful, other) and optional details – whose Send fires a cancelable `tc-report`. Then a line says
+ * "Reported – a reviewer will look at this" with Undo (`tc-report-undo`) for a few seconds; the flag stays "Reported".
  */
 
 export type MessageActionKey = "copy" | "regenerate" | "feedback" | "speak";
@@ -31,6 +35,21 @@ export type FeedbackKind = "up" | "down";
 /** Details of the events */
 export type MessageVersionChange = { version: number };
 export type MessageFeedbackDetail = { feedback: FeedbackKind | null; reason?: string };
+/** Why a reply is reported */
+export type ReportReason = "harmful" | "unsafe-advice" | "private-data" | "hateful" | "other";
+/** tc-report and tc-report-undo: the reason picked and the details typed (empty when none) */
+export type MessageReportDetail = { reason: ReportReason; details: string };
+/** The report form's reasons, in order – `reportLabels` renames them */
+export const defaultReportLabels: Record<ReportReason, string> = {
+  harmful: "Harmful or dangerous",
+  "unsafe-advice": "Unsafe advice",
+  "private-data": "Shares private data",
+  hateful: "Hateful or harassing",
+  other: "Something else",
+};
+const REPORT_REASONS = Object.keys(defaultReportLabels) as ReportReason[];
+/** How long Undo stays after a report, in ms */
+const UNDO_MS = 6000;
 
 const isPromise = (value: unknown): value is Promise<unknown> => !!value && typeof (value as Promise<unknown>).then === "function";
 
@@ -60,6 +79,8 @@ const paths = {
   prev: "m14.5 7-5 5 5 5",
   next: "m9.5 7 5 5-5 5",
   close: "m7.5 7.5 9 9m0-9-9 9",
+  /* After Lucide's flag (ISC) */
+  flag: "M5 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM5 22v-7",
 };
 
 /* Clean: 16px glyphs, thin or solid */
@@ -75,9 +96,11 @@ const cleanPaths = {
   thumb: "M4.5 7v6.5H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1.5Zm1 6.5h5.95a1.5 1.5 0 0 0 1.47-1.2l.86-4.3A1.5 1.5 0 0 0 12.31 6.2H9.5l.42-2.08A1.4 1.4 0 0 0 7.3 3.1L5.5 6.8v6.7Z",
   next: "M10.85 7.65a.5.5 0 0 1 0 .7L7.2 12a.5.5 0 0 1-.7-.7L9.79 8 6.5 4.7a.5.5 0 1 1 .7-.7l3.65 3.65Z",
   close: "m4.5 4.5 7 7m0-7-7 7",
+  /* After Lucide's flag (ISC), on the 16px grid */
+  flag: "M3.3 10s.7-.7 2.7-.7 3.3 1.4 5.3 1.4 2.7-.7 2.7-.7V2s-.7.7-2.7.7S8 1.3 6 1.3 3.3 2 3.3 2zM3.3 14.7V10",
 };
 
-type IconName = "copy" | "copied" | "redo" | "prev" | "next" | "thumb" | "speaker" | "close" | "sent";
+type IconName = "copy" | "copied" | "redo" | "prev" | "next" | "thumb" | "speaker" | "close" | "sent" | "flag";
 /** Each look's icons; Clean's previous arrow is the next one, mirrored by its CSS */
 const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
   standard: {
@@ -90,6 +113,7 @@ const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
     speaker: glyph(paths.speaker),
     close: glyph(paths.close),
     sent: glyph(paths.check),
+    flag: glyph(paths.flag),
   },
   clean: {
     copy: cleanGlyph(cleanPaths.copy, true),
@@ -101,6 +125,7 @@ const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
     speaker: speakerIcon,
     close: cleanGlyph(cleanPaths.close),
     sent: cleanGlyph(cleanPaths.tick),
+    flag: cleanGlyph(cleanPaths.flag),
   },
 };
 
@@ -161,6 +186,8 @@ let uid = 0;
  * @fires tc-copy - `text` is on the clipboard (or Copy was pressed without `text`); detail `{ text?: string }`
  * @fires tc-feedback - A thumb was pressed or taken back, or the feedback row was sent; detail `{ feedback: "up" | "down" | null, reason?: string }`
  * @fires tc-speak - Read aloud started or stopped; detail `{ playing: boolean }`
+ * @fires tc-report - The report form was sent (`reportable`); detail `{ reason, details }` (MessageReportDetail). Cancelable – prevented, the form stays open and nothing is confirmed
+ * @fires tc-report-undo - Undo was pressed after a report; detail `{ reason, details }` (MessageReportDetail)
  */
 export class TcMessageActions extends TcElement {
   static override ui = "ma";
@@ -209,6 +236,10 @@ export class TcMessageActions extends TcElement {
   @property({ converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor quiet = true;
   /** Accessible name of the bar */
   @property() accessor label = "Message actions";
+  /** Adds Report at the end of the bar: a short form to flag a harmful reply for human review */
+  @property({ type: Boolean }) accessor reportable = false;
+  /** Renames the report form's reasons, e.g. `{ other: "Another problem" }` – merged over `defaultReportLabels` */
+  @property({ attribute: false }) accessor reportLabels: Partial<Record<ReportReason, string>> = {};
 
   /** @internal */ @state() accessor innerVersion = 0;
   /** @internal */ @state() accessor innerVote: FeedbackKind | null = null;
@@ -225,6 +256,10 @@ export class TcMessageActions extends TcElement {
   /** @internal */ @state() accessor regenFailed = 0;
   /** @internal */ @state() accessor innerSpeaking = false;
   /** @internal */ @state() accessor hush = false;
+  /** @internal Report: closed, the form open, or sent (Undo showing, then done) */
+  @state() accessor reportState: "idle" | "open" | "sent" | "done" = "idle";
+  /** @internal */ @state() accessor reportReason: ReportReason | null = null;
+  /** @internal */ @state() accessor reportDetails = "";
 
   private readonly uid = `tc-ma-${++uid}`;
   private readonly swaps = new Swaps(this);
@@ -253,6 +288,12 @@ export class TcMessageActions extends TcElement {
   }
   private get panelEl() {
     return this.querySelector<HTMLElement>(`#${this.uid}-feedback`);
+  }
+  private get reportEl() {
+    return this.querySelector<HTMLElement>(`#${this.uid}-report`);
+  }
+  private get reportButton() {
+    return this.querySelector<HTMLElement>(".ui-ma__btn--report");
   }
 
   /** @internal How many versions there are */
@@ -444,6 +485,7 @@ export class TcMessageActions extends TcElement {
     }
     this.setVote("down");
     this.panel = true;
+    if (this.reportState === "open") this.reportState = "idle";
     this.sent = false;
     this.reason = null;
     this.other = "";
@@ -478,6 +520,132 @@ export class TcMessageActions extends TcElement {
     // Esc / × from inside the row: focus goes back to Bad response before the row goes inert
     rescueFocus(this.panelEl, [this.downButton]);
     this.panel = false;
+  }
+
+  /* ----- Report: a reason and details, sent for human review, with a few seconds to undo ----- */
+  /** @internal The report reasons with their labels, in order */
+  get reportOptions() {
+    const labels = { ...defaultReportLabels, ...this.reportLabels };
+    return REPORT_REASONS.map((id) => ({ id, label: labels[id] }));
+  }
+  private toggleReport() {
+    if (this.reportState === "done") return;
+    if (this.reportState === "open") {
+      this.closeReport();
+      return;
+    }
+    if (this.reportState === "sent") return;
+    this.reportState = "open";
+    this.reportReason = null;
+    this.reportDetails = "";
+    this.panel = false;
+    this.updateComplete.then(() => this.reportEl?.querySelector<HTMLInputElement>('input[type="radio"]')?.focus());
+  }
+  private closeReport() {
+    rescueFocus(this.reportEl, [this.reportButton]);
+    if (this.reportState === "open") this.reportState = "idle";
+    else if (this.reportState === "sent") this.finishReport();
+  }
+  private sendReport() {
+    const reason = this.reportReason;
+    if (!reason || this.reportState !== "open") return;
+    const detail: MessageReportDetail = { reason, details: this.reportDetails.trim() };
+    if (!this.emit<MessageReportDetail>("tc-report", detail, { cancelable: true })) return;
+    this.reportState = "sent";
+    this.announce("Reported – a reviewer will look at this");
+    this.updateComplete.then(() => this.reportEl?.querySelector<HTMLElement>(".ui-ma__undo")?.focus());
+    this.scheduleReportEnd();
+  }
+  /** Undo goes after a few seconds – but not while focus is on it (WCAG 2.2.1): then when focus leaves */
+  private scheduleReportEnd() {
+    this.later("report", UNDO_MS, () => {
+      if (this.reportState !== "sent") return;
+      if (this.reportEl?.contains(document.activeElement)) return;
+      this.finishReport();
+    });
+  }
+  private finishReport() {
+    this.cancel("report");
+    rescueFocus(this.reportEl, [this.reportButton]);
+    this.reportState = "done";
+  }
+  private undoReport() {
+    if (this.reportState !== "sent" || !this.reportReason) return;
+    this.cancel("report");
+    this.emit<MessageReportDetail>("tc-report-undo", { reason: this.reportReason, details: this.reportDetails.trim() });
+    rescueFocus(this.reportEl, [this.reportButton]);
+    this.reportState = "idle";
+    this.announce("Report withdrawn");
+  }
+
+  /** The report form, then the confirmation with Undo */
+  private reportPanel(icon: Record<IconName, TemplateResult>) {
+    const id = `${this.uid}-report`;
+    const state = this.reportState;
+    const open = state === "open" || state === "sent";
+    return html`<div
+      id=${id}
+      class="ui-ma__fold ui-ma__report"
+      data-open=${ifDefined(open ? "" : undefined)}
+      .inert=${!open}
+      @focusout=${(e: FocusEvent) => {
+        if (this.reportState === "sent" && !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null) && !this.timers.has("report")) this.finishReport();
+      }}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          this.closeReport();
+        }
+      }}
+    >
+      <div class="ui-ma__clip">
+        ${state === "sent"
+          ? html`<div class="ui-ma__panel ui-ma__reported">
+              <span class="ui-ma__reported-text">${icon.sent}Reported – a reviewer will look at this</span>
+              <button type="button" class="ui-ma__undo" @click=${() => this.undoReport()}>Undo</button>
+            </div>`
+          : html`<form
+              class="ui-ma__panel"
+              aria-labelledby="${id}-ask"
+              @submit=${(e: Event) => {
+                e.preventDefault();
+                this.sendReport();
+              }}
+            >
+              <div class="ui-ma__panel-head">
+                <span id="${id}-ask" class="ui-ma__ask">Report this reply</span>
+                <button type="button" class="ui-ma__close" aria-label="Close report" @click=${() => this.closeReport()}>${icon.close}</button>
+              </div>
+              <fieldset class="ui-ma__reasons">
+                <legend class="ui-ma__legend">Why are you reporting it?</legend>
+                ${this.reportOptions.map(
+                  (o) => html`<label class="ui-ma__reason"
+                    ><input
+                      type="radio"
+                      name="${id}-reason"
+                      value=${o.id}
+                      .checked=${this.reportReason === o.id}
+                      @change=${() => (this.reportReason = o.id)}
+                    /><span>${o.label}</span></label
+                  >`,
+                )}
+              </fieldset>
+              <label class="ui-ma__details-label" for="${id}-details">Details <span class="ui-ma__optional">(optional)</span></label>
+              <textarea
+                id="${id}-details"
+                class="ui-ma__input ui-ma__details"
+                rows="2"
+                .value=${this.reportDetails}
+                placeholder="What should the reviewer know?"
+                @input=${(e: InputEvent) => (this.reportDetails = (e.target as HTMLTextAreaElement).value)}
+              ></textarea>
+              <div class="ui-ma__report-foot">
+                <span class="ui-ma__report-note">A person reviews reports. The reply stays in your chat.</span>
+                <button type="submit" class="ui-ma__send" ?disabled=${!this.reportReason}>Send report</button>
+              </div>
+            </form>`}
+      </div>
+    </div>`;
   }
 
   /* ----- Read aloud: the browser's speech synthesis when nobody plays it, otherwise a timed (or controlled) state ----- */
@@ -707,8 +875,20 @@ export class TcMessageActions extends TcElement {
         }}
         @focusin=${() => (this.hush = false)}
         @pointerenter=${() => (this.hush = false)}
-      >${parts}</div>
+      >${parts}${this.reportable
+        ? this.button({
+            name: "report",
+            tip: this.reportState === "done" || this.reportState === "sent" ? "Reported" : "Report",
+            labelText: this.reportState === "done" || this.reportState === "sent" ? "Reported" : "Report reply",
+            onClick: () => this.toggleReport(),
+            done: this.reportState === "done" || this.reportState === "sent",
+            expanded: this.reportState === "done" ? undefined : this.reportState === "open",
+            controls: this.reportState === "done" ? undefined : `${this.uid}-report`,
+            content: html`<span class="ui-ma__icon">${icon.flag}</span>`,
+          })
+        : nothing}</div>
       ${this.actions.includes("feedback") ? this.feedbackPanel(icon) : nothing}
+      ${this.reportable ? this.reportPanel(icon) : nothing}
       <span class="ui-ma__sr" aria-live="polite">${this.status}</span>
     `;
   }
@@ -769,6 +949,8 @@ export class TcMessageActions extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-ma__btn[aria-pressed="true"],
 :where([data-look="clean"], [data-look="clean"] *).ui-ma__btn[aria-pressed="true"]:hover { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); }
 .ui-ma__btn--copy[data-done] { color: var(--tc-status-success-fg); }
+/* Report: a reported reply keeps the flag, and its button says so */
+.ui-ma__btn--report[data-done] { color: var(--tc-text-secondary); cursor: default; }
 .ui-ma__icon { position: relative; display: grid; place-items: center; width: 16px; height: 16px; transition: transform var(--tc-duration-fast) var(--tc-ease-move); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ma__glyph { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ma__glyph { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
@@ -889,6 +1071,27 @@ export class TcMessageActions extends TcElement {
 @keyframes ui-ma-pop { 0% { transform: scale(1); } 40% { transform: scale(1.28) rotate(-8deg); } 100% { transform: scale(1); } }
 @keyframes ui-ma-pop-clean { 0% { transform: scale(1); } 40% { transform: scale(1.22) rotate(-8deg); } 100% { transform: scale(1); } }
 @keyframes ui-ma-eq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+/* ----- Report form and its confirmation ----- */
+.ui-ma__reasons { display: flex; flex-direction: column; gap: var(--tc-space-0-5); min-width: 0; margin: var(--tc-space-1-5) 0 0; padding: 0; border: 0; }
+.ui-ma__legend { margin-bottom: var(--tc-space-1); padding: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-ma__reason { display: flex; align-items: center; gap: var(--tc-space-2); min-height: var(--tc-control-h-sm); padding: 0 var(--tc-space-1-5); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); cursor: pointer; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-ma__reason:hover { background: var(--tc-fill-subtle); }
+.ui-ma__reason input { flex: none; width: 14px; height: 14px; margin: 0; accent-color: var(--tc-accent); }
+.ui-ma__reason input:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-ma__details-label { display: block; margin-top: var(--tc-space-2-5); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-ma__optional { color: var(--tc-text-muted); }
+.ui-ma__input.ui-ma__details { height: auto; min-height: calc(2 * var(--tc-field-h)); margin-top: var(--tc-space-1); padding: var(--tc-space-1-5) var(--tc-field-px); line-height: var(--tc-line-height-normal); resize: vertical; }
+.ui-ma__report-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2); margin-top: var(--tc-space-2-5); }
+.ui-ma__report-note { flex: 1 1 160px; min-width: 0; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
+.ui-ma__report .ui-ma__send { flex: none; }
+.ui-ma__reported { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--tc-space-2); }
+.ui-ma__reported-text { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); }
+.ui-ma__reported-text .ui-ma__glyph { width: 14px; height: 14px; color: var(--tc-status-success-fg); }
+.ui-ma__undo { height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); }
+.ui-ma__undo:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+@media (forced-colors: active) {
+  .ui-ma__reason input { accent-color: auto; }
+}
 /* Narrow: the feedback row stacks its send button under the chips */
 @container (max-width: 320px) {
   .ui-ma__send { flex-basis: 100%; }

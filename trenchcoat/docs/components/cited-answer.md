@@ -9,7 +9,7 @@
 An AI answer wired to its sources – point at a citation to light up its sentence and source, click to unfold the quoted passage with the matching words marked
 
 - **Element:** `<tc-cited-answer>`
-- **Size:** 13.3 KB gzip · 57.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.7 KB gzip · 71.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -31,13 +31,15 @@ An AI answer wired to the sources it relies on. Each cited sentence ends in smal
 wait below as chips. Point at a marker and its source lights up with the sentence; point at a chip and every
 sentence that cites it lights up while the rest fades back. Click either to unfold the quoted passage in place, with
 the words that back the answer marked, Open source and Copy quote – so people can check a claim without leaving the
-answer.
+answer. When the page has the full text of a source, View in document opens it in a side sheet, scrolled to the
+cited passage, with Previous and Next through every passage the answer cites from that document.
 
 ### When to use
 
 - Answers built from search or retrieval, where people need to check what a sentence rests on.
 - Research and support tools where a claim without a source shouldn't be trusted.
 - Showing how much of an answer is backed – the line under it counts the cited sentences.
+- Checking a quote in context: give `documents` (or `loadDocument`) and people read the passage where it sits.
 
 ### When not to use
 
@@ -56,12 +58,19 @@ answer.
 5. **Preview** `.ui-ca__fold` – the quoted passage with Open source and Copy quote, unfolded in place
 6. **Caption** `.ui-ca__caption` – what you're pointing at, or how many sentences are backed
 7. **Action** `.ui-ca__action` – an optional button, e.g. “Follow up”
+8. **View in document** `.ui-ca__view` – in the preview, when the source's document is available
+9. **Source viewer** `.ui-ca__viewer` – the side sheet: the source's title and site, Previous / Next passage
 
 ## Looks
 
 Standard sets the answer in a white card on a gray tray, with the chips, the caption and the action on the tray
 below it. Clean is one white card: the chips sit inside it as outlined pills that fold into a “+N” button when they
 don't fit on one line, and the caption and action form the card's last row under a hairline.
+
+The source viewer follows the look: Standard puts the document in a white card on a gray sheet, Clean is one sheet
+with hairlines. It's 560px wide, or the whole screen when that's narrower – set `--tc-cited-answer-viewer-w` on the
+element to change it. The current passage has the highlight and an accent underline; the answer's other passages from
+the same document get a quiet fill.
 
 ## Usage
 
@@ -86,7 +95,10 @@ don't fit on one line, and the caption and action form the card's last row under
     },
   ];
   answer.segments = [{ text: "The edge cache roughly halved p95 latency.", cite: ["edge"] }];
+  // View in document: the full text, by document id (a source's `document`, else its id)
+  answer.loadDocument = (sourceId, signal) => fetch(`/documents/${sourceId}.txt`, { signal }).then((r) => r.text());
   answer.addEventListener("tc-preview-change", (e) => console.log(e.detail.preview));
+  answer.addEventListener("tc-source-open", (e) => console.log("viewing", e.detail.sourceId));
 </script>
 ```
 
@@ -108,8 +120,12 @@ const sources: CitedSource[] = [
 ];
 const segments: CitedSegment[] = [{ text: "The edge cache roughly halved p95 latency.", cite: ["edge"] }];
 
+const documents = {
+  edge: "Why edge caching cut our p95 latency in half\n\nAfter moving product pages behind the edge cache, p95 latency dropped from 410 ms to 190 ms.",
+};
+
 export function Answer({ open }: { open: (url?: string) => void }) {
-  return <CitedAnswer segments={segments} sources={sources} pagesRead={14} onOpenSource={(s) => open(s.url)} />;
+  return <CitedAnswer segments={segments} sources={sources} pagesRead={14} documents={documents} onOpenSource={(s) => open(s.url)} />;
 }
 ```
 
@@ -190,6 +206,8 @@ export class CitedAnswerExample {
 | `preview` | – | `string \| null` | `null` | Id of the source whose preview is open (null: closed) |
 | `openHandled` | `open-handled` | `boolean` | `false` | The app opens sources itself (it listens to tc-open-source): links don't navigate, and sources without a url get Open source too |
 | `actionLabel` | `action-label` | `string` | `""` | A button on the tray that fires tc-action, e.g. "Follow up" |
+| `documents` | – | `Record<string, string>` | `{}` | Full text of the sources' documents, by document id (a source's `document`, else its id) – turns on View in document |
+| `loadDocument` | – | `CitedDocumentLoader \| undefined` | `undefined` | Loads a document's full text when `documents` doesn't have it – turns on View in document for every source |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -199,6 +217,7 @@ export class CitedAnswerExample {
 | `tc-preview-change` | – | Yes | The open preview changes; detail `{ preview: string \| null }` (null: closed). Cancelable. |
 | `tc-open-source` | – | No | Open source was pressed; detail `{ source: CitedSource }` |
 | `tc-action` | – | No | The action button (`actionLabel`) was pressed; detail: null |
+| `tc-source-open` | – | Yes | View in document was pressed; detail `{ sourceId }` (CitedSourceOpen). Cancelable – prevented, the viewer doesn't open (the page shows the document its own way) |
 
 #### Component tokens
 
@@ -207,10 +226,11 @@ export class CitedAnswerExample {
 | Custom property | Value | Look |
 | --- | --- | --- |
 | `--tc-cited-answer-well` | `light-dark(#f4f4f5, #222225)` | standard |
+| `--tc-cited-answer-viewer-w` | `560px` | standard, clean |
 
-#### Design tokens it reads (80)
+#### Design tokens it reads (85)
 
-`--tc-accent`, `--tc-accent-highlight`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-cited-answer-glyph-bg`, `--tc-cited-answer-glyph-fg`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-line-height-tight`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xl`, `--tc-radius-xs`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-5`, `--tc-status-danger-fg`, `--tc-status-success-fg`, `--tc-surface-inverse`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-accent-highlight`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-cited-answer-glyph-bg`, `--tc-cited-answer-glyph-fg`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-line-height-tight`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xl`, `--tc-radius-xs`, `--tc-scrim`, `--tc-shadow-overlay`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-5`, `--tc-space-6`, `--tc-status-danger-fg`, `--tc-status-success-fg`, `--tc-surface-inverse`, `--tc-surface-on-tray`, `--tc-surface-overlay`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
 
 ## Frameworks
 
@@ -233,6 +253,8 @@ export class CitedAnswerExample {
 | `segments` | `el.segments = …;` | `<… segments={…} />` | `<tc-cited-answer :segments="…">` | `<tc-cited-answer [segments]="…">` | `<tc-cited-answer {segments}>` |
 | `sources` | `el.sources = …;` | `<… sources={…} />` | `<tc-cited-answer :sources="…">` | `<tc-cited-answer [sources]="…">` | `<tc-cited-answer {sources}>` |
 | `preview` | `el.preview = …;` | `<… preview={…} />` | `<tc-cited-answer :preview="…">` | `<tc-cited-answer [preview]="…">` | `<tc-cited-answer {preview}>` |
+| `documents` | `el.documents = …;` | `<… documents={…} />` | `<tc-cited-answer :documents="…">` | `<tc-cited-answer [documents]="…">` | `<tc-cited-answer {documents}>` |
+| `loadDocument` | `el.loadDocument = …;` | `<… loadDocument={…} />` | `<tc-cited-answer :loadDocument="…">` | `<tc-cited-answer [loadDocument]="…">` | `<tc-cited-answer {loadDocument}>` |
 
 *Also attributes: `pages-read`, `open-handled`, `action-label` – see the API table.*
 
@@ -243,6 +265,7 @@ export class CitedAnswerExample {
 | `tc-preview-change` | Yes | `el.addEventListener("tc-preview-change", (e) => …)` | `ref.current.addEventListener("tc-preview-change", …)` | `@tc-preview-change="…"` | `(tc-preview-change)="…($event)"` | `el.addEventListener("tc-preview-change", …)` |
 | `tc-open-source` | No | `el.addEventListener("tc-open-source", (e) => …)` | `onOpenSource={…}` | `@tc-open-source="…"` | `(tc-open-source)="…($event)"` | `el.addEventListener("tc-open-source", …)` |
 | `tc-action` | No | `el.addEventListener("tc-action", (e) => …)` | `onClick={…}` | `@tc-action="…"` | `(tc-action)="…($event)"` | `el.addEventListener("tc-action", …)` |
+| `tc-source-open` | Yes | `el.addEventListener("tc-source-open", (e) => …)` | `onSourceOpen={…}` | `@tc-source-open="…"` | `(tc-source-open)="…($event)"` | `el.addEventListener("tc-source-open", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -374,6 +397,7 @@ No slots: everything it shows comes from its properties.
 | `onOpenSource` | `(source: CitedSource) => void` | Called by Open source. With it the link doesn't navigate on its own – open the page yourself |
 | `onPreviewChange` | `(id: string \| null) => void` | Called when the open preview changes (null = closed) |
 | `action` | `{ label: string; onClick: () => void }` | A button on the tray, e.g. { label: "Follow up", onClick } |
+| `onSourceOpen` | `(sourceId: string, event: CustomEvent<CitedSourceOpen>) => void` | Called by View in document before the source viewer opens; call `event.preventDefault()` to show the document your own way |
 
 *Renamed or hidden on the wrapper: `sources`, `preview`, `openHandled`, `actionLabel`*
 
@@ -390,6 +414,10 @@ Follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patter
 | ← / → | On a chip: moves to the previous or next chip (and “+N”) |
 | Home / End | On a chip: moves to the first or last chip |
 | Escape | Closes the preview and returns focus to the marker or chip that opened it |
+| Enter / Space on View in document | Opens the source viewer; focus goes to the document text |
+| Tab / Shift+Tab in the viewer | Moves through Close, Previous, Next, Open source and the text – focus stays in the viewer |
+| ↑ / ↓ / Page Up / Page Down on the text | Scrolls the document |
+| Escape in the viewer | Closes it and returns focus to View in document (the preview stays open) |
 
 Focusing a marker or chip lights it up the same way pointing does.
 
@@ -401,6 +429,11 @@ number and source (“1, source: Example Eng – Why edge caching cut our p95 la
 preview, a region named “Source 1: Example Eng” that's inert while closed. Its buttons are “Close source”, “Open
 source” and “Copy quote” (then “Copied”); a status region says “Quote copied” or “Couldn't copy the quote”. Clean's
 overflow button is “+2 more sources”.
+
+The source viewer is a modal dialog named by the source's title; the rest of the page is inert while it's open. The
+document text is a focusable region (“… text”, busy while it loads), and the current passage starts with hidden
+“Cited passage:” text. A status line says “Passage 2 of 3 in …” on opening and on each step, “Loading the document”
+and “Couldn't load the document”. Previous and Next are named “Previous passage” and “Next passage”.
 
 ### Every component
 
@@ -430,6 +463,7 @@ overflow button is “+2 more sources”.
 | inert | 102 | 112 | 15.5 | 15.5 | itself, internal/controllers | Closed and leaving parts are out of the tab order and hidden from screen readers. |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit | Focus rings for keyboard users. |
 | :has() | 105 | 121 | 15.4 | 15.4 | itself | Layout and state that depend on what's inside a part (an icon present, a focused field). |
+| &lt;dialog> and showModal() | 37 (Edge 79) | 98 | 15.4 | 15.4 | itself, internal/modal | Modals trap focus, close on Escape and sit in the top layer. |
 | inset | 87 | 66 | 14.1 | 14.1 | itself | – |
 | :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
 | Async Clipboard (writeText) | 66 (Edge 79) | 63 | 13.1 | 13.4 | itself | Copy buttons. |
@@ -442,27 +476,29 @@ overflow button is “+2 more sources”.
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 49.0 KB | 10.8 KB |
+| **This component alone** | 62.2 KB | 13.8 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
+| `internal/modal` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **57.1 KB** | **13.3 KB** |
-| With Lit – the first component on a page | 77.3 KB | 19.8 KB |
+| **Added to a page that already has Lit** | **71.8 KB** | **16.7 KB** |
+| With Lit – the first component on a page | 92.0 KB | 23.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -470,13 +506,13 @@ overflow button is “+2 more sources”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.8 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of segments replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 15 ms | segments: first render, 562 nodes; update 1.2 ms |
-| 1,000 items | 55 ms | segments: first render, 5,242 nodes; update 6.4 ms |
+| First render | **1.0 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of segments replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.5 ms | segments: first render, 562 nodes; update 0.7 ms |
+| 1,000 items | 52 ms | segments: first render, 5,242 nodes; update 4.5 ms |
 
-1,000 items of segments: 55 ms. It renders every item, so a first render passes 50 ms (a long task) at about 920 items – page or filter longer lists.
+1,000 items of segments: 52 ms. It renders every item, so a first render passes 50 ms (a long task) at about 970 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -497,6 +533,8 @@ overflow button is “+2 more sources”.
 - Give each source a short `site` for its chip (“Latency Notes”) and the page's real `title`.
 - Quote the passage the answer relies on, a sentence or two, and `highlight` the phrase that backs it.
 - Format `date` the way the rest of the product does – the component shows it as given.
+- For the viewer, `quote` must appear in the document text as written (case and line breaks don't matter). Sources
+  quoting the same document share a `document` id, so the viewer can step between their passages.
 
 ## Do and don't
 
@@ -505,12 +543,15 @@ overflow button is “+2 more sources”.
 - Pass `pagesRead` when the model read more than it cited, so people see the search was wider.
 - Give sources their favicon as `icon`; without one they get a letter on a soft colour.
 - Handle Open source yourself (`onOpenSource`) when sources open in a side panel or need checking first.
+- Use `loadDocument` for documents that are large or fetched on demand; it gets an AbortSignal for when the viewer
+  closes first.
 
 ### Don't
 
 - Don't cite a source the answer doesn't use – a chip nobody cites says “read, not cited”.
 - Don't put the whole page in `quote` – the preview is for the passage, not the article.
 - Don't number sources in the text yourself; the markers follow the order of `sources`.
+- Don't pass HTML as a document's text – it's shown as plain text, with blank lines starting paragraphs.
 
 ## Related
 

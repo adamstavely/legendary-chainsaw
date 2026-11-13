@@ -235,7 +235,9 @@
       "tc-feedback",
       "tc-follow-up",
       "tc-stop",
-      "tc-copy"
+      "tc-copy",
+      "tc-continue",
+      "tc-retry"
     ]
   },
   {
@@ -302,7 +304,7 @@
   {
     "tag": "tc-answer-arena",
     "name": "AnswerArena",
-    "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
+    "description": "Two to four models' answers to the same prompt side by side, with a vote: which is better (or best), a tie or all bad, and a reason.",
     "events": [
       "tc-value-change"
     ]
@@ -768,7 +770,8 @@
     "events": [
       "tc-preview-change",
       "tc-open-source",
-      "tc-action"
+      "tc-action",
+      "tc-source-open"
     ]
   },
   {
@@ -1552,6 +1555,16 @@
     ]
   },
   {
+    "tag": "tc-ghost-completion",
+    "name": "GhostCompletion",
+    "description": "A text field with dimmed AI suggestions after the caret – Tab accepts, Ctrl/⌘ + → takes a word, Escape dismisses.",
+    "events": [
+      "tc-value-change",
+      "tc-accept",
+      "tc-dismiss"
+    ]
+  },
+  {
     "tag": "tc-ghosted-chat",
     "name": "GhostedChat",
     "description": "Unanswered chat messages – an illustration for being ghosted.",
@@ -2009,7 +2022,9 @@
       "tc-version-change",
       "tc-copy",
       "tc-feedback",
-      "tc-speak"
+      "tc-speak",
+      "tc-report",
+      "tc-report-undo"
     ]
   },
   {
@@ -2097,6 +2112,15 @@
       "tc-view-change",
       "tc-date-change",
       "tc-visible-change"
+    ]
+  },
+  {
+    "tag": "tc-multiplayer-thread",
+    "name": "MultiplayerThread",
+    "description": "One chat thread with several people and one model – presence, typing, grouped messages and",
+    "events": [
+      "tc-send",
+      "tc-mode-change"
     ]
   },
   {
@@ -2223,6 +2247,18 @@
     "events": [
       "tc-expanded-change",
       "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-panel-dock",
+    "name": "PanelDock",
+    "description": "One side panel beside a chat with a tab per open item – resizable, collapsible to a rail, a full-width sheet when narrow.",
+    "events": [
+      "tc-active-change",
+      "tc-close",
+      "tc-width-change",
+      "tc-open-change",
+      "tc-collapsed-change"
     ]
   },
   {
@@ -2979,7 +3015,9 @@
       "tc-command",
       "tc-pressed-change",
       "tc-values-change",
-      "tc-close"
+      "tc-close",
+      "tc-rewrite",
+      "tc-rewrite-accept"
     ]
   },
   {
@@ -3028,6 +3066,17 @@
     "description": "Where a long LLM session stands: a health pill, tiles for the goal, open loops, pending artifacts and context",
     "events": [
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-session-tabs",
+    "name": "SessionTabs",
+    "description": "Open chats as a row of tabs above a chat thread – status, unread, close, reorder by drag or keys, and a menu of the tabs out of view.",
+    "events": [
+      "tc-active-change",
+      "tc-order-change",
+      "tc-close",
+      "tc-new"
     ]
   },
   {
@@ -3384,6 +3433,17 @@
       "tc-progress-change",
       "tc-done",
       "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-thread-header",
+    "name": "ThreadHeader",
+    "description": "The bar at the top of a chat thread – the title renamed in place, model and project chips, Share, side-panel toggles and a menu.",
+    "events": [
+      "tc-title-change",
+      "tc-panels-change",
+      "tc-share",
+      "tc-action"
     ]
   },
   {

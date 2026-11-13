@@ -65,6 +65,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           }
           onSpeak={(p) => setStatus(p ? "Reading aloud…" : "Stopped reading")}
           speakDuration={4000}
+          reportable
+          onReport={(r) => setStatus(`Reported for review: ${r.reason}${r.details ? ` – “${r.details}”` : ""}`)}
+          onReportUndo={() => setStatus("Report withdrawn")}
         />
       </div>
       <div style={{ fontSize: 12, color: "var(--tc-text-muted, light-dark(#646464, #9a9aa1))" }}>{status}</div>

@@ -86,9 +86,9 @@ When a fork reports back, note:
      lists any other copy for you to look at – iCloud's copy can be the newer one;
    - regenerates the element index, docs, Angular wrappers and generative schemas;
    - measures performance and captures thumbnails for anything new;
-   - exports every gallery page to `docs/` as Markdown. CI fails a PR whose `docs/` is out of date, and a merge to
+   - exports every gallery page to `docs/` as Markdown and rebuilds `standalone/trenchcoat-gallery.html`. CI fails a PR whose `docs/` is out of date, and a merge to
      `main` mirrors `docs/` to the [trenchcoat-docs](https://github.com/adamstavely/trenchcoat-docs) repo, so commit
-     the new and changed pages under `docs/` with the component;
+     the new and changed pages under `docs/` and the standalone gallery with the component;
    - re-sorts the canvas's Similar layout (`canvas/src/data/similarity.json`) for the new thumbnails, since Canvas CI
      runs on every Trenchcoat change and fails when a thumbnail isn't in it;
    - runs every check;

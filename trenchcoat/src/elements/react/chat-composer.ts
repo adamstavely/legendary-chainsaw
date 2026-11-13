@@ -7,6 +7,7 @@ import {
   chatModelLogo,
   defaultChatModels,
   type ChatModel as ElementModel,
+  type ChatLimitAction,
   type ChatPageContext,
   type ChatPageContextChange,
   type ChatPromptPick,
@@ -19,7 +20,7 @@ import type { ContextTrayChange, ContextTrayItem } from "../context-tray";
 import type { MentionPickerPick } from "../mention-picker";
 import type { ModelSettingsValue } from "../model-settings";
 import { h, isNode, useControlled, useStaged } from "./internal";
-export type { ChatPageContext, ChatPageContextChange, ChatPromptPick, ChatSend, ChatSendDetails, ChatSettingsChange, ChatSkillRef } from "../chat-composer";
+export type { ChatLimit, ChatLimitAction, ChatPageContext, ChatPageContextChange, ChatPromptPick, ChatSend, ChatSendDetails, ChatSettingsChange, ChatSkillRef } from "../chat-composer";
 
 /** A skill (slash command) in the composer; `icon` may be a React node */
 export type ChatSkill = Omit<ElementSkill, "icon"> & { icon?: React.ReactNode | Element };
@@ -76,6 +77,8 @@ const RawChatComposer = createComponent({
     onTcPromptPick: "tc-prompt-pick" as EventName<CustomEvent<ChatPromptPick>>,
     onTcPageContextChange: "tc-page-context-change" as EventName<CustomEvent<ChatPageContextChange>>,
     onTcSkillChange: "tc-skill-change" as EventName<CustomEvent<ElementSkillChange>>,
+    onTcLimitAction: "tc-limit-action" as EventName<CustomEvent<ChatLimitAction>>,
+    onTcTrialAction: "tc-trial-action" as EventName<CustomEvent<ChatLimitAction>>,
   },
 });
 type RawChatComposerProps = React.ComponentProps<typeof RawChatComposer>;
@@ -99,7 +102,9 @@ type Own =
   | "onTcPick"
   | "onTcSettingsChange"
   | "onTcPromptPick"
-  | "onTcPageContextChange";
+  | "onTcPageContextChange"
+  | "onTcLimitAction"
+  | "onTcTrialAction";
 export type ChatComposerProps = Omit<RawChatComposerProps, Own> & {
   /** The message (controlled). Leave undefined to let the composer keep it, starting at `defaultValue` */
   value?: string;
@@ -159,6 +164,10 @@ export type ChatComposerProps = Omit<RawChatComposerProps, Own> & {
   defaultSkill?: string;
   /** The message's skill changed: the skill now (null: none) and why – picked, replaced, removed, edited away or sent */
   onSkillChange?: (skill: ChatSkill | null, reason: ChatSkillChangeReason) => void;
+  /** The limit notice's action was pressed – upgrade or learn more */
+  onLimitAction?: (limit: ChatLimitAction["limit"]) => void;
+  /** The trial-ended notice's action was pressed */
+  onTrialAction?: (limit: ChatLimitAction["limit"]) => void;
 };
 
 export function ChatComposer({
@@ -188,6 +197,8 @@ export function ChatComposer({
   skill,
   defaultSkill = "",
   onSkillChange,
+  onLimitAction,
+  onTrialAction,
   ...props
 }: ChatComposerProps) {
   // Logos given as React components render in the staging box; the element gets their DOM nodes
@@ -267,5 +278,7 @@ export function ChatComposer({
       lastPage.current = e.detail.change;
       p.handler(e.detail.pageContext, e);
     },
+    onTcLimitAction: (e: CustomEvent<ChatLimitAction>) => onLimitAction?.(e.detail.limit),
+    onTcTrialAction: (e: CustomEvent<ChatLimitAction>) => onTrialAction?.(e.detail.limit),
   }));
 }

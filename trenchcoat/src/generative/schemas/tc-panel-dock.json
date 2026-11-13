@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-panel-dock.json",
+  "title": "tc-panel-dock",
+  "description": "One side panel beside a chat with a tab per open item – resizable, collapsible to a rail, a full-width sheet when narrow.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PanelDockItem"
+      },
+      "description": "The items open in the panel, in tab order"
+    },
+    "active": {
+      "type": "string",
+      "description": "The shown item's id. Changed by the tabs unless a tc-active-change listener calls preventDefault()"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the panel shows at all. Closed by its Close button or Escape unless a tc-open-change listener calls preventDefault()"
+    },
+    "collapsed": {
+      "type": "boolean",
+      "description": "Folded to a rail of icons. Changed by Collapse and Expand unless a tc-collapsed-change listener calls preventDefault()"
+    },
+    "width": {
+      "type": "number",
+      "description": "The panel's width, px. Changed by the splitter unless a tc-width-change listener calls preventDefault()"
+    },
+    "minWidth": {
+      "type": "number",
+      "description": "The narrowest the splitter goes, px"
+    },
+    "maxWidth": {
+      "type": "number",
+      "description": "The widest the splitter goes, px"
+    },
+    "breakpoint": {
+      "type": "number",
+      "description": "Below this width of its parent, px, the panel becomes a full-width sheet over the page; 0 never"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "description": "Which side of the chat the panel docks on – the splitter is on the other edge"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "panel": {
+          "type": "string"
+        },
+        "tabs": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "closePanel": {
+          "type": "string"
+        },
+        "collapse": {
+          "type": "string"
+        },
+        "expand": {
+          "type": "string"
+        },
+        "resize": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "widthText": {
+          "type": "string"
+        },
+        "closed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PanelDockItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "description": "What it is, in a word: \"Artifact\", \"File\", \"Source\", \"Preview\" – read with the title"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Lucide-style path data for its icon; a file icon when left out"
+        },
+        "closable": {
+          "type": "boolean",
+          "description": "false hides its close button"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1109,6 +1109,7 @@
      "button",
      "chat-composer",
      "context-tray",
+     "mention-picker",
      "model-picker",
      "model-settings",
      "segmented-control",
@@ -1468,11 +1469,14 @@
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
      "itself",
+     "ai-answer",
      "internal/card-head",
      "internal/kit",
      "chat-composer",
+     "mention-picker",
      "internal/popover",
      "validity-badge",
+     "message-actions",
      "tokens.css"
     ]
    },
@@ -1501,6 +1505,7 @@
  },
  "runtime": {
   "timers": [
+   "setInterval, cleared (ai-answer)",
    "setTimeout (ai-answer)",
    "setInterval, cleared (chat-composer)",
    "setTimeout (chat-composer)",
@@ -1548,7 +1553,9 @@
    "MutationObserver (message-actions)"
   ],
   "clock": [
+   "Date.now() (ai-answer)",
    "performance.now() (ai-answer)",
+   "Date.now() (chat-composer)",
    "performance.now() (internal/controllers › RollingController)",
    "performance.now() (prompt-library)",
    "Date.now() (chat-history)",
@@ -1601,7 +1608,7 @@
   "windowed": false
  },
  "size": {
-  "min": 672170,
-  "gzip": 158972
+  "min": 703638,
+  "gzip": 167011
  }
 }

@@ -13,11 +13,21 @@ answer is finished, people can copy it with its sources, regenerate it, rate it 
 follow-up question. The answer is plain text: blank lines make paragraphs, a paragraph whose every line starts with “- ” is a
 list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 
+Two states cover what goes wrong. **Interrupted** (`interrupted`) is an answer that stopped part way – the reader
+stopped it, the connection dropped, or it reached its length limit. The text written so far stays, a quiet notice says
+why in words, and Continue and Retry are offered. **Unavailable** (`unavailable`) is a model that can't answer right
+now – busy or down. The notice says so and when it will try again, as a countdown that keeps itself fresh, with Try
+now and, when you name one, “Use <fallback>” to answer with another model.
+
 ## When to use
 
 - Answers from a knowledge base, search or company documents, where people need to see and check the sources.
 - One question and its answer as a unit – a help panel, a search results page, an “Ask” box.
 - Streaming answers from your model: pass the text as it grows and set `streaming` until it's complete.
+- Answers that can be cut off – a dropped connection, a token limit, a Stop – where people should keep what they
+  have and carry on (`interrupted`).
+- A model that's overloaded, rate-limited or down, where people should see when it will try again and what else they
+  can do (`unavailable`).
 
 ## When not to use
 
@@ -36,13 +46,16 @@ list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 5. **Citation** `.ui-ans__cite` – a chip naming its source; it previews the source and lights up its card
 6. **Footer** `.ui-ans__foot` – Stop while writing; then Copy, Regenerate, Good answer, Bad answer and the status.
    `hide-actions` leaves the finished row out, for an app that puts `message-actions` there instead
+7. **Notice** `.ui-ans__notice` – an interrupted answer (why, Continue and Retry) or an unavailable model (busy or
+   down, the countdown `.ui-ans__notice-when`, Try now and Use <fallback>)
 
 ## Looks
 
 Standard sets the question on a gray tray, the answer on a white card below it and the footer on the tray, and its assistant is
 a small blue cloud whose eyes scan the sources and follow the text. Clean has no tray: one white card holds
 everything, the question as its first row and the footer as its last, and the assistant is a blue sparkle; its icons are smaller and thinner. Both
-stream, cite and preview the same way.
+stream, cite and preview the same way. The notice is a soft gray panel under the text in both looks, its first button
+the primary one.
 
 ## Keyboard
 
@@ -55,6 +68,8 @@ reasons and the follow-up questions.
 | Enter / Space | On a citation chip: opens or closes the preview. On a button: presses it |
 | Escape | Closes the source preview, wherever focus is |
 
+The notice's buttons – Continue and Retry, or Try now and Use <fallback> – are ordinary buttons in the Tab order.
+
 ## Screen readers
 
 The question is a heading, and the sources a list named “Sources”. The label says what's happening (“Reading 3
@@ -63,6 +78,12 @@ source's name and title (“Notion – Remote work policy (2026)”); while its 
 it. Good answer and Bad answer are toggle buttons with `aria-pressed`, and Copy answer becomes “Copied”. A polite
 status says how the answer ended and what happened next: “Answered in 3.2s”, “Stopped”, “Copied”, “What went wrong?”,
 “Thanks for the feedback”. A failed regenerate is an alert (“Couldn't regenerate: …”).
+
+The notice is a group named by its sentence. When an answer is interrupted the status says why, once (“The
+connection dropped before the answer finished.”), and the footer's status reads “Connection lost”, “Stopped before
+it finished” or “Reached the length limit”. While the model is unavailable the label says “Waiting for Atlas” and the
+status says “Atlas is busy right now.” once; the countdown in the notice updates silently, so it's read only when
+people move to it.
 
 ## Content
 
@@ -74,6 +95,9 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 - Give each source a short `name` people recognise (“Notion”, “Slack”) – it's the text on the chip – and a `snippet`
   with the passage the answer relies on.
 - Offer follow-ups as full questions people would ask next, not topics.
+- Leave the notice's sentence to the element unless you know more: a `message` such as “Your plan allows 4,000
+  words per answer.” beats a generic one.
+- Give `unavailable.retryAt` only when you'll really try again then, and name a `fallback` people would accept.
 
 ## Do
 
@@ -82,12 +106,19 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 - Pass `animate={false}` (React) or `animated = false` for answers loaded from history.
 - In a conversation that puts `message-actions` under every reply, set `hide-actions` (React: `hideActions`) so the
   answer doesn't show a second row of the same actions.
+- After `tc-stop`, set `interrupted = { reason: "stopped" }` if people may want to carry on.
+- In React, own `interrupted` and `unavailable`: Continue and Retry call `onContinue` and `onRetry`, and the page
+  clears the state when it asks again.
+- On Continue, keep the text and stream the rest on after it: an `answer` that starts with the old one is written on,
+  not started over.
 
 ## Don't
 
 - Don't cite numbers that have no source – `[4]` with three sources is left out of the text.
 - Don't put links in the answer text; it's plain text, and sources belong in the cards.
 - Don't hide the sources to save space – the answer is only as trustworthy as what people can check.
+- Don't throw away a cut-off answer and start over without asking – `interrupted` keeps it.
+- Don't leave `unavailable` set once the model answers again – clear it, and the answer starts over.
 
 ## Example
 
@@ -110,6 +141,17 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
   answer.followUps = ["How do I request manager approval?"];
   answer.answer = "Yes – for **up to 30 working days a year**, with your manager's approval [1].";
   answer.addEventListener("tc-follow-up", (e) => console.log(e.detail.question));
+
+  // The connection dropped: keep the text, say why, offer Continue and Retry
+  answer.interrupted = { reason: "network" };
+  answer.addEventListener("tc-continue", () => {
+    // The element clears `interrupted`; stream the rest on after the text so far
+    answer.streaming = true;
+  });
+
+  // Or: the model is busy – try again in 40 seconds, or answer with another model now
+  // answer.unavailable = { model: "Atlas", reason: "busy", retryAt: Date.now() + 40_000, fallback: "Nova" };
+  answer.addEventListener("tc-retry", (e) => console.log("Ask again with", e.detail.model ?? "the same model"));
 </script>
 ```
 
@@ -126,7 +168,19 @@ const sources: AnswerSource[] = [
   },
 ];
 
-export function Answer({ text, streaming }: { text: string; streaming: boolean }) {
+export function Answer({
+  text,
+  streaming,
+  cutOff,
+  busyUntil,
+  onAskAgain,
+}: {
+  text: string;
+  streaming: boolean;
+  cutOff: boolean;
+  busyUntil?: number;
+  onAskAgain: (model?: string, keepText?: boolean) => void;
+}) {
   return (
     <AIAnswer
       question="Can I work from abroad for a few weeks?"
@@ -135,6 +189,10 @@ export function Answer({ text, streaming }: { text: string; streaming: boolean }
       streaming={streaming}
       followUps={["How do I request manager approval?"]}
       onFeedback={(value, reason) => console.log(value, reason)}
+      interrupted={cutOff ? { reason: "network" } : null}
+      unavailable={busyUntil ? { model: "Atlas", reason: "busy", retryAt: busyUntil, fallback: "Nova" } : null}
+      onContinue={() => onAskAgain(undefined, true)}
+      onRetry={(retry) => onAskAgain(retry.model)}
     />
   );
 }
