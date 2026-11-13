@@ -119,8 +119,8 @@ for (const look of ["standard", "clean"] as const) {
       const el = await mount(html`<tc-agent-graph look=${look} .nodes=${nodes} .edges=${[["lead", "search"]]} .now=${1000}></tc-agent-graph>`);
       el.calls = [{ id: "c1", from: "lead", to: "search", at: 1000, status: "pending" }];
       await settle();
-      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-      expect(el.querySelector(".ui-agg__pulse")).toBeTruthy();
+      // The frame loop draws the pulse on a later frame – how many depends on the runner
+      await expect.poll(() => el.querySelector(".ui-agg__pulse")).toBeTruthy();
       expect(el.querySelector("path.ui-agg__edge")!.hasAttribute("data-live")).toBe(true);
       el.paused = true;
       el.calls = [...el.calls, { id: "c2", from: "lead", to: "search", at: 1000, status: "ok" }];

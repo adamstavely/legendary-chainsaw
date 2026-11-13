@@ -158,7 +158,9 @@ describe("tc-recipe-card", () => {
 
   test("a timer starts, pauses, resumes, finishes with an announcement, and resets", async () => {
     const el = await make();
-    el.tickMs = 20;
+    // A tick too slow to finish while the running state is checked, then a fast one to finish: an interval is set when
+    // a timer starts, so the speed changes across a pause and resume, and nothing depends on how fast the runner is
+    el.tickMs = 100000;
     await settle();
     const done: { step: number; text: string }[] = [];
     el.addEventListener("tc-timer-done", (e) => done.push((e as CustomEvent<{ step: number; text: string }>).detail));
@@ -170,6 +172,11 @@ describe("tc-recipe-card", () => {
     expect(timer().getAttribute("data-state")).toBe("running");
     expect(timer().querySelector('[role="timer"]')).not.toBeNull();
     expect(status(el)).toBe("Timer started: 2 s");
+    button().click();
+    await settle();
+    expect(timer().getAttribute("data-state")).toBe("paused");
+    el.tickMs = 20;
+    button().click();
     await expect.poll(() => timer().getAttribute("data-state"), { timeout: 5000 }).toBe("done");
     expect(done).toEqual([{ step: 2, text: "Simmer for 2 seconds." }]);
     expect(status(el)).toBe("Timer done: step 3, Simmer for 2 seconds.");
