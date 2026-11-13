@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-340 items · 340 files
+345 items · 345 files
 
 ## Agents (49)
 
@@ -79,7 +79,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Retrieval Settings](retrieval-settings.md) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
 - [Tool Configuration](tool-configuration.md) – A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs
 
-## AI & chat (46)
+## AI & chat (48)
 
 - [Agent Face](agent-face.md) – Donovan's animated face, which shows what the agent is doing – nine states that blend on springs, blinks and glances, a nod or a hop, sharp from 16 to 256 px and resting when it isn't busy
 - [AI Answer](ai-answer.md) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
@@ -102,6 +102,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Feedback Rubric](feedback-rubric.md) – Rate an answer the useful way – rubric criteria, what kind of failure it was, and the answer it should have been, ready for training and evals
 - [File Summary](file-summary.md) – What's in a file without opening it – an AI summary that streams in, key points citing their pages or times, the people, organisations, dates and amounts it mentions, and Copy, Regenerate and Open file
 - [Generated UI](generated-ui.md) – A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
+- [Ghost Completion](ghost-completion.md) – Dimmed AI suggestions after the caret as you write – Tab takes them, Ctrl/⌘ + → takes a word, Escape dismisses, and typing the same letters uses them up; asked from the page after typing pauses, aborted when it resumes
 - [Guardrail Notice](guardrail-notice.md) – When a policy blocks, redacts or rewrites content – which policy, why, what changed with personal data masked, and a way to ask for review
 - [Image Generation](image-generation.md) – One image while it's generated – its place in the queue, then the picture taking shape in a frame of the image's own shape as a blurred preview or colour field clears, the step, percentage and time left, the image fading in when it's done or why it failed with Try again, the prompt with Show more, and Cancel, Download, Regenerate and Copy prompt
 - [Image Grid](image-grid.md) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
@@ -112,6 +113,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Message Actions](message-actions.md) – The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
 - [Message Status](message-status.md) – The quiet row under a sent message – a read receipt from sending to delivered to read (or Not sent with Retry), a relative time that keeps itself fresh, and Copy, Send again, Branch into a new chat and Edit
 - [Model Picker](model-picker.md) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
+- [Multiplayer Thread](multiplayer-thread.md) – One chat thread shared by several people and one model – grouped messages with names, joins and leaves, who's here and typing, @-mentions, a switch for whether the model answers every message or only when mentioned, and "Replying to" on its answers
 - [Pixel Loader](pixel-loader.md) – A small working row – a 5 × 5 grid of dots lit in a wave, a snake, a twinkle or an orbit, a shimmering label and the time since the work started, settling into a check or a cross when it ends
 - [Prompt Library](prompt-library.md) – Saved prompt templates with variables – type straight into the sentence, watch the finished prompt assemble below, and use it once every variable is filled
 - [Prompt Starters](prompt-starters.md) – Where to begin, and what to ask next – suggestions for an empty chat and follow-ups after an answer, from the conversation's context
@@ -273,7 +275,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Saved Search Alerts](saved-search-alerts.md) – Saved searches that tell you about new matches – “12 new since Tue”, how often and where each one checks, pause, Run now, remove with Undo, and Add alert from the current search
 - [Search History](search-history.md) – Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and times, and Run again, a save star and Remove with Undo on each
 
-## Workspace & sessions (25)
+## Workspace & sessions (28)
 
 - [Branch Switcher](branch-switcher.md) – the current branch with ahead/behind counts and a filterable list of worktrees, local and remote branches to switch to or create from.
 - [Change List](change-list.md) – Proposed code changes as compact rows – state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.
@@ -289,6 +291,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Meter Row](meter-row.md) – How full something is on one line – a label, a percentage and a tiny bar, with a mark and a word when it's getting full; can open the details or sit compact beside a value.
 - [Network Log](network-log.md) – The requests a web page made: status, method, name, size, time and a waterfall, with type chips and a detail of headers and response.
 - [Panel Card](panel-card.md) – One section of a side panel – a heading, a short value and content that glides open and shut, or a row that opens something else.
+- [Panel Dock](panel-dock.md) – One side panel beside a chat, with a tab per open item – an artifact, a file, a source or a preview – resized from its edge, folded to a rail of icons, closed with Escape, and a full-width sheet when space is narrow
 - [PR Link](pr-link.md) – A pull request named in running text – its state's mark and owner/repo#number · title as a link, with a card of its state, author, lines changed and files on hover or focus; compact for just #number
 - [Preview Card](preview-card.md) – A gallery tile – a large preview above a one-line title and a two-line description; a picture or a live component scaled down from its design width, a badge, a horizontal list form and a loading skeleton, the whole card one link
 - [Preview Frame](preview-frame.md) – a browser pane around a page the app supplies: address, back, forward and reload, phone, tablet and desktop widths zoomed to fit, a console count, tabs, and loading, error and empty states.
@@ -298,7 +301,9 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Route Map](route-map.md) – An app's routes as an indented list with :params picked out, a status mark and word, load time and last visit; status chips filter it, and pressing a route opens it.
 - [Search Results](search-results.md) – results of a search across files, grouped by file with the matched text marked, with match case, whole word and regular expression toggles, collapse all, and an optional replace preview.
 - [Session List](session-list.md) – sessions in a sidebar, pinned first and grouped by project or status, with status, unread dot, branch, time, Pin and Archive.
+- [Session Tabs](session-tabs.md) – Open chats as tabs above a thread – status as a mark and a word, unread dots, close, drag or Alt+Shift+arrows to reorder, and a menu of the tabs scrolled out of view
 - [Terminal](terminal.md) – A command line for a panel – output in colour above a prompt with history, Ctrl+C and Ctrl+L; the page runs the commands
+- [Thread Header](thread-header.md) – The bar at the top of a chat thread – the title renamed in place, model and project chips, Share, side-panel toggles and a menu of actions, folding into the menu when narrow
 - [Web Vitals](web-vitals.md) – A tile per measure (LCP, INP, CLS, FCP, TTFB or the page's own) with its value, a Good / Needs improvement / Poor word, a three-zone track and earlier readings, plus an optional Mobile / Desktop switch.
 
 ## Charts (39)

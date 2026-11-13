@@ -509,3 +509,208 @@ describe("tc-mention-picker: ranking, recents and richer rows (Part 7.2)", () =>
     expect(picker.open).toBe(true);
   });
 });
+
+/* ---------- Commands with arguments ---------- */
+
+const argCommands: MentionPickerGroup = {
+  id: "commands",
+  label: "Commands",
+  items: [
+    { id: "summarize", label: "summarize", token: "/summarize" },
+    {
+      id: "translate",
+      label: "translate",
+      description: "Translate the last answer",
+      token: "/translate",
+      args: [
+        { name: "language", type: "choice", options: ["French", "Spanish", "German"], required: true },
+        { name: "note", label: "Note", placeholder: "for the board" },
+      ],
+    },
+    { id: "audit", label: "audit", token: "/audit", args: [{ name: "sample", label: "Sample size", type: "number", required: true }] },
+  ],
+};
+const argTriggers: MentionPickerTrigger[] = [{ char: "/", atLineStart: true, label: "Commands", groups: [argCommands] }];
+
+async function argSetup(look: "standard" | "clean" = "standard") {
+  const wrap = await fixture<HTMLElement>(html`<div style="min-height: 460px"><textarea id="cmd" aria-label="Message"></textarea><tc-mention-picker look=${look} for="cmd" .triggers=${argTriggers}></tc-mention-picker></div>`);
+  const picker = wrap.querySelector<TcMentionPicker>("tc-mention-picker")!;
+  const input = wrap.querySelector<HTMLTextAreaElement>("#cmd")!;
+  await settle();
+  return { wrap, picker, input };
+}
+const form = (p: Element) => p.querySelector<HTMLFormElement>(".ui-mnp__args");
+const argField = (p: Element, i: number) => p.querySelectorAll<HTMLElement>(".ui-mnp__arg :is(input, [role=listbox])")[i];
+
+for (const look of ["standard", "clean"] as const) {
+  describe(`tc-mention-picker (${look}) – commands with arguments`, () => {
+    test("a command without args inserts at once, as before", async () => {
+      const { picker, input } = await argSetup(look);
+      const picks: MentionPickerPick[] = [];
+      picker.addEventListener("tc-pick", (e) => picks.push((e as CustomEvent<MentionPickerPick>).detail));
+      await type(input, "/sum");
+      key(input, { key: "Enter" });
+      await settle();
+      expect(input.value).toBe("/summarize ");
+      expect(picks[0].args).toBeUndefined();
+      expect(form(picker)).toBeNull();
+    });
+
+    test("picking a command with args opens its form; ↵ steps through, a required field must be filled, and the pick carries args", async () => {
+      const { picker, input } = await argSetup(look);
+      const picks: MentionPickerPick[] = [];
+      picker.addEventListener("tc-pick", (e) => picks.push((e as CustomEvent<MentionPickerPick>).detail));
+      await type(input, "/tran");
+      key(input, { key: "Enter" });
+      await settle();
+      expect(picks).toEqual([]);
+      const f = form(picker)!;
+      expect(f).not.toBeNull();
+      expect(f.getAttribute("aria-labelledby")).toBeTruthy();
+      expect(document.getElementById(f.getAttribute("aria-labelledby")!)!.textContent).toBe("/translate");
+      expect(picker.querySelector(".ui-mnp__list")!.hasAttribute("hidden")).toBe(true);
+      expect(input.hasAttribute("aria-activedescendant")).toBe(false);
+      expect(picker.querySelector("[role=status]")!.textContent!.trim()).toBe("/translate takes 2 details: language, Note");
+      const choices = argField(picker, 0);
+      await expect.poll(() => document.activeElement).toBe(choices);
+      expect(choices.getAttribute("role")).toBe("listbox");
+      expect(choices.getAttribute("aria-required")).toBe("true");
+      // ↵ on an empty required choice: Required, and it stays
+      key(choices, { key: "Enter" });
+      await settle();
+      expect(choices.getAttribute("aria-invalid")).toBe("true");
+      expect(document.getElementById(choices.getAttribute("aria-describedby")!)!.textContent).toBe("Required");
+      expect(document.activeElement).toBe(choices);
+      key(choices, { key: "ArrowDown" });
+      key(choices, { key: "ArrowDown" });
+      await settle();
+      expect(choices.querySelector('[aria-selected="true"]')!.textContent).toBe("Spanish");
+      expect(choices.getAttribute("aria-activedescendant")).toBe(choices.querySelector('[aria-selected="true"]')!.id);
+      expect(choices.getAttribute("aria-invalid")).toBe("false");
+      expect(picker.querySelector(".ui-mnp__assembled code")!.textContent).toBe("/translate language:Spanish");
+      key(choices, { key: "Enter" });
+      await settle();
+      const note = argField(picker, 1) as HTMLInputElement;
+      expect(document.activeElement).toBe(note);
+      expect(picker.querySelector(`label[for="${note.id}"]`)!.textContent).toBe("Note (optional)");
+      note.value = "for the board";
+      note.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      await settle();
+      expect(picker.querySelector(".ui-mnp__assembled code")!.textContent).toBe('/translate language:Spanish note:"for the board"');
+      key(note, { key: "Enter" });
+      await settle();
+      expect(picks).toEqual([
+        { item: argCommands.items[1], trigger: "/", query: "tran", token: '/translate language:Spanish note:"for the board"', args: { language: "Spanish", note: "for the board" } },
+      ]);
+      expect(input.value).toBe('/translate language:Spanish note:"for the board" ');
+      expect(document.activeElement).toBe(input);
+      expect(picker.open).toBe(false);
+    });
+
+    test("number args come back as numbers; Insert with a required field empty focuses it", async () => {
+      const { picker, input } = await argSetup(look);
+      const picks: MentionPickerPick[] = [];
+      picker.addEventListener("tc-pick", (e) => picks.push((e as CustomEvent<MentionPickerPick>).detail));
+      await type(input, "/aud");
+      key(input, { key: "Enter" });
+      await settle();
+      const sample = argField(picker, 0) as HTMLInputElement;
+      await expect.poll(() => document.activeElement).toBe(sample);
+      expect(sample.type).toBe("number");
+      form(picker)!.requestSubmit();
+      await settle();
+      expect(sample.getAttribute("aria-invalid")).toBe("true");
+      expect(picks).toEqual([]);
+      sample.value = "50";
+      sample.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      await settle();
+      [...form(picker)!.querySelectorAll("button")].find((b) => b.textContent === "Insert")!.click();
+      await settle();
+      expect(picks[0].args).toEqual({ sample: 50 });
+      expect(picks[0].token).toBe("/audit sample:50");
+    });
+
+    test("Escape cancels: nothing inserted, focus back in the text with the caret where it was", async () => {
+      const { picker, input } = await argSetup(look);
+      const picks: MentionPickerPick[] = [];
+      picker.addEventListener("tc-pick", (e) => picks.push((e as CustomEvent<MentionPickerPick>).detail));
+      await type(input, "/tran");
+      key(input, { key: "Enter" });
+      await settle();
+      await expect.poll(() => document.activeElement).toBe(argField(picker, 0));
+      key(argField(picker, 0), { key: "Escape" });
+      await settle();
+      expect(picks).toEqual([]);
+      expect(form(picker)).toBeNull();
+      expect(picker.open).toBe(false);
+      expect(document.activeElement).toBe(input);
+      expect(input.value).toBe("/tran");
+      expect(input.selectionStart).toBe(5);
+    });
+
+    test("a prevented pick leaves the field as it is", async () => {
+      const { picker, input } = await argSetup(look);
+      picker.addEventListener("tc-pick", (e) => e.preventDefault());
+      await type(input, "/aud");
+      key(input, { key: "Enter" });
+      await settle();
+      const sample = argField(picker, 0) as HTMLInputElement;
+      await expect.poll(() => document.activeElement).toBe(sample);
+      sample.value = "12";
+      sample.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      key(sample, { key: "Enter" });
+      await settle();
+      expect(input.value).toBe("/aud");
+      expect(picker.open).toBe(false);
+    });
+  });
+}
+
+test("React: onPick gets a command's args", async () => {
+  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  const seen: MentionPickerPick[] = [];
+  function App() {
+    const ref = React.useRef<HTMLTextAreaElement>(null);
+    return React.createElement(React.Fragment, null, React.createElement("textarea", { ref, "aria-label": "Message" }), React.createElement(MentionPicker, { target: ref, triggers: argTriggers, onPick: (p) => void seen.push(p) }));
+  }
+  await act(async () => root.render(React.createElement(App)));
+  await settle();
+  const input = host.querySelector("textarea")!;
+  const picker = host.querySelector("tc-mention-picker")!;
+  await type(input, "/aud");
+  key(input, { key: "Enter" });
+  await settle();
+  const sample = argField(picker, 0) as HTMLInputElement;
+  await expect.poll(() => document.activeElement).toBe(sample);
+  sample.value = "8";
+  sample.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  key(sample, { key: "Enter" });
+  await settle();
+  expect(seen.map((p) => p.args)).toEqual([{ sample: 8 }]);
+  expect(input.value).toBe("/audit sample:8 ");
+  await act(async () => root.unmount());
+  host.remove();
+});
+
+for (const theme of ["light", "dark"] as const)
+  for (const look of ["standard", "clean"] as const)
+    test(`axe: the argument form, with a required field flagged (${look}, ${theme})`, async () => {
+      const wrap = await fixture<HTMLElement>(html`<div data-tc-theme=${theme} style="min-height:460px">
+        <textarea id="ax" aria-label="Message"></textarea><tc-mention-picker look=${look} for="ax" .triggers=${argTriggers}></tc-mention-picker>
+      </div>`);
+      await settle();
+      const input = wrap.querySelector<HTMLTextAreaElement>("#ax")!;
+      await type(input, "/tran");
+      key(input, { key: "Enter" });
+      await settle();
+      const picker = wrap.querySelector<TcMentionPicker>("tc-mention-picker")!;
+      await expect.poll(() => document.activeElement).toBe(argField(picker, 0));
+      key(argField(picker, 0), { key: "Enter" });
+      await settle();
+      wrap.getAnimations({ subtree: true }).forEach((a) => a.finish());
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });

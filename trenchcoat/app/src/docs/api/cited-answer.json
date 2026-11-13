@@ -54,6 +54,22 @@
      "readonly": false
     },
     {
+     "name": "documents",
+     "attribute": null,
+     "type": "Record<string, string>",
+     "default": "{}",
+     "description": "Full text of the sources' documents, by document id (a source's `document`, else its id) – turns on View in document",
+     "readonly": false
+    },
+    {
+     "name": "loadDocument",
+     "attribute": null,
+     "type": "CitedDocumentLoader | undefined",
+     "default": "undefined",
+     "description": "Loads a document's full text when `documents` doesn't have it – turns on View in document for every source",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -80,6 +96,12 @@
      "detail": "",
      "description": "The action button (`actionLabel`) was pressed; detail: null",
      "cancelable": false
+    },
+    {
+     "name": "tc-source-open",
+     "detail": "",
+     "description": "View in document was pressed; detail `{ sourceId }` (CitedSourceOpen). Cancelable – prevented, the viewer doesn't open (the page shows the document its own way)",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -91,6 +113,14 @@
      "value": "light-dark(#f4f4f5, #222225)",
      "looks": [
       "standard"
+     ]
+    },
+    {
+     "name": "--tc-cited-answer-viewer-w",
+     "value": "560px",
+     "looks": [
+      "standard",
+      "clean"
      ]
     }
    ],
@@ -130,6 +160,7 @@
     "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-2xs",
     "--tc-font-size-md",
@@ -150,6 +181,8 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-scrim",
+    "--tc-shadow-overlay",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -160,10 +193,12 @@
     "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-5",
+    "--tc-space-6",
     "--tc-status-danger-fg",
     "--tc-status-success-fg",
     "--tc-surface-inverse",
     "--tc-surface-on-tray",
+    "--tc-surface-overlay",
     "--tc-surface-raised",
     "--tc-surface-tray",
     "--tc-text-disabled",
@@ -225,6 +260,12 @@
      "type": "{ label: string; onClick: () => void }",
      "optional": true,
      "description": "A button on the tray, e.g. { label: \"Follow up\", onClick }"
+    },
+    {
+     "name": "onSourceOpen",
+     "type": "(sourceId: string, event: CustomEvent<CitedSourceOpen>) => void",
+     "optional": true,
+     "description": "Called by View in document before the source viewer opens; call `event.preventDefault()` to show the document your own way"
     }
    ],
    "hides": [
@@ -236,7 +277,8 @@
    "events": {
     "tc-preview-change": null,
     "tc-open-source": "onOpenSource",
-    "tc-action": "onClick"
+    "tc-action": "onClick",
+    "tc-source-open": "onSourceOpen"
    }
   }
  ],
@@ -251,7 +293,9 @@
    "data": [
     "segments",
     "sources",
-    "preview"
+    "preview",
+    "documents",
+    "loadDocument"
    ],
    "attributes": [
     {
@@ -279,6 +323,10 @@
     {
      "name": "tc-action",
      "cancelable": false
+    },
+    {
+     "name": "tc-source-open",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -423,6 +471,24 @@
     ]
    },
    {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself",
+     "internal/modal"
+    ]
+   },
+   {
     "id": "inset",
     "name": "inset",
     "bcd": "css.properties.inset",
@@ -521,9 +587,27 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
     ]
    }
   ]
@@ -553,7 +637,7 @@
   "windowed": false
  },
  "size": {
-  "min": 58446,
-  "gzip": 13582
+  "min": 73501,
+  "gzip": 17061
  }
 }

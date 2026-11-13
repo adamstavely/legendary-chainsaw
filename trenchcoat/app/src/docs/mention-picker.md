@@ -14,6 +14,10 @@ Enter-to-send. Typing ranks the matches – a label's start, then a word's start
 marks the part that matched; before anything is typed, recently used items can come first. chat-composer builds its
 skills (slash commands) on it.
 
+A command can take arguments (`args` on the item): picking it turns the list into a short form – a field per
+argument, text, a number or a choice – and inserts the assembled command, such as “/translate language:French”, with
+the values in `tc-pick`'s `args`.
+
 ## When to use
 
 - Mentioning people, files or sources in a message to a person or an agent.
@@ -21,6 +25,7 @@ skills (slash commands) on it.
   `description` per command and `recent` ones first.
 - Suggestions that come from a server as people type – pass `search` and it shows a loading state and drops stale
   answers.
+- Commands that need a value or two before they can run – a language, a sample size – given as `args`.
 
 ## When not to use
 
@@ -36,6 +41,9 @@ skills (slash commands) on it.
 3. **Row** `.ui-mnp__option` – one result, with its icon or avatar, the label and a lighter hint; with a `description`, a second line under them
 4. **Highlight** `.ui-mnp__pill` – the fill that glides to the active row
 5. **Key hints** `.ui-mnp__foot` – ↑ ↓ to move, ↵ to insert, Esc to close
+6. **Argument form** `.ui-mnp__args` – for a command with `args`: the command, a field per argument (`.ui-mnp__arg`,
+   with `.ui-mnp__arg-input` or the choices `.ui-mnp__arg-choices`), the assembled command (`.ui-mnp__assembled`), and
+   Cancel and Insert
 
 ## Looks
 
@@ -43,6 +51,9 @@ Standard sets the list on a white card inside a gray tray, with the key hints on
 white popover with hairline shadows and the key hints as its last row (“esc” in lower case). Both glide the same
 highlight between rows and place the list the same way. A trigger's `note` sits over the list, under a hairline, in
 both.
+
+The argument form takes the list's place in the same popover, in both looks; the chosen choice gets the selected fill
+and ring, and a required field left empty gets a red edge and “Required”.
 
 ## Keyboard
 
@@ -57,6 +68,15 @@ The field keeps focus throughout; the picker takes these keys only while its lis
 
 Moving the caret out of the query, or pressing outside the field and the list, also closes it.
 
+In a command's argument form, focus moves into the form:
+
+| Key | What it does |
+|---|---|
+| Enter | Goes to the next field; on the last, inserts the command. A required field left empty says so and stays |
+| Tab / Shift+Tab | Moves to the next or previous field, then Cancel and Insert |
+| ↓ / ↑ / Home / End in a choice | Picks the next, previous, first or last choice |
+| Escape | Cancels: nothing is inserted and focus goes back to the text where it was |
+
 ## Screen readers
 
 The field is the combobox and keeps focus: an `<input>` or a contenteditable element gets `role="combobox"` and
@@ -69,6 +89,12 @@ suggestions” when a search fails, and the pick (“Inserted @Maya Chen”). An
 hint, the description and – in one ranked list (`rankAcrossGroups`) – its group's tag. The key hints and the note on screen are hidden from screen
 readers – the status says the note. The picker gives back the field's own attributes when it detaches.
 
+A command's argument form is a form named by the command (“/translate”). Text and number arguments are labelled
+inputs; a choice is a listbox named by its label, with the chosen option `aria-selected`. Required fields have
+`aria-required`, and when left empty `aria-invalid` and “Required” as their description. The status says what the
+command takes (“/translate takes 2 details: language, tone”) and, when something's missing, “language is required”.
+The assembled command is read with “Inserts:” before it.
+
 ## Content
 
 - Name each trigger's list in `label` by what it holds: “People and files”, “Commands”.
@@ -79,6 +105,8 @@ readers – the status says the note. The picker gives back the field's own attr
   “for ‘…’” with what was typed. A trigger's `emptyHint` says what to try instead: “Try another word, or press Esc to
   type it as text”.
 - Keep a `description` to one line on what the item does; it's cut with an ellipsis, and it's matched too.
+- Give a command no more than two or three `args`; name each the word that goes in the command (`language`) and give
+  it a friendlier `label` when that helps (“Sample size”). Say in the `description` that it asks for them.
 
 ## Do
 
@@ -92,7 +120,8 @@ readers – the status says the note. The picker gives back the field's own attr
 - Don't use a trigger character people type at the start of words for other reasons – “#” in a field where people
   write “#2” opens the list every time. (Inside a word, as in `ana@example.com`, a trigger is ignored.)
 - Don't add actions (“Invite someone”) as rows next to results.
-- Don't move focus into the list – it is designed to leave focus in the field.
+- Don't move focus into the list – it is designed to leave focus in the field. (A command's argument form is the one
+  place focus goes in, and it comes back to the field.)
 
 ## Example
 
@@ -109,12 +138,20 @@ readers – the status says the note. The picker gives back the field's own attr
   const commands = [
     { id: "sum", label: "summarize", description: "Sum up the thread", token: "/summarize" },
     { id: "tests", label: "tests", description: "Write tests for a file", token: "/tests", keywords: "spec" },
+    {
+      id: "translate",
+      label: "translate",
+      description: "Translate the last answer",
+      token: "/translate",
+      args: [{ name: "language", type: "choice", options: ["French", "Spanish"], required: true }],
+    },
   ];
   picker.triggers = [
     { char: "@", label: "People", groups: [{ id: "people", label: "People", items: people }] },
     { char: "/", atLineStart: true, label: "Commands", showChar: true, recent: ["tests"], noun: ["command", "commands"], groups: [{ id: "cmd", label: "Commands", items: commands }] },
   ];
-  picker.addEventListener("tc-pick", (e) => console.log(e.detail.token));
+  // A command with args: e.detail.token is "/translate language:French", e.detail.args is { language: "French" }
+  picker.addEventListener("tc-pick", (e) => console.log(e.detail.token, e.detail.args));
 </script>
 ```
 

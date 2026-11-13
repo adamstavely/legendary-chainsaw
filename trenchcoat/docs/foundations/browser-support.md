@@ -10,11 +10,11 @@ features that set those versions, and the features it uses only where they exist
 
 | Browser | Works fully from | Set by | At that version |
 | --- | --- | --- | --- |
-| Chrome | **123** | light-dark() | 438 components |
-| Edge | **123** | light-dark() | 438 components |
-| Firefox | **121** | :has() | 98 components |
-| Safari (macOS) | **17.5** | light-dark() | 438 components |
-| Safari (iOS, iPadOS) | **17.5** | light-dark() | 438 components |
+| Chrome | **123** | light-dark() | 443 components |
+| Edge | **123** | light-dark() | 443 components |
+| Firefox | **121** | :has() | 101 components |
+| Safari (macOS) | **17.5** | light-dark() | 443 components |
+| Safari (iOS, iPadOS) | **17.5** | light-dark() | 443 components |
 
 *Tested in Chromium 156, Firefox 157 and WebKit 27.2 (Playwright 1.64.0).*
 
@@ -22,41 +22,41 @@ features that set those versions, and the features it uses only where they exist
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Components | Kind |
 | --- | --- | --- | --- | --- | --- | --- |
-| light-dark() | 123 | 120 | 17.5 | 17.5 | 438 | Needed |
-| color-mix() | 111 | 113 | 16.2 | 16.2 | 438 | Needed |
-| :is() and :where() | 88 | 78 | 14 | 14 | 438 | Needed |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | 437 | Needed |
-| Container size queries | 105 | 110 | 16 | 16 | 312 | Needed |
-| inset | 87 | 66 | 14.1 | 14.1 | 205 | Needed |
-| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 184 | Needed |
+| light-dark() | 123 | 120 | 17.5 | 17.5 | 443 | Needed |
+| color-mix() | 111 | 113 | 16.2 | 16.2 | 443 | Needed |
+| :is() and :where() | 88 | 78 | 14 | 14 | 443 | Needed |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | 442 | Needed |
+| Container size queries | 105 | 110 | 16 | 16 | 314 | Needed |
+| inset | 87 | 66 | 14.1 | 14.1 | 207 | Needed |
+| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 188 | Needed |
 | IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 166 | Needed |
 | inert | 102 | 112 | 15.5 | 15.5 | 161 | Needed |
-| :has() | 105 | 121 | 15.4 | 15.4 | 98 | Needed |
+| :has() | 105 | 121 | 15.4 | 15.4 | 101 | Needed |
 | translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 67 | Needed |
 | aspect-ratio | 88 | 89 | 15 | 15 | 66 | Needed |
-| CSS masks | 1 | 53 | 4 | 3.2 | 58 | Needed |
+| CSS masks | 1 | 53 | 4 | 3.2 | 59 | Needed |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | 52 | Needed |
 | Async Clipboard (writeText) | 66 | 63 | 13.1 | 13.4 | 48 | Needed |
 | Form association (ElementInternals) | 77 | 98 | 16.4 | 16.4 | 34 | Needed |
 | Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | 20 | Needed |
 | Intl.RelativeTimeFormat | 71 | 65 | 14 | 14 | 13 | Needed |
 | Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 13 | Needed |
-| <dialog> and showModal() | 37 | 98 | 15.4 | 15.4 | 12 | Needed |
+| <dialog> and showModal() | 37 | 98 | 15.4 | 15.4 | 13 | Needed |
 | structuredClone() | 98 | 94 | 15.4 | 15.4 | 10 | Needed |
 | conic-gradient() | 69 | 83 | 12.1 | 12.1 | 5 | Needed |
 | ARIA reflection (element.ariaBusy…) | 81 | 119 | 12.1 | 12.1 | 2 | Needed |
-| forced-colors media query | 89 | 89 | 16 | 16 | 438 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
-| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 437 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
-| scrollbar-width | 121 | 64 | 18.2 | 18.2 | 121 | Progressive – Scrollbars keep the browser's default width. |
-| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 77 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
-| Popover API | 114 | 125 | 17 | 18.3 | 37 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
+| forced-colors media query | 89 | 89 | 16 | 16 | 443 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 442 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
+| scrollbar-width | 121 | 64 | 18.2 | 18.2 | 124 | Progressive – Scrollbars keep the browser's default width. |
+| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 79 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
+| Popover API | 114 | 125 | 17 | 18.3 | 38 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
 | @property | 85 | 128 | 16.4 | 16.4 | 27 | Progressive – The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
-| field-sizing | 123 | 152 | 26.2 | 26.2 | 19 | Progressive – Text fields grow with their text. Without it they keep their minimum height and scroll. |
+| field-sizing | 123 | 152 | 26.2 | 26.2 | 20 | Progressive – Text fields grow with their text. Without it they keep their minimum height and scroll. |
 | text-wrap: pretty | 117 | No | 26 | 26 | 17 | Progressive – Paragraphs may end on a single short word. |
 | scrollbar-color | 121 | 64 | 26.2 | 26.2 | 10 | Progressive – Scrollbars keep the browser's default colours. |
 | backdrop-filter | 76 | 103 | 18 | 18 | 10 | Progressive – What's behind a translucent surface isn't blurred; the surface keeps its fill. |
 | text-wrap: balance | 114 | 121 | 17.5 | 17.5 | 7 | Progressive – Titles break where the line fills up instead of into even lines. |
-| scrollbar-gutter | 94 | 97 | 18.2 | 18.2 | 2 | Progressive – Content can shift sideways when a scrollbar appears. |
+| scrollbar-gutter | 94 | 97 | 18.2 | 18.2 | 3 | Progressive – Content can shift sideways when a scrollbar appears. |
 
 The table above is generated: it's the highest floor of any component, with the features that set it. Every
 component reads the token dictionary, whose colours are `light-dark()` pairs, so `light-dark()` sets the floor for all

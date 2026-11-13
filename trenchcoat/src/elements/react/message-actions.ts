@@ -1,9 +1,10 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcMessageActions, TcMessageText, type MessageVersionChange } from "../message-actions";
+import { TcMessageActions, TcMessageText, type MessageReportDetail, type MessageVersionChange } from "../message-actions";
 import { h, useStaged } from "./internal";
 
-export type { FeedbackKind, MessageActionKey } from "../message-actions";
+export type { FeedbackKind, MessageActionKey, MessageReportDetail, ReportReason } from "../message-actions";
+export { defaultReportLabels } from "../message-actions";
 
 const RawMessageActions = createComponent({
   tagName: "tc-message-actions",
@@ -13,10 +14,12 @@ const RawMessageActions = createComponent({
     onTcVersionChange: "tc-version-change" as EventName<CustomEvent<MessageVersionChange>>,
     onTcCopy: "tc-copy" as EventName<CustomEvent<{ text?: string }>>,
     onTcSpeak: "tc-speak" as EventName<CustomEvent<{ playing: boolean }>>,
+    onTcReport: "tc-report" as EventName<CustomEvent<MessageReportDetail>>,
+    onTcReportUndo: "tc-report-undo" as EventName<CustomEvent<MessageReportDetail>>,
   },
 });
 type RawMessageActionsProps = React.ComponentProps<typeof RawMessageActions>;
-export type MessageActionsProps = Omit<RawMessageActionsProps, "onTcVersionChange" | "onTcCopy" | "onTcSpeak" | "onTcFeedback" | "ownSpeech"> & {
+export type MessageActionsProps = Omit<RawMessageActionsProps, "onTcVersionChange" | "onTcCopy" | "onTcSpeak" | "onTcFeedback" | "ownSpeech" | "onTcReport" | "onTcReportUndo"> & {
   /** Called with the version index picked in the switcher */
   onVersionChange?: (index: number) => void;
   /** Called once `text` is on the clipboard (or right away when there's no `text`). "Copied" shows only after a successful write */
@@ -26,8 +29,12 @@ export type MessageActionsProps = Omit<RawMessageActionsProps, "onTcVersionChang
    * `speaking`) the browser's speech synthesis reads `text`
    */
   onSpeak?: (playing: boolean) => void;
+  /** Called when a report is sent (with `reportable`). Return false to keep the form open – nothing is confirmed */
+  onReport?: (report: MessageReportDetail) => void | boolean;
+  /** Called when Undo withdraws a report */
+  onReportUndo?: (report: MessageReportDetail) => void;
 };
-export function MessageActions({ version, onVersionChange, onCopy, onSpeak, ...props }: MessageActionsProps) {
+export function MessageActions({ version, onVersionChange, onCopy, onSpeak, onReport, onReportUndo, ...props }: MessageActionsProps) {
   return h(RawMessageActions, {
     ...props,
     version,
@@ -39,6 +46,10 @@ export function MessageActions({ version, onVersionChange, onCopy, onSpeak, ...p
     },
     onTcCopy: (e: CustomEvent<{ text?: string }>) => onCopy?.(e.detail.text),
     onTcSpeak: (e: CustomEvent<{ playing: boolean }>) => onSpeak?.(e.detail.playing),
+    onTcReport: (e: CustomEvent<MessageReportDetail>) => {
+      if (onReport?.(e.detail) === false) e.preventDefault();
+    },
+    onTcReportUndo: (e: CustomEvent<MessageReportDetail>) => onReportUndo?.(e.detail),
   });
 }
 

@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { ModalController } from "./internal/modal";
 import { safeUrl } from "./internal/safe-url";
 
 /*
@@ -21,6 +22,12 @@ import { safeUrl } from "./internal/safe-url";
  * The open preview is `preview` (null: closed) with a cancelable `tc-preview-change`. Open source fires
  * `tc-open-source`; with `open-handled` the link doesn't navigate on its own (and sources without a url get the button).
  * The host is the group ("Answer with sources") unless the page names it.
+ *
+ * The source viewer: when the page gives the full text of a source's document – `documents` (text by document id) or
+ * `loadDocument(sourceId, signal)` – the preview gets View in document. It opens a side sheet (a modal dialog: Tab
+ * stays inside, Escape closes, focus goes back) with the document's text scrolled to the cited passage, the quote's
+ * words marked, and Previous / Next passage through every source cited from the same document (`document` on the
+ * source names it; it defaults to the source's id). Opening fires a cancelable `tc-source-open`.
  */
 
 export type CitedSegment = {
@@ -47,7 +54,25 @@ export type CitedSource = {
   highlight?: string[];
   /** A favicon or logo element (cloned), shown at 16px – a letter on a soft color when left out */
   icon?: Element;
+  /** Id of the full document the quote comes from, for the source viewer – sources that share one are its passages. Defaults to the source's id */
+  document?: string;
 };
+
+/** Loads a document's full text for the source viewer. The signal aborts when the viewer closes or moves to another document */
+export type CitedDocumentLoader = (sourceId: string, signal: AbortSignal) => Promise<string>;
+/** tc-source-open: the source whose document the viewer is about to show */
+export type CitedSourceOpen = { sourceId: string };
+
+/** A cited passage found in a document's text: the source and where its quote sits */
+type Passage = { source: CitedSource; start: number; end: number };
+
+/** Where the quote sits in the text – matched without regard to case or how the whitespace runs */
+function findQuote(text: string, quote: string | undefined) {
+  const words = (quote ?? "").replace(/^[\s“"'‘…]+|[\s”"'’…]+$/g, "").split(/\s+/).filter(Boolean);
+  if (!words.length) return null;
+  const m = new RegExp(words.map(escape).join("\\s+"), "i").exec(text);
+  return m ? { start: m.index, end: m.index + m[0].length } : null;
+}
 
 /* ---------- Helpers ---------- */
 
@@ -101,6 +126,18 @@ const cleanIcons = {
 const icon = (name: keyof typeof cleanIcons, look: Look) =>
   look === "clean" ? html`<svg viewBox="0 0 16 16" class="ui-ca__icon" aria-hidden="true">${svg`<path d=${cleanIcons[name]}></path>`}</svg>` : standardIcons[name];
 
+/* The source viewer's icons, after Lucide (ISC): file-text, chevron-up, chevron-down, x – drawn on its 24px grid at 12px (Standard) or 16px (Clean) */
+const lucide = {
+  doc: ["M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", "M14 2v4a2 2 0 0 0 2 2h4", "M10 9H8", "M16 13H8", "M16 17H8"],
+  up: ["m18 15-6-6-6 6"],
+  down: ["m6 9 6 6 6-6"],
+  x: ["M18 6 6 18", "m6 6 12 12"],
+};
+const licon = (name: keyof typeof lucide, look: Look) => {
+  const clean = look === "clean";
+  return html`<svg class="ui-ca__licon" width=${clean ? 16 : 12} height=${clean ? 16 : 12} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${clean ? 1.6 : 2.4} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name].map((d) => svg`<path d=${d}></path>`)}</svg>`;
+};
+
 const glyph = (s: CitedSource) => html`<span class="ui-ca__glyph" data-tone=${tone(s.site)} aria-hidden="true">${s.icon ? s.icon.cloneNode(true) : s.site.trim().charAt(0).toUpperCase()}</span>`;
 
 /** What the pointer (or focus) is on: one marker in one sentence, or a whole source */
@@ -117,6 +154,7 @@ let uidCount = 0;
  * @fires tc-preview-change - The open preview changes; detail `{ preview: string | null }` (null: closed). Cancelable.
  * @fires tc-open-source - Open source was pressed; detail `{ source: CitedSource }`
  * @fires tc-action - The action button (`actionLabel`) was pressed; detail: null
+ * @fires tc-source-open - View in document was pressed; detail `{ sourceId }` (CitedSourceOpen). Cancelable – prevented, the viewer doesn't open (the page shows the document its own way)
  */
 export class TcCitedAnswer extends TcElement {
   static override ui = "ca";
@@ -133,6 +171,10 @@ export class TcCitedAnswer extends TcElement {
   @property({ type: Boolean, attribute: "open-handled" }) accessor openHandled = false;
   /** A button on the tray that fires tc-action, e.g. "Follow up" */
   @property({ attribute: "action-label" }) accessor actionLabel = "";
+  /** Full text of the sources' documents, by document id (a source's `document`, else its id) – turns on View in document */
+  @property({ attribute: false }) accessor documents: Record<string, string> = {};
+  /** Loads a document's full text when `documents` doesn't have it – turns on View in document for every source */
+  @property({ attribute: false }) accessor loadDocument: CitedDocumentLoader | undefined = undefined;
 
   /** @internal */
   @state() accessor hot: Hot = null;
@@ -146,6 +188,12 @@ export class TcCitedAnswer extends TcElement {
   @state() accessor allChips = false;
   /** @internal The caption line fading out underneath the new one */
   @state() accessor swapOut: Line | null = null;
+  /** @internal The source whose passage the viewer shows (null: closed) */
+  @state() accessor viewing: string | null = null;
+  /** @internal The viewer's document: loading, its text, or why it couldn't be had */
+  @state() accessor doc: { id: string; status: "loading" | "ready" | "error"; text: string } | null = null;
+  /** @internal The viewer's polite status line */
+  @state() accessor viewSaid = "";
 
   private uid = `tc-ca-${++uidCount}`;
   private opener: HTMLElement | null = null;
@@ -158,6 +206,14 @@ export class TcCitedAnswer extends TcElement {
   private ro?: ResizeObserver;
   private observed: Element | null = null;
   private ownName = false;
+  private loading: AbortController | null = null;
+  /** The viewer should bring its current passage into view after the next render */
+  private scrollPending = false;
+  private readonly modal = new ModalController(this, {
+    dialog: () => this.querySelector<HTMLDialogElement>(".ui-ca__viewer"),
+    focus: () => this.querySelector<HTMLElement>(".ui-ca__vw-doc"),
+    lockScroll: true,
+  });
 
   constructor() {
     super();
@@ -192,6 +248,8 @@ export class TcCitedAnswer extends TcElement {
     this.removeEventListener("keydown", this.onKeyDown);
     window.clearTimeout(this.copiedTimer);
     window.clearTimeout(this.swapTimer);
+    this.loading?.abort();
+    this.loading = null;
     this.ro?.disconnect();
     this.ro = undefined;
     this.observed = null;
@@ -206,6 +264,8 @@ export class TcCitedAnswer extends TcElement {
     if (hot) this.dataset.hot = hot.segment !== undefined ? "mark" : "source";
     else delete this.dataset.hot;
     if (changed.has("sources") || changed.has("look") || changed.has("contextLook")) this.fit = this.sources.length;
+    // The viewer follows the sources: a source that's gone closes it
+    if (this.viewing && !this.sources.some((s) => s.id === this.viewing)) this.closeViewer();
     // The caption: when it says something else, the old line fades out underneath for a moment
     const index = this.index();
     const byId = (id: string | null | undefined) => (id == null ? null : (this.sources[index.get(id) ?? -1] ?? null));
@@ -223,6 +283,11 @@ export class TcCitedAnswer extends TcElement {
   }
 
   protected override updated(changed: PropertyValues) {
+    this.modal.sync(this.viewing !== null);
+    if (this.scrollPending && this.doc?.status === "ready") {
+      this.scrollPending = false;
+      this.scrollToPassage();
+    }
     // Clean: measure the chips at their natural width (in a hidden copy) against the width of the row
     const row = this.resolvedLook === "clean" ? this.chips : null;
     if (row !== this.observed) {
@@ -293,7 +358,7 @@ export class TcCitedAnswer extends TcElement {
   }
 
   private onKeyDown = (e: KeyboardEvent) => {
-    if (e.defaultPrevented) return;
+    if (e.defaultPrevented || this.viewing) return;
     if (e.key === "Escape" && this.open) {
       e.stopPropagation();
       this.close();
@@ -329,6 +394,212 @@ export class TcCitedAnswer extends TcElement {
   private openSource(e: Event, s: CitedSource) {
     if (this.openHandled) e.preventDefault();
     this.emit("tc-open-source", { source: s });
+  }
+
+  /* ---------- The source viewer ---------- */
+
+  private docId(s: CitedSource) {
+    return s.document ?? s.id;
+  }
+
+  /** @internal Whether View in document is offered for a source */
+  canView(s: CitedSource) {
+    return !!this.loadDocument || Object.prototype.hasOwnProperty.call(this.documents, this.docId(s));
+  }
+
+  private viewSource(s: CitedSource) {
+    if (!this.emit("tc-source-open", { sourceId: s.id } satisfies CitedSourceOpen, { cancelable: true })) return;
+    this.showPassage(s);
+  }
+
+  /** Points the viewer at a source's passage, loading its document when it isn't the one showing */
+  private showPassage(s: CitedSource) {
+    const id = this.docId(s);
+    this.viewing = s.id;
+    this.scrollPending = true;
+    if (this.doc?.id === id && this.doc.status !== "error") {
+      this.announce();
+      return;
+    }
+    this.loadDoc(s);
+  }
+
+  private loadDoc(s: CitedSource) {
+    const id = this.docId(s);
+    this.loading?.abort();
+    this.loading = null;
+    if (Object.prototype.hasOwnProperty.call(this.documents, id)) {
+      this.doc = { id, status: "ready", text: this.documents[id] };
+      this.announce();
+      return;
+    }
+    const load = this.loadDocument;
+    if (!load) {
+      this.doc = { id, status: "error", text: "" };
+      return;
+    }
+    const abort = new AbortController();
+    this.loading = abort;
+    this.doc = { id, status: "loading", text: "" };
+    this.viewSaid = "Loading the document";
+    load(s.id, abort.signal).then(
+      (text) => {
+        if (abort.signal.aborted) return;
+        this.loading = null;
+        this.doc = { id, status: "ready", text: String(text ?? "") };
+        this.announce();
+      },
+      () => {
+        if (abort.signal.aborted) return;
+        this.loading = null;
+        this.doc = { id, status: "error", text: "" };
+        this.viewSaid = "Couldn't load the document";
+      },
+    );
+  }
+
+  private closeViewer() {
+    if (this.viewing === null) return;
+    this.loading?.abort();
+    this.loading = null;
+    this.viewing = null;
+    this.viewSaid = "";
+  }
+
+  /** The browser closed the dialog on its own (a repeated Escape): follow it */
+  private onViewerClose = () => {
+    if (this.modal.ownClose()) return;
+    this.closeViewer();
+  };
+
+  /** Every source cited from the viewer's document whose quote was found in it, in reading order */
+  private passages(): Passage[] {
+    const doc = this.doc;
+    if (!doc || doc.status !== "ready") return [];
+    const list: Passage[] = [];
+    for (const s of this.sources) {
+      if (this.docId(s) !== doc.id) continue;
+      const at = findQuote(doc.text, s.quote);
+      if (at) list.push({ source: s, ...at });
+    }
+    return list.sort((a, b) => a.start - b.start);
+  }
+
+  private announce() {
+    const s = this.sources.find((x) => x.id === this.viewing);
+    if (!s) return;
+    const list = this.passages();
+    const i = list.findIndex((p) => p.source.id === s.id);
+    this.viewSaid = this.doc?.status !== "ready" ? "" : i < 0 ? `${s.title} – the cited passage wasn't found in the document` : `Passage ${i + 1} of ${list.length} in ${s.title}`;
+  }
+
+  private step(by: 1 | -1) {
+    const list = this.passages();
+    const i = list.findIndex((p) => p.source.id === this.viewing);
+    const next = list[i + by];
+    if (next) this.showPassage(next.source);
+  }
+
+  /** Brings the current passage to the middle of the document pane (not with scrollIntoView, which would move the page too) */
+  private scrollToPassage() {
+    const pane = this.querySelector<HTMLElement>(".ui-ca__vw-doc");
+    const mark = pane?.querySelector<HTMLElement>(".ui-ca__passage[data-current]");
+    if (!pane || !mark) return;
+    const pr = pane.getBoundingClientRect();
+    const mr = mark.getBoundingClientRect();
+    pane.scrollTop += mr.top - pr.top - Math.max(0, (pr.height - mr.height) / 2);
+  }
+
+  private docText(text: string, list: Passage[], current: string | null, answer: string) {
+    const paras: [number, number][] = [];
+    const gap = /\n\s*\n/g;
+    let from = 0;
+    for (let m = gap.exec(text); m; m = gap.exec(text)) {
+      paras.push([from, m.index]);
+      from = m.index + m[0].length;
+    }
+    paras.push([from, text.length]);
+    return paras
+      .filter(([a, b]) => text.slice(a, b).trim())
+      .map(([a, b]) => {
+        const parts: unknown[] = [];
+        let at = a;
+        for (const p of list) {
+          const start = Math.max(p.start, a);
+          const end = Math.min(p.end, b);
+          if (end <= start || start < at) continue;
+          parts.push(text.slice(at, start));
+          const now = p.source.id === current;
+          const slice = text.slice(start, end);
+          parts.push(
+            html`<mark class="ui-ca__passage" data-source=${p.source.id} ?data-current=${now}>${now && start === p.start ? html`<span class="ui-ca__sr">Cited passage: </span>` : nothing}${now ? marked(slice, p.source.highlight, answer) : slice}</mark>`,
+          );
+          at = end;
+        }
+        parts.push(text.slice(at, b));
+        return html`<p class="ui-ca__vw-p">${parts}</p>`;
+      });
+  }
+
+  private viewer(look: Look) {
+    const s = this.sources.find((x) => x.id === this.viewing) ?? null;
+    const doc = this.doc;
+    const list = this.passages();
+    const i = s ? list.findIndex((p) => p.source.id === s.id) : -1;
+    const answer = s
+      ? this.segments
+          .filter((seg) => seg.cite?.includes(s.id))
+          .map((seg) => seg.text)
+          .join(" ")
+      : "";
+    const titleId = `${this.uid}-vw-title`;
+    const link = s ? safeUrl(s.url) : undefined;
+    return html`<dialog
+      class="ui-ca__viewer"
+      aria-labelledby=${titleId}
+      @keydown=${(e: KeyboardEvent) => e.key === "Escape" && e.stopPropagation()}
+      @cancel=${(e: Event) => {
+        e.preventDefault();
+        this.closeViewer();
+      }}
+      @close=${this.onViewerClose}
+    >
+      ${s
+        ? html`<div class="ui-ca__vw-panel">
+            <div class="ui-ca__vw-head">
+              ${glyph(s)}
+              <div class="ui-ca__vw-titles">
+                <h2 class="ui-ca__vw-title" id=${titleId}>${s.title}</h2>
+                <span class="ui-ca__vw-meta"><span class="ui-ca__pv-domain">${domain(s.url) || s.site}</span>${s.date ? html`<span class="ui-ca__dot"> · </span>${s.date}` : nothing}</span>
+              </div>
+              <button type="button" class="ui-ca__vw-close" aria-label="Close document" @click=${() => this.closeViewer()}>${licon("x", look)}</button>
+            </div>
+            <div class="ui-ca__vw-card">
+              <div class="ui-ca__vw-bar">
+                <span class="ui-ca__vw-count">${doc?.status !== "ready" ? "" : i < 0 ? "Passage not found" : `Passage ${i + 1} of ${list.length}`}</span>
+                <button type="button" class="ui-ca__vw-step" ?disabled=${i <= 0} @click=${() => this.step(-1)}>${licon("up", look)}<span class="ui-ca__vw-step-text">Previous<span class="ui-ca__sr"> passage</span></span></button>
+                <button type="button" class="ui-ca__vw-step" ?disabled=${i < 0 || i >= list.length - 1} @click=${() => this.step(1)}>${licon("down", look)}<span class="ui-ca__vw-step-text">Next<span class="ui-ca__sr"> passage</span></span></button>
+                ${link || this.openHandled
+                  ? link
+                    ? html`<a class="ui-ca__vw-open" href=${link} target="_blank" rel="noreferrer noopener" @click=${(e: Event) => this.openSource(e, s)}>Open source${icon("out", look)}</a>`
+                    : html`<button type="button" class="ui-ca__vw-open" @click=${(e: Event) => this.openSource(e, s)}>Open source${icon("out", look)}</button>`
+                  : nothing}
+              </div>
+              <div class="ui-ca__vw-doc" tabindex="0" role="region" aria-label=${`${s.title} text`} aria-busy=${doc?.status === "loading" ? "true" : "false"}>
+                ${doc?.status === "loading"
+                  ? html`<p class="ui-ca__vw-state">Loading the document…</p>`
+                  : doc?.status === "error"
+                    ? html`<p class="ui-ca__vw-state" data-tone="error">Couldn't load the document.</p>
+                        ${this.loadDocument ? html`<button type="button" class="ui-ca__btn" @click=${() => this.loadDoc(s)}>Try again</button>` : nothing}`
+                    : doc
+                      ? html`${i < 0 ? html`<p class="ui-ca__vw-state">The cited passage wasn't found in this document.</p>` : nothing}${this.docText(doc.text, list, s.id, answer)}`
+                      : nothing}
+              </div>
+            </div>
+          </div>`
+        : nothing}
+      <span class="ui-ca__sr" role="status">${this.viewSaid}</span>
+    </dialog>`;
   }
 
   /* ---------- What the tray (Clean: the card's last row) says ---------- */
@@ -455,6 +726,9 @@ export class TcCitedAnswer extends TcElement {
           : this.openHandled
             ? html`<button type="button" class="ui-ca__btn ui-ca__btn--main" @click=${(e: Event) => this.openSource(e, source)}>${openLabel}</button>`
             : nothing}
+        ${this.canView(source)
+          ? html`<button type="button" class="ui-ca__btn ui-ca__view" @click=${() => this.viewSource(source)}><span class="ui-ca__btn-icon">${licon("doc", look)}</span><span class="ui-ca__btn-text">View in document</span></button>`
+          : nothing}
         ${source.quote
           ? html`<button type="button" class="ui-ca__btn" ?data-done=${copied} aria-label=${copied ? "Copied" : "Copy quote"} @click=${() => void this.copyQuote(source)}>
               ${keyed(copied ? "done" : "idle", html`<span class="ui-ca__btn-icon">${icon(copied ? "done" : "copy", look)}</span>`)}
@@ -528,6 +802,7 @@ export class TcCitedAnswer extends TcElement {
         <span class="ui-ca__caption">${this.swap()}</span>
         ${this.actionLabel ? html`<button type="button" class="ui-ca__action" @click=${() => this.emit("tc-action", null)}>${this.actionLabel}${icon("arrow", look)}</button>` : nothing}
       </div>
+      ${this.viewing !== null || this.modal.showing ? this.viewer(look) : nothing}
     `;
   }
 
@@ -535,6 +810,8 @@ export class TcCitedAnswer extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="ca"] {
   /* insets and hover fills: a light grey on the card, lighter than the card in dark mode */
   --tc-cited-answer-well: light-dark(#f4f4f5, #222225);
+  /* The source viewer's width */
+  --tc-cited-answer-viewer-w: 560px;
   box-sizing: border-box;
   width: 100%;
   max-width: 460px;
@@ -552,6 +829,8 @@ export class TcCitedAnswer extends TcElement {
 }
 /* Colors and motion as variables – override them on [data-ui="ca"] */
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ca"] {
+  /* The source viewer's width */
+  --tc-cited-answer-viewer-w: 560px;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -724,6 +1003,45 @@ export class TcCitedAnswer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-ca__action .ui-ca__icon { color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ca__action:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ca__action:hover .ui-ca__icon { color: var(--tc-text-primary); }
+/* ----- The source viewer: a side sheet over the page ----- */
+.ui-ca__viewer { box-sizing: border-box; width: min(var(--tc-cited-answer-viewer-w), 100vw); height: 100dvh; max-width: none; max-height: none; margin: 0 0 0 auto; padding: 0; overflow: hidden; border: 0; color: var(--tc-text-primary); font-family: var(--tc-font-sans); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); text-align: left; -webkit-font-smoothing: antialiased; }
+.ui-ca__viewer:not([open]) { display: none; }
+.ui-ca__viewer::backdrop { background: var(--tc-scrim); }
+.ui-ca__viewer[open] { animation: ui-ca-sheet-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ca__viewer { padding: var(--tc-tray-inset); background: var(--tc-surface-tray); box-shadow: var(--tc-shadow-overlay); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ca__viewer { background: var(--tc-surface-overlay); box-shadow: var(--tc-shadow-overlay); font-weight: var(--tc-font-weight-regular); }
+.ui-ca__vw-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.ui-ca__vw-head { display: flex; align-items: center; gap: var(--tc-space-2-5); padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-3) var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ca__vw-head { padding: var(--tc-space-4) var(--tc-space-3) var(--tc-space-3) var(--tc-space-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+.ui-ca__vw-titles { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.ui-ca__vw-title { margin: 0; overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="clean"], [data-look="clean"] *).ui-ca__vw-title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
+.ui-ca__vw-meta { overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+.ui-ca__vw-close { display: grid; flex: none; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); color: var(--tc-text-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-ca__vw-close:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-ca__vw-card { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ca__vw-card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); overflow: hidden; }
+.ui-ca__vw-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ca__vw-bar { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2) var(--tc-space-5); }
+.ui-ca__vw-count { flex: 1; min-width: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+:is(.ui-ca__vw-step, .ui-ca__vw-open) { display: inline-flex; align-items: center; gap: var(--tc-space-1); height: var(--tc-control-h-sm); padding: 0 var(--tc-space-2); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); text-decoration: none; white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+:is(.ui-ca__vw-step, .ui-ca__vw-open):hover:not(:disabled) { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-ca__vw-step:disabled { color: var(--tc-text-disabled); cursor: default; }
+.ui-ca__vw-doc { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-6); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ca__vw-doc { padding: var(--tc-space-4) var(--tc-space-5) var(--tc-space-6); }
+.ui-ca__vw-doc:focus-visible { outline: var(--tc-focus-outline); outline-offset: calc(-1 * var(--tc-focus-ring-width)); }
+.ui-ca__vw-p { margin: 0; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-secondary); white-space: pre-line; }
+.ui-ca__vw-p + .ui-ca__vw-p { margin-top: var(--tc-space-3); }
+.ui-ca__vw-state { margin: 0 0 var(--tc-space-3); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+.ui-ca__vw-state[data-tone="error"] { color: var(--tc-status-danger-fg); }
+/* Other passages from this document: a quiet fill. The current one: the highlight with an accent underline, so colour isn't the only cue */
+.ui-ca__passage { border-radius: var(--tc-radius-2xs); background: var(--tc-fill-subtle); color: inherit; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.ui-ca__passage[data-current] { background: var(--tc-accent-highlight); box-shadow: inset 0 -2px 0 var(--tc-accent); color: var(--tc-text-primary); }
+.ui-ca__passage mark { padding: 0; border-radius: var(--tc-radius-2xs); background: var(--tc-accent-highlight); color: var(--tc-text-strong); font-weight: var(--tc-font-weight-medium); }
+@keyframes ui-ca-sheet-in { from { transform: translateX(24px); opacity: 0; } }
+@media (forced-colors: active) {
+  .ui-ca__passage[data-current] { outline: 2px solid Highlight; }
+}
 @keyframes ui-ca-swap-in { from { opacity: 0; filter: blur(2px); } }
 @keyframes ui-ca-swap-out { from { opacity: 1; } to { opacity: 0; filter: blur(2px); } }
 /* Narrow cards: tighter padding, chip names shorten, Copy quote keeps only its icon */

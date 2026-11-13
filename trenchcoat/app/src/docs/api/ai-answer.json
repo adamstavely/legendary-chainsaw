@@ -94,6 +94,30 @@
      "readonly": false
     },
     {
+     "name": "interrupted",
+     "attribute": null,
+     "type": "AnswerInterruption | null",
+     "default": "null",
+     "description": "The answer stopped part way – the text so far stays, with why and Continue / Retry (null: it didn't)",
+     "readonly": false
+    },
+    {
+     "name": "unavailable",
+     "attribute": null,
+     "type": "AnswerUnavailable | null",
+     "default": "null",
+     "description": "The model can't answer right now – busy or down, when it tries again, Try now and a fallback (null: it can)",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time for the retry countdown, epoch ms – the element keeps its own clock when unset",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -132,6 +156,18 @@
      "detail": "",
      "description": "The answer is on the clipboard; detail `{ text: string }`",
      "cancelable": false
+    },
+    {
+     "name": "tc-continue",
+     "detail": "",
+     "description": "Continue on an interrupted answer; detail `{ reason }` (AnswerContinue). Cancelable – prevented, `interrupted` stays; otherwise it clears and the element waits for more text",
+     "cancelable": true
+    },
+    {
+     "name": "tc-retry",
+     "detail": "",
+     "description": "Retry on an interrupted answer, or Try now / Use <fallback> while unavailable; detail `{ model?, from }` (AnswerRetry). Cancelable – prevented, the state stays; otherwise it clears and the answer starts over",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -159,6 +195,9 @@
     "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
     "--tc-action-secondary-bg",
     "--tc-action-secondary-fg",
     "--tc-action-secondary-shadow",
@@ -328,6 +367,18 @@
      "type": "(text: string) => void",
      "optional": true,
      "description": "Called with the copied text once the answer is on the clipboard"
+    },
+    {
+     "name": "onContinue",
+     "type": "(reason: AnswerContinue[\"reason\"]) => void",
+     "optional": true,
+     "description": "Continue on an interrupted answer – carry on streaming and clear `interrupted`"
+    },
+    {
+     "name": "onRetry",
+     "type": "(retry: AnswerRetry) => void",
+     "optional": true,
+     "description": "Retry an interrupted answer, or Try now / Use <fallback> while unavailable – clear the state and ask again"
     }
    ],
    "hides": [
@@ -341,7 +392,9 @@
     "tc-feedback": "onFeedback",
     "tc-follow-up": "onFollowUp",
     "tc-stop": "onStop",
-    "tc-copy": "onCopy"
+    "tc-copy": "onCopy",
+    "tc-continue": "onContinue",
+    "tc-retry": "onRetry"
    }
   }
  ],
@@ -357,7 +410,9 @@
     "followUps",
     "feedback",
     "feedbackReasons",
-    "onRegenerate"
+    "onRegenerate",
+    "interrupted",
+    "unavailable"
    ],
    "attributes": [
     {
@@ -379,6 +434,10 @@
     {
      "name": "hideActions",
      "attribute": "hide-actions"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
     }
    ],
    "events": [
@@ -401,6 +460,14 @@
     {
      "name": "tc-copy",
      "cancelable": false
+    },
+    {
+     "name": "tc-continue",
+     "cancelable": true
+    },
+    {
+     "name": "tc-retry",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -693,6 +760,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -702,6 +770,7 @@
  },
  "runtime": {
   "timers": [
+   "setInterval, cleared",
    "setTimeout"
   ],
   "frames": [
@@ -716,6 +785,7 @@
    "IntersectionObserver (internal/controllers › OnScreenController)"
   ],
   "clock": [
+   "Date.now()",
    "performance.now()"
   ],
   "listeners": [
@@ -738,7 +808,7 @@
   "windowed": false
  },
  "size": {
-  "min": 69860,
-  "gzip": 17115
+  "min": 76667,
+  "gzip": 18824
  }
 }

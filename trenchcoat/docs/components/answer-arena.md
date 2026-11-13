@@ -9,7 +9,7 @@
 Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 
 - **Element:** `<tc-answer-arena>`
-- **Size:** 9.4 KB gzip · 32.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.9 KB gzip · 38.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -32,11 +32,17 @@ B is better, or a tie – and then pick a reason. In blind mode the model names 
 until the vote, so people judge the answers, not the brands. It collects preferences for evaluating models, prompts
 or settings without leaving the product.
 
+Give it three or four answers and it compares them all: the answers sit side by side as columns while each has about
+230 px, and below that become a pager – a tab per answer, or a swipe on touch. The vote turns into “pick the best”:
+one “A is best” per answer, “All equally good” and “All bad”, then a reason. The tc-value-change detail names the
+winning answer as `winnerId` – its `id`, or its model's name.
+
 ### When to use
 
 - Collecting people's preferences between two models, two prompts or two settings on real tasks.
 - Blind comparisons, where knowing the model would bias the vote.
 - Showing two answers to the same question when the difference is the point.
+- Picking the best of three or four models, prompts or settings on the same task.
 
 ### When not to use
 
@@ -50,14 +56,16 @@ or settings without leaving the product.
 
 2. **Answer** `.ui-arena__pane` – one side's answer, streaming with a caret, and a meta line once done
 3. **Model** `.ui-arena__head` – the side's glyph and name – “Model A” in blind mode until the vote
-4. **Vote** `.ui-arena__votes` – A is better, Tie, B is better
+4. **Vote** `.ui-arena__votes` – A is better, Tie, B is better; with three or four answers, one “X is best” each, All equally good and All bad
 5. **Reasons** `.ui-arena__reasons` – why, offered once there's a vote
+6. **Tabs** `.ui-arena__tabs` – three or four answers on a narrow screen: one tab per answer, with its name once revealed
 
 ## Looks
 
 Standard sets the prompt, then the two answers as white cards, then the vote, all on a gray tray. Clean is one white
 card split by hairlines: the prompt as the header row on top, the answers side by side, the vote as the
-last row. Both stack the answers in containers narrower than 560 px.
+last row. Both stack two answers in containers narrower than 560 px. Three or four answers stay columns while each
+has about 230 px, then show one at a time behind the tabs; with them the arena may grow to 1200 px wide.
 
 ## Usage
 
@@ -75,7 +83,7 @@ last row. Both stack the answers in containers narrower than 560 px.
     { model: "Atlas", answer: "**RAG** lets the model look things up before it answers.", meta: "1.8s · 212 tokens" },
     { model: "Nova", answer: "Think of it as an open-book exam.", meta: "2.1s · 188 tokens" },
   ];
-  arena.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+  arena.addEventListener("tc-value-change", (e) => console.log(e.detail.value, e.detail.winnerId));
 </script>
 ```
 
@@ -98,6 +106,22 @@ export function Compare({ a, b, streaming }: { a: string; b: string; streaming: 
       ]}
       value={vote}
       onChange={setVote}
+    />
+  );
+}
+
+export function PickTheBest({ answers }: { answers: { id: string; model: string; answer: string }[] }) {
+  const [vote, setVote] = useState<ArenaVote | null>(null);
+  return (
+    <AnswerArena
+      prompt="Summarise the audit finding in two sentences."
+      blind
+      answers={answers}
+      value={vote}
+      onChange={(next, winnerId) => {
+        setVote(next);
+        if (winnerId) console.log("Best:", winnerId);
+      }}
     />
   );
 }
@@ -175,23 +199,25 @@ export class AnswerArenaExample {
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `prompt` | `prompt` | `string` | `""` | The prompt both models answered |
-| `answers` | – | `ArenaAnswer[]` | `[]` | The two answers: A first, then B |
+| `answers` | – | `ArenaAnswer[]` | `[]` | The answers: A first, then B – two for a head-to-head, three or four to pick the best (more than four are left out) |
 | `value` | – | `ArenaVote \| null` | `null` | The vote (null: none yet). Changed by the element unless a tc-value-change listener calls preventDefault() |
 | `blind` | `blind` | `boolean` | `false` | Hide the model names until there's a vote |
 | `question` | `question` | `string` | `"Which answer is better?"` | The question over the vote |
 | `reasons` | – | `array` | `["More accurate", "Easier to follow", "More complete", "Better tone"]` | Reasons offered after A or B wins |
 | `tieReasons` | – | `array` | `["Both good", "Both wrong", "Too close to call"]` | Reasons offered after a tie |
+| `allGoodReasons` | – | `array` | `["All accurate", "Too close to call"]` | Reasons offered after "All equally good", with three or more answers |
+| `badReasons` | – | `array` | `["All inaccurate", "All incomplete", "All off-topic"]` | Reasons offered after "All bad", with three or more answers |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
 
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
-| `tc-value-change` | – | Yes | The vote changed (`{ value: ArenaVote \| null }`); cancelable – prevent it to keep `value` (controlled use) |
+| `tc-value-change` | – | Yes | The vote changed (`{ value: ArenaVote \| null, winnerId? }`: ArenaValueChange); cancelable – prevent it to keep `value` (controlled use) |
 
-#### Design tokens it reads (82)
+#### Design tokens it reads (83)
 
-`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-avatar-font-weight`, `--tc-avatar-radius-agent`, `--tc-border-default`, `--tc-border-selected`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-lg`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-reveal-slow`, `--tc-duration-slow`, `--tc-duration-slowest`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-selected`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-2xs`, `--tc-radius-sm`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-space-5`, `--tc-surface-control`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-avatar-font-weight`, `--tc-avatar-radius-agent`, `--tc-border-default`, `--tc-border-selected`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-lg`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-reveal-slow`, `--tc-duration-slow`, `--tc-duration-slowest`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-selected`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-2xs`, `--tc-radius-sm`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-space-5`, `--tc-surface-control`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
 
 ## Frameworks
 
@@ -215,6 +241,8 @@ export class AnswerArenaExample {
 | `value` | `el.value = …;` | `<… value={…} />` | `<tc-answer-arena :value="…">` | `<tc-answer-arena [value]="…">` | `<tc-answer-arena {value}>` |
 | `reasons` | `el.reasons = …;` | `<… reasons={…} />` | `<tc-answer-arena :reasons="…">` | `<tc-answer-arena [reasons]="…">` | `<tc-answer-arena {reasons}>` |
 | `tieReasons` | `el.tieReasons = …;` | `<… tieReasons={…} />` | `<tc-answer-arena :tieReasons="…">` | `<tc-answer-arena [tieReasons]="…">` | `<tc-answer-arena {tieReasons}>` |
+| `allGoodReasons` | `el.allGoodReasons = …;` | `<… allGoodReasons={…} />` | `<tc-answer-arena :allGoodReasons="…">` | `<tc-answer-arena [allGoodReasons]="…">` | `<tc-answer-arena {allGoodReasons}>` |
+| `badReasons` | `el.badReasons = …;` | `<… badReasons={…} />` | `<tc-answer-arena :badReasons="…">` | `<tc-answer-arena [badReasons]="…">` | `<tc-answer-arena {badReasons}>` |
 
 *Also attributes: `prompt`, `blind`, `question` – see the API table.*
 
@@ -406,10 +434,10 @@ No slots: everything it shows comes from its properties.
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `answers` | `ArenaAnswer[]` | The two answers: A first, then B |
+| `answers` | `ArenaAnswer[]` | The answers: A first, then B – two for a head-to-head, three or four to pick the best |
 | `value` | `ArenaVote \| null` | The vote – controlled when defined (null: none yet) |
 | `defaultValue` | `ArenaVote \| null` | The vote at first when uncontrolled – null by default |
-| `onChange` | `(vote: ArenaVote \| null) => void` | Every change of the vote: a side or a tie, then a reason |
+| `onChange` | `(vote: ArenaVote \| null, winnerId?: string) => void` | Every change of the vote: a side, a tie or all bad, then a reason – with the winning answer's id (or model) |
 
 *Renamed or hidden on the wrapper: `answers`, `value`, `defaultValue`, `onChange`*
 
@@ -426,7 +454,11 @@ Follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/
 | Home / End | Moves to the first or last vote button |
 | Enter / Space | Votes; on a reason, picks it or takes it back |
 
-The vote buttons stay `aria-disabled` until both answers are done.
+With three or four answers the vote is a radio group: ← → (and Home / End) move between the choices and choose as
+they move, as radio buttons do. On the pager's tabs, ← → Home End switch answers and Tab moves on into the shown
+answer.
+
+The vote buttons stay `aria-disabled` until every answer is done.
 
 ### Screen readers
 
@@ -435,6 +467,11 @@ they arrive. A status region says “Both answers are in.” once streaming ends
 better.” – in blind mode followed by the names (“A was Atlas, B was Nova.”) – and “Reason: More accurate.” The vote
 buttons are a toolbar named by the question, each `aria-pressed`; the reasons are a group named “Why?” of
 `aria-pressed` buttons. The winning side is marked “Preferred”.
+
+With three or four answers the status says “All answers are in.”, the vote is a `radiogroup` of `radio` buttons
+named by the question (“Which answer is best?”), and blind mode names every model after the vote (“A was Atlas, B
+was Nova, C was Lumen.”). On narrow screens the answers are a `tablist` of tabs named “Answer A”… – “(preferred)” on
+the winner, “(writing)” while one streams – each controlling its answer's `tabpanel`.
 
 ### Every component
 
@@ -464,6 +501,7 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 | inert | 102 | 112 | 15.5 | 15.5 | itself, internal/controllers | Closed and leaving parts are out of the tab order and hidden from screen readers. |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit | Focus rings for keyboard users. |
 | :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | itself | – |
 | IntersectionObserver | 51 (Edge 15) | 55 | 12.1 | 12.2 | internal/controllers | – |
 
 ### Progressive
@@ -477,13 +515,13 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 23.2 KB | 6.8 KB |
+| **This component alone** | 29.7 KB | 8.3 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -491,8 +529,8 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **32.0 KB** | **9.4 KB** |
-| With Lit – the first component on a page | 52.2 KB | 15.9 KB |
+| **Added to a page that already has Lit** | **38.5 KB** | **10.9 KB** |
+| With Lit – the first component on a page | 58.7 KB | 17.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -500,11 +538,11 @@ buttons are a toolbar named by the question, each `aria-pressed`; the reasons ar
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.2 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
+| First render | **2.3 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | one item of reasons replaced |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.1 ms | reasons: first render, 37 nodes; update 0.2 ms |
-| 1,000 items | 1.8 ms | reasons: first render, 37 nodes; update 0.1 ms |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.0 ms | reasons: first render, 37 nodes; update 0.0 ms |
+| 1,000 items | 0.7 ms | reasons: first render, 37 nodes; update 0.0 ms |
 
 What it renders doesn't grow with reasons (tested to 1,000 items).
 
@@ -517,7 +555,7 @@ What it renders doesn't grow with reasons (tested to 1,000 items).
 - No timers.
 - 2 infinite CSS animations.
 - Stops or pauses off screen and under reduced motion.
-- Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OffScreenController).
+- Observers: `ResizeObserver`, `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OffScreenController).
 - Doesn't read the clock.
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
@@ -527,6 +565,8 @@ What it renders doesn't grow with reasons (tested to 1,000 items).
 - Show the prompt as people wrote it; don't summarise it.
 - Keep `question` neutral – “Which answer is better?” – rather than leading.
 - Offer three to five `reasons`, each a short quality: “More accurate”, “Easier to follow”. Ties get their own `tieReasons`.
+- With three or four answers, “All equally good” offers `allGoodReasons` and “All bad” offers `badReasons`.
+- Give each answer an `id` when the model's name isn't what your records use – `winnerId` reports it.
 - Use `meta` for facts people may weigh, e.g. “1.8s · 212 tokens” – leave it out in blind tests where it would give a model away.
 
 ## Do and don't
@@ -539,7 +579,7 @@ What it renders doesn't grow with reasons (tested to 1,000 items).
 
 ### Don't
 
-- Don't compare more than two answers here.
+- Don't compare more than four answers here – past four, run an evaluation with `eval-scorecard`.
 - Don't let people vote before both answers are complete – the component holds the vote until then.
 - Don't format answers with HTML – they're plain text with paragraphs, `- ` lists and `**bold**`.
 

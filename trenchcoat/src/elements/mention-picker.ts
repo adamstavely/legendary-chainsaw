@@ -33,6 +33,11 @@ import { safeMediaUrl } from "./internal/safe-media";
  * first while nothing is typed, rank one list across its groups while something is (`rankAcrossGroups`), show its
  * character on each row (`showChar`), search on its own (`search`), and word its empty state, status and a note. Rows
  * with a `description` take two lines. A failed search tries again on ↵.
+ *
+ * Commands with arguments: an item with `args` doesn't insert at once. The list turns into a short form – one field
+ * per argument (text, a number, or a choice as a listbox) – and focus moves into it; ↵ or Tab goes to the next field,
+ * Shift+Tab back, Esc cancels back to the text. The assembled command shows as it's filled ("/translate
+ * language:French"); ↵ on the last field (or Insert) fires tc-pick with `args` and inserts the assembled text.
  */
 
 export type MentionPickerItem = {
@@ -50,6 +55,24 @@ export type MentionPickerItem = {
   token?: string;
   /** A second, quieter line under the label – what a command or skill does. It is matched too */
   description?: string;
+  /** What the command takes: picking it asks for each in turn, then inserts the assembled command */
+  args?: MentionPickerArg[];
+};
+
+/** One argument a command takes */
+export type MentionPickerArg = {
+  /** The argument's key in `args`, and its name in the assembled command ("language:French") */
+  name: string;
+  /** The field's label – default: the name */
+  label?: string;
+  /** "text" (default), "number", or "choice" from `options` */
+  type?: "text" | "choice" | "number";
+  /** The choices, for "choice" */
+  options?: string[];
+  /** It must be filled before the command is inserted */
+  required?: boolean;
+  /** A hint in an empty text or number field */
+  placeholder?: string;
 };
 
 export type MentionPickerGroup = { id: string; label: string; items: MentionPickerItem[] };
@@ -89,7 +112,8 @@ export type MentionPickerSearch = (query: string, trigger: string, options: { si
 /** Builds the chip a pick inserts into a contenteditable field – in place of the built-in one */
 export type MentionPickerRenderChip = (item: MentionPickerItem, trigger: string) => Node;
 
-export type MentionPickerPick = { item: MentionPickerItem; trigger: string; query: string; token: string };
+/** `token` is what lands in the field – for a command with arguments, the assembled command; `args` holds their values */
+export type MentionPickerPick = { item: MentionPickerItem; trigger: string; query: string; token: string; args?: Record<string, string | number> };
 export type MentionPickerPickEvent = CustomEvent<MentionPickerPick>;
 export type MentionPickerOpenChange = { open: boolean; trigger: string | null; query: string };
 export type MentionPickerQueryChange = { query: string; trigger: string };
@@ -110,6 +134,12 @@ const GAP = 6;
 const EDGE = 8;
 
 const isText = (f: Field): f is HTMLTextAreaElement | HTMLInputElement => f instanceof HTMLTextAreaElement || f instanceof HTMLInputElement;
+
+/** A value in the assembled command: quoted when it has spaces */
+const quoted = (v: string) => (/\s/.test(v) ? `"${v.replace(/"/g, '\\"')}"` : v);
+/** The command as it will be inserted: the token, then each filled argument as name:value */
+const assemble = (token: string, args: MentionPickerArg[], values: Record<string, string>) =>
+  [token, ...args.filter((a) => (values[a.name] ?? "").trim()).map((a) => `${a.name}:${quoted(values[a.name].trim())}`)].join(" ");
 
 /** What separates words in a label: "billing-spec.md", "create_report", "docs/api" */
 const SEP = /[\s._/:-]+/;
@@ -193,6 +223,8 @@ export class TcMentionPicker extends TcElement {
   @state() accessor found: { query: string; trigger: string; groups: MentionPickerGroup[]; state: "ok" | "loading" | "failed" } | null = null;
   /** @internal What the status region says; repeats alternate a trailing no-break space, so they're read again */
   @state() accessor said: { text: string; n: number } = { text: "", n: 0 };
+  /** @internal A picked command asking for its arguments: its row, the values so far, and the fields left empty that must be filled */
+  @state() accessor argForm: { row: Row; values: Record<string, string>; missing: string[] } | null = null;
 
   private uid = `tc-mnp-${++uid}`;
   private field: Field | null = null;
@@ -369,6 +401,7 @@ export class TcMentionPicker extends TcElement {
     const changed = !prev || !next || prev.start !== next.start || prev.query !== next.query || prev.trigger !== next.trigger;
     this.context = next;
     if (!next) {
+      this.argForm = null;
       this.searching?.abort();
       this.searching = null;
       this.found = null;
@@ -516,14 +549,30 @@ export class TcMentionPicker extends TcElement {
     }
   };
 
-  /** Inserts a row's token (textarea, input) or chip (contenteditable) in place of the trigger and query */
+  /** A command with arguments asks for them first; any other row is inserted */
   private pick(row: Row) {
+    if (row.item.args?.length && this.context) {
+      this.argForm = { row, values: {}, missing: [] };
+      const args = row.item.args;
+      this.say(`${this.tokenOf(row)} takes ${args.length === 1 ? "1 detail" : `${args.length} details`}: ${args.map((a) => a.label ?? a.name).join(", ")}`);
+      void this.updateComplete.then(() => this.argField(0)?.focus());
+      return;
+    }
+    this.insert(row);
+  }
+
+  private tokenOf(row: Row) {
+    return row.item.token ?? `${this.context?.trigger.char ?? ""}${row.item.label}`;
+  }
+
+  /** Inserts a row's token (textarea, input) or chip (contenteditable) in place of the trigger and query */
+  private insert(row: Row, args?: Record<string, string | number>, assembled?: string) {
     const ctx = this.context;
     const field = this.field;
     if (!ctx || !field) return;
     const trigger = ctx.trigger.char;
-    const token = row.item.token ?? `${trigger}${row.item.label}`;
-    const go = this.emit<MentionPickerPick>("tc-pick", { item: row.item, trigger, query: ctx.query, token }, { cancelable: true });
+    const token = assembled ?? row.item.token ?? `${trigger}${row.item.label}`;
+    const go = this.emit<MentionPickerPick>("tc-pick", args ? { item: row.item, trigger, query: ctx.query, token, args } : { item: row.item, trigger, query: ctx.query, token }, { cancelable: true });
     this.dismissed = null;
     this.setContext(null);
     if (!go) return;
@@ -551,6 +600,199 @@ export class TcMentionPicker extends TcElement {
     }
     field.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertReplacementText", data: token }));
     this.say(`Inserted ${token}`);
+  }
+
+  /* ---------- A command's arguments ---------- */
+
+  private argField(i: number) {
+    return this.ownerDocument.getElementById(`${this.uid}-a${i}`) as HTMLElement | null;
+  }
+
+  private setArg(name: string, value: string) {
+    const form = this.argForm;
+    if (!form) return;
+    this.argForm = { ...form, values: { ...form.values, [name]: value }, missing: form.missing.filter((m) => m !== name) };
+  }
+
+  /** The arguments that must be filled and aren't */
+  private unfilled() {
+    const form = this.argForm;
+    return form ? (form.row.item.args ?? []).filter((a) => a.required && !(form.values[a.name] ?? "").trim()).map((a) => a.name) : [];
+  }
+
+  /** ↵ in a field: on to the next one – if this one, when required, is filled – or insert from the last */
+  private advance(i: number) {
+    const form = this.argForm;
+    const args = form?.row.item.args ?? [];
+    const arg = args[i];
+    if (!form || !arg) return;
+    if (arg.required && !(form.values[arg.name] ?? "").trim()) {
+      this.argForm = { ...form, missing: [...new Set([...form.missing, arg.name])] };
+      this.say(`${arg.label ?? arg.name} is required`);
+      return;
+    }
+    if (i < args.length - 1) this.argField(i + 1)?.focus();
+    else this.finishArgs();
+  }
+
+  private finishArgs() {
+    const form = this.argForm;
+    const field = this.field;
+    if (!form || !field) return;
+    const missing = this.unfilled();
+    if (missing.length) {
+      this.argForm = { ...form, missing };
+      const at = (form.row.item.args ?? []).findIndex((a) => a.name === missing[0]);
+      this.say(`${missing.length === 1 ? "1 detail is" : `${missing.length} details are`} required`);
+      void this.updateComplete.then(() => this.argField(at)?.focus());
+      return;
+    }
+    const args = form.row.item.args ?? [];
+    const out: Record<string, string | number> = {};
+    for (const a of args) {
+      const v = (form.values[a.name] ?? "").trim();
+      if (v) out[a.name] = a.type === "number" && Number.isFinite(Number(v)) ? Number(v) : v;
+    }
+    const assembled = assemble(this.tokenOf(form.row), args, form.values);
+    field.focus();
+    this.insert(form.row, out, assembled);
+  }
+
+  /** Esc: no command – back in the text with the caret where it was, the list closed until the next trigger */
+  private cancelArgs() {
+    const ctx = this.context;
+    const field = this.field;
+    if (!ctx || !field) return;
+    this.dismissed = ctx.start;
+    this.setContext(null);
+    field.focus();
+    if (isText(field)) field.setSelectionRange(ctx.end, ctx.end);
+    this.say("Cancelled");
+  }
+
+  private onArgKey(e: KeyboardEvent, i: number, arg: MentionPickerArg) {
+    if (e.isComposing) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
+      this.cancelArgs();
+      return;
+    }
+    if (arg.type === "choice" && arg.options?.length) {
+      const opts = arg.options;
+      const at = opts.indexOf(this.argForm?.values[arg.name] ?? "");
+      let to = -1;
+      if (e.key === "ArrowDown") to = Math.min(opts.length - 1, at + 1);
+      else if (e.key === "ArrowUp") to = at < 0 ? 0 : Math.max(0, at - 1);
+      else if (e.key === "Home") to = 0;
+      else if (e.key === "End") to = opts.length - 1;
+      else if (e.key === " " && at < 0) to = 0;
+      if (to >= 0) {
+        e.preventDefault();
+        this.setArg(arg.name, opts[to]);
+        return;
+      }
+    }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      this.advance(i);
+    }
+  }
+
+  private argsForm() {
+    const form = this.argForm!;
+    const args = form.row.item.args ?? [];
+    const token = this.tokenOf(form.row);
+    const titleId = `${this.uid}-args`;
+    return html`<form
+      class="ui-mnp__args"
+      aria-labelledby=${titleId}
+      @submit=${(e: Event) => {
+        e.preventDefault();
+        this.finishArgs();
+      }}
+      @focusout=${(e: FocusEvent) => {
+        const to = e.relatedTarget as Node | null;
+        // Focus left for somewhere else on the page: the command isn't inserted
+        if (to && !this.contains(to) && to !== this.field) this.setContext(null);
+      }}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          e.stopPropagation();
+          this.cancelArgs();
+        }
+      }}
+    >
+      <div class="ui-mnp__args-head">
+        <span class="ui-mnp__args-cmd" id=${titleId}>${token}</span>
+        ${form.row.item.description || form.row.item.hint ? html`<span class="ui-mnp__args-desc">${form.row.item.description ?? form.row.item.hint}</span>` : nothing}
+      </div>
+      ${args.map((a, i) => {
+        const id = `${this.uid}-a${i}`;
+        const labelId = `${id}-l`;
+        const errId = `${id}-e`;
+        const value = form.values[a.name] ?? "";
+        const bad = form.missing.includes(a.name);
+        const label = html`<span class="ui-mnp__arg-label" id=${labelId}>${a.label ?? a.name}${a.required ? nothing : html`<span class="ui-mnp__arg-opt"> (optional)</span>`}</span>`;
+        const error = bad ? html`<span class="ui-mnp__arg-error" id=${errId}>Required</span>` : nothing;
+        if (a.type === "choice" && a.options?.length) {
+          const at = a.options.indexOf(value);
+          return html`<div class="ui-mnp__arg">
+            ${label}
+            <div
+              id=${id}
+              class="ui-mnp__arg-choices"
+              role="listbox"
+              tabindex="0"
+              aria-labelledby=${labelId}
+              aria-required=${a.required ? "true" : "false"}
+              aria-invalid=${bad ? "true" : "false"}
+              aria-describedby=${ifDefined(bad ? errId : undefined)}
+              aria-activedescendant=${ifDefined(at >= 0 ? `${id}-o${at}` : undefined)}
+              @keydown=${(e: KeyboardEvent) => this.onArgKey(e, i, a)}
+            >
+              ${a.options.map(
+                (o, oi) => html`<div
+                  id=${`${id}-o${oi}`}
+                  class="ui-mnp__arg-choice"
+                  role="option"
+                  aria-selected=${o === value ? "true" : "false"}
+                  @click=${() => {
+                    this.setArg(a.name, o);
+                    this.argField(i)?.focus();
+                  }}
+                >${o}</div>`,
+              )}
+            </div>
+            ${error}
+          </div>`;
+        }
+        return html`<div class="ui-mnp__arg">
+          <label class="ui-mnp__arg-label" id=${labelId} for=${id}>${a.label ?? a.name}${a.required ? nothing : html`<span class="ui-mnp__arg-opt"> (optional)</span>`}</label>
+          <input
+            id=${id}
+            class="ui-mnp__arg-input"
+            type=${a.type === "number" ? "number" : "text"}
+            inputmode=${ifDefined(a.type === "number" ? "decimal" : undefined)}
+            autocomplete="off"
+            .value=${value}
+            placeholder=${ifDefined(a.placeholder)}
+            aria-required=${a.required ? "true" : "false"}
+            aria-invalid=${bad ? "true" : "false"}
+            aria-describedby=${ifDefined(bad ? errId : undefined)}
+            @input=${(e: InputEvent) => this.setArg(a.name, (e.target as HTMLInputElement).value)}
+            @keydown=${(e: KeyboardEvent) => this.onArgKey(e, i, a)}
+          />
+          ${error}
+        </div>`;
+      })}
+      <div class="ui-mnp__assembled"><span class="ui-mnp__sr">Inserts: </span><code>${assemble(token, args, form.values)}</code></div>
+      <div class="ui-mnp__args-actions">
+        <button type="button" class="ui-mnp__args-btn" @click=${() => this.cancelArgs()}>Cancel</button>
+        <button type="submit" class="ui-mnp__args-btn" data-kind="primary">Insert</button>
+      </div>
+    </form>`;
   }
 
   /** The built-in chip: one unit the caret steps over and Backspace removes whole */
@@ -665,7 +907,7 @@ export class TcMentionPicker extends TcElement {
     if ((changed.has("disabled") && this.disabled) || (changed.has("triggers") && this.context && !same)) this.setContext(null);
     else if (changed.has("triggers") && this.context && same && same !== this.context.trigger) this.context = { ...this.context, trigger: same };
     // Results changed: say how many
-    if (this.context && (changed.has("context") || changed.has("found"))) {
+    if (this.context && !this.argForm && (changed.has("context") || changed.has("found"))) {
       const { rows } = this.view();
       const st = this.found?.state;
       const t = this.context.trigger;
@@ -686,7 +928,7 @@ export class TcMentionPicker extends TcElement {
     const pop = this.pop;
     const open = !!this.context;
     const { rows } = this.view();
-    const row = open ? this.current(rows) : undefined;
+    const row = open && !this.argForm ? this.current(rows) : undefined;
     this.toggleAttribute("data-open", open);
     if (field) {
       if (field.getAttribute("role") === "combobox") field.setAttribute("aria-expanded", open ? "true" : "false");
@@ -738,6 +980,11 @@ export class TcMentionPicker extends TcElement {
   }
 
   private foot(clean: boolean) {
+    if (this.argForm)
+      return html`<div class="ui-mnp__foot" aria-hidden="true">
+        <span class="ui-mnp__keys"><kbd>↵</kbd><span>next</span><kbd>⇧</kbd><kbd>⇥</kbd><span>back</span></span>
+        <span class="ui-mnp__keys ui-mnp__keys--end"><kbd>${clean ? "esc" : "Esc"}</kbd><span>to cancel</span></span>
+      </div>`;
     return html`<div class="ui-mnp__foot" aria-hidden="true">
       <span class="ui-mnp__keys"><kbd>↑</kbd><kbd>↓</kbd><span>to move</span><kbd>↵</kbd><span>to insert</span></span>
       <span class="ui-mnp__keys ui-mnp__keys--end"><kbd>${clean ? "esc" : "Esc"}</kbd><span>to close</span></span>
@@ -788,6 +1035,7 @@ export class TcMentionPicker extends TcElement {
       role="listbox"
       aria-label=${ctx?.trigger.label ?? "Suggestions"}
       aria-busy=${ifDefined(state === "loading" ? "true" : undefined)}
+      ?hidden=${!!this.argForm}
     >
       <span class="ui-mnp__pill" aria-hidden="true" hidden></span>
       <div class="ui-mnp__inner">
@@ -827,9 +1075,10 @@ export class TcMentionPicker extends TcElement {
           : nothing}
       </div>
     </div>`;
-    const top = note ? html`<div class="ui-mnp__note" aria-hidden="true">${note}</div>` : nothing;
-    return html`<div class="ui-mnp__pop" @pointerdown=${(e: Event) => e.preventDefault()}>
-        ${clean ? html`${top}${listbox}` : html`<div class="ui-mnp__card">${top}${listbox}</div>`} ${this.foot(clean)}
+    const top = note && !this.argForm ? html`<div class="ui-mnp__note" aria-hidden="true">${note}</div>` : nothing;
+    const body = this.argForm ? html`${this.argsForm()}${listbox}` : listbox;
+    return html`<div class="ui-mnp__pop" @pointerdown=${(e: Event) => ((e.target as Element).closest(".ui-mnp__args") ? undefined : e.preventDefault())}>
+        ${clean ? html`${top}${body}` : html`<div class="ui-mnp__card">${top}${body}</div>`} ${this.foot(clean)}
       </div>
       <span class="ui-mnp__sr" role="status">${said.text ? said.text + (said.n % 2 ? "" : " ") : ""}</span>`;
   }
@@ -990,6 +1239,37 @@ export class TcMentionPicker extends TcElement {
   user-select: all;
 }
 .ui-mnp__chip[data-trigger="/"] { background: var(--tc-fill-default); color: var(--tc-text-primary); font-family: var(--tc-font-mono); font-size: 0.92em; }
+/* ----- A command's arguments: a short form in place of the list ----- */
+.ui-mnp__args { display: grid; gap: var(--tc-space-2-5); padding: var(--tc-space-3); }
+.ui-mnp__args-head { display: grid; gap: var(--tc-space-0-5); }
+.ui-mnp__args-cmd { font-family: var(--tc-font-mono); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
+.ui-mnp__args-desc { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+.ui-mnp__arg { display: grid; gap: var(--tc-space-1); }
+.ui-mnp__arg-label { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
+.ui-mnp__arg-opt { font-weight: var(--tc-font-weight-regular); color: var(--tc-text-muted); }
+.ui-mnp__arg-input { width: 100%; height: var(--tc-field-h); padding: 0 var(--tc-field-px); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); outline: none; }
+.ui-mnp__arg-input:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-mnp__arg-input:focus { box-shadow: var(--tc-field-shadow-focus); }
+.ui-mnp__arg-input::placeholder { color: var(--tc-text-placeholder); }
+.ui-mnp__arg-input[aria-invalid="true"], .ui-mnp__arg-choices[aria-invalid="true"] { box-shadow: inset 0 0 0 1px var(--tc-status-danger-fg); }
+.ui-mnp__arg-choices { display: flex; flex-wrap: wrap; gap: var(--tc-space-1); padding: var(--tc-space-0-5); border-radius: var(--tc-field-radius); outline: none; }
+.ui-mnp__arg-choices:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-mnp__arg-choice { display: inline-flex; align-items: center; height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); box-shadow: inset 0 0 0 1px var(--tc-border-default); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); cursor: pointer; }
+.ui-mnp__arg-choice:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+/* The chosen one: the selected fill and ring, so the choice reads without colour too */
+.ui-mnp__arg-choice[aria-selected="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); font-weight: var(--tc-font-weight-medium); }
+.ui-mnp__arg-error { font-size: var(--tc-font-size-xs); color: var(--tc-status-danger-fg); }
+.ui-mnp__assembled { overflow-wrap: anywhere; padding: var(--tc-space-1-5) var(--tc-space-2); border-radius: var(--tc-radius-sm); background: var(--tc-fill-subtle); }
+.ui-mnp__assembled code { font-family: var(--tc-font-mono); font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); }
+.ui-mnp__args-actions { display: flex; justify-content: flex-end; gap: var(--tc-space-1-5); }
+.ui-mnp__args-btn { height: var(--tc-control-h-sm); margin: 0; padding: 0 var(--tc-control-px-sm); border: 0; border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font: inherit; font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); cursor: pointer; }
+.ui-mnp__args-btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-mnp__args-btn[data-kind="primary"] { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
+.ui-mnp__args-btn[data-kind="primary"]:hover { background: var(--tc-action-primary-bg-hover); }
+.ui-mnp__args-btn:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+@media (forced-colors: active) {
+  .ui-mnp__arg-choice[aria-selected="true"] { outline: 2px solid Highlight; }
+}
 @keyframes ui-mnp-open { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: none; } }
 @keyframes ui-mnp-open-up { from { opacity: 0; transform: translateY(4px) scale(0.98); } to { opacity: 1; transform: none; } }
 @keyframes ui-mnp-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }

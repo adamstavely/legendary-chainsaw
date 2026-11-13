@@ -3,9 +3,13 @@
  */
 import { html, render as litRender } from "lit";
 import axe from "axe-core";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/ai-answer";
-import type { AnswerFeedback, AnswerSource, TcAiAnswer } from "../../src/elements/ai-answer";
+import type { AnswerFeedback, AnswerInterruption, AnswerSource, AnswerUnavailable, TcAiAnswer } from "../../src/elements/ai-answer";
+import { AIAnswer } from "../../src/elements/react/ai-answer";
 import { cleanup } from "./helpers";
 
 const FRAME = 16;
@@ -26,7 +30,9 @@ const SOURCES: AnswerSource[] = [
   { title: "Re: Lisbon", name: "Slack", href: "https://example.com/b" },
 ];
 
-type Props = Partial<Pick<TcAiAnswer, "answer" | "sources" | "streaming" | "animated" | "feedback" | "onRegenerate" | "look" | "followUps" | "hideActions">>;
+type Props = Partial<
+  Pick<TcAiAnswer, "answer" | "sources" | "streaming" | "animated" | "feedback" | "onRegenerate" | "look" | "followUps" | "hideActions" | "interrupted" | "unavailable" | "now">
+>;
 
 /** Mounts without waiting on animation frames (they're faked here) */
 async function mount(props: Props) {
@@ -288,6 +294,109 @@ for (const look of ["standard", "clean"] as const) {
       expect(icon.isConnected).toBe(false);
     });
 
+    test("interrupted: everything so far shows at once, why in words, Continue writes on", async () => {
+      const { el, text } = await mount({ look, sources: SOURCES, answer: ANSWER, interrupted: { reason: "network" } });
+      expect(el.dataset.phase).toBe("stopped");
+      expect(text()).toBe(words(ANSWER));
+      const notice = el.querySelector<HTMLElement>(".ui-ans__notice")!;
+      expect(notice.dataset.kind).toBe("interrupted");
+      expect(notice.getAttribute("role")).toBe("group");
+      expect(el.querySelector(".ui-ans__notice-text")!.textContent).toBe("The connection dropped before the answer finished.");
+      expect(el.querySelector('[role="status"]')!.textContent).toBe("The connection dropped before the answer finished.");
+      expect(el.querySelector(".ui-ans__status")!.textContent).toBe("Connection lost");
+      const seen: unknown[] = [];
+      el.addEventListener("tc-continue", (e) => seen.push((e as CustomEvent).detail));
+      byName(el, "Continue")!.click();
+      await el.updateComplete;
+      expect(seen).toEqual([{ reason: "network" }]);
+      expect(el.interrupted).toBeNull();
+      expect(el.querySelector(".ui-ans__notice")).toBeNull();
+      el.answer = `${ANSWER} And the rest.`;
+      await frames(el, 1000);
+      expect(el.dataset.phase).toBe("done");
+      expect(text()).toBe(words(`${ANSWER} And the rest.`));
+    });
+
+    test("interrupted mid-stream: the words so far show; length and stopped have their own words; a prevented Continue keeps it", async () => {
+      const { el, text } = await mount({ look, answer: ANSWER });
+      await frames(el, 200);
+      expect(el.dataset.phase).toBe("writing");
+      el.interrupted = { reason: "length" };
+      await el.updateComplete;
+      expect(el.dataset.phase).toBe("stopped");
+      expect(text()).toBe(words(ANSWER));
+      expect(el.querySelector(".ui-ans__notice-text")!.textContent).toBe("The answer reached its length limit before it finished.");
+      expect(el.querySelector(".ui-ans__status")!.textContent).toBe("Reached the length limit");
+      el.addEventListener("tc-continue", (e) => e.preventDefault());
+      byName(el, "Continue")!.click();
+      await el.updateComplete;
+      expect(el.interrupted).toEqual({ reason: "length" });
+      el.interrupted = { reason: "stopped", message: "Paused by you." } satisfies AnswerInterruption;
+      await el.updateComplete;
+      expect(el.querySelector(".ui-ans__notice-text")!.textContent).toBe("Paused by you.");
+      expect(el.querySelector(".ui-ans__status")!.textContent).toBe("Stopped before it finished");
+    });
+
+    test("interrupted: Retry fires tc-retry and starts over through onRegenerate", async () => {
+      const regen = vi.fn();
+      const { el } = await mount({ look, sources: SOURCES, answer: ANSWER, interrupted: { reason: "network" }, onRegenerate: regen });
+      const seen: unknown[] = [];
+      el.addEventListener("tc-retry", (e) => seen.push((e as CustomEvent).detail));
+      byName(el, "Retry")!.click();
+      await el.updateComplete;
+      expect(seen).toEqual([{ model: undefined, from: "interrupted" }]);
+      expect(regen).toHaveBeenCalledTimes(1);
+      expect(el.interrupted).toBeNull();
+      expect(el.dataset.phase).toBe("reading");
+    });
+
+    test("unavailable: no answer, who and when, a live countdown, Try now and the fallback", async () => {
+      const at = Date.now();
+      const { el } = await mount({ look, sources: SOURCES, answer: "", unavailable: { model: "Atlas", retryAt: at + 42_000, fallback: "Nova" } satisfies AnswerUnavailable });
+      expect(el.dataset.phase).toBe("unavailable");
+      expect(el.querySelector(".ui-ans__sources")).toBeNull();
+      expect(el.querySelector(".ui-ans__foot")).toBeNull();
+      expect(el.querySelector(".ui-ans__label-text")!.textContent).toBe("Waiting for Atlas");
+      expect(el.querySelector(".ui-ans__notice-text span")!.textContent).toBe("Atlas is busy right now.");
+      expect(el.querySelector('[role="status"]')!.textContent).toBe("Atlas is busy right now.");
+      expect(el.querySelector(".ui-ans__notice-when")!.textContent).toBe("Trying again in 42 s.");
+      vi.advanceTimersByTime(2000);
+      await el.updateComplete;
+      expect(el.querySelector(".ui-ans__notice-when")!.textContent).toBe("Trying again in 40 s.");
+      expect(el.querySelector('[role="status"]')!.textContent).toBe("Atlas is busy right now.");
+      vi.advanceTimersByTime(40_000);
+      await el.updateComplete;
+      expect(el.querySelector(".ui-ans__notice-when")!.textContent).toBe("Trying again now…");
+      const seen: unknown[] = [];
+      el.addEventListener("tc-retry", (e) => seen.push((e as CustomEvent).detail));
+      byName(el, "Use Nova")!.click();
+      await el.updateComplete;
+      expect(seen).toEqual([{ model: "Nova", from: "unavailable" }]);
+      expect(el.unavailable).toBeNull();
+      expect(el.dataset.phase).toBe("reading");
+      expect(vi.getTimerCount()).toBeLessThanOrEqual(1);
+    });
+
+    test("unavailable: down, a page-given now, minutes and hours, a prevented Try now keeps it", async () => {
+      const { el } = await mount({ look, answer: "", now: 1_000_000, unavailable: { model: "Atlas", reason: "down", retryAt: 1_000_000 + 125_000 } });
+      expect(el.querySelector(".ui-ans__notice-text span")!.textContent).toBe("Atlas isn't responding right now.");
+      expect(el.querySelector(".ui-ans__notice-when")!.textContent).toBe("Trying again in 2 min 5 s.");
+      expect(vi.getTimerCount()).toBe(0);
+      el.now = 1_000_000 - 3_840_000 + 125_000;
+      await el.updateComplete;
+      expect(el.querySelector(".ui-ans__notice-when")!.textContent).toBe("Trying again in 1 h 4 min.");
+      expect(byName(el, "Use Nova")).toBeUndefined();
+      el.addEventListener("tc-retry", (e) => e.preventDefault());
+      byName(el, "Try now")!.click();
+      await el.updateComplete;
+      expect(el.unavailable).not.toBeNull();
+      el.unavailable = { message: "The model is resting." };
+      await el.updateComplete;
+      expect(el.querySelector(".ui-ans__notice-text span")!.textContent).toBe("The model is resting.");
+      expect(el.querySelector(".ui-ans__notice-when")).toBeNull();
+      expect(el.querySelector(".ui-ans__label-text")!.textContent).toBe("Waiting for the model");
+    });
+
     test("no frames or timers left behind when removed", async () => {
       const { el } = await mount({ look, sources: SOURCES, answer: ANSWER });
       el.remove();
@@ -301,6 +410,61 @@ test("the shine moves by transform, the mascot rests, the +N count isn't faded (
   expect(css).not.toContain("background-position");
   expect(css).not.toMatch(/ui-ans-(look|blink)[^;]*infinite/);
   expect(css).not.toMatch(/\.ui-ans__more \{[^}]*opacity/);
+});
+
+test("wrapper: the page owns interrupted – Continue and Retry call back and the notice stays until it clears", async () => {
+  vi.useRealTimers();
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  const calls: string[] = [];
+  let clear = () => {};
+  function App() {
+    const [cut, setCut] = React.useState(true);
+    clear = () => setCut(false);
+    return React.createElement(AIAnswer, {
+      sources: [],
+      answer: ANSWER,
+      animate: false,
+      interrupted: cut ? { reason: "network" } : null,
+      onContinue: (reason) => calls.push(`continue:${reason}`),
+      onRetry: (r) => calls.push(`retry:${r.from}`),
+    });
+  }
+  await act(async () => root.render(React.createElement(App)));
+  const el = host.querySelector("tc-ai-answer")!;
+  await el.updateComplete;
+  byName(el, "Continue")!.click();
+  byName(el, "Retry")!.click();
+  await el.updateComplete;
+  expect(calls).toEqual(["continue:network", "retry:interrupted"]);
+  expect(el.interrupted).toEqual({ reason: "network" });
+  expect(el.querySelector(".ui-ans__notice")).toBeTruthy();
+  await act(async () => clear());
+  await el.updateComplete;
+  expect(el.querySelector(".ui-ans__notice")).toBeNull();
+  await act(async () => root.unmount());
+});
+
+test("axe: interrupted and unavailable, in either look", async () => {
+  vi.useRealTimers();
+  const a = await mount({ sources: SOURCES, answer: "Yes, you can [1].", animated: false, interrupted: { reason: "network" } });
+  const b = await mount({ look: "clean", sources: SOURCES, answer: "Yes [1].", animated: false, interrupted: { reason: "length" } });
+  const c = await mount({ answer: "", unavailable: { model: "Atlas", retryAt: Date.now() + 42_000, fallback: "Nova" } });
+  const d = await mount({ look: "clean", answer: "", unavailable: { model: "Atlas", reason: "down", fallback: "Nova" } });
+  await new Promise((r) => setTimeout(r, 100));
+  for (const x of [a, b, c, d]) await x.el.updateComplete;
+  for (const x of document.getAnimations()) if (x.effect?.getComputedTiming().iterations !== Infinity) x.finish();
+  document.body.style.background = "Canvas";
+  for (const theme of ["light", "dark"]) {
+    document.body.dataset.tcTheme = theme;
+    await new Promise((r) => setTimeout(r, 20));
+    for (const x of document.getAnimations()) if (x.effect?.getComputedTiming().iterations !== Infinity) x.finish();
+    const result = await axe.run(document.body, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+    expect(result.violations.map((v) => `${theme} ${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  }
+  delete document.body.dataset.tcTheme;
+  document.body.style.background = "";
 });
 
 test("axe: no violations in either look", async () => {

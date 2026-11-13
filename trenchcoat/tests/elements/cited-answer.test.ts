@@ -3,10 +3,14 @@
  */
 import { html } from "lit";
 import axe from "axe-core";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/cited-answer";
 import { TcCitedAnswer, type CitedSegment, type CitedSource } from "../../src/elements/cited-answer";
-import { cleanup, fixture, settle } from "./helpers";
+import { CitedAnswer } from "../../src/elements/react/cited-answer";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   cleanup();
@@ -229,3 +233,181 @@ test("axe: no violations in either look", async () => {
   const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
   expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
+
+/* ---------- The source viewer ---------- */
+
+const docSources: CitedSource[] = [
+  { id: "a", title: "Annual audit report", site: "Audit office", url: "https://audit.example.org/report", quote: "Three grants were reported late.", document: "report" },
+  { id: "b", title: "Annual audit report", site: "Audit office", quote: "the controls  worked as designed", document: "report" },
+  { id: "c", title: "Board minutes", site: "Minutes", quote: "Not in the text at all." },
+];
+const docSegments: CitedSegment[] = [
+  { text: "Three grants were late.", cite: ["a"] },
+  { text: " Otherwise the controls held.", cite: ["b"] },
+  { text: " The board agreed.", cite: ["c"] },
+];
+const REPORT = "Annual audit report\n\nOverall, the controls worked\nas designed through the year.\n\nThree grants were reported late. Each was under the reporting threshold.";
+const viewer = (el: Element) => el.querySelector<HTMLDialogElement>(".ui-ca__viewer");
+const viewBtn = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-ca__view");
+
+for (const look of ["standard", "clean"] as const) {
+  describe(`tc-cited-answer (${look}) – source viewer`, () => {
+    test("View in document shows only when the document is available", async () => {
+      const el = await fixture<TcCitedAnswer>(html`<tc-cited-answer look=${look} .segments=${docSegments} .sources=${docSources} .preview=${"a"}></tc-cited-answer>`);
+      expect(viewBtn(el)).toBeNull();
+      el.documents = { report: REPORT };
+      await settle();
+      expect(viewBtn(el)!.textContent).toMatch(/View in document/);
+      el.preview = "c";
+      await flush();
+      expect(viewBtn(el)).toBeNull();
+      el.loadDocument = async () => "Board minutes";
+      await settle();
+      expect(viewBtn(el)).not.toBeNull();
+    });
+
+    test("opens a modal at the cited passage, steps between passages, and Escape returns focus", async () => {
+      const el = await fixture<TcCitedAnswer>(html`<tc-cited-answer look=${look} .segments=${docSegments} .sources=${docSources} .documents=${{ report: REPORT }} .preview=${"a"}></tc-cited-answer>`);
+      const opened = vi.fn();
+      el.addEventListener("tc-source-open", (e) => opened((e as CustomEvent).detail));
+      const btn = viewBtn(el)!;
+      btn.focus();
+      btn.click();
+      await flush();
+      expect(opened).toHaveBeenCalledWith({ sourceId: "a" });
+      const dlg = viewer(el)!;
+      expect(dlg.open).toBe(true);
+      expect(dlg.getAttribute("aria-labelledby")).toBeTruthy();
+      expect(document.getElementById(dlg.getAttribute("aria-labelledby")!)!.textContent).toBe("Annual audit report");
+      expect(document.activeElement).toBe(dlg.querySelector(".ui-ca__vw-doc"));
+      // Both passages of the report are marked; the current one is a's, matched across the line break for b
+      const marks = [...dlg.querySelectorAll<HTMLElement>(".ui-ca__passage")];
+      expect(marks.map((m) => m.dataset.source)).toEqual(["b", "a"]);
+      expect(dlg.querySelector(".ui-ca__passage[data-current]")!.getAttribute("data-source")).toBe("a");
+      expect(dlg.querySelector(".ui-ca__vw-count")!.textContent).toBe("Passage 2 of 2");
+      expect(dlg.querySelector("[role=status]")!.textContent).toBe("Passage 2 of 2 in Annual audit report");
+      const [prev, next] = [...dlg.querySelectorAll<HTMLButtonElement>(".ui-ca__vw-step")];
+      expect(prev.textContent).toMatch(/Previous passage/);
+      expect(next.disabled).toBe(true);
+      prev.click();
+      await flush();
+      expect(dlg.querySelector(".ui-ca__passage[data-current]")!.getAttribute("data-source")).toBe("b");
+      expect(dlg.querySelector(".ui-ca__vw-count")!.textContent).toBe("Passage 1 of 2");
+      expect(prev.disabled).toBe(true);
+      // Escape closes the viewer, not the preview, and focus goes back to View in document
+      dlg.querySelector<HTMLElement>(".ui-ca__vw-doc")!.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true }));
+      dlg.dispatchEvent(new Event("cancel", { cancelable: true }));
+      await flush();
+      expect(dlg.open).toBe(false);
+      expect(el.preview).toBe("a");
+      expect(document.activeElement).toBe(btn);
+    });
+
+    test("a prevented tc-source-open keeps the viewer closed", async () => {
+      const el = await fixture<TcCitedAnswer>(html`<tc-cited-answer look=${look} .segments=${docSegments} .sources=${docSources} .documents=${{ report: REPORT }} .preview=${"a"}></tc-cited-answer>`);
+      el.addEventListener("tc-source-open", (e) => e.preventDefault());
+      viewBtn(el)!.click();
+      await flush();
+      expect(viewer(el)?.open ?? false).toBe(false);
+    });
+
+    test("loadDocument: loading, then the text; a failure offers Try again; a passage that isn't there says so", async () => {
+      let fail = true;
+      let release!: () => void;
+      const signals: AbortSignal[] = [];
+      const load = vi.fn((id: string, signal: AbortSignal) => {
+        signals.push(signal);
+        return new Promise<string>((resolve, reject) => {
+          release = () => (fail ? reject(new Error("offline")) : resolve(`Minutes for ${id}. The board agreed.`));
+        });
+      });
+      const el = await fixture<TcCitedAnswer>(html`<tc-cited-answer look=${look} .segments=${docSegments} .sources=${docSources} .loadDocument=${load} .preview=${"c"}></tc-cited-answer>`);
+      viewBtn(el)!.click();
+      await flush();
+      const dlg = viewer(el)!;
+      expect(load).toHaveBeenCalledWith("c", expect.any(AbortSignal));
+      expect(dlg.querySelector(".ui-ca__vw-doc")!.getAttribute("aria-busy")).toBe("true");
+      expect(dlg.textContent).toMatch(/Loading the document/);
+      release();
+      await flush();
+      expect(dlg.textContent).toMatch(/Couldn't load the document/);
+      expect(dlg.querySelector("[role=status]")!.textContent).toBe("Couldn't load the document");
+      fail = false;
+      [...dlg.querySelectorAll<HTMLButtonElement>("button")].find((b) => /Try again/.test(b.textContent!))!.click();
+      await flush();
+      release();
+      await flush();
+      expect(dlg.textContent).toMatch(/Minutes for c/);
+      expect(dlg.textContent).toMatch(/The cited passage wasn't found/);
+      expect(dlg.querySelector(".ui-ca__vw-count")!.textContent).toBe("Passage not found");
+      // Closing aborts a load that's still running
+      el.loadDocument = () => new Promise<string>(() => {});
+      dlg.querySelector<HTMLButtonElement>(".ui-ca__vw-close")!.click();
+      await flush();
+      expect(dlg.open).toBe(false);
+    });
+
+    test("a source that disappears closes the viewer", async () => {
+      const el = await fixture<TcCitedAnswer>(html`<tc-cited-answer look=${look} .segments=${docSegments} .sources=${docSources} .documents=${{ report: REPORT }} .preview=${"a"}></tc-cited-answer>`);
+      viewBtn(el)!.click();
+      await flush();
+      expect(viewer(el)!.open).toBe(true);
+      el.sources = docSources.slice(1);
+      await flush();
+      expect(viewer(el)?.open ?? false).toBe(false);
+    });
+  });
+}
+
+test("React: onSourceOpen hears View in document, and preventDefault keeps the viewer closed", async () => {
+  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  const seen: string[] = [];
+  let block = false;
+  await act(async () =>
+    root.render(
+      React.createElement(CitedAnswer, {
+        segments: docSegments,
+        // The test's sources have no icons, so they fit the React shape as they are
+        sources: docSources as React.ComponentProps<typeof CitedAnswer>["sources"],
+        documents: { report: REPORT },
+        defaultPreview: "a",
+        onSourceOpen: (id, e) => {
+          seen.push(id);
+          if (block) e.preventDefault();
+        },
+      }),
+    ),
+  );
+  await settle();
+  const el = host.querySelector("tc-cited-answer")!;
+  block = true;
+  viewBtn(el)!.click();
+  await flush();
+  expect(viewer(el)?.open ?? false).toBe(false);
+  block = false;
+  viewBtn(el)!.click();
+  await flush();
+  expect(viewer(el)!.open).toBe(true);
+  expect(seen).toEqual(["a", "a"]);
+  await act(async () => root.unmount());
+  host.remove();
+});
+
+for (const theme of ["light", "dark"] as const) {
+  for (const look of ["standard", "clean"] as const) {
+    test(`axe (${theme}, ${look}): the open source viewer has no violations`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
+        <tc-cited-answer look=${look} .segments=${docSegments} .sources=${docSources} .documents=${{ report: REPORT }} .preview=${"a"}></tc-cited-answer>
+      </div>`);
+      const el = wrap.querySelector("tc-cited-answer")!;
+      viewBtn(el)!.click();
+      await flush();
+      await finish(wrap);
+      const result = await axe.run(viewer(el)!, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+  }
+}

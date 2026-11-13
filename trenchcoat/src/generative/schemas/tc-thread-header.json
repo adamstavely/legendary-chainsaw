@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-thread-header.json",
+  "title": "tc-thread-header",
+  "description": "The bar at the top of a chat thread – the title renamed in place, model and project chips, Share, side-panel toggles and a menu.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The thread's title. Changed by renaming unless a tc-title-change listener calls preventDefault()"
+    },
+    "level": {
+      "type": "number",
+      "description": "The heading level of the title, 1–6"
+    },
+    "model": {
+      "type": "string",
+      "description": "The model's name, as a chip"
+    },
+    "project": {
+      "type": "string",
+      "description": "The project the thread belongs to, as a chip"
+    },
+    "toggles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadHeaderToggle"
+      },
+      "description": "A toggle button for each side panel"
+    },
+    "panels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the open panels. Changed by the toggles unless a tc-panels-change listener calls preventDefault()"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadHeaderAction"
+      },
+      "description": "The menu's actions"
+    },
+    "hideShare": {
+      "type": "boolean",
+      "description": "Hides Share"
+    },
+    "noRename": {
+      "type": "boolean",
+      "description": "Turns renaming off: the title is plain text"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "rename": {
+          "type": "string"
+        },
+        "titleField": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "panels": {
+          "type": "string"
+        },
+        "untitled": {
+          "type": "string"
+        },
+        "renamed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ThreadHeaderToggle": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Its name – the button's words for screen readers and its tooltip"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Lucide-style path data for its icon; a panel icon when left out"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ThreadHeaderAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "danger": {
+          "type": "boolean",
+          "description": "Drawn in the danger colour, after a separator"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

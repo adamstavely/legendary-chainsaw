@@ -238,6 +238,30 @@
      "readonly": false
     },
     {
+     "name": "limit",
+     "attribute": null,
+     "type": "ChatLimit | null",
+     "default": "null",
+     "description": "Holds sending back – a message limit with when it resets, or a trial that's over; the draft stays editable (null: send freely)",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time for the limit's \"in 2 h 10 min\", epoch ms – the composer keeps its own clock when unset",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for the limit's reset time – the browser's when unset",
+     "readonly": false
+    },
+    {
      "name": "pickedSkill",
      "attribute": null,
      "type": "ChatSkill | null",
@@ -320,6 +344,18 @@
      "detail": "",
      "description": "The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext`",
      "cancelable": true
+    },
+    {
+     "name": "tc-limit-action",
+     "detail": "",
+     "description": "The limit notice's action was pressed – upgrade, learn more (`ChatLimitAction`: `{ limit }`)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-trial-action",
+     "detail": "",
+     "description": "The trial-ended notice's action was pressed (`ChatLimitAction`: `{ limit }`)",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -402,6 +438,7 @@
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
     "--tc-action-primary-shadow",
     "--tc-action-secondary-bg",
@@ -465,6 +502,7 @@
     "--tc-menu-shadow",
     "--tc-radius-full",
     "--tc-radius-lg",
+    "--tc-radius-md",
     "--tc-radius-sm",
     "--tc-radius-xs",
     "--tc-shadow-control",
@@ -475,6 +513,7 @@
     "--tc-space-12",
     "--tc-space-2",
     "--tc-space-2-5",
+    "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-8",
@@ -663,6 +702,18 @@
      "type": "(skill: ChatSkill | null, reason: ChatSkillChangeReason) => void",
      "optional": true,
      "description": "The message's skill changed: the skill now (null: none) and why – picked, replaced, removed, edited away or sent"
+    },
+    {
+     "name": "onLimitAction",
+     "type": "(limit: ChatLimitAction[\"limit\"]) => void",
+     "optional": true,
+     "description": "The limit notice's action was pressed – upgrade or learn more"
+    },
+    {
+     "name": "onTrialAction",
+     "type": "(limit: ChatLimitAction[\"limit\"]) => void",
+     "optional": true,
+     "description": "The trial-ended notice's action was pressed"
     }
    ],
    "hides": [
@@ -687,7 +738,9 @@
     "tc-settings-change": null,
     "tc-prompt-pick": "onPromptPick",
     "tc-page-context-change": null,
-    "tc-skill-change": null
+    "tc-skill-change": null,
+    "tc-limit-action": "onLimitAction",
+    "tc-trial-action": "onTrialAction"
    }
   }
  ],
@@ -715,7 +768,8 @@
     "settings",
     "settingsModel",
     "prompts",
-    "pageContext"
+    "pageContext",
+    "limit"
    ],
    "attributes": [
     {
@@ -777,6 +831,14 @@
     {
      "name": "disclaimer",
      "attribute": "disclaimer"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
     }
    ],
    "events": [
@@ -823,6 +885,14 @@
     {
      "name": "tc-page-context-change",
      "cancelable": true
+    },
+    {
+     "name": "tc-limit-action",
+     "cancelable": false
+    },
+    {
+     "name": "tc-trial-action",
+     "cancelable": false
     }
    ],
    "controlled": [
@@ -1012,6 +1082,7 @@
      "itself",
      "context-tray",
      "internal/kit",
+     "mention-picker",
      "model-picker",
      "model-settings",
      "segmented-control",
@@ -1240,6 +1311,7 @@
      "itself",
      "internal/card-head",
      "internal/kit",
+     "mention-picker",
      "internal/popover",
      "tokens.css"
     ]
@@ -1296,6 +1368,7 @@
    "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [
+   "Date.now()",
    "performance.now() (internal/controllers › RollingController)",
    "performance.now() (prompt-library)"
   ],
@@ -1322,7 +1395,7 @@
   "windowed": false
  },
  "size": {
-  "min": 365451,
-  "gzip": 84672
+  "min": 381642,
+  "gzip": 88878
  }
 }

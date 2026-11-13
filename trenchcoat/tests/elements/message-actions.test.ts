@@ -4,10 +4,14 @@
  */
 import { html } from "lit";
 import axe from "axe-core";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/message-actions";
-import { TcMessageActions, type MessageFeedbackDetail, type TcMessageText } from "../../src/elements/message-actions";
-import { cleanup, fixture, settle } from "./helpers";
+import { TcMessageActions, type MessageFeedbackDetail, type MessageReportDetail, type TcMessageText } from "../../src/elements/message-actions";
+import { MessageActions } from "../../src/elements/react/message-actions";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 const g = globalThis as Record<string, unknown>;
 const restores: (() => void)[] = [];
@@ -366,3 +370,175 @@ describe("tc-message-text", () => {
     expect(el.querySelector(".ui-ma__swap-item")!.textContent).toBe("Final");
   });
 });
+
+/* ---------- Report ---------- */
+
+const reportBtn = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-ma__btn--report");
+const reportFold = (el: Element) => el.querySelector<HTMLElement>(".ui-ma__report")!;
+const pick = async (el: Element, reason: string) => {
+  const radio = reportFold(el).querySelector<HTMLInputElement>(`input[value="${reason}"]`)!;
+  radio.click();
+  await settle();
+};
+
+for (const look of ["standard", "clean"] as const) {
+  describe(`tc-message-actions (${look}) – report`, () => {
+    test("off by default: no Report button or form", async () => {
+      const el = await fixture<TcMessageActions>(html`<tc-message-actions look=${look} text="Hi" demo></tc-message-actions>`);
+      expect(reportBtn(el)).toBeNull();
+      expect(el.querySelector(".ui-ma__report")).toBeNull();
+    });
+
+    test("Report opens the form; Send waits for a reason and fires tc-report with the details; Undo withdraws it", async () => {
+      const el = await fixture<TcMessageActions>(html`<tc-message-actions look=${look} text="Hi" demo reportable></tc-message-actions>`);
+      const sent: MessageReportDetail[] = [];
+      const undone: MessageReportDetail[] = [];
+      el.addEventListener("tc-report", (e) => sent.push((e as CustomEvent<MessageReportDetail>).detail));
+      el.addEventListener("tc-report-undo", (e) => undone.push((e as CustomEvent<MessageReportDetail>).detail));
+      const button = reportBtn(el)!;
+      expect(button.getAttribute("aria-label")).toBe("Report reply");
+      expect(button.getAttribute("aria-expanded")).toBe("false");
+      button.click();
+      await settle();
+      expect(button.getAttribute("aria-expanded")).toBe("true");
+      expect(reportFold(el).hasAttribute("data-open")).toBe(true);
+      await expect.poll(() => document.activeElement?.getAttribute("value")).toBe("harmful");
+      const labels = [...reportFold(el).querySelectorAll(".ui-ma__reason")].map((l) => l.textContent!.trim());
+      expect(labels).toEqual(["Harmful or dangerous", "Unsafe advice", "Shares private data", "Hateful or harassing", "Something else"]);
+      const send = reportFold(el).querySelector<HTMLButtonElement>(".ui-ma__send")!;
+      expect(send.disabled).toBe(true);
+      await pick(el, "private-data");
+      const details = reportFold(el).querySelector<HTMLTextAreaElement>("textarea")!;
+      details.value = "  It shows a phone number  ";
+      details.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      await settle();
+      expect(send.disabled).toBe(false);
+      send.click();
+      await settle();
+      expect(sent).toEqual([{ reason: "private-data", details: "It shows a phone number" }]);
+      expect(reportFold(el).textContent).toMatch(/Reported – a reviewer will look at this/);
+      expect(button.getAttribute("aria-label")).toBe("Reported");
+      await expect.poll(() => document.activeElement?.className).toMatch(/ui-ma__undo/);
+      expect(el.querySelector("[aria-live]")!.textContent).toMatch(/Reported – a reviewer will look at this/);
+      reportFold(el).querySelector<HTMLButtonElement>(".ui-ma__undo")!.click();
+      await settle();
+      expect(undone).toEqual([{ reason: "private-data", details: "It shows a phone number" }]);
+      expect(button.getAttribute("aria-label")).toBe("Report reply");
+      expect(reportFold(el).hasAttribute("data-open")).toBe(false);
+      expect(document.activeElement).toBe(button);
+    });
+
+    test("a prevented tc-report keeps the form open with nothing confirmed", async () => {
+      const el = await fixture<TcMessageActions>(html`<tc-message-actions look=${look} text="Hi" demo reportable></tc-message-actions>`);
+      el.addEventListener("tc-report", (e) => e.preventDefault());
+      reportBtn(el)!.click();
+      await settle();
+      await pick(el, "harmful");
+      reportFold(el).querySelector<HTMLButtonElement>(".ui-ma__send")!.click();
+      await settle();
+      expect(reportFold(el).querySelector("form")).not.toBeNull();
+      expect(reportBtn(el)!.getAttribute("aria-label")).toBe("Report reply");
+    });
+
+    test("Escape closes the form and returns focus to Report; opening it closes the feedback row", async () => {
+      const el = await fixture<TcMessageActions>(html`<tc-message-actions look=${look} text="Hi" demo reportable></tc-message-actions>`);
+      btn(el, "Bad response")!.click();
+      await settle();
+      expect(btn(el, "Bad response")!.getAttribute("aria-expanded")).toBe("true");
+      reportBtn(el)!.click();
+      await settle();
+      expect(btn(el, "Bad response")!.getAttribute("aria-expanded")).toBe("false");
+      await expect.poll(() => reportFold(el).contains(document.activeElement)).toBe(true);
+      document.activeElement!.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true }));
+      await settle();
+      expect(reportFold(el).hasAttribute("data-open")).toBe(false);
+      expect(document.activeElement).toBe(reportBtn(el));
+    });
+
+    test("after the Undo window the flag stays Reported, and renamed labels show", async () => {
+      vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+      try {
+        const el = await fixture<TcMessageActions>(html`<tc-message-actions look=${look} text="Hi" demo reportable .reportLabels=${{ other: "Another problem" }}></tc-message-actions>`);
+        reportBtn(el)!.click();
+        await settle();
+        expect(reportFold(el).textContent).toMatch(/Another problem/);
+        await pick(el, "other");
+        reportFold(el).querySelector<HTMLButtonElement>(".ui-ma__send")!.click();
+        await settle();
+        // Focus moves off Undo, so the timer may end it
+        reportBtn(el)!.focus();
+        vi.advanceTimersByTime(6100);
+        await settle();
+        expect(reportFold(el).hasAttribute("data-open")).toBe(false);
+        expect(reportBtn(el)!.getAttribute("aria-label")).toBe("Reported");
+        expect(reportBtn(el)!.hasAttribute("aria-expanded")).toBe(false);
+        reportBtn(el)!.click();
+        await settle();
+        expect(reportFold(el).hasAttribute("data-open")).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+}
+
+test("React: onReport hears the report, and returning false keeps the form", async () => {
+  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  const seen: string[] = [];
+  let refuse = true;
+  await act(async () =>
+    root.render(
+      React.createElement(MessageActions, {
+        text: "Hi",
+        demo: true,
+        reportable: true,
+        onReport: (r) => {
+          seen.push(r.reason);
+          return refuse ? false : undefined;
+        },
+        onReportUndo: (r) => void seen.push(`undo ${r.reason}`),
+      }),
+    ),
+  );
+  await settle();
+  const el = host.querySelector("tc-message-actions")!;
+  reportBtn(el)!.click();
+  await settle();
+  await pick(el, "hateful");
+  const send = () => reportFold(el).querySelector<HTMLButtonElement>(".ui-ma__send")!.click();
+  send();
+  await settle();
+  expect(reportFold(el).querySelector("form")).not.toBeNull();
+  refuse = false;
+  send();
+  await settle();
+  reportFold(el).querySelector<HTMLButtonElement>(".ui-ma__undo")!.click();
+  await settle();
+  expect(seen).toEqual(["hateful", "hateful", "undo hateful"]);
+  await act(async () => root.unmount());
+  host.remove();
+});
+
+for (const theme of ["light", "dark"] as const) {
+  test(`axe (${theme}): the report form and its confirmation in both looks`, async () => {
+    const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base); display: grid; gap: 16px">
+      <tc-message-actions text="Hi" demo reportable label="Actions for answer 1"></tc-message-actions>
+      <tc-message-actions look="clean" text="Hi" demo reportable label="Actions for answer 2"></tc-message-actions>
+      <tc-message-actions text="Hi" demo reportable label="Actions for answer 3"></tc-message-actions>
+    </div>`);
+    const [a, b, c] = [...wrap.querySelectorAll("tc-message-actions")];
+    for (const el of [a, b, c]) {
+      reportBtn(el)!.click();
+      await settle();
+    }
+    await pick(c, "harmful");
+    reportFold(c).querySelector<HTMLButtonElement>(".ui-ma__send")!.click();
+    await settle();
+    await finish(wrap);
+    const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+    expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+}

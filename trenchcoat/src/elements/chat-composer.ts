@@ -60,6 +60,12 @@ import { PopoverController } from "./internal/popover";
  *   · a "/" button by the attach button (hide-skills-button leaves it out) opens the list for people who don't know
  *     the shortcut; `searchSkills` finds skills on the app's side, with loading and error states
  * The text area stays the combobox; the token and the hint are read with it (aria-describedby) and picks are said.
+ *
+ * Limits – `limit` ({ kind: "limit" | "trial", resetsAt?, message?, action? }) holds the message back without losing
+ * it: the field stays editable so the draft is kept, Send is aria-disabled with the reason as its description, and a
+ * notice above the composer says why – "You've reached your message limit · resets at 14:00 (in 2 h 10 min)", the
+ * time kept fresh (or following `now`) – with an optional action (tc-limit-action). A trial that's over says so, with
+ * its primary action (tc-trial-action). The notice is said once when it appears.
  */
 
 type Step = "idle" | "loading" | "done";
@@ -122,6 +128,19 @@ export type ChatSkill = {
 export type ChatSkillRef = { id: string; name: string };
 /** tc-skill-change: the skill now (null: none), the one before, and why. Cancelable for pick, replace and remove */
 export type ChatSkillChange = { skill: ChatSkill | null; previous: ChatSkill | null; reason: "pick" | "replace" | "remove" | "edit" | "send" };
+/** Why sending is held back: a message limit that resets, or a trial that's over */
+export type ChatLimit = {
+  /** "limit": the message limit is reached; "trial": the trial has ended */
+  kind: "limit" | "trial";
+  /** When the limit resets, epoch ms – shown as "resets at 14:00 (in 2 h 10 min)" */
+  resetsAt?: number;
+  /** Your own words in place of the built-in sentence */
+  message?: string;
+  /** The action's label – optional for a limit ("Upgrade", "Learn more"); a trial defaults to "Upgrade" */
+  action?: string;
+};
+/** tc-limit-action and tc-trial-action: the limit the action belongs to */
+export type ChatLimitAction = { limit: ChatLimit };
 /** Finds skills for what's typed after the slash, on the app's side. The signal aborts when the query changes or the list closes */
 export type ChatSkillSearch = (query: string, options: { signal: AbortSignal }) => ChatSkill[] | Promise<ChatSkill[]>;
 /** tc-send's detail, and onSend's details plus the message: `message` is the whole text, the token included */
@@ -280,6 +299,15 @@ function builtInLogo(model: ChatModel, look: Look): Element | undefined {
   return byLook[look];
 }
 
+/** The composer's one clock read: the limit's "in 2 h 10 min" when the page gives no `now` */
+const wallClock = () => Date.now();
+/** "2 h 10 min", "45 min", "1 min" – a reset time's distance, to the minute */
+function untilText(ms: number) {
+  const m = Math.max(1, Math.round(ms / 60_000));
+  if (m < 60) return `${m} min`;
+  return m % 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${Math.floor(m / 60)} h`;
+}
+
 let uid = 0;
 
 /**
@@ -296,6 +324,8 @@ let uid = 0;
  * @fires tc-settings-change - The model settings changed in the settings popover (`ChatSettingsChange`: `{ value, changed }`); cancelable – prevent it to control `settings`
  * @fires tc-prompt-pick - A prompt was picked in the prompt library (`ChatPromptPick`: `{ prompt, template, values }`); cancelable – prevent it to place the prompt yourself
  * @fires tc-page-context-change - The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext`
+ * @fires tc-limit-action - The limit notice's action was pressed – upgrade, learn more (`ChatLimitAction`: `{ limit }`)
+ * @fires tc-trial-action - The trial-ended notice's action was pressed (`ChatLimitAction`: `{ limit }`)
  */
 export class TcChatComposer extends TcElement {
   static override ui = "chat-composer";
@@ -370,6 +400,12 @@ export class TcChatComposer extends TcElement {
   @property({ attribute: false }) accessor pageContext: ChatPageContext | undefined = undefined;
   /** One quiet line under the composer, e.g. "AI can make mistakes. Check important info." – it also describes the message field */
   @property() accessor disclaimer = "";
+  /** Holds sending back – a message limit with when it resets, or a trial that's over; the draft stays editable (null: send freely) */
+  @property({ attribute: false }) accessor limit: ChatLimit | null = null;
+  /** The time for the limit's "in 2 h 10 min", epoch ms – the composer keeps its own clock when unset */
+  @property({ type: Number }) accessor now: number | undefined = undefined;
+  /** The locale for the limit's reset time – the browser's when unset */
+  @property() accessor locale: string | undefined = undefined;
 
   /** @internal The open toolbar popover */
   @state() accessor sheet: Panel = "";
@@ -381,6 +417,8 @@ export class TcChatComposer extends TcElement {
   /** @internal */ @state() accessor sending = false;
   /** @internal */ @state() accessor menuOpen = false;
   /** @internal */ @state() accessor status = "";
+  /** @internal The composer's own clock for the limit's reset time */
+  @state() accessor clock = 0;
   /** @internal */ @state() accessor error = "";
   /** @internal */ @state() accessor apps: Step = "idle";
   /** @internal */ @state() accessor approval: Step = "idle";
@@ -402,6 +440,7 @@ export class TcChatComposer extends TcElement {
 
   private uid = `tc-cc-${++uid}`;
   private timers: number[] = [];
+  private clockTimer = 0;
   private speaking: number[] = [];
   private dictating: AbortController | null = null;
   private levels = silentTrace();
@@ -461,6 +500,8 @@ export class TcChatComposer extends TcElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
+    clearInterval(this.clockTimer);
+    this.clockTimer = 0;
     this.barRo?.disconnect();
     this.barRo = undefined;
     this.watchedBar = null;
@@ -498,7 +539,49 @@ export class TcChatComposer extends TcElement {
     return this.models.find((m) => m.id === this.model) ?? this.models[0] ?? NO_MODEL;
   }
   private get canSend() {
-    return this.message.trim().length > 0 && !this.sending;
+    return this.message.trim().length > 0 && !this.sending && !this.limit;
+  }
+
+  /* ---------- Limits: a message limit or a trial that's over ---------- */
+
+  /** The notice's sentence: "You've reached your message limit · resets at 14:00 (in 2 h 10 min)" */
+  private limitText(l: ChatLimit) {
+    if (l.kind === "trial") return l.message ?? "Your trial has ended. Your draft is kept – upgrade to send it.";
+    const lead = l.message ?? "You've reached your message limit";
+    if (l.resetsAt === undefined) return lead;
+    const at = new Intl.DateTimeFormat(this.locale, { hour: "numeric", minute: "2-digit" }).format(l.resetsAt);
+    const left = l.resetsAt - (this.now ?? this.clock);
+    return `${lead} · resets at ${at} (${left > 30_000 ? `in ${untilText(left)}` : "any moment now"})`;
+  }
+  /** What's said once when the notice appears – without the countdown, which would be stale by the time it's heard */
+  private limitSaid(l: ChatLimit) {
+    if (l.kind === "trial") return this.limitText(l);
+    const lead = l.message ?? "You've reached your message limit";
+    return l.resetsAt === undefined ? `${lead}.` : `${lead}. It resets at ${new Intl.DateTimeFormat(this.locale, { hour: "numeric", minute: "2-digit" }).format(l.resetsAt)}.`;
+  }
+  /** Ticks every 15 s while a reset time shows and the page gives no `now` */
+  private syncLimitClock() {
+    const want = !!this.limit?.resetsAt && this.now === undefined && this.isConnected;
+    if (want && !this.clockTimer) {
+      this.clock = wallClock();
+      this.clockTimer = window.setInterval(() => (this.clock = wallClock()), 15_000);
+    } else if (!want && this.clockTimer) {
+      clearInterval(this.clockTimer);
+      this.clockTimer = 0;
+    }
+  }
+  private limitNotice() {
+    const l = this.limit;
+    if (!l) return nothing;
+    const label = l.action ?? (l.kind === "trial" ? "Upgrade" : "");
+    const event = l.kind === "trial" ? "tc-trial-action" : "tc-limit-action";
+    return html`<div class="ui-chat-composer__limit" data-kind=${l.kind} role="group" aria-labelledby=${`${this.uid}-limit`}>
+      <svg class="ui-chat-composer__limit-icon" viewBox="0 0 24 24" aria-hidden="true">${l.kind === "trial" ? svg`<rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>` : svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>`}</svg>
+      <p class="ui-chat-composer__limit-text" id=${`${this.uid}-limit`}>${this.limitText(l)}</p>
+      ${label
+        ? html`<button type="button" class="ui-chat-composer__limit-action" ?data-primary=${l.kind === "trial"} @click=${() => this.emit<ChatLimitAction>(event, { limit: l })}>${label}</button>`
+        : nothing}
+    </div>`;
   }
 
   /* ---------- Saying what happened ---------- */
@@ -1118,6 +1201,12 @@ export class TcChatComposer extends TcElement {
 
   protected override willUpdate(changed: PropertyValues<this>) {
     super.willUpdate(changed);
+    // A limit that appears, or changes kind, is said once; lifted, it says sending is back
+    if (changed.has("limit") && this.hasUpdated) {
+      const before = changed.get("limit") as ChatLimit | null | undefined;
+      if (this.limit && (before?.kind !== this.limit.kind || before?.resetsAt !== this.limit.resetsAt || before?.message !== this.limit.message)) this.status = this.limitSaid(this.limit);
+      else if (!this.limit && before) this.status = "You can send messages again.";
+    } else if (!this.hasUpdated && this.limit) this.status = this.limitSaid(this.limit);
     // The page answered with what was typed
     if (changed.has("value") && this.value === this.typed) this.typed = null;
     // The page set the skill: its token takes the start of the message. Then text the page set may break or make one
@@ -1182,6 +1271,7 @@ export class TcChatComposer extends TcElement {
   }
 
   protected override updated(changed: PropertyValues<this>) {
+    this.syncLimitClock();
     this.watchModel();
     this.watchText();
     this.watchBar(changed);
@@ -1285,6 +1375,8 @@ export class TcChatComposer extends TcElement {
     if (event.defaultPrevented) return;
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
       event.preventDefault();
+      // Held back by a limit: say why again rather than nothing happening
+      if (this.limit && this.message.trim()) this.status = this.status === this.limitSaid(this.limit) ? `${this.limitSaid(this.limit)} ` : this.limitSaid(this.limit);
       void this.send();
     }
   };
@@ -1432,7 +1524,16 @@ export class TcChatComposer extends TcElement {
             <div class="ui-chat-composer__group ui-chat-composer__group--end" .inert=${this.recording}>
               ${this.modelSwitcher === "toolbar" ? nothing : this.modelButtonTemplate(true, i)}
               <button type="button" class="ui-chat-composer__icon-btn" aria-label="Voice input" data-focus-key="voice" @click=${() => this.startRecording()}>${i.mic}</button>
-              <button type="button" class="ui-chat-composer__send" aria-label="Send message" ?disabled=${!this.canSend} aria-busy=${ifDefined(this.sending ? "true" : undefined)} @click=${() => void this.send()}>${i.arrowUp}</button>
+              <button
+                type="button"
+                class="ui-chat-composer__send"
+                aria-label="Send message"
+                ?disabled=${!this.canSend && !this.limit}
+                aria-disabled=${ifDefined(this.limit ? "true" : undefined)}
+                aria-describedby=${ifDefined(this.limit ? `${this.uid}-limit` : undefined)}
+                aria-busy=${ifDefined(this.sending ? "true" : undefined)}
+                @click=${() => void this.send()}
+              >${i.arrowUp}</button>
             </div>
             <div class="ui-chat-composer__group ui-chat-composer__group--end ui-chat-composer__group--voice" .inert=${!this.recording}>
               ${this.trace(true)}
@@ -1457,7 +1558,16 @@ export class TcChatComposer extends TcElement {
         <div class="ui-chat-composer__toolbar ui-chat-composer__toolbar--end" .inert=${this.recording}>
           ${this.modelSwitcher === "toolbar" ? nothing : this.modelButtonTemplate(false, i)}
           <button type="button" class="ui-chat-composer__icon-btn" aria-label="Voice input" data-focus-key="voice" @click=${() => this.startRecording()}><span class="ui-chat-composer__icon">${i.mic}</span></button>
-          <button type="button" class="ui-chat-composer__send" aria-label="Send message" ?disabled=${!this.canSend} aria-busy=${ifDefined(this.sending ? "true" : undefined)} @click=${() => void this.send()}>${i.arrowUp}</button>
+          <button
+                type="button"
+                class="ui-chat-composer__send"
+                aria-label="Send message"
+                ?disabled=${!this.canSend && !this.limit}
+                aria-disabled=${ifDefined(this.limit ? "true" : undefined)}
+                aria-describedby=${ifDefined(this.limit ? `${this.uid}-limit` : undefined)}
+                aria-busy=${ifDefined(this.sending ? "true" : undefined)}
+                @click=${() => void this.send()}
+              >${i.arrowUp}</button>
         </div>
         <div class="ui-chat-composer__toolbar ui-chat-composer__toolbar--end ui-chat-composer__toolbar--voice" .inert=${!this.recording}>
           ${this.trace(false)}
@@ -1651,6 +1761,7 @@ export class TcChatComposer extends TcElement {
     const i = iconsFor(clean);
     const heard = this.heard;
     return html`
+      ${this.limitNotice()}
       ${this.context
         ? html`<tc-context-tray
             class="ui-chat-composer__context"
@@ -1946,7 +2057,7 @@ export class TcChatComposer extends TcElement {
   width: calc(60 * var(--u));
   height: calc(60 * var(--u));
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__send:disabled {
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__send:is(:disabled, [aria-disabled="true"]) {
   opacity: 0.18;
   cursor: default;
 }
@@ -2505,7 +2616,7 @@ export class TcChatComposer extends TcElement {
   transition: background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__send svg { width: 16px; height: 16px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__send:disabled { background: var(--tc-fill-default) !important; color: var(--tc-text-disabled); cursor: default; }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__send:is(:disabled, [aria-disabled="true"]) { background: var(--tc-fill-default) !important; color: var(--tc-text-disabled); cursor: default; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__send:not(:disabled):active { transform: scale(0.94); }
 /* Recording: the trace, discard and keep take the place of the right group */
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__group--end { transition: opacity var(--tc-duration-base) var(--tc-ease-decelerate), transform var(--tc-duration-slow) var(--tc-ease-move); }
@@ -2903,6 +3014,46 @@ export class TcChatComposer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__page[data-on="true"] .ui-chat-composer__tool-icon { color: var(--tc-accent); }
 .ui-chat-composer__page-items { width: var(--tc-control-h-sm); padding: 0; justify-content: center; border-radius: var(--tc-radius-full); }
 /* The disclaimer: one quiet line under it all */
+/* ----- Limits: the notice above the composer while sending is held back ----- */
+.ui-chat-composer__limit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tc-space-2) var(--tc-space-2-5);
+  margin: 0 0 var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-3);
+  border-radius: var(--tc-radius-md);
+  background: var(--tc-fill-default);
+  font-family: var(--tc-font-sans);
+  animation: ui-chat-composer-limit var(--tc-duration-moderate) var(--tc-ease-move) both;
+}
+.ui-chat-composer__limit-icon { flex: none; width: 16px; height: 16px; fill: none; stroke: var(--tc-text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__limit-icon { stroke-width: 1.5; }
+.ui-chat-composer__limit-text { flex: 1 1 200px; min-width: 0; margin: 0; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); font-variant-numeric: tabular-nums; color: var(--tc-text-secondary); }
+.ui-chat-composer__limit-action {
+  flex: none;
+  height: var(--tc-control-h-sm);
+  margin-left: auto;
+  padding: 0 var(--tc-control-px-sm);
+  border: 0;
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-action-secondary-bg);
+  box-shadow: var(--tc-action-secondary-shadow);
+  font: inherit;
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  color: var(--tc-action-secondary-fg);
+  cursor: pointer;
+  transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-chat-composer__limit-action:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-chat-composer__limit-action[data-primary] { background: var(--tc-action-primary-bg); box-shadow: none; color: var(--tc-action-primary-fg); }
+.ui-chat-composer__limit-action[data-primary]:hover { background: var(--tc-action-primary-bg-hover); }
+.ui-chat-composer__limit-action:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+@keyframes ui-chat-composer-limit { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+@media (hover: none) and (pointer: coarse) { .ui-chat-composer__limit-action { height: var(--tc-control-h-md); } }
+@media (forced-colors: active) { .ui-chat-composer__limit { border: 1px solid CanvasText; } .ui-chat-composer__limit-icon { stroke: CanvasText; } }
+@media (prefers-reduced-motion: reduce) { .ui-chat-composer__limit { animation: none; } }
 .ui-chat-composer__disclaimer { margin: var(--tc-space-2) 0 0; font-family: var(--tc-font-sans); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-normal); text-align: center; color: var(--tc-text-muted); }
 /* The popovers (internal/popover.ts places them): settings and prompts hold their own card, so the surface is theirs */
 .ui-chat-composer__pop[role="dialog"] { width: min(420px, calc(100vw - var(--tc-space-4))); max-height: min(560px, calc(100vh - var(--tc-space-8))); overflow: auto; padding: 0; background: none; overscroll-behavior: contain; }

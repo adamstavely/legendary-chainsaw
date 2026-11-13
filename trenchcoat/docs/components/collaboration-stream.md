@@ -9,7 +9,7 @@
 What agents say to each other in a run, as a quiet chat – who to whom on every message, handoffs as slim rows, questions for you with an answer box, files that preview, details with tool calls, filter tabs and an @-composer
 
 - **Element:** `<tc-collaboration-stream>`
-- **Size:** 21.9 KB gzip · 77.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 24.5 KB gzip · 87.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -453,7 +453,7 @@ hidden.
 | color-mix() | 111 | 113 | 16.2 | 16.2 | tokens.css | Tints and washes mixed from the tokens. |
 | Container size queries | 105 | 110 | 16 | 16 | itself | Components adapt to the width they're given, not the window's. |
 | inert | 102 | 112 | 15.5 | 15.5 | internal/controllers | Closed and leaving parts are out of the tab order and hidden from screen readers. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, mention-picker, internal/kit | Focus rings for keyboard users. |
 | :has() | 105 | 121 | 15.4 | 15.4 | mention-picker | Layout and state that depend on what's inside a part (an icon present, a focused field). |
 | inset | 87 | 66 | 14.1 | 14.1 | mention-picker | – |
 | :is() and :where() | 88 | 78 | 14 | 14 | itself, mention-picker, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
@@ -468,12 +468,12 @@ hidden.
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | itself, mention-picker | Scrollbars keep the browser's default width. |
 | Popover API | 114 | 125 | 17 | 18.3 | mention-picker | Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, mention-picker, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself, mention-picker | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -491,9 +491,9 @@ hidden.
 | `internal/format` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| [mention-picker](mention-picker.md) · Element it renders | 29.9 KB | – |
-| **Added to a page that already has Lit** | **77.2 KB** | **21.9 KB** |
-| With Lit – the first component on a page | 98.9 KB | 29.0 KB |
+| [mention-picker](mention-picker.md) · Element it renders | 39.8 KB | – |
+| **Added to a page that already has Lit** | **87.0 KB** | **24.5 KB** |
+| With Lit – the first component on a page | 108.7 KB | 31.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -501,13 +501,13 @@ hidden.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.8 ms** | the gallery demo's data, 256 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of messages replaced |
-| First on the page | 27 ms | default properties; includes adding its CSS to the document |
-| 100 items | 23 ms | messages: first render, 2,149 nodes; update 1.7 ms |
-| 1,000 items | 133 ms | messages: first render, 20,949 nodes; update 6.8 ms |
+| First render | **4.2 ms** | the gallery demo's data, 256 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of messages replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 18 ms | messages: first render, 2,149 nodes; update 1.4 ms |
+| 1,000 items | 126 ms | messages: first render, 20,949 nodes; update 6.9 ms |
 
-1,000 items of messages: 133 ms. It renders every item, so a first render passes 50 ms (a long task) at about 380 items – page or filter longer lists.
+1,000 items of messages: 126 ms. It renders every item, so a first render passes 50 ms (a long task) at about 400 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

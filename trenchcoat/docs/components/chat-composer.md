@@ -9,7 +9,7 @@
 Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 
 - **Element:** `<tc-chat-composer>`
-- **Size:** 82.7 KB gzip · 356.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 86.8 KB gzip · 372.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -38,6 +38,11 @@ menu, to fit a 320 px side pane. With `skills` set, people start a message with 
 pressing the / button) lists them, recent ones first, then by source; a pick puts “/translate” at the start of the
 message with what to type next greyed after it, and the skill and its arguments ride on the send.
 
+With `limit` set, sending is held back but nothing is lost: the field stays editable so the draft is kept, Send is
+`aria-disabled` with the reason as its description, and a notice above the composer says why. A message limit reads
+“You've reached your message limit · resets at 14:00 (in 2 h 10 min)” – the countdown kept fresh – with an optional
+action such as Upgrade; a trial that's over says so, with Upgrade as its primary action.
+
 ### When to use
 
 - The prompt field at the bottom of an AI chat or assistant.
@@ -47,6 +52,8 @@ message with what to type next greyed after it, and the skill and its arguments 
   toolbar, and leave out what the pane doesn't offer with `hide-connect-apps`, `hide-project` and `hide-approval`.
 - An agent with skills or slash commands – set `skills` (and `searchSkills` when the catalogue lives on a server), so
   people can find one by name or by what it does, without knowing the list by heart.
+- A plan with a message limit, or a free trial – set `limit` when people can't send right now, so they keep their
+  draft and know when they can.
 
 ### When not to use
 
@@ -67,6 +74,7 @@ message with what to type next greyed after it, and the skill and its arguments 
 5. **Model** `.ui-chat-composer__picker` – with `model-switcher="toolbar"`, model-picker's menu in the toolbar row (otherwise a model button in the card)
 6. **Settings and prompts** `.ui-chat-composer__tool` – open model-settings and prompt-library in popovers
 7. **Page context** `.ui-chat-composer__page` – connects or disconnects what's on the page; the button beside it shows what's attached
+8. **Limit** `.ui-chat-composer__limit` – with `limit` set, the notice above the composer: why sending is held back,
 
 ## Looks
 
@@ -112,6 +120,10 @@ look: Standard sets it on a gray tray, Clean is one white popover. The token is 
   ];
   composer.recentSkills = ["brief"];
   composer.addEventListener("tc-send", (e) => e.detail.skill && console.log("run", e.detail.skill.id, "with", e.detail.args));
+
+  // Out of messages until 14:00: the draft stays, Send waits, the notice says when
+  composer.limit = { kind: "limit", resetsAt: new Date().setHours(14, 0, 0, 0), action: "Upgrade" };
+  composer.addEventListener("tc-limit-action", () => (location.href = "/plans"));
 </script>
 ```
 
@@ -127,7 +139,17 @@ const skills: ChatSkill[] = [
   { id: "brief", name: "exec-brief", description: "A one-page brief in the team's format", source: "Your team" },
 ];
 
-export function Composer({ send, pickFiles }: { send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>; pickFiles: () => void }) {
+export function Composer({
+  send,
+  pickFiles,
+  trialOver,
+  openCheckout,
+}: {
+  send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>;
+  pickFiles: () => void;
+  trialOver: boolean;
+  openCheckout: () => void;
+}) {
   const [draft, setDraft] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
   const [model, setModel] = useState("claude");
@@ -157,6 +179,8 @@ export function Composer({ send, pickFiles }: { send: (text: string, model: stri
       onConnectApps={() => fetch("/api/connect", { method: "POST" })}
       onRequestApproval={() => fetch("/api/approve", { method: "POST" })}
       hideProject
+      limit={trialOver ? { kind: "trial" } : null}
+      onTrialAction={openCheckout}
     />
   );
 }
@@ -262,6 +286,9 @@ export class ChatComposerExample {
 | `prompts` | – | `PromptTemplate[] \| undefined` | `undefined` | Opt-in: saved prompts, in a popover from the toolbar. A used prompt goes in at the caret (tc-prompt-pick) |
 | `pageContext` | – | `ChatPageContext \| undefined` | `undefined` | Opt-in: what's on the page, as a chip in the toolbar that connects or disconnects it (tc-page-context-change) |
 | `disclaimer` | `disclaimer` | `string` | `""` | One quiet line under the composer, e.g. "AI can make mistakes. Check important info." – it also describes the message field |
+| `limit` | – | `ChatLimit \| null` | `null` | Holds sending back – a message limit with when it resets, or a trial that's over; the draft stays editable (null: send freely) |
+| `now` | `now` | `number \| undefined` | `undefined` | The time for the limit's "in 2 h 10 min", epoch ms – the composer keeps its own clock when unset |
+| `locale` | `locale` | `string \| undefined` | `undefined` | The locale for the limit's reset time – the browser's when unset |
 | `pickedSkill` | – | `ChatSkill \| null` | – | The message's skill, from its id – a skill the composer hasn't seen is named by its id |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
@@ -280,6 +307,8 @@ export class ChatComposerExample {
 | `tc-settings-change` | – | Yes | The model settings changed in the settings popover (`ChatSettingsChange`: `{ value, changed }`); cancelable – prevent it to control `settings` |
 | `tc-prompt-pick` | – | Yes | A prompt was picked in the prompt library (`ChatPromptPick`: `{ prompt, template, values }`); cancelable – prevent it to place the prompt yourself |
 | `tc-page-context-change` | – | Yes | The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext` |
+| `tc-limit-action` | – | No | The limit notice's action was pressed – upgrade, learn more (`ChatLimitAction`: `{ limit }`) |
+| `tc-trial-action` | – | No | The trial-ended notice's action was pressed (`ChatLimitAction`: `{ limit }`) |
 
 #### Component tokens
 
@@ -297,9 +326,9 @@ export class ChatComposerExample {
 | `--tc-chat-composer-grow` | `0` | not set – this fallback applies |
 | `--tc-chat-composer-lines` | `1` | not set – this fallback applies |
 
-#### Design tokens it reads (97)
+#### Design tokens it reads (100)
 
-`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-chat-composer-card-h`, `--tc-chat-composer-frame`, `--tc-chat-composer-inset`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-duration-slowest`, `--tc-ease-decelerate`, `--tc-ease-emphasized`, `--tc-ease-in`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-spring`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-menu-bg`, `--tc-menu-item-font-size`, `--tc-menu-item-h`, `--tc-menu-item-hover`, `--tc-menu-item-px`, `--tc-menu-item-radius`, `--tc-menu-item-selected-fg`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-12`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-8`, `--tc-status-danger-bg`, `--tc-status-danger-border`, `--tc-status-danger-fg`, `--tc-status-info-border`, `--tc-surface-control`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-radius`, `--tc-z-dropdown`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-chat-composer-card-h`, `--tc-chat-composer-frame`, `--tc-chat-composer-inset`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-duration-slowest`, `--tc-ease-decelerate`, `--tc-ease-emphasized`, `--tc-ease-in`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-spring`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-menu-bg`, `--tc-menu-item-font-size`, `--tc-menu-item-h`, `--tc-menu-item-hover`, `--tc-menu-item-px`, `--tc-menu-item-radius`, `--tc-menu-item-selected-fg`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-12`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-8`, `--tc-status-danger-bg`, `--tc-status-danger-border`, `--tc-status-danger-fg`, `--tc-status-info-border`, `--tc-surface-control`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-radius`, `--tc-z-dropdown`
 
 #### Functions
 
@@ -341,8 +370,9 @@ export class ChatComposerExample {
 | `settingsModel` | `el.settingsModel = …;` | `<… settingsModel={…} />` | `<tc-chat-composer :settingsModel="…">` | `<tc-chat-composer [settingsModel]="…">` | `<tc-chat-composer {settingsModel}>` |
 | `prompts` | `el.prompts = …;` | `<… prompts={…} />` | `<tc-chat-composer :prompts="…">` | `<tc-chat-composer [prompts]="…">` | `<tc-chat-composer {prompts}>` |
 | `pageContext` | `el.pageContext = …;` | `<… pageContext={…} />` | `<tc-chat-composer :pageContext="…">` | `<tc-chat-composer [pageContext]="…">` | `<tc-chat-composer {pageContext}>` |
+| `limit` | `el.limit = …;` | `<… limit={…} />` | `<tc-chat-composer :limit="…">` | `<tc-chat-composer [limit]="…">` | `<tc-chat-composer {limit}>` |
 
-*Also attributes: `hide-connect-apps`, `hide-project`, `hide-approval`, `placeholder`, `value`, `model`, `load-ms`, `dictation` and 7 more – see the API table.*
+*Also attributes: `hide-connect-apps`, `hide-project`, `hide-approval`, `placeholder`, `value`, `model`, `load-ms`, `dictation` and 9 more – see the API table.*
 
 ### Events
 
@@ -359,6 +389,8 @@ export class ChatComposerExample {
 | `tc-settings-change` | Yes | `el.addEventListener("tc-settings-change", (e) => …)` | `ref.current.addEventListener("tc-settings-change", …)` | `@tc-settings-change="…"` | `(tc-settings-change)="…($event)"` | `el.addEventListener("tc-settings-change", …)` |
 | `tc-prompt-pick` | Yes | `el.addEventListener("tc-prompt-pick", (e) => …)` | `onPromptPick={…}` | `@tc-prompt-pick="…"` | `(tc-prompt-pick)="…($event)"` | `el.addEventListener("tc-prompt-pick", …)` |
 | `tc-page-context-change` | Yes | `el.addEventListener("tc-page-context-change", (e) => …)` | `ref.current.addEventListener("tc-page-context-change", …)` | `@tc-page-context-change="…"` | `(tc-page-context-change)="…($event)"` | `el.addEventListener("tc-page-context-change", …)` |
+| `tc-limit-action` | No | `el.addEventListener("tc-limit-action", (e) => …)` | `onLimitAction={…}` | `@tc-limit-action="…"` | `(tc-limit-action)="…($event)"` | `el.addEventListener("tc-limit-action", …)` |
+| `tc-trial-action` | No | `el.addEventListener("tc-trial-action", (e) => …)` | `onTrialAction={…}` | `@tc-trial-action="…"` | `(tc-trial-action)="…($event)"` | `el.addEventListener("tc-trial-action", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -570,6 +602,8 @@ No slots: everything it shows comes from its properties.
 | `skill` | `string` | Id of the message's skill (controlled; "" for none). Leave undefined to let the composer keep it |
 | `defaultSkill` | `string` | Id of the skill to start with when uncontrolled |
 | `onSkillChange` | `(skill: ChatSkill \| null, reason: ChatSkillChangeReason) => void` | The message's skill changed: the skill now (null: none) and why – picked, replaced, removed, edited away or sent |
+| `onLimitAction` | `(limit: ChatLimitAction["limit"]) => void` | The limit notice's action was pressed – upgrade or learn more |
+| `onTrialAction` | `(limit: ChatLimitAction["limit"]) => void` | The trial-ended notice's action was pressed |
 
 *Renamed or hidden on the wrapper: `value`, `models`, `model`, `context`, `settings`, `pageContext`, `skills`, `searchSkills`, `skill`, `onSend`*
 
@@ -600,6 +634,11 @@ picker, which has its own keys (`mention-picker`). The toolbar's model switch, s
 their own keys inside their popovers (`model-picker`, `model-settings`, `prompt-library`).
 
 ### Screen readers
+
+With `limit` set, the notice is a group named by its sentence; it's said once in the live region when it appears
+(“You've reached your message limit. It resets at 14:00.” – the countdown isn't read, so it can't go stale), and
+“You can send messages again.” when it's lifted. Send stays focusable as `aria-disabled`, described by the notice, and
+Enter in the message says the reason again instead of doing nothing.
 
 The composer is a section named “Message composer”; the text area is named “Message”. Icon buttons are named for
 what they do: “Add attachment”, “Voice input”, “Send message”, “Discard recording” and “Use recording” – which is
@@ -657,7 +696,7 @@ the token's tint is hidden from screen readers.
 | Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | itself | Sizes relative to the component's own width. |
 | Container size queries | 105 | 110 | 16 | 16 | itself, context-tray, model-picker, model-settings, prompt-library | Components adapt to the width they're given, not the window's. |
 | inert | 102 | 112 | 15.5 | 15.5 | itself, context-tray, internal/controllers, model-picker, prompt-library, internal/popover | Closed and leaving parts are out of the tab order and hidden from screen readers. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, context-tray, internal/kit, model-picker, model-settings, segmented-control, prompt-library | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, context-tray, internal/kit, mention-picker, model-picker, model-settings, segmented-control, prompt-library | Focus rings for keyboard users. |
 | :has() | 105 | 121 | 15.4 | 15.4 | itself, mention-picker | Layout and state that depend on what's inside a part (an icon present, a focused field). |
 | inset | 87 | 66 | 14.1 | 14.1 | itself, mention-picker, prompt-library, internal/popover | – |
 | translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | model-picker, segmented-control | – |
@@ -676,18 +715,18 @@ the token's tint is hidden from screen readers.
 | Popover API | 114 | 125 | 17 | 18.3 | mention-picker, internal/popover | Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
 | @property | 85 | 128 | 16.4 | 16.4 | segmented-control | The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, internal/popover, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, mention-picker, internal/popover, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself, mention-picker, segmented-control | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 134.1 KB | 30.9 KB |
+| **This component alone** | 140.1 KB | 32.1 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.8 KB | – |
@@ -701,15 +740,15 @@ the token's tint is hidden from screen readers.
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
 | [prompt-library](prompt-library.md) · Element it renders | 47.7 KB | – |
+| [mention-picker](mention-picker.md) · Element it renders | 39.8 KB | – |
 | [model-picker](model-picker.md) · Element it renders | 36.3 KB | – |
 | [model-settings](model-settings.md) · Element it renders | 30.7 KB | – |
-| [mention-picker](mention-picker.md) · Element it renders | 29.9 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
 | [context-tray](context-tray.md) · Element it renders | 25.2 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **356.9 KB** | **82.7 KB** |
-| With Lit – the first component on a page | 378.3 KB | 89.4 KB |
+| **Added to a page that already has Lit** | **372.7 KB** | **86.8 KB** |
+| With Lit – the first component on a page | 394.1 KB | 93.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -717,11 +756,11 @@ the token's tint is hidden from screen readers.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **6.2 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of skills replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.3 ms | skills: first render, 304 nodes; update 0.3 ms |
-| 1,000 items | 5.2 ms | skills: first render, 304 nodes; update 0.3 ms |
+| First render | **5.7 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of skills replaced |
+| First on the page | 31 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.3 ms | skills: first render, 304 nodes; update 0.2 ms |
+| 1,000 items | 5.1 ms | skills: first render, 304 nodes; update 0.2 ms |
 
 What it renders doesn't grow with skills (tested to 1,000 items).
 
@@ -736,7 +775,7 @@ What it renders doesn't grow with skills (tested to 1,000 items).
 - Stops or pauses under reduced motion.
 - Observers: `ResizeObserver`, `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `ResizeObserver` (mention-picker), `ResizeObserver` (segmented-control), `ResizeObserver` (prompt-library), `ResizeObserver` (internal/popover – PopoverController).
 - Listens on the page: `document pointerdown`, `document pointerdown` (model-picker), `window resize` (model-picker).
-- Reads the clock: `performance.now()` (internal/controllers – RollingController), `performance.now()` (prompt-library).
+- Reads the clock: `Date.now()`, `performance.now()` (internal/controllers – RollingController), `performance.now()` (prompt-library).
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
 
@@ -755,6 +794,8 @@ What it renders doesn't grow with skills (tested to 1,000 items).
   plugin's name.
 - Write `argumentHint` as the thing to type in angle brackets: “<language>”, “<pr number>”. Leave it out when the
   skill takes nothing.
+- Leave the limit's sentence to the composer, or say what's specific in `message`: “You've used your 40 messages for
+  today”. Name the action for what it does – “Upgrade”, “See plans”, “Learn more”.
 
 ## Do and don't
 
@@ -770,6 +811,7 @@ What it renders doesn't grow with skills (tested to 1,000 items).
 - Pass `recentSkills` from what the person used last, across sessions; the composer only remembers picks while it's
   on the page.
 - Read `skill` and `args` from `onSend`'s details (or tc-send) to run the skill; `message` still has the whole text.
+- Give `limit.resetsAt` whenever the limit resets on its own, and clear `limit` the moment people can send again.
 
 ### Don't
 
@@ -782,6 +824,7 @@ What it renders doesn't grow with skills (tested to 1,000 items).
   title and count.
 - Don't put a / trigger in `mentions` next to `skills` – skills take the / key.
 - Don't hide the / button unless your product teaches the shortcut somewhere else.
+- Don't clear or disable the message field when a limit is reached – the draft is people's work; `limit` keeps it.
 
 ## Related
 

@@ -1,5 +1,6 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
@@ -19,6 +20,11 @@ import type { Look } from "./internal/look";
  * the vote – never the streaming words.
  *
  * Keyboard: the three vote buttons are a toolbar – Tab reaches it once, ← → Home End move, Enter or Space votes.
+ *
+ * Three or four answers (`answers` with 3–4 items) compare more models at once: the answers sit side by side as
+ * columns while each gets about 230px, and below that they become a pager – a tab per answer (← → Home End), or a
+ * swipe on touch. The vote becomes "pick the best" as a radio group – one "X is best" per answer, "All equally good"
+ * and "All bad" – and the tc-value-change detail names the winning answer's `id` (or model) as `winnerId`.
  */
 
 // The header icon: a balance – two answers weighed against each other
@@ -36,18 +42,34 @@ export type ArenaAnswer = {
   streaming?: boolean;
   /** A short line under the answer, e.g. "1.8s · 212 tokens" */
   meta?: string;
+  /** What tc-value-change's `winnerId` names when this answer wins – defaults to the model's name */
+  id?: string;
 };
-export type ArenaWinner = "a" | "b" | "tie";
+/** A side by letter ("a"–"d", in `answers` order), a tie ("tie" – with three or more, "All equally good") or, with three or more, "bad" ("All bad") */
+export type ArenaWinner = "a" | "b" | "c" | "d" | "tie" | "bad";
 /** The vote: which side won (or a tie) and, once picked, why */
 export type ArenaVote = { winner: ArenaWinner; reason?: string };
+/** tc-value-change: the vote, and the winning answer's `id` (or model) when one answer won */
+export type ArenaValueChange = { value: ArenaVote | null; winnerId?: string };
 
 let arenaSeq = 0;
-const SIDES = ["a", "b"] as const;
-const LETTER = { a: "A", b: "B" } as const;
+const SIDES = ["a", "b", "c", "d"] as const;
+type Side = (typeof SIDES)[number];
+const LETTER: Record<Side, string> = { a: "A", b: "B", c: "C", d: "D" };
 const VOTES: { id: ArenaWinner; label: string }[] = [
   { id: "a", label: "A is better" },
   { id: "tie", label: "Tie" },
   { id: "b", label: "B is better" },
+];
+/** The most answers the arena compares */
+const MOST = 4;
+/** Below this width per answer, three or four answers become a pager */
+const COLUMN_MIN = 230;
+/** The vote with three or more answers: one "X is best" each, then everyone equal, then everyone bad */
+const manyVotes = (n: number): { id: ArenaWinner; label: string }[] => [
+  ...SIDES.slice(0, n).map((s) => ({ id: s as ArenaWinner, label: `${LETTER[s]} is best` })),
+  { id: "tie", label: "All equally good" },
+  { id: "bad", label: "All bad" },
 ];
 
 /* ---------- Text: paragraphs, "- " lists and **bold** ---------- */
@@ -79,16 +101,16 @@ const checkIcon = (look: Look) =>
   html`<svg class="ui-arena__check" viewBox=${look === "clean" ? "0 0 16 16" : "0 0 24 24"} aria-hidden="true">${look === "clean" ? svg`<path d="m4 8.4 2.6 2.6L12 5.4"></path>` : svg`<path d="M5 12.5l4.5 4.5L19 7.5"></path>`}</svg>`;
 
 /**
- * Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.
+ * Two to four models' answers to the same prompt side by side, with a vote: which is better (or best), a tie or all bad, and a reason.
  * @tag tc-answer-arena
- * @fires tc-value-change - The vote changed (`{ value: ArenaVote | null }`); cancelable – prevent it to keep `value` (controlled use)
+ * @fires tc-value-change - The vote changed (`{ value: ArenaVote | null, winnerId? }`: ArenaValueChange); cancelable – prevent it to keep `value` (controlled use)
  */
 export class TcAnswerArena extends TcElement {
   static override ui = "arena";
 
   /** The prompt both models answered */
   @property() accessor prompt = "";
-  /** The two answers: A first, then B */
+  /** The answers: A first, then B – two for a head-to-head, three or four to pick the best (more than four are left out) */
   @property({ attribute: false }) accessor answers: ArenaAnswer[] = [];
   /** The vote (null: none yet). Changed by the element unless a tc-value-change listener calls preventDefault() */
   @property({ attribute: false }) accessor value: ArenaVote | null = null;
@@ -100,14 +122,24 @@ export class TcAnswerArena extends TcElement {
   @property({ attribute: false }) accessor reasons = ["More accurate", "Easier to follow", "More complete", "Better tone"];
   /** Reasons offered after a tie */
   @property({ attribute: false }) accessor tieReasons = ["Both good", "Both wrong", "Too close to call"];
+  /** Reasons offered after "All equally good", with three or more answers */
+  @property({ attribute: false }) accessor allGoodReasons = ["All accurate", "Too close to call"];
+  /** Reasons offered after "All bad", with three or more answers */
+  @property({ attribute: false }) accessor badReasons = ["All inaccurate", "All incomplete", "All off-topic"];
 
   /** @internal What screen readers hear */
   @state() accessor said = "";
   /** @internal The vote button that Tab lands on */
   @state() accessor voteIndex = 0;
+  /** @internal Three or four answers too narrow for columns: one answer at a time behind tabs */
+  @state() accessor paged = false;
+  /** @internal The answer the pager shows */
+  @state() accessor page = 0;
 
   private wasStreaming = false;
   private uid = `tc-arena-${++arenaSeq}`;
+  private ro?: ResizeObserver;
+  private swipeFrom: { x: number; y: number } | null = null;
 
   constructor() {
     super();
@@ -117,28 +149,46 @@ export class TcAnswerArena extends TcElement {
     new OffScreenController(this, () => this.streaming);
   }
 
+  private get shown() {
+    return this.answers.slice(0, MOST);
+  }
+  /** Three or four answers: pick the best rather than A against B */
+  private get many() {
+    return this.shown.length > 2;
+  }
+  private get votes() {
+    return this.many ? manyVotes(this.shown.length) : VOTES;
+  }
   private get streaming() {
-    return this.answers.some((a) => a.streaming);
+    return this.shown.some((a) => a.streaming);
   }
   private get ready() {
-    return this.answers.length >= 2 && !this.streaming;
+    return this.shown.length >= 2 && !this.streaming;
   }
   /** Names show when not blind, or once there's a vote */
   private get revealed() {
     return !this.blind || this.value !== null;
   }
-  private side(s: "a" | "b") {
-    return this.answers[s === "a" ? 0 : 1];
+  private side(s: Side) {
+    return this.shown[SIDES.indexOf(s)];
   }
 
   /* ---------- The vote ---------- */
 
   private setValue(next: ArenaVote | null) {
-    if (this.emit("tc-value-change", { value: next }, { cancelable: true })) this.value = next;
+    const won = next && (SIDES as readonly string[]).includes(next.winner) ? this.side(next.winner as Side) : undefined;
+    const detail: ArenaValueChange = won ? { value: next, winnerId: won.id ?? won.model } : { value: next };
+    if (this.emit("tc-value-change", detail, { cancelable: true })) this.value = next;
   }
   private vote(winner: ArenaWinner) {
     if (!this.ready || this.value?.winner === winner) return;
     this.setValue({ winner });
+  }
+  private reasonsFor(winner: ArenaWinner | undefined) {
+    if (!winner) return [];
+    if (winner === "bad") return this.badReasons;
+    if (winner === "tie") return this.many ? this.allGoodReasons : this.tieReasons;
+    return this.reasons;
   }
   private pickReason(reason: string) {
     if (!this.value) return;
@@ -159,7 +209,54 @@ export class TcAnswerArena extends TcElement {
     e.preventDefault();
     this.voteIndex = to;
     buttons[to].focus();
+    // A radio group: moving is choosing, once the answers are in
+    if (this.many) this.vote(this.votes[to].id);
   };
+
+  /* ---------- The pager: three or four answers on a narrow screen ---------- */
+
+  private goTo(i: number, focus = false) {
+    const n = this.shown.length;
+    this.page = (i + n) % n;
+    if (focus) void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-arena__tab[data-index="${this.page}"]`)?.focus());
+  }
+  private onTabKey = (e: KeyboardEvent) => {
+    const n = this.shown.length;
+    const to =
+      e.key === "ArrowRight" ? this.page + 1
+      : e.key === "ArrowLeft" ? this.page - 1
+      : e.key === "Home" ? 0
+      : e.key === "End" ? n - 1
+      : null;
+    if (to === null) return;
+    e.preventDefault();
+    this.goTo(to, true);
+  };
+  private onSwipeStart = (e: PointerEvent) => {
+    this.swipeFrom = this.paged && e.pointerType !== "mouse" ? { x: e.clientX, y: e.clientY } : null;
+  };
+  private onSwipeEnd = (e: PointerEvent) => {
+    const from = this.swipeFrom;
+    this.swipeFrom = null;
+    if (!from) return;
+    const dx = e.clientX - from.x;
+    // A sideways swipe of 40px or more turns the page; mostly vertical movement is scrolling
+    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(e.clientY - from.y)) this.goTo(this.page + (dx < 0 ? 1 : -1));
+  };
+  private measure = () => {
+    const paged = this.many && this.getBoundingClientRect().width < this.shown.length * COLUMN_MIN;
+    if (paged !== this.paged) this.paged = paged;
+  };
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.ro = new ResizeObserver(this.measure);
+    this.ro.observe(this);
+  }
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.ro?.disconnect();
+  }
 
   /* ---------- Lifecycle ---------- */
 
@@ -167,28 +264,36 @@ export class TcAnswerArena extends TcElement {
     super.willUpdate(changed);
     const streaming = this.streaming;
     if (changed.has("answers")) {
-      // Both done after streaming: say so once (not on the first render, and not word by word)
-      if (this.hasUpdated && this.wasStreaming && !streaming && this.answers.length >= 2) this.said = "Both answers are in.";
+      // All done after streaming: say so once (not on the first render, and not word by word)
+      if (this.hasUpdated && this.wasStreaming && !streaming && this.shown.length >= 2) this.said = this.many ? "All answers are in." : "Both answers are in.";
       this.wasStreaming = streaming;
+      if (this.page >= this.shown.length) this.page = 0;
+      if (this.hasUpdated) queueMicrotask(this.measure);
     }
     if (changed.has("value") && this.hasUpdated) {
       const prev = changed.get("value") as ArenaVote | null | undefined;
       const v = this.value;
       if (!v) this.said = "";
       else if (prev?.winner !== v.winner) {
-        const label = VOTES.find((x) => x.id === v.winner)!.label;
-        const names = this.blind && !prev ? ` A was ${this.side("a")?.model ?? "Model A"}, B was ${this.side("b")?.model ?? "Model B"}.` : "";
+        const label = this.votes.find((x) => x.id === v.winner)?.label ?? v.winner;
+        const names =
+          this.blind && !prev
+            ? ` ${this.shown.map((a, i) => `${LETTER[SIDES[i]]} was ${a?.model ?? `Model ${LETTER[SIDES[i]]}`}`).join(", ")}.`
+            : "";
         this.said = `You voted: ${label}.${names}`;
       } else if (v.reason && v.reason !== prev?.reason) this.said = `Reason: ${v.reason}.`;
     }
-    if (changed.has("value") && this.value) this.voteIndex = Math.max(0, VOTES.findIndex((x) => x.id === this.value!.winner));
+    if (changed.has("value") && this.value) this.voteIndex = Math.max(0, this.votes.findIndex((x) => x.id === this.value!.winner));
     this.toggleAttribute("data-voted", this.value !== null);
+    this.dataset.count = String(Math.max(2, this.shown.length));
   }
 
   /* ---------- Render ---------- */
 
-  private renderPane(s: "a" | "b", look: Look) {
+  private renderPane(s: Side, look: Look) {
     const a = this.side(s);
+    const i = SIDES.indexOf(s);
+    const paged = this.paged;
     const revealed = this.revealed;
     const winner = this.value?.winner === s;
     const name = revealed && a ? a.model : `Model ${LETTER[s]}`;
@@ -196,7 +301,18 @@ export class TcAnswerArena extends TcElement {
     const text = blocks(a?.answer ?? "");
     const caret = a?.streaming ? html`<span class="ui-arena__caret" aria-hidden="true"></span>` : nothing;
     const last = text.length - 1;
-    return html`<section class="ui-arena__pane" data-side=${s} ?data-winner=${winner} ?data-streaming=${!!a?.streaming} aria-label=${`Answer ${LETTER[s]}`} aria-busy=${a?.streaming ? "true" : "false"}>
+    return html`<section
+      class="ui-arena__pane"
+      id=${`${this.uid}-pane-${s}`}
+      data-side=${s}
+      ?data-winner=${winner}
+      ?data-streaming=${!!a?.streaming}
+      role=${ifDefined(paged ? "tabpanel" : undefined)}
+      ?hidden=${paged && i !== this.page}
+      tabindex=${ifDefined(paged ? 0 : undefined)}
+      aria-label=${`Answer ${LETTER[s]}`}
+      aria-busy=${a?.streaming ? "true" : "false"}
+    >
       <header class="ui-arena__head">
         <span class="ui-arena__glyph" aria-hidden="true">${glyph}</span>
         ${keyed(revealed, html`<span class="ui-arena__model" ?data-revealed=${revealed && this.blind}>${name}</span>`)}
@@ -219,21 +335,36 @@ export class TcAnswerArena extends TcElement {
     </section>`;
   }
 
+  private questionText(open: boolean) {
+    if (!open) return this.many ? "Vote once all the answers are done" : "Vote once both answers are done";
+    // The default question reads "best" once there are more than two
+    return this.many && this.question === "Which answer is better?" ? "Which answer is best?" : this.question;
+  }
   private renderVote(look: Look) {
     const v = this.value;
     const ready = this.ready;
-    const reasons = v ? (v.winner === "tie" ? this.tieReasons : this.reasons) : [];
+    const reasons = this.reasonsFor(v?.winner);
     const open = !!v && reasons.length > 0;
+    const many = this.many;
     return html`<div class="ui-arena__foot">
       <div class="ui-arena__ask">
-        <p class="ui-arena__question" id=${`${this.uid}-q`} ?data-waiting=${!ready && !v}>${ready || v ? this.question : "Vote once both answers are done"}</p>
-        <div class="ui-arena__votes" role="toolbar" aria-labelledby=${`${this.uid}-q`} @keydown=${this.onVoteKey}>
-          ${VOTES.map(
+        <p class="ui-arena__question" id=${`${this.uid}-q`} ?data-waiting=${!ready && !v}>${this.questionText(ready || !!v)}</p>
+        <div
+          class="ui-arena__votes"
+          ?data-many=${many}
+          role=${many ? "radiogroup" : "toolbar"}
+          aria-labelledby=${`${this.uid}-q`}
+          aria-disabled=${ifDefined(many && !ready ? "true" : undefined)}
+          @keydown=${this.onVoteKey}
+        >
+          ${this.votes.map(
             (x, i) => html`<button
               type="button"
               class="ui-arena__vote"
               data-vote=${x.id}
-              aria-pressed=${v?.winner === x.id ? "true" : "false"}
+              role=${ifDefined(many ? "radio" : undefined)}
+              aria-checked=${ifDefined(many ? (v?.winner === x.id ? "true" : "false") : undefined)}
+              aria-pressed=${ifDefined(many ? undefined : v?.winner === x.id ? "true" : "false")}
               aria-disabled=${ready ? "false" : "true"}
               tabindex=${i === this.voteIndex ? 0 : -1}
               @focus=${() => (this.voteIndex = i)}
@@ -246,7 +377,7 @@ export class TcAnswerArena extends TcElement {
         <div role="group" aria-label="Why?">
           <span class="ui-arena__why" aria-hidden="true">Why?</span>
           ${keyed(
-            v?.winner === "tie" ? "tie" : "win",
+            v?.winner === "tie" || v?.winner === "bad" ? v.winner : "win",
             html`${reasons.map((r) => html`<button type="button" class="ui-arena__reason" aria-pressed=${v?.reason === r ? "true" : "false"} @click=${() => this.pickReason(r)}>${r}</button>`)}`,
           )}
         </div>
@@ -258,7 +389,37 @@ export class TcAnswerArena extends TcElement {
     const look = this.resolvedLook;
     // The prompt is the card's title; "Prompt" is said, the icon shows it
     const prompt = this.prompt ? cardHead({ icon: arenaIcon, title: html`<span class="ui-arena__sr">Prompt: </span>${this.prompt}` }) : nothing;
-    const panes = html`<div class="ui-arena__panes" ?data-headed=${!!this.prompt}>${SIDES.map((s) => this.renderPane(s, look))}</div>`;
+    const sides = SIDES.slice(0, Math.max(2, this.shown.length));
+    const paged = this.paged;
+    const tabs = paged
+      ? html`<div class="ui-arena__tabs" role="tablist" aria-label="Answers" @keydown=${this.onTabKey}>
+          ${sides.map((s, i) => {
+            const a = this.side(s);
+            const named = this.revealed && a ? html`<span class="ui-arena__tab-name">${a.model}</span>` : nothing;
+            return html`<button
+              type="button"
+              class="ui-arena__tab"
+              role="tab"
+              id=${`${this.uid}-tab-${s}`}
+              data-index=${i}
+              aria-selected=${i === this.page ? "true" : "false"}
+              aria-controls=${`${this.uid}-pane-${s}`}
+              tabindex=${i === this.page ? 0 : -1}
+              ?data-winner=${this.value?.winner === s}
+              @click=${() => this.goTo(i)}
+            >${this.value?.winner === s ? checkIcon(look) : nothing}<span class="ui-arena__sr">Answer </span>${LETTER[s]}${named}${this.value?.winner === s ? html`<span class="ui-arena__sr"> (preferred)</span>` : nothing}${a?.streaming ? html`<span class="ui-arena__sr"> (writing)</span>` : nothing}</button>`;
+          })}
+        </div>`
+      : nothing;
+    const panes = html`${tabs}<div
+      class="ui-arena__panes"
+      ?data-headed=${!!this.prompt && !paged}
+      ?data-paged=${paged}
+      data-count=${sides.length}
+      @pointerdown=${this.onSwipeStart}
+      @pointerup=${this.onSwipeEnd}
+      @pointercancel=${() => (this.swipeFrom = null)}
+    >${sides.map((s) => this.renderPane(s, look))}</div>`;
     return html`
       ${look === "clean" ? html`<div class="ui-arena__card">${prompt}${panes}${this.renderVote(look)}</div>` : html`${prompt}${panes}${this.renderVote(look)}`}
       <span class="ui-arena__sr" role="status">${this.said}</span>
@@ -282,6 +443,8 @@ export class TcAnswerArena extends TcElement {
   font-family: var(--tc-font-sans);
   -webkit-font-smoothing: antialiased;
 }
+/* Three or four answers get room for their columns */
+[data-ui="arena"][data-count="3"], [data-ui="arena"][data-count="4"] { max-width: 1200px; }
 /* Standard: two white cards on a gray tray; the prompt and the vote sit on the tray */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="arena"] {
   padding: var(--tc-tray-inset);
@@ -359,6 +522,39 @@ export class TcAnswerArena extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-arena__check { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-arena__check { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 
+/* Three or four answers: a column each, or one at a time behind the tabs */
+.ui-arena__panes[data-count="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ui-arena__panes[data-count="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ui-arena__panes[data-paged] { grid-template-columns: 1fr; touch-action: pan-y; }
+.ui-arena__pane[hidden] { display: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-arena__panes[data-paged] .ui-arena__pane { border-left: 0; }
+[data-ui="arena"] .ui-arena__pane[role="tabpanel"]:focus-visible { outline: var(--tc-focus-outline); outline-offset: calc(-1 * var(--tc-focus-ring-width)); }
+
+/* ----- The pager's tabs ----- */
+.ui-arena__tabs { display: flex; flex-wrap: wrap; gap: var(--tc-space-1); }
+:where([data-look="standard"], [data-look="standard"] *).ui-arena__tabs { padding: 0 var(--tc-space-1) var(--tc-tray-inset); }
+:where([data-look="clean"], [data-look="clean"] *).ui-arena__tabs { padding: var(--tc-space-2) var(--tc-space-4); border-top: var(--tc-hairline) solid var(--tc-divider); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+.ui-arena__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1-5);
+  min-width: var(--tc-control-h-md);
+  max-width: 100%;
+  height: var(--tc-control-h-sm);
+  padding: 0 var(--tc-control-px-sm);
+  justify-content: center;
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-action-secondary-bg);
+  box-shadow: var(--tc-action-secondary-shadow);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  color: var(--tc-action-secondary-fg);
+  transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-arena__tab:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-arena__tab[aria-selected="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); }
+.ui-arena__tab-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: var(--tc-font-weight-regular); }
+
 /* ----- The answer text ----- */
 .ui-arena__answer { flex: 1; overflow-wrap: anywhere; }
 :where([data-look="standard"], [data-look="standard"] *).ui-arena__answer { color: var(--tc-text-secondary); }
@@ -403,6 +599,7 @@ export class TcAnswerArena extends TcElement {
 .ui-arena__question { margin: 0; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
 .ui-arena__question[data-waiting] { font-weight: var(--tc-font-weight-regular); color: var(--tc-text-muted); }
 .ui-arena__votes { display: flex; gap: var(--tc-space-1); }
+.ui-arena__votes[data-many] { flex-wrap: wrap; }
 .ui-arena__vote {
   display: inline-flex;
   align-items: center;
@@ -421,7 +618,7 @@ export class TcAnswerArena extends TcElement {
 .ui-arena__vote:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-arena__vote[aria-disabled="true"] { color: var(--tc-text-disabled); box-shadow: var(--tc-action-secondary-shadow); cursor: default; }
 /* The vote you gave: the selected fill with a ≥ 3:1 ring and the accent */
-.ui-arena__vote[aria-pressed="true"] { padding-left: var(--tc-control-px-sm); background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); }
+.ui-arena__vote:is([aria-pressed="true"], [aria-checked="true"]) { padding-left: var(--tc-control-px-sm); background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); }
 
 /* Reasons fold out under the vote */
 .ui-arena__reasons { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--tc-duration-slow) var(--tc-ease-move), opacity var(--tc-duration-base) var(--tc-ease-standard); }
@@ -461,6 +658,9 @@ export class TcAnswerArena extends TcElement {
 @container (max-width: 400px) {
   .ui-arena__votes { flex: 1; }
   .ui-arena__vote { flex: 1 1 auto; justify-content: center; padding: 0 var(--tc-control-px-sm); }
+}
+@media (hover: none) and (pointer: coarse) {
+  .ui-arena__tab { height: var(--tc-control-h-md); }
 }
 @media (hover: none) and (pointer: coarse) {
   .ui-arena__vote { height: var(--tc-control-h-lg); }

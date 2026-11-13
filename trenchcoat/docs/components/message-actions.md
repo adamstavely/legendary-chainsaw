@@ -9,7 +9,7 @@
 The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
 
 - **Element:** `<tc-message-actions>`, `<tc-message-text>`
-- **Size:** 14.2 KB gzip · 54.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.0 KB gzip · 62.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -33,11 +33,16 @@ version, thumbs down opens a short “What went wrong?” row with reasons, Read
 plays. The bar stays quiet until the message is hovered or focused, so a long conversation doesn't fill with icons.
 `tc-message-text` (React: `MessageText`) crossfades the message itself when the version changes.
 
+With `reportable`, a flag at the end of the bar lets people report a harmful reply for human review: they pick why,
+add details if they like and send it. A line then says “Reported – a reviewer will look at this”, with Undo for a few
+seconds.
+
 ### When to use
 
 - Under every assistant message in a chat, or under the latest one.
 - When people should be able to retry an answer and move between its versions.
 - Collecting quick feedback on answers, with a reason when they're bad.
+- Letting people flag a reply that's harmful, unsafe or shares private data, so a person reviews it (`reportable`).
 
 ### When not to use
 
@@ -54,13 +59,16 @@ plays. The bar stays quiet until the message is hovered or focused, so a long co
 3. **Version switcher** `.ui-ma__versions` – “‹ 2 / 3 ›”, next to Regenerate from the second version on
 4. **Bad response** `.ui-ma__btn--down` – thumbs down, beside thumbs up; opens the “What went wrong?” row below
 5. **Read aloud** `.ui-ma__btn--speak` – becomes a small equalizer while it plays
+6. **Report** `.ui-ma__btn--report` – with `reportable`: a flag at the end of the bar, “Reported” once sent
+7. **Report form** `.ui-ma__report` – the reasons (`.ui-ma__reasons`), optional details (`.ui-ma__details`) and Send
 
 ## Looks
 
 Standard uses 30 px icon buttons with full-size line icons, and the feedback row is a small card with gray reason
 chips. Clean uses ghost icon buttons with thin or solid 16 px glyphs; a pressed action takes the selected-tab look,
 the reasons are tab-style buttons and Send is the dark chip. In both, the icons sit a step lighter until the
-message is hovered.
+message is hovered. The report form follows the feedback row: a small card in Standard, part of the message's card in
+Clean.
 
 ## Usage
 
@@ -83,6 +91,8 @@ message is hovered.
   actions.text = versions[1];
   actions.versions = versions;
   actions.onFeedback = (kind, reason) => fetch("/api/feedback", { method: "POST", body: JSON.stringify({ kind, reason }) });
+  actions.reportable = true;
+  actions.addEventListener("tc-report", (e) => fetch("/api/reports", { method: "POST", body: JSON.stringify(e.detail) }));
   actions.addEventListener("tc-version-change", (e) => {
     answer.version = e.detail.version;
     answer.content = actions.text = versions[e.detail.version];
@@ -110,6 +120,8 @@ export function Answer({ versions, onRegenerate }: { versions: string[]; onRegen
         version={version}
         onVersionChange={setVersion}
         onRegenerate={onRegenerate}
+        reportable
+        onReport={(report) => void fetch("/api/reports", { method: "POST", body: JSON.stringify(report) })}
       />
     </div>
   );
@@ -209,6 +221,8 @@ read aloud.*
 | `demo` | `demo` | `boolean` | `false` | Demo mode: Read aloud is simulated silently where it would be simulated. For galleries and prototypes |
 | `quiet` | `quiet` | `boolean` | `true` | Lighter icons until the message is hovered (default true; quiet="false" turns it off). Put data-ui-message on the message wrapper |
 | `label` | `label` | `string` | `"Message actions"` | Accessible name of the bar |
+| `reportable` | `reportable` | `boolean` | `false` | Adds Report at the end of the bar: a short form to flag a harmful reply for human review |
+| `reportLabels` | – | `Partial<Record<ReportReason, string>>` | `{}` | Renames the report form's reasons, e.g. `{ other: "Another problem" }` – merged over `defaultReportLabels` |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -219,6 +233,8 @@ read aloud.*
 | `tc-copy` | – | No | `text` is on the clipboard (or Copy was pressed without `text`); detail `{ text?: string }` |
 | `tc-feedback` | – | No | A thumb was pressed or taken back, or the feedback row was sent; detail `{ feedback: "up" \| "down" \| null, reason?: string }` |
 | `tc-speak` | – | No | Read aloud started or stopped; detail `{ playing: boolean }` |
+| `tc-report` | – | Yes | The report form was sent (`reportable`); detail `{ reason, details }` (MessageReportDetail). Cancelable – prevented, the form stays open and nothing is confirmed |
+| `tc-report-undo` | – | No | Undo was pressed after a report; detail `{ reason, details }` (MessageReportDetail) |
 
 #### Component tokens
 
@@ -228,9 +244,9 @@ read aloud.*
 | --- | --- | --- |
 | `--tc-message-actions-quiet` | `var(--tc-text-muted)` | not set – this fallback applies |
 
-#### Design tokens it reads (76)
+#### Design tokens it reads (81)
 
-`--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-reveal`, `--tc-duration-reveal-slow`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-surface-overlay`, `--tc-surface-raised`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-radius`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-reveal`, `--tc-duration-reveal-slow`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-surface-overlay`, `--tc-surface-raised`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-radius`
 
 ### `<tc-message-text>`
 
@@ -253,9 +269,17 @@ in, and the block eases to its new height.*
 | --- | --- | --- |
 | `--tc-message-actions-quiet` | `var(--tc-text-muted)` | not set – this fallback applies |
 
-#### Design tokens it reads (76)
+#### Design tokens it reads (81)
 
-`--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-reveal`, `--tc-duration-reveal-slow`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-surface-overlay`, `--tc-surface-raised`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-radius`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-reveal`, `--tc-duration-reveal-slow`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-surface-overlay`, `--tc-surface-raised`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-radius`
+
+#### Functions
+
+*Exported from the module next to the element.*
+
+| Function | Description |
+| --- | --- |
+| `defaultReportLabels: Record<ReportReason, string>` | The report form's reasons, in order – `reportLabels` renames them |
 
 ## Frameworks
 
@@ -282,8 +306,9 @@ in, and the block eases to its new height.*
 | `feedback` | `el.feedback = …;` | `<… feedback={…} />` | `<tc-message-actions :feedback="…">` | `<tc-message-actions [feedback]="…">` | `<tc-message-actions {feedback}>` |
 | `defaultFeedback` | `el.defaultFeedback = …;` | `<… defaultFeedback={…} />` | `<tc-message-actions :defaultFeedback="…">` | `<tc-message-actions [defaultFeedback]="…">` | `<tc-message-actions {defaultFeedback}>` |
 | `reasons` | `el.reasons = …;` | `<… reasons={…} />` | `<tc-message-actions :reasons="…">` | `<tc-message-actions [reasons]="…">` | `<tc-message-actions {reasons}>` |
+| `reportLabels` | `el.reportLabels = …;` | `<… reportLabels={…} />` | `<tc-message-actions :reportLabels="…">` | `<tc-message-actions [reportLabels]="…">` | `<tc-message-actions {reportLabels}>` |
 
-*Also attributes: `text`, `version`, `default-version`, `regenerating`, `own-speech`, `speaking`, `speak-duration`, `demo` and 2 more – see the API table.*
+*Also attributes: `text`, `version`, `default-version`, `regenerating`, `own-speech`, `speaking`, `speak-duration`, `demo` and 3 more – see the API table.*
 
 ### Events
 
@@ -293,6 +318,8 @@ in, and the block eases to its new height.*
 | `tc-copy` | No | `el.addEventListener("tc-copy", (e) => …)` | `onCopy={…}` | `@tc-copy="…"` | `(tc-copy)="…($event)"` | `el.addEventListener("tc-copy", …)` |
 | `tc-feedback` | No | `el.addEventListener("tc-feedback", (e) => …)` | `ref.current.addEventListener("tc-feedback", …)` | `@tc-feedback="…"` | `(tc-feedback)="…($event)"` | `el.addEventListener("tc-feedback", …)` |
 | `tc-speak` | No | `el.addEventListener("tc-speak", (e) => …)` | `onSpeak={…}` | `@tc-speak="…"` | `(tc-speak)="…($event)"` | `el.addEventListener("tc-speak", …)` |
+| `tc-report` | Yes | `el.addEventListener("tc-report", (e) => …)` | `onReport={…}` | `@tc-report="…"` | `(tc-report)="…($event)"` | `el.addEventListener("tc-report", …)` |
+| `tc-report-undo` | No | `el.addEventListener("tc-report-undo", (e) => …)` | `onReportUndo={…}` | `@tc-report-undo="…"` | `(tc-report-undo)="…($event)"` | `el.addEventListener("tc-report-undo", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -422,6 +449,8 @@ No slots: everything it shows comes from its properties.
 | `onVersionChange` | `(index: number) => void` | Called with the version index picked in the switcher |
 | `onCopy` | `(text?: string) => void` | Called once `text` is on the clipboard (or right away when there's no `text`). "Copied" shows only after a successful write |
 | `onSpeak` | `(playing: boolean) => void` | Called with true when Read aloud starts and false when it stops – play your audio here. Without it (and without `speaking`) the browser's speech synthesis reads `text` |
+| `onReport` | `(report: MessageReportDetail) => void \| boolean` | Called when a report is sent (with `reportable`). Return false to keep the form open – nothing is confirmed |
+| `onReportUndo` | `(report: MessageReportDetail) => void` | Called when Undo withdraws a report |
 
 *Renamed or hidden on the wrapper: `ownSpeech`*
 
@@ -446,6 +475,8 @@ Follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/b
 | Enter / Space | Presses the focused action, reason or Send |
 | Escape | In the feedback row: closes it and returns focus to Bad response; elsewhere in the bar: hides the tooltip |
 | Enter (in the “Other” field) | Sends the feedback |
+| ↑ / ↓ (in the report reasons) | Moves between the reasons and picks one (native radio buttons) |
+| Escape | In the report form: closes it and returns focus to Report; after sending: ends the Undo window |
 
 ### Screen readers
 
@@ -457,6 +488,11 @@ version”. The feedback row is a group named “What went wrong?”, with toggl
 feedback”. A polite live region says what happened: “Copied”, “Regenerating”, “Version 3 of 3”, “Marked as bad
 response. Tell us what went wrong below”, “Thanks for the feedback”, “Reading aloud”, “Finished reading” – and the
 failures, such as “Couldn't copy” or “Couldn't regenerate”.
+
+Report is a button named “Report reply” with `aria-expanded` for its form, and “Reported” once sent. The form is
+named “Report this reply”; its reasons are a radio group in a fieldset, “Why are you reporting it?”, and the details
+field is labelled “Details (optional)”. Sending moves focus to Undo and announces “Reported – a reviewer will look at
+this”; Undo announces “Report withdrawn”. Undo stays while focus is on it, so nobody loses it to the timer.
 
 ### Every component
 
@@ -496,17 +532,17 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 46.9 KB | 11.9 KB |
+| **This component alone** | 55.1 KB | 13.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -515,8 +551,8 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **54.7 KB** | **14.2 KB** |
-| With Lit – the first component on a page | 76.6 KB | 21.3 KB |
+| **Added to a page that already has Lit** | **62.9 KB** | **16.0 KB** |
+| With Lit – the first component on a page | 84.9 KB | 23.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -524,13 +560,13 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.1 ms** | the gallery demo's data, 87 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of actions replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 21 ms | actions: first render, 1,671 nodes; update 1.8 ms |
-| 1,000 items | 106 ms | actions: first render, 16,521 nodes; update 6.7 ms |
+| First render | **1.3 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of actions replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 15 ms | actions: first render, 1,710 nodes; update 1.6 ms |
+| 1,000 items | 112 ms | actions: first render, 16,560 nodes; update 7.7 ms |
 
-1,000 items of actions: 106 ms. It renders every item, so a first render passes 50 ms (a long task) at about 470 items – page or filter longer lists.
+1,000 items of actions: 112 ms. It renders every item, so a first render passes 50 ms (a long task) at about 450 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -551,6 +587,7 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 - Keep `reasons` to three or four short phrases about the answer, not the person: “Not accurate”, “Too long”.
 - Keep “Other” last – it opens a field for people's own words.
 - Name the bar for its message when there are several on screen: `label="Actions for answer 3"`.
+- Rename the report reasons with `reportLabels` to match your policy's words; keep them about the reply.
 
 ## Do and don't
 
@@ -559,6 +596,7 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 - Put `data-ui-message` on the message's wrapper so the bar lights up when the message is hovered.
 - Return a promise from `onRegenerate` and `onFeedback` so the bar can show progress, success and failure.
 - Pair the bar with `tc-message-text` so the message crossfades when people switch versions.
+- Send reports to a queue a person reads, and honour `tc-report-undo` (React: `onReportUndo`).
 
 ### Don't
 
@@ -566,6 +604,7 @@ failures, such as “Couldn't copy” or “Couldn't regenerate”.
 - Don't rely on the simulated Read aloud in production: listen for `tc-speak` (React: `onSpeak`) or let the browser
   read `text`; set `demo` only in galleries and prototypes.
 - Don't ask for a reason after every thumbs up – the bar only asks after thumbs down.
+- Don't use Report for “this answer was wrong” – that's thumbs down; Report is for replies that could do harm.
 
 ## Related
 

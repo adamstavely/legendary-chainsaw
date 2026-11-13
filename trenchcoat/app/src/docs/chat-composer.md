@@ -17,6 +17,11 @@ menu, to fit a 320 px side pane. With `skills` set, people start a message with 
 pressing the / button) lists them, recent ones first, then by source; a pick puts “/translate” at the start of the
 message with what to type next greyed after it, and the skill and its arguments ride on the send.
 
+With `limit` set, sending is held back but nothing is lost: the field stays editable so the draft is kept, Send is
+`aria-disabled` with the reason as its description, and a notice above the composer says why. A message limit reads
+“You've reached your message limit · resets at 14:00 (in 2 h 10 min)” – the countdown kept fresh – with an optional
+action such as Upgrade; a trial that's over says so, with Upgrade as its primary action.
+
 ## When to use
 
 - The prompt field at the bottom of an AI chat or assistant.
@@ -26,6 +31,8 @@ message with what to type next greyed after it, and the skill and its arguments 
   toolbar, and leave out what the pane doesn't offer with `hide-connect-apps`, `hide-project` and `hide-approval`.
 - An agent with skills or slash commands – set `skills` (and `searchSkills` when the catalogue lives on a server), so
   people can find one by name or by what it does, without knowing the list by heart.
+- A plan with a message limit, or a free trial – set `limit` when people can't send right now, so they keep their
+  draft and know when they can.
 
 ## When not to use
 
@@ -44,6 +51,8 @@ message with what to type next greyed after it, and the skill and its arguments 
 5. **Model** `.ui-chat-composer__picker` – with `model-switcher="toolbar"`, model-picker's menu in the toolbar row (otherwise a model button in the card)
 6. **Settings and prompts** `.ui-chat-composer__tool` – open model-settings and prompt-library in popovers
 7. **Page context** `.ui-chat-composer__page` – connects or disconnects what's on the page; the button beside it shows what's attached
+8. **Limit** `.ui-chat-composer__limit` – with `limit` set, the notice above the composer: why sending is held back,
+   when it resets, and the action `.ui-chat-composer__limit-action` (Upgrade, Learn more)
 
 Under the row, `disclaimer` adds one quiet line. Once a skill is picked, its token `.ui-chat-composer__token` – a
 tint behind “/name” at the start of the message – and its argument hint `.ui-chat-composer__arg` show in the text
@@ -89,6 +98,11 @@ their own keys inside their popovers (`model-picker`, `model-settings`, `prompt-
 
 ## Screen readers
 
+With `limit` set, the notice is a group named by its sentence; it's said once in the live region when it appears
+(“You've reached your message limit. It resets at 14:00.” – the countdown isn't read, so it can't go stale), and
+“You can send messages again.” when it's lifted. Send stays focusable as `aria-disabled`, described by the notice, and
+Enter in the message says the reason again instead of doing nothing.
+
 The composer is a section named “Message composer”; the text area is named “Message”. Icon buttons are named for
 what they do: “Add attachment”, “Voice input”, “Send message”, “Discard recording” and “Use recording” – which is
 described by what was heard so far (“Heard so far: …”). The model button has `aria-haspopup="listbox"` and
@@ -132,6 +146,8 @@ the token's tint is hidden from screen readers.
   plugin's name.
 - Write `argumentHint` as the thing to type in angle brackets: “<language>”, “<pr number>”. Leave it out when the
   skill takes nothing.
+- Leave the limit's sentence to the composer, or say what's specific in `message`: “You've used your 40 messages for
+  today”. Name the action for what it does – “Upgrade”, “See plans”, “Learn more”.
 
 ## Do
 
@@ -145,6 +161,7 @@ the token's tint is hidden from screen readers.
 - Pass `recentSkills` from what the person used last, across sessions; the composer only remembers picks while it's
   on the page.
 - Read `skill` and `args` from `onSend`'s details (or tc-send) to run the skill; `message` still has the whole text.
+- Give `limit.resetsAt` whenever the limit resets on its own, and clear `limit` the moment people can send again.
 
 ## Don't
 
@@ -157,6 +174,7 @@ the token's tint is hidden from screen readers.
   title and count.
 - Don't put a / trigger in `mentions` next to `skills` – skills take the / key.
 - Don't hide the / button unless your product teaches the shortcut somewhere else.
+- Don't clear or disable the message field when a limit is reached – the draft is people's work; `limit` keeps it.
 
 ## Example
 
@@ -190,6 +208,10 @@ the token's tint is hidden from screen readers.
   ];
   composer.recentSkills = ["brief"];
   composer.addEventListener("tc-send", (e) => e.detail.skill && console.log("run", e.detail.skill.id, "with", e.detail.args));
+
+  // Out of messages until 14:00: the draft stays, Send waits, the notice says when
+  composer.limit = { kind: "limit", resetsAt: new Date().setHours(14, 0, 0, 0), action: "Upgrade" };
+  composer.addEventListener("tc-limit-action", () => (location.href = "/plans"));
 </script>
 ```
 
@@ -203,7 +225,17 @@ const skills: ChatSkill[] = [
   { id: "brief", name: "exec-brief", description: "A one-page brief in the team's format", source: "Your team" },
 ];
 
-export function Composer({ send, pickFiles }: { send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>; pickFiles: () => void }) {
+export function Composer({
+  send,
+  pickFiles,
+  trialOver,
+  openCheckout,
+}: {
+  send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>;
+  pickFiles: () => void;
+  trialOver: boolean;
+  openCheckout: () => void;
+}) {
   const [draft, setDraft] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
   const [model, setModel] = useState("claude");
@@ -233,6 +265,8 @@ export function Composer({ send, pickFiles }: { send: (text: string, model: stri
       onConnectApps={() => fetch("/api/connect", { method: "POST" })}
       onRequestApproval={() => fetch("/api/approve", { method: "POST" })}
       hideProject
+      limit={trialOver ? { kind: "trial" } : null}
+      onTrialAction={openCheckout}
     />
   );
 }

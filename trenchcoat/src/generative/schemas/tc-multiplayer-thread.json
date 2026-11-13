@@ -1,0 +1,237 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-multiplayer-thread.json",
+  "title": "tc-multiplayer-thread",
+  "description": "One chat thread with several people and one model – presence, typing, grouped messages and",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MultiplayerPerson"
+      },
+      "description": "Everyone who can be in the thread"
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The model in the thread"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MultiplayerItem"
+      },
+      "description": "Messages, joins and leaves, oldest first – the source of truth"
+    },
+    "currentUser": {
+      "type": "string",
+      "description": "The id of the person using this view – their messages are theirs, and they aren't offered as a mention"
+    },
+    "present": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of who's here now (MULTIPLAYER_MODEL_ID for the model)"
+    },
+    "typing": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of who's typing now; MULTIPLAYER_MODEL_ID while the model is answering"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "every",
+        "mentions"
+      ],
+      "description": "When the model answers: only when"
+    },
+    "hideMode": {
+      "type": "boolean",
+      "description": "Hides the mode switch – the page decides when the model answers"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "string"
+        },
+        "here": {
+          "type": "string"
+        },
+        "modeLegend": {
+          "type": "string"
+        },
+        "every": {
+          "type": "string"
+        },
+        "mentions": {
+          "type": "string"
+        },
+        "replyingTo": {
+          "type": "string"
+        },
+        "joined": {
+          "type": "string"
+        },
+        "left": {
+          "type": "string"
+        },
+        "answering": {
+          "type": "string"
+        },
+        "typingOne": {
+          "type": "string"
+        },
+        "typingTwo": {
+          "type": "string"
+        },
+        "typingMany": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "hintMentions": {
+          "type": "string"
+        },
+        "hintEvery": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "you": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultMultiplayerThreadLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "MultiplayerPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "An image URL, or an element cloned per message; unset shows initials",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
+        },
+        "role": {
+          "type": "string",
+          "description": "A word after the name – \"Lead\", \"Reviewer\""
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "MultiplayerItem": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/MultiplayerMessage"
+        },
+        {
+          "$ref": "#/definitions/MultiplayerPresence"
+        }
+      ]
+    },
+    "MultiplayerMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "const": "message"
+        },
+        "authorId": {
+          "type": "string",
+          "description": "A person's id, or MULTIPLAYER_MODEL_ID (\"model\")"
+        },
+        "at": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "text": {
+          "type": "string"
+        },
+        "replyTo": {
+          "type": "string",
+          "description": "On the model's messages: the id of the person whose message it answers"
+        }
+      },
+      "required": [
+        "id",
+        "authorId",
+        "at",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "MultiplayerPresence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "join",
+            "leave"
+          ]
+        },
+        "personId": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "Epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "personId",
+        "at"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

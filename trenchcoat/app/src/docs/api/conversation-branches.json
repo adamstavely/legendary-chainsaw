@@ -520,6 +520,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "message-actions",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -558,7 +559,7 @@
   "windowed": false
  },
  "size": {
-  "min": 80817,
-  "gzip": 20183
+  "min": 89247,
+  "gzip": 22037
  }
 }

@@ -3,7 +3,7 @@
   {
    "tag": "tc-answer-arena",
    "className": "TcAnswerArena",
-   "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
+   "description": "Two to four models' answers to the same prompt side by side, with a vote: which is better (or best), a tie or all bad, and a reason.",
    "properties": [
     {
      "name": "prompt",
@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "ArenaAnswer[]",
      "default": "[]",
-     "description": "The two answers: A first, then B",
+     "description": "The answers: A first, then B – two for a head-to-head, three or four to pick the best (more than four are left out)",
      "readonly": false
     },
     {
@@ -62,6 +62,22 @@
      "readonly": false
     },
     {
+     "name": "allGoodReasons",
+     "attribute": null,
+     "type": "array",
+     "default": "[\"All accurate\", \"Too close to call\"]",
+     "description": "Reasons offered after \"All equally good\", with three or more answers",
+     "readonly": false
+    },
+    {
+     "name": "badReasons",
+     "attribute": null,
+     "type": "array",
+     "default": "[\"All inaccurate\", \"All incomplete\", \"All off-topic\"]",
+     "description": "Reasons offered after \"All bad\", with three or more answers",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -74,7 +90,7 @@
     {
      "name": "tc-value-change",
      "detail": "",
-     "description": "The vote changed (`{ value: ArenaVote | null }`); cancelable – prevent it to keep `value` (controlled use)",
+     "description": "The vote changed (`{ value: ArenaVote | null, winnerId? }`: ArenaValueChange); cancelable – prevent it to keep `value` (controlled use)",
      "cancelable": true
     }
    ],
@@ -125,6 +141,7 @@
     "--tc-fill-selected",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-2xs",
     "--tc-font-size-lg",
@@ -178,7 +195,7 @@
      "name": "answers",
      "type": "ArenaAnswer[]",
      "optional": false,
-     "description": "The two answers: A first, then B"
+     "description": "The answers: A first, then B – two for a head-to-head, three or four to pick the best"
     },
     {
      "name": "value",
@@ -194,9 +211,9 @@
     },
     {
      "name": "onChange",
-     "type": "(vote: ArenaVote | null) => void",
+     "type": "(vote: ArenaVote | null, winnerId?: string) => void",
      "optional": true,
-     "description": "Every change of the vote: a side or a tie, then a reason"
+     "description": "Every change of the vote: a side, a tie or all bad, then a reason – with the winning answer's id (or model)"
     }
    ],
    "hides": [
@@ -222,7 +239,9 @@
     "answers",
     "value",
     "reasons",
-    "tieReasons"
+    "tieReasons",
+    "allGoodReasons",
+    "badReasons"
    ],
    "attributes": [
     {
@@ -391,6 +410,22 @@
     ]
    },
    {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "intersection-observer",
     "name": "IntersectionObserver",
     "bcd": "api.IntersectionObserver",
@@ -449,6 +484,7 @@
   "frames": [],
   "animations": 2,
   "observers": [
+   "ResizeObserver",
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "MutationObserver (internal/controllers › FocusRescueController)",
@@ -470,7 +506,7 @@
   "windowed": false
  },
  "size": {
-  "min": 32740,
-  "gzip": 9586
+  "min": 39451,
+  "gzip": 11158
  }
 }

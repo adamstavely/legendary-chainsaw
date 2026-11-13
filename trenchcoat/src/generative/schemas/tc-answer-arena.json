@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "@adamstavely/trenchcoat/generative/schemas/tc-answer-arena.json",
   "title": "tc-answer-arena",
-  "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
+  "description": "Two to four models' answers to the same prompt side by side, with a vote: which is better (or best), a tie or all bad, and a reason.",
   "type": "object",
   "properties": {
     "prompt": {
@@ -14,7 +14,7 @@
       "items": {
         "$ref": "#/definitions/ArenaAnswer"
       },
-      "description": "The two answers: A first, then B"
+      "description": "The answers: A first, then B – two for a head-to-head, three or four to pick the best (more than four are left out)"
     },
     "value": {
       "type": "object",
@@ -53,6 +53,20 @@
         "type": "string"
       },
       "description": "Reasons offered after a tie"
+    },
+    "allGoodReasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Reasons offered after \"All equally good\", with three or more answers"
+    },
+    "badReasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Reasons offered after \"All bad\", with three or more answers"
     }
   },
   "additionalProperties": false,
@@ -75,6 +89,10 @@
         "meta": {
           "type": "string",
           "description": "A short line under the answer, e.g. \"1.8s · 212 tokens\""
+        },
+        "id": {
+          "type": "string",
+          "description": "What tc-value-change's `winnerId` names when this answer wins – defaults to the model's name"
         }
       },
       "required": [
@@ -89,8 +107,12 @@
       "enum": [
         "a",
         "b",
+        "bad",
+        "c",
+        "d",
         "tie"
-      ]
+      ],
+      "description": "A side by letter (\"a\"–\"d\", in `answers` order), a tie (\"tie\" – with three or more, \"All equally good\") or, with three or more, \"bad\" (\"All bad\")"
     }
   }
 }

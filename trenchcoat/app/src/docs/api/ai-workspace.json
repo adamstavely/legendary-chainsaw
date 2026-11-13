@@ -540,6 +540,7 @@
      "internal/kit",
      "chat-composer",
      "context-tray",
+     "mention-picker",
      "model-picker",
      "model-settings",
      "segmented-control",
@@ -811,6 +812,7 @@
      "internal/card-head",
      "internal/kit",
      "chat-composer",
+     "mention-picker",
      "internal/popover",
      "tokens.css"
     ]
@@ -872,6 +874,7 @@
    "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [
+   "Date.now() (chat-composer)",
    "performance.now() (internal/controllers › RollingController)",
    "performance.now() (prompt-library)"
   ],
@@ -905,7 +908,7 @@
   "windowed": false
  },
  "size": {
-  "min": 428372,
-  "gzip": 99926
+  "min": 444570,
+  "gzip": 104385
  }
 }

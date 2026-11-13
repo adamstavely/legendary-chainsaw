@@ -11,7 +11,7 @@ import {
 } from "../mention-picker";
 import { h, isNode, useStaged } from "./internal";
 
-export type { MentionPickerPick, MentionPickerRenderChip, MentionPickerSearch } from "../mention-picker";
+export type { MentionPickerArg, MentionPickerPick, MentionPickerRenderChip, MentionPickerSearch } from "../mention-picker";
 
 /** React nodes (or elements) for icons */
 export type MentionItem = Omit<MentionPickerItem, "icon"> & { icon?: React.ReactNode | Element };

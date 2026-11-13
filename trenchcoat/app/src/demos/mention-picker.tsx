@@ -74,6 +74,28 @@ const TRIGGERS: MentionTrigger[] = [
           { id: "explain", label: "explain", description: "Walk through the selected code", icon: spark, token: "/explain" },
           { id: "tests", label: "tests", description: "Write tests for a file", icon: wrench, token: "/tests", keywords: "spec" },
           { id: "compact", label: "compact", description: "Shrink the conversation", icon: shrink, token: "/compact" },
+          {
+            id: "translate",
+            label: "translate",
+            description: "Translate the last answer – asks for the language",
+            icon: spark,
+            token: "/translate",
+            args: [
+              { name: "language", type: "choice", options: ["French", "Spanish", "German", "Japanese"], required: true },
+              { name: "tone", type: "choice", options: ["plain", "formal"] },
+            ],
+          },
+          {
+            id: "audit",
+            label: "audit",
+            description: "Check a sample of invoices – asks how many and which period",
+            icon: wrench,
+            token: "/audit",
+            args: [
+              { name: "sample", label: "Sample size", type: "number", placeholder: "50", required: true },
+              { name: "period", label: "Period", placeholder: "Q3 2026" },
+            ],
+          },
         ],
       },
     ],

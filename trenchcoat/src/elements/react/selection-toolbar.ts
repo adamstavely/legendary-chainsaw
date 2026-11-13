@@ -5,6 +5,8 @@ import {
   type SelectionToolbarClose,
   type SelectionToolbarCommand,
   type SelectionToolbarPressedChange,
+  type SelectionToolbarRewrite,
+  type SelectionToolbarRewriteAccept,
   type SelectionToolbarValuesChange,
 } from "../selection-toolbar";
 import { h, useControlled } from "./internal";
@@ -16,9 +18,13 @@ export type {
   SelectionToolbarLabels,
   SelectionToolbarOption,
   SelectionToolbarPressedChange,
+  SelectionToolbarQuickRewrite,
+  SelectionToolbarRewrite,
+  SelectionToolbarRewriteAccept,
+  SelectionToolbarRewriter,
   SelectionToolbarValuesChange,
 } from "../selection-toolbar";
-export { defaultSelectionToolbarItems, defaultSelectionToolbarLabels, selectionRect } from "../selection-toolbar";
+export { defaultQuickRewrites, defaultSelectionToolbarItems, defaultSelectionToolbarLabels, selectionRect } from "../selection-toolbar";
 
 const RawSelectionToolbar = createComponent({
   tagName: "tc-selection-toolbar",
@@ -29,6 +35,8 @@ const RawSelectionToolbar = createComponent({
     onTcPressedChange: "tc-pressed-change" as EventName<CustomEvent<SelectionToolbarPressedChange>>,
     onTcValuesChange: "tc-values-change" as EventName<CustomEvent<SelectionToolbarValuesChange>>,
     onTcClose: "tc-close" as EventName<CustomEvent<SelectionToolbarClose>>,
+    onTcRewrite: "tc-rewrite" as EventName<CustomEvent<SelectionToolbarRewrite>>,
+    onTcRewriteAccept: "tc-rewrite-accept" as EventName<CustomEvent<SelectionToolbarRewriteAccept>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawSelectionToolbar>;
@@ -45,10 +53,14 @@ export type SelectionToolbarProps = Omit<RawProps, "pressed" | "values" | "onTcP
   defaultValues?: Record<string, string>;
   /** A menu option was chosen */
   onValuesChange?: (values: Record<string, string>, id: string, value: string) => void;
+  /** A rewrite was asked for (with `rewritable`). Return false to stop it – nothing is requested */
+  onRewriteRequest?: (request: SelectionToolbarRewrite) => void | boolean;
+  /** Accept was pressed on a rewrite: put `text` in place of the selection */
+  onRewriteAccept?: (text: string, detail: SelectionToolbarRewriteAccept) => void;
 };
 
 /** A formatting bar that floats over selected text; every press fires `onTcCommand` for the editor to apply */
-export function SelectionToolbar({ pressed, defaultPressed = [], onPressedChange, values, defaultValues = {}, onValuesChange, ...props }: SelectionToolbarProps) {
+export function SelectionToolbar({ pressed, defaultPressed = [], onPressedChange, values, defaultValues = {}, onValuesChange, onRewriteRequest, onRewriteAccept, ...props }: SelectionToolbarProps) {
   const last = React.useRef<{ id: string; value: string }>({ id: "", value: "" });
   const p = useControlled<string[]>(pressed, defaultPressed, onPressedChange ? (next) => onPressedChange(next, last.current.id) : undefined);
   const v = useControlled<Record<string, string>>(values, defaultValues, onValuesChange ? (next) => onValuesChange(next, last.current.id, last.current.value) : undefined);
@@ -63,6 +75,14 @@ export function SelectionToolbar({ pressed, defaultPressed = [], onPressedChange
     onTcValuesChange: (e: CustomEvent<SelectionToolbarValuesChange>) => {
       last.current = { id: e.detail.id, value: e.detail.value };
       v.handler(e.detail.values, e);
+    },
+    onTcRewrite: (e: CustomEvent<SelectionToolbarRewrite>) => {
+      props.onTcRewrite?.(e);
+      if (onRewriteRequest?.(e.detail) === false) e.preventDefault();
+    },
+    onTcRewriteAccept: (e: CustomEvent<SelectionToolbarRewriteAccept>) => {
+      props.onTcRewriteAccept?.(e);
+      onRewriteAccept?.(e.detail.text, e.detail);
     },
   });
 }

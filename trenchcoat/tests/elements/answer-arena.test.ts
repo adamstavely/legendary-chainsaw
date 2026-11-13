@@ -254,6 +254,156 @@ describe("tc-answer-arena", () => {
     await act(async () => root.unmount());
   });
 
+  const four: ArenaAnswer[] = [
+    ...done,
+    { model: "Lumen", answer: "The model checks a library first.", id: "lumen-2" },
+    { model: "Quill", answer: "Search, then write." },
+  ];
+
+  test("three or four answers: a column each when wide, the pick-the-best radio group", async () => {
+    const wrap = await fixture<HTMLDivElement>(html`<div style="width: 1100px"><tc-answer-arena .answers=${four}></tc-answer-arena></div>`);
+    const el = wrap.querySelector("tc-answer-arena")!;
+    await settle();
+    expect(el.dataset.count).toBe("4");
+    const panes = [...el.querySelectorAll<HTMLElement>("section.ui-arena__pane")];
+    expect(panes.map((p) => p.getAttribute("aria-label"))).toEqual(["Answer A", "Answer B", "Answer C", "Answer D"]);
+    expect(el.querySelector(".ui-arena__tabs")).toBeNull();
+    const tops = new Set(panes.map((p) => Math.round(p.getBoundingClientRect().top)));
+    expect(tops.size).toBe(1);
+    const group = el.querySelector(".ui-arena__votes")!;
+    expect(group.getAttribute("role")).toBe("radiogroup");
+    expect(el.querySelector(".ui-arena__question")!.textContent!.trim()).toBe("Which answer is best?");
+    const radios = [...group.querySelectorAll<HTMLButtonElement>('[role="radio"]')];
+    expect(radios.map((r) => r.textContent!.trim())).toEqual(["A is best", "B is best", "C is best", "D is best", "All equally good", "All bad"]);
+    expect(radios.filter((r) => r.tabIndex === 0)).toHaveLength(1);
+    expect(radios[0].hasAttribute("aria-pressed")).toBe(false);
+    expect(radios[0].getAttribute("aria-checked")).toBe("false");
+  });
+
+  test("three or four: arrows choose, the detail names the winner, reasons follow the choice", async () => {
+    const el = await fixture<TcAnswerArena>(html`<tc-answer-arena blind .answers=${four}></tc-answer-arena>`);
+    const seen: { value: ArenaVote | null; winnerId?: string }[] = [];
+    el.addEventListener("tc-value-change", (e) => seen.push((e as CustomEvent).detail));
+    const a = vote(el, "a");
+    a.focus();
+    key(a, "ArrowRight");
+    await settle();
+    expect(status(el)).toBe("You voted: B is best. A was Atlas, B was Nova, C was Lumen, D was Quill.");
+    key(vote(el, "b"), "ArrowRight");
+    await settle();
+    expect(document.activeElement).toBe(vote(el, "c"));
+    expect(el.value).toEqual({ winner: "c" });
+    expect(seen.map((d) => d.winnerId)).toEqual(["Nova", "lumen-2"]);
+    expect(vote(el, "c").getAttribute("aria-checked")).toBe("true");
+    expect(status(el)).toBe("You voted: C is best.");
+    vote(el, "bad").click();
+    await settle();
+    expect(seen.at(-1)).toEqual({ value: { winner: "bad" } });
+    expect([...el.querySelectorAll(".ui-arena__reason")].map((r) => r.textContent)).toEqual(["All inaccurate", "All incomplete", "All off-topic"]);
+    vote(el, "tie").click();
+    await settle();
+    expect([...el.querySelectorAll(".ui-arena__reason")].map((r) => r.textContent)).toEqual(["All accurate", "Too close to call"]);
+    expect(status(el)).toBe("You voted: All equally good.");
+  });
+
+  test("three or four: no vote while one streams; 'All answers are in' once", async () => {
+    const el = await fixture<TcAnswerArena>(html`<tc-answer-arena .answers=${[...four.slice(0, 2), { ...four[2], streaming: true }]}></tc-answer-arena>`);
+    expect(el.querySelector(".ui-arena__question")!.textContent!.trim()).toBe("Vote once all the answers are done");
+    expect(el.querySelector(".ui-arena__votes")!.getAttribute("aria-disabled")).toBe("true");
+    vote(el, "a").click();
+    await settle();
+    expect(el.value).toBeNull();
+    el.answers = four.slice(0, 3);
+    await settle();
+    expect(status(el)).toBe("All answers are in.");
+    expect(el.dataset.count).toBe("3");
+  });
+
+  test("three or four on a narrow screen: a tab per answer, one shown, arrows and swipes page", async () => {
+    const wrap = await fixture<HTMLDivElement>(html`<div style="width: 420px"><tc-answer-arena .answers=${four}></tc-answer-arena></div>`);
+    const el = wrap.querySelector("tc-answer-arena")!;
+    await expect.poll(() => el.querySelector(".ui-arena__tabs")).toBeTruthy();
+    const tabs = () => [...el.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    expect(tabs().map((t) => t.textContent!.trim())).toEqual(["Answer AAtlas", "Answer BNova", "Answer CLumen", "Answer DQuill"]);
+    const shown = () => [...el.querySelectorAll<HTMLElement>("section.ui-arena__pane")].filter((p) => !p.hidden).map((p) => p.dataset.side);
+    expect(shown()).toEqual(["a"]);
+    expect(el.querySelector("section.ui-arena__pane")!.getAttribute("role")).toBe("tabpanel");
+    expect(tabs()[0].getAttribute("aria-controls")).toBe(el.querySelector("section.ui-arena__pane")!.id);
+    tabs()[0].focus();
+    key(tabs()[0], "ArrowLeft");
+    await settle();
+    expect(shown()).toEqual(["d"]);
+    expect(document.activeElement).toBe(tabs()[3]);
+    key(tabs()[3], "Home");
+    await settle();
+    expect(shown()).toEqual(["a"]);
+    tabs()[2].click();
+    await settle();
+    expect(shown()).toEqual(["c"]);
+    const panes = el.querySelector<HTMLElement>(".ui-arena__panes")!;
+    panes.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerType: "touch", clientX: 300, clientY: 100 }));
+    panes.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerType: "touch", clientX: 200, clientY: 110 }));
+    await settle();
+    expect(shown()).toEqual(["d"]);
+    panes.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerType: "mouse", clientX: 300, clientY: 100 }));
+    panes.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerType: "mouse", clientX: 100, clientY: 100 }));
+    await settle();
+    expect(shown()).toEqual(["d"]);
+    wrap.style.width = "1100px";
+    await expect.poll(() => el.querySelector(".ui-arena__tabs")).toBeNull();
+    expect(shown()).toEqual(["a", "b", "c", "d"]);
+  });
+
+  test("two answers keep the A / Tie / B toolbar; more than four are left out", async () => {
+    const el = await fixture<TcAnswerArena>(html`<tc-answer-arena .answers=${done}></tc-answer-arena>`);
+    expect(el.querySelector(".ui-arena__votes")!.getAttribute("role")).toBe("toolbar");
+    let detail: unknown;
+    el.addEventListener("tc-value-change", (e) => (detail = (e as CustomEvent).detail));
+    vote(el, "b").click();
+    await settle();
+    expect(detail).toEqual({ value: { winner: "b" }, winnerId: "Nova" });
+    el.answers = [...four, { model: "Extra", answer: "Too many." }];
+    await settle();
+    expect(el.querySelectorAll("section.ui-arena__pane")).toHaveLength(4);
+  });
+
+  test("wrapper: onChange gets the winner's id with three or more", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: [ArenaVote | null, string | undefined][] = [];
+    await act(async () =>
+      root.render(
+        React.createElement(AnswerArena, {
+          answers: four as React.ComponentProps<typeof AnswerArena>["answers"],
+          onChange: (v: ArenaVote | null, id?: string) => seen.push([v, id]),
+        }),
+      ),
+    );
+    await settle();
+    const el = host.querySelector("tc-answer-arena")!;
+    vote(el, "c").click();
+    await settle();
+    expect(seen).toEqual([[{ winner: "c" }, "lumen-2"]]);
+    expect(el.value).toEqual({ winner: "c" });
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const)
+    test(`axe: three or four answers, wide and paged (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: Canvas">
+        <div style="width: 1100px"><tc-answer-arena prompt="Explain RAG" blind .answers=${four}></tc-answer-arena></div>
+        <div style="width: 1100px"><tc-answer-arena look="clean" prompt="Explain RAG" .answers=${four} .value=${{ winner: "bad", reason: "All off-topic" }}></tc-answer-arena></div>
+        <div style="width: 420px"><tc-answer-arena prompt="Explain RAG" .answers=${four} .value=${{ winner: "b" }}></tc-answer-arena></div>
+        <div style="width: 420px"><tc-answer-arena look="clean" .answers=${[...four.slice(0, 2), { ...four[2], streaming: true }]}></tc-answer-arena></div>
+      </div>`);
+      await expect.poll(() => wrap.querySelectorAll(".ui-arena__tabs").length).toBe(2);
+      await settle();
+      finishAnimations(wrap);
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+
   for (const theme of ["light", "dark"] as const)
     test(`axe: no violations in either look (${theme})`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: Canvas">

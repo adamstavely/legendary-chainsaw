@@ -477,6 +477,7 @@
     "why": "Focus rings for keyboard users.",
     "via": [
      "itself",
+     "mention-picker",
      "internal/kit"
     ]
    },
@@ -616,6 +617,7 @@
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
      "itself",
+     "mention-picker",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -667,7 +669,7 @@
   "windowed": false
  },
  "size": {
-  "min": 79028,
-  "gzip": 22436
+  "min": 89086,
+  "gzip": 25059
  }
 }

@@ -88,6 +88,32 @@
     "label": {
       "type": "string",
       "description": "Accessible name of the bar"
+    },
+    "reportable": {
+      "type": "boolean",
+      "description": "Adds Report at the end of the bar: a short form to flag a harmful reply for human review"
+    },
+    "reportLabels": {
+      "type": "object",
+      "properties": {
+        "other": {
+          "type": "string"
+        },
+        "harmful": {
+          "type": "string"
+        },
+        "unsafe-advice": {
+          "type": "string"
+        },
+        "private-data": {
+          "type": "string"
+        },
+        "hateful": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the report form's reasons, e.g. `{ other: \"Another problem\" }` – merged over `defaultReportLabels`"
     }
   },
   "additionalProperties": false,

@@ -20,6 +20,11 @@ import { safeUrl } from "./internal/safe-url";
  *
  * The typing is written straight to the DOM (data-on on each word): the element re-renders only when a new paragraph
  * or list item begins.
+ *
+ * Two states for when things go wrong. `interrupted` ({ reason: "stopped" | "network" | "length" }) keeps the text
+ * written so far, says in words why it stopped, and offers Continue (tc-continue) and Retry (tc-retry). `unavailable`
+ * ({ model, reason: "busy" | "down", retryAt, fallback }) shows that the model can't answer right now, when it will
+ * try again – a countdown that keeps itself fresh, or follows `now` – with Try now and "Use <fallback>" (tc-retry).
  */
 
 // The header icon: a speech bubble with a sparkle – an assistant's answer
@@ -40,10 +45,35 @@ export type AnswerSource = {
 
 /** The reader's verdict: a thumb, and for a thumbs down the reason picked */
 export type AnswerFeedback = { value: "up" | "down"; reason?: string };
+/** Why an answer stopped part way: the reader stopped it, the connection dropped, or it hit the length limit */
+export type AnswerInterruptReason = "stopped" | "network" | "length";
+/** An answer that stopped before it finished – the text so far stays */
+export type AnswerInterruption = {
+  reason: AnswerInterruptReason;
+  /** Your own words in place of the built-in sentence */
+  message?: string;
+};
+/** The model can't answer right now */
+export type AnswerUnavailable = {
+  /** The model's name, e.g. "Atlas" – "The model" when left out */
+  model?: string;
+  /** Busy (overloaded, rate-limited) or down (not responding) – busy by default */
+  reason?: "busy" | "down";
+  /** When it will try again, epoch ms – a countdown shows until then */
+  retryAt?: number;
+  /** Another model to offer instead – "Use Nova" */
+  fallback?: string;
+  /** Your own words in place of the built-in sentence */
+  message?: string;
+};
+/** tc-retry: which model to try (the same one, or the fallback), and from which state */
+export type AnswerRetry = { model?: string; from: "interrupted" | "unavailable" };
+/** tc-continue: the reason the answer had stopped */
+export type AnswerContinue = { reason: AnswerInterruptReason };
 
 type Token = { i: number; kind: "word"; text: string; bold?: boolean } | { i: number; kind: "cite"; ids: number[] };
 type Block = { kind: "p"; tokens: Token[] } | { kind: "ul"; items: Token[][] };
-type Phase = "reading" | "writing" | "done" | "stopped";
+type Phase = "reading" | "writing" | "done" | "stopped" | "unavailable";
 type Pop = { ids: number[]; left: number; top: number; width: number };
 
 /* ---------- Parsing: paragraphs, lists, **bold** and [1] citations ---------- */
@@ -103,6 +133,27 @@ function plain(text: string, sources: AnswerSource[]) {
 }
 
 const reducedMotion = () => typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+/** The one monotonic clock: how long reading and writing took */
+const elapsed = () => performance.now();
+/** The one wall clock: the retry countdown, when the page gives no `now` */
+const wallClock = () => Date.now();
+
+const INTERRUPTED: Record<AnswerInterruptReason, { said: string; status: string }> = {
+  stopped: { said: "You stopped this answer before it finished.", status: "Stopped before it finished" },
+  network: { said: "The connection dropped before the answer finished.", status: "Connection lost" },
+  length: { said: "The answer reached its length limit before it finished.", status: "Reached the length limit" },
+};
+/** "42 s", "2 min 5 s", "1 h 4 min" */
+function waitText(ms: number) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  if (s < 60) return `${s} s`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return s % 60 ? `${m} min ${s % 60} s` : `${m} min`;
+  return m % 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${Math.floor(m / 60)} h`;
+}
+/** The notice's icons, Lucide's circle-pause and clock (ISC) */
+const pauseIcon = svg`<circle cx="12" cy="12" r="10"></circle><path d="M10 15V9M14 15V9"></path>`;
+const clockIcon = svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>`;
 
 /* ---------- Icons ---------- */
 
@@ -237,6 +288,8 @@ let uidSeq = 0;
  * @fires tc-follow-up - A follow-up question was picked; detail `{ question: string }`
  * @fires tc-stop - Stop was pressed while writing; detail: null
  * @fires tc-copy - The answer is on the clipboard; detail `{ text: string }`
+ * @fires tc-continue - Continue on an interrupted answer; detail `{ reason }` (AnswerContinue). Cancelable – prevented, `interrupted` stays; otherwise it clears and the element waits for more text
+ * @fires tc-retry - Retry on an interrupted answer, or Try now / Use <fallback> while unavailable; detail `{ model?, from }` (AnswerRetry). Cancelable – prevented, the state stays; otherwise it clears and the answer starts over
  */
 export class TcAiAnswer extends TcElement {
   static override ui = "ans";
@@ -264,6 +317,12 @@ export class TcAiAnswer extends TcElement {
   @property({ type: Boolean, attribute: "hide-actions" }) accessor hideActions = false;
   /** Regenerate: may return a promise – a rejection shows in the last row, and Regenerate can be tried again */
   @property({ attribute: false }) accessor onRegenerate: (() => void | Promise<unknown>) | undefined = undefined;
+  /** The answer stopped part way – the text so far stays, with why and Continue / Retry (null: it didn't) */
+  @property({ attribute: false }) accessor interrupted: AnswerInterruption | null = null;
+  /** The model can't answer right now – busy or down, when it tries again, Try now and a fallback (null: it can) */
+  @property({ attribute: false }) accessor unavailable: AnswerUnavailable | null = null;
+  /** The time for the retry countdown, epoch ms – the element keeps its own clock when unset */
+  @property({ type: Number }) accessor now: number | undefined = undefined;
 
   /** @internal */
   @state() accessor run = 0;
@@ -281,6 +340,8 @@ export class TcAiAnswer extends TcElement {
   @state() accessor hoverSource: number | null = null;
   /** @internal How far the typing has got, rounded to the paragraph – the only part that renders */
   @state() accessor visible = 0;
+  /** @internal The element's own clock for the retry countdown */
+  @state() accessor clock = 0;
 
   private uid = `tc-ans-${++uidSeq}`;
   private screen = new OnScreenController(this);
@@ -297,6 +358,7 @@ export class TcAiAnswer extends TcElement {
   private closeTimer = 0;
   private frame = 0;
   private loopKey = "";
+  private clockTimer = 0;
   private cardRo?: { ro: ResizeObserver; card: HTMLElement; inner: HTMLElement };
 
   constructor() {
@@ -325,6 +387,8 @@ export class TcAiAnswer extends TcElement {
     clearTimeout(this.readTimer);
     clearTimeout(this.copiedTimer);
     clearTimeout(this.closeTimer);
+    clearInterval(this.clockTimer);
+    this.clockTimer = 0;
     cancelAnimationFrame(this.frame);
     this.loopKey = "";
     this.cardRo?.ro.disconnect();
@@ -375,31 +439,73 @@ export class TcAiAnswer extends TcElement {
     }
     this.prevAnswer = this.answer;
     // Each run: read the sources, then write
-    if (this.run !== this.lastRun) {
-      this.lastRun = this.run;
-      this.started = performance.now();
-      this.progress = 0;
-      this.show(0);
-      if (this.feedbackRun !== this.run) {
-        this.feedbackRun = this.run;
-        this.setFeedback(null);
-      }
-      this.copied = false;
-      this.pop = null;
-      clearTimeout(this.readTimer);
-      if (this.instant) {
-        this.progress = Infinity;
-        this.phase = "writing";
-      } else {
-        this.phase = "reading";
-        this.readTimer = window.setTimeout(() => (this.phase = "writing"), this.sources.length ? READ_MS + this.sources.length * CARD_MS : 0);
-      }
-    }
+    if (this.run !== this.lastRun) this.willUpdateRun();
+    this.applyTrouble(changed);
     if (this.dataset.phase !== this.phase) this.dataset.phase = this.phase;
+  }
+
+  /** Interrupted: everything written so far shows at once and the answer stops. Unavailable: no answer, a notice */
+  private applyTrouble(changed: PropertyValues<this>) {
+    if (this.unavailable) {
+      if (this.phase !== "unavailable") {
+        clearTimeout(this.readTimer);
+        this.phase = "unavailable";
+      }
+    } else if (changed.has("unavailable") && changed.get("unavailable")) {
+      // The model is back: start over
+      this.run++;
+      this.willUpdateRun();
+    }
+    if (this.interrupted && !this.unavailable) {
+      if (this.phase !== "stopped" || this.progress < this.parsed.total) {
+        clearTimeout(this.readTimer);
+        this.progress = this.parsed.total;
+        this.show(this.parsed.total);
+        if (this.phase !== "stopped") this.seconds = Math.max(0.1, Math.round((elapsed() - this.started) / 100) / 10);
+        this.phase = "stopped";
+      }
+    } else if (changed.has("interrupted") && changed.get("interrupted") && this.phase === "stopped") {
+      // Cleared: write on – more text may be streaming in
+      this.phase = "writing";
+    }
+  }
+  /** Starts a new run now (reading, then writing), as willUpdate does when `run` moves */
+  private willUpdateRun() {
+    this.lastRun = this.run;
+    this.started = elapsed();
+    this.progress = 0;
+    this.show(0);
+    if (this.feedbackRun !== this.run) {
+      this.feedbackRun = this.run;
+      this.setFeedback(null);
+    }
+    this.copied = false;
+    this.pop = null;
+    clearTimeout(this.readTimer);
+    if (this.instant) {
+      this.progress = Infinity;
+      this.phase = "writing";
+    } else {
+      this.phase = "reading";
+      this.readTimer = window.setTimeout(() => (this.phase = "writing"), this.sources.length ? READ_MS + this.sources.length * CARD_MS : 0);
+    }
+  }
+
+  /** The retry countdown's clock: ticks each second while there's a `retryAt` and no `now` */
+  private syncClock() {
+    const want = !!this.unavailable?.retryAt && this.now === undefined && this.isConnected;
+    if (want && !this.clockTimer) {
+      this.clock = wallClock();
+      this.clockTimer = window.setInterval(() => (this.clock = wallClock()), 1000);
+    } else if (!want && this.clockTimer) {
+      clearInterval(this.clockTimer);
+      this.clockTimer = 0;
+    }
   }
 
   protected override updated() {
     this.toggleAttribute("data-offscreen", !this.screen.onScreen);
+    this.syncClock();
     // New text may regroup the paragraphs; newly rendered words start hidden until painted
     paintWords(this.querySelector(".ui-ans__answer"), this.shown);
     const edge = edgeOf(this.starts, this.shown);
@@ -426,7 +532,7 @@ export class TcAiAnswer extends TcElement {
     this.loopKey = key;
     cancelAnimationFrame(this.frame);
     if (!key) return;
-    let last = performance.now();
+    let last = elapsed();
     let revealed = last;
     const tick = (now: number) => {
       this.progress = Math.min(total, this.progress + ((now - last) / 1000) * this.speed);
@@ -438,7 +544,7 @@ export class TcAiAnswer extends TcElement {
       if (this.progress >= total) {
         // Caught up: done, or – while more text is streaming in – idle until it arrives
         if (!this.streaming) {
-          this.seconds = Math.max(0.1, Math.round((performance.now() - this.started) / 100) / 10);
+          this.seconds = Math.max(0.1, Math.round((elapsed() - this.started) / 100) / 10);
           this.phase = "done";
         }
         return;
@@ -479,7 +585,7 @@ export class TcAiAnswer extends TcElement {
     );
   }
   private stop() {
-    this.seconds = Math.max(0.1, Math.round((performance.now() - this.started) / 100) / 10);
+    this.seconds = Math.max(0.1, Math.round((elapsed() - this.started) / 100) / 10);
     this.phase = "stopped";
     this.emit("tc-stop", null);
   }
@@ -497,6 +603,18 @@ export class TcAiAnswer extends TcElement {
       (work as Promise<unknown>).then(undefined, (e: unknown) => {
         if (this.isConnected) this.failed = messageOf(e);
       });
+  }
+  private continueAnswer() {
+    const reason = this.interrupted?.reason;
+    if (!reason) return;
+    if (this.emit("tc-continue", { reason } satisfies AnswerContinue, { cancelable: true })) this.interrupted = null;
+  }
+  private retry(from: AnswerRetry["from"], model?: string) {
+    if (!this.emit("tc-retry", { model, from } satisfies AnswerRetry, { cancelable: true })) return;
+    if (from === "interrupted") {
+      this.interrupted = null;
+      this.regenerate();
+    } else this.unavailable = null;
   }
   private voteFor(value: "up" | "down") {
     const next = this.feedback?.value === value ? null : value;
@@ -574,6 +692,47 @@ export class TcAiAnswer extends TcElement {
     </div>`;
   }
 
+  /** The countdown's words: "Trying again in 42 s." – or "Trying again now…" once it's due */
+  private retryText(u: AnswerUnavailable) {
+    if (u.retryAt === undefined) return "";
+    const left = u.retryAt - (this.now ?? this.clock);
+    return left > 500 ? `Trying again in ${waitText(left)}.` : "Trying again now…";
+  }
+  private unavailableSaid(u: AnswerUnavailable) {
+    if (u.message) return u.message;
+    const who = u.model || "The model";
+    return u.reason === "down" ? `${who} isn't responding right now.` : `${who} is busy right now.`;
+  }
+
+  private renderNotice() {
+    const u = this.unavailable;
+    const i = this.interrupted;
+    if (u) {
+      const retry = this.retryText(u);
+      return html`<div class="ui-ans__notice" data-kind="unavailable" role="group" aria-labelledby=${`${this.uid}-notice`}>
+        <svg class="ui-ans__notice-icon" viewBox="0 0 24 24" aria-hidden="true">${clockIcon}</svg>
+        <p class="ui-ans__notice-text" id=${`${this.uid}-notice`}>
+          <span>${this.unavailableSaid(u)}</span>${retry ? html` <span class="ui-ans__notice-when">${retry}</span>` : nothing}
+        </p>
+        <div class="ui-ans__notice-actions">
+          <button type="button" class="ui-ans__notice-btn" data-primary data-action="try-now" @click=${() => this.retry("unavailable", u.model)}>Try now</button>
+          ${u.fallback ? html`<button type="button" class="ui-ans__notice-btn" data-action="fallback" @click=${() => this.retry("unavailable", u.fallback)}>Use ${u.fallback}</button>` : nothing}
+        </div>
+      </div>`;
+    }
+    if (i) {
+      return html`<div class="ui-ans__notice" data-kind="interrupted" data-reason=${i.reason} role="group" aria-labelledby=${`${this.uid}-notice`}>
+        <svg class="ui-ans__notice-icon" viewBox="0 0 24 24" aria-hidden="true">${pauseIcon}</svg>
+        <p class="ui-ans__notice-text" id=${`${this.uid}-notice`}>${i.message ?? INTERRUPTED[i.reason]?.said ?? INTERRUPTED.stopped.said}</p>
+        <div class="ui-ans__notice-actions">
+          <button type="button" class="ui-ans__notice-btn" data-primary data-action="continue" @click=${() => this.continueAnswer()}>Continue</button>
+          <button type="button" class="ui-ans__notice-btn" data-action="retry" @click=${() => this.retry("interrupted")}>Retry</button>
+        </div>
+      </div>`;
+    }
+    return nothing;
+  }
+
   private renderFooter(status: string) {
     const look = this.resolvedLook;
     const icons = look === "clean" ? cleanIcons : standardIcons;
@@ -582,6 +741,7 @@ export class TcAiAnswer extends TcElement {
     const reason = this.feedback?.reason ?? null;
     const copied = this.copied;
     const reasonsOpen = vote === "down" && !reason;
+    if (this.phase === "unavailable") return nothing;
     if (finished && this.hideActions) return nothing;
     return html`
       <div class="ui-ans__foot">
@@ -649,18 +809,31 @@ export class TcAiAnswer extends TcElement {
           : vote === "down"
             ? "What went wrong?"
             : phase === "stopped"
-              ? "Stopped"
+              ? this.interrupted
+                ? (INTERRUPTED[this.interrupted.reason] ?? INTERRUPTED.stopped).status
+                : "Stopped"
               : `Answered in ${this.seconds}s`;
-    const label = phase === "reading" ? `Reading ${this.sources.length} sources` : phase === "writing" ? "Writing" : "Answer";
+    const unavailable = this.unavailable;
+    const label =
+      phase === "unavailable"
+        ? `Waiting for ${unavailable?.model || "the model"}`
+        : phase === "reading"
+          ? `Reading ${this.sources.length} sources`
+          : phase === "writing"
+            ? "Writing"
+            : "Answer";
+    // Said once per change: the trouble in words, else the finished status
+    const spoken = unavailable ? this.unavailableSaid(unavailable) : finished && !failed ? (this.interrupted ? (this.interrupted.message ?? (INTERRUPTED[this.interrupted.reason] ?? INTERRUPTED.stopped).said) : status) : "";
     const icons = clean ? cleanIcons : standardIcons;
 
     const content = html`<div class="ui-ans__inner">
-      ${this.renderSources(lit)}
+      ${unavailable ? nothing : this.renderSources(lit)}
       <div class="ui-ans__label">
         ${clean ? sparkleMark : cloudMark(this.uid)}
-        ${keyed(label, html`<span class="ui-ans__label-text">${label}${!finished ? html`<span class="ui-ans__shine" aria-hidden="true"><span>${label}</span></span>` : nothing}</span>`)}
+        ${keyed(label, html`<span class="ui-ans__label-text">${label}${!finished && !unavailable ? html`<span class="ui-ans__shine" aria-hidden="true"><span>${label}</span></span>` : nothing}</span>`)}
       </div>
-      ${this.renderAnswer(lit)}
+      ${unavailable ? nothing : this.renderAnswer(lit)}
+      ${this.renderNotice()}
       ${phase === "done" && this.followUps.length
         ? html`<div class="ui-ans__follow">
             <span class="ui-ans__follow-label">Related</span>
@@ -678,7 +851,7 @@ export class TcAiAnswer extends TcElement {
 
     return html`
       ${clean ? html`<div class="ui-ans__card">${head}<div class="ui-ans__body">${content}</div>${footer}</div>` : html`${head}<div class="ui-ans__card">${content}</div>${footer}`}
-      <span class="ui-ans__sr" role="status">${finished && !failed ? status : ""}</span>
+      <span class="ui-ans__sr" role="status">${spoken}</span>
       <span class="ui-ans__sr" role="alert">${finished && failed ? status : ""}</span>
       ${this.renderPop()}
     `;
@@ -922,6 +1095,46 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
 .ui-ans__answer li::marker { color: var(--tc-text-disabled); }
 .ui-ans__answer > :last-child { margin-bottom: 0; }
 .ui-ans__empty { color: var(--tc-text-muted); }
+
+/* ----- The notice: an answer that stopped part way, or a model that can't answer right now ----- */
+.ui-ans__notice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--tc-space-2) var(--tc-space-2-5);
+  margin-top: var(--tc-space-3);
+  padding: var(--tc-space-3);
+  border-radius: var(--tc-radius-md);
+  background: var(--tc-fill-default);
+  animation: ui-ans-notice var(--tc-duration-moderate) var(--tc-ease-move) both;
+}
+.ui-ans__notice-icon { width: 16px; height: 16px; margin-top: var(--tc-space-0-5); fill: none; stroke: var(--tc-text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+:where([data-look="clean"], [data-look="clean"] *).ui-ans__notice-icon { stroke-width: 1.5; }
+.ui-ans__notice-text { margin: 0; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); }
+.ui-ans__notice-when { font-variant-numeric: tabular-nums; color: var(--tc-text-muted); }
+.ui-ans__notice-actions { grid-column: 2; display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); }
+.ui-ans__notice-btn {
+  display: inline-flex;
+  align-items: center;
+  height: var(--tc-control-h-sm);
+  padding: 0 var(--tc-control-px-sm);
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-action-secondary-bg);
+  box-shadow: var(--tc-action-secondary-shadow);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  color: var(--tc-action-secondary-fg);
+  white-space: nowrap;
+  transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-ans__notice-btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-ans__notice-btn[data-primary] { background: var(--tc-action-primary-bg); box-shadow: none; color: var(--tc-action-primary-fg); }
+.ui-ans__notice-btn[data-primary]:hover { background: var(--tc-action-primary-bg-hover); }
+@keyframes ui-ans-notice { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+@media (forced-colors: active) {
+  .ui-ans__notice { border: 1px solid CanvasText; }
+  .ui-ans__notice-icon { stroke: CanvasText; }
+}
 .ui-ans__w { animation: ui-ans-word var(--tc-duration-slower) var(--tc-ease-move) both; }
 /* Words are rendered ahead of the typing and shown by it (data-on); the caret follows the last one shown */
 .ui-ans__w:not([data-on]) { display: none; }

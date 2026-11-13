@@ -9,7 +9,7 @@
 Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
 
 - **Element:** `<tc-ai-answer>`
-- **Size:** 16.7 KB gzip · 68.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.4 KB gzip · 74.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -34,11 +34,21 @@ answer is finished, people can copy it with its sources, regenerate it, rate it 
 follow-up question. The answer is plain text: blank lines make paragraphs, a paragraph whose every line starts with “- ” is a
 list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 
+Two states cover what goes wrong. **Interrupted** (`interrupted`) is an answer that stopped part way – the reader
+stopped it, the connection dropped, or it reached its length limit. The text written so far stays, a quiet notice says
+why in words, and Continue and Retry are offered. **Unavailable** (`unavailable`) is a model that can't answer right
+now – busy or down. The notice says so and when it will try again, as a countdown that keeps itself fresh, with Try
+now and, when you name one, “Use <fallback>” to answer with another model.
+
 ### When to use
 
 - Answers from a knowledge base, search or company documents, where people need to see and check the sources.
 - One question and its answer as a unit – a help panel, a search results page, an “Ask” box.
 - Streaming answers from your model: pass the text as it grows and set `streaming` until it's complete.
+- Answers that can be cut off – a dropped connection, a token limit, a Stop – where people should keep what they
+  have and carry on (`interrupted`).
+- A model that's overloaded, rate-limited or down, where people should see when it will try again and what else they
+  can do (`unavailable`).
 
 ### When not to use
 
@@ -57,13 +67,15 @@ list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 4. **Answer** `.ui-ans__answer` – the streamed text, with paragraphs, lists and bold
 5. **Citation** `.ui-ans__cite` – a chip naming its source; it previews the source and lights up its card
 6. **Footer** `.ui-ans__foot` – Stop while writing; then Copy, Regenerate, Good answer, Bad answer and the status.
+7. **Notice** `.ui-ans__notice` – an interrupted answer (why, Continue and Retry) or an unavailable model (busy or
 
 ## Looks
 
 Standard sets the question on a gray tray, the answer on a white card below it and the footer on the tray, and its assistant is
 a small blue cloud whose eyes scan the sources and follow the text. Clean has no tray: one white card holds
 everything, the question as its first row and the footer as its last, and the assistant is a blue sparkle; its icons are smaller and thinner. Both
-stream, cite and preview the same way.
+stream, cite and preview the same way. The notice is a soft gray panel under the text in both looks, its first button
+the primary one.
 
 ## Usage
 
@@ -88,6 +100,17 @@ stream, cite and preview the same way.
   answer.followUps = ["How do I request manager approval?"];
   answer.answer = "Yes – for **up to 30 working days a year**, with your manager's approval [1].";
   answer.addEventListener("tc-follow-up", (e) => console.log(e.detail.question));
+
+  // The connection dropped: keep the text, say why, offer Continue and Retry
+  answer.interrupted = { reason: "network" };
+  answer.addEventListener("tc-continue", () => {
+    // The element clears `interrupted`; stream the rest on after the text so far
+    answer.streaming = true;
+  });
+
+  // Or: the model is busy – try again in 40 seconds, or answer with another model now
+  // answer.unavailable = { model: "Atlas", reason: "busy", retryAt: Date.now() + 40_000, fallback: "Nova" };
+  answer.addEventListener("tc-retry", (e) => console.log("Ask again with", e.detail.model ?? "the same model"));
 </script>
 ```
 
@@ -106,7 +129,19 @@ const sources: AnswerSource[] = [
   },
 ];
 
-export function Answer({ text, streaming }: { text: string; streaming: boolean }) {
+export function Answer({
+  text,
+  streaming,
+  cutOff,
+  busyUntil,
+  onAskAgain,
+}: {
+  text: string;
+  streaming: boolean;
+  cutOff: boolean;
+  busyUntil?: number;
+  onAskAgain: (model?: string, keepText?: boolean) => void;
+}) {
   return (
     <AIAnswer
       question="Can I work from abroad for a few weeks?"
@@ -115,6 +150,10 @@ export function Answer({ text, streaming }: { text: string; streaming: boolean }
       streaming={streaming}
       followUps={["How do I request manager approval?"]}
       onFeedback={(value, reason) => console.log(value, reason)}
+      interrupted={cutOff ? { reason: "network" } : null}
+      unavailable={busyUntil ? { model: "Atlas", reason: "busy", retryAt: busyUntil, fallback: "Nova" } : null}
+      onContinue={() => onAskAgain(undefined, true)}
+      onRetry={(retry) => onAskAgain(retry.model)}
     />
   );
 }
@@ -202,6 +241,9 @@ export class AiAnswerExample {
 | `feedbackReasons` | – | `array` | `["Not accurate", "Wrong source", "Too long", "Out of date"]` | Reasons offered after a thumbs down |
 | `hideActions` | `hide-actions` | `boolean` | `false` | Leave out the built-in actions under a finished answer (copy, regenerate, thumbs and the status beside them) – for an app that puts its own row there, such as `tc-message-actions`. Stop still shows while the answer is written |
 | `onRegenerate` | – | `(() => void \| Promise<unknown>) \| undefined` | `undefined` | Regenerate: may return a promise – a rejection shows in the last row, and Regenerate can be tried again |
+| `interrupted` | – | `AnswerInterruption \| null` | `null` | The answer stopped part way – the text so far stays, with why and Continue / Retry (null: it didn't) |
+| `unavailable` | – | `AnswerUnavailable \| null` | `null` | The model can't answer right now – busy or down, when it tries again, Try now and a fallback (null: it can) |
+| `now` | `now` | `number \| undefined` | `undefined` | The time for the retry countdown, epoch ms – the element keeps its own clock when unset |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -213,6 +255,8 @@ export class AiAnswerExample {
 | `tc-follow-up` | – | No | A follow-up question was picked; detail `{ question: string }` |
 | `tc-stop` | – | No | Stop was pressed while writing; detail: null |
 | `tc-copy` | – | No | The answer is on the clipboard; detail `{ text: string }` |
+| `tc-continue` | – | Yes | Continue on an interrupted answer; detail `{ reason }` (AnswerContinue). Cancelable – prevented, `interrupted` stays; otherwise it clears and the element waits for more text |
+| `tc-retry` | – | Yes | Retry on an interrupted answer, or Try now / Use &lt;fallback> while unavailable; detail `{ model?, from }` (AnswerRetry). Cancelable – prevented, the state stays; otherwise it clears and the answer starts over |
 
 #### Component tokens
 
@@ -223,9 +267,9 @@ export class AiAnswerExample {
 | `--tc-ai-answer-shimmer` | `light-dark(rgba(255, 255, 255, 0.82), #ffffff)` | standard, clean |
 | `--tc-ai-answer-source-ring-lit` | `light-dark(#cfcfd3, #4a4a50)` | standard |
 
-#### Design tokens it reads (105)
+#### Design tokens it reads (108)
 
-`--tc-accent`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-ai-answer-mark-edge`, `--tc-ai-answer-mark-eye-shade`, `--tc-border-default`, `--tc-border-selected`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-reveal-slow`, `--tc-duration-shimmer`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-lg`, `--tc-font-size-lg-plus`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-menu-bg`, `--tc-menu-item-radius`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-pill-font-size`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xl`, `--tc-radius-xs`, `--tc-shadow-raised`, `--tc-shadow-raised-hover`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-4-5`, `--tc-space-5`, `--tc-space-6`, `--tc-status-success-fg`, `--tc-status-success-solid`, `--tc-surface-inverse`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tracking-caps`, `--tc-tray-inset`, `--tc-tray-radius`, `--tc-z-dropdown`
+`--tc-accent`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-ai-answer-mark-edge`, `--tc-ai-answer-mark-eye-shade`, `--tc-border-default`, `--tc-border-selected`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-reveal-slow`, `--tc-duration-shimmer`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-lg`, `--tc-font-size-lg-plus`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-menu-bg`, `--tc-menu-item-radius`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-pill-font-size`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-2xs`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xl`, `--tc-radius-xs`, `--tc-shadow-raised`, `--tc-shadow-raised-hover`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-4-5`, `--tc-space-5`, `--tc-space-6`, `--tc-status-success-fg`, `--tc-status-success-solid`, `--tc-surface-inverse`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tracking-caps`, `--tc-tray-inset`, `--tc-tray-radius`, `--tc-z-dropdown`
 
 ## Frameworks
 
@@ -251,8 +295,10 @@ export class AiAnswerExample {
 | `feedback` | `el.feedback = …;` | `<… feedback={…} />` | `<tc-ai-answer :feedback="…">` | `<tc-ai-answer [feedback]="…">` | `<tc-ai-answer {feedback}>` |
 | `feedbackReasons` | `el.feedbackReasons = …;` | `<… feedbackReasons={…} />` | `<tc-ai-answer :feedbackReasons="…">` | `<tc-ai-answer [feedbackReasons]="…">` | `<tc-ai-answer {feedbackReasons}>` |
 | `onRegenerate` | `el.onRegenerate = …;` | `<… onRegenerate={…} />` | `<tc-ai-answer :onRegenerate="…">` | `<tc-ai-answer [onRegenerate]="…">` | `<tc-ai-answer {onRegenerate}>` |
+| `interrupted` | `el.interrupted = …;` | `<… interrupted={…} />` | `<tc-ai-answer :interrupted="…">` | `<tc-ai-answer [interrupted]="…">` | `<tc-ai-answer {interrupted}>` |
+| `unavailable` | `el.unavailable = …;` | `<… unavailable={…} />` | `<tc-ai-answer :unavailable="…">` | `<tc-ai-answer [unavailable]="…">` | `<tc-ai-answer {unavailable}>` |
 
-*Also attributes: `question`, `answer`, `streaming`, `speed`, `hide-actions` – see the API table.*
+*Also attributes: `question`, `answer`, `streaming`, `speed`, `hide-actions`, `now` – see the API table.*
 
 ### Events
 
@@ -263,6 +309,8 @@ export class AiAnswerExample {
 | `tc-follow-up` | No | `el.addEventListener("tc-follow-up", (e) => …)` | `onFollowUp={…}` | `@tc-follow-up="…"` | `(tc-follow-up)="…($event)"` | `el.addEventListener("tc-follow-up", …)` |
 | `tc-stop` | No | `el.addEventListener("tc-stop", (e) => …)` | `onStop={…}` | `@tc-stop="…"` | `(tc-stop)="…($event)"` | `el.addEventListener("tc-stop", …)` |
 | `tc-copy` | No | `el.addEventListener("tc-copy", (e) => …)` | `onCopy={…}` | `@tc-copy="…"` | `(tc-copy)="…($event)"` | `el.addEventListener("tc-copy", …)` |
+| `tc-continue` | Yes | `el.addEventListener("tc-continue", (e) => …)` | `onContinue={…}` | `@tc-continue="…"` | `(tc-continue)="…($event)"` | `el.addEventListener("tc-continue", …)` |
+| `tc-retry` | Yes | `el.addEventListener("tc-retry", (e) => …)` | `onRetry={…}` | `@tc-retry="…"` | `(tc-retry)="…($event)"` | `el.addEventListener("tc-retry", …)` |
 
 ### Controlled
 
@@ -407,6 +455,8 @@ No slots: everything it shows comes from its properties.
 | `defaultFeedback` | `AnswerFeedback \| null` | The verdict on mount when `feedback` isn't controlled |
 | `onFeedbackChange` | `(feedback: AnswerFeedback \| null) => void` | Every change of the verdict, including clearing it and a new answer starting over |
 | `onCopy` | `(text: string) => void` | Called with the copied text once the answer is on the clipboard |
+| `onContinue` | `(reason: AnswerContinue["reason"]) => void` | Continue on an interrupted answer – carry on streaming and clear `interrupted` |
+| `onRetry` | `(retry: AnswerRetry) => void` | Retry an interrupted answer, or Try now / Use &lt;fallback> while unavailable – clear the state and ask again |
 
 *Renamed or hidden on the wrapper: `sources`, `feedback`, `animated`, `onCopy`*
 
@@ -423,6 +473,8 @@ reasons and the follow-up questions.
 | Enter / Space | On a citation chip: opens or closes the preview. On a button: presses it |
 | Escape | Closes the source preview, wherever focus is |
 
+The notice's buttons – Continue and Retry, or Try now and Use <fallback> – are ordinary buttons in the Tab order.
+
 ### Screen readers
 
 The question is a heading, and the sources a list named “Sources”. The label says what's happening (“Reading 3
@@ -431,6 +483,12 @@ source's name and title (“Notion – Remote work policy (2026)”); while its 
 it. Good answer and Bad answer are toggle buttons with `aria-pressed`, and Copy answer becomes “Copied”. A polite
 status says how the answer ended and what happened next: “Answered in 3.2s”, “Stopped”, “Copied”, “What went wrong?”,
 “Thanks for the feedback”. A failed regenerate is an alert (“Couldn't regenerate: …”).
+
+The notice is a group named by its sentence. When an answer is interrupted the status says why, once (“The
+connection dropped before the answer finished.”), and the footer's status reads “Connection lost”, “Stopped before
+it finished” or “Reached the length limit”. While the model is unavailable the label says “Waiting for Atlas” and the
+status says “Atlas is busy right now.” once; the countdown in the notice updates silently, so it's read only when
+people move to it.
 
 ### Every component
 
@@ -475,17 +533,17 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 | --- | --- | --- | --- | --- | --- | --- |
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | itself | Scrollbars keep the browser's default width. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 58.9 KB | 13.8 KB |
+| **This component alone** | 65.5 KB | 15.4 KB |
 | Lit · the library every element is built on, the parts it uses | 19.9 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.8 KB | – |
@@ -494,8 +552,8 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **68.2 KB** | **16.7 KB** |
-| With Lit – the first component on a page | 89.3 KB | 23.6 KB |
+| **Added to a page that already has Lit** | **74.9 KB** | **18.4 KB** |
+| With Lit – the first component on a page | 95.9 KB | 25.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -503,13 +561,13 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.3 ms** | the gallery demo's data, 102 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of feedbackReasons replaced |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.9 ms | feedbackReasons: first render, 198 nodes; update 0.5 ms |
-| 1,000 items | 14 ms | feedbackReasons: first render, 1,098 nodes; update 1.6 ms |
+| First render | **3.2 ms** | the gallery demo's data, 102 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of feedbackReasons replaced |
+| First on the page | 38 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.1 ms | feedbackReasons: first render, 198 nodes; update 0.3 ms |
+| 1,000 items | 12 ms | feedbackReasons: first render, 1,098 nodes; update 1.3 ms |
 
-1,000 items of feedbackReasons: 14 ms, 1,098 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of feedbackReasons: 12 ms, 1,098 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 28 React commits (clean), 25 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -517,12 +575,12 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 
 - At rest with the demo's data: **1 frames/s, 0 timer callbacks/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame, cancelled`.
-- Timers: `setTimeout`.
+- Timers: `setInterval, cleared`, `setTimeout`.
 - 8 infinite CSS animations.
 - Stops or pauses off screen, in a hidden tab and under reduced motion.
 - Observers: `ResizeObserver`, `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OnScreenController).
 - Listens on the page: `document keydown`, `document visibilitychange` (internal/controllers – OnScreenController).
-- Reads the clock: `performance.now()`.
+- Reads the clock: `Date.now()`, `performance.now()`.
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
 
@@ -536,6 +594,9 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 - Give each source a short `name` people recognise (“Notion”, “Slack”) – it's the text on the chip – and a `snippet`
   with the passage the answer relies on.
 - Offer follow-ups as full questions people would ask next, not topics.
+- Leave the notice's sentence to the element unless you know more: a `message` such as “Your plan allows 4,000
+  words per answer.” beats a generic one.
+- Give `unavailable.retryAt` only when you'll really try again then, and name a `fallback` people would accept.
 
 ## Do and don't
 
@@ -546,12 +607,19 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 - Pass `animate={false}` (React) or `animated = false` for answers loaded from history.
 - In a conversation that puts `message-actions` under every reply, set `hide-actions` (React: `hideActions`) so the
   answer doesn't show a second row of the same actions.
+- After `tc-stop`, set `interrupted = { reason: "stopped" }` if people may want to carry on.
+- In React, own `interrupted` and `unavailable`: Continue and Retry call `onContinue` and `onRetry`, and the page
+  clears the state when it asks again.
+- On Continue, keep the text and stream the rest on after it: an `answer` that starts with the old one is written on,
+  not started over.
 
 ### Don't
 
 - Don't cite numbers that have no source – `[4]` with three sources is left out of the text.
 - Don't put links in the answer text; it's plain text, and sources belong in the cards.
 - Don't hide the sources to save space – the answer is only as trustworthy as what people can check.
+- Don't throw away a cut-off answer and start over without asking – `interrupted` keeps it.
+- Don't leave `unavailable` set once the model answers again – clear it, and the answer starts over.
 
 ## Related
 

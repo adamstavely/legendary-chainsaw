@@ -20,6 +20,12 @@ import { PopoverController, type PopoverCloseReason, type PopoverRect } from "./
  * Standard: a white bar with a hairline, toggles pressed in gray. Clean: a softer bar, toggles pressed in the accent.
  *
  *   <tc-selection-toolbar open .anchor=${selectionRect()} .editor=${editorEl} .pressed=${["bold"]}></tc-selection-toolbar>
+ *
+ * Rewrite (opt-in with `rewritable`): a wand at the start of the bar opens a field under it – "Make it shorter…" – with
+ * quick chips (Shorter, Clearer, More formal, Fix grammar). Enter fires a cancelable `tc-rewrite` with the instruction
+ * and the selected text (`selectedText`, else the page's selection). The page answers through `rewrite`: an async
+ * function the bar calls, or a string it sets in reply. The new text shows as a word diff with Accept
+ * (`tc-rewrite-accept`, for the editor to apply), Reject and Try again.
  */
 
 export type SelectionToolbarOption = {
@@ -58,6 +64,53 @@ export type SelectionToolbarLabels = { toolbar: string };
 
 export const defaultSelectionToolbarLabels: SelectionToolbarLabels = { toolbar: "Format" };
 
+/** tc-rewrite: what to do and to which text */
+export type SelectionToolbarRewrite = { instruction: string; text: string };
+/** tc-rewrite-accept: the rewritten text, for the editor to put in place of the selection */
+export type SelectionToolbarRewriteAccept = { text: string; instruction: string; original: string };
+/** Writes the new text for a rewrite; the signal aborts on Reject, Escape or a new request */
+export type SelectionToolbarRewriter = (request: SelectionToolbarRewrite, signal: AbortSignal) => Promise<string>;
+/** The quick instructions under the rewrite field: the chip's words and the instruction it sends */
+export type SelectionToolbarQuickRewrite = { label: string; instruction: string };
+export const defaultQuickRewrites: SelectionToolbarQuickRewrite[] = [
+  { label: "Shorter", instruction: "Make it shorter" },
+  { label: "Clearer", instruction: "Make it clearer" },
+  { label: "More formal", instruction: "Make it more formal" },
+  { label: "Fix grammar", instruction: "Fix spelling and grammar" },
+];
+
+type DiffPart = { type: "same" | "del" | "ins"; text: string };
+/** A word-level diff: words and the spaces between them, matched by their longest common run */
+function wordDiff(a: string, b: string): DiffPart[] {
+  const A = a.match(/\s+|[^\s]+/g) ?? [];
+  const B = b.match(/\s+|[^\s]+/g) ?? [];
+  // Very long selections: show the whole change rather than spend the time
+  if (A.length * B.length > 250_000) return [...(a ? [{ type: "del" as const, text: a }] : []), ...(b ? [{ type: "ins" as const, text: b }] : [])];
+  const n = A.length;
+  const m = B.length;
+  const L: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const out: DiffPart[] = [];
+  const push = (type: DiffPart["type"], text: string) => {
+    const last = out.at(-1);
+    if (last && last.type === type) last.text += text;
+    else out.push({ type, text });
+  };
+  let i = 0;
+  let j = 0;
+  while (i < n && j < m) {
+    if (A[i] === B[j]) {
+      push("same", A[i]);
+      i++;
+      j++;
+    } else if (L[i + 1][j] >= L[i][j + 1]) push("del", A[i++]);
+    else push("ins", B[j++]);
+  }
+  while (i < n) push("del", A[i++]);
+  while (j < m) push("ins", B[j++]);
+  return out;
+}
+
 /* Icons: Lucide (ISC, lucide.dev) */
 const I = {
   ask: ["M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z", "M20 3v4", "M22 5h-4"],
@@ -74,8 +127,11 @@ const I = {
   numbers: ["M10 12h11", "M10 18h11", "M10 6h11", "M4 10h2", "M4 6h1v4", "M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"],
   checks: ["m3 17 2 2 4-4", "m3 7 2 2 4-4", "M13 6h8", "M13 12h8", "M13 18h8"],
   link: ["M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71", "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"],
+  rewrite: ["m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72", "m14 7 3 3", "M5 6v4", "M19 14v4", "M10 2v2", "M7 8H3", "M21 16h-4", "M11 3H9"],
 };
 const CHEVRON = "m6 9 6 6 6-6";
+/** The Rewrite tool's id among the bar's controls */
+const REWRITE = "rewrite";
 
 /** The bar in the reference layout: ask, comment and react; text style; bold to code; colour; list type; link */
 export const defaultSelectionToolbarItems: SelectionToolbarItem[] = [
@@ -157,6 +213,8 @@ type Menu = Extract<SelectionToolbarItem, { type: "menu" }>;
  * @fires tc-pressed-change - A toggle was pressed ({ pressed, id }: SelectionToolbarPressedChange); cancelable – prevented, `pressed` stays as it was
  * @fires tc-values-change - A menu option was chosen ({ values, id, value }: SelectionToolbarValuesChange); cancelable – prevented, `values` stays as it was
  * @fires tc-close - The floating bar closed itself – Escape, or a click outside it and the editor ({ reason }: SelectionToolbarClose)
+ * @fires tc-rewrite - A rewrite was asked for ({ instruction, text }: SelectionToolbarRewrite); cancelable – prevented, nothing is requested and the field stays
+ * @fires tc-rewrite-accept - Accept was pressed on a rewrite ({ text, instruction, original }: SelectionToolbarRewriteAccept) – put `text` in place of the selection
  */
 export class TcSelectionToolbar extends TcElement {
   static override ui = "stb";
@@ -176,9 +234,25 @@ export class TcSelectionToolbar extends TcElement {
   @property({ attribute: false }) accessor editor: HTMLElement | null = null;
   /** Words the page can change */
   @property({ attribute: false }) accessor labels: Partial<SelectionToolbarLabels> = {};
+  /** Adds Rewrite at the start of the bar: rewrite the selected text with an instruction, shown as a diff to accept or reject */
+  @property({ type: Boolean }) accessor rewritable = false;
+  /** The text a rewrite works on – read from the page's selection when empty */
+  @property({ attribute: "selected-text" }) accessor selectedText = "";
+  /** The rewrite's answer: a function the bar calls after tc-rewrite, or the new text the page sets in reply to it */
+  @property({ attribute: false }) accessor rewrite: SelectionToolbarRewriter | string | null = null;
+  /** The chips under the rewrite field */
+  @property({ attribute: false }) accessor quickRewrites: SelectionToolbarQuickRewrite[] = defaultQuickRewrites;
 
   /** The menu that's open, by id */
   @state() private accessor menu: string | null = null;
+  /** The rewrite panel: closed, asking, waiting for the text, showing it, or failed */
+  @state() private accessor rw: "closed" | "ask" | "pending" | "result" | "error" = "closed";
+  @state() private accessor instruction = "";
+  @state() private accessor rwOriginal = "";
+  @state() private accessor rwResult = "";
+  @state() private accessor rwAsked = "";
+  @state() private accessor said = "";
+  private rwAbort: AbortController | null = null;
 
   private readonly pop = new PopoverController(this, {
     popover: () => (this.anchor ? this.querySelector<HTMLElement>(".ui-stb__bar") : null),
@@ -213,6 +287,8 @@ export class TcSelectionToolbar extends TcElement {
 
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
+    // The page answered a rewrite by setting the new text
+    if (changed.has("rewrite") && this.rw === "pending" && typeof this.rewrite === "string") this.showResult(this.rewrite);
     if (changed.has("menu")) {
       document.removeEventListener("pointerdown", this.outside, true);
       if (this.menu !== null) document.addEventListener("pointerdown", this.outside, true);
@@ -318,6 +394,140 @@ export class TcSelectionToolbar extends TcElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener("pointerdown", this.outside, true);
+    this.rwAbort?.abort();
+    this.rwAbort = null;
+  }
+
+  /* ---------- Rewrite ---------- */
+
+  private get rwPanel() {
+    return this.querySelector<HTMLElement>(".ui-stb__rewrite");
+  }
+  private get rwTool() {
+    return this.querySelector<HTMLButtonElement>(`.ui-stb__tool[data-id="${REWRITE}"]`);
+  }
+
+  private toggleRewrite() {
+    if (this.rw !== "closed") {
+      this.closeRewrite();
+      return;
+    }
+    this.menu = null;
+    this.rwOriginal = this.selectedText || (this.ownerDocument.getSelection()?.toString() ?? "");
+    this.instruction = "";
+    this.rw = "ask";
+    void this.updateComplete.then(() => this.rwPanel?.querySelector<HTMLInputElement>(".ui-stb__rw-field")?.focus());
+  }
+
+  private closeRewrite(refocus = true) {
+    this.rwAbort?.abort();
+    this.rwAbort = null;
+    const inside = !!this.rwPanel?.contains(document.activeElement);
+    this.rw = "closed";
+    this.said = "";
+    if (refocus && inside) void this.updateComplete.then(() => this.rwTool?.focus());
+  }
+
+  private ask(instruction: string) {
+    const text = instruction.trim();
+    if (!text || this.rw === "pending") return;
+    const request: SelectionToolbarRewrite = { instruction: text, text: this.rwOriginal };
+    if (!this.emit<SelectionToolbarRewrite>("tc-rewrite", request, { cancelable: true })) return;
+    this.rwAsked = text;
+    this.instruction = text;
+    this.rw = "pending";
+    this.said = "Rewriting…";
+    this.rwAbort?.abort();
+    this.rwAbort = null;
+    const run = this.rewrite;
+    if (typeof run !== "function") return;
+    const abort = new AbortController();
+    this.rwAbort = abort;
+    run(request, abort.signal).then(
+      (result) => {
+        if (abort.signal.aborted) return;
+        this.rwAbort = null;
+        this.showResult(String(result ?? ""));
+      },
+      () => {
+        if (abort.signal.aborted) return;
+        this.rwAbort = null;
+        this.rw = "error";
+        this.said = "Couldn't rewrite the text";
+      },
+    );
+  }
+
+  private showResult(text: string) {
+    this.rwResult = text;
+    this.rw = "result";
+    const changes = wordDiff(this.rwOriginal, text).filter((p) => p.type !== "same" && p.text.trim()).length;
+    this.said = changes ? `Rewrite ready: ${changes} ${changes === 1 ? "change" : "changes"}. Accept or reject it` : "Rewrite ready: no changes";
+    void this.updateComplete.then(() => this.rwPanel?.querySelector<HTMLElement>(".ui-stb__rw-accept")?.focus());
+  }
+
+  private accept() {
+    if (this.rw !== "result") return;
+    this.emit<SelectionToolbarRewriteAccept>("tc-rewrite-accept", { text: this.rwResult, instruction: this.rwAsked, original: this.rwOriginal });
+    this.closeRewrite();
+  }
+
+  private onRewriteKey = (e: KeyboardEvent) => {
+    if (e.key !== "Escape") return;
+    // Closes the panel, not the bar: the popover leaves a prevented Escape alone
+    e.preventDefault();
+    e.stopPropagation();
+    this.closeRewrite();
+  };
+
+  private rewritePanel() {
+    const state = this.rw;
+    const panelId = `${this.uid}-rewrite`;
+    const busy = state === "pending";
+    return html`<div class="ui-stb__rewrite" id=${panelId} role="group" aria-label="Rewrite with AI" aria-busy=${busy ? "true" : "false"} @keydown=${this.onRewriteKey}>
+      ${state === "result"
+        ? html`<div class="ui-stb__rw-result">
+            <div class="ui-stb__rw-asked">${this.rwAsked}</div>
+            <p class="ui-stb__rw-diff" aria-label="Suggested rewrite">${wordDiff(this.rwOriginal, this.rwResult).map((part) =>
+              part.type === "same"
+                ? part.text
+                : part.type === "del"
+                  ? html`<del class="ui-stb__rw-del"><span class="ui-stb__sr">removed: </span>${part.text}</del>`
+                  : html`<ins class="ui-stb__rw-ins"><span class="ui-stb__sr">added: </span>${part.text}</ins>`,
+            )}</p>
+            <div class="ui-stb__rw-actions">
+              <button type="button" class="ui-stb__rw-btn ui-stb__rw-accept" data-kind="primary" @click=${() => this.accept()}>Accept</button>
+              <button type="button" class="ui-stb__rw-btn" @click=${() => this.closeRewrite()}>Reject</button>
+              <button type="button" class="ui-stb__rw-btn" @click=${() => this.ask(this.rwAsked)}>Try again</button>
+            </div>
+          </div>`
+        : html`<form
+              class="ui-stb__rw-form"
+              @submit=${(e: Event) => {
+                e.preventDefault();
+                this.ask(this.instruction);
+              }}
+            >
+              <label class="ui-stb__sr" for="${panelId}-field">How should it be rewritten?</label>
+              <input
+                id="${panelId}-field"
+                class="ui-stb__rw-field"
+                .value=${this.instruction}
+                placeholder="Make it shorter…"
+                autocomplete="off"
+                ?readonly=${busy}
+                @input=${(e: InputEvent) => (this.instruction = (e.target as HTMLInputElement).value)}
+              />
+              <button type="submit" class="ui-stb__rw-btn" data-kind="primary" ?disabled=${busy || !this.instruction.trim()}>${busy ? "Rewriting…" : "Rewrite"}</button>
+            </form>
+            ${state === "error" ? html`<p class="ui-stb__rw-error">Couldn't rewrite the text. Try again.</p>` : nothing}
+            <div class="ui-stb__rw-chips" role="group" aria-label="Quick instructions">
+              ${this.quickRewrites.map(
+                (q) => html`<button type="button" class="ui-stb__rw-chip" ?disabled=${busy} @click=${() => this.ask(q.instruction)}>${q.label}</button>`,
+              )}
+            </div>`}
+      <span class="ui-stb__sr" role="status">${this.said}</span>
+    </div>`;
   }
 
   /* ---------- Rendering ---------- */
@@ -399,11 +609,28 @@ export class TcSelectionToolbar extends TcElement {
       class=${this.floating ? "tc-pop ui-stb__bar" : "ui-stb__bar"}
       role="toolbar"
       aria-label=${this.word("toolbar")}
-      @mousedown=${(e: MouseEvent) => e.preventDefault()}
-      @keydown=${(e: KeyboardEvent) => (e.target as Element).closest(".ui-stb__menu") ? undefined : this.tools.onKeyDown(e)}
+      @mousedown=${(e: MouseEvent) => ((e.target as Element).closest(".ui-stb__rewrite") ? undefined : e.preventDefault())}
+      @keydown=${(e: KeyboardEvent) => (e.target as Element).closest(".ui-stb__menu, .ui-stb__rewrite") ? undefined : this.tools.onKeyDown(e)}
       @focusin=${this.tools.onFocusIn}
     >
+      ${this.rewritable
+        ? html`<span class="ui-stb__slot">
+              <button
+                type="button"
+                class="ui-stb__tool"
+                data-id=${REWRITE}
+                data-type="button"
+                aria-label="Rewrite with AI"
+                aria-expanded=${this.rw !== "closed" ? "true" : "false"}
+                aria-controls=${this.rw !== "closed" ? `${this.uid}-rewrite` : nothing}
+                @click=${() => this.toggleRewrite()}
+              >${glyph(I.rewrite)}</button>
+              ${this.rw === "closed" ? html`<span class="ui-stb__tip" aria-hidden="true">Rewrite with AI</span>` : nothing}
+            </span>
+            <span class="ui-stb__sep" role="separator" aria-orientation="vertical"></span>`
+        : nothing}
       ${this.items.map((item) => (item.type === "separator" ? html`<span class="ui-stb__sep" role="separator" aria-orientation="vertical"></span>` : this.control(item)))}
+      ${this.rewritable && this.rw !== "closed" ? this.rewritePanel() : nothing}
     </div>`;
   }
 
@@ -517,6 +744,32 @@ export class TcSelectionToolbar extends TcElement {
 .ui-stb__option[aria-checked="true"] { color: var(--tc-menu-item-selected-fg); }
 .ui-stb__option-label { flex: 1; }
 .ui-stb__check { width: var(--tc-space-4); height: var(--tc-space-4); flex: none; }
+
+/* ----- Rewrite: a row under the tools ----- */
+.ui-stb__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ui-stb__rewrite { flex: 1 0 100%; box-sizing: border-box; display: grid; gap: var(--tc-space-2); min-width: min(var(--tc-stb-menu) * 1.4, 100%); padding: var(--tc-space-2) var(--tc-space-1) var(--tc-space-1); border-top: var(--tc-hairline) solid var(--tc-divider); margin-top: var(--tc-space-0-5); }
+.ui-stb__rw-form { display: flex; gap: var(--tc-space-1-5); }
+.ui-stb__rw-field { flex: 1; min-width: 0; height: var(--tc-field-h); padding: 0 var(--tc-field-px); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); outline: none; }
+.ui-stb__rw-field:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-stb__rw-field:focus { box-shadow: var(--tc-field-shadow-focus); }
+.ui-stb__rw-field::placeholder { color: var(--tc-text-placeholder); }
+.ui-stb__rw-chips { display: flex; flex-wrap: wrap; gap: var(--tc-space-1); }
+.ui-stb__rw-chip { height: var(--tc-control-h-sm); margin: 0; padding: 0 var(--tc-control-px-sm); border: 0; border-radius: var(--tc-radius-full); background: var(--tc-fill-default); color: var(--tc-text-secondary); font: inherit; font-size: var(--tc-font-size-xs); cursor: pointer; }
+.ui-stb__rw-chip:hover:not(:disabled) { background: var(--tc-fill-strong); color: var(--tc-text-primary); }
+.ui-stb__rw-chip:disabled { color: var(--tc-text-disabled); cursor: default; }
+.ui-stb__rw-btn { display: inline-flex; flex: none; align-items: center; height: var(--tc-control-h-sm); margin: 0; padding: 0 var(--tc-control-px-sm); border: 0; border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); font: inherit; font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); white-space: nowrap; cursor: pointer; }
+.ui-stb__rw-btn:hover:not(:disabled) { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-stb__rw-btn[data-kind="primary"] { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
+.ui-stb__rw-btn[data-kind="primary"]:hover:not(:disabled) { background: var(--tc-action-primary-bg-hover); }
+.ui-stb__rw-btn:disabled { background: var(--tc-fill-default); box-shadow: none; color: var(--tc-text-disabled); cursor: default; }
+:is(.ui-stb__rw-chip, .ui-stb__rw-btn):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-stb__rw-error { margin: 0; font-size: var(--tc-font-size-xs); color: var(--tc-status-danger-fg); }
+.ui-stb__rw-result { display: grid; gap: var(--tc-space-2); }
+.ui-stb__rw-asked { font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
+.ui-stb__rw-diff { max-height: calc(var(--tc-space-16) * 2.5); margin: 0; overflow-y: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-primary); white-space: pre-wrap; }
+.ui-stb__rw-del { border-radius: var(--tc-radius-2xs); background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); text-decoration: line-through; }
+.ui-stb__rw-ins { border-radius: var(--tc-radius-2xs); background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); text-decoration: underline; text-underline-offset: 2px; }
+.ui-stb__rw-actions { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); }
 
 @media (forced-colors: active) {
   .ui-stb__tool[aria-pressed="true"] { outline: 2px solid Highlight; }
