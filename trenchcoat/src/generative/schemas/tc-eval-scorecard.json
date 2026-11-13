@@ -59,6 +59,17 @@
     "maxHeight": {
       "type": "number",
       "description": "The grid's height before it scrolls, in px"
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvalRun"
+      },
+      "description": "Runs of the whole set, oldest first – turns on the run history. A run whose id is a version's id gets its regressions from `cases`"
+    },
+    "baseline": {
+      "type": "string",
+      "description": "The id of the run the others are compared with; null uses the run marked `baseline`, else the first. Changed by Set as baseline unless tc-baseline-change is prevented"
     }
   },
   "additionalProperties": false,
@@ -173,6 +184,67 @@
         "pass",
         "pending"
       ]
+    },
+    "EvalRun": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short – it labels the run's bar: \"Run 14\", \"Nightly 3 Nov\""
+        },
+        "at": {
+          "type": "number",
+          "description": "When it ran, epoch ms"
+        },
+        "passRate": {
+          "type": "number",
+          "description": "Its pass rate, 0–1"
+        },
+        "passed": {
+          "type": "number",
+          "description": "Cases passed"
+        },
+        "total": {
+          "type": "number",
+          "description": "Cases run"
+        },
+        "baseline": {
+          "type": "boolean",
+          "description": "The run the others are compared with – used when `baseline` isn't set"
+        },
+        "regressions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "caseId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "caseId"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Cases that passed in the baseline and fail in this run. Left out, they're worked out from `cases` when both runs' ids are versions there"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "at",
+        "passRate",
+        "passed",
+        "total"
+      ],
+      "additionalProperties": false,
+      "description": "One run of the whole set – for the run history"
     }
   }
 }

@@ -11,9 +11,15 @@ import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/eval-scorecard";
 import {
+  evalBaselineRun,
+  evalDeltaText,
   evalRegressed,
+  evalRunDelta,
   evalStats,
   type EvalCase,
+  type EvalRun,
+  type EvalScorecardBaselineChange,
+  type EvalScorecardCaseOpen,
   type EvalScorecardOpenChange,
   type EvalScorecardShowChange,
   type EvalScorecardTagsChange,
@@ -303,6 +309,230 @@ describe("tc-eval-scorecard", () => {
       </div>`);
       const g = wrap.querySelector<HTMLElement>('[role="grid"]')!;
       g.focus();
+      await settle();
+      wrap.getAnimations({ subtree: true }).forEach((a) => a.finish());
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${theme} ${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+      cleanup();
+    }
+  });
+
+  /* ---------- Run history ---------- */
+
+  const RUNS: EvalRun[] = [
+    { id: "a", label: "Run 1", at: Date.UTC(2026, 10, 3, 12), passRate: 0.5, passed: 2, total: 4, baseline: true },
+    { id: "b", label: "Run 2", at: Date.UTC(2026, 10, 4, 12), passRate: 2 / 3, passed: 2, total: 3 },
+    { id: "n", label: "Nightly", at: Date.UTC(2026, 10, 5, 12), passRate: 0.47, passed: 47, total: 100, regressions: [{ caseId: "c3" }, { caseId: "zz", name: "Gone case" }] },
+  ];
+  const picked = (el: Element) => el.querySelector('.ui-evs__pick [aria-checked="true"]');
+
+  test("evalBaselineRun, evalRunDelta and evalDeltaText: the baseline, the change in points and the new failures", () => {
+    expect(evalBaselineRun(RUNS)?.id).toBe("a");
+    expect(evalBaselineRun(RUNS, "n")?.id).toBe("n");
+    expect(evalBaselineRun(RUNS.map(({ baseline: _b, ...r }) => r))?.id).toBe("a");
+    expect(evalBaselineRun([])).toBeUndefined();
+    // b against a: +17 points; c1 passed on a and fails on b
+    const db = evalRunDelta(RUNS[1], RUNS[0], CASES);
+    expect(db).toEqual({ points: 17, regressions: [{ caseId: "c1", name: "Refund" }], baseline: false });
+    expect(evalDeltaText(db)).toBe("+17 points, 1 new failure");
+    // Given regressions win; names come from the cases, else the id
+    const dn = evalRunDelta(RUNS[2], RUNS[0], CASES);
+    expect(dn.regressions).toEqual([{ caseId: "c3", name: "Double charge" }, { caseId: "zz", name: "Gone case" }]);
+    expect(evalDeltaText(dn)).toBe("−3 points, 2 new failures");
+    expect(evalDeltaText(evalRunDelta(RUNS[0], RUNS[0]))).toBe("Baseline");
+    expect(evalDeltaText({ points: 0, regressions: [], baseline: false })).toBe("Same as the baseline");
+    expect(evalDeltaText({ points: -1, regressions: [], baseline: false })).toBe("−1 point");
+  });
+
+  test("without runs there's no run history", async () => {
+    const el = await fixture<TcEvalScorecard>(html`<tc-eval-scorecard .versions=${V} .cases=${CASES}></tc-eval-scorecard>`);
+    expect(el.querySelector(".ui-evs__history")).toBeNull();
+  });
+
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: run history – bars against the baseline, the latest run picked, its change in words and its regressions`, async () => {
+      const el = await fixture<TcEvalScorecard>(html`<tc-eval-scorecard look=${look} .versions=${V} .cases=${CASES} .runs=${RUNS.slice(0, 2)}></tc-eval-scorecard>`);
+      const section = el.querySelector<HTMLElement>(".ui-evs__history")!;
+      expect(section.getAttribute("aria-labelledby")).toBe(section.querySelector("h4")!.id);
+      expect(text(section.querySelector(".ui-evs__history-base"))).toBe("Baseline: Run 1 · 50%");
+      expect(section.querySelectorAll(".ui-evs__bar")).toHaveLength(2);
+      expect(section.querySelector(".ui-evs__bars")!.getAttribute("aria-hidden")).toBe("true");
+      expect(section.querySelector<HTMLElement>(".ui-evs__base-line")!.style.bottom).toBe("50%");
+      expect(section.querySelectorAll(".ui-evs__bar")[1].getAttribute("data-tone")).toBe("worse");
+      const radios = [...section.querySelectorAll('.ui-evs__pick [role="radio"]')];
+      expect(section.querySelector(".ui-evs__pick")!.getAttribute("role")).toBe("radiogroup");
+      expect(radios.map((r) => r.getAttribute("tabindex"))).toEqual(["-1", "0"]);
+      expect(text(radios[0])).toBe("Run 1, 50%, Baseline");
+      expect(text(picked(el))).toBe("Run 2, 67%");
+      expect(text(section.querySelector(".ui-evs__run-line"))).toBe("Run 2 · Nov 4 · 67% (2 of 3 cases passed) +17 points, 1 new failure against Run 1");
+      expect([...section.querySelectorAll(".ui-evs__reg")].map(text)).toEqual(["Refund"]);
+      expect(section.querySelector(".ui-evs__set-base")).not.toBeNull();
+    });
+  }
+
+  test("run history: arrows pick runs; the baseline shows no Set as baseline or regressions", async () => {
+    const el = await fixture<TcEvalScorecard>(html`<tc-eval-scorecard .versions=${V} .cases=${CASES} .runs=${RUNS}></tc-eval-scorecard>`);
+    const group = el.querySelector<HTMLElement>(".ui-evs__pick")!;
+    picked(el)!.closest<HTMLElement>("button")!.focus();
+    key(group, "Home");
+    await settle();
+    expect(text(picked(el))).toBe("Run 1, 50%, Baseline");
+    expect(document.activeElement).toBe(picked(el));
+    expect(text(el.querySelector(".ui-evs__run-delta"))).toBe("Baseline");
+    expect(el.querySelector(".ui-evs__set-base")).toBeNull();
+    expect(el.querySelector(".ui-evs__regressions, .ui-evs__no-reg")).toBeNull();
+    key(group, "ArrowLeft");
+    await settle();
+    expect(text(picked(el))).toBe("Nightly, 47%");
+    key(group, "ArrowRight");
+    key(group, "ArrowRight");
+    await settle();
+    expect(text(picked(el))).toBe("Run 2, 67%");
+    // Clicking a bar picks its run too
+    el.querySelectorAll<HTMLElement>(".ui-evs__bar-col")[2].click();
+    await settle();
+    expect(text(picked(el))).toBe("Nightly, 47%");
+    expect([...el.querySelectorAll(".ui-evs__reg")].map(text)).toEqual(["Double charge", "Gone case"]);
+  });
+
+  test("Set as baseline: tc-baseline-change, cancelable; the new baseline is measured against", async () => {
+    const el = await fixture<TcEvalScorecard>(html`<tc-eval-scorecard .versions=${V} .cases=${CASES} .runs=${RUNS.slice(0, 2)}></tc-eval-scorecard>`);
+    const seen: EvalScorecardBaselineChange[] = [];
+    let block = true;
+    el.addEventListener("tc-baseline-change", (e) => {
+      seen.push((e as CustomEvent<EvalScorecardBaselineChange>).detail);
+      if (block) e.preventDefault();
+    });
+    el.querySelector<HTMLButtonElement>(".ui-evs__set-base")!.click();
+    await settle();
+    expect(seen).toEqual([{ baseline: "b", id: "b" }]);
+    expect(el.baseline).toBeNull();
+    block = false;
+    el.querySelector<HTMLButtonElement>(".ui-evs__set-base")!.click();
+    await settle();
+    expect(el.baseline).toBe("b");
+    expect(text(el.querySelector(".ui-evs__history-base"))).toBe("Baseline: Run 2 · 67%");
+    expect(text(el.querySelector('[role="status"]'))).toBe("Baseline: Run 2");
+    expect(document.activeElement).toBe(picked(el));
+    expect(el.querySelector(".ui-evs__set-base")).toBeNull();
+    // Run 1 against Run 2: −17 points, no new failures (c2 passed on b, failed on a)
+    el.querySelectorAll<HTMLButtonElement>('.ui-evs__pick [role="radio"]')[0].click();
+    await settle();
+    expect(text(el.querySelector(".ui-evs__run-delta"))).toBe("−17 points, 1 new failure");
+  });
+
+  test("a regression opens its case on that run (tc-case-open, cancelable); Table swaps the bars for a table", async () => {
+    const el = await fixture<TcEvalScorecard>(html`<tc-eval-scorecard .versions=${V} .cases=${CASES} .runs=${RUNS}></tc-eval-scorecard>`);
+    const seen: EvalScorecardCaseOpen[] = [];
+    let block = true;
+    el.addEventListener("tc-case-open", (e) => {
+      seen.push((e as CustomEvent<EvalScorecardCaseOpen>).detail);
+      if (block) e.preventDefault();
+    });
+    el.querySelectorAll<HTMLButtonElement>('.ui-evs__pick [role="radio"]')[1].click();
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-evs__reg")!.click();
+    await settle();
+    expect(seen).toEqual([{ caseId: "c1", runId: "b" }]);
+    expect(el.open).toBeNull();
+    block = false;
+    el.querySelector<HTMLButtonElement>(".ui-evs__reg")!.click();
+    await settle();
+    expect(el.open).toEqual({ caseId: "c1", versionId: "b" });
+    // A run that isn't a version: the event fires, nothing opens
+    el.open = null;
+    el.querySelectorAll<HTMLButtonElement>('.ui-evs__pick [role="radio"]')[2].click();
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-evs__reg")!.click();
+    await settle();
+    expect(seen.at(-1)).toEqual({ caseId: "c3", runId: "n" });
+    expect(el.open).toBeNull();
+
+    const toggle = el.querySelector<HTMLButtonElement>(".ui-evs__table-toggle")!;
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(document.getElementById(toggle.getAttribute("aria-controls")!)).not.toBeNull();
+    toggle.click();
+    await settle();
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    expect(el.querySelector(".ui-evs__bars")).toBeNull();
+    const table = el.querySelector("table.ui-evs__table")!;
+    expect(text(table.querySelector("caption"))).toBe("Pass rate by run, against Run 1");
+    expect([...table.querySelectorAll("tbody tr")].map((r) => text(r))).toEqual([
+      "Run 1 Nov 3 50% 2 / 4 Baseline",
+      "Run 2 Nov 4 67% 2 / 3 +17 points, 1 new failure",
+      "Nightly Nov 5 47% 47 / 100 −3 points, 2 new failures",
+    ]);
+  });
+
+  test("run history lists eight regressions, then says how many more", async () => {
+    const many: EvalRun[] = [
+      { id: "x", label: "Base", at: 0, passRate: 1, passed: 10, total: 10, baseline: true },
+      { id: "y", label: "Now", at: 0, passRate: 0, passed: 0, total: 10, regressions: Array.from({ length: 10 }, (_, i) => ({ caseId: `k${i}`, name: `Case ${i}` })) },
+    ];
+    const el = await fixture<TcEvalScorecard>(html`<tc-eval-scorecard .versions=${V} .cases=${CASES} .runs=${many}></tc-eval-scorecard>`);
+    expect(el.querySelectorAll(".ui-evs__reg")).toHaveLength(8);
+    expect(text(el.querySelector(".ui-evs__regressions .ui-evs__no-reg"))).toBe("and 2 more – filter the grid to Regressed to see them all");
+  });
+
+  test("React wrapper: baseline controlled or not, onBaselineChange, onCaseOpen returning false keeps the case closed", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: unknown[] = [];
+    let bump = () => {};
+    function App() {
+      const [n, setN] = React.useState(0);
+      bump = () => setN((x) => x + 1);
+      return React.createElement(EvalScorecard, {
+        versions: V,
+        cases: CASES,
+        runs: RUNS.slice(0, 2),
+        onBaselineChange: (b) => seen.push(b),
+        onCaseOpen: (c, r) => {
+          seen.push(`${c}@${r}`);
+          return false;
+        },
+        "data-n": n,
+      } as React.ComponentProps<typeof EvalScorecard>);
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const el = host.querySelector("tc-eval-scorecard")!;
+    el.querySelector<HTMLButtonElement>(".ui-evs__reg")!.click();
+    await settle();
+    expect(el.open).toBeNull();
+    el.querySelector<HTMLButtonElement>(".ui-evs__set-base")!.click();
+    await settle();
+    await act(async () => bump());
+    await settle();
+    expect(el.baseline).toBe("b");
+    expect(seen).toEqual(["c1@b", "b"]);
+
+    // Controlled: stays until the parent changes it
+    function Controlled() {
+      return React.createElement(EvalScorecard, { versions: V, cases: CASES, runs: RUNS.slice(0, 2), baseline: "a", onBaselineChange: (b: string) => seen.push(`controlled ${b}`) });
+    }
+    await act(async () => root.render(React.createElement(Controlled)));
+    await settle();
+    const c = host.querySelector("tc-eval-scorecard")!;
+    c.querySelectorAll<HTMLButtonElement>('.ui-evs__pick [role="radio"]')[1].click();
+    await settle();
+    c.querySelector<HTMLButtonElement>(".ui-evs__set-base")!.click();
+    await settle();
+    expect(c.baseline).toBe("a");
+    expect(seen.at(-1)).toBe("controlled b");
+    await act(async () => root.unmount());
+  });
+
+  test("axe: the run history in either look and theme, bars and table, wide and narrow", async () => {
+    for (const theme of ["light", "dark"]) {
+      const wrap = await fixture(html`<div data-tc-theme=${theme}>
+        <div style="width: 960px"><tc-eval-scorecard .versions=${V} .cases=${CASES} .runs=${RUNS}></tc-eval-scorecard></div>
+        <div style="width: 960px"><tc-eval-scorecard look="clean" .versions=${V} .cases=${CASES} .runs=${RUNS} baseline="b"></tc-eval-scorecard></div>
+        <div style="width: 320px"><tc-eval-scorecard look="clean" .versions=${V} .cases=${CASES} .runs=${RUNS.slice(0, 2)}></tc-eval-scorecard></div>
+      </div>`);
+      wrap.querySelectorAll<HTMLButtonElement>(".ui-evs__table-toggle")[1].click();
       await settle();
       wrap.getAnimations({ subtree: true }).forEach((a) => a.finish());
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });

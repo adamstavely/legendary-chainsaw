@@ -460,13 +460,13 @@ discount… Edited 3 cells in Pricing”), and a failure as
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 30.6 KB | 9.0 KB |
+| **This component alone** | 30.8 KB | 9.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -476,8 +476,8 @@ discount… Edited 3 cells in Pricing”), and a failure as
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **40.0 KB** | **11.9 KB** |
-| With Lit – the first component on a page | 60.6 KB | 18.6 KB |
+| **Added to a page that already has Lit** | **40.2 KB** | **11.9 KB** |
+| With Lit – the first component on a page | 60.8 KB | 18.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -485,13 +485,13 @@ discount… Edited 3 cells in Pricing”), and a failure as
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.1 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of messages replaced |
+| First render | **1.9 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of messages replaced |
 | First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 24 ms | messages: first render, 1,281 nodes; update 3.2 ms |
-| 1,000 items | 109 ms | messages: first render, 12,681 nodes; update 17 ms |
+| 100 items | 15 ms | messages: first render, 1,281 nodes; update 2.5 ms |
+| 1,000 items | 117 ms | messages: first render, 12,681 nodes; update 18 ms |
 
-1,000 items of messages: 109 ms. It renders every item, so a first render passes 50 ms (a long task) at about 460 items – page or filter longer lists.
+1,000 items of messages: 117 ms. It renders every item, so a first render passes 50 ms (a long task) at about 430 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

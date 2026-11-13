@@ -84,4 +84,13 @@ export async function mountExample(root: HTMLElement, slug: string, prefix: stri
   root.innerHTML = example.markup;
   const ids = prefixIds(root, prefix);
   await example.default(scopedDocument(root, ids), quiet, demoFetch);
+  // An example that opens a modal dialog (Terms Dialog's does) would make the whole canvas inert and take focus: close
+  // it, and let the card show its thumbnail instead
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  const modal = root.querySelector<HTMLDialogElement>("dialog:modal");
+  if (modal) {
+    modal.close();
+    root.replaceChildren();
+    throw new Error(`${slug}'s example opens a modal dialog, which would block the canvas`);
+  }
 }

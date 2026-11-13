@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 465
+   "elements": 474
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 465
+   "elements": 474
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 465
+   "elements": 474
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 465
+   "elements": 474
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 465
+   "elements": 474
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 465
+   "elements": 474
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 465
+   "elements": 474
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 464
+   "elements": 473
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 335
+   "elements": 344
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 217
+   "elements": 220
   },
   {
    "id": "resize-observer",
@@ -140,21 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 194
-  },
-  {
-   "id": "intersection-observer",
-   "name": "IntersectionObserver",
-   "bcd": "api.IntersectionObserver",
-   "versions": {
-    "chrome": "51",
-    "edge": "15",
-    "firefox": "55",
-    "safari": "12.1",
-    "safari_ios": "12.2"
-   },
-   "progressive": false,
-   "elements": 167
+   "elements": 196
   },
   {
    "id": "inert",
@@ -169,7 +155,21 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 166
+   "elements": 169
+  },
+  {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   },
+   "progressive": false,
+   "elements": 168
   },
   {
    "id": "has",
@@ -198,7 +198,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 69
+   "elements": 73
   },
   {
    "id": "aspect-ratio",
@@ -212,7 +212,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 68
+   "elements": 69
   },
   {
    "id": "mask",
@@ -256,7 +256,7 @@
    },
    "progressive": false,
    "why": "Copy buttons.",
-   "elements": 51
+   "elements": 53
   },
   {
    "id": "form-associated",
@@ -286,7 +286,7 @@
    },
    "progressive": false,
    "why": "Sizes relative to the component's own width.",
-   "elements": 20
+   "elements": 21
   },
   {
    "id": "array-at",
@@ -329,7 +329,7 @@
    },
    "progressive": false,
    "why": "Modals trap focus, close on Escape and sit in the top layer.",
-   "elements": 13
+   "elements": 14
   },
   {
    "id": "structured-clone",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 465
+   "elements": 474
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 464
+   "elements": 473
   },
   {
    "id": "scrollbar-width",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 82
+   "elements": 83
   },
   {
    "id": "popover",
@@ -477,7 +477,7 @@
    },
    "progressive": true,
    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
-   "elements": 22
+   "elements": 24
   },
   {
    "id": "text-wrap-pretty",

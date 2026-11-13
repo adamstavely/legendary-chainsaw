@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-failure-clusters.json",
+  "title": "tc-failure-clusters",
+  "description": "Failing chats grouped by topic, biggest first – a size bar, count and share, trend in words and the criteria each\nfails; open a cluster for its summary, quotes, Open chats, Add to dataset and Mark as known.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading – the agent and the period"
+    },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FailureCluster"
+      },
+      "description": "The clusters, in any order – shown biggest first, known ones last"
+    },
+    "total": {
+      "type": "number",
+      "description": "All failing chats in the period; by default the clusters' counts added up"
+    },
+    "open": {
+      "type": "string",
+      "description": "The open cluster's id. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "known": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The clusters marked as known (ids). Changed by the user unless a tc-known-change listener calls preventDefault()"
+    },
+    "criterion": {
+      "type": "string",
+      "description": "Only clusters failing this criterion; null for all. Changed by the user unless a tc-criterion-change listener calls preventDefault()"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "bubbles",
+        "list"
+      ],
+      "description": "\"list\" or \"bubbles\". Changed by the user unless a tc-view-change listener calls preventDefault()"
+    },
+    "hideView": {
+      "type": "boolean",
+      "description": "Hides the List / Bubbles switch"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "openChats": {
+          "type": "string"
+        },
+        "addToDataset": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "markKnown": {
+          "type": "string"
+        },
+        "markNew": {
+          "type": "string"
+        },
+        "known": {
+          "type": "string"
+        },
+        "examples": {
+          "type": "string"
+        },
+        "list": {
+          "type": "string"
+        },
+        "bubbles": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words used, merged over the defaults"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FailureCluster": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The topic, in a few words: \"Expense limits abroad\""
+        },
+        "summary": {
+          "type": "string",
+          "description": "What goes wrong in these chats, in a sentence or two"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many failing chats are in it"
+        },
+        "share": {
+          "type": "number",
+          "description": "Its share of all failing chats, 0–1; by default count / total"
+        },
+        "trend": {
+          "$ref": "#/definitions/ClusterTrend"
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The criteria these chats fail, by name: [\"Cites policy\"]"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClusterExample"
+          },
+          "description": "A few quotes from the chats"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "count"
+      ],
+      "additionalProperties": false
+    },
+    "ClusterTrend": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "down",
+            "flat",
+            "up"
+          ],
+          "description": "Which way the cluster moved over the period"
+        },
+        "change": {
+          "type": "number",
+          "description": "By how much, in percent (12 for 12%)"
+        }
+      },
+      "required": [
+        "direction"
+      ],
+      "additionalProperties": false
+    },
+    "ClusterExample": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quote": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "quote"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

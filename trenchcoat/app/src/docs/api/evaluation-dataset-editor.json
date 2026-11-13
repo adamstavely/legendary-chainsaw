@@ -94,6 +94,22 @@
      "readonly": false
     },
     {
+     "name": "fromRun",
+     "attribute": null,
+     "type": "EvaluationRun | null",
+     "default": "null",
+     "description": "A real run to turn into a test case: shows New case from run, prefilled from it. A run already added or\ndiscarded isn't offered again until `fromRun` changes",
+     "readonly": false
+    },
+    {
+     "name": "runChecks",
+     "attribute": null,
+     "type": "EvaluationCheckSuggestion[]",
+     "default": "[]",
+     "description": "Checks to offer for the run's case – kept when the set knows their type",
+     "readonly": false
+    },
+    {
      "name": "problems",
      "attribute": null,
      "type": "EvaluationIssue[]",
@@ -148,6 +164,12 @@
      "detail": "",
      "description": "Export was pressed ({ value, jsonl }: EvaluationDatasetExport – the set and the same set as JSON Lines)",
      "cancelable": false
+    },
+    {
+     "name": "tc-from-run-dismiss",
+     "detail": "",
+     "description": "New case from run was discarded ({ runId }: EvaluationDatasetFromRunDismiss); cancelable – prevented, the panel stays",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -321,6 +343,11 @@
  ],
  "functions": [
   {
+   "name": "evaluationRunChecks",
+   "signature": "evaluationRunChecks(run: EvaluationRun, suggestions: readonly EvaluationCheckSuggestion[], types: readonly EvaluationAssertionType[]): EvaluationCheckSuggestion[]",
+   "description": "Checks worth offering for a case made from a run: the page's suggestions whose type the set knows, then – when the\noutput is a JSON object and a JSON check exists – that it stays an object with the same keys"
+  },
+  {
    "name": "evaluationDatasetIssues",
    "signature": "evaluationDatasetIssues(value: EvaluationDatasetValue, o: { assertionTypes?: EvaluationAssertionType[]; splits?: EvaluationSplit[] }): EvaluationIssue[]",
    "description": "Every problem in a set, case by case in order"
@@ -411,6 +438,18 @@
      "type": "(value: EvaluationDatasetValue, jsonl: string) => void",
      "optional": true,
      "description": "Export was pressed, with the set and the same set as JSON Lines"
+    },
+    {
+     "name": "onRunCaseAdd",
+     "type": "(added: EvaluationCase, source: EvaluationCaseSource) => void",
+     "optional": true,
+     "description": "A case made from `fromRun` was added – also passed to onChange with the whole set"
+    },
+    {
+     "name": "onFromRunDismiss",
+     "type": "(runId: string) => boolean | void",
+     "optional": true,
+     "description": "New case from run was discarded; return false to keep the panel"
     }
    ],
    "hides": [
@@ -423,11 +462,12 @@
     "children"
    ],
    "events": {
-    "tc-value-change": "onChange",
+    "tc-value-change": "onRunCaseAdd",
     "tc-open-change": null,
     "tc-compare-change": "onCompareChange",
     "tc-import": "onImport",
-    "tc-export": "onExport"
+    "tc-export": "onExport",
+    "tc-from-run-dismiss": "onFromRunDismiss"
    }
   }
  ],
@@ -442,7 +482,9 @@
     "splits",
     "assertionTypes",
     "versions",
-    "open"
+    "open",
+    "fromRun",
+    "runChecks"
    ],
    "attributes": [
     {
@@ -490,6 +532,10 @@
     {
      "name": "tc-export",
      "cancelable": false
+    },
+    {
+     "name": "tc-from-run-dismiss",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -780,7 +826,7 @@
   "windowed": true
  },
  "size": {
-  "min": 75833,
-  "gzip": 19889
+  "min": 86938,
+  "gzip": 22248
  }
 }

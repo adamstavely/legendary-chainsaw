@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-quality-trend.json",
+  "title": "tc-quality-trend",
+  "description": "Judge scores on live chats day by day, a line per criterion with a band from its sample size, the changes pinned on\nthe time axis, a 7 / 30 / 90-day switch, and a table view.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading – the agent, the judge"
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityCriterion"
+      },
+      "description": "The criteria the judge scores, in legend order"
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityDay"
+      },
+      "description": "One entry per day, any order – the last day is the end of every range"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityChange"
+      },
+      "description": "The changes made to the agent – prompts, models, tools – pinned where they went live"
+    },
+    "range": {
+      "type": "string",
+      "enum": [
+        "30d",
+        "7d",
+        "90d"
+      ],
+      "description": "How many days show: \"7d\", \"30d\" or \"90d\""
+    },
+    "shown": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the criteria drawn; null draws every one"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "chart",
+        "table"
+      ],
+      "description": "\"chart\", or \"table\" for the same days as a table"
+    },
+    "min": {
+      "type": "number",
+      "description": "The lowest score on the scale"
+    },
+    "max": {
+      "type": "number",
+      "description": "The highest score on the scale"
+    },
+    "spread": {
+      "type": "number",
+      "description": "A score's spread (standard deviation) when a day gives none – sets the band's width with the day's chats"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "How far a mean must move for the summary to call it a change"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Formats dates and numbers"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone dates are read in – UTC by default, so a day's midnight stays that day"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "QualityCriterion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What the judge scores – \"Correctness\", \"Cites policy\""
+        },
+        "color": {
+          "type": "string",
+          "description": "Any CSS colour; unset takes --tc-chart-1…6 in order"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "QualityDay": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "number",
+          "description": "The day, as epoch ms – midnight UTC by default (see `timeZone`)"
+        },
+        "scores": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/QualityScore"
+              },
+              {
+                "not": {}
+              }
+            ]
+          },
+          "description": "The day's score per criterion id; a criterion with none that day leaves a gap in its line"
+        }
+      },
+      "required": [
+        "date",
+        "scores"
+      ],
+      "additionalProperties": false
+    },
+    "QualityScore": {
+      "type": "object",
+      "properties": {
+        "mean": {
+          "type": "number"
+        },
+        "n": {
+          "type": "number"
+        },
+        "sd": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "mean",
+        "n"
+      ],
+      "additionalProperties": false,
+      "description": "One criterion's scores on one day: the mean, how many chats were scored, and their spread if known"
+    },
+    "QualityChange": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it went live, as epoch ms"
+        },
+        "label": {
+          "type": "string",
+          "description": "What changed, in a few words – \"Prompt v13 → v14\""
+        },
+        "short": {
+          "type": "string",
+          "description": "The short name the summary uses – \"v14\"; defaults to the label"
+        },
+        "kind": {
+          "$ref": "#/definitions/QualityChangeKind"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A line more, shown in the pin's tooltip"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "QualityChangeKind": {
+      "type": "string",
+      "enum": [
+        "model",
+        "other",
+        "prompt",
+        "tool"
+      ]
+    }
+  }
+}

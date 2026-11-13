@@ -42,10 +42,10 @@
     "labels": {
       "type": "object",
       "properties": {
-        "image": {
+        "other": {
           "type": "string"
         },
-        "other": {
+        "image": {
           "type": "string"
         },
         "document": {

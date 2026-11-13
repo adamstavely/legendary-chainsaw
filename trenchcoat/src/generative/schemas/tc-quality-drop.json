@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-quality-drop.json",
+  "title": "tc-quality-drop",
+  "description": "One drop in a judge score on live chats – what fell, the likely cause with its evidence, the topics it clusters in,\nand Roll back, Investigate or Dismiss as expected.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "criterion": {
+      "type": "string",
+      "description": "The criterion that fell – \"Correctness\""
+    },
+    "from": {
+      "type": "number",
+      "description": "Its mean before the drop"
+    },
+    "to": {
+      "type": "number",
+      "description": "Its mean since"
+    },
+    "at": {
+      "type": "number",
+      "description": "When it fell, as epoch ms"
+    },
+    "chats": {
+      "type": "number",
+      "description": "How many chats were scored since it fell"
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityDropPoint"
+      },
+      "description": "The daily mean round the drop, for the small chart"
+    },
+    "cause": {
+      "type": "object",
+      "properties": {
+        "change": {
+          "$ref": "#/definitions/QualityDropChange"
+        },
+        "confidence": {
+          "$ref": "#/definitions/QualityDropConfidence"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "change",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "description": "The likely cause, or null when nothing lines up"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityDropEvidence"
+      },
+      "description": "Failing chats that point to the cause, as short quotes"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityDropSegment"
+      },
+      "description": "The topics the failing chats fall in, with their share"
+    },
+    "rollbackTo": {
+      "type": "string",
+      "description": "The version Roll back returns to – \"v13\"; empty hides Roll back"
+    },
+    "reverts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What rolling back reverts, a line each – said before it's confirmed"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "dismissed",
+        "open",
+        "rolled-back"
+      ],
+      "description": "\"open\", \"rolled-back\" or \"dismissed\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "Formats dates and numbers"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone dates are read in"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "QualityDropPoint": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "number"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "date",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "QualityDropChange": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "What changed – \"Prompt v13 → v14\""
+        },
+        "at": {
+          "type": "number",
+          "description": "When it went live, as epoch ms"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "model",
+            "other",
+            "prompt",
+            "tool"
+          ]
+        }
+      },
+      "required": [
+        "label",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "QualityDropConfidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "low",
+        "medium"
+      ]
+    },
+    "QualityDropEvidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quote": {
+          "type": "string",
+          "description": "A short quote from the failing chat – the part that shows the problem"
+        },
+        "note": {
+          "type": "string",
+          "description": "What the judge said about it"
+        }
+      },
+      "required": [
+        "id",
+        "quote"
+      ],
+      "additionalProperties": false
+    },
+    "QualityDropSegment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The topic – \"Refunds\", \"Travel policy\""
+        },
+        "share": {
+          "type": "number",
+          "description": "Its share of the failing chats, 0–1"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "share"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,676 @@
+{
+ "elements": [
+  {
+   "tag": "tc-test-run-panel",
+   "className": "TcTestRunPanel",
+   "description": "Try an agent while editing it: a test conversation with its tool calls, test variables, Reset, and Save as test case.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Test\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The agent's name, shown under the heading",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": "target",
+     "type": "TestRunTarget",
+     "default": "\"draft\"",
+     "description": "Which version answers: the draft being edited, or the live one",
+     "readonly": false
+    },
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The version's label – \"v14\" – shown in the badge",
+     "readonly": false
+    },
+    {
+     "name": "turns",
+     "attribute": null,
+     "type": "TestRunTurn[]",
+     "default": "[]",
+     "description": "The conversation so far, oldest first. The page appends to it",
+     "readonly": false
+    },
+    {
+     "name": "variables",
+     "attribute": null,
+     "type": "TestRunVariable[]",
+     "default": "[]",
+     "description": "Test inputs sent with every message. Changed by the user unless a tc-variables-change listener prevents it",
+     "readonly": false
+    },
+    {
+     "name": "saved",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of the replies already saved as test cases",
+     "readonly": false
+    },
+    {
+     "name": "streaming",
+     "attribute": "streaming",
+     "type": "boolean",
+     "default": "false",
+     "description": "The agent is answering: the log is busy and Send waits",
+     "readonly": false
+    },
+    {
+     "name": "hideVariables",
+     "attribute": "hide-variables",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the Variables strip",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<TestRunPanelLabels>",
+     "default": "{}",
+     "description": "Words the page can rename, merged over defaultTestRunPanelLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-send",
+     "detail": "",
+     "description": "Send was pressed with text ({ text, variables }: TestRunSend); cancelable – prevented, the text stays in the field",
+     "cancelable": true
+    },
+    {
+     "name": "tc-turns-change",
+     "detail": "",
+     "description": "Reset cleared the conversation ({ turns }: TestRunTurnsChange); cancelable – prevented, the turns stay",
+     "cancelable": true
+    },
+    {
+     "name": "tc-variables-change",
+     "detail": "",
+     "description": "A variable was added, edited or removed ({ variables }: TestRunVariablesChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-save-case",
+     "detail": "",
+     "description": "\"Save as test case\" on a reply ({ turn, input, variables }: TestRunSaveCase); cancelable – prevented, the reply isn't marked saved",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "trp",
+   "cssProperties": [
+    {
+     "name": "--tc-trp-log-h",
+     "value": "320px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-slowest",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TestRunPanel",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – defaults to \"Test\""
+    },
+    {
+     "name": "turns",
+     "type": "TestRunTurn[]",
+     "optional": true,
+     "description": "The conversation. Controlled when defined; otherwise kept by the component from `defaultTurns`, and Reset clears it"
+    },
+    {
+     "name": "defaultTurns",
+     "type": "TestRunTurn[]",
+     "optional": true,
+     "description": "On mount, when `turns` isn't controlled"
+    },
+    {
+     "name": "onTurnsChange",
+     "type": "(turns: TestRunTurn[]) => void",
+     "optional": true,
+     "description": "Called when Reset clears the conversation"
+    },
+    {
+     "name": "variables",
+     "type": "TestRunVariable[]",
+     "optional": true,
+     "description": "Test inputs sent with every message. Controlled when defined"
+    },
+    {
+     "name": "defaultVariables",
+     "type": "TestRunVariable[]",
+     "optional": true,
+     "description": "On mount, when `variables` isn't controlled"
+    },
+    {
+     "name": "onVariablesChange",
+     "type": "(variables: TestRunVariable[]) => void",
+     "optional": true,
+     "description": "Called with the next `variables`"
+    },
+    {
+     "name": "onSend",
+     "type": "(text: string, variables: TestRunVariable[]) => void | boolean",
+     "optional": true,
+     "description": "Called with the message and the variables when Send is pressed. Return false to keep the text in the field"
+    },
+    {
+     "name": "onSaveCase",
+     "type": "(saved: TestRunSaveCase) => void | boolean",
+     "optional": true,
+     "description": "Called when a reply is saved as a test case. Return false to leave it unsaved"
+    }
+   ],
+   "hides": [
+    "heading",
+    "turns",
+    "variables"
+   ],
+   "events": {
+    "tc-send": "onSend",
+    "tc-turns-change": null,
+    "tc-variables-change": null,
+    "tc-save-case": "onSaveCase"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-test-run-panel",
+   "className": "TcTestRunPanel",
+   "module": "@adamstavely/trenchcoat/test-run-panel",
+   "data": [
+    "turns",
+    "variables",
+    "saved",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "agent",
+     "attribute": "agent"
+    },
+    {
+     "name": "target",
+     "attribute": "target"
+    },
+    {
+     "name": "version",
+     "attribute": "version"
+    },
+    {
+     "name": "streaming",
+     "attribute": "streaming"
+    },
+    {
+     "name": "hideVariables",
+     "attribute": "hide-variables"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-send",
+     "cancelable": true
+    },
+    {
+     "name": "tc-turns-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-variables-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-save-case",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "turns",
+     "event": "tc-turns-change"
+    },
+    {
+     "property": "variables",
+     "event": "tc-variables-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tool-call-card",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-units",
+    "name": "Container query units (cqi, cqw…)",
+    "bcd": "css.types.length.container_query_length_units",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Sizes relative to the component's own width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "tool-call-card"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "tool-call-card",
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "tool-call-card",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "tool-call-card"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "tool-call-card",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "tool-call-card"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "tool-call-card"
+    ]
+   },
+   {
+    "id": "field-sizing",
+    "name": "field-sizing",
+    "bcd": "css.properties.field-sizing",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "152",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared (tool-call-card)",
+   "setTimeout (tool-call-card)"
+  ],
+  "frames": [],
+  "animations": 1,
+  "observers": [
+   "ResizeObserver (tool-call-card)",
+   "IntersectionObserver (tool-call-card)",
+   "MutationObserver (tool-call-card)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [
+   "Date.now() (tool-call-card)"
+  ],
+  "listeners": [
+   "document visibilitychange (tool-call-card)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "tool-call-card"
+   ],
+   "hidden": [
+    "tool-call-card"
+   ],
+   "reducedMotion": [
+    "CSS",
+    "CSS (tool-call-card)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 75425,
+  "gzip": 18756
+ }
+}

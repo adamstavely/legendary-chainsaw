@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-test-run-panel.json",
+  "title": "tc-test-run-panel",
+  "description": "Try an agent while editing it: a test conversation with its tool calls, test variables, Reset, and Save as test case.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "agent": {
+      "type": "string",
+      "description": "The agent's name, shown under the heading"
+    },
+    "target": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "live"
+      ],
+      "description": "Which version answers: the draft being edited, or the live one"
+    },
+    "version": {
+      "type": "string",
+      "description": "The version's label – \"v14\" – shown in the badge"
+    },
+    "turns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TestRunTurn"
+      },
+      "description": "The conversation so far, oldest first. The page appends to it"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TestRunVariable"
+      },
+      "description": "Test inputs sent with every message. Changed by the user unless a tc-variables-change listener prevents it"
+    },
+    "saved": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the replies already saved as test cases"
+    },
+    "streaming": {
+      "type": "boolean",
+      "description": "The agent is answering: the log is busy and Send waits"
+    },
+    "hideVariables": {
+      "type": "boolean",
+      "description": "Hides the Variables strip"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "live": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "reset": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "string"
+        },
+        "addVariable": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "save": {
+          "type": "string"
+        },
+        "saved": {
+          "type": "string"
+        },
+        "you": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultTestRunPanelLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TestRunTurn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "agent",
+            "user"
+          ],
+          "description": "Who said it: the person testing, or the agent"
+        },
+        "text": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestRunToolCall"
+          },
+          "description": "The tools the agent called for this reply, in order"
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "The reply is still arriving"
+        },
+        "error": {
+          "type": "string",
+          "description": "The reply failed – said under it"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "TestRunToolCall": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The tool's name – shown in mono"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "error",
+            "running",
+            "success"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "description": "A short line on what it did"
+        },
+        "args": {},
+        "result": {},
+        "error": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "TestRunVariable": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

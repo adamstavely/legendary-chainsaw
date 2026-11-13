@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { EvaluationCase, EvaluationDatasetValue, EvaluationDatasetVersion } from "../../../src/elements/react";
-import { caption } from "../demo-kit";
+import type { EvaluationCase, EvaluationCheckSuggestion, EvaluationDatasetValue, EvaluationDatasetVersion, EvaluationRun } from "../../../src/elements/react";
+import { caption, textButton } from "../demo-kit";
 
 /* A support team's reply evals: 2,400 cases across train, validation and test. v3 is last week's snapshot; since then a
    dozen refund cases were added (one with a schema check that doesn't parse yet), four were edited and three removed.
@@ -57,10 +57,30 @@ const BATCH = Array.from({ length: 60 }, (_, i) =>
   JSON.stringify({ id: `import-${i + 1}`, input: `Order ${70_100 + i} came with the wrong size – exchange or refund?`, expected: "Offers a free exchange first, refund if they prefer", assertions: [{ type: "contains", value: "exchange" }], tags: ["refunds", "sizing"], split: i % 5 === 4 ? "validation" : "train" }),
 ).join("\n");
 
+/* A real conversation from yesterday that went wrong – New case from run turns it into a test case */
+const RUN: EvaluationRun = {
+  id: "run-8f3a2c",
+  input: "I returned order 51877 three weeks ago and still have no refund. What's going on?",
+  output: "Refunds can take up to 30 days. Please wait a little longer and contact us again if it hasn't arrived.",
+  messages: [
+    { role: "user", content: "I returned order 51877 three weeks ago and still have no refund. What's going on?" },
+    { role: "assistant", content: "Refunds can take up to 30 days…" },
+  ],
+  toolCalls: [{ name: "lookup_order", arguments: '{"order":"51877"}' }],
+  metadata: { model: "Support v5", rating: "Thumbs down", latency: "2.1 s" },
+};
+const RUN_CHECKS: EvaluationCheckSuggestion[] = [
+  { type: "contains", value: "received your return", reason: "The order shows the return arrived on 21 Oct" },
+  { type: "not-contains", value: "contact us again", reason: "The customer was sent away" },
+];
+
 const size = (bytes: number) => (bytes > 1_000_000 ? `${(bytes / 1_000_000).toFixed(1)} MB` : `${Math.round(bytes / 1_000)} KB`);
 
 export default function Demo({ ui }: { ui: typeof UI }) {
-  const { EvaluationDatasetEditor, evaluationDatasetFromJsonl } = ui;
+  const { EvaluationDatasetEditor, evaluationDatasetFromJsonl, EVALUATION_ASSERTION_TYPES } = ui;
+  // The set adds one kind of check of its own: a phrase the answer must not use
+  const types = useMemo(() => [...EVALUATION_ASSERTION_TYPES, { id: "not-contains", label: "Doesn't contain", placeholder: "Text the answer must not include", description: "Passes when the answer leaves this out" }], [EVALUATION_ASSERTION_TYPES]);
+  const [fromRun, setFromRun] = useState<EvaluationRun | null>(null);
   const [value, setValue] = useState(START);
   const [open, setOpen] = useState<string | null>(ADDED[0].id);
   const [imported, setImported] = useState(false);
@@ -74,6 +94,11 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         value={value}
         onChange={setValue}
         versions={VERSIONS}
+        assertionTypes={types}
+        fromRun={fromRun}
+        runChecks={RUN_CHECKS}
+        onRunCaseAdd={(c, source) => setNote(`Added ${c.id} from ${source.runId} – it's marked From run.`)}
+        onFromRunDismiss={() => setFromRun(null)}
         defaultCompare="v3"
         open={open}
         onOpenChange={setOpen}
@@ -86,7 +111,12 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         }}
         onExport={(v, jsonl) => setNote(`Exported ${v.cases.length.toLocaleString("en-US")} cases as JSON Lines – ${size(new Blob([jsonl]).size)}.`)}
       />
-      <div style={{ ...caption, textAlign: "center" }}>{note}</div>
+      <div style={{ ...caption, textAlign: "center" }}>
+        {note}{" "}
+        <button type="button" style={textButton} onClick={() => setFromRun(fromRun ? { ...RUN, id: `${RUN.id}-${Date.now() % 1000}` } : RUN)}>
+          Make a case from yesterday's bad reply
+        </button>
+      </div>
     </div>
   );
 }

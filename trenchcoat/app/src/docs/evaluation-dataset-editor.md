@@ -15,11 +15,19 @@ what's wrong with a case shows where it's wrong. It pairs with `eval-scorecard`:
 results of running it are read. The component never runs anything – import, export and running the eval belong to
 the app.
 
+Set `fromRun` to a real run – its input, its output, and optionally its messages, tool calls and metadata – and the
+side shows New case from run, prefilled from it. The output becomes the expected answer, or – ticked as a bad output –
+is shown struck through above an empty field for the right one. Checks are offered from the run: the page's
+`runChecks` whose type the set knows, plus “matches schema” with the output's keys when the output is a JSON object.
+Add tags and a split, then Add to dataset: the case goes in through `tc-value-change` with `source: { runId }`, opens,
+and its row is marked From run.
+
 ## When to use
 
 - Curating an evaluation set: adding cases, writing checks, tagging and splitting them.
 - Reviewing what changed in a set before a new version is used for a release decision.
 - Receiving cases from elsewhere – reviewed conversations, a support export – and putting them in the right split.
+- Turning a real run that went wrong – a thumbs-down, a flagged trace – into a test case with `fromRun`.
 
 ## When not to use
 
@@ -36,6 +44,8 @@ the app.
 4. **Table** `.ui-eds__grid` – one row per case: its input, what checks it, its tags as chips and its split
 5. **Open case** `.ui-eds__read` – the quoted prompt beside the rules it has to pass, with its split and tags; Edit
    swaps it for the form
+6. **New case from run** `.ui-eds__from` – with `fromRun`: input, expected output (or the bad output and the right
+   one), run details, suggested checks, tags, split, Add to dataset and Discard
 
 ## Looks
 
@@ -62,6 +72,8 @@ buttons wrap under the title (icons only under 400 px).
 | Escape | In the form: saves the field being typed in and goes back to the read view. In the read view or the table: closes the case and returns to the table |
 | Enter or , | In the tags field: adds the tag typed |
 | Backspace | In an empty tags field: removes the last tag |
+| Escape | In New case from run: discards it and returns to the table |
+| ← / → / ↑ / ↓ | In New case from run's split: picks the previous or next split |
 
 Edit and Done switch between the read view and the form; the form's cursor starts in the input, and Done or Escape
 returns focus to Edit. The form's fields are native textareas, inputs and selects with their usual keys; an edit is
@@ -79,6 +91,12 @@ view is a focusable group with the same name, described by “Enter or F2 to edi
 number of cases after a filter, “Case added”, “Case deleted”, “Case restored” and “Compared with v3: 12 new, 4 edited,
 3 removed”. In a form, a set with an error is invalid (“Fix 1 problem in the cases first.”).
 
+New case from run is a region named “New case from run run-8f3a2c”. Its fields are labelled; the bad-output switch is a
+native checkbox, the suggested checks a `fieldset` of checkboxes each read as its rule and reason, the run's details a
+native `details` disclosure, and the split a `radiogroup`. Adding without an input marks the input `aria-invalid`,
+describes it with “Add an input” and moves focus there. A status region says “Case added from run run-8f3a2c” or “New
+case from run discarded”, and the new case's row starts with its “From run” pill.
+
 ## Content
 
 - Name the set for what it tests – “Support replies”, “Refund policy answers” – and use `description` for its scope.
@@ -88,6 +106,8 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 - Prefer one check per behaviour: “contains · 5–10 business days” rather than a rubric that says the same thing.
 - Version labels are short (“v3”) with the when or why in `detail` (“Oct 19 · before the refund policy”).
 - Splits and check types are data: pass your own (`dev` and `test`, a “regex” check) with plain labels.
+- Give each `runChecks` suggestion a short `reason` – what in the run it comes from (“The customer was sent away”).
+  A “doesn't contain” suggestion needs a check type of that id in `assertionTypes`.
 
 ## Do
 
@@ -97,13 +117,14 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
   lines by number.
 - Run the checks on the server, and show the results in `eval-scorecard`.
 - Store `value` as it is – the app owns the ids.
+- Keep `source.runId` with the case on your side, so a failing case can lead back to the run it came from.
 
 ## Don't
 
 - Don't run evals from the client because the set is here – the component has no run action on purpose.
 - Don't move a case between test and train to make a number better; the deltas show it.
 - Don't put secrets or personal data into inputs; redact before cases reach the set (`conversation-annotation`
-  can redact spans first).
+  can redact spans first) – that includes a run passed as `fromRun`.
 
 ## Example
 
@@ -128,11 +149,12 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 
 ```tsx
 import { useState } from "react";
-import { EvaluationDatasetEditor, type EvaluationDatasetValue, type EvaluationDatasetVersion } from "@adamstavely/trenchcoat/react";
+import { EvaluationDatasetEditor, type EvaluationDatasetValue, type EvaluationDatasetVersion, type EvaluationRun } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
-export function SupportSet({ start, versions }: { start: EvaluationDatasetValue; versions: EvaluationDatasetVersion[] }) {
+export function SupportSet({ start, versions, flagged }: { start: EvaluationDatasetValue; versions: EvaluationDatasetVersion[]; flagged: EvaluationRun | null }) {
   const [value, setValue] = useState(start);
+  const [fromRun, setFromRun] = useState(flagged);
   return (
     <EvaluationDatasetEditor
       title="Support replies"
@@ -142,6 +164,10 @@ export function SupportSet({ start, versions }: { start: EvaluationDatasetValue;
       defaultCompare={versions[versions.length - 1]?.id ?? ""}
       onImport={() => console.log("open a file picker")}
       onExport={(_, jsonl) => console.log(jsonl.length)}
+      fromRun={fromRun}
+      runChecks={[{ type: "contains", value: "received your return", reason: "The return arrived on 21 Oct" }]}
+      onRunCaseAdd={(added, source) => console.log(added.id, "from", source.runId)}
+      onFromRunDismiss={() => setFromRun(null)}
     />
   );
 }

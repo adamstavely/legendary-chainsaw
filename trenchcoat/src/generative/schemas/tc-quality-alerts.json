@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-quality-alerts.json",
+  "title": "tc-quality-alerts",
+  "description": "Alert rules for an agent's quality, written as sentences with the choices in them – each with an on/off switch,\nwhen it last fired and how often it would have fired in the last 30 days; add and remove rules.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityAlertRule"
+      },
+      "description": "The rules. Changed by the user unless a tc-rules-change listener calls preventDefault()"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityAlertOption"
+      },
+      "description": "Where alerts can go"
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityAlertMetric"
+      },
+      "description": "What can be watched, with each metric's scale"
+    },
+    "windows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QualityAlertOption"
+      },
+      "description": "The windows a rule can look over, e.g. { id: \"24h\", label: \"24 hours\" }"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" for when rules last fired, epoch ms; unset, dates are shown instead"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "alert": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string"
+        },
+        "over": {
+          "type": "string"
+        },
+        "atLeast": {
+          "type": "string"
+        },
+        "chats": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "metric": {
+          "type": "string"
+        },
+        "comparison": {
+          "type": "string"
+        },
+        "threshold": {
+          "type": "string"
+        },
+        "window": {
+          "type": "string"
+        },
+        "minChats": {
+          "type": "string"
+        },
+        "on": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "never": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "comparisons": {
+          "type": "object",
+          "properties": {
+            "below": {
+              "type": "string"
+            },
+            "drops-by": {
+              "type": "string"
+            },
+            "above": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "below",
+            "drops-by",
+            "above"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words used, merged over the defaults"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "QualityAlertRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string",
+          "description": "Where the alert goes – a channel's id"
+        },
+        "metric": {
+          "type": "string",
+          "description": "What's watched – a metric's id"
+        },
+        "comparison": {
+          "$ref": "#/definitions/QualityAlertComparison"
+        },
+        "threshold": {
+          "type": "number",
+          "description": "The level, or for \"drops-by\" the size of the drop"
+        },
+        "window": {
+          "type": "string",
+          "description": "Over how long – a window's id"
+        },
+        "minChats": {
+          "type": "number",
+          "description": "Fires only when at least this many chats were judged in the window"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "lastTriggered": {
+          "type": "number",
+          "description": "When it last fired, epoch ms"
+        },
+        "preview": {
+          "type": "number",
+          "description": "How many times it would have fired in the last 30 days, worked out by the page; undefined while unknown"
+        }
+      },
+      "required": [
+        "id",
+        "channel",
+        "metric",
+        "comparison",
+        "threshold",
+        "window",
+        "minChats",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "QualityAlertComparison": {
+      "type": "string",
+      "enum": [
+        "above",
+        "below",
+        "drops-by"
+      ]
+    },
+    "QualityAlertOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "QualityAlertMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min": {
+          "type": "number",
+          "description": "The scale's lowest value (default 0)"
+        },
+        "max": {
+          "type": "number",
+          "description": "The scale's highest value (default 5)"
+        },
+        "step": {
+          "type": "number",
+          "description": "The threshold field's step (default 0.1)"
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ]
+    }
+  }
+}

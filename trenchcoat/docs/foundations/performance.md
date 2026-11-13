@@ -6,13 +6,13 @@ Each component page has a **Performance** section: what the component costs to d
 and update, how far it scales, and what it does when nobody's using it. The numbers come from `npm run measure:perf`
 and live in `app/src/docs/perf.json`; each page says when it was measured.
 
-*465 components measured, between 2026-10-27 and 2026-11-13, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
+*474 components measured, between 2026-10-27 and 2026-11-13, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
 
 ### Largest, on a page that has Lit
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 2712.0 KB | 10883.1 KB | 10.6 KB |
+| [generated-ui](../components/generated-ui.md) | 2770.3 KB | 11138.0 KB | 10.6 KB |
 | [ai-side-pane](../blocks/ai-side-pane.md) | 163.1 KB | 687.1 KB | 11.2 KB |
 | [small-multiples](../components/small-multiples.md) | 146.4 KB | 457.5 KB | 6.0 KB |
 | [chart](../components/chart.md) | 143.0 KB | 447.5 KB | 2.4 KB |
@@ -26,10 +26,10 @@ and live in `app/src/docs/perf.json`; each page says when it was measured.
 | Component | First render | Update | DOM nodes |
 | --- | --- | --- | --- |
 | [activity-calendar](../components/activity-calendar.md) | 14.4 ms | 11.6 ms | 964 |
-| [eval-scorecard](../components/eval-scorecard.md) | 9.7 ms | 1.3 ms | 1989 |
 | [retrieval-inspector](../components/retrieval-inspector.md) | 9.7 ms | 0.6 ms | 1336 |
+| [eval-scorecard](../components/eval-scorecard.md) | 9.4 ms | 1.6 ms | 2074 |
 | [multi-calendar](../components/multi-calendar.md) | 9.1 ms | 1.5 ms | 1368 |
-| [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 8.3 ms | 2.4 ms | 1049 |
+| [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 8.1 ms | 2.4 ms | 1049 |
 | [active-days](../components/active-days.md) | 7.9 ms | 5.2 ms | 718 |
 | [network-graph](../components/network-graph.md) | 7.2 ms | 4 ms | 157 |
 | [fan-out-grid](../components/fan-out-grid.md) | 6.6 ms | 0.7 ms | 176 |

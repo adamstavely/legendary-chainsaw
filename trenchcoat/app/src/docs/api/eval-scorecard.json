@@ -70,6 +70,22 @@
      "readonly": false
     },
     {
+     "name": "runs",
+     "attribute": null,
+     "type": "EvalRun[]",
+     "default": "[]",
+     "description": "Runs of the whole set, oldest first – turns on the run history. A run whose id is a version's id gets its\nregressions from `cases`",
+     "readonly": false
+    },
+    {
+     "name": "baseline",
+     "attribute": "baseline",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the run the others are compared with; null uses the run marked `baseline`, else the first. Changed by\nSet as baseline unless tc-baseline-change is prevented",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -95,6 +111,18 @@
      "name": "tc-open-change",
      "detail": "",
      "description": "A case was opened, switched to another version or closed ({ open }: EvalScorecardOpenChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-baseline-change",
+     "detail": "",
+     "description": "Set as baseline was pressed ({ baseline, id }: EvalScorecardBaselineChange – the run's id); cancelable – prevented, `baseline` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-case-open",
+     "detail": "",
+     "description": "A regression in the run history was picked ({ caseId, runId }: EvalScorecardCaseOpen); cancelable – unless prevented, the case opens on that run when the run is a version",
      "cancelable": true
     }
    ],
@@ -131,6 +159,20 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-eval-scorecard-history",
+     "value": "72px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-eval-scorecard-bar-gap",
+     "value": "6px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
@@ -138,8 +180,12 @@
     "--tc-accent-subtle",
     "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
     "--tc-border-default",
     "--tc-border-selected",
+    "--tc-border-strong",
     "--tc-border-subtle",
     "--tc-caption-color",
     "--tc-caption-font-size",
@@ -149,14 +195,18 @@
     "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
+    "--tc-chart-neutral",
     "--tc-control-font-size",
     "--tc-control-font-weight",
     "--tc-control-h-sm",
+    "--tc-control-px-sm",
     "--tc-control-radius-sm",
     "--tc-divider",
     "--tc-duration-fast",
     "--tc-ease-standard",
+    "--tc-eval-scorecard-runs",
     "--tc-eval-scorecard-versions",
+    "--tc-fill-default",
     "--tc-fill-hover",
     "--tc-fill-selected",
     "--tc-fill-subtle",
@@ -208,6 +258,7 @@
     "--tc-status-danger-solid",
     "--tc-status-success-bg",
     "--tc-status-success-fg",
+    "--tc-status-success-solid",
     "--tc-status-warning-bg",
     "--tc-status-warning-fg",
     "--tc-surface-on-tray",
@@ -233,6 +284,21 @@
    "name": "evalRegressed",
    "signature": "evalRegressed(c: EvalCase, versions: EvalVersion[]): void",
    "description": "Whether a case failed on the latest version after passing on the one before"
+  },
+  {
+   "name": "evalBaselineRun",
+   "signature": "evalBaselineRun(runs: readonly EvalRun[], baseline: string | null): void",
+   "description": "Which run the others are compared with: `baseline` by id, else the run marked `baseline`, else the first"
+  },
+  {
+   "name": "evalRunDelta",
+   "signature": "evalRunDelta(run: EvalRun, base: EvalRun, cases: readonly EvalCase[]): EvalRunDelta",
+   "description": "A run against the baseline: the change in whole points, and the cases that passed there and fail here"
+  },
+  {
+   "name": "evalDeltaText",
+   "signature": "evalDeltaText(d: EvalRunDelta): void",
+   "description": "A run's change in words: \"+4 points\", \"−2 points, 3 new failures\", \"Same as the baseline\""
   }
  ],
  "react": [
@@ -299,18 +365,45 @@
      "type": "(open: EvalScorecardOpen | null) => void",
      "optional": true,
      "description": "Called when a case is opened, switched to another version or closed, controlled or not"
+    },
+    {
+     "name": "baseline",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the run the others are compared with, or null for the run marked `baseline`. Controlled when defined"
+    },
+    {
+     "name": "defaultBaseline",
+     "type": "string | null",
+     "optional": true,
+     "description": "The baseline at first when `baseline` isn't controlled"
+    },
+    {
+     "name": "onBaselineChange",
+     "type": "(baseline: string) => void",
+     "optional": true,
+     "description": "Called with the run's id when Set as baseline is pressed, controlled or not"
+    },
+    {
+     "name": "onCaseOpen",
+     "type": "(caseId: string, runId: string) => boolean | void",
+     "optional": true,
+     "description": "Called when a regression in the run history is picked; return false to keep the case from opening"
     }
    ],
    "hides": [
     "heading",
     "tags",
     "show",
-    "open"
+    "open",
+    "baseline"
    ],
    "events": {
     "tc-tags-change": null,
     "tc-show-change": null,
-    "tc-open-change": null
+    "tc-open-change": null,
+    "tc-baseline-change": null,
+    "tc-case-open": "onCaseOpen"
    }
   }
  ],
@@ -327,7 +420,8 @@
     "cases",
     "tags",
     "open",
-    "formatRate"
+    "formatRate",
+    "runs"
    ],
    "attributes": [
     {
@@ -341,6 +435,10 @@
     {
      "name": "maxHeight",
      "attribute": "max-height"
+    },
+    {
+     "name": "baseline",
+     "attribute": "baseline"
     }
    ],
    "events": [
@@ -354,6 +452,14 @@
     },
     {
      "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-baseline-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-case-open",
      "cancelable": true
     }
    ],
@@ -369,6 +475,10 @@
     {
      "property": "open",
      "event": "tc-open-change"
+    },
+    {
+     "property": "baseline",
+     "event": "tc-baseline-change"
     }
    ],
    "form": null,
@@ -608,6 +718,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -667,7 +778,7 @@
   "windowed": true
  },
  "size": {
-  "min": 90966,
-  "gzip": 22984
+  "min": 103793,
+  "gzip": 25492
  }
 }

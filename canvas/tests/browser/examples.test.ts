@@ -3,14 +3,15 @@ import { afterEach, describe, expect, it } from "vitest";
 import { mountExample, prefixIds, scopeSelector, scopedDocument } from "../../src/data/examples";
 import "../../src/elements";
 
-// Docs snippets that lean on something the page around them provides (a variable, a template elsewhere on the page):
-// on the canvas these cards show their thumbnail instead
+// Docs snippets that lean on something the page around them provides (a variable, a template elsewhere on the page),
+// or open a modal dialog that would block the canvas: on the canvas these cards show their thumbnail instead
 const NEEDS_THE_PAGE: Record<string, string> = {
   "agent-recap": "uses the app's lastSeenAt",
   "header-brand": "reads a <template> defined elsewhere on the page",
   "image-generation": "drives the app's own generation job",
   stories: "uses the app's own story data",
   "structured-output": "reads the app's model stream",
+  "terms-dialog": "opens a modal dialog, which would block the canvas",
 };
 
 let host: HTMLElement;

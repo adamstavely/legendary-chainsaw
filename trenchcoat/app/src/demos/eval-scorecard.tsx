@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { EvalCase, EvalOutcome, EvalScorecardOpen, EvalVersion } from "../../../src/elements/react";
+import type { EvalCase, EvalOutcome, EvalRun, EvalScorecardOpen, EvalVersion } from "../../../src/elements/react";
+import { evalStats } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* A support assistant's eval set: 2,400 cases against five prompt versions. v1–v4 are in; v5 runs when the demo
@@ -110,6 +111,13 @@ const ALL = build();
 // Opens on a case v4 fails, so the side-by-side shows from the start
 const FIRST_FAIL = ALL.find((c) => c.results.v4?.outcome === "fail" && c.results.v3?.outcome === "pass")!;
 
+/** Each version's full run, for the run history – a run a day from 3 November, v3 the baseline */
+const DAY = 86_400_000;
+const RUNS: EvalRun[] = evalStats(VERSIONS, ALL).map((st, i) => {
+  const total = st.pass + st.fail + st.error;
+  return { id: VERSIONS[i].id, label: `Run ${i + 1} · ${VERSIONS[i].label}`, at: Date.UTC(2026, 10, 3, 12) + i * DAY, passRate: st.rate ?? 0, passed: st.pass, total, baseline: VERSIONS[i].id === "v3" };
+});
+
 /** v5's results land a tenth of the cases at a time */
 function at(step: number): { versions: EvalVersion[]; cases: EvalCase[] } {
   if (step >= STEPS) return { versions: VERSIONS, cases: ALL };
@@ -136,9 +144,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
 
   return (
     <div style={{ width: "100%", maxWidth: 880, display: "grid", gap: 10 }}>
-      <EvalScorecard title="Support replies" versions={data.versions} cases={data.cases} open={open} onOpenChange={setOpen} />
+      <EvalScorecard title="Support replies" versions={data.versions} cases={data.cases} open={open} onOpenChange={setOpen} runs={done ? RUNS : RUNS.slice(0, 4)} />
       <div style={{ ...caption, textAlign: "center", minHeight: 18 }}>
-        {done ? "v5 is through. " : `v5 is running… ${Math.round((step / STEPS) * 100)}% `}
+        {done ? "v5 is through – pick a run below the grid to see what regressed against the baseline. " : `v5 is running… ${Math.round((step / STEPS) * 100)}% `}
         {done && (
           <button type="button" style={textButton} onClick={() => setStep(0)}>
             Run v5 again

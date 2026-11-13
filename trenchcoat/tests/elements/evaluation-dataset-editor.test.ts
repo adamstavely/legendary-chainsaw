@@ -14,7 +14,12 @@ import {
   evaluationDatasetFromJsonl,
   evaluationDatasetIssues,
   evaluationDatasetToJsonl,
+  evaluationRunChecks,
+  EVALUATION_ASSERTION_TYPES,
   type EvaluationCase,
+  type EvaluationCheckSuggestion,
+  type EvaluationDatasetValueChange,
+  type EvaluationRun,
   type EvaluationDatasetValue,
   type EvaluationDatasetVersion,
   type TcEvaluationDatasetEditor,
@@ -545,4 +550,205 @@ describe("tc-evaluation-dataset-editor", () => {
     expect(css).not.toMatch(/\.dark|data-(?:tc-)?theme/);
     expect(css).toMatch(/prefers-reduced-motion[^{]*\{\s*\[data-ui="eds"\] \*[^{]*\{ animation: none !important; transition: none !important; \}/);
   });
+
+  /* ---------- A case from a run ---------- */
+
+  const RUN: EvaluationRun = {
+    id: "run-1",
+    input: "I returned order 51877 and have no refund",
+    output: "Please wait and contact us again",
+    messages: [{ role: "user", content: "I returned…" }],
+    toolCalls: [{ name: "lookup_order" }],
+    metadata: { model: "Support v5", rating: "Thumbs down" },
+  };
+  const NOT: (typeof EVALUATION_ASSERTION_TYPES)[number] = { id: "not-contains", label: "Doesn't contain" };
+  const SUGGEST: EvaluationCheckSuggestion[] = [
+    { type: "contains", value: "received your return", reason: "The return arrived" },
+    { type: "not-contains", value: "contact us again" },
+    { type: "regex", value: "x" },
+  ];
+  const from = (el: Element) => el.querySelector<HTMLElement>(".ui-eds__from");
+  const mountRun = (o: { run?: EvaluationRun | null; look?: "standard" | "clean"; types?: typeof EVALUATION_ASSERTION_TYPES } = {}) =>
+    fixture<TcEvaluationDatasetEditor>(
+      html`<tc-evaluation-dataset-editor style="width: 760px" look=${o.look ?? "standard"} .value=${VALUE} .fromRun=${o.run === undefined ? RUN : o.run} .runChecks=${SUGGEST} .assertionTypes=${o.types ?? [...EVALUATION_ASSERTION_TYPES, NOT]}></tc-evaluation-dataset-editor>`,
+    );
+
+  test("evaluationRunChecks: the page's suggestions the set knows, plus a schema check for a JSON object output", () => {
+    expect(evaluationRunChecks(RUN, SUGGEST).map((x) => x.type)).toEqual(["contains"]);
+    expect(evaluationRunChecks(RUN, SUGGEST, [...EVALUATION_ASSERTION_TYPES, NOT]).map((x) => x.type)).toEqual(["contains", "not-contains"]);
+    const json = evaluationRunChecks({ ...RUN, output: '{"refund_id":"r1","amount":12}' });
+    expect(json).toEqual([{ type: "schema", value: '{"type":"object","required":["refund_id","amount"]}', reason: "The output is a JSON object" }]);
+    expect(evaluationRunChecks({ ...RUN, output: "[1,2]" })).toEqual([]);
+    expect(evaluationRunChecks({ ...RUN, output: "{}" }, [], [EVALUATION_ASSERTION_TYPES[0]])).toEqual([]);
+  });
+
+  test("without fromRun nothing changes; with it the side shows New case from run, prefilled", async () => {
+    const plain = await mount();
+    expect(from(plain)).toBeNull();
+    cleanup();
+    const el = await mountRun();
+    const panel = from(el)!;
+    expect(el.querySelector(".ui-eds__main")!.hasAttribute("data-open")).toBe(true);
+    expect(panel.getAttribute("aria-labelledby")).toBe(panel.querySelector("h4")!.id);
+    expect(panel.querySelector("h4")!.textContent!.replace(/\s+/g, " ").trim()).toBe("New case from run run-1");
+    expect(panel.querySelector<HTMLTextAreaElement>('[data-field="run-input"]')!.value).toBe(RUN.input);
+    expect(panel.querySelector<HTMLTextAreaElement>('[data-field="run-expected"]')!.value).toBe(RUN.output);
+    expect([...panel.querySelectorAll(".ui-eds__meta dt")].map((d) => d.textContent)).toEqual(["Conversation", "Tools called", "model", "rating"]);
+    expect([...panel.querySelectorAll(".ui-eds__meta dd")].map((d) => d.textContent)).toEqual(["1 message", "lookup_order", "Support v5", "Thumbs down"]);
+    const checks = [...panel.querySelectorAll<HTMLInputElement>(".ui-eds__suggest input[type=checkbox]")];
+    expect(checks).toHaveLength(2);
+    expect(checks.every((c) => !c.checked)).toBe(true);
+    expect(panel.querySelector(".ui-eds__suggest")!.textContent!.replace(/\s+/g, " ")).toContain("output doesn't contain “contact us again”");
+    // Split defaults to test when the set has one
+    expect(panel.querySelector('.ui-eds__radio[aria-checked="true"]')!.textContent!.trim()).toBe("Test");
+  });
+
+  test("a bad output: shown struck through, and the expected field starts empty", async () => {
+    const el = await mountRun();
+    const panel = from(el)!;
+    const bad = panel.querySelector<HTMLInputElement>(".ui-eds__bad input")!;
+    bad.click();
+    await settle();
+    expect(panel.querySelector(".ui-eds__bad-output")!.textContent).toBe(RUN.output);
+    expect(panel.querySelector<HTMLTextAreaElement>('[data-field="run-expected"]')!.value).toBe("");
+    bad.click();
+    await settle();
+    expect(panel.querySelector(".ui-eds__bad-output")).toBeNull();
+    expect(panel.querySelector<HTMLTextAreaElement>('[data-field="run-expected"]')!.value).toBe(RUN.output);
+  });
+
+  test("Add to dataset: tc-value-change with the case and source; it opens, its row says From run, the run isn't offered again", async () => {
+    const el = await mountRun();
+    const seen: EvaluationDatasetValueChange[] = [];
+    on(el, "tc-value-change", (e) => seen.push(e.detail));
+    const panel = from(el)!;
+    panel.querySelectorAll<HTMLInputElement>(".ui-eds__suggest input")[1].click();
+    const tags = panel.querySelector<HTMLInputElement>('[data-field="run-tags"]')!;
+    tags.value = "refunds, from-prod, refunds";
+    tags.dispatchEvent(new Event("input", { bubbles: true }));
+    const radios = panel.querySelectorAll<HTMLElement>(".ui-eds__radio");
+    radios[2].focus();
+    key(radios[2], "ArrowLeft");
+    await settle();
+    expect(document.activeElement!.textContent!.trim()).toBe("Validation");
+    panel.querySelector<HTMLButtonElement>(".ui-eds__from-foot [data-primary]")!.click();
+    await settle();
+    expect(seen).toHaveLength(1);
+    const { added, source, value } = seen[0];
+    expect(source).toEqual({ runId: "run-1" });
+    expect(added).toMatchObject({ input: RUN.input, expected: RUN.output, tags: ["refunds", "from-prod"], split: "validation", assertions: [{ type: "not-contains", value: "contact us again" }] });
+    expect(value.cases.at(-1)).toEqual(added);
+    expect(from(el)).toBeNull();
+    expect(el.open).toBe(added!.id);
+    const row = el.querySelector<HTMLElement>(".ui-eds__rows .ui-eds__row[data-from-run]")!;
+    expect(row.querySelector('.ui-eds__change[data-kind="run"]')!.textContent).toBe("From run");
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Case added from run run-1");
+    // The same run again: still done; a new run: offered again, and the old mark goes
+    el.fromRun = { ...RUN };
+    await settle();
+    expect(from(el)).toBeNull();
+    el.fromRun = { ...RUN, id: "run-2" };
+    await settle();
+    expect(from(el)).not.toBeNull();
+    expect(el.querySelector(".ui-eds__row[data-from-run]")).toBeNull();
+  });
+
+  test("Add to dataset without an input: aria-invalid, described, focused; prevented, nothing changes", async () => {
+    const el = await mountRun();
+    const panel = from(el)!;
+    const input = panel.querySelector<HTMLTextAreaElement>('[data-field="run-input"]')!;
+    input.value = "  ";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    panel.querySelector<HTMLButtonElement>(".ui-eds__from-foot [data-primary]")!.click();
+    await settle();
+    expect(input.getAttribute("aria-invalid")).toBe("true");
+    expect(document.getElementById(input.getAttribute("aria-describedby")!)!.textContent).toBe("Add an input");
+    expect(document.activeElement).toBe(input);
+    input.value = "Fixed";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    expect(input.getAttribute("aria-invalid")).toBe("false");
+    on(el, "tc-value-change", (e) => e.preventDefault());
+    panel.querySelector<HTMLButtonElement>(".ui-eds__from-foot [data-primary]")!.click();
+    await settle();
+    expect(el.value.cases).toHaveLength(CASES.length);
+    expect(from(el)).not.toBeNull();
+  });
+
+  test("Discard and Escape: tc-from-run-dismiss, cancelable; focus goes back to the table", async () => {
+    const el = await mountRun();
+    const seen: string[] = [];
+    let block = true;
+    on(el, "tc-from-run-dismiss", (e) => {
+      seen.push(e.detail.runId);
+      if (block) e.preventDefault();
+    });
+    from(el)!.querySelector<HTMLButtonElement>(".ui-eds__from-foot .ui-eds__ghost")!.click();
+    await settle();
+    expect(seen).toEqual(["run-1"]);
+    expect(from(el)).not.toBeNull();
+    block = false;
+    key(from(el)!.querySelector('[data-field="run-input"]')!, "Escape");
+    await settle();
+    expect(seen).toEqual(["run-1", "run-1"]);
+    expect(from(el)).toBeNull();
+    expect(document.activeElement).toBe(grid(el));
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("New case from run discarded");
+  });
+
+  test("React wrapper: onRunCaseAdd with the case and source, onChange with the set; onFromRunDismiss returning false keeps the panel", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: unknown[] = [];
+    function App() {
+      const [value, setValue] = React.useState(VALUE);
+      return React.createElement(EvaluationDatasetEditor, {
+        value,
+        onChange: (v: EvaluationDatasetValue) => {
+          seen.push(v.cases.length);
+          setValue(v);
+        },
+        fromRun: RUN,
+        onRunCaseAdd: (c: EvaluationCase, src: { runId: string }) => seen.push(`${c.input}@${src.runId}`),
+        onFromRunDismiss: (id: string) => {
+          seen.push(`dismiss ${id}`);
+          return false;
+        },
+      });
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const el = host.querySelector("tc-evaluation-dataset-editor")!;
+    from(el)!.querySelector<HTMLButtonElement>(".ui-eds__from-foot .ui-eds__ghost")!.click();
+    await settle();
+    expect(from(el)).not.toBeNull();
+    from(el)!.querySelector<HTMLButtonElement>(".ui-eds__from-foot [data-primary]")!.click();
+    await act(async () => {});
+    await settle();
+    expect(seen).toEqual(["dismiss run-1", 5, `${RUN.input}@run-1`]);
+    expect(el.value.cases).toHaveLength(5);
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const)
+    test(`axe: New case from run in either look, with a bad output and an error (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme}>
+        <tc-evaluation-dataset-editor heading="Standard" .value=${VALUE} .fromRun=${RUN} .runChecks=${SUGGEST} .assertionTypes=${[...EVALUATION_ASSERTION_TYPES, NOT]}></tc-evaluation-dataset-editor>
+        <tc-evaluation-dataset-editor look="clean" heading="Clean" .value=${VALUE} .fromRun=${{ ...RUN, output: '{"a":1}' }}></tc-evaluation-dataset-editor>
+      </div>`);
+      await settle();
+      const [a, b] = wrap.querySelectorAll<HTMLElement>(".ui-eds__from");
+      a.querySelector<HTMLInputElement>(".ui-eds__bad input")!.click();
+      a.querySelector<HTMLDetailsElement>("details")!.open = true;
+      const input = b.querySelector<HTMLTextAreaElement>('[data-field="run-input"]')!;
+      input.value = "";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      b.querySelector<HTMLButtonElement>(".ui-eds__from-foot [data-primary]")!.click();
+      await settle();
+      for (const x of document.getAnimations()) if (x.effect?.getTiming().iterations !== Infinity) x.finish();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
 });

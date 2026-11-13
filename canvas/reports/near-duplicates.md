@@ -13,3 +13,4 @@ Written by `npm run similarity`; don't edit by hand.
 | Number Field (Components)         | Secret Field (Components)           | 0.928      |
 | Case Review (Blocks)              | Red-team Finding (Blocks)           | 0.927      |
 | Collaboration Stream (Components) | Correction Propagation (Components) | 0.923      |
+| Eval Criteria Editor (Components) | Review Queue (Components)           | 0.923      |
