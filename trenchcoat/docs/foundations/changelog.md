@@ -41,6 +41,11 @@
 - **Running Now** and **Background Tasks:** `notifiable` adds a bell on tasks still going – tell me when it finishes,
   optionally by channel.
 - **Standalone gallery and `docs/`:** rebuilt with the above.
+## 0.22.1 – A comment thread's first reply shows in full; read-only threads
+
+- **Comment Thread:** the first reply on an empty thread shows in full – the list was held at its empty height, so the
+  reply sat in a sliver of a scroll area.
+- **Comment Thread:** `readonly` (reflected) hides the reply field, for people who may read a thread but not reply.
 
 ## 0.23.0 – Images and tool results
 
