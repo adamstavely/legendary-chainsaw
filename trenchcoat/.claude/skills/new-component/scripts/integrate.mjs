@@ -5,7 +5,7 @@
 //      files whose original exists
 //   2. regenerate: the element index, the docs, the Angular wrappers, the generative-UI schemas
 //   3. measure performance and capture thumbnails for whatever has none, then export the gallery's pages to docs/ as
-//      Markdown (mirrored to the trenchcoat-docs repo on merge)
+//      Markdown and rebuild the standalone gallery (both mirrored to the trenchcoat-docs repo on merge)
 //      and, when the canvas is checked out beside trenchcoat/, re-sort its Similar layout for the new thumbnails
 //   4. run every check – the same ones as CI's check job
 //   5. run the new components' tests in Chromium, Firefox and WebKit, then the React suite
@@ -90,6 +90,7 @@ step("performance and thumbnails");
 run("npm run -s measure:perf -- --missing");
 run("npm run -s capture:thumbs -- --missing");
 run("node scripts/export-docs-md.mjs");
+run("node scripts/build-standalone.mjs");
 if (existsSync("../canvas/node_modules")) run("npm --prefix ../canvas run -s similarity");
 else if (existsSync("../canvas")) console.log("   canvas has no node_modules: run npm ci && npm run similarity in canvas/, or its CI fails");
 

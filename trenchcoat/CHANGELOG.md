@@ -27,6 +27,8 @@
 - **`docs/` checked in CI** (`npm run check:docs-md`) and exported by the new-component integration pass; a merge to
   `main` mirrors it to [trenchcoat-docs](https://github.com/adamstavely/trenchcoat-docs), replacing only the folders it
   copies, so files added there directly stay.
+- **Standalone gallery:** rebuilt with all of the above, now by `npm run build:standalone`, which the new-component
+  integration pass runs.
 
 - **`docs/` checked in CI:** a PR fails when `docs/` doesn't match the gallery (`npm run check:docs-md`), and the
   new-component integration pass now exports it, so every new component's page is in `docs/`.
