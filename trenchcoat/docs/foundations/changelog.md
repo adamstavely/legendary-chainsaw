@@ -2,6 +2,31 @@
 
 # Changelog
 
+## 0.23.0 – Images and tool results
+
+- **Edit Region:** brush, erase or box part of an image and say what should change; Generate sends the instruction, the
+  mask as a PNG at the image's size, its bounds and coverage.
+- **Point and Ask:** pin or box parts of an image, ask about each and all of them, and show answers under each mark –
+  every step works from the keyboard.
+- **Region Overlay:** what a vision model read, drawn on the image – numbered boxes linked to a list with kind,
+  confidence and read text, filtered by kind and a confidence threshold.
+- **Before After:** an original and its edit with a divider to drag (or arrow keys), vertical or side by side.
+- **Line Items:** rows a model reads off a document, edited in place with locale numbers, totals with tax that recompute
+  live, "Check" and "Low confidence" in words, a warning when the total doesn't match the document's, and Confirm.
+- **Test Run Result:** only what failed – counts in words over a bar, each failure with its message, a line diff and the
+  trimmed stack with a file link, passed tests folded, Re-run failed, and live counts while running.
+- **Schedule Card:** a recurring agent task – the schedule in words, a live countdown to the next run, the last runs as
+  marks with when and how long, and Run now, Pause / Resume and Edit.
+- **Map Itinerary:** a trip planned day by day, each day's stops in order and on a map drawn from their coordinates –
+  the chosen day's route standing out and map tiles only on request.
+- **Recipe Card:** a recipe to cook from – scaling servings, metric or imperial (oven temperatures too), an ingredient
+  checklist, and steps with the current one marked and built-in timers.
+- **Message Drafts:** text-message drafts in two to four tones, edited in place with an SMS length (GSM or Unicode),
+  then Copy, Send or Open in Messages.
+- **New-component integration pass:** also runs the canvas's tests, and warns when the framework example apps aren't
+  installed (the snippets check skips itself without them).
+- **Standalone gallery and `docs/`:** rebuilt with the above.
+
 ## 0.22.0 – Chat: tabs, a dock, ghost text, shared threads and recovery states
 
 - **Session Tabs:** open chats as tabs above a thread – status in a mark and a word, unread dots, close, drag or

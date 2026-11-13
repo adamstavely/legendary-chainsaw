@@ -102,10 +102,10 @@
         "context": {
           "type": "string"
         },
-        "environment": {
+        "tools": {
           "type": "string"
         },
-        "tools": {
+        "environment": {
           "type": "string"
         },
         "connectors": {

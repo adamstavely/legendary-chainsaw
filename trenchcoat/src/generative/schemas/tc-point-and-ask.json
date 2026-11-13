@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-point-and-ask.json",
+  "title": "tc-point-and-ask",
+  "description": "Pin or box parts of an image, ask about each and about all of them – marks you can move, resize and remove from the\nkeyboard, and answers streamed back per mark.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The title above the image"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the title"
+    },
+    "src": {
+      "type": "string",
+      "description": "The image",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "alt": {
+      "type": "string",
+      "description": "What the image shows, for screen readers"
+    },
+    "marks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PointMark"
+      },
+      "description": "The marks, in order; their numbers follow it"
+    },
+    "question": {
+      "type": "string",
+      "description": "The question over all the marks"
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Answers by mark id, shown under each mark (update it as the text streams in)"
+    },
+    "answer": {
+      "type": "string",
+      "description": "The answer to the overall question"
+    },
+    "busy": {
+      "type": "boolean",
+      "description": "Holds everything while the page answers; Ask turns it on unless tc-ask is prevented"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "marks": {
+          "type": "string"
+        },
+        "list": {
+          "type": "string"
+        },
+        "pin": {
+          "type": "string"
+        },
+        "box": {
+          "type": "string"
+        },
+        "addPin": {
+          "type": "string"
+        },
+        "addBox": {
+          "type": "string"
+        },
+        "clearAll": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "markQuestion": {
+          "type": "string"
+        },
+        "noQuestion": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "asking": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "cleared": {
+          "type": "string"
+        },
+        "ready": {
+          "type": "string"
+        },
+        "needsSomething": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename (merged over defaultPointAndAskLabels)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PointMark": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "box",
+            "pin"
+          ]
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "w": {
+          "type": "number"
+        },
+        "h": {
+          "type": "number"
+        },
+        "question": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y"
+      ],
+      "additionalProperties": false,
+      "description": "A mark on the image: a pin at (x, y) or a box from (x, y), w wide and h tall – all fractions (0–1) of the image"
+    }
+  }
+}

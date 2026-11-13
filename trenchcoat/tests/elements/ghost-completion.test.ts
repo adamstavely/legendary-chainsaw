@@ -137,17 +137,22 @@ for (const look of ["standard", "clean"] as const) {
     });
 
     test("suggest() is asked after typing pauses, aborted when typing goes on, and its answer shows", async () => {
+      // Each request waits until the test answers it, so nothing depends on how fast the runner types
       const signals: AbortSignal[] = [];
-      const suggest = vi.fn((text: string, signal: AbortSignal) => {
+      const answers: ((text: string) => void)[] = [];
+      const suggest = vi.fn((_text: string, signal: AbortSignal) => {
         signals.push(signal);
-        return new Promise<string>((resolve) => setTimeout(() => resolve(text.endsWith("were") ? " late." : ""), 30));
+        return new Promise<string>((resolve) => answers.push(resolve));
       });
       const el = await fixture<TcGhostCompletion>(html`<tc-ghost-completion look=${look} value="Reviews" debounce="10" .suggest=${suggest}></tc-ghost-completion>`);
       toEnd(el);
       await type(el, " w");
-      await expect.poll(() => suggest.mock.calls.length).toBe(1);
+      await expect.poll(() => suggest.mock.calls.length).toBeGreaterThanOrEqual(1);
+      const waiting = signals.length - 1;
       await type(el, "ere");
-      await expect.poll(() => signals[0].aborted).toBe(true);
+      await expect.poll(() => signals[waiting].aborted).toBe(true);
+      await expect.poll(() => suggest.mock.lastCall?.[0]).toBe("Reviews were");
+      answers.at(-1)!(" late.");
       await expect.poll(() => ghost(el)).toBe(" late.");
       expect(suggest).toHaveBeenLastCalledWith("Reviews were", expect.anything());
       expect(el.querySelector(".ui-ghc__loading")).toBeNull();

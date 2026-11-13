@@ -443,6 +443,9 @@
   "src/elements/saved-search-alerts.ts": {
     "clock/environment read": 1
   },
+  "src/elements/schedule-card.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/search-history.ts": {
     "clock/environment read": 1
   },

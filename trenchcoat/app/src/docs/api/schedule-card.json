@@ -1,0 +1,549 @@
+{
+ "elements": [
+  {
+   "tag": "tc-schedule-card",
+   "className": "TcScheduleCard",
+   "description": "A recurring agent task at a glance – the schedule in words, a live countdown to the next run, the last runs as\nmarks, and Run now, Pause / Resume and Edit.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Scheduled task\"",
+     "description": "The task's name, and the card's heading",
+     "readonly": false
+    },
+    {
+     "name": "schedule",
+     "attribute": "schedule",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The schedule in words, e.g. \"Every weekday at 09:00, Europe/London\"",
+     "readonly": false
+    },
+    {
+     "name": "nextRun",
+     "attribute": null,
+     "type": "number | null",
+     "default": "null",
+     "description": "When it runs next, epoch ms; null when nothing is scheduled",
+     "readonly": false
+    },
+    {
+     "name": "runs",
+     "attribute": null,
+     "type": "ScheduleRun[]",
+     "default": "[]",
+     "description": "The last runs, oldest first",
+     "readonly": false
+    },
+    {
+     "name": "maxRuns",
+     "attribute": "max-runs",
+     "type": "number",
+     "default": "14",
+     "description": "How many of the last runs the strip shows",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "Paused: no countdown, and Resume in place of Pause. Changed by the user unless a tc-paused-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, epoch ms; leave it unset and the element keeps its own clock",
+     "readonly": false
+    },
+    {
+     "name": "hideEdit",
+     "attribute": "hide-edit",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Edit",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates and times, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "ScheduleCardLabelsInput",
+     "default": "{}",
+     "description": "The card's words, merged over defaultScheduleCardLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-run-now",
+     "detail": "",
+     "description": "Run now was pressed (detail: {})",
+     "cancelable": false
+    },
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "Pause or Resume was pressed ({ paused }: SchedulePausedChange); cancelable – prevented, `paused` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-edit",
+     "detail": "",
+     "description": "Edit was pressed (detail: {})",
+     "cancelable": false
+    },
+    {
+     "name": "tc-run-open",
+     "detail": "",
+     "description": "A run in the strip was opened ({ id, run }: ScheduleRunOpen)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "scd",
+   "cssProperties": [
+    {
+     "name": "--tc-scd-mark",
+     "value": "22px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-scd-tone",
+    "--tc-scd-tone-bg",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "scheduleCountdown",
+   "signature": "scheduleCountdown(ms: number): void",
+   "description": "\"in 2 h 10 min\", \"in 45 s\" – the time left, to the precision that matters"
+  }
+ ],
+ "react": [
+  {
+   "component": "ScheduleCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The task's name, and the card's heading"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Paused – controlled when given"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Paused on mount when `paused` isn't controlled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Pause or Resume was pressed"
+    },
+    {
+     "name": "onRunNow",
+     "type": "() => void",
+     "optional": true,
+     "description": "Run now was pressed"
+    },
+    {
+     "name": "onEdit",
+     "type": "() => void",
+     "optional": true,
+     "description": "Edit was pressed"
+    },
+    {
+     "name": "onRunOpen",
+     "type": "(id: string, run: ScheduleRun) => void",
+     "optional": true,
+     "description": "A run in the strip was opened"
+    }
+   ],
+   "hides": [
+    "heading",
+    "paused",
+    "children"
+   ],
+   "events": {
+    "tc-run-now": "onRunNow",
+    "tc-paused-change": null,
+    "tc-edit": "onEdit",
+    "tc-run-open": "onRunOpen"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-schedule-card",
+   "className": "TcScheduleCard",
+   "module": "@adamstavely/trenchcoat/schedule-card",
+   "data": [
+    "nextRun",
+    "runs",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "schedule",
+     "attribute": "schedule"
+    },
+    {
+     "name": "maxRuns",
+     "attribute": "max-runs"
+    },
+    {
+     "name": "paused",
+     "attribute": "paused"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "hideEdit",
+     "attribute": "hide-edit"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-run-now",
+     "cancelable": false
+    },
+    {
+     "name": "tc-paused-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-edit",
+     "cancelable": false
+    },
+    {
+     "name": "tc-run-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "paused",
+     "event": "tc-paused-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "array-at",
+    "name": "Array.prototype.at()",
+    "bcd": "javascript.builtins.Array.at",
+    "versions": {
+     "chrome": "92",
+     "edge": "92",
+     "firefox": "90",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared"
+  ],
+  "frames": [],
+  "animations": 1,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 26001,
+  "gzip": 8624
+ }
+}

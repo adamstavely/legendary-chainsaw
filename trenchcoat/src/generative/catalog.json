@@ -477,6 +477,15 @@
     ]
   },
   {
+    "tag": "tc-before-after",
+    "name": "BeforeAfter",
+    "description": "An original and its edit in one frame, with a divider to drag between them – or side by side.",
+    "events": [
+      "tc-position-change",
+      "tc-mode-change"
+    ]
+  },
+  {
     "tag": "tc-bibliography",
     "name": "Bibliography",
     "description": "A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,",
@@ -1233,6 +1242,17 @@
     ]
   },
   {
+    "tag": "tc-edit-region",
+    "name": "EditRegion",
+    "description": "Brush a mask over an image and say what should change – brush, eraser and a keyboard-movable box, undo and redo,",
+    "events": [
+      "tc-mask-change",
+      "tc-tool-change",
+      "tc-instruction-change",
+      "tc-edit"
+    ]
+  },
+  {
     "tag": "tc-element-inspector",
     "name": "ElementInspector",
     "description": "A page's elements as a tree beside the chosen element's box model and styles.",
@@ -1931,6 +1951,15 @@
     ]
   },
   {
+    "tag": "tc-line-items",
+    "name": "LineItems",
+    "description": "Rows a model reads off a document, for a person to fix, total and confirm.",
+    "events": [
+      "tc-items-change",
+      "tc-confirm"
+    ]
+  },
+  {
     "tag": "tc-lineage-graph",
     "name": "LineageGraph",
     "description": "Where an output came from: run, turns, queries and tools, source chunks, claims and artifacts in columns, every",
@@ -1974,6 +2003,15 @@
     "name": "MalwareBlocked",
     "description": "A file behind a warning shield with a bug on it, for a file that can't be shown because it may be malware.",
     "events": []
+  },
+  {
+    "tag": "tc-map-itinerary",
+    "name": "MapItinerary",
+    "description": "A trip planned day by day – the days as tabs, each day's stops in order with times and travel, and the stops on a",
+    "events": [
+      "tc-day-change",
+      "tc-stop-select"
+    ]
   },
   {
     "tag": "tc-marimekko-chart",
@@ -2025,6 +2063,17 @@
       "tc-speak",
       "tc-report",
       "tc-report-undo"
+    ]
+  },
+  {
+    "tag": "tc-message-drafts",
+    "name": "MessageDrafts",
+    "description": "Text-message drafts in two to four variants – edit in place with the SMS length, then Copy, Send or Open in",
+    "events": [
+      "tc-selected-change",
+      "tc-variants-change",
+      "tc-send",
+      "tc-copy-text"
     ]
   },
   {
@@ -2369,6 +2418,16 @@
     ]
   },
   {
+    "tag": "tc-point-and-ask",
+    "name": "PointAndAsk",
+    "description": "Pin or box parts of an image, ask about each and about all of them – marks you can move, resize and remove from the",
+    "events": [
+      "tc-marks-change",
+      "tc-question-change",
+      "tc-ask"
+    ]
+  },
+  {
     "tag": "tc-policy-simulator",
     "name": "PolicySimulator",
     "description": "A dry run of an action against a policy set: the decision, the rule that decided it, the reason and a step-by-step",
@@ -2646,6 +2705,17 @@
     ]
   },
   {
+    "tag": "tc-recipe-card",
+    "name": "RecipeCard",
+    "description": "A recipe ready to cook from – servings that scale every quantity, metric or imperial, ingredients to tick off, and",
+    "events": [
+      "tc-servings-change",
+      "tc-units-change",
+      "tc-step-change",
+      "tc-timer-done"
+    ]
+  },
+  {
     "tag": "tc-red-team-finding",
     "name": "RedTeamFinding",
     "description": "What an adversarial test broke and the response: a findings listbox and the picked finding's invariants, scenario, evidence and undoable response timeline.",
@@ -2681,6 +2751,17 @@
     "description": "A map of the DACH region (or another country) with a band along its border and a menu to switch it.",
     "events": [
       "tc-region-change"
+    ]
+  },
+  {
+    "tag": "tc-region-overlay",
+    "name": "RegionOverlay",
+    "description": "What a vision model read, drawn on the image: numbered boxes linked to a list with each region's kind, confidence and",
+    "events": [
+      "tc-selected-change",
+      "tc-threshold-change",
+      "tc-kinds-change",
+      "tc-show-boxes-change"
     ]
   },
   {
@@ -2914,6 +2995,17 @@
     "description": "Where a file stands in malware scanning.",
     "events": [
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-schedule-card",
+    "name": "ScheduleCard",
+    "description": "A recurring agent task at a glance – the schedule in words, a live countdown to the next run, the last runs as",
+    "events": [
+      "tc-run-now",
+      "tc-paused-change",
+      "tc-edit",
+      "tc-run-open"
     ]
   },
   {
@@ -3393,6 +3485,16 @@
       "tc-interrupt",
       "tc-clear",
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-test-run-result",
+    "name": "TestRunResult",
+    "description": "A test run that shows only what failed: counts in words over a bar, the failures with their message, diff and stack, and Re-run failed.",
+    "events": [
+      "tc-open-change",
+      "tc-open",
+      "tc-rerun"
     ]
   },
   {

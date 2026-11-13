@@ -92,7 +92,7 @@ When a fork reports back, note:
    - re-sorts the canvas's Similar layout (`canvas/src/data/similarity.json`) for the new thumbnails, since Canvas CI
      runs on every Trenchcoat change and fails when a thumbnail isn't in it;
    - runs every check;
-   - runs the new components' tests in Chromium, Firefox and WebKit, plus the React suite;
+   - runs the new components' tests in Chromium, Firefox and WebKit, plus the React suite and the canvas's tests;
    - stops at the first failure, saying what to fix.
 3. **Fix what it reports, then run it again.** Common fixes:
    - **Ratchet failure, `clock/environment read`.** A component with its own clock (a `Date.now()` used when `now`
@@ -135,6 +135,10 @@ or mid-animation can look broken when nothing is; check the DOM before chasing a
   `expect.poll` or `finish()`, not a longer wait.
 
 ## Things that have bitten before
+
+- **The snippets check skips itself locally.** Without `examples/<app>/node_modules` it passes without checking, and CI
+  then fails on a framework's controlled example. Run `npm run examples` once, or link those folders from a checkout
+  that has them; the integration pass warns when they're missing.
 
 - **Docs snippets that need the page.** The canvas mounts every docs page's first HTML example. One that reads
   something only the app has (a `job`, a template elsewhere on the page) fails its test: add the slug to

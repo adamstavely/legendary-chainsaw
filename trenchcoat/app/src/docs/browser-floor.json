@@ -11,31 +11,31 @@
    "features": [
     "light-dark"
    ],
-   "elements": 443
+   "elements": 453
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 443
+   "elements": 453
   },
   "firefox": {
    "features": [
     "has"
    ],
-   "elements": 101
+   "elements": 103
   },
   "safari": {
    "features": [
     "light-dark"
    ],
-   "elements": 443
+   "elements": 453
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 443
+   "elements": 453
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 443
+   "elements": 453
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 443
+   "elements": 453
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 443
+   "elements": 453
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 442
+   "elements": 452
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 314
+   "elements": 324
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 207
+   "elements": 212
   },
   {
    "id": "resize-observer",
@@ -140,7 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 188
+   "elements": 190
   },
   {
    "id": "intersection-observer",
@@ -169,7 +169,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 161
+   "elements": 163
   },
   {
    "id": "has",
@@ -184,21 +184,7 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 101
-  },
-  {
-   "id": "individual-transforms",
-   "name": "translate, scale and rotate properties",
-   "bcd": "css.properties.translate",
-   "versions": {
-    "chrome": "104",
-    "edge": "104",
-    "firefox": "72",
-    "safari": "14.1",
-    "safari_ios": "14.1"
-   },
-   "progressive": false,
-   "elements": 67
+   "elements": 103
   },
   {
    "id": "aspect-ratio",
@@ -212,7 +198,21 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 66
+   "elements": 68
+  },
+  {
+   "id": "individual-transforms",
+   "name": "translate, scale and rotate properties",
+   "bcd": "css.properties.translate",
+   "versions": {
+    "chrome": "104",
+    "edge": "104",
+    "firefox": "72",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   },
+   "progressive": false,
+   "elements": 68
   },
   {
    "id": "mask",
@@ -227,7 +227,7 @@
    },
    "progressive": false,
    "note": "with the -webkit- prefix",
-   "elements": 59
+   "elements": 60
   },
   {
    "id": "object-hasown",
@@ -241,7 +241,7 @@
     "safari_ios": "15.4"
    },
    "progressive": false,
-   "elements": 52
+   "elements": 54
   },
   {
    "id": "clipboard",
@@ -256,7 +256,7 @@
    },
    "progressive": false,
    "why": "Copy buttons.",
-   "elements": 48
+   "elements": 49
   },
   {
    "id": "form-associated",
@@ -289,20 +289,6 @@
    "elements": 20
   },
   {
-   "id": "relative-time-format",
-   "name": "Intl.RelativeTimeFormat",
-   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
-   "versions": {
-    "chrome": "71",
-    "edge": "79",
-    "firefox": "65",
-    "safari": "14",
-    "safari_ios": "14"
-   },
-   "progressive": false,
-   "elements": 13
-  },
-  {
    "id": "array-at",
    "name": "Array.prototype.at()",
    "bcd": "javascript.builtins.Array.at",
@@ -312,6 +298,20 @@
     "firefox": "90",
     "safari": "15.4",
     "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 14
+  },
+  {
+   "id": "relative-time-format",
+   "name": "Intl.RelativeTimeFormat",
+   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+   "versions": {
+    "chrome": "71",
+    "edge": "79",
+    "firefox": "65",
+    "safari": "14",
+    "safari_ios": "14"
    },
    "progressive": false,
    "elements": 13
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 443
+   "elements": 453
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 442
+   "elements": 452
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 124
+   "elements": 126
   },
   {
    "id": "overscroll-contain",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 79
+   "elements": 80
   },
   {
    "id": "popover",

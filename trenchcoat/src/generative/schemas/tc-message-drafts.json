@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-message-drafts.json",
+  "title": "tc-message-drafts",
+  "description": "Text-message drafts in two to four variants – edit in place with the SMS length, then Copy, Send or Open in\nMessages.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "recipient": {
+      "type": "string",
+      "description": "Who it's for, by name"
+    },
+    "to": {
+      "type": "string",
+      "description": "Their number – used in Send's event and the sms: link",
+      "format": "uri-reference"
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MessageVariant"
+      },
+      "description": "The drafts, two to four; more are left out"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The variant shown, by id. Changed by the user unless tc-selected-change is prevented"
+    },
+    "openLink": {
+      "type": "boolean",
+      "description": "Shows Open in Messages, an sms: link with the text filled in"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent"
+      ],
+      "description": "Draft or sent – Send moves it to sent; set it back to \"draft\" to write again"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "message": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "sent": {
+          "type": "string"
+        },
+        "another": {
+          "type": "string"
+        },
+        "characters": {
+          "type": "string"
+        },
+        "unicode": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words to use instead of the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "MessageVariant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "tone": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "id",
+        "tone",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
