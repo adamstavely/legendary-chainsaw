@@ -23,6 +23,9 @@ import { compact } from "./internal/format";
  *     Escape turns it back. A new case opens straight into its form. Problems show on the case and on its row
  *   · versions: the app supplies earlier snapshots; picking one marks new and edited rows, counts the removed cases and
  *     lets a removed case be restored
+ *   · a case from a run: set `fromRun` to a real run and the side shows New case from run – its input, its output as the
+ *     expected answer (or marked as a bad output, to write the right one), checks suggested from the run, tags and a
+ *     split. Add to dataset adds the case through tc-value-change with `source: { runId }`, opens it and marks its row
  * Nothing is run here: Import and Export fire tc-import and tc-export, and eval-scorecard shows what running the set
  * gave. The table is the WAI-ARIA grid (one tab stop, arrows, Home / End, Ctrl+Home / End, Page Up / Down, Enter opens
  * the case, Escape closes it). Standard puts the header on a gray tray above a white card; Clean is one white card with
@@ -73,7 +76,32 @@ export type EvaluationIssue = { caseId: string; level: "error" | "warning"; mess
 /** What changed between two versions of a set */
 export type EvaluationComparison = { added: string[]; edited: string[]; removed: EvaluationCase[] };
 
-export type EvaluationDatasetValueChange = { value: EvaluationDatasetValue };
+/** Where an added case came from – set when it was made from a run */
+export type EvaluationCaseSource = { runId: string };
+export type EvaluationDatasetValueChange = {
+  value: EvaluationDatasetValue;
+  /** Set when the change adds a case made from a run (`fromRun`) */
+  source?: EvaluationCaseSource;
+  /** The case made from the run */
+  added?: EvaluationCase;
+};
+/** A real run to turn into a test case */
+export type EvaluationRun = {
+  id: string;
+  /** What the model was given */
+  input: string;
+  /** What it answered */
+  output: string;
+  /** The conversation, when the run had several turns */
+  messages?: { role: string; content: string }[];
+  /** The tools it called */
+  toolCalls?: { name: string; arguments?: string }[];
+  /** Anything else worth seeing: model, latency, user rating… shown as name and value */
+  metadata?: Record<string, string | number | boolean>;
+};
+/** A check offered for a case made from a run */
+export type EvaluationCheckSuggestion = { type: string; value: string; /** Why it's suggested, in a few words */ reason?: string };
+export type EvaluationDatasetFromRunDismiss = { runId: string };
 export type EvaluationDatasetOpenChange = { open: string | null };
 export type EvaluationDatasetCompareChange = { compare: string };
 export type EvaluationDatasetExport = { value: EvaluationDatasetValue; jsonl: string };
@@ -91,6 +119,26 @@ export const EVALUATION_SPLITS: EvaluationSplit[] = [
 ];
 
 const EMPTY: EvaluationDatasetValue = { cases: [] };
+
+/** Checks worth offering for a case made from a run: the page's suggestions whose type the set knows, then – when the
+ *  output is a JSON object and a JSON check exists – that it stays an object with the same keys */
+export function evaluationRunChecks(run: EvaluationRun, suggestions: readonly EvaluationCheckSuggestion[] = [], types: readonly EvaluationAssertionType[] = EVALUATION_ASSERTION_TYPES): EvaluationCheckSuggestion[] {
+  const known = new Set(types.map((t) => t.id));
+  const out = suggestions.filter((x) => known.has(x.type) && x.value.trim());
+  const json = types.find((t) => t.json);
+  if (json) {
+    try {
+      const v: unknown = JSON.parse(run.output);
+      if (v && typeof v === "object" && !Array.isArray(v)) {
+        const value = JSON.stringify({ type: "object", required: Object.keys(v) });
+        if (!out.some((x) => x.type === json.id && x.value === value)) out.push({ type: json.id, value, reason: "The output is a JSON object" });
+      }
+    } catch {
+      /* not JSON – nothing to offer */
+    }
+  }
+  return out;
+}
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
 const TONES = ["teal", "violet", "amber", "pink", "rose"];
 
@@ -219,6 +267,7 @@ let instances = 0;
  * @fires tc-compare-change - A version to compare with was picked ({ compare }: EvaluationDatasetCompareChange – a version id, or "" for none); cancelable
  * @fires tc-import - Import was pressed: the app reads a file and sets `value`; detail: null
  * @fires tc-export - Export was pressed ({ value, jsonl }: EvaluationDatasetExport – the set and the same set as JSON Lines)
+ * @fires tc-from-run-dismiss - New case from run was discarded ({ runId }: EvaluationDatasetFromRunDismiss); cancelable – prevented, the panel stays
  */
 export class TcEvaluationDatasetEditor extends TcElement {
   static override ui = "eds";
@@ -246,6 +295,31 @@ export class TcEvaluationDatasetEditor extends TcElement {
   @property({ reflect: true }) accessor name = "";
   /** Turns every control off and leaves the set out of the form; a disabled fieldset does the same */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
+  /** A real run to turn into a test case: shows New case from run, prefilled from it. A run already added or
+   *  discarded isn't offered again until `fromRun` changes */
+  @property({ attribute: false }) accessor fromRun: EvaluationRun | null = null;
+  /** Checks to offer for the run's case – kept when the set knows their type */
+  @property({ attribute: false }) accessor runChecks: EvaluationCheckSuggestion[] = [];
+
+  /** @internal The run whose panel was added or discarded */
+  @state() accessor runDone: string | null = null;
+  /** @internal The case made from the run, marked in the table */
+  @state() accessor fromRunCase: string | null = null;
+  /** @internal The new case's input */
+  @state() accessor draftInput = "";
+  /** @internal The new case's expected answer */
+  @state() accessor draftExpected = "";
+  /** @internal The run's output was marked bad */
+  @state() accessor draftBad = false;
+  /** @internal Which suggested checks are picked */
+  @state() accessor draftChecks: boolean[] = [];
+  /** @internal The new case's tags, comma-separated */
+  @state() accessor draftTags = "";
+  /** @internal The new case's split */
+  @state() accessor draftSplit = "";
+  /** @internal What's wrong with the draft, if anything */
+  @state() accessor draftError = "";
+  private suggestions: EvaluationCheckSuggestion[] = [];
 
   /** @internal The split filter: "" for all */
   @state() accessor filter = "";
@@ -347,7 +421,28 @@ export class TcEvaluationDatasetEditor extends TcElement {
       this.editOnOpen = null;
     }
     if (this.isDisabled) this.editing = false;
+    if (changed.has("fromRun")) {
+      const run = this.fromRun;
+      const before = changed.get("fromRun") as EvaluationRun | null | undefined;
+      if (!run || run.id !== before?.id) {
+        this.runDone = null;
+        if (run) this.fromRunCase = null;
+      }
+      if (run) {
+        this.draftInput = run.input;
+        this.draftExpected = run.output;
+        this.draftBad = false;
+        this.draftTags = "";
+        this.draftSplit = this.splits.find((x) => x.id === "test")?.id ?? this.splits[0]?.id ?? "";
+        this.draftError = "";
+      }
+    }
+    if (changed.has("fromRun") || changed.has("runChecks") || changed.has("assertionTypes")) {
+      this.suggestions = this.fromRun ? evaluationRunChecks(this.fromRun, this.runChecks, this.assertionTypes) : [];
+      if (changed.has("fromRun") || this.draftChecks.length !== this.suggestions.length) this.draftChecks = this.suggestions.map(() => false);
+    }
     const cases = this.value.cases;
+    if (this.fromRunCase && changed.has("value") && !cases.some((c) => c.id === this.fromRunCase)) this.fromRunCase = null;
     if (changed.has("value") || changed.has("assertionTypes") || changed.has("splits")) {
       this.issues = new Map();
       this.errorCount = this.warningCount = 0;
@@ -408,10 +503,10 @@ export class TcEvaluationDatasetEditor extends TcElement {
   /* ---------- Changes ---------- */
 
   /** @internal */
-  private commit(cases: EvaluationCase[]) {
+  private commit(cases: EvaluationCase[], extra: Omit<EvaluationDatasetValueChange, "value"> = {}) {
     if (this.isDisabled) return false;
     const next: EvaluationDatasetValue = { ...this.value, cases };
-    const ok = this.emit<EvaluationDatasetValueChange>("tc-value-change", { value: next }, { cancelable: true });
+    const ok = this.emit<EvaluationDatasetValueChange>("tc-value-change", { value: next, ...extra }, { cancelable: true });
     if (ok) this.value = next;
     else this.requestUpdate();
     return ok;
@@ -464,6 +559,56 @@ export class TcEvaluationDatasetEditor extends TcElement {
       this.querySelector<HTMLTextAreaElement>('.ui-eds__detail [data-field="input"]')?.focus();
     });
   }
+  /** @internal Whether New case from run is showing */
+  private get runPending() {
+    return !!this.fromRun && this.fromRun.id !== this.runDone;
+  }
+
+  /** @internal Adds the run's case: the draft as a case, through tc-value-change with its source */
+  private addFromRun() {
+    const run = this.fromRun;
+    if (!run || this.isDisabled) return;
+    const input = this.draftInput.trim() ? this.draftInput : "";
+    if (!input) {
+      this.draftError = "Add an input";
+      void this.updateComplete.then(() => this.querySelector<HTMLTextAreaElement>('.ui-eds__from [data-field="run-input"]')?.focus());
+      return;
+    }
+    const id = this.freshId("case", new Set(this.value.cases.map((c) => c.id)));
+    const taken = new Set<string>();
+    const assertions = this.suggestions
+      .filter((_, i) => this.draftChecks[i])
+      .map((x) => ({ id: this.freshId("check", taken), type: x.type, value: x.value }));
+    const tags = [...new Set(this.draftTags.split(",").map((t) => t.trim()).filter(Boolean))];
+    const expected = this.draftExpected.trim() ? this.draftExpected : undefined;
+    const added: EvaluationCase = { id, input, ...(expected !== undefined ? { expected } : {}), assertions, tags, split: this.draftSplit };
+    if (!this.commit([...this.value.cases, added], { source: { runId: run.id }, added })) return;
+    this.runDone = run.id;
+    this.fromRunCase = id;
+    this.query = "";
+    this.filter = "";
+    this.setOpen(id);
+    void this.updateComplete.then(() => {
+      const r = this.view.findIndex((c) => c.id === id);
+      if (r >= 0) {
+        this.active = { r, c: 0 };
+        this.reveal(r);
+      }
+      this.spoken = `Case added from run ${run.id}`;
+      (this.querySelector<HTMLElement>(".ui-eds__detail .ui-eds__read") ?? this.grid)?.focus();
+    });
+  }
+
+  /** @internal Discards New case from run */
+  private dismissRun() {
+    const run = this.fromRun;
+    if (!run) return;
+    if (!this.emit<EvaluationDatasetFromRunDismiss>("tc-from-run-dismiss", { runId: run.id }, { cancelable: true })) return;
+    this.runDone = run.id;
+    this.spoken = "New case from run discarded";
+    void this.updateComplete.then(() => this.grid?.focus());
+  }
+
   /** @internal Switches the open case to its form and puts the cursor in its input */
   private startEditing() {
     if (this.isDisabled || this.open === null) return;
@@ -594,7 +739,7 @@ export class TcEvaluationDatasetEditor extends TcElement {
   /** @internal "New" or "Edited" since the compared version – text, not colour alone */
   private changePill(id: string) {
     const kind = this.changes.get(id);
-    return kind ? html`<span class="ui-eds__change" data-kind=${kind}>${kind === "new" ? "New" : "Edited"}</span>` : nothing;
+    return html`${kind ? html`<span class="ui-eds__change" data-kind=${kind}>${kind === "new" ? "New" : "Edited"}</span>` : nothing}${id === this.fromRunCase ? html`<span class="ui-eds__change" data-kind="run">From run</span>` : nothing}`;
   }
   /** @internal */
   private splitLabel(id: string) {
@@ -716,7 +861,7 @@ export class TcEvaluationDatasetEditor extends TcElement {
         this.setOpen(c.id);
       }}
     >${content}</div>`;
-    return html`<div class="ui-eds__row" role="row" aria-rowindex=${r + 2} ?data-open=${this.open === c.id} data-level=${ifDefined(level)}>
+    return html`<div class="ui-eds__row" role="row" aria-rowindex=${r + 2} ?data-open=${this.open === c.id} ?data-from-run=${c.id === this.fromRunCase} data-level=${ifDefined(level)}>
       ${cell(
         0,
         html`<span class="ui-eds__case-main">${this.changePill(c.id)}${level ? html`<span class="ui-eds__flag" data-level=${level}>${alertIcon}<span class="ui-eds__sr">${level === "error" ? "Has a problem" : "Has a warning"}, </span></span>` : nothing}<span class="ui-eds__input-text">${c.input || html`<span class="ui-eds__muted">No input</span>`}</span></span>${c.tags.length ? html`<span class="ui-eds__case-tags" aria-hidden="true">${this.chips(c.tags)}</span>` : nothing}`,
@@ -776,6 +921,107 @@ export class TcEvaluationDatasetEditor extends TcElement {
           : html`<p class="ui-eds__muted ui-eds__small">Nothing checked yet</p>`}
       </div>
     </div>`;
+  }
+
+  /** @internal New case from run: the run's input and output, suggested checks, tags and split */
+  private fromRunPanel() {
+    const run = this.fromRun!;
+    const disabled = this.isDisabled;
+    const titleId = `${this.uid}-from`;
+    const errId = `${this.uid}-from-err`;
+    const meta = Object.entries(run.metadata ?? {});
+    const splitKey = (e: KeyboardEvent) => {
+      const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      if (!(e.key in step) || !this.splits.length) return;
+      e.preventDefault();
+      const at = Math.max(0, this.splits.findIndex((x) => x.id === this.draftSplit));
+      this.draftSplit = this.splits[(at + step[e.key] + this.splits.length) % this.splits.length].id;
+      void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-eds__from .ui-eds__radio[aria-checked="true"]`)?.focus());
+    };
+    return html`<section class="ui-eds__detail ui-eds__from" aria-labelledby=${titleId} @keydown=${(e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        this.dismissRun();
+      }
+    }}>
+      <div class="ui-eds__detail-head">
+        <h4 class="ui-eds__detail-title" id=${titleId}>New case from run <span class="ui-eds__id">${run.id}</span></h4>
+        <button type="button" class="ui-eds__icon-btn" aria-label="Discard new case from run" title="Discard" @click=${() => this.dismissRun()}>${closeIcon}</button>
+      </div>
+      <div class="ui-eds__form">
+        <label class="ui-eds__field">
+          <span class="ui-eds__label">Input</span>
+          <textarea class="ui-eds__input" data-field="run-input" rows="3" aria-invalid=${this.draftError ? "true" : "false"} aria-describedby=${ifDefined(this.draftError ? errId : undefined)} .value=${live(this.draftInput)} ?disabled=${disabled} @input=${(e: Event) => {
+            this.draftInput = (e.target as HTMLTextAreaElement).value;
+            if (this.draftInput.trim()) this.draftError = "";
+          }}></textarea>
+          ${this.draftError ? html`<span class="ui-eds__error" id=${errId}>${this.draftError}</span>` : nothing}
+        </label>
+        <div class="ui-eds__field">
+          <label class="ui-eds__bad">
+            <input type="checkbox" class="ui-eds__check" .checked=${live(this.draftBad)} ?disabled=${disabled} @change=${(e: Event) => {
+              this.draftBad = (e.target as HTMLInputElement).checked;
+              this.draftExpected = this.draftBad ? "" : run.output;
+            }} />
+            <span>The run's output is bad – write the expected one</span>
+          </label>
+          ${this.draftBad ? html`<span class="ui-eds__label">The run answered</span><blockquote class="ui-eds__prompt ui-eds__bad-output">${run.output}</blockquote>` : nothing}
+          <label class="ui-eds__field">
+            <span class="ui-eds__label">${this.draftBad ? "Expected output" : "Expected output – the run's answer"} <span class="ui-eds__opt-hint">optional</span></span>
+            <textarea class="ui-eds__input" data-field="run-expected" rows="3" placeholder="What a good answer says" .value=${live(this.draftExpected)} ?disabled=${disabled} @input=${(e: Event) => (this.draftExpected = (e.target as HTMLTextAreaElement).value)}></textarea>
+          </label>
+        </div>
+        ${run.messages?.length || run.toolCalls?.length || meta.length
+          ? html`<details class="ui-eds__run-details">
+              <summary class="ui-eds__summary-btn">Run details</summary>
+              <dl class="ui-eds__meta">
+                ${run.messages?.length ? html`<dt>Conversation</dt><dd>${plural(run.messages.length, "message")}</dd>` : nothing}
+                ${run.toolCalls?.length ? html`<dt>Tools called</dt><dd>${run.toolCalls.map((t) => t.name).join(", ")}</dd>` : nothing}
+                ${meta.map(([k, v]) => html`<dt>${k}</dt><dd>${String(v)}</dd>`)}
+              </dl>
+            </details>`
+          : nothing}
+        <fieldset class="ui-eds__field ui-eds__fieldset">
+          <legend class="ui-eds__label">Suggested checks</legend>
+          ${this.suggestions.length
+            ? html`<ul class="ui-eds__suggest">
+                ${this.suggestions.map(
+                  (x, i) => html`<li>
+                    <label class="ui-eds__suggestion">
+                      <input type="checkbox" class="ui-eds__check" .checked=${live(this.draftChecks[i] ?? false)} ?disabled=${disabled} @change=${(e: Event) => {
+                        const next = [...this.draftChecks];
+                        next[i] = (e.target as HTMLInputElement).checked;
+                        this.draftChecks = next;
+                      }} />
+                      <span class="ui-eds__suggest-text"><code class="ui-eds__code">${this.rule({ id: `s${i}`, type: x.type, value: x.value }, false)}</code>${x.reason ? html`<span class="ui-eds__hint">${x.reason}</span>` : nothing}</span>
+                    </label>
+                  </li>`,
+                )}
+              </ul>`
+            : html`<p class="ui-eds__muted ui-eds__small">No checks to suggest – add some after the case is in the set.</p>`}
+        </fieldset>
+        <label class="ui-eds__field">
+          <span class="ui-eds__label">Tags <span class="ui-eds__opt-hint">separated by commas</span></span>
+          <input class="ui-eds__input" data-field="run-tags" .value=${live(this.draftTags)} ?disabled=${disabled} @input=${(e: Event) => (this.draftTags = (e.target as HTMLInputElement).value)} />
+        </label>
+        <div class="ui-eds__field">
+          <span class="ui-eds__label" id=${`${titleId}-split`}>Split</span>
+          <div class="ui-eds__radios" role="radiogroup" aria-labelledby=${`${titleId}-split`} @keydown=${splitKey}>
+            ${this.splits.map((x, i) => {
+              const on = x.id === this.draftSplit;
+              const focusable = on || (!this.splits.some((y) => y.id === this.draftSplit) && i === 0);
+              return html`<button type="button" role="radio" class="ui-eds__radio" aria-checked=${on ? "true" : "false"} tabindex=${focusable ? "0" : "-1"} ?disabled=${disabled} @click=${() => (this.draftSplit = x.id)}>
+                <span class="ui-eds__dot" data-tone=${this.tone(x.id)} aria-hidden="true"></span>${x.label}
+              </button>`;
+            })}
+          </div>
+        </div>
+        <div class="ui-eds__detail-foot ui-eds__from-foot">
+          <button type="button" class="ui-eds__btn" data-primary ?disabled=${disabled} @click=${() => this.addFromRun()}>${plusIcon}<span>Add to dataset</span></button>
+          <button type="button" class="ui-eds__ghost" ?disabled=${disabled} @click=${() => this.dismissRun()}>Discard</button>
+        </div>
+      </div>
+    </section>`;
   }
 
   /** @internal The open case: its read view, or its form while editing */
@@ -932,7 +1178,8 @@ export class TcEvaluationDatasetEditor extends TcElement {
     const titleId = `${this.uid}-title`;
     const total = this.value.cases.length;
     const disabled = this.isDisabled;
-    const opened = this.open !== null && this.value.cases.some((c) => c.id === this.open);
+    const fromRun = this.runPending;
+    const opened = fromRun || (this.open !== null && this.value.cases.some((c) => c.id === this.open));
     const filtered = view.length !== total;
     return html`
       ${cardHead({
@@ -985,7 +1232,7 @@ export class TcEvaluationDatasetEditor extends TcElement {
             </div>
             ${view.length === 0 ? html`<p class="ui-eds__empty">${total ? "No cases match these filters" : "No cases yet – add one or import a file"}</p>` : nothing}
           </div>
-          ${this.detail()}
+          ${fromRun ? this.fromRunPanel() : this.detail()}
         </div>
       </div>
       <span class="ui-eds__sr" role="status">${this.spoken}</span>
@@ -1141,6 +1388,9 @@ export class TcEvaluationDatasetEditor extends TcElement {
 .ui-eds__pill[data-tone="none"] { background: var(--tc-fill-default); color: var(--tc-text-secondary); }
 .ui-eds__change[data-kind="new"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
 .ui-eds__change[data-kind="edited"] { background: var(--tc-status-info-bg); color: var(--tc-status-info-fg); }
+.ui-eds__change[data-kind="run"] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
+/* The case just made from a run: an accent edge on its row */
+.ui-eds__row[data-from-run] { box-shadow: inset 2px 0 0 var(--tc-accent); }
 .ui-eds__flag { display: inline-grid; flex: none; place-items: center; }
 .ui-eds__alert { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 :where([data-look="clean"], [data-look="clean"] *) .ui-eds__alert { stroke-width: 1.4; }
@@ -1206,6 +1456,23 @@ textarea.ui-eds__input { height: auto; min-height: 60px; max-height: 240px; fiel
 .ui-eds__issue[data-level="error"] { color: var(--tc-status-danger-fg); }
 .ui-eds__issue[data-level="warning"] { color: var(--tc-status-warning-fg); }
 .ui-eds__detail-foot { display: flex; padding-top: var(--tc-space-2-5); border-top: var(--tc-hairline) solid var(--tc-divider); }
+
+/* New case from run */
+.ui-eds__fieldset { margin: 0; padding: 0; border: 0; }
+.ui-eds__fieldset > legend { padding: 0; margin-bottom: var(--tc-space-1-5); }
+.ui-eds__check { flex: none; width: 16px; height: 16px; margin: var(--tc-space-0-5) 0 0; accent-color: var(--tc-accent); }
+.ui-eds__bad, .ui-eds__suggestion { display: flex; align-items: flex-start; gap: var(--tc-space-2); min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); cursor: pointer; }
+.ui-eds__bad-output { color: var(--tc-text-secondary); text-decoration: line-through; text-decoration-color: var(--tc-text-muted); }
+.ui-eds__suggest { display: grid; gap: var(--tc-space-1); }
+.ui-eds__suggest-text { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
+.ui-eds__run-details { border-radius: var(--tc-radius-md); background: var(--tc-surface-well); }
+.ui-eds__summary-btn { padding: var(--tc-space-1-5) var(--tc-space-2-5); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); cursor: pointer; }
+.ui-eds__summary-btn:focus-visible { border-radius: var(--tc-radius-md); outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-eds__meta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--tc-space-1) var(--tc-space-3); margin: 0; padding: 0 var(--tc-space-2-5) var(--tc-space-2-5); font-size: var(--tc-font-size-sm); }
+.ui-eds__meta dt { color: var(--tc-text-muted); }
+.ui-eds__meta dd { margin: 0; color: var(--tc-text-primary); overflow-wrap: anywhere; }
+.ui-eds__from-foot { gap: var(--tc-space-2); align-items: center; }
+.ui-eds__from-foot .ui-eds__ghost { margin-left: 0; }
 
 /* The read view: the prompt beside the rules it has to pass */
 .ui-eds__detail { container: ui-eds-case / inline-size; }

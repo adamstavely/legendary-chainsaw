@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-judge-sampling.json",
+  "title": "tc-judge-sampling",
+  "description": "How much of an agent's traffic an LLM judge reads, and what it costs – a sampling rate per segment, rules that\nalways include a chat, the judge model, and live estimates of chats judged, monthly cost and what the sample can\nsee, with a budget cap that warns.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JudgeSegment"
+      },
+      "description": "The traffic segments, each with its chats a day"
+    },
+    "includeRules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JudgeIncludeRule"
+      },
+      "description": "Rules that always include a chat, whatever the rate"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JudgeModel"
+      },
+      "description": "The judge models to choose from, with a price per chat"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "rates": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "include": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "model": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "rates",
+        "include",
+        "model"
+      ],
+      "additionalProperties": false,
+      "description": "The settings. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency for prices and the budget, e.g. \"USD\""
+    },
+    "scoreSd": {
+      "type": "number",
+      "description": "How spread out the judge's scores are (their standard deviation), for what the sample can see"
+    },
+    "detect": {
+      "type": "number",
+      "description": "The drop in the average score worth seeing, e.g. 0.2 on a 1–5 scale"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "JudgeSegment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "chatsPerDay": {
+          "type": "number",
+          "description": "Chats a day in this segment"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "chatsPerDay"
+      ],
+      "additionalProperties": false
+    },
+    "JudgeIncludeRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One line on what it catches"
+        },
+        "chatsPerDay": {
+          "type": "number",
+          "description": "Chats a day it matches – added on top of the sample"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "chatsPerDay"
+      ],
+      "additionalProperties": false
+    },
+    "JudgeModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "costPerChat": {
+          "type": "number",
+          "description": "What judging one chat costs, in `currency`"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "costPerChat"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

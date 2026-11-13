@@ -2,6 +2,30 @@
 
 # Changelog
 
+## 0.25.0 – Evals in production
+
+- **Test Run Panel:** try an agent while you edit it – draft or live badge, the conversation with its tool calls, test
+  variables, Reset, and Save as test case.
+- **Review Queue:** grade real outputs one at a time from the keyboard – per-criterion pass or fail and 1–5 grades, a
+  note, a suggested verdict, progress, skip and undo.
+- **Eval Criteria Editor:** define what an LLM judge asks – pass or fail, scale or label answers, weights as shares,
+  examples, checks in words, the assembled prompt and Try on sample.
+- **Quality Trend:** judge scores on live chats day by day, with sample-size bands, changes pinned on the time axis, a
+  sentence on what moved since the latest change, and a table view.
+- **Quality Drop:** one drop in a judge score – the likely cause with its confidence in words, failing chats as quotes,
+  the topics it clusters in, and Roll back, Investigate or Dismiss.
+- **Change Impact:** before against after for one change – a dumbbell row per criterion with a verdict in words from
+  the counts, cost and latency deltas, and a segment switch.
+- **Failure Clusters:** failing chats grouped by topic with size, share and trend in words; quotes, Open chats, Add to
+  dataset and Mark as known.
+- **Quality Alerts:** alert rules written as sentences with labelled slots, a switch, last fired and a 30-day preview.
+- **Judge Sampling:** a judge's sampling rate per segment, always-include rules and model, with live estimates of chats
+  judged, monthly cost and the drop it can see, and a budget warning.
+- **Eval Scorecard:** `runs` adds run history – pass rate against a baseline, each run's change in words, the cases that
+  regressed, Set as baseline and a table view.
+- **Evaluation Dataset Editor:** `fromRun` turns a real run into a test case, with suggested checks, tags and split.
+- **Standalone gallery and `docs/`:** rebuilt with the above.
+
 ## 0.24.0 – Agent setup and deploy
 
 - **Agent List:** every agent in a workspace with the failing ones lifted into Needs attention and why in words; search,

@@ -1,0 +1,237 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-change-impact.json",
+  "title": "tc-change-impact",
+  "description": "Before against after for one change – per-criterion differences with a verdict in words, a dumbbell row each, cost and\nlatency, sample sizes, a summary line, and a segment switch.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "change": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "model",
+            "other",
+            "prompt",
+            "tool"
+          ]
+        }
+      },
+      "required": [
+        "label",
+        "before",
+        "after"
+      ],
+      "additionalProperties": false,
+      "description": "The change being judged, and the names of its two sides"
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ImpactCriterion"
+      },
+      "description": "One entry per judge criterion, over all traffic"
+    },
+    "cost": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "number"
+        },
+        "after": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "before",
+        "after"
+      ],
+      "additionalProperties": false,
+      "description": "Cost per chat before and after, over all traffic"
+    },
+    "latency": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "number"
+        },
+        "after": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "before",
+        "after"
+      ],
+      "additionalProperties": false,
+      "description": "Median latency in ms before and after, over all traffic"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ImpactSegment"
+      },
+      "description": "Slices of the traffic, each with its own criteria (and cost and latency, if known)"
+    },
+    "segment": {
+      "type": "string",
+      "description": "The segment shown; null for all traffic"
+    },
+    "min": {
+      "type": "number",
+      "description": "The lowest judge score – the dumbbells' left edge for scores (pass rates run 0–100%)"
+    },
+    "max": {
+      "type": "number",
+      "description": "The highest judge score"
+    },
+    "spread": {
+      "type": "number",
+      "description": "A score's spread (standard deviation) when a criterion gives none"
+    },
+    "z": {
+      "type": "number",
+      "description": "How many standard errors make a difference \"likely\""
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency of `cost`"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Formats numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ImpactCriterion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "before": {
+          "$ref": "#/definitions/ImpactValue"
+        },
+        "after": {
+          "$ref": "#/definitions/ImpactValue"
+        },
+        "higherIsBetter": {
+          "type": "boolean",
+          "description": "False when a lower number is the better one – a refusal rate"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "before",
+        "after"
+      ],
+      "additionalProperties": false
+    },
+    "ImpactValue": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "mean": {
+              "type": "number"
+            },
+            "n": {
+              "type": "number"
+            },
+            "sd": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "mean",
+            "n"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "passes": {
+              "type": "number"
+            },
+            "n": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "passes",
+            "n"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "A criterion on one side: a judge score (its mean, the chats scored and, if known, the spread) or pass counts"
+    },
+    "ImpactSegment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The slice – \"Refunds\", \"Spanish\""
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImpactCriterion"
+          }
+        },
+        "cost": {
+          "$ref": "#/definitions/ImpactMetric"
+        },
+        "latency": {
+          "$ref": "#/definitions/ImpactMetric"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "criteria"
+      ],
+      "additionalProperties": false
+    },
+    "ImpactMetric": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "number"
+        },
+        "after": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "before",
+        "after"
+      ],
+      "additionalProperties": false,
+      "description": "Before and after for cost (per chat) or latency (median ms) – lower is better"
+    }
+  }
+}

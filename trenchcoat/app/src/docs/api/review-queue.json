@@ -1,0 +1,567 @@
+{
+ "elements": [
+  {
+   "tag": "tc-review-queue",
+   "className": "TcReviewQueue",
+   "description": "Grade real outputs one at a time from the keyboard: per-criterion grades, a note and a verdict, with progress and undo.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Review queue\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "ReviewQueueItem[]",
+     "default": "[]",
+     "description": "The outputs to grade, in order",
+     "readonly": false
+    },
+    {
+     "name": "criteria",
+     "attribute": null,
+     "type": "ReviewQueueCriterion[]",
+     "default": "[ { id: \"correct\", label: \"Correct\", description: \"Is everything it says true?\" }, { id: \"grounded\", label: \"Grounded\", description: \"Does it stick to the policy text?\" }, { id: \"helpful\", label: \"Helpful\", description: \"How well does it answer what was asked?\", kind: \"scale\", min: 1, max: 5 }, ]",
+     "description": "What each output is graded on",
+     "readonly": false
+    },
+    {
+     "name": "index",
+     "attribute": "index",
+     "type": "number",
+     "default": "0",
+     "description": "The item showing. Changed by the user unless a tc-index-change listener prevents it",
+     "readonly": false
+    },
+    {
+     "name": "results",
+     "attribute": null,
+     "type": "Record<string, ReviewQueueResult>",
+     "default": "{}",
+     "description": "Where each item stands, by id. Changed by submits, skips and undo unless a tc-results-change listener prevents it",
+     "readonly": false
+    },
+    {
+     "name": "noShortcuts",
+     "attribute": "no-shortcuts",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns the single-key shortcuts off (buttons still work)",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": null,
+     "type": "ReviewQueueItem | undefined",
+     "default": null,
+     "description": "The item showing",
+     "readonly": true
+    },
+    {
+     "name": "counts",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "How many are graded and skipped",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-grade",
+     "detail": "",
+     "description": "An item was submitted ({ id, grades, verdict, note }: ReviewQueueGrade); cancelable – prevented, it stays open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skip",
+     "detail": "",
+     "description": "An item was skipped ({ id }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-undo",
+     "detail": "",
+     "description": "The last submit was undone ({ id }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-index-change",
+     "detail": "",
+     "description": "Another item came up ({ index, item }: ReviewQueueIndexChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-results-change",
+     "detail": "",
+     "description": "An item was graded, skipped or undone ({ results, id }: ReviewQueueResultsChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rvq",
+   "cssProperties": [
+    {
+     "name": "--tc-rvq-text-h",
+     "value": "180px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-scrim",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "suggestVerdict",
+   "signature": "suggestVerdict(criteria: ReviewQueueCriterion[], grades: Record<string, ReviewQueueGradeValue>): ReviewQueueVerdict | null",
+   "description": "The verdict the grades suggest: fail when any pass/fail criterion failed or a scale sits in its lower half"
+  }
+ ],
+ "react": [
+  {
+   "component": "ReviewQueue",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – defaults to \"Review queue\""
+    },
+    {
+     "name": "index",
+     "type": "number",
+     "optional": true,
+     "description": "The item showing. Controlled when defined"
+    },
+    {
+     "name": "defaultIndex",
+     "type": "number",
+     "optional": true,
+     "description": "On mount, when `index` isn't controlled"
+    },
+    {
+     "name": "onIndexChange",
+     "type": "(index: number, item: ReviewQueueItem | undefined) => void",
+     "optional": true,
+     "description": "Called with the next `index`"
+    },
+    {
+     "name": "results",
+     "type": "Record<string, ReviewQueueResult>",
+     "optional": true,
+     "description": "Where each item stands, by id. Controlled when defined"
+    },
+    {
+     "name": "defaultResults",
+     "type": "Record<string, ReviewQueueResult>",
+     "optional": true,
+     "description": "On mount, when `results` isn't controlled"
+    },
+    {
+     "name": "onResultsChange",
+     "type": "(results: Record<string, ReviewQueueResult>) => void",
+     "optional": true,
+     "description": "Called with the next `results`"
+    },
+    {
+     "name": "onGrade",
+     "type": "(grade: ReviewQueueGrade) => void | boolean",
+     "optional": true,
+     "description": "Called when an item is submitted. Return false to keep it open"
+    },
+    {
+     "name": "onSkip",
+     "type": "(id: string) => void | boolean",
+     "optional": true,
+     "description": "Called when an item is skipped. Return false to stay on it"
+    },
+    {
+     "name": "onUndo",
+     "type": "(id: string) => void | boolean",
+     "optional": true,
+     "description": "Called when the last submit is undone. Return false to keep it"
+    }
+   ],
+   "hides": [
+    "heading",
+    "index",
+    "results"
+   ],
+   "events": {
+    "tc-grade": "onGrade",
+    "tc-skip": "onSkip",
+    "tc-undo": "onUndo",
+    "tc-index-change": "onIndexChange",
+    "tc-results-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-review-queue",
+   "className": "TcReviewQueue",
+   "module": "@adamstavely/trenchcoat/review-queue",
+   "data": [
+    "items",
+    "criteria",
+    "results"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "index",
+     "attribute": "index"
+    },
+    {
+     "name": "noShortcuts",
+     "attribute": "no-shortcuts"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-grade",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skip",
+     "cancelable": true
+    },
+    {
+     "name": "tc-undo",
+     "cancelable": true
+    },
+    {
+     "name": "tc-index-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-results-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "index",
+     "event": "tc-index-change"
+    },
+    {
+     "property": "results",
+     "event": "tc-results-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 42222,
+  "gzip": 12515
+ }
+}

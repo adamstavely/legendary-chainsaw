@@ -14,11 +14,18 @@ answer, the differences marked word by word. Filters by tag and by outcome narro
 cases do across versions?” is one click. It answers “is the new version better, and where did it get worse?” before
 a change ships, and it stays fast with 10,000 cases.
 
+Given `runs` – each run of the whole set with its pass rate – a run history follows the grid. Each run is a bar
+against a dashed line at the baseline's pass rate, and the picked run's change is said in words: “+4 points”, or
+“−2 points, 3 new failures”. The cases that passed in the baseline and fail in that run are listed; pick one to open
+it. Set as baseline makes another run the one the rest are measured against, and Table shows the same runs as a
+table.
+
 ## When to use
 
 - Reviewing an eval run before promoting a new prompt or model.
 - Finding regressions: cases the latest version fails that the one before passed.
 - Comparing pass rates for one slice of the set – a tag such as “billing” or “multilingual”.
+- Tracking the set's pass rate run after run against a baseline, and what each run broke.
 
 ## When not to use
 
@@ -34,6 +41,10 @@ a change ships, and it stays fast with 10,000 cases.
 3. **Grid** `.ui-evs__grid` – a row per case, a column per version, an outcome in each cell
 4. **Open case** `.ui-evs__detail` – the version buttons, the grader's verdict and the case's input
 5. **Comparison** `.ui-evs__pair` – the expected answer beside the output, differences marked
+6. **Run history** `.ui-evs__history` – with `runs`: the baseline's name and rate, and Table
+7. **Bars** `.ui-evs__bars` – a bar per run, the baseline's pass rate as a dashed line across them
+8. **Runs** `.ui-evs__pick` – the runs as radio buttons, the baseline marked
+9. **Picked run** `.ui-evs__run-detail` – its pass rate, its change in words, Set as baseline and its regressions
 
 ## Looks
 
@@ -41,6 +52,10 @@ Standard puts the header on a gray tray and the scorecard on a white card inside
 hairline dividers, uppercase captions on the grid and the open case, and plain text on its marked words. Wide (from
 860 px), the open case sits beside the grid; narrower, it opens below, the columns tighten and the case's tags give
 way.
+
+The run history's bars are grey for a run level with the baseline, green for one that gained and red for one that
+lost points or broke cases; the baseline's own bar and line use `--tc-eval-scorecard-line`. Their height is
+`--tc-eval-scorecard-history` (72 px).
 
 ## Keyboard
 
@@ -55,6 +70,8 @@ way.
 | Enter / Space | In the grid, opens the active cell's case for that version – the case column opens the latest version |
 | Escape | Closes the open case; from inside the open case, focus goes back to the grid |
 | ← / → / Home / End | In the version buttons, moves between them; Enter or Space shows that version's run |
+| ← / → / ↑ / ↓ / Home / End | In the run history's runs, picks the previous, next, first or last run |
+| Enter / Space | On Table, switches between bars and the table; on a regression, opens that case |
 
 ## Screen readers
 
@@ -68,18 +85,28 @@ region named by the case; its version buttons are a `toolbar` named “Versions�
 with its outcome (“Fail, v4”). Words only the expected answer has are `<del>` and words only the output has are
 `<ins>`.
 
+The run history is a region named “Run history”. Its bars are hidden from screen readers: the runs are a
+`radiogroup` named “Runs”, each read with its rate (“Run 4 · v4, 86%, Baseline”), and the picked run reads as a
+sentence – “Run 5 · v5 · Nov 7 · 89% (2,136 of 2,400 cases passed) +3 points, 41 new failures against Run 3 · v3”.
+Table is a toggle button (`aria-pressed`) controlling a real `table` with a caption, a row per run. Set as baseline
+moves focus to the picked run and says “Baseline: Run 5”.
+
 ## Content
 
 - Name cases by what they test, in a few words – “Refund for a damaged item”, not an id.
 - Keep version labels short (“v4”, “Prompt 12”) – they head narrow columns – and put the model in `detail`.
 - Give failures a `reason` in one line: what the grader saw, not the score again.
 - Use a handful of tags people would filter by – the topic, the language, the risk.
+- Label runs so they can be told apart at a glance – “Nightly 3 Nov”, “Run 14 · v5” – and give each its time in `at`.
+- Give a run the same id as its version when there is one: its regressions then come from the cases' results, and
+  picking one opens the case on that run.
 
 ## Do
 
 - List versions oldest first: Failing and Regressed judge the last one.
 - Set `status: "running"` on a version whose results are still arriving, and mark its unfinished cases `pending`.
 - Fill in `expected` and each result's `output`, so a failure can be read, not only counted.
+- Pick a baseline people agree on – the version in production – and move it with Set as baseline when that changes.
 
 ## Don't
 
@@ -107,17 +134,35 @@ with its outcome (“Fail, v4”). Words only the expected answer has are `<del>
       results: { v3: { outcome: "pass" }, v4: { outcome: "fail", output: "Please send it back first.", reason: "Asked for a return" } },
     },
   ];
+  evals.runs = [
+    { id: "v3", label: "Run 3 · v3", at: Date.UTC(2026, 10, 5), passRate: 1, passed: 1, total: 1, baseline: true },
+    { id: "v4", label: "Run 4 · v4", at: Date.UTC(2026, 10, 6), passRate: 0, passed: 0, total: 1 },
+  ];
   evals.addEventListener("tc-open-change", (e) => console.log(e.detail.open));
+  evals.addEventListener("tc-baseline-change", (e) => console.log("baseline", e.detail.baseline));
 </script>
 ```
 
 ```tsx
-import { EvalScorecard, type EvalCase, type EvalVersion } from "@adamstavely/trenchcoat/react";
+import { useState } from "react";
+import { EvalScorecard, type EvalCase, type EvalRun, type EvalVersion } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
 const versions: EvalVersion[] = [{ id: "v3", label: "v3" }, { id: "v4", label: "v4", detail: "Opus" }];
 
-export function EvalReview({ cases }: { cases: EvalCase[] }) {
-  return <EvalScorecard title="Support replies" versions={versions} cases={cases} defaultShow="regressed" onOpenChange={(open) => console.log(open)} />;
+export function EvalReview({ cases, runs }: { cases: EvalCase[]; runs: EvalRun[] }) {
+  const [baseline, setBaseline] = useState<string | null>("v3");
+  return (
+    <EvalScorecard
+      title="Support replies"
+      versions={versions}
+      cases={cases}
+      runs={runs}
+      baseline={baseline}
+      onBaselineChange={setBaseline}
+      defaultShow="regressed"
+      onOpenChange={(open) => console.log(open)}
+    />
+  );
 }
 ```

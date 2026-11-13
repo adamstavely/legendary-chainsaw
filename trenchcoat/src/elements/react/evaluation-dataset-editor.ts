@@ -1,10 +1,32 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcEvaluationDatasetEditor, type EvaluationDatasetCompareChange, type EvaluationDatasetExport, type EvaluationDatasetOpenChange, type EvaluationDatasetValue, type EvaluationDatasetValueChange } from "../evaluation-dataset-editor";
+import {
+  TcEvaluationDatasetEditor,
+  type EvaluationCase,
+  type EvaluationCaseSource,
+  type EvaluationDatasetCompareChange,
+  type EvaluationDatasetExport,
+  type EvaluationDatasetFromRunDismiss,
+  type EvaluationDatasetOpenChange,
+  type EvaluationDatasetValue,
+  type EvaluationDatasetValueChange,
+} from "../evaluation-dataset-editor";
 import { h, useControlled } from "./internal";
 
-export type { EvaluationAssertion, EvaluationAssertionType, EvaluationCase, EvaluationComparison, EvaluationDatasetValue, EvaluationDatasetVersion, EvaluationIssue, EvaluationSplit } from "../evaluation-dataset-editor";
-export { compareEvaluationDatasets, EVALUATION_ASSERTION_TYPES, EVALUATION_SPLITS, evaluationDatasetFromJsonl, evaluationDatasetIssues, evaluationDatasetToJsonl } from "../evaluation-dataset-editor";
+export type {
+  EvaluationAssertion,
+  EvaluationAssertionType,
+  EvaluationCase,
+  EvaluationCaseSource,
+  EvaluationCheckSuggestion,
+  EvaluationComparison,
+  EvaluationDatasetValue,
+  EvaluationDatasetVersion,
+  EvaluationIssue,
+  EvaluationRun,
+  EvaluationSplit,
+} from "../evaluation-dataset-editor";
+export { compareEvaluationDatasets, EVALUATION_ASSERTION_TYPES, EVALUATION_SPLITS, evaluationDatasetFromJsonl, evaluationDatasetIssues, evaluationDatasetToJsonl, evaluationRunChecks } from "../evaluation-dataset-editor";
 
 const RawEvaluationDatasetEditor = createComponent({
   tagName: "tc-evaluation-dataset-editor",
@@ -16,11 +38,12 @@ const RawEvaluationDatasetEditor = createComponent({
     onTcCompareChange: "tc-compare-change" as EventName<CustomEvent<EvaluationDatasetCompareChange>>,
     onTcImport: "tc-import" as EventName<CustomEvent<null>>,
     onTcExport: "tc-export" as EventName<CustomEvent<EvaluationDatasetExport>>,
+    onTcFromRunDismiss: "tc-from-run-dismiss" as EventName<CustomEvent<EvaluationDatasetFromRunDismiss>>,
   },
 });
 
 type RawProps = React.ComponentProps<typeof RawEvaluationDatasetEditor>;
-type Owned = "value" | "defaultValue" | "heading" | "open" | "compare" | "onChange" | "onTcValueChange" | "onTcOpenChange" | "onTcCompareChange" | "onTcImport" | "onTcExport" | "children";
+type Owned = "value" | "defaultValue" | "heading" | "open" | "compare" | "onChange" | "onTcValueChange" | "onTcOpenChange" | "onTcCompareChange" | "onTcImport" | "onTcExport" | "onTcFromRunDismiss" | "children";
 export type EvaluationDatasetEditorProps = Omit<RawProps, Owned> & {
   /** The heading – the set's name */
   title?: string;
@@ -44,11 +67,15 @@ export type EvaluationDatasetEditorProps = Omit<RawProps, Owned> & {
   onImport?: () => void;
   /** Export was pressed, with the set and the same set as JSON Lines */
   onExport?: (value: EvaluationDatasetValue, jsonl: string) => void;
+  /** A case made from `fromRun` was added – also passed to onChange with the whole set */
+  onRunCaseAdd?: (added: EvaluationCase, source: EvaluationCaseSource) => void;
+  /** New case from run was discarded; return false to keep the panel */
+  onFromRunDismiss?: (runId: string) => boolean | void;
 };
 
 const DEFAULT: EvaluationDatasetValue = { cases: [] };
 
-export function EvaluationDatasetEditor({ title, value, defaultValue = DEFAULT, onChange, compare, defaultCompare = "", onCompareChange, open, onOpenChange, onImport, onExport, ...props }: EvaluationDatasetEditorProps) {
+export function EvaluationDatasetEditor({ title, value, defaultValue = DEFAULT, onChange, compare, defaultCompare = "", onCompareChange, open, onOpenChange, onImport, onExport, onRunCaseAdd, onFromRunDismiss, ...props }: EvaluationDatasetEditorProps) {
   const v = useControlled(value, defaultValue, onChange);
   const c = useControlled(compare, defaultCompare, onCompareChange);
   const o = useControlled<string | null>(open, null, onOpenChange);
@@ -58,7 +85,13 @@ export function EvaluationDatasetEditor({ title, value, defaultValue = DEFAULT, 
     value: v.value,
     compare: c.value,
     open: o.value,
-    onTcValueChange: (e: CustomEvent<EvaluationDatasetValueChange>) => v.handler(e.detail.value, e),
+    onTcValueChange: (e: CustomEvent<EvaluationDatasetValueChange>) => {
+      v.handler(e.detail.value, e);
+      if (e.detail.added && e.detail.source) onRunCaseAdd?.(e.detail.added, e.detail.source);
+    },
+    onTcFromRunDismiss: (e: CustomEvent<EvaluationDatasetFromRunDismiss>) => {
+      if (onFromRunDismiss?.(e.detail.runId) === false) e.preventDefault();
+    },
     onTcCompareChange: (e: CustomEvent<EvaluationDatasetCompareChange>) => c.handler(e.detail.compare, e),
     onTcOpenChange: (e: CustomEvent<EvaluationDatasetOpenChange>) => o.handler(e.detail.open, e),
     onTcImport: () => onImport?.(),

@@ -20,6 +20,9 @@ import { diffWords, type DiffSegment } from "./inline-diff";
  *   · open a cell: the case's input, why it failed, and its output beside the expected answer, diffed word by word
  *     (Inline Diff's diffWords); the version buttons switch between its runs
  *   · long sets render only the rows near the scroll position (10,000 cases stay fast)
+ *   · run history (with `runs`): the pass rate of each run of the set as bars against the baseline's, each run's change
+ *     in words ("+4 points", "−2 points, 3 new failures"), the cases that passed in the baseline and fail now, and Set as
+ *     baseline; Table shows the same runs as a table
  * Standard is a gray tray with the scorecard on a white card; Clean is one white card with hairline dividers. Wide,
  * the open case sits beside the grid; narrow, below it.
  *
@@ -71,6 +74,30 @@ export type EvalScorecardTagsChange = { tags: string[] };
 export type EvalScorecardShowChange = { show: EvalScorecardShow };
 export type EvalScorecardOpenChange = { open: EvalScorecardOpen | null };
 
+/** One run of the whole set – for the run history */
+export type EvalRun = {
+  id: string;
+  /** Short – it labels the run's bar: "Run 14", "Nightly 3 Nov" */
+  label: string;
+  /** When it ran, epoch ms */
+  at: number;
+  /** Its pass rate, 0–1 */
+  passRate: number;
+  /** Cases passed */
+  passed: number;
+  /** Cases run */
+  total: number;
+  /** The run the others are compared with – used when `baseline` isn't set */
+  baseline?: boolean;
+  /** Cases that passed in the baseline and fail in this run. Left out, they're worked out from `cases` when both runs'
+   *  ids are versions there */
+  regressions?: { caseId: string; name?: string }[];
+};
+/** A run's change against the baseline */
+export type EvalRunDelta = { points: number; regressions: { caseId: string; name: string }[]; baseline: boolean };
+export type EvalScorecardBaselineChange = { baseline: string; id: string };
+export type EvalScorecardCaseOpen = { caseId: string; runId: string };
+
 /** One version's numbers over the cases on show */
 export type EvalVersionStats = { pass: number; fail: number; error: number; pending: number; rate: number | null };
 
@@ -100,6 +127,30 @@ export function evalRegressed(c: EvalCase, versions: EvalVersion[]) {
   return n > 1 && c.results[versions[n - 2].id]?.outcome === "pass" && failed(c.results[versions[n - 1].id]);
 }
 
+/** Which run the others are compared with: `baseline` by id, else the run marked `baseline`, else the first */
+export function evalBaselineRun(runs: readonly EvalRun[], baseline: string | null = null) {
+  return (baseline ? runs.find((r) => r.id === baseline) : undefined) ?? runs.find((r) => r.baseline) ?? runs[0];
+}
+
+/** A run against the baseline: the change in whole points, and the cases that passed there and fail here */
+export function evalRunDelta(run: EvalRun, base: EvalRun, cases: readonly EvalCase[] = []): EvalRunDelta {
+  const points = Math.round((run.passRate - base.passRate) * 100);
+  if (run.id === base.id) return { points: 0, regressions: [], baseline: true };
+  const regressions = run.regressions
+    ? run.regressions.map((r) => ({ caseId: r.caseId, name: r.name ?? cases.find((c) => c.id === r.caseId)?.name ?? r.caseId }))
+    : cases.filter((c) => c.results[base.id]?.outcome === "pass" && failed(c.results[run.id])).map((c) => ({ caseId: c.id, name: c.name }));
+  return { points, regressions, baseline: false };
+}
+
+/** A run's change in words: "+4 points", "−2 points, 3 new failures", "Same as the baseline" */
+export function evalDeltaText(d: EvalRunDelta) {
+  if (d.baseline) return "Baseline";
+  const pts = d.points ? `${d.points > 0 ? "+" : "−"}${Math.abs(d.points)} ${Math.abs(d.points) === 1 ? "point" : "points"}` : "Same as the baseline";
+  return d.regressions.length ? `${pts}, ${plural(d.regressions.length, "new failure")}` : pts;
+}
+
+const runDate = (at: number) => new Date(at).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
 /* ---------- Icons (Lucide, ISC – lucide.dev) ---------- */
 const glyph = (d: TemplateResult) => html`<svg class="ui-evs__glyph" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
 const ICONS: Record<EvalOutcome | "none", TemplateResult> = {
@@ -115,6 +166,8 @@ const mark = svg`<rect x="5" y="4" width="14" height="17" rx="2"></rect><path d=
 const closeIcon = html`<svg class="ui-evs__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M7 7l10 10M17 7L7 17"></path>`}</svg>`;
 
 /** The windowed grid renders rows near the scroll position above this many cases */
+/** The run history lists this many regressions, then says how many more */
+const REGRESSIONS_SHOWN = 8;
 const VIRTUAL_FROM = 60;
 const OVERSCAN = 20;
 const ROW = 36;
@@ -130,6 +183,8 @@ let instances = 0;
  * @fires tc-tags-change - The picked tags changed ({ tags }: EvalScorecardTagsChange); cancelable
  * @fires tc-show-change - All, Failing or Regressed was picked ({ show }: EvalScorecardShowChange); cancelable
  * @fires tc-open-change - A case was opened, switched to another version or closed ({ open }: EvalScorecardOpenChange); cancelable
+ * @fires tc-baseline-change - Set as baseline was pressed ({ baseline, id }: EvalScorecardBaselineChange – the run's id); cancelable – prevented, `baseline` stays as it was
+ * @fires tc-case-open - A regression in the run history was picked ({ caseId, runId }: EvalScorecardCaseOpen); cancelable – unless prevented, the case opens on that run when the run is a version
  */
 export class TcEvalScorecard extends TcElement {
   static override ui = "evs";
@@ -150,6 +205,17 @@ export class TcEvalScorecard extends TcElement {
   @property({ type: Number, attribute: "max-height" }) accessor maxHeight = 360;
   /** Formats a pass rate (0–1) – defaults to a whole percentage, e.g. "86%" */
   @property({ attribute: false }) accessor formatRate: (rate: number) => string = percent;
+  /** Runs of the whole set, oldest first – turns on the run history. A run whose id is a version's id gets its
+   *  regressions from `cases` */
+  @property({ attribute: false }) accessor runs: EvalRun[] = [];
+  /** The id of the run the others are compared with; null uses the run marked `baseline`, else the first. Changed by
+   *  Set as baseline unless tc-baseline-change is prevented */
+  @property() accessor baseline: string | null = null;
+
+  /** @internal The run picked in the run history: its id, or null for the latest */
+  @state() accessor pickedRun: string | null = null;
+  /** @internal The run history shows a table instead of bars */
+  @state() accessor historyTable = false;
 
   /** @internal The grid's active cell: row in the shown cases, column 0 the case, 1… the versions */
   @state() accessor active: Cell | null = null;
@@ -172,7 +238,7 @@ export class TcEvalScorecard extends TcElement {
     overscan: OVERSCAN,
     rowHeight: ROW,
   });
-  private readonly runs = new ToolbarController(this, { items: () => [...this.querySelectorAll<HTMLElement>(".ui-evs__run")] });
+  private readonly runBar = new ToolbarController(this, { items: () => [...this.querySelectorAll<HTMLElement>(".ui-evs__run")] });
 
   constructor() {
     super();
@@ -320,6 +386,120 @@ export class TcEvalScorecard extends TcElement {
   private outcome(r: EvalResult | undefined, extra = "") {
     const key = r?.outcome ?? "none";
     return html`<span class="ui-evs__out" data-outcome=${key}>${ICONS[key]}<span class="ui-evs__sr">${OUTCOME[key]}${extra}</span></span>`;
+  }
+
+  /** @internal Set as baseline */
+  private setBaseline(id: string) {
+    if (id === evalBaselineRun(this.runs, this.baseline)?.id) return;
+    if (this.emit<EvalScorecardBaselineChange>("tc-baseline-change", { baseline: id, id }, { cancelable: true })) this.baseline = id;
+    void this.updateComplete.then(() => {
+      const base = evalBaselineRun(this.runs, this.baseline);
+      this.spoken = base ? `Baseline: ${base.label}` : "";
+      this.querySelector<HTMLElement>(`.ui-evs__pick [aria-checked="true"]`)?.focus();
+    });
+  }
+
+  /** @internal A regression picked: tells the page, and opens the case on that run when the run is a version */
+  private openRegression(caseId: string, runId: string) {
+    if (!this.emit<EvalScorecardCaseOpen>("tc-case-open", { caseId, runId }, { cancelable: true })) return;
+    if (this.cases.some((c) => c.id === caseId) && this.versions.some((v) => v.id === runId)) this.setOpen({ caseId, versionId: runId });
+  }
+
+  /** @internal APG radio group over the runs: arrows move and pick */
+  private onRunKey = (e: KeyboardEvent) => {
+    const runs = this.runs;
+    if (!runs.length) return;
+    const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    let to: number;
+    const at = Math.max(0, runs.findIndex((r) => r.id === this.shownRun?.id));
+    if (e.key in step) to = (at + step[e.key] + runs.length) % runs.length;
+    else if (e.key === "Home") to = 0;
+    else if (e.key === "End") to = runs.length - 1;
+    else return;
+    e.preventDefault();
+    this.pickedRun = runs[to].id;
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-evs__pick [aria-checked="true"]`)?.focus());
+  };
+
+  /** @internal The run the history's details are about */
+  private get shownRun() {
+    return this.runs.find((r) => r.id === this.pickedRun) ?? this.runs[this.runs.length - 1];
+  }
+
+  /** @internal The run history: bars against the baseline (or a table), the runs to pick, and the picked run's change */
+  private history() {
+    const runs = this.runs;
+    if (!runs.length) return nothing;
+    const base = evalBaselineRun(runs, this.baseline)!;
+    const shown = this.shownRun!;
+    const deltas = new Map(runs.map((r) => [r.id, evalRunDelta(r, base, this.cases)]));
+    const d = deltas.get(shown.id)!;
+    const headId = `${this.uid}-history`;
+    const tableId = `${this.uid}-history-table`;
+    const pct = (r: number) => `${Math.max(0, Math.min(1, r)) * 100}%`;
+    return html`<section class="ui-evs__history" aria-labelledby=${headId}>
+      <div class="ui-evs__history-head">
+        <h4 class="ui-evs__history-title" id=${headId}>Run history</h4>
+        <span class="ui-evs__history-base">Baseline: ${base.label} · ${this.formatRate(base.passRate)}</span>
+        <button type="button" class="ui-evs__table-toggle" aria-pressed=${this.historyTable ? "true" : "false"} aria-controls=${tableId} @click=${() => (this.historyTable = !this.historyTable)}>Table</button>
+      </div>
+      <div id=${tableId}>
+        ${this.historyTable
+          ? html`<table class="ui-evs__table">
+              <caption class="ui-evs__sr">Pass rate by run, against ${base.label}</caption>
+              <thead><tr><th scope="col">Run</th><th scope="col">Date</th><th scope="col">Pass rate</th><th scope="col">Passed</th><th scope="col">Against the baseline</th></tr></thead>
+              <tbody>
+                ${runs.map(
+                  (r) => html`<tr ?data-picked=${r.id === shown.id}>
+                    <th scope="row">${r.label}</th>
+                    <td>${runDate(r.at)}</td>
+                    <td>${this.formatRate(r.passRate)}</td>
+                    <td>${r.passed.toLocaleString("en-US")} / ${r.total.toLocaleString("en-US")}</td>
+                    <td>${evalDeltaText(deltas.get(r.id)!)}</td>
+                  </tr>`,
+                )}
+              </tbody>
+            </table>`
+          : html`<div class="ui-evs__bars" aria-hidden="true" style=${styleMap({ "--tc-eval-scorecard-runs": String(runs.length) })}>
+              <span class="ui-evs__base-line" style=${styleMap({ bottom: pct(base.passRate) })}></span>
+              ${runs.map((r) => {
+                const rd = deltas.get(r.id)!;
+                const tone = rd.baseline ? "base" : rd.points < 0 || rd.regressions.length ? "worse" : rd.points > 0 ? "better" : "same";
+                return html`<span class="ui-evs__bar-col" ?data-picked=${r.id === shown.id} @click=${() => (this.pickedRun = r.id)}>
+                  <span class="ui-evs__bar" data-tone=${tone} style=${styleMap({ height: pct(r.passRate) })}></span>
+                </span>`;
+              })}
+            </div>`}
+      </div>
+      <div class="ui-evs__pick" role="radiogroup" aria-label="Runs" @keydown=${this.onRunKey}>
+        ${runs.map(
+          (r) => html`<button type="button" role="radio" class="ui-evs__pick-run" aria-checked=${r.id === shown.id ? "true" : "false"} tabindex=${r.id === shown.id ? "0" : "-1"} @click=${() => (this.pickedRun = r.id)}>
+            <span class="ui-evs__pick-label">${r.label}</span><span class="ui-evs__pick-rate"><span class="ui-evs__sr">, </span>${this.formatRate(r.passRate)}</span>${r.id === base.id ? html`<span class="ui-evs__base-mark"><span class="ui-evs__sr">, </span>Baseline</span>` : nothing}
+          </button>`,
+        )}
+      </div>
+      <div class="ui-evs__run-detail">
+        <p class="ui-evs__run-line">
+          <strong class="ui-evs__run-name">${shown.label}</strong> · ${runDate(shown.at)} · ${this.formatRate(shown.passRate)}
+          (${shown.passed.toLocaleString("en-US")} of ${plural(shown.total, "case")} passed)
+          ${d.baseline
+            ? html`<span class="ui-evs__run-delta" data-tone="base">Baseline</span>`
+            : html`<span class="ui-evs__run-delta" data-tone=${d.points < 0 || d.regressions.length ? "worse" : d.points > 0 ? "better" : "same"}>${evalDeltaText(d)}</span><span class="ui-evs__sr"> against ${base.label}</span>`}
+        </p>
+        ${d.baseline ? nothing : html`<button type="button" class="ui-evs__set-base" @click=${() => this.setBaseline(shown.id)}>Set as baseline</button>`}
+        ${d.baseline
+          ? nothing
+          : d.regressions.length
+            ? html`<div class="ui-evs__regressions">
+                <span class="ui-evs__label">Passed in ${base.label}, fail now</span>
+                <ul class="ui-evs__reg-list">
+                  ${d.regressions.slice(0, REGRESSIONS_SHOWN).map((g) => html`<li><button type="button" class="ui-evs__reg" @click=${() => this.openRegression(g.caseId, shown.id)}>${ICONS.fail}<span>${g.name}</span></button></li>`)}
+                </ul>
+                ${d.regressions.length > REGRESSIONS_SHOWN ? html`<p class="ui-evs__no-reg">and ${(d.regressions.length - REGRESSIONS_SHOWN).toLocaleString("en-US")} more – filter the grid to Regressed to see them all</p>` : nothing}
+              </div>`
+            : html`<p class="ui-evs__no-reg">No regressions since ${base.label}</p>`}
+      </div>
+    </section>`;
   }
 
   /** @internal The trend: a column per version, a line through their pass rates */
@@ -477,7 +657,7 @@ export class TcEvalScorecard extends TcElement {
           }}
         >${closeIcon}</button>
       </div>
-      <div class="ui-evs__runs" role="toolbar" aria-label="Versions" @keydown=${this.runs.onKeyDown} @focusin=${this.runs.onFocusIn}>
+      <div class="ui-evs__runs" role="toolbar" aria-label="Versions" @keydown=${this.runBar.onKeyDown} @focusin=${this.runBar.onFocusIn}>
         ${this.versions.map(
           (ver) => html`<button
             type="button"
@@ -555,6 +735,7 @@ export class TcEvalScorecard extends TcElement {
           </div>
           ${this.detail()}
         </div>
+        ${this.history()}
       </div>
       <span class="ui-evs__sr" role="status">${this.spoken}</span>
     `;
@@ -567,6 +748,8 @@ export class TcEvalScorecard extends TcElement {
   --tc-eval-scorecard-row: 36px;
   --tc-eval-scorecard-line: var(--tc-accent);
   --tc-eval-scorecard-side: 400px;
+  --tc-eval-scorecard-history: 72px;
+  --tc-eval-scorecard-bar-gap: 6px;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -706,6 +889,54 @@ export class TcEvalScorecard extends TcElement {
 .ui-evs__extra { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 :where([data-look="clean"], [data-look="clean"] *) :is(.ui-evs__miss, .ui-evs__extra) { color: var(--tc-text-primary); }
 .ui-evs__key { display: flex; flex-wrap: wrap; gap: var(--tc-space-1) var(--tc-space-4); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
+/* ----- Run history: bars against the baseline's line (or a table), the runs as radios, the picked run's change ----- */
+.ui-evs__history { display: grid; gap: var(--tc-space-2-5); padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-evs__history-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2-5); }
+.ui-evs__history-title { font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-snug); color: var(--tc-text-strong); }
+:where([data-look="clean"], [data-look="clean"] *).ui-evs__history-title { font-weight: var(--tc-font-weight-medium); }
+.ui-evs__history-base { flex: 1; min-width: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-evs__table-toggle, .ui-evs__set-base { display: inline-flex; align-items: center; height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); white-space: nowrap; }
+[data-ui="evs"] .ui-evs__table-toggle[aria-pressed="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-strong); color: var(--tc-text-primary); }
+.ui-evs__set-base { justify-self: start; }
+.ui-evs__bars { position: relative; display: grid; grid-template-columns: repeat(var(--tc-eval-scorecard-runs), minmax(0, 1fr)); align-items: end; gap: var(--tc-eval-scorecard-bar-gap); height: var(--tc-eval-scorecard-history); border-bottom: var(--tc-hairline) solid var(--tc-border-subtle); }
+.ui-evs__bar-col { display: flex; align-items: flex-end; justify-content: center; height: 100%; cursor: pointer; }
+.ui-evs__bar { width: 100%; max-width: var(--tc-control-h-sm); min-height: 2px; border-radius: var(--tc-radius-xs) var(--tc-radius-xs) 0 0; background: var(--tc-chart-neutral); }
+.ui-evs__bar[data-tone="base"] { background: var(--tc-eval-scorecard-line); }
+.ui-evs__bar[data-tone="better"] { background: var(--tc-status-success-solid); }
+.ui-evs__bar[data-tone="worse"] { background: var(--tc-status-danger-solid); }
+.ui-evs__bar-col[data-picked] .ui-evs__bar { box-shadow: 0 0 0 1.5px var(--tc-surface-raised), 0 0 0 3px var(--tc-accent); }
+/* The baseline's pass rate: a dashed line across the bars */
+.ui-evs__base-line { position: absolute; right: 0; left: 0; z-index: 1; border-top: 1.5px dashed var(--tc-eval-scorecard-line); pointer-events: none; }
+.ui-evs__table { width: 100%; border-collapse: collapse; font-size: var(--tc-font-size-sm); font-variant-numeric: tabular-nums; }
+.ui-evs__table :is(th, td) { padding: var(--tc-space-1-5) var(--tc-space-2); border-bottom: var(--tc-hairline) solid var(--tc-border-subtle); text-align: left; font-weight: var(--tc-font-weight-regular); color: var(--tc-text-secondary); }
+.ui-evs__table thead th { font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); }
+.ui-evs__table tbody th { color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); }
+.ui-evs__table tr[data-picked] { background: var(--tc-fill-subtle); }
+.ui-evs__pick { display: flex; flex-wrap: wrap; gap: var(--tc-space-1); }
+.ui-evs__pick-run { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-space-2); border-radius: var(--tc-control-radius-sm); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); font-size: var(--tc-control-font-size); color: var(--tc-text-secondary); white-space: nowrap; }
+[data-ui="evs"] .ui-evs__pick-run:hover { background: var(--tc-fill-hover); }
+[data-ui="evs"] .ui-evs__pick-run[aria-checked="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-strong); color: var(--tc-text-primary); }
+.ui-evs__pick-rate { color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-evs__pick-run[aria-checked="true"] .ui-evs__pick-rate { color: var(--tc-text-secondary); }
+.ui-evs__base-mark { padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-xs); background: var(--tc-accent-subtle); color: var(--tc-accent-text); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); }
+.ui-evs__run-detail { display: grid; gap: var(--tc-space-2); padding-top: var(--tc-space-2-5); border-top: var(--tc-hairline) solid var(--tc-border-subtle); }
+.ui-evs__run-line { font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
+.ui-evs__run-name { color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); }
+.ui-evs__run-delta { display: inline-block; margin-left: var(--tc-space-1); padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-xs); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); }
+.ui-evs__run-delta[data-tone="better"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
+.ui-evs__run-delta[data-tone="worse"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
+.ui-evs__run-delta[data-tone="same"] { background: var(--tc-fill-default); color: var(--tc-text-secondary); }
+.ui-evs__run-delta[data-tone="base"] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
+.ui-evs__regressions { display: grid; gap: var(--tc-space-1); }
+.ui-evs__reg-list { display: grid; gap: var(--tc-space-0-5); padding: 0; list-style: none; }
+.ui-evs__reg { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); color: var(--tc-accent-text); font-size: var(--tc-font-size-sm); text-align: left; }
+.ui-evs__reg .ui-evs__glyph { color: var(--tc-status-danger-fg); }
+[data-ui="evs"] .ui-evs__reg:hover span { text-decoration: underline; }
+.ui-evs__no-reg { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+@media (forced-colors: active) {
+  .ui-evs__bar { background: CanvasText; }
+  .ui-evs__base-line { border-top-color: Highlight; }
+}
 /* Wide: the open case beside the grid */
 @container ui-evs (min-width: 860px) {
   .ui-evs__main[data-open] { grid-template-columns: minmax(0, 1fr) var(--tc-eval-scorecard-side); }

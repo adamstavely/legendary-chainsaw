@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-eval-criteria-editor.json",
+  "title": "tc-eval-criteria-editor",
+  "description": "Define an LLM judge's criteria: questions, answer kinds, weights as shares and examples, with the assembled prompt.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JudgeCriterion"
+      },
+      "description": "The criteria, in the order the judge asks them. Changed by the user unless a tc-criteria-change listener prevents it"
+    },
+    "open": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the criteria shown open; unset, the first is open"
+    },
+    "hideTry": {
+      "type": "boolean",
+      "description": "Hides \"Try on sample\""
+    },
+    "trying": {
+      "type": "boolean",
+      "description": "Shows Try as busy while the page runs the judge"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "JudgeCriterion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question the judge answers about each answer"
+        },
+        "type": {
+          "$ref": "#/definitions/JudgeCriterionType"
+        },
+        "scale": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "anchors": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "min",
+            "max"
+          ],
+          "additionalProperties": false,
+          "description": "For a scale: its ends and, optionally, a word for any point"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "For a label: the labels it picks from"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Its weight in the overall score – a share of the total"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgeExample"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "question",
+        "type",
+        "weight"
+      ],
+      "additionalProperties": false
+    },
+    "JudgeCriterionType": {
+      "type": "string",
+      "enum": [
+        "label",
+        "pass-fail",
+        "scale"
+      ]
+    },
+    "JudgeExample": {
+      "type": "object",
+      "properties": {
+        "output": {
+          "type": "string",
+          "description": "An answer to judge"
+        },
+        "verdict": {
+          "type": "string",
+          "description": "The verdict it should get – \"FAIL\", \"4\", \"formal\""
+        },
+        "why": {
+          "type": "string",
+          "description": "Why, in a line"
+        }
+      },
+      "required": [
+        "output",
+        "verdict"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

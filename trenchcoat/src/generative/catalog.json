@@ -712,6 +712,15 @@
     ]
   },
   {
+    "tag": "tc-change-impact",
+    "name": "ChangeImpact",
+    "description": "Before against after for one change – per-criterion differences with a verdict in words, a dumbbell row each, cost and",
+    "events": [
+      "tc-segment-change",
+      "tc-examples-open"
+    ]
+  },
+  {
     "tag": "tc-change-list",
     "name": "ChangeList",
     "description": "Proposed code changes as compact rows: state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.",
@@ -1399,13 +1408,25 @@
     "events": []
   },
   {
+    "tag": "tc-eval-criteria-editor",
+    "name": "EvalCriteriaEditor",
+    "description": "Define an LLM judge's criteria: questions, answer kinds, weights as shares and examples, with the assembled prompt.",
+    "events": [
+      "tc-criteria-change",
+      "tc-try",
+      "tc-prompt-copy"
+    ]
+  },
+  {
     "tag": "tc-eval-scorecard",
     "name": "EvalScorecard",
     "description": "Test cases run against prompt or model versions – pass or fail per case per version, the pass rate across versions,",
     "events": [
       "tc-tags-change",
       "tc-show-change",
-      "tc-open-change"
+      "tc-open-change",
+      "tc-baseline-change",
+      "tc-case-open"
     ]
   },
   {
@@ -1417,7 +1438,8 @@
       "tc-open-change",
       "tc-compare-change",
       "tc-import",
-      "tc-export"
+      "tc-export",
+      "tc-from-run-dismiss"
     ]
   },
   {
@@ -1482,6 +1504,19 @@
     "description": "Facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence –",
     "events": [
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-failure-clusters",
+    "name": "FailureClusters",
+    "description": "Failing chats grouped by topic, biggest first – a size bar, count and share, trend in words and the criteria each",
+    "events": [
+      "tc-open-change",
+      "tc-known-change",
+      "tc-criterion-change",
+      "tc-view-change",
+      "tc-cluster-open",
+      "tc-add-to-dataset"
     ]
   },
   {
@@ -1931,6 +1966,14 @@
     "events": [
       "tc-match-change",
       "tc-accept"
+    ]
+  },
+  {
+    "tag": "tc-judge-sampling",
+    "name": "JudgeSampling",
+    "description": "How much of an agent's traffic an LLM judge reads, and what it costs – a sampling rate per segment, rules that",
+    "events": [
+      "tc-value-change"
     ]
   },
   {
@@ -2729,6 +2772,36 @@
     ]
   },
   {
+    "tag": "tc-quality-alerts",
+    "name": "QualityAlerts",
+    "description": "Alert rules for an agent's quality, written as sentences with the choices in them – each with an on/off switch,",
+    "events": [
+      "tc-rules-change"
+    ]
+  },
+  {
+    "tag": "tc-quality-drop",
+    "name": "QualityDrop",
+    "description": "One drop in a judge score on live chats – what fell, the likely cause with its evidence, the topics it clusters in,",
+    "events": [
+      "tc-rollback",
+      "tc-status-change",
+      "tc-investigate",
+      "tc-chat-open"
+    ]
+  },
+  {
+    "tag": "tc-quality-trend",
+    "name": "QualityTrend",
+    "description": "Judge scores on live chats day by day, a line per criterion with a band from its sample size, the changes pinned on",
+    "events": [
+      "tc-range-change",
+      "tc-shown-change",
+      "tc-view-change",
+      "tc-change-open"
+    ]
+  },
+  {
     "tag": "tc-query-builder",
     "name": "QueryBuilder",
     "description": "A visual query builder – conditions joined by AND or OR, one level of nested groups, a field, an operator by type",
@@ -2927,6 +3000,18 @@
     "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
     "events": [
       "tc-resolve"
+    ]
+  },
+  {
+    "tag": "tc-review-queue",
+    "name": "ReviewQueue",
+    "description": "Grade real outputs one at a time from the keyboard: per-criterion grades, a note and a verdict, with progress and undo.",
+    "events": [
+      "tc-grade",
+      "tc-skip",
+      "tc-undo",
+      "tc-index-change",
+      "tc-results-change"
     ]
   },
   {
@@ -3592,6 +3677,17 @@
       "tc-interrupt",
       "tc-clear",
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-test-run-panel",
+    "name": "TestRunPanel",
+    "description": "Try an agent while editing it: a test conversation with its tool calls, test variables, Reset, and Save as test case.",
+    "events": [
+      "tc-send",
+      "tc-turns-change",
+      "tc-variables-change",
+      "tc-save-case"
     ]
   },
   {

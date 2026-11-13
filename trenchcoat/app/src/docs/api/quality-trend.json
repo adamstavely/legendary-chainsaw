@@ -1,0 +1,646 @@
+{
+ "elements": [
+  {
+   "tag": "tc-quality-trend",
+   "className": "TcQualityTrend",
+   "description": "Judge scores on live chats day by day, a line per criterion with a band from its sample size, the changes pinned on\nthe time axis, a 7 / 30 / 90-day switch, and a table view.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Quality on live chats\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A line under the heading – the agent, the judge",
+     "readonly": false
+    },
+    {
+     "name": "criteria",
+     "attribute": null,
+     "type": "QualityCriterion[]",
+     "default": "[]",
+     "description": "The criteria the judge scores, in legend order",
+     "readonly": false
+    },
+    {
+     "name": "days",
+     "attribute": null,
+     "type": "QualityDay[]",
+     "default": "[]",
+     "description": "One entry per day, any order – the last day is the end of every range",
+     "readonly": false
+    },
+    {
+     "name": "changes",
+     "attribute": null,
+     "type": "QualityChange[]",
+     "default": "[]",
+     "description": "The changes made to the agent – prompts, models, tools – pinned where they went live",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "QualityRange",
+     "default": "\"30d\"",
+     "description": "How many days show: \"7d\", \"30d\" or \"90d\"",
+     "readonly": false
+    },
+    {
+     "name": "shown",
+     "attribute": null,
+     "type": "string[] | null",
+     "default": "null",
+     "description": "The ids of the criteria drawn; null draws every one",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "QualityTrendView",
+     "default": "\"chart\"",
+     "description": "\"chart\", or \"table\" for the same days as a table",
+     "readonly": false
+    },
+    {
+     "name": "min",
+     "attribute": "min",
+     "type": "number",
+     "default": "1",
+     "description": "The lowest score on the scale",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number",
+     "default": "5",
+     "description": "The highest score on the scale",
+     "readonly": false
+    },
+    {
+     "name": "spread",
+     "attribute": "spread",
+     "type": "number",
+     "default": "1",
+     "description": "A score's spread (standard deviation) when a day gives none – sets the band's width with the day's chats",
+     "readonly": false
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold",
+     "type": "number",
+     "default": "0.1",
+     "description": "How far a mean must move for the summary to call it a change",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Formats dates and numbers",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string",
+     "default": "\"UTC\"",
+     "description": "The time zone dates are read in – UTC by default, so a day's midnight stays that day",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "detail": "",
+     "description": "7, 30 or 90 days was picked ({ range }: QualityTrendRangeChange); cancelable – prevented, `range` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-shown-change",
+     "detail": "",
+     "description": "A criterion was shown or hidden ({ shown }: QualityTrendShownChange); cancelable – prevented, `shown` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "Table was pressed ({ view }: QualityTrendViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-change-open",
+     "detail": "",
+     "description": "A change pin was clicked or picked with Enter ({ id, change }: QualityTrendChangeOpen)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "qtr",
+   "cssProperties": [
+    {
+     "name": "--tc-quality-trend-band",
+     "value": "0.14",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-quality-trend-tip-w",
+     "value": "220px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-quality-trend-pin",
+     "value": "22px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-quality-trend-ink",
+    "--tc-radius-md",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "qualityBand",
+   "signature": "qualityBand(score: QualityScore, spread: unknown, z: unknown): void",
+   "description": "Half the width of a score's band: z × standard error, from its own spread or the element's `spread`"
+  },
+  {
+   "name": "qualityShift",
+   "signature": "qualityShift(days: readonly QualityDay[], id: string, at: number): QualityShift",
+   "description": "A criterion's mean on the days before `at` and on the days from it, each weighted by the day's chats"
+  }
+ ],
+ "react": [
+  {
+   "component": "QualityTrend",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "range",
+     "type": "QualityRange",
+     "optional": true,
+     "description": "How many days show – \"7d\", \"30d\" or \"90d\". Controlled when defined"
+    },
+    {
+     "name": "defaultRange",
+     "type": "QualityRange",
+     "optional": true,
+     "description": "The range at first when `range` isn't controlled"
+    },
+    {
+     "name": "onRangeChange",
+     "type": "(range: QualityRange) => void",
+     "optional": true,
+     "description": "Called with the range the user picked, controlled or not"
+    },
+    {
+     "name": "shown",
+     "type": "string[] | null",
+     "optional": true,
+     "description": "The ids of the criteria drawn (null: all). Controlled when defined"
+    },
+    {
+     "name": "defaultShown",
+     "type": "string[] | null",
+     "optional": true,
+     "description": "The criteria drawn at first when `shown` isn't controlled"
+    },
+    {
+     "name": "onShownChange",
+     "type": "(shown: string[] | null) => void",
+     "optional": true,
+     "description": "Called with the criteria drawn after one is toggled, controlled or not"
+    },
+    {
+     "name": "view",
+     "type": "QualityTrendView",
+     "optional": true,
+     "description": "\"chart\" or \"table\". Controlled when defined"
+    },
+    {
+     "name": "defaultView",
+     "type": "QualityTrendView",
+     "optional": true,
+     "description": "The view at first when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: QualityTrendView) => void",
+     "optional": true,
+     "description": "Called when Table is pressed, controlled or not"
+    },
+    {
+     "name": "onChangeOpen",
+     "type": "(change: QualityChange) => void",
+     "optional": true,
+     "description": "Called when a change pin is clicked or picked with Enter"
+    }
+   ],
+   "hides": [
+    "heading",
+    "range",
+    "shown",
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-range-change": null,
+    "tc-shown-change": null,
+    "tc-view-change": null,
+    "tc-change-open": "onChangeOpen"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-quality-trend",
+   "className": "TcQualityTrend",
+   "module": "@adamstavely/trenchcoat/quality-trend",
+   "data": [
+    "criteria",
+    "days",
+    "changes",
+    "shown"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "range",
+     "attribute": "range"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "min",
+     "attribute": "min"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "spread",
+     "attribute": "spread"
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-shown-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-change-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "range",
+     "event": "tc-range-change"
+    },
+    {
+     "property": "shown",
+     "event": "tc-shown-change"
+    },
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 33703,
+  "gzip": 10821
+ }
+}

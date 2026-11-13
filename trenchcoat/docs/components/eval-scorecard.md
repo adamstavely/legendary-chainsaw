@@ -9,7 +9,7 @@
 Test cases run against prompt or model versions – pass and fail per case, the score across versions, and a failing case opened beside its expected answer
 
 - **Element:** `<tc-eval-scorecard>`
-- **Size:** 22.4 KB gzip · 88.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 24.9 KB gzip · 101.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -35,11 +35,18 @@ answer, the differences marked word by word. Filters by tag and by outcome narro
 cases do across versions?” is one click. It answers “is the new version better, and where did it get worse?” before
 a change ships, and it stays fast with 10,000 cases.
 
+Given `runs` – each run of the whole set with its pass rate – a run history follows the grid. Each run is a bar
+against a dashed line at the baseline's pass rate, and the picked run's change is said in words: “+4 points”, or
+“−2 points, 3 new failures”. The cases that passed in the baseline and fail in that run are listed; pick one to open
+it. Set as baseline makes another run the one the rest are measured against, and Table shows the same runs as a
+table.
+
 ### When to use
 
 - Reviewing an eval run before promoting a new prompt or model.
 - Finding regressions: cases the latest version fails that the one before passed.
 - Comparing pass rates for one slice of the set – a tag such as “billing” or “multilingual”.
+- Tracking the set's pass rate run after run against a baseline, and what each run broke.
 
 ### When not to use
 
@@ -57,6 +64,10 @@ a change ships, and it stays fast with 10,000 cases.
 3. **Grid** `.ui-evs__grid` – a row per case, a column per version, an outcome in each cell
 4. **Open case** `.ui-evs__detail` – the version buttons, the grader's verdict and the case's input
 5. **Comparison** `.ui-evs__pair` – the expected answer beside the output, differences marked
+6. **Run history** `.ui-evs__history` – with `runs`: the baseline's name and rate, and Table
+7. **Bars** `.ui-evs__bars` – a bar per run, the baseline's pass rate as a dashed line across them
+8. **Runs** `.ui-evs__pick` – the runs as radio buttons, the baseline marked
+9. **Picked run** `.ui-evs__run-detail` – its pass rate, its change in words, Set as baseline and its regressions
 
 ## Looks
 
@@ -64,6 +75,10 @@ Standard puts the header on a gray tray and the scorecard on a white card inside
 hairline dividers, uppercase captions on the grid and the open case, and plain text on its marked words. Wide (from
 860 px), the open case sits beside the grid; narrower, it opens below, the columns tighten and the case's tags give
 way.
+
+The run history's bars are grey for a run level with the baseline, green for one that gained and red for one that
+lost points or broke cases; the baseline's own bar and line use `--tc-eval-scorecard-line`. Their height is
+`--tc-eval-scorecard-history` (72 px).
 
 ## Usage
 
@@ -87,20 +102,38 @@ way.
       results: { v3: { outcome: "pass" }, v4: { outcome: "fail", output: "Please send it back first.", reason: "Asked for a return" } },
     },
   ];
+  evals.runs = [
+    { id: "v3", label: "Run 3 · v3", at: Date.UTC(2026, 10, 5), passRate: 1, passed: 1, total: 1, baseline: true },
+    { id: "v4", label: "Run 4 · v4", at: Date.UTC(2026, 10, 6), passRate: 0, passed: 0, total: 1 },
+  ];
   evals.addEventListener("tc-open-change", (e) => console.log(e.detail.open));
+  evals.addEventListener("tc-baseline-change", (e) => console.log("baseline", e.detail.baseline));
 </script>
 ```
 
 ### React / Next.js
 
 ```tsx
-import { EvalScorecard, type EvalCase, type EvalVersion } from "@adamstavely/trenchcoat/react";
+import { useState } from "react";
+import { EvalScorecard, type EvalCase, type EvalRun, type EvalVersion } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
 const versions: EvalVersion[] = [{ id: "v3", label: "v3" }, { id: "v4", label: "v4", detail: "Opus" }];
 
-export function EvalReview({ cases }: { cases: EvalCase[] }) {
-  return <EvalScorecard title="Support replies" versions={versions} cases={cases} defaultShow="regressed" onOpenChange={(open) => console.log(open)} />;
+export function EvalReview({ cases, runs }: { cases: EvalCase[]; runs: EvalRun[] }) {
+  const [baseline, setBaseline] = useState<string | null>("v3");
+  return (
+    <EvalScorecard
+      title="Support replies"
+      versions={versions}
+      cases={cases}
+      runs={runs}
+      baseline={baseline}
+      onBaselineChange={setBaseline}
+      defaultShow="regressed"
+      onOpenChange={(open) => console.log(open)}
+    />
+  );
 }
 ```
 
@@ -183,6 +216,8 @@ export class EvalScorecardExample {
 | `open` | – | `EvalScorecardOpen \| null` | `null` | The open case and version, or null for none |
 | `maxHeight` | `max-height` | `number` | `360` | The grid's height before it scrolls, in px |
 | `formatRate` | – | `(rate: number) => string` | `percent` | Formats a pass rate (0–1) – defaults to a whole percentage, e.g. "86%" |
+| `runs` | – | `EvalRun[]` | `[]` | Runs of the whole set, oldest first – turns on the run history. A run whose id is a version's id gets its regressions from `cases` |
+| `baseline` | `baseline` | `string \| null` | `null` | The id of the run the others are compared with; null uses the run marked `baseline`, else the first. Changed by Set as baseline unless tc-baseline-change is prevented |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -192,6 +227,8 @@ export class EvalScorecardExample {
 | `tc-tags-change` | – | Yes | The picked tags changed ({ tags }: EvalScorecardTagsChange); cancelable |
 | `tc-show-change` | – | Yes | All, Failing or Regressed was picked ({ show }: EvalScorecardShowChange); cancelable |
 | `tc-open-change` | – | Yes | A case was opened, switched to another version or closed ({ open }: EvalScorecardOpenChange); cancelable |
+| `tc-baseline-change` | – | Yes | Set as baseline was pressed ({ baseline, id }: EvalScorecardBaselineChange – the run's id); cancelable – prevented, `baseline` stays as it was |
+| `tc-case-open` | – | Yes | A regression in the run history was picked ({ caseId, runId }: EvalScorecardCaseOpen); cancelable – unless prevented, the case opens on that run when the run is a version |
 
 #### Component tokens
 
@@ -203,10 +240,12 @@ export class EvalScorecardExample {
 | `--tc-eval-scorecard-row` | `34px` | both, clean |
 | `--tc-eval-scorecard-line` | `var(--tc-accent)` | both |
 | `--tc-eval-scorecard-side` | `400px` | both |
+| `--tc-eval-scorecard-history` | `72px` | both |
+| `--tc-eval-scorecard-bar-gap` | `6px` | both |
 
-#### Design tokens it reads (86)
+#### Design tokens it reads (95)
 
-`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-border-default`, `--tc-border-selected`, `--tc-border-subtle`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-ease-standard`, `--tc-eval-scorecard-versions`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-lg-plus`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xl`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-line-height-snug`, `--tc-pill-font-size`, `--tc-pill-font-size-lg`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-seg-pad`, `--tc-seg-thumb-bg`, `--tc-seg-thumb-shadow`, `--tc-seg-track-bg`, `--tc-seg-track-radius`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-5`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-danger-solid`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-surface-well`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-border-default`, `--tc-border-selected`, `--tc-border-strong`, `--tc-border-subtle`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-chart-neutral`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-ease-standard`, `--tc-eval-scorecard-runs`, `--tc-eval-scorecard-versions`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-lg-plus`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xl`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-relaxed`, `--tc-line-height-snug`, `--tc-pill-font-size`, `--tc-pill-font-size-lg`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-seg-pad`, `--tc-seg-thumb-bg`, `--tc-seg-thumb-shadow`, `--tc-seg-track-bg`, `--tc-seg-track-radius`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-5`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-danger-solid`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-success-solid`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-surface-well`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
 
 #### Functions
 
@@ -216,6 +255,9 @@ export class EvalScorecardExample {
 | --- | --- |
 | `evalStats(versions: EvalVersion[], cases: readonly EvalCase[]): EvalVersionStats[]` | Pass rate per version over a set of cases: passes over everything that finished; null when nothing has |
 | `evalRegressed(c: EvalCase, versions: EvalVersion[]): void` | Whether a case failed on the latest version after passing on the one before |
+| `evalBaselineRun(runs: readonly EvalRun[], baseline: string \| null): void` | Which run the others are compared with: `baseline` by id, else the run marked `baseline`, else the first |
+| `evalRunDelta(run: EvalRun, base: EvalRun, cases: readonly EvalCase[]): EvalRunDelta` | A run against the baseline: the change in whole points, and the cases that passed there and fail here |
+| `evalDeltaText(d: EvalRunDelta): void` | A run's change in words: "+4 points", "−2 points, 3 new failures", "Same as the baseline" |
 
 ## Frameworks
 
@@ -240,8 +282,9 @@ export class EvalScorecardExample {
 | `tags` | `el.tags = …;` | `<… tags={…} />` | `<tc-eval-scorecard :tags="…">` | `<tc-eval-scorecard [tags]="…">` | `<tc-eval-scorecard {tags}>` |
 | `open` | `el.open = …;` | `<… open={…} />` | `<tc-eval-scorecard :open="…">` | `<tc-eval-scorecard [open]="…">` | `<tc-eval-scorecard {open}>` |
 | `formatRate` | `el.formatRate = …;` | `<… formatRate={…} />` | `<tc-eval-scorecard :formatRate="…">` | `<tc-eval-scorecard [formatRate]="…">` | `<tc-eval-scorecard {formatRate}>` |
+| `runs` | `el.runs = …;` | `<… runs={…} />` | `<tc-eval-scorecard :runs="…">` | `<tc-eval-scorecard [runs]="…">` | `<tc-eval-scorecard {runs}>` |
 
-*Also attributes: `heading`, `show`, `max-height` – see the API table.*
+*Also attributes: `heading`, `show`, `max-height`, `baseline` – see the API table.*
 
 ### Events
 
@@ -250,12 +293,14 @@ export class EvalScorecardExample {
 | `tc-tags-change` | Yes | `el.addEventListener("tc-tags-change", (e) => …)` | `ref.current.addEventListener("tc-tags-change", …)` | `@tc-tags-change="…"` | `(tc-tags-change)="…($event)"` | `el.addEventListener("tc-tags-change", …)` |
 | `tc-show-change` | Yes | `el.addEventListener("tc-show-change", (e) => …)` | `ref.current.addEventListener("tc-show-change", …)` | `@tc-show-change="…"` | `(tc-show-change)="…($event)"` | `el.addEventListener("tc-show-change", …)` |
 | `tc-open-change` | Yes | `el.addEventListener("tc-open-change", (e) => …)` | `ref.current.addEventListener("tc-open-change", …)` | `@tc-open-change="…"` | `(tc-open-change)="…($event)"` | `el.addEventListener("tc-open-change", …)` |
+| `tc-baseline-change` | Yes | `el.addEventListener("tc-baseline-change", (e) => …)` | `ref.current.addEventListener("tc-baseline-change", …)` | `@tc-baseline-change="…"` | `(tc-baseline-change)="…($event)"` | `el.addEventListener("tc-baseline-change", …)` |
+| `tc-case-open` | Yes | `el.addEventListener("tc-case-open", (e) => …)` | `onCaseOpen={…}` | `@tc-case-open="…"` | `(tc-case-open)="…($event)"` | `el.addEventListener("tc-case-open", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-The element changes `tags`, `show` and `open` itself unless a listener calls `preventDefault()` on `tc-tags-change`, `tc-show-change` or `tc-open-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `tags`, `show`, `open` and `baseline` itself unless a listener calls `preventDefault()` on `tc-tags-change`, `tc-show-change`, `tc-open-change` or `tc-baseline-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -384,8 +429,12 @@ No slots: everything it shows comes from its properties.
 | `open` | `EvalScorecardOpen \| null` | The open case and version, or null. Controlled when defined |
 | `defaultOpen` | `EvalScorecardOpen \| null` | The case open at first when `open` isn't controlled |
 | `onOpenChange` | `(open: EvalScorecardOpen \| null) => void` | Called when a case is opened, switched to another version or closed, controlled or not |
+| `baseline` | `string \| null` | The id of the run the others are compared with, or null for the run marked `baseline`. Controlled when defined |
+| `defaultBaseline` | `string \| null` | The baseline at first when `baseline` isn't controlled |
+| `onBaselineChange` | `(baseline: string) => void` | Called with the run's id when Set as baseline is pressed, controlled or not |
+| `onCaseOpen` | `(caseId: string, runId: string) => boolean \| void` | Called when a regression in the run history is picked; return false to keep the case from opening |
 
-*Renamed or hidden on the wrapper: `heading`, `tags`, `show`, `open`*
+*Renamed or hidden on the wrapper: `heading`, `tags`, `show`, `open`, `baseline`*
 
 ## Accessibility
 
@@ -404,6 +453,8 @@ Follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/gri
 | Enter / Space | In the grid, opens the active cell's case for that version – the case column opens the latest version |
 | Escape | Closes the open case; from inside the open case, focus goes back to the grid |
 | ← / → / Home / End | In the version buttons, moves between them; Enter or Space shows that version's run |
+| ← / → / ↑ / ↓ / Home / End | In the run history's runs, picks the previous, next, first or last run |
+| Enter / Space | On Table, switches between bars and the table; on a regression, opens that case |
 
 ### Screen readers
 
@@ -416,6 +467,12 @@ filter changes, a status region says what is left: “312 cases of 10,000” or 
 region named by the case; its version buttons are a `toolbar` named “Versions”, the shown one pressed and each named
 with its outcome (“Fail, v4”). Words only the expected answer has are `<del>` and words only the output has are
 `<ins>`.
+
+The run history is a region named “Run history”. Its bars are hidden from screen readers: the runs are a
+`radiogroup` named “Runs”, each read with its rate (“Run 4 · v4, 86%, Baseline”), and the picked run reads as a
+sentence – “Run 5 · v5 · Nov 7 · 89% (2,136 of 2,400 cases passed) +3 points, 41 new failures against Run 3 · v3”.
+Table is a toggle button (`aria-pressed`) controlling a real `table` with a caption, a row per run. Set as baseline
+moves focus to the picked run and says “Baseline: Run 5”.
 
 ### Every component
 
@@ -457,18 +514,18 @@ with its outcome (“Fail, v4”). Words only the expected answer has are `<del>
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 35.3 KB | 9.8 KB |
+| **This component alone** | 47.8 KB | 12.1 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.8 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
@@ -478,8 +535,8 @@ with its outcome (“Fail, v4”). Words only the expected answer has are `<del>
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
 | [inline-diff](inline-diff.md) · Element it renders | 42.3 KB | – |
-| **Added to a page that already has Lit** | **88.8 KB** | **22.4 KB** |
-| With Lit – the first component on a page | 111.2 KB | 29.8 KB |
+| **Added to a page that already has Lit** | **101.4 KB** | **24.9 KB** |
+| With Lit – the first component on a page | 123.7 KB | 32.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,12 +544,12 @@ with its outcome (“Fail, v4”). Words only the expected answer has are `<del>
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **9.7 ms** | the gallery demo's data, 1,989 DOM nodes – to layout, median of 7 |
-| Typical update | **1.3 ms** | one item of cases replaced |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 11 ms | cases: first render, 1,989 nodes; update 2.4 ms |
+| First render | **9.4 ms** | the gallery demo's data, 2,074 DOM nodes – to layout, median of 7 |
+| Typical update | **1.6 ms** | one item of cases replaced |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 11 ms | cases: first render, 2,074 nodes; update 3.2 ms |
 
-Windowed: 10,000 items of cases render 1,989 nodes in 11 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of cases render 2,074 nodes in 11 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -514,6 +571,9 @@ Windowed: 10,000 items of cases render 1,989 nodes in 11 ms – only the rows ne
 - Keep version labels short (“v4”, “Prompt 12”) – they head narrow columns – and put the model in `detail`.
 - Give failures a `reason` in one line: what the grader saw, not the score again.
 - Use a handful of tags people would filter by – the topic, the language, the risk.
+- Label runs so they can be told apart at a glance – “Nightly 3 Nov”, “Run 14 · v5” – and give each its time in `at`.
+- Give a run the same id as its version when there is one: its regressions then come from the cases' results, and
+  picking one opens the case on that run.
 
 ## Do and don't
 
@@ -522,6 +582,7 @@ Windowed: 10,000 items of cases render 1,989 nodes in 11 ms – only the rows ne
 - List versions oldest first: Failing and Regressed judge the last one.
 - Set `status: "running"` on a version whose results are still arriving, and mark its unfinished cases `pending`.
 - Fill in `expected` and each result's `output`, so a failure can be read, not only counted.
+- Pick a baseline people agree on – the version in production – and move it with Set as baseline when that changes.
 
 ### Don't
 

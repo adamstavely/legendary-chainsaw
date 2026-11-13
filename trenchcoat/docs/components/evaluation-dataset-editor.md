@@ -9,7 +9,7 @@
 Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
 
 - **Element:** `<tc-evaluation-dataset-editor>`
-- **Size:** 19.4 KB gzip · 74.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.7 KB gzip · 84.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -36,11 +36,19 @@ what's wrong with a case shows where it's wrong. It pairs with `eval-scorecard`:
 results of running it are read. The component never runs anything – import, export and running the eval belong to
 the app.
 
+Set `fromRun` to a real run – its input, its output, and optionally its messages, tool calls and metadata – and the
+side shows New case from run, prefilled from it. The output becomes the expected answer, or – ticked as a bad output –
+is shown struck through above an empty field for the right one. Checks are offered from the run: the page's
+`runChecks` whose type the set knows, plus “matches schema” with the output's keys when the output is a JSON object.
+Add tags and a split, then Add to dataset: the case goes in through `tc-value-change` with `source: { runId }`, opens,
+and its row is marked From run.
+
 ### When to use
 
 - Curating an evaluation set: adding cases, writing checks, tagging and splitting them.
 - Reviewing what changed in a set before a new version is used for a release decision.
 - Receiving cases from elsewhere – reviewed conversations, a support export – and putting them in the right split.
+- Turning a real run that went wrong – a thumbs-down, a flagged trace – into a test case with `fromRun`.
 
 ### When not to use
 
@@ -58,6 +66,7 @@ the app.
 3. **Filters** `.ui-eds__filters` – the split as a radio group with counts, search, Changed and the removed cases
 4. **Table** `.ui-eds__grid` – one row per case: its input, what checks it, its tags as chips and its split
 5. **Open case** `.ui-eds__read` – the quoted prompt beside the rules it has to pass, with its split and tags; Edit
+6. **New case from run** `.ui-eds__from` – with `fromRun`: input, expected output (or the bad output and the right
 
 ## Looks
 
@@ -96,11 +105,12 @@ buttons wrap under the title (icons only under 400 px).
 
 ```tsx
 import { useState } from "react";
-import { EvaluationDatasetEditor, type EvaluationDatasetValue, type EvaluationDatasetVersion } from "@adamstavely/trenchcoat/react";
+import { EvaluationDatasetEditor, type EvaluationDatasetValue, type EvaluationDatasetVersion, type EvaluationRun } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
-export function SupportSet({ start, versions }: { start: EvaluationDatasetValue; versions: EvaluationDatasetVersion[] }) {
+export function SupportSet({ start, versions, flagged }: { start: EvaluationDatasetValue; versions: EvaluationDatasetVersion[]; flagged: EvaluationRun | null }) {
   const [value, setValue] = useState(start);
+  const [fromRun, setFromRun] = useState(flagged);
   return (
     <EvaluationDatasetEditor
       title="Support replies"
@@ -110,6 +120,10 @@ export function SupportSet({ start, versions }: { start: EvaluationDatasetValue;
       defaultCompare={versions[versions.length - 1]?.id ?? ""}
       onImport={() => console.log("open a file picker")}
       onExport={(_, jsonl) => console.log(jsonl.length)}
+      fromRun={fromRun}
+      runChecks={[{ type: "contains", value: "received your return", reason: "The return arrived on 21 Oct" }]}
+      onRunCaseAdd={(added, source) => console.log(added.id, "from", source.runId)}
+      onFromRunDismiss={() => setFromRun(null)}
     />
   );
 }
@@ -197,6 +211,8 @@ export class EvaluationDatasetEditorExample {
 | `maxHeight` | `max-height` | `number` | `400` | The table's height before it scrolls, in px |
 | `name` | `name` | `string` | `""` | Submitted with the form: the set as JSON |
 | `disabled` | `disabled` | `boolean` | `false` | Turns every control off and leaves the set out of the form; a disabled fieldset does the same |
+| `fromRun` | – | `EvaluationRun \| null` | `null` | A real run to turn into a test case: shows New case from run, prefilled from it. A run already added or discarded isn't offered again until `fromRun` changes |
+| `runChecks` | – | `EvaluationCheckSuggestion[]` | `[]` | Checks to offer for the run's case – kept when the set knows their type |
 | `problems` | – | `EvaluationIssue[]` | – | Every problem in the set, in case order |
 | `comparison` | – | `EvaluationComparison \| null` | – | What changed since the compared version; null when not comparing |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
@@ -210,6 +226,7 @@ export class EvaluationDatasetEditorExample {
 | `tc-compare-change` | – | Yes | A version to compare with was picked ({ compare }: EvaluationDatasetCompareChange – a version id, or "" for none); cancelable |
 | `tc-import` | – | No | Import was pressed: the app reads a file and sets `value`; detail: null |
 | `tc-export` | – | No | Export was pressed ({ value, jsonl }: EvaluationDatasetExport – the set and the same set as JSON Lines) |
+| `tc-from-run-dismiss` | – | Yes | New case from run was discarded ({ runId }: EvaluationDatasetFromRunDismiss); cancelable – prevented, the panel stays |
 
 #### Component tokens
 
@@ -231,6 +248,7 @@ export class EvaluationDatasetEditorExample {
 
 | Function | Description |
 | --- | --- |
+| `evaluationRunChecks(run: EvaluationRun, suggestions: readonly EvaluationCheckSuggestion[], types: readonly EvaluationAssertionType[]): EvaluationCheckSuggestion[]` | Checks worth offering for a case made from a run: the page's suggestions whose type the set knows, then – when the output is a JSON object and a JSON check exists – that it stays an object with the same keys |
 | `evaluationDatasetIssues(value: EvaluationDatasetValue, o: { assertionTypes?: EvaluationAssertionType[]; splits?: EvaluationSplit[] }): EvaluationIssue[]` | Every problem in a set, case by case in order |
 | `compareEvaluationDatasets(base: readonly EvaluationCase[], current: readonly EvaluationCase[]): EvaluationComparison` | The cases added, edited (same id, different content) and removed since `base` |
 | `evaluationDatasetToJsonl(value: EvaluationDatasetValue): string` | The set as JSON Lines – one case per line |
@@ -259,6 +277,8 @@ export class EvaluationDatasetEditorExample {
 | `assertionTypes` | `el.assertionTypes = …;` | `<… assertionTypes={…} />` | `<tc-evaluation-dataset-editor :assertionTypes="…">` | `<tc-evaluation-dataset-editor [assertionTypes]="…">` | `<tc-evaluation-dataset-editor {assertionTypes}>` |
 | `versions` | `el.versions = …;` | `<… versions={…} />` | `<tc-evaluation-dataset-editor :versions="…">` | `<tc-evaluation-dataset-editor [versions]="…">` | `<tc-evaluation-dataset-editor {versions}>` |
 | `open` | `el.open = …;` | `<… open={…} />` | `<tc-evaluation-dataset-editor :open="…">` | `<tc-evaluation-dataset-editor [open]="…">` | `<tc-evaluation-dataset-editor {open}>` |
+| `fromRun` | `el.fromRun = …;` | `<… fromRun={…} />` | `<tc-evaluation-dataset-editor :fromRun="…">` | `<tc-evaluation-dataset-editor [fromRun]="…">` | `<tc-evaluation-dataset-editor {fromRun}>` |
+| `runChecks` | `el.runChecks = …;` | `<… runChecks={…} />` | `<tc-evaluation-dataset-editor :runChecks="…">` | `<tc-evaluation-dataset-editor [runChecks]="…">` | `<tc-evaluation-dataset-editor {runChecks}>` |
 
 *Also attributes: `compare`, `heading`, `description`, `max-height`, `name`, `disabled` – see the API table.*
 
@@ -266,11 +286,12 @@ export class EvaluationDatasetEditorExample {
 
 | Event | Cancelable | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
 | --- | --- | --- | --- | --- | --- | --- |
-| `tc-value-change` | Yes | `el.addEventListener("tc-value-change", (e) => …)` | `onChange={…}` | `@tc-value-change="…"` | `(tc-value-change)="…($event)"` | `el.addEventListener("tc-value-change", …)` |
+| `tc-value-change` | Yes | `el.addEventListener("tc-value-change", (e) => …)` | `onRunCaseAdd={…}` | `@tc-value-change="…"` | `(tc-value-change)="…($event)"` | `el.addEventListener("tc-value-change", …)` |
 | `tc-open-change` | Yes | `el.addEventListener("tc-open-change", (e) => …)` | `ref.current.addEventListener("tc-open-change", …)` | `@tc-open-change="…"` | `(tc-open-change)="…($event)"` | `el.addEventListener("tc-open-change", …)` |
 | `tc-compare-change` | Yes | `el.addEventListener("tc-compare-change", (e) => …)` | `onCompareChange={…}` | `@tc-compare-change="…"` | `(tc-compare-change)="…($event)"` | `el.addEventListener("tc-compare-change", …)` |
 | `tc-import` | No | `el.addEventListener("tc-import", (e) => …)` | `onImport={…}` | `@tc-import="…"` | `(tc-import)="…($event)"` | `el.addEventListener("tc-import", …)` |
 | `tc-export` | No | `el.addEventListener("tc-export", (e) => …)` | `onExport={…}` | `@tc-export="…"` | `(tc-export)="…($event)"` | `el.addEventListener("tc-export", …)` |
+| `tc-from-run-dismiss` | Yes | `el.addEventListener("tc-from-run-dismiss", (e) => …)` | `onFromRunDismiss={…}` | `@tc-from-run-dismiss="…"` | `(tc-from-run-dismiss)="…($event)"` | `el.addEventListener("tc-from-run-dismiss", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -297,19 +318,7 @@ The element changes `value`, `compare` and `open` itself unless a listener calls
 
 #### React / Next.js
 
-```tsx
-import { useState, type ComponentProps } from "react";
-import { EvaluationDatasetEditor } from "@adamstavely/trenchcoat/react";
-
-type Own = ComponentProps<typeof EvaluationDatasetEditor>;
-type Props = Omit<Own, "value" | "onChange"> & { initial: NonNullable<Own["value"]> };
-
-// Controlled: passing value makes the wrapper prevent the element's own change; the app sets it
-export function ControlledEvaluationDatasetEditor({ initial, ...props }: Props) {
-  const [value, setValue] = useState<Own["value"]>(initial);
-  return <EvaluationDatasetEditor {...props} value={value} onChange={(next) => setValue(next)} />;
-}
-```
+*The wrapper doesn't take this value with a callback of its own – see the props below, or use the element through a ref.*
 
 #### Vue / Nuxt
 
@@ -398,7 +407,7 @@ Pass the value and its callback. Leave the value out to let the element keep it,
 
 ```tsx
 const [value, setValue] = useState(…);
-<… value={value} onChange={setValue} />
+<… value={value} onRunCaseAdd={setValue} />
 ```
 
 #### Vue / Nuxt
@@ -467,6 +476,8 @@ No slots: everything it shows comes from its properties.
 | `onOpenChange` | `(open: string \| null) => void` | A case was opened or closed (its id, or null) |
 | `onImport` | `() => void` | Import was pressed – read a file and pass the cases back through `value` |
 | `onExport` | `(value: EvaluationDatasetValue, jsonl: string) => void` | Export was pressed, with the set and the same set as JSON Lines |
+| `onRunCaseAdd` | `(added: EvaluationCase, source: EvaluationCaseSource) => void` | A case made from `fromRun` was added – also passed to onChange with the whole set |
+| `onFromRunDismiss` | `(runId: string) => boolean \| void` | New case from run was discarded; return false to keep the panel |
 
 *Renamed or hidden on the wrapper: `value`, `defaultValue`, `heading`, `open`, `compare`, `onChange`, `children`*
 
@@ -489,6 +500,8 @@ Follows the WAI-ARIA [Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/gri
 | Escape | In the form: saves the field being typed in and goes back to the read view. In the read view or the table: closes the case and returns to the table |
 | Enter or , | In the tags field: adds the tag typed |
 | Backspace | In an empty tags field: removes the last tag |
+| Escape | In New case from run: discards it and returns to the table |
+| ← / → / ↑ / ↓ | In New case from run's split: picks the previous or next split |
 
 Edit and Done switch between the read view and the form; the form's cursor starts in the input, and Done or Escape
 returns focus to Edit. The form's fields are native textareas, inputs and selects with their usual keys; an edit is
@@ -505,6 +518,12 @@ view is a focusable group with the same name, described by “Enter or F2 to edi
 “Problem:”. In the form, a check with a problem is `aria-invalid` and described by it (“Check 1 isn't valid JSON”). A status region says the
 number of cases after a filter, “Case added”, “Case deleted”, “Case restored” and “Compared with v3: 12 new, 4 edited,
 3 removed”. In a form, a set with an error is invalid (“Fix 1 problem in the cases first.”).
+
+New case from run is a region named “New case from run run-8f3a2c”. Its fields are labelled; the bad-output switch is a
+native checkbox, the suggested checks a `fieldset` of checkboxes each read as its rule and reason, the run's details a
+native `details` disclosure, and the split a `radiogroup`. Adding without an input marks the input `aria-invalid`,
+describes it with “Add an input” and moves focus there. A status region says “Case added from run run-8f3a2c” or “New
+case from run discarded”, and the new case's row starts with its “From run” pill.
 
 ### Every component
 
@@ -550,13 +569,13 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 63.9 KB | 16.1 KB |
+| **This component alone** | 74.7 KB | 18.4 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.9 KB | – |
@@ -565,8 +584,8 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **74.1 KB** | **19.4 KB** |
-| With Lit – the first component on a page | 97.2 KB | 27.0 KB |
+| **Added to a page that already has Lit** | **84.9 KB** | **21.7 KB** |
+| With Lit – the first component on a page | 108.0 KB | 29.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -574,12 +593,12 @@ number of cases after a filter, “Case added”, “Case deleted”, “Case re
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **8.3 ms** | the gallery demo's data, 1,049 DOM nodes – to layout, median of 7 |
+| First render | **8.1 ms** | the gallery demo's data, 1,049 DOM nodes – to layout, median of 7 |
 | Typical update | **2.4 ms** | one item of assertionTypes replaced |
-| First on the page | 26 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 9.5 ms | assertionTypes: first render, 1,049 nodes; update 2.9 ms |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 9.6 ms | assertionTypes: first render, 1,049 nodes; update 2.7 ms |
 
-Windowed: 10,000 items of assertionTypes render 1,049 nodes in 9.5 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of assertionTypes render 1,049 nodes in 9.6 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -604,6 +623,8 @@ Windowed: 10,000 items of assertionTypes render 1,049 nodes in 9.5 ms – only t
 - Prefer one check per behaviour: “contains · 5–10 business days” rather than a rubric that says the same thing.
 - Version labels are short (“v3”) with the when or why in `detail` (“Oct 19 · before the refund policy”).
 - Splits and check types are data: pass your own (`dev` and `test`, a “regex” check) with plain labels.
+- Give each `runChecks` suggestion a short `reason` – what in the run it comes from (“The customer was sent away”).
+  A “doesn't contain” suggestion needs a check type of that id in `assertionTypes`.
 
 ## Do and don't
 
@@ -615,13 +636,14 @@ Windowed: 10,000 items of assertionTypes render 1,049 nodes in 9.5 ms – only t
   lines by number.
 - Run the checks on the server, and show the results in `eval-scorecard`.
 - Store `value` as it is – the app owns the ids.
+- Keep `source.runId` with the case on your side, so a failing case can lead back to the run it came from.
 
 ### Don't
 
 - Don't run evals from the client because the set is here – the component has no run action on purpose.
 - Don't move a case between test and train to make a number better; the deltas show it.
 - Don't put secrets or personal data into inputs; redact before cases reach the set (`conversation-annotation`
-  can redact spans first).
+  can redact spans first) – that includes a run passed as `fromRun`.
 
 ## Related
 

@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-review-queue.json",
+  "title": "tc-review-queue",
+  "description": "Grade real outputs one at a time from the keyboard: per-criterion grades, a note and a verdict, with progress and undo.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReviewQueueItem"
+      },
+      "description": "The outputs to grade, in order"
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReviewQueueCriterion"
+      },
+      "description": "What each output is graded on"
+    },
+    "index": {
+      "type": "number",
+      "description": "The item showing. Changed by the user unless a tc-index-change listener prevents it"
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ReviewQueueResult"
+      },
+      "description": "Where each item stands, by id. Changed by submits, skips and undo unless a tc-results-change listener prevents it"
+    },
+    "noShortcuts": {
+      "type": "boolean",
+      "description": "Turns the single-key shortcuts off (buttons still work)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReviewQueueItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string",
+          "description": "What the model was asked"
+        },
+        "output": {
+          "type": "string",
+          "description": "What it answered"
+        },
+        "reference": {
+          "type": "string",
+          "description": "The answer it should have given, when known"
+        },
+        "source": {
+          "type": "string",
+          "description": "A line about where it came from – \"Live chat · 12 Nov\""
+        }
+      },
+      "required": [
+        "id",
+        "input",
+        "output"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewQueueCriterion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "The question it asks, in a line"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "pass-fail",
+            "scale"
+          ],
+          "description": "Pass or fail (the default), or a number on a scale"
+        },
+        "min": {
+          "type": "number",
+          "description": "For a scale: its ends, 1 and 5 by default"
+        },
+        "max": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewQueueResult": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "grades": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/ReviewQueueGradeValue"
+              },
+              "description": "A grade per criterion, by the criterion's id"
+            },
+            "verdict": {
+              "$ref": "#/definitions/ReviewQueueVerdict"
+            },
+            "note": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "const": "graded"
+            }
+          },
+          "required": [
+            "grades",
+            "note",
+            "status",
+            "verdict"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "skipped"
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "Where an item stands"
+    },
+    "ReviewQueueGradeValue": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "const": "fail"
+        },
+        {
+          "type": "string",
+          "const": "pass"
+        }
+      ]
+    },
+    "ReviewQueueVerdict": {
+      "type": "string",
+      "enum": [
+        "fail",
+        "pass"
+      ]
+    }
+  }
+}

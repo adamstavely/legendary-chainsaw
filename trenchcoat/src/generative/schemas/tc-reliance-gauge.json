@@ -119,10 +119,10 @@
     "calibrationLabels": {
       "type": "object",
       "properties": {
-        "calibrated": {
+        "over": {
           "type": "string"
         },
-        "over": {
+        "calibrated": {
           "type": "string"
         },
         "under": {
