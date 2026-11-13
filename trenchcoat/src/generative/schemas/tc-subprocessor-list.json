@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-subprocessor-list.json",
+  "title": "tc-subprocessor-list",
+  "description": "Every vendor that touches customer data – purpose, data categories, location, transfer mechanism, when added and\nwhether it's active, new or removed – with search, category and location filters, Export CSV and Subscribe to\nchanges.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "subprocessors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Subprocessor"
+      },
+      "description": "The vendors, in order"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text. Changed by typing unless a tc-query-change listener calls preventDefault()"
+    },
+    "category": {
+      "type": "string",
+      "description": "The data category shown, or null for all. Changed by the filter unless a tc-category-change listener calls preventDefault()"
+    },
+    "location": {
+      "type": "string",
+      "description": "The location shown, or null for all. Changed by the filter unless a tc-location-change listener calls preventDefault()"
+    },
+    "hideSubscribe": {
+      "type": "boolean",
+      "description": "Leaves out Subscribe to changes"
+    },
+    "filename": {
+      "type": "string",
+      "description": "The name Export CSV saves as"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "search": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "string"
+        },
+        "where": {
+          "type": "string"
+        },
+        "transfer": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "new": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "takesEffect": {
+          "type": "string"
+        },
+        "removedOn": {
+          "type": "string"
+        },
+        "exportCsv": {
+          "type": "string"
+        },
+        "subscribe": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "subscribeButton": {
+          "type": "string"
+        },
+        "subscribeHint": {
+          "type": "string"
+        },
+        "emptyEmail": {
+          "type": "string"
+        },
+        "badEmail": {
+          "type": "string"
+        },
+        "subscribed": {
+          "type": "string"
+        },
+        "subscribedEnd": {
+          "type": "string"
+        },
+        "none": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "countOne": {
+          "type": "string"
+        },
+        "newCount": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words used, merged over defaultSubprocessorListLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Subprocessor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The vendor's name"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "What it does for the service: \"Cloud hosting\", \"Transactional email\""
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The kinds of customer data it handles: \"Account data\", \"Customer content\""
+        },
+        "location": {
+          "type": "string",
+          "description": "Where it processes the data: \"Ireland\", \"United States\""
+        },
+        "transfer": {
+          "type": "string",
+          "description": "How data gets there lawfully: \"Standard Contractual Clauses\", \"Within the EEA\""
+        },
+        "added": {
+          "type": "number",
+          "description": "When it was added to the list, as epoch ms"
+        },
+        "status": {
+          "$ref": "#/definitions/SubprocessorStatus"
+        },
+        "effective": {
+          "type": "number",
+          "description": "For a new vendor, when it starts processing data; for a removed one, when it stopped – epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "purpose",
+        "categories",
+        "location",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "SubprocessorStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "new",
+        "removed"
+      ]
+    }
+  }
+}

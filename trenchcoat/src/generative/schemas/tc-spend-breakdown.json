@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-spend-breakdown.json",
+  "title": "tc-spend-breakdown",
+  "description": "Spend breakdown: AI spend by model, feature, user or team for a period – a ranked list with shares and the change on\nthe period before, a stacked bar per day, or a table – with picking a slice to filter.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpendEntry"
+      },
+      "description": "The period's spend, one entry per day and slice"
+    },
+    "previous": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpendEntry"
+      },
+      "description": "The period before's spend, for the change in words; null leaves the change out"
+    },
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "feature",
+        "model",
+        "team",
+        "user"
+      ],
+      "description": "What to split by. Changed by the switch unless a tc-dimension-change listener calls preventDefault()"
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpendDimension"
+      },
+      "description": "The dimensions the switch offers, in order"
+    },
+    "dimensionLabels": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "feature": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The switch's words for each dimension"
+    },
+    "period": {
+      "type": "string",
+      "description": "The period shown. Changed by the select unless a tc-period-change listener calls preventDefault()"
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpendPeriod"
+      },
+      "description": "The periods the select offers"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "ranked",
+        "table"
+      ],
+      "description": "Ranked bars, a stacked bar per day, or a table. Changed by the switch unless a tc-view-change listener calls preventDefault()"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The picked slice's id, or null for all. Changed by picking unless a tc-slice-select listener calls preventDefault()"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SpendEntry": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "The day, as YYYY-MM-DD"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What it cost, in `currency`"
+        },
+        "by": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string"
+            },
+            "feature": {
+              "type": "string"
+            },
+            "user": {
+              "type": "string"
+            },
+            "team": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Which model, feature, user and team it belongs to; a missing one counts as \"Unassigned\""
+        }
+      },
+      "required": [
+        "date",
+        "cost",
+        "by"
+      ],
+      "additionalProperties": false
+    },
+    "SpendDimension": {
+      "type": "string",
+      "enum": [
+        "feature",
+        "model",
+        "team",
+        "user"
+      ]
+    },
+    "SpendPeriod": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

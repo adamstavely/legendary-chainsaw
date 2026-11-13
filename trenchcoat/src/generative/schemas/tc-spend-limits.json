@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-spend-limits.json",
+  "title": "tc-spend-limits",
+  "description": "Spend limits: caps per member, team or API key with spent of the cap in words and a bar, what happens at the cap,\nover-limit rows first, a workspace default, in-place editing, add and remove.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpendLimit"
+      },
+      "description": "The limits. Changed by editing unless a tc-limits-change listener calls preventDefault()"
+    },
+    "defaultLimit": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "number"
+        },
+        "period": {
+          "$ref": "#/definitions/SpendLimitPeriod"
+        },
+        "action": {
+          "$ref": "#/definitions/SpendLimitAction"
+        }
+      },
+      "required": [
+        "limit",
+        "period",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "The workspace's default cap, or null for none. Changed by editing unless a tc-default-limit-change listener calls preventDefault()"
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpendLimitTarget"
+      },
+      "description": "Members, teams and keys that Add limit offers; ones that already have a limit are left out"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SpendLimit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/SpendLimitKind"
+        },
+        "name": {
+          "type": "string",
+          "description": "The member's, team's or key's name"
+        },
+        "limit": {
+          "type": "number",
+          "description": "The cap, in `currency`"
+        },
+        "spent": {
+          "type": "number",
+          "description": "Spent so far this period, in `currency`"
+        },
+        "period": {
+          "$ref": "#/definitions/SpendLimitPeriod"
+        },
+        "action": {
+          "$ref": "#/definitions/SpendLimitAction",
+          "description": "What happens at the cap"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "limit",
+        "spent",
+        "period",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "SpendLimitKind": {
+      "type": "string",
+      "enum": [
+        "key",
+        "member",
+        "team"
+      ]
+    },
+    "SpendLimitPeriod": {
+      "type": "string",
+      "enum": [
+        "day",
+        "month"
+      ]
+    },
+    "SpendLimitAction": {
+      "type": "string",
+      "enum": [
+        "block",
+        "notify",
+        "warn"
+      ]
+    },
+    "SpendLimitTarget": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/SpendLimitKind"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "A member, team or key the page offers for a new limit"
+    }
+  }
+}

@@ -32,10 +32,10 @@
         "review": {
           "type": "string"
         },
-        "blocked": {
+        "active": {
           "type": "string"
         },
-        "active": {
+        "blocked": {
           "type": "string"
         }
       },

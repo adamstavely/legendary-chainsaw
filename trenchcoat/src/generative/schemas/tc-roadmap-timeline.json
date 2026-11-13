@@ -71,10 +71,10 @@
         "done": {
           "type": "string"
         },
-        "blocked": {
+        "active": {
           "type": "string"
         },
-        "active": {
+        "blocked": {
           "type": "string"
         },
         "at-risk": {

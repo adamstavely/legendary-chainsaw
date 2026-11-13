@@ -114,19 +114,19 @@
     "labels": {
       "type": "object",
       "properties": {
-        "retention": {
+        "training": {
           "type": "string"
         },
         "memory": {
+          "type": "string"
+        },
+        "retention": {
           "type": "string"
         },
         "logging": {
           "type": "string"
         },
         "redact": {
-          "type": "string"
-        },
-        "training": {
           "type": "string"
         }
       },

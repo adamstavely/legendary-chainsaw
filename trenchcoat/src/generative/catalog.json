@@ -632,6 +632,14 @@
     ]
   },
   {
+    "tag": "tc-budget-alerts",
+    "name": "BudgetAlerts",
+    "description": "Budget alerts: alert markers dragged along the month's budget bar – spent so far and the hatched forecast – with each",
+    "events": [
+      "tc-alerts-change"
+    ]
+  },
+  {
     "tag": "tc-budget-burn",
     "name": "BudgetBurn",
     "description": "Budget burn: each item's spend against its budget, with a pace marker and words for ahead, on or behind pace, its",
@@ -1165,6 +1173,17 @@
     ]
   },
   {
+    "tag": "tc-cost-anomaly",
+    "name": "CostAnomaly",
+    "description": "Cost anomaly: one spend spike – how far over expected, a chart of daily spend with the expected band, the likely",
+    "events": [
+      "tc-status-change",
+      "tc-set-limit",
+      "tc-investigate",
+      "tc-evidence-open"
+    ]
+  },
+  {
     "tag": "tc-cover-flow",
     "name": "CoverFlow",
     "description": "Browse covers in 3D: the front one faces you, the others stack up on both sides.",
@@ -1191,12 +1210,33 @@
     ]
   },
   {
+    "tag": "tc-data-controls",
+    "name": "DataControls",
+    "description": "A person's own data – switches for training, chat history and memory with what each means, Export my data, Delete",
+    "events": [
+      "tc-value-change",
+      "tc-export",
+      "tc-delete-chats",
+      "tc-delete-account"
+    ]
+  },
+  {
     "tag": "tc-data-handling-policy",
     "name": "DataHandlingPolicy",
     "description": "Organization-level data handling as a lifecycle – conversations, logs, memory, training, deletion – led by the policy",
     "events": [
       "tc-value-change",
       "tc-deletion-request"
+    ]
+  },
+  {
+    "tag": "tc-data-region",
+    "name": "DataRegion",
+    "description": "Where a workspace's data lives, item by item, and a flow to move it – choose a region, see the impact, schedule it,",
+    "events": [
+      "tc-step-change",
+      "tc-target-change",
+      "tc-migrate"
     ]
   },
   {
@@ -2329,6 +2369,14 @@
     ]
   },
   {
+    "tag": "tc-model-access",
+    "name": "ModelAccess",
+    "description": "Which models a workspace may use – grouped by provider, each allowed or blocked with an optional approval step, a",
+    "events": [
+      "tc-access-change"
+    ]
+  },
+  {
     "tag": "tc-model-picker",
     "name": "ModelPicker",
     "description": "The model menu of an AI chat: models with strength bars, extended thinking with its effort, and web search.",
@@ -2362,6 +2410,17 @@
     "name": "ModelWheel",
     "description": "AI model names on a turning drum.",
     "events": []
+  },
+  {
+    "tag": "tc-moderation-queue",
+    "name": "ModerationQueue",
+    "description": "Reported replies, one decision each – the report or automatic flag, the policy, the conversation with the reported",
+    "events": [
+      "tc-decide",
+      "tc-decisions-change",
+      "tc-index-change",
+      "tc-undo"
+    ]
   },
   {
     "tag": "tc-money-flow",
@@ -3187,6 +3246,15 @@
     ]
   },
   {
+    "tag": "tc-role-editor",
+    "name": "RoleEditor",
+    "description": "What each role can do – a grid of permissions against roles, with dependent permissions kept in step, a locked",
+    "events": [
+      "tc-roles-change",
+      "tc-roles-save"
+    ]
+  },
+  {
     "tag": "tc-root-cause-tree",
     "name": "RootCauseTree",
     "description": "A fault tree of what an agent suspects caused a failure – hypotheses ruled out one by one, and the way from the",
@@ -3418,6 +3486,15 @@
       "tc-replacement-change",
       "tc-replace",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-seat-usage",
+    "name": "SeatUsage",
+    "description": "Seat usage: seats paid for against seats used – active, idle and unassigned in one bar, their cost, a breakdown by",
+    "events": [
+      "tc-selected-change",
+      "tc-reclaim"
     ]
   },
   {
@@ -3696,6 +3773,26 @@
     ]
   },
   {
+    "tag": "tc-spend-breakdown",
+    "name": "SpendBreakdown",
+    "description": "Spend breakdown: AI spend by model, feature, user or team for a period – a ranked list with shares and the change on",
+    "events": [
+      "tc-dimension-change",
+      "tc-period-change",
+      "tc-view-change",
+      "tc-slice-select"
+    ]
+  },
+  {
+    "tag": "tc-spend-limits",
+    "name": "SpendLimits",
+    "description": "Spend limits: caps per member, team or API key with spent of the cap in words and a bar, what happens at the cap,",
+    "events": [
+      "tc-limits-change",
+      "tc-default-limit-change"
+    ]
+  },
+  {
     "tag": "tc-stack-spread",
     "name": "StackSpread",
     "description": "An overlapping stack – avatars, file chips, tags – that fans apart on hover or focus, with \"+N\" past `max`.",
@@ -3786,6 +3883,18 @@
     "description": "The sub-agents a session started, grouped Active and Done, each with its mark, what it's doing and a live clock.",
     "events": [
       "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-subprocessor-list",
+    "name": "SubprocessorList",
+    "description": "Every vendor that touches customer data – purpose, data categories, location, transfer mechanism, when added and",
+    "events": [
+      "tc-query-change",
+      "tc-category-change",
+      "tc-location-change",
+      "tc-subscribe",
+      "tc-export"
     ]
   },
   {
@@ -4034,6 +4143,15 @@
     ]
   },
   {
+    "tag": "tc-top-spenders",
+    "name": "TopSpenders",
+    "description": "Top spenders: who is behind most of the spend, ranked, with share bars, change in words, top model and a sparkline,",
+    "events": [
+      "tc-kind-change",
+      "tc-spender-open"
+    ]
+  },
+  {
     "tag": "tc-trace-waterfall",
     "name": "TraceWaterfall",
     "description": "An agent run as a tree of spans next to a timeline: durations, costs, folding and a details window per span.",
@@ -4109,6 +4227,17 @@
       "tc-enabled-change",
       "tc-edit",
       "tc-add"
+    ]
+  },
+  {
+    "tag": "tc-trust-center",
+    "name": "TrustCenter",
+    "description": "A vendor's trust center on one card – certifications with their status in words, security documents to view or",
+    "events": [
+      "tc-request",
+      "tc-document-open",
+      "tc-dpa-sign",
+      "tc-open-change"
     ]
   },
   {

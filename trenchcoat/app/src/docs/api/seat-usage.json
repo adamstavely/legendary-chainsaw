@@ -1,0 +1,521 @@
+{
+ "elements": [
+  {
+   "tag": "tc-seat-usage",
+   "className": "TcSeatUsage",
+   "description": "Seat usage: seats paid for against seats used – active, idle and unassigned in one bar, their cost, a breakdown by\nplan or team, and idle members to reclaim after a confirmation.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Seats\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading, e.g. the plan and renewal date",
+     "readonly": false
+    },
+    {
+     "name": "paid",
+     "attribute": "paid",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Seats paid for; by default the groups' sum",
+     "readonly": false
+    },
+    {
+     "name": "assigned",
+     "attribute": "assigned",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Seats given to someone; by default the groups' sum",
+     "readonly": false
+    },
+    {
+     "name": "active",
+     "attribute": "active",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Assigned seats used in the last 30 days; by default the groups' sum",
+     "readonly": false
+    },
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "SeatGroup[]",
+     "default": "[]",
+     "description": "The split per plan or team; leave empty to hide the breakdown",
+     "readonly": false
+    },
+    {
+     "name": "groupLabel",
+     "attribute": "group-label",
+     "type": "string",
+     "default": "\"Team\"",
+     "description": "What the breakdown's first column is called: \"Plan\" or \"Team\"",
+     "readonly": false
+    },
+    {
+     "name": "idle",
+     "attribute": null,
+     "type": "IdleMember[]",
+     "default": "[]",
+     "description": "Members holding a seat they haven't used in the last 30 days",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ticked idle members' ids. Changed by the checkboxes unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "seatPrice",
+     "attribute": "seat-price",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "What one seat costs per `period`, in `currency`; unset hides the cost line",
+     "readonly": false
+    },
+    {
+     "name": "period",
+     "attribute": "period",
+     "type": "string",
+     "default": "\"a month\"",
+     "description": "The period `seat-price` is for, in words: \"a month\", \"a year\"",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The price's currency, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time for \"47 days ago\", epoch ms; unset shows dates instead",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The time zone for dates, e.g. \"Europe/London\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "Idle members were ticked or unticked ({ selected }: SeatSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-reclaim",
+     "detail": "",
+     "description": "Reclaiming was confirmed ({ ids, members }: SeatReclaim); cancelable – prevented, the confirmation stays open",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "seat",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-h-hero",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-12",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "seatTotals",
+   "signature": "seatTotals(groups: SeatGroup[], given: Partial<Pick<SeatTotals, \"paid\" | \"assigned\" | \"active\">>): SeatTotals",
+   "description": "Paid, assigned, active, idle (assigned but not active) and unassigned seats, from the totals or the groups"
+  }
+ ],
+ "react": [
+  {
+   "component": "SeatUsage",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "selected",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ticked idle members' ids – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ticked idle members' ids on mount, when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string[]) => void",
+     "optional": true,
+     "description": "Idle members were ticked or unticked"
+    },
+    {
+     "name": "onReclaim",
+     "type": "(ids: string[], members: IdleMember[]) => boolean | void",
+     "optional": true,
+     "description": "Reclaiming was confirmed; return false to keep the confirmation open"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null,
+    "tc-reclaim": "onReclaim"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-seat-usage",
+   "className": "TcSeatUsage",
+   "module": "@adamstavely/trenchcoat/seat-usage",
+   "data": [
+    "groups",
+    "idle",
+    "selected"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "paid",
+     "attribute": "paid"
+    },
+    {
+     "name": "assigned",
+     "attribute": "assigned"
+    },
+    {
+     "name": "active",
+     "attribute": "active"
+    },
+    {
+     "name": "groupLabel",
+     "attribute": "group-label"
+    },
+    {
+     "name": "seatPrice",
+     "attribute": "seat-price"
+    },
+    {
+     "name": "period",
+     "attribute": "period"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-reclaim",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29356,
+  "gzip": 8897
+ }
+}

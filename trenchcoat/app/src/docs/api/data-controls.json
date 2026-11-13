@@ -1,0 +1,556 @@
+{
+ "elements": [
+  {
+   "tag": "tc-data-controls",
+   "className": "TcDataControls",
+   "description": "A person's own data – switches for training, chat history and memory with what each means, Export my data, Delete\nall chats behind a confirmation, and Delete account.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Data controls\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "DataControlsValue",
+     "default": "{ training: false, history: true, memory: true }",
+     "description": "The switches. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "changed",
+     "attribute": null,
+     "type": "Partial<Record<DataControlsField, number>>",
+     "default": "{}",
+     "description": "When each switch was last changed, epoch ms – the page records the change and passes it back",
+     "readonly": false
+    },
+    {
+     "name": "chatCount",
+     "attribute": "chat-count",
+     "type": "number",
+     "default": "0",
+     "description": "How many chats Delete all chats removes",
+     "readonly": false
+    },
+    {
+     "name": "memoryHref",
+     "attribute": "memory-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where memories are managed; leave it unset and Manage memory isn't shown",
+     "readonly": false
+    },
+    {
+     "name": "deleteAccountHref",
+     "attribute": "delete-account-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where deleting the account starts; unset, Delete account fires tc-delete-account",
+     "readonly": false
+    },
+    {
+     "name": "exportStatus",
+     "attribute": "export-status",
+     "type": "DataExportStatus",
+     "default": "\"idle\"",
+     "description": "Where the export stands: idle, requested (a link will be emailed), ready or failed. Set to requested by Export my data unless prevented",
+     "readonly": false
+    },
+    {
+     "name": "exportHref",
+     "attribute": "export-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The finished export's link, shown when `exportStatus` is ready",
+     "readonly": false
+    },
+    {
+     "name": "hideDeleteAccount",
+     "attribute": "hide-delete-account",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Delete account",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<DataControlsLabels>",
+     "default": "{}",
+     "description": "The card's words, merged over defaultDataControlsLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A switch was flipped ({ value, field }: DataControlsValueChange); cancelable – prevented, the switch stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export my data was pressed (detail: {}); cancelable – prevented, the status doesn't change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-delete-chats",
+     "detail": "",
+     "description": "Delete chats was confirmed ({ count }: DataControlsDeleteChats); cancelable – prevented, the dialog stays open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-delete-account",
+     "detail": "",
+     "description": "Delete account was pressed, when there's no `deleteAccountHref` (detail: {})",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dcl",
+   "cssProperties": [
+    {
+     "name": "--tc-dcl-dialog-w",
+     "value": "400px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-scrim",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "DataControls",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "value",
+     "type": "DataControlsValue",
+     "optional": true,
+     "description": "The switches – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "DataControlsValue",
+     "optional": true,
+     "description": "The switches on mount, when `value` isn't controlled"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(value: DataControlsValue, field: DataControlsField) => void",
+     "optional": true,
+     "description": "A switch was flipped: the whole value and the field that changed"
+    },
+    {
+     "name": "onExport",
+     "type": "() => boolean | void",
+     "optional": true,
+     "description": "Export my data was pressed; return false to keep the status as it is"
+    },
+    {
+     "name": "onDeleteChats",
+     "type": "(count: number) => boolean | void",
+     "optional": true,
+     "description": "Delete chats was confirmed; return false to keep the dialog open"
+    },
+    {
+     "name": "onDeleteAccount",
+     "type": "() => void",
+     "optional": true,
+     "description": "Delete account was pressed, when there's no `deleteAccountHref`"
+    }
+   ],
+   "hides": [
+    "heading",
+    "value",
+    "defaultValue",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": null,
+    "tc-export": "onExport",
+    "tc-delete-chats": "onDeleteChats",
+    "tc-delete-account": "onDeleteAccount"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-data-controls",
+   "className": "TcDataControls",
+   "module": "@adamstavely/trenchcoat/data-controls",
+   "data": [
+    "value",
+    "changed",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "chatCount",
+     "attribute": "chat-count"
+    },
+    {
+     "name": "memoryHref",
+     "attribute": "memory-href"
+    },
+    {
+     "name": "deleteAccountHref",
+     "attribute": "delete-account-href"
+    },
+    {
+     "name": "exportStatus",
+     "attribute": "export-status"
+    },
+    {
+     "name": "exportHref",
+     "attribute": "export-href"
+    },
+    {
+     "name": "hideDeleteAccount",
+     "attribute": "hide-delete-account"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "cancelable": true
+    },
+    {
+     "name": "tc-delete-chats",
+     "cancelable": true
+    },
+    {
+     "name": "tc-delete-account",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28484,
+  "gzip": 9226
+ }
+}

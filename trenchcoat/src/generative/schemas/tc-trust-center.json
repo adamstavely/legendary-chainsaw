@@ -1,0 +1,271 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-trust-center.json",
+  "title": "tc-trust-center",
+  "description": "A vendor's trust center on one card – certifications with their status in words, security documents to view or\nrequest (NDA noted), the Data Processing Agreement to review and sign, and common questions.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TrustCertification"
+      },
+      "description": "Certifications and frameworks, in order"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TrustDocument"
+      },
+      "description": "Security documents, in order"
+    },
+    "dpa": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "not-signed",
+            "signed"
+          ]
+        },
+        "signedAt": {
+          "type": "number"
+        },
+        "signedBy": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "The Data Processing Agreement; null leaves its card out"
+    },
+    "faqs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TrustFaq"
+      },
+      "description": "Common questions and their answers"
+    },
+    "open": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the open questions. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "lastUpdated": {
+      "type": "number",
+      "description": "When the trust center was last updated, as epoch ms – shown in the header"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "certifications": {
+          "type": "string"
+        },
+        "documents": {
+          "type": "string"
+        },
+        "dpa": {
+          "type": "string"
+        },
+        "faq": {
+          "type": "string"
+        },
+        "certified": {
+          "type": "string"
+        },
+        "inProgress": {
+          "type": "string"
+        },
+        "planned": {
+          "type": "string"
+        },
+        "auditor": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        },
+        "requestAccess": {
+          "type": "string"
+        },
+        "requested": {
+          "type": "string"
+        },
+        "nda": {
+          "type": "string"
+        },
+        "public": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string"
+        },
+        "notSigned": {
+          "type": "string"
+        },
+        "signed": {
+          "type": "string"
+        },
+        "signedOn": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "reviewAndSign": {
+          "type": "string"
+        },
+        "viewSigned": {
+          "type": "string"
+        },
+        "dpaNote": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "requestSent": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words used, merged over defaultTrustCenterLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TrustCertification": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "Its name as text: \"ISO 27001\", \"SOC 2 Type II\""
+        },
+        "status": {
+          "$ref": "#/definitions/TrustCertificationStatus"
+        },
+        "period": {
+          "type": "string",
+          "description": "The period it covers, or when it's expected: \"May 2026 – May 2029\", \"Expected Q2 2027\""
+        },
+        "auditor": {
+          "type": "string",
+          "description": "Who audited or issued it"
+        },
+        "image": {
+          "type": "string",
+          "description": "The page's own image for it (a URL); drawn beside the name, which stays as text"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "TrustCertificationStatus": {
+      "type": "string",
+      "enum": [
+        "certified",
+        "in-progress",
+        "planned"
+      ],
+      "description": "Where a certification stands"
+    },
+    "TrustDocument": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One line on what's in it"
+        },
+        "access": {
+          "$ref": "#/definitions/TrustDocumentAccess"
+        },
+        "nda": {
+          "type": "boolean",
+          "description": "Reading it needs a signed NDA"
+        },
+        "href": {
+          "type": "string",
+          "description": "Where to read it, for public and granted documents",
+          "format": "uri-reference"
+        },
+        "updated": {
+          "type": "number",
+          "description": "When it was last updated, as epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "access"
+      ],
+      "additionalProperties": false
+    },
+    "TrustDocumentAccess": {
+      "type": "string",
+      "enum": [
+        "granted",
+        "public",
+        "request",
+        "requested"
+      ],
+      "description": "Who can read a document: anyone, on request, requested already, or granted to this reader"
+    },
+    "TrustFaq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "answer"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
