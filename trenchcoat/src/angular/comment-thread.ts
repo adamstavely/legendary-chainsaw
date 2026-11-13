@@ -42,6 +42,10 @@ export class CommentThread {
   @Input() set closable(v: TcCommentThread["closable"] | "" | "true" | "false") {
     this.#el.closable = typeof v === "string" ? v !== "false" : v;
   }
+  /** Hides the reply field: for people who may read the thread but not reply */
+  @Input() set readonly(v: TcCommentThread["readonly"] | "" | "true" | "false") {
+    this.#el.readonly = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcCommentThread["look"]) {
     this.#el.look = v;

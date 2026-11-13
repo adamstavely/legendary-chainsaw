@@ -61,6 +61,10 @@
     "closable": {
       "type": "boolean",
       "description": "Shows a close button, which fires tc-close"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Hides the reply field: for people who may read the thread but not reply"
     }
   },
   "additionalProperties": false,

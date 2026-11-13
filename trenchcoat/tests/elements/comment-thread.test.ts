@@ -137,6 +137,40 @@ for (const look of ["standard", "clean"] as const) {
       expect(close).toHaveBeenCalledTimes(1);
     });
 
+    test("the first reply on an empty thread shows in full – the list isn't locked at its empty height", async () => {
+      const el = await fixture<TcCommentThread>(html`<tc-comment-thread look=${look} .messages=${[]} .currentUser=${you}></tc-comment-thread>`);
+      const list = el.querySelector<HTMLElement>(".ui-ct__scroll")!;
+      const empty = list.offsetHeight;
+      await reply(el, "The first comment on this card, long enough to wrap onto a second line in a narrow thread");
+      for (const a of document.getAnimations()) a.finish();
+      expect(list.style.maxHeight).toBe("");
+      expect(list.offsetHeight).toBeGreaterThan(empty);
+      expect(list.scrollHeight).toBeLessThanOrEqual(list.clientHeight + 1);
+    });
+
+    test("later replies keep the card at its height", async () => {
+      const el = await fixture<TcCommentThread>(html`<tc-comment-thread look=${look} .messages=${[msg("a", "First")]} .currentUser=${you}></tc-comment-thread>`);
+      const list = el.querySelector<HTMLElement>(".ui-ct__scroll")!;
+      const height = list.offsetHeight;
+      await reply(el, "Second");
+      expect(list.style.maxHeight).toBe(`${height}px`);
+    });
+
+    test("readonly hides the reply field and reflects", async () => {
+      const el = await fixture<TcCommentThread>(html`<tc-comment-thread look=${look} readonly .messages=${[msg("a", "First")]} .currentUser=${you}></tc-comment-thread>`);
+      expect(el.readonly).toBe(true);
+      expect(el.querySelector(".ui-ct__composer")).toBeNull();
+      expect(texts(el)).toEqual(["First"]);
+      el.readonly = false;
+      await settle();
+      expect(el.hasAttribute("readonly")).toBe(false);
+      expect(el.querySelector(".ui-ct__composer")).not.toBeNull();
+      el.readonly = true;
+      await settle();
+      expect(el.getAttribute("readonly")).toBe("");
+      expect(el.querySelector(".ui-ct__composer")).toBeNull();
+    });
+
     test("status lines fold their details open", async () => {
       const m: ThreadMessage = { id: "s", author: bot, createdAt: 0, text: "Done", status: "Edited 2 lines", details: ["One", "Two"] };
       const el = await fixture<TcCommentThread>(html`<tc-comment-thread look=${look} .messages=${[m]} .currentUser=${you}></tc-comment-thread>`);

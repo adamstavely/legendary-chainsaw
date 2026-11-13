@@ -54,6 +54,14 @@
      "readonly": false
     },
     {
+     "name": "readonly",
+     "attribute": "readonly",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the reply field: for people who may read the thread but not reply",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -281,6 +289,10 @@
     {
      "name": "closable",
      "attribute": "closable"
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly"
     }
    ],
    "events": [
@@ -586,7 +598,7 @@
   "windowed": false
  },
  "size": {
-  "min": 40914,
-  "gzip": 12172
+  "min": 41137,
+  "gzip": 12221
  }
 }

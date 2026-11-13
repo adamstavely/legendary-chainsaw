@@ -28,7 +28,7 @@ fails, the thread says so and offers Try again. Times read as “12min ago” an
 1. **Header** – the shared card header: a boxed icon, the heading, the message count and the close button
 2. **Message** `.ui-ct__msg` – avatar, name, time and text
 3. **Status line** `.ui-ct__status-btn` – what the assistant did; folds open its details
-4. **Reply field** `.ui-ct__composer` – the input and the send button
+4. **Reply field** `.ui-ct__composer` – the input and the send button; left out with `readonly`
 
 ## Looks
 
@@ -68,6 +68,7 @@ discount… Edited 3 cells in Pricing”), and a failure as
 - Set `assistant` so the field invites people to ask it (“Reply, or ask @Assistant…”) and the thinking state shows.
 - Return a promise from `onReply` and reject it when the assistant fails, so people get Try again.
 - Store the list from `tc-messages-change` and pass it back – ids keep replies from doubling.
+- Set `readonly` for people who may read the thread but not reply – the reply field goes away.
 
 ## Don't
 

@@ -104,6 +104,8 @@ export class TcCommentThread extends TcElement {
   @property({ attribute: false }) accessor onReply: ((text: string) => ThreadReplyResult) | undefined = undefined;
   /** Shows a close button, which fires tc-close */
   @property({ type: Boolean }) accessor closable = false;
+  /** Hides the reply field: for people who may read the thread but not reply */
+  @property({ type: Boolean, reflect: true }) accessor readonly = false;
 
   /** @internal Posted here and not in `messages` yet (matched by id) */
   @state() accessor local: ThreadMessage[] = [];
@@ -204,7 +206,8 @@ export class TcCommentThread extends TcElement {
     this.draft = "";
     const at = Date.now();
     this.now = at;
-    this.lockHeight(true);
+    // An empty list is only as tall as its padding: locked there, the first message would be cut off
+    if (this.thread.length) this.lockHeight(true);
     this.post({ id: `${this.uid}-${++this.count}`, author: this.currentUser, createdAt: at, text });
     void this.answer(text);
   }
@@ -334,28 +337,30 @@ export class TcCommentThread extends TcElement {
             : nothing}
         </div>
       </div>
-      <form
-        class="ui-ct__composer"
-        @submit=${(e: Event) => {
-          e.preventDefault();
-          this.send();
-        }}
-      >
-        <input
-          class="ui-ct__input"
-          .value=${this.draft}
-          @input=${(e: Event) => (this.draft = (e.target as HTMLInputElement).value)}
-          @keydown=${(e: KeyboardEvent) => {
-            // Enter that confirms an IME composition doesn't send
-            if (e.key === "Enter" && e.isComposing) e.preventDefault();
-          }}
-          placeholder=${assistant ? `Reply, or ask @${assistant.name}…` : "Add comment…"}
-          aria-label="Reply"
-        />
-        <button type="submit" class="ui-ct__send" aria-label="Send reply" ?disabled=${!this.draft.trim() || this.thinking}>
-          ${clean ? html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 12.5v-9M4.25 7.25 8 3.5l3.75 3.75"></path>`}</svg>` : icon(look, "M8 13V3M3.5 7.5 8 3l4.5 4.5", 14)}
-        </button>
-      </form>
+      ${this.readonly
+        ? nothing
+        : html`<form
+            class="ui-ct__composer"
+            @submit=${(e: Event) => {
+              e.preventDefault();
+              this.send();
+            }}
+          >
+            <input
+              class="ui-ct__input"
+              .value=${this.draft}
+              @input=${(e: Event) => (this.draft = (e.target as HTMLInputElement).value)}
+              @keydown=${(e: KeyboardEvent) => {
+                // Enter that confirms an IME composition doesn't send
+                if (e.key === "Enter" && e.isComposing) e.preventDefault();
+              }}
+              placeholder=${assistant ? `Reply, or ask @${assistant.name}…` : "Add comment…"}
+              aria-label="Reply"
+            />
+            <button type="submit" class="ui-ct__send" aria-label="Send reply" ?disabled=${!this.draft.trim() || this.thinking}>
+              ${clean ? html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 12.5v-9M4.25 7.25 8 3.5l3.75 3.75"></path>`}</svg>` : icon(look, "M8 13V3M3.5 7.5 8 3l4.5 4.5", 14)}
+            </button>
+          </form>`}
       <p class="ui-ct__live" role="status">${this.announce}</p>
     `;
   }
