@@ -21,6 +21,11 @@ import { compact } from "./internal/format";
  *   · long lists render only the rows near the scroll position (thousands of sources stay fast)
  * The element ingests nothing: Add, Resync, Pause and Review chunks are events the app acts on, and it reports back
  * through `sources`. Removing a source and changing its schedule change `sources` (cancelable).
+ *   · `addInline`: Add source opens an Add sources panel in the card instead of firing tc-add – a drop area and file
+ *     picker, a field for one or many links (checked, with repeats dropped) with how far to crawl, and Paste text
+ *     with a title. What's waiting shows as rows with its type and size; Add fires tc-sources-add { files, urls,
+ *     depth, texts } (cancelable) and, unless prevented, lists them as queued sources through tc-sources-change
+ *     ({ type: "add" }) until the app passes the real ones in `sources`
  * Keyboard: ↑ ↓ Home End Page Up / Page Down move through the list and pick; Delete asks to remove the picked source;
  * Escape closes it. Standard is a gray tray holding the header and Add source, with the list on a white card; Clean is
  * one white card with hairline dividers, quieter pills and thinner icons.
@@ -57,11 +62,22 @@ export type KnowledgeSource = {
 };
 export type KnowledgeSchedule = { id: string; label: string };
 export type KnowledgeShow = "all" | "attention";
-export type KnowledgeSourcesChange = { sources: KnowledgeSource[]; change: { type: "remove" | "schedule"; source: KnowledgeSource } };
+export type KnowledgeSourcesChange = {
+  sources: KnowledgeSource[];
+  /** What changed. "add" comes from the Add sources panel: `source` is the first new one, `added` all of them */
+  change: { type: "remove" | "schedule" | "add"; source: KnowledgeSource; added?: KnowledgeSource[] };
+};
 export type KnowledgeSourceEvent = { source: KnowledgeSource };
 export type KnowledgePauseEvent = { source: KnowledgeSource; paused: boolean };
 export type KnowledgeSelectedChange = { selected: string | null; source?: KnowledgeSource };
 export type KnowledgeShowChange = { show: KnowledgeShow };
+/** How far a link is crawled: the page alone, or the section of the site under it */
+export type KnowledgeCrawlDepth = "page" | "section";
+/** Text pasted in as a source */
+export type KnowledgeText = { title: string; text: string };
+export type KnowledgeSourcesAdd = { files: File[]; urls: string[]; depth: KnowledgeCrawlDepth; texts: KnowledgeText[] };
+/** One addition waiting in the Add sources panel */
+type Pending = { id: string } & ({ type: "file"; file: File } | { type: "url"; url: string } | { type: "text"; title: string; text: string });
 
 export const KNOWLEDGE_SCHEDULES: KnowledgeSchedule[] = [
   { id: "manual", label: "Manually" },
@@ -90,6 +106,34 @@ function when(at: KnowledgeSource["lastSync"], now?: number) {
   return d < 30 ? `${d} ${d === 1 ? "day" : "days"} ago` : DATE.format(t);
 }
 
+/** "12 KB", "1.4 MB" */
+const bytes = (n: number) => (n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / (1024 * 1024)).toFixed(1)} MB`);
+/** "PDF", "DOCX" – from the name's extension, else "File" */
+const fileType = (name: string) => (/\.([a-z0-9]{1,6})$/i.exec(name)?.[1]?.toUpperCase() ?? "File");
+/** A link as typed, made whole: a scheme added when it has none; null when it isn't an http(s) address */
+export function knowledgeUrl(typed: string): string | null {
+  const t = typed.trim().replace(/[),.;]+$/, "");
+  if (!t) return null;
+  const withScheme = /^[a-z][a-z0-9+.-]*:/i.test(t) ? t : `https://${t}`;
+  try {
+    const u = new URL(withScheme);
+    if ((u.protocol !== "http:" && u.protocol !== "https:") || !u.hostname.includes(".")) return null;
+    return u.href;
+  } catch {
+    return null;
+  }
+}
+/** The same address however it was typed: no trailing slash, no fragment, lower-case host */
+const sameUrl = (url: string) => {
+  try {
+    const u = new URL(url);
+    u.hash = "";
+    return `${u.protocol}//${u.host.toLowerCase()}${u.pathname.replace(/\/$/, "")}${u.search}`;
+  } catch {
+    return url;
+  }
+};
+
 /* ---------- Icons (Lucide, ISC – lucide.dev) ---------- */
 const glyph = (body: TemplateResult, cls = "ui-ksm__glyph") => html`<svg class=${cls} viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
 const KIND_PATHS: Record<string, TemplateResult> = {
@@ -108,6 +152,8 @@ const play = () => glyph(svg`<path d="M7 4.5v15l12-7.5z"></path>`);
 const trash = () => glyph(svg`<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path>`);
 const layers = () => glyph(svg`<path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path>`);
 const warn = () => glyph(svg`<path d="M12 9v4M12 16.5h.01M10.3 3.9 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path>`);
+const upload = () => glyph(svg`<path d="M12 15V3M7 8l5-5 5 5"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>`);
+const textIcon = () => glyph(svg`<path d="M4 7V5h16v2M9 19h6M12 5v14"></path>`);
 const copies = () => glyph(svg`<rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>`);
 
 /** The state's icon: a check, a ring that fills while indexing, a clock, two bars, an alert */
@@ -137,13 +183,14 @@ let instances = 0;
  * The sources a knowledge base answers from – ingestion state and progress, documents and chunks, last sync and
  * schedule, stale and duplicate warnings – with add, resync, pause, remove and a handoff to chunk review.
  * @tag tc-knowledge-source-manager
- * @fires tc-sources-change - A source was removed or its schedule changed ({ sources, change: { type, source } }: KnowledgeSourcesChange); cancelable – prevent it to control `sources`
+ * @fires tc-sources-change - A source was removed, its schedule changed, or sources were added from the Add sources panel ({ sources, change: { type, source, added } }: KnowledgeSourcesChange); cancelable – prevent it to control `sources`
  * @fires tc-selected-change - A source was picked or the open one closed ({ selected, source }: KnowledgeSelectedChange); cancelable
  * @fires tc-show-change - All or Needs attention was picked ({ show }: KnowledgeShowChange); cancelable
  * @fires tc-add - Add source was pressed – open your own picker; detail: null
  * @fires tc-resync - Resync (or Retry, for a failed source) was pressed ({ source }: KnowledgeSourceEvent)
  * @fires tc-pause - Pause or Resume was pressed ({ source, paused }: KnowledgePauseEvent – `paused` is what was asked for)
  * @fires tc-review-chunks - Review chunks was pressed – open your chunk review for the source ({ source }: KnowledgeSourceEvent)
+ * @fires tc-sources-add - With `addInline`, Add was pressed in the Add sources panel ({ files, urls, depth, texts }: KnowledgeSourcesAdd); cancelable – prevented, the panel closes without listing them as queued sources
  */
 export class TcKnowledgeSourceManager extends TcElement {
   static override ui = "ksm";
@@ -168,6 +215,12 @@ export class TcKnowledgeSourceManager extends TcElement {
   @property({ type: Boolean, attribute: "no-review" }) accessor noReview = false;
   /** The list's height before it scrolls, in px */
   @property({ type: Number, attribute: "max-height" }) accessor maxHeight = 420;
+  /** Add source opens the Add sources panel – files, links and pasted text – instead of firing tc-add */
+  @property({ type: Boolean, attribute: "add-inline" }) accessor addInline = false;
+  /** The files the panel's picker and drop area take, as an input's `accept`: ".pdf,.docx,text/*" */
+  @property() accessor accept = "";
+  /** The largest file the panel takes, in bytes; larger ones are turned away with a reason */
+  @property({ type: Number, attribute: "max-file-size" }) accessor maxFileSize: number | undefined = undefined;
 
   /** @internal The keyboard's place in the list (shown rows), or -1 */
   @state() accessor active = -1;
@@ -175,6 +228,27 @@ export class TcKnowledgeSourceManager extends TcElement {
   @state() accessor confirming: string | null = null;
   /** @internal What the status region says */
   @state() accessor spoken = "";
+  /** @internal The Add sources panel is open */
+  @state() accessor adding = false;
+  /** @internal What's waiting to be added */
+  @state() accessor pending: Pending[] = [];
+  /** @internal The links field */
+  @state() accessor linkDraft = "";
+  /** @internal What the links field couldn't read as links */
+  @state() accessor linkProblems: string[] = [];
+  /** @internal How far links are crawled */
+  @state() accessor depth: KnowledgeCrawlDepth = "page";
+  /** @internal Paste text is open */
+  @state() accessor pasting = false;
+  /** @internal The pasted text's title */
+  @state() accessor textTitle = "";
+  /** @internal The pasted text */
+  @state() accessor textBody = "";
+  /** @internal Files are dragged over the drop area */
+  @state() accessor dragOver = false;
+  /** @internal Files the panel turned away, with why */
+  @state() accessor turnedAway: string[] = [];
+  private nextPending = 0;
 
   private readonly uid = `tc-ksm${++instances}`;
   private view: KnowledgeSource[] = [];
@@ -251,8 +325,8 @@ export class TcKnowledgeSourceManager extends TcElement {
   }
 
   /** @internal */
-  private change(sources: KnowledgeSource[], type: "remove" | "schedule", source: KnowledgeSource) {
-    const ok = this.emit<KnowledgeSourcesChange>("tc-sources-change", { sources, change: { type, source } }, { cancelable: true });
+  private change(sources: KnowledgeSource[], type: "remove" | "schedule" | "add", source: KnowledgeSource, added?: KnowledgeSource[]) {
+    const ok = this.emit<KnowledgeSourcesChange>("tc-sources-change", { sources, change: { type, source, ...(added ? { added } : {}) } }, { cancelable: true });
     if (ok) this.sources = sources;
     else this.requestUpdate();
     return ok;
@@ -329,6 +403,294 @@ export class TcKnowledgeSourceManager extends TcElement {
     e.preventDefault();
     this.setShow(this.show === "all" ? "attention" : "all", true);
   };
+
+  /* ---------- Adding sources ---------- */
+
+  /** @internal Add source: the panel with `addInline`, else tc-add for the app's own picker */
+  private onAdd() {
+    if (!this.addInline) {
+      this.emit("tc-add", null);
+      return;
+    }
+    if (this.adding) {
+      this.closeAdder();
+      return;
+    }
+    this.adding = true;
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ksm__choose")?.focus());
+  }
+
+  /** @internal Closes the panel, dropping what's waiting, and puts focus back on Add source */
+  private closeAdder() {
+    this.adding = false;
+    this.resetAdder();
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ksm__add")?.focus());
+  }
+  private resetAdder() {
+    this.pending = [];
+    this.linkDraft = "";
+    this.linkProblems = [];
+    this.pasting = false;
+    this.textTitle = "";
+    this.textBody = "";
+    this.turnedAway = [];
+    this.dragOver = false;
+  }
+
+  /** @internal Whether a file is one `accept` allows */
+  private accepts(file: File) {
+    const rules = this.accept.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean);
+    if (!rules.length) return true;
+    const name = file.name.toLowerCase();
+    const type = (file.type || "").toLowerCase();
+    return rules.some((r) => (r.startsWith(".") ? name.endsWith(r) : r.endsWith("/*") ? type.startsWith(r.slice(0, -1)) : type === r));
+  }
+
+  /** @internal Files from the picker or a drop: the ones allowed wait in the list, the rest are turned away with why */
+  private addFiles(files: Iterable<File>) {
+    const away: string[] = [];
+    const added: Pending[] = [];
+    for (const file of files) {
+      if (!this.accepts(file)) away.push(`${file.name} isn't a type this takes`);
+      else if (this.maxFileSize !== undefined && file.size > this.maxFileSize) away.push(`${file.name} is over ${bytes(this.maxFileSize)}`);
+      else if (this.pending.some((p) => p.type === "file" && p.file.name === file.name && p.file.size === file.size)) continue;
+      else added.push({ id: `p${++this.nextPending}`, type: "file", file });
+    }
+    this.pending = [...this.pending, ...added];
+    this.turnedAway = away;
+    const said = [added.length ? `Added ${plural(added.length, "file")} to the list` : "", ...away].filter(Boolean);
+    if (said.length) this.spoken = said.join(". ");
+  }
+
+  /** @internal The links field: every link in it waits in the list, repeats dropped; what isn't a link stays to fix */
+  private addLinks() {
+    const words = this.linkDraft.split(/[\s,]+/).filter(Boolean);
+    if (!words.length) return;
+    const known = new Set([...this.pending.flatMap((p) => (p.type === "url" ? [sameUrl(p.url)] : [])), ...this.sources.flatMap((s) => (s.location ? [sameUrl(knowledgeUrl(s.location) ?? s.location)] : []))]);
+    const added: Pending[] = [];
+    const bad: string[] = [];
+    let repeats = 0;
+    for (const word of words) {
+      const url = knowledgeUrl(word);
+      if (!url) {
+        bad.push(word);
+        continue;
+      }
+      if (known.has(sameUrl(url))) {
+        repeats += 1;
+        continue;
+      }
+      known.add(sameUrl(url));
+      added.push({ id: `p${++this.nextPending}`, type: "url", url });
+    }
+    this.pending = [...this.pending, ...added];
+    this.linkProblems = bad;
+    this.linkDraft = bad.join("\n");
+    this.spoken = [added.length ? `Added ${plural(added.length, "link")} to the list` : "", repeats ? `${plural(repeats, "link")} already there` : "", bad.length ? `${plural(bad.length, "entry", "entries")} isn't a link` : ""]
+      .filter(Boolean)
+      .join(". ");
+  }
+
+  /** @internal Pasted text waits in the list under its title */
+  private addText() {
+    const text = this.textBody.trim();
+    if (!text) return;
+    const title = this.textTitle.trim() || text.split("\n")[0].slice(0, 60);
+    this.pending = [...this.pending, { id: `p${++this.nextPending}`, type: "text", title, text }];
+    this.textTitle = "";
+    this.textBody = "";
+    this.pasting = false;
+    this.spoken = `Added ${title} to the list`;
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ksm__paste-toggle")?.focus());
+  }
+
+  /** @internal Takes one thing off the waiting list, focus moving to the next row or the Add sources heading */
+  private unpend(item: Pending, i: number) {
+    this.pending = this.pending.filter((p) => p.id !== item.id);
+    this.spoken = `Removed ${this.pendingName(item)} from the list`;
+    void this.updateComplete.then(() => {
+      const rows = this.querySelectorAll<HTMLElement>(".ui-ksm__pending-remove");
+      (rows[Math.min(i, rows.length - 1)] ?? this.querySelector<HTMLElement>(".ui-ksm__choose"))?.focus();
+    });
+  }
+
+  /** @internal Add: tc-sources-add, then – unless prevented – the additions listed as queued sources */
+  private submitAdd() {
+    if (!this.pending.length) return;
+    const files = this.pending.flatMap((p) => (p.type === "file" ? [p.file] : []));
+    const urls = this.pending.flatMap((p) => (p.type === "url" ? [p.url] : []));
+    const texts = this.pending.flatMap((p) => (p.type === "text" ? [{ title: p.title, text: p.text }] : []));
+    const listed = this.emit<KnowledgeSourcesAdd>("tc-sources-add", { files, urls, depth: this.depth, texts }, { cancelable: true });
+    const stamp = this.nextPending;
+    const queued: KnowledgeSource[] = this.pending.map((p, i) =>
+      p.type === "file"
+        ? { id: `new-${stamp}-${i}`, name: p.file.name, kind: "file", state: "queued" }
+        : p.type === "url"
+          ? { id: `new-${stamp}-${i}`, name: this.pendingName(p), kind: "site", location: p.url, state: "queued" }
+          : { id: `new-${stamp}-${i}`, name: p.title, kind: "text", state: "queued" },
+    );
+    const n = queued.length;
+    if (listed) this.change([...this.sources, ...queued], "add", queued[0], queued);
+    this.adding = false;
+    this.resetAdder();
+    void this.updateComplete.then(() => {
+      this.spoken = `Adding ${plural(n, "source")}`;
+      this.querySelector<HTMLElement>(".ui-ksm__add")?.focus();
+    });
+  }
+
+  /** @internal What a waiting item is called */
+  private pendingName(p: Pending) {
+    if (p.type === "file") return p.file.name;
+    if (p.type === "text") return p.title;
+    try {
+      const u = new URL(p.url);
+      return `${u.host}${u.pathname === "/" ? "" : u.pathname}`;
+    } catch {
+      return p.url;
+    }
+  }
+
+  /** @internal "PDF · 1.2 MB", "Link · this page", "Text · 1,240 characters" */
+  private pendingInfo(p: Pending) {
+    if (p.type === "file") return `${fileType(p.file.name)} · ${bytes(p.file.size)}`;
+    if (p.type === "url") return `Link · ${this.depth === "page" ? "this page" : "this section of the site"}`;
+    return `Text · ${plural(p.text.length, "character")}`;
+  }
+
+  /** @internal The Add sources panel */
+  private adder() {
+    if (!this.adding) return nothing;
+    const id = this.uid;
+    const n = this.pending.length;
+    return html`<section
+      class="ui-ksm__adder"
+      id=${`${id}-adder`}
+      aria-labelledby=${`${id}-adder-title`}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key !== "Escape" || e.defaultPrevented) return;
+        e.preventDefault();
+        this.closeAdder();
+      }}
+    >
+      <h4 class="ui-ksm__adder-title" id=${`${id}-adder-title`}>Add sources</h4>
+      <div
+        class="ui-ksm__drop"
+        ?data-over=${this.dragOver}
+        @dragenter=${(e: DragEvent) => {
+          e.preventDefault();
+          this.dragOver = true;
+        }}
+        @dragover=${(e: DragEvent) => {
+          e.preventDefault();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+          this.dragOver = true;
+        }}
+        @dragleave=${(e: DragEvent) => {
+          if (!(e.currentTarget as Element).contains(e.relatedTarget as Node | null)) this.dragOver = false;
+        }}
+        @drop=${(e: DragEvent) => {
+          e.preventDefault();
+          this.dragOver = false;
+          if (e.dataTransfer?.files.length) this.addFiles(e.dataTransfer.files);
+        }}
+      >
+        ${upload()}
+        <p class="ui-ksm__drop-text" id=${`${id}-drop`}>Drop files here${this.accept ? html` <span class="ui-ksm__drop-hint">(${this.accept.split(",").map((a) => a.trim()).join(", ")}${this.maxFileSize !== undefined ? `, up to ${bytes(this.maxFileSize)}` : ""})</span>` : this.maxFileSize !== undefined ? html` <span class="ui-ksm__drop-hint">(up to ${bytes(this.maxFileSize)})</span>` : nothing}</p>
+        <button type="button" class="ui-ksm__btn ui-ksm__choose" aria-describedby=${`${id}-drop`} @click=${() => this.querySelector<HTMLInputElement>(".ui-ksm__file")?.click()}>Choose files</button>
+        <input
+          class="ui-ksm__file"
+          type="file"
+          multiple
+          tabindex="-1"
+          aria-hidden="true"
+          accept=${ifDefined(this.accept || undefined)}
+          @change=${(e: Event) => {
+            const input = e.target as HTMLInputElement;
+            if (input.files?.length) this.addFiles([...input.files]);
+            input.value = "";
+          }}
+        />
+      </div>
+      ${this.turnedAway.length ? html`<ul class="ui-ksm__away">${this.turnedAway.map((t) => html`<li>${warn()}<span>${t}</span></li>`)}</ul>` : nothing}
+      <div class="ui-ksm__links">
+        <label class="ui-ksm__label" for=${`${id}-links`}>Links</label>
+        <div class="ui-ksm__links-row">
+          <textarea
+            class="ui-ksm__field ui-ksm__links-field"
+            id=${`${id}-links`}
+            rows="2"
+            spellcheck="false"
+            placeholder="https://… – one or many, on lines or with spaces"
+            aria-invalid=${this.linkProblems.length ? "true" : "false"}
+            aria-describedby=${ifDefined(this.linkProblems.length ? `${id}-links-problem` : undefined)}
+            .value=${live(this.linkDraft)}
+            @input=${(e: Event) => {
+              this.linkDraft = (e.target as HTMLTextAreaElement).value;
+              if (this.linkProblems.length) this.linkProblems = [];
+            }}
+            @keydown=${(e: KeyboardEvent) => {
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                this.addLinks();
+              }
+            }}
+          ></textarea>
+          <button type="button" class="ui-ksm__btn ui-ksm__add-links" ?disabled=${!this.linkDraft.trim()} @click=${() => this.addLinks()}>Add links</button>
+        </div>
+        ${this.linkProblems.length
+          ? html`<p class="ui-ksm__problem" id=${`${id}-links-problem`}>Not a link: ${this.linkProblems.join(", ")}. Use web addresses such as https://example.org/guide.</p>`
+          : nothing}
+        <fieldset class="ui-ksm__depth">
+          <legend class="ui-ksm__label">Crawl</legend>
+          ${(
+            [
+              ["page", "This page only"],
+              ["section", "This section of the site"],
+            ] as const
+          ).map(
+            ([value, label]) => html`<label class="ui-ksm__radio"><input type="radio" name=${`${id}-depth`} value=${value} .checked=${live(this.depth === value)} @change=${() => (this.depth = value)} />${label}</label>`,
+          )}
+        </fieldset>
+      </div>
+      <div class="ui-ksm__paste">
+        <button type="button" class="ui-ksm__btn ui-ksm__paste-toggle" aria-expanded=${this.pasting ? "true" : "false"} aria-controls=${`${id}-paste`} @click=${() => {
+          this.pasting = !this.pasting;
+          if (this.pasting) void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${id}-paste-title`)?.focus());
+        }}>${textIcon()}Paste text</button>
+        ${this.pasting
+          ? html`<div class="ui-ksm__paste-body" id=${`${id}-paste`}>
+              <label class="ui-ksm__label" for=${`${id}-paste-title`}>Title</label>
+              <input class="ui-ksm__field" id=${`${id}-paste-title`} type="text" autocomplete="off" .value=${live(this.textTitle)} @input=${(e: Event) => (this.textTitle = (e.target as HTMLInputElement).value)} />
+              <label class="ui-ksm__label" for=${`${id}-paste-text`}>Text</label>
+              <textarea class="ui-ksm__field" id=${`${id}-paste-text`} rows="4" .value=${live(this.textBody)} @input=${(e: Event) => (this.textBody = (e.target as HTMLTextAreaElement).value)}></textarea>
+              <div class="ui-ksm__actions"><button type="button" class="ui-ksm__btn ui-ksm__add-text" ?disabled=${!this.textBody.trim()} @click=${() => this.addText()}>Add text</button></div>
+            </div>`
+          : nothing}
+      </div>
+      ${n
+        ? html`<ul class="ui-ksm__pending" aria-label="To add">
+            ${repeat(
+              this.pending,
+              (p) => p.id,
+              (p, i) => html`<li class="ui-ksm__pending-row" data-type=${p.type}>
+                <span class="ui-ksm__kind" data-kind=${p.type === "url" ? "site" : p.type === "text" ? "text" : "file"}>${p.type === "text" ? textIcon() : kindIcon(p.type === "url" ? "site" : "file")}</span>
+                <span class="ui-ksm__pending-name">${this.pendingName(p)}</span>
+                <span class="ui-ksm__pending-info">${this.pendingInfo(p)}</span>
+                <button type="button" class="ui-ksm__icon-btn ui-ksm__pending-remove" title="Remove" @click=${() => this.unpend(p, i)}>${cross()}<span class="ui-ksm__sr">Remove ${this.pendingName(p)}</span></button>
+              </li>`,
+            )}
+          </ul>`
+        : nothing}
+      <div class="ui-ksm__actions ui-ksm__adder-actions">
+        <button type="button" class="ui-ksm__btn ui-ksm__btn--plain ui-ksm__adder-cancel" @click=${() => this.closeAdder()}>Cancel</button>
+        <button type="button" class="ui-ksm__btn ui-ksm__btn--primary ui-ksm__adder-submit" aria-disabled=${n ? "false" : "true"} @click=${() => {
+          if (n) this.submitAdd();
+          else this.spoken = "Nothing to add yet – choose files, add links or paste text first";
+        }}>${plus()}${n ? `Add ${plural(n, "source")}` : "Add sources"}</button>
+      </div>
+    </section>`;
+  }
 
   /* ---------- Rendering ---------- */
 
@@ -497,9 +859,18 @@ export class TcKnowledgeSourceManager extends TcElement {
         title: this.heading,
         id: titleId,
         subtitle: all.length ? sub : undefined,
-        aside: this.noAdd ? undefined : html`<button type="button" class="ui-ksm__btn ui-ksm__add" @click=${() => this.emit("tc-add", null)}>${plus()}${this.addLabel}</button>`,
+        aside: this.noAdd
+          ? undefined
+          : html`<button
+              type="button"
+              class="ui-ksm__btn ui-ksm__add"
+              aria-expanded=${ifDefined(this.addInline ? (this.adding ? "true" : "false") : undefined)}
+              aria-controls=${ifDefined(this.addInline && this.adding ? `${this.uid}-adder` : undefined)}
+              @click=${() => this.onAdd()}
+            >${plus()}${this.addLabel}</button>`,
       })}
       <div class="ui-ksm__card">
+        ${this.adder()}
         ${all.length
           ? html`<div class="ui-ksm__filters">
               <div class="ui-ksm__show" role="radiogroup" aria-label="Show" @keydown=${this.onShowKey}>
@@ -581,6 +952,11 @@ export class TcKnowledgeSourceManager extends TcElement {
 .ui-ksm__btn--danger:hover:not(:disabled) { background: var(--tc-action-danger-bg-hover); box-shadow: var(--tc-action-primary-shadow); }
 .ui-ksm__btn--ghost { background: none; box-shadow: none; color: var(--tc-status-danger-fg); }
 .ui-ksm__btn--ghost:hover:not(:disabled) { background: var(--tc-status-danger-bg); box-shadow: none; }
+.ui-ksm__btn--primary { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
+.ui-ksm__btn--primary:hover:not(:disabled) { background: var(--tc-action-primary-bg-hover); box-shadow: var(--tc-action-primary-shadow); }
+.ui-ksm__btn--primary[aria-disabled="true"] { background: var(--tc-fill-default); box-shadow: none; color: var(--tc-text-muted); cursor: not-allowed; }
+.ui-ksm__btn--plain { background: none; box-shadow: none; }
+.ui-ksm__btn--plain:hover:not(:disabled) { background: var(--tc-action-ghost-bg-hover); box-shadow: none; }
 .ui-ksm__icon-btn { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-action-ghost-fg); }
 [data-ui="ksm"] .ui-ksm__icon-btn:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 /* ----- The card: the filter, the list and the open source ----- */
@@ -663,6 +1039,45 @@ export class TcKnowledgeSourceManager extends TcElement {
 .ui-ksm__confirm { display: grid; gap: var(--tc-space-2-5); padding: var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-status-danger-bg); }
 .ui-ksm__ask { color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 .ui-ksm__confirm .ui-ksm__actions { justify-content: flex-end; }
+/* ----- Add sources: the drop area, links, pasted text and what's waiting ----- */
+.ui-ksm__adder { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+.ui-ksm__adder-title { font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ksm__adder-title { font-weight: var(--tc-font-weight-medium); }
+.ui-ksm__drop { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-4); border: var(--tc-hairline) dashed var(--tc-border-strong); border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); color: var(--tc-icon-muted); text-align: center; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), border-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-ksm__drop[data-over] { border-color: var(--tc-accent); background: var(--tc-fill-selected); }
+.ui-ksm__drop-text { color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); }
+.ui-ksm__drop-hint { color: var(--tc-text-muted); }
+.ui-ksm__file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); opacity: 0; }
+.ui-ksm__away { display: grid; gap: var(--tc-space-1); }
+.ui-ksm__away li { display: flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-status-danger-fg); font-size: var(--tc-font-size-sm); }
+.ui-ksm__links, .ui-ksm__paste-body { display: grid; gap: var(--tc-space-1-5); }
+.ui-ksm__links-row { display: flex; align-items: flex-start; gap: var(--tc-space-2); }
+.ui-ksm__label { color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); }
+.ui-ksm__field { width: 100%; min-width: 0; margin: 0; padding: var(--tc-space-1-5) var(--tc-field-px); border: 0; border-radius: var(--tc-field-radius); outline: 0; background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); color: var(--tc-text-primary); font: inherit; font-size: var(--tc-field-font-size); line-height: var(--tc-line-height-snug); resize: vertical; }
+input.ui-ksm__field { height: var(--tc-field-h); padding-block: 0; }
+.ui-ksm__field:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-ksm__field:focus-visible { box-shadow: var(--tc-field-shadow-focus); }
+.ui-ksm__field[aria-invalid="true"] { box-shadow: inset 0 0 0 var(--tc-focus-ring-width) var(--tc-status-danger-fg); }
+.ui-ksm__links-field { flex: 1; }
+.ui-ksm__problem { color: var(--tc-status-danger-fg); font-size: var(--tc-font-size-sm); }
+.ui-ksm__depth { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-4); margin: 0; padding: 0; border: 0; }
+.ui-ksm__depth legend { float: left; margin-inline-end: var(--tc-space-1); padding: 0; }
+.ui-ksm__radio { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); cursor: pointer; }
+.ui-ksm__radio input { margin: 0; accent-color: var(--tc-accent); }
+.ui-ksm__paste { display: grid; justify-items: start; gap: var(--tc-space-2); }
+.ui-ksm__paste-body { justify-self: stretch; }
+.ui-ksm__pending { display: grid; border-radius: var(--tc-radius-lg); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+.ui-ksm__pending-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: var(--tc-space-2-5); min-height: var(--tc-control-h-md); padding: var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-2-5); border-bottom: var(--tc-hairline) solid var(--tc-border-subtle); }
+.ui-ksm__pending-row:last-child { border-bottom: 0; }
+.ui-ksm__pending-row .ui-ksm__kind { grid-row: auto; }
+.ui-ksm__pending-name { min-width: 0; overflow: hidden; color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); text-overflow: ellipsis; white-space: nowrap; }
+.ui-ksm__pending-info { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ui-ksm__adder-actions { justify-content: flex-end; }
+@container ui-ksm (max-width: 440px) {
+  .ui-ksm__links-row { flex-direction: column; align-items: stretch; }
+  .ui-ksm__pending-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .ui-ksm__pending-info { grid-column: 2; grid-row: 2; }
+}
 /* Wide: the open source beside the list */
 @container ui-ksm (min-width: 760px) {
   .ui-ksm__main[data-open] { grid-template-columns: minmax(0, 1fr) var(--tc-knowledge-source-manager-side); }

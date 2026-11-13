@@ -17,6 +17,9 @@
         },
         "role": {
           "type": "string"
+        },
+        "id": {
+          "type": "string"
         }
       },
       "required": [
@@ -32,6 +35,9 @@
           "type": "string"
         },
         "role": {
+          "type": "string"
+        },
+        "id": {
           "type": "string"
         }
       },
@@ -112,6 +118,74 @@
     "acceptLabel": {
       "type": "string",
       "description": "The accept button's text"
+    },
+    "run": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/HandoffBriefRunStatus"
+        },
+        "step": {
+          "type": "string"
+        },
+        "startedAt": {
+          "type": "number"
+        },
+        "owner": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "An agent run that's still going, to hand on with the work – set, the card is the sender's"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffBriefPerson"
+      },
+      "description": "Who the run can be handed to"
+    },
+    "handoffTo": {
+      "type": "string",
+      "description": "The chosen receiver: a person's id (or name) from `people`"
+    },
+    "pauseUntilAccepted": {
+      "type": "boolean",
+      "description": "Whether the run pauses until the receiver accepts"
+    },
+    "handoffNote": {
+      "type": "string",
+      "description": "The note for the receiver"
+    },
+    "handoffState": {
+      "type": "string",
+      "enum": [
+        "",
+        "sent"
+      ],
+      "description": "\"sent\" once the run is handed off and waiting for the receiver; the element sets it when tc-handoff isn't prevented"
+    },
+    "takesOver": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What the receiver takes over with the run, one line each"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for the run's start time"
     }
   },
   "additionalProperties": false,
@@ -179,6 +253,34 @@
         "requested"
       ],
       "description": "Where an access request stands"
+    },
+    "HandoffBriefRunStatus": {
+      "type": "string",
+      "enum": [
+        "paused",
+        "running",
+        "waiting"
+      ],
+      "description": "Where an in-flight run stands"
+    },
+    "HandoffBriefPerson": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "description": "Tells people apart in `people` and `handoffTo`; the name when left out"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
     }
   }
 }

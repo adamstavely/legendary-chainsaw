@@ -1,0 +1,228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-summary.json",
+  "title": "tc-agent-summary",
+  "description": "One agent's profile: status, model, tools, owner, version, two weeks of runs, and recent failures.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The agent's name, the heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the name: what the agent does"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "failing",
+        "live",
+        "paused"
+      ],
+      "description": "Where it stands: \"live\", \"draft\", \"paused\" or \"failing\""
+    },
+    "model": {
+      "type": "string",
+      "description": "The model it runs on"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The tools it may call, as words"
+    },
+    "owner": {
+      "type": "string",
+      "description": "Who owns it"
+    },
+    "liveVersion": {
+      "type": "string",
+      "description": "The version that's live, e.g. \"v12\""
+    },
+    "draftVersion": {
+      "type": "string",
+      "description": "A draft version waiting to go live, e.g. \"v13\""
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentSummaryDay"
+      },
+      "description": "Runs per day, oldest first – usually the last 14"
+    },
+    "medianDuration": {
+      "type": "number",
+      "description": "The median run time, ms"
+    },
+    "cost": {
+      "type": "number",
+      "description": "What the period cost"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The cost's currency, an ISO 4217 code"
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentSummaryFailure"
+      },
+      "description": "Recent failures, newest first"
+    },
+    "actions": {
+      "type": "boolean",
+      "description": "Offer Edit, Run test and Pause / Resume; set actions=\"false\" to only show"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates, numbers and money"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
+        },
+        "live": {
+          "type": "string"
+        },
+        "failing": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "string"
+        },
+        "noTools": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "liveVersion": {
+          "type": "string"
+        },
+        "draftVersion": {
+          "type": "string"
+        },
+        "runs": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "chartSummary": {
+          "type": "string"
+        },
+        "showTable": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string"
+        },
+        "succeeded": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "successRate": {
+          "type": "string"
+        },
+        "median": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "failures": {
+          "type": "string"
+        },
+        "noFailures": {
+          "type": "string"
+        },
+        "noRuns": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "test": {
+          "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentSummaryDay": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "number",
+          "description": "The day, epoch ms (any time in it)"
+        },
+        "succeeded": {
+          "type": "number"
+        },
+        "failed": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "date",
+        "succeeded",
+        "failed"
+      ],
+      "additionalProperties": false
+    },
+    "AgentSummaryFailure": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When, epoch ms"
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong, in words"
+        },
+        "step": {
+          "type": "string",
+          "description": "The step it failed at"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "error"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

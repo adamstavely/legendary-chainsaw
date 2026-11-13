@@ -96,13 +96,13 @@
     "labels": {
       "type": "object",
       "properties": {
+        "tools": {
+          "type": "string"
+        },
         "changes": {
           "type": "string"
         },
         "context": {
-          "type": "string"
-        },
-        "tools": {
           "type": "string"
         },
         "environment": {

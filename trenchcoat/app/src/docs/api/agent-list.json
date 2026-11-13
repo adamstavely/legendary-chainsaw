@@ -1,0 +1,582 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-list",
+   "className": "TcAgentList",
+   "description": "Every agent in a workspace, with the failing ones lifted first; search, status filter and sort.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Agents\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "agents",
+     "attribute": null,
+     "type": "AgentListItem[]",
+     "default": "[]",
+     "description": "The agents",
+     "readonly": false
+    },
+    {
+     "name": "sort",
+     "attribute": "sort",
+     "type": "AgentListSort",
+     "default": "\"name\"",
+     "description": "The order: \"name\", \"lastRun\", \"failures\" or \"cost\". Changed by the user unless a tc-sort-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": null,
+     "type": "AgentListStatus[]",
+     "default": "[]",
+     "description": "The statuses shown; empty shows every one. Changed by the user unless a tc-filter-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text. Changed by the user unless a tc-query-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "\"Now\", epoch ms – last runs read as \"2 h ago\" when it's given, else as a date",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The cost's currency, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for dates, numbers and money",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<AgentListLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "visible",
+     "attribute": null,
+     "type": "{ attention: AgentListItem[]; others: AgentListItem[] }",
+     "default": null,
+     "description": "The agents the search and filter let through, in order: Needs attention first, then the rest",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-agent-open",
+     "detail": "",
+     "description": "A row was opened ({ id, agent }: AgentListOpen)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-sort-change",
+     "detail": "",
+     "description": "The sort changed ({ sort }: AgentListSortChange); cancelable – prevented, `sort` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The status filter changed ({ filter }: AgentListFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search changed ({ query }: AgentListQueryChange); cancelable – prevented, `query` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agl",
+   "cssProperties": [
+    {
+     "name": "--tc-agl-mark",
+     "value": "var(--tc-space-2)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-field-bg",
+    "--tc-field-h-sm",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-line-height-normal",
+    "--tc-radius-full",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "needsAttention",
+   "signature": "needsAttention(a: AgentListItem): void",
+   "description": "Whether an agent goes in Needs attention: it's failing, or the page said why"
+  },
+  {
+   "name": "sortAgents",
+   "signature": "sortAgents(agents: AgentListItem[], sort: AgentListSort): void",
+   "description": "The agents in the order a sort puts them: name A–Z, the rest highest first; ties by name"
+  }
+ ],
+ "react": [
+  {
+   "component": "AgentList",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "sort",
+     "type": "AgentListSort",
+     "optional": true,
+     "description": "The order – controlled when given"
+    },
+    {
+     "name": "defaultSort",
+     "type": "AgentListSort",
+     "optional": true,
+     "description": "The order on mount when `sort` isn't controlled"
+    },
+    {
+     "name": "onSortChange",
+     "type": "(sort: AgentListSort) => void",
+     "optional": true,
+     "description": "The order changed"
+    },
+    {
+     "name": "filter",
+     "type": "AgentListStatus[]",
+     "optional": true,
+     "description": "The statuses shown – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "AgentListStatus[]",
+     "optional": true,
+     "description": "The statuses shown on mount when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: AgentListStatus[]) => void",
+     "optional": true,
+     "description": "The status filter changed"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text on mount when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "The search changed"
+    },
+    {
+     "name": "onAgentOpen",
+     "type": "(id: string, agent: AgentListItem) => void",
+     "optional": true,
+     "description": "A row was opened"
+    }
+   ],
+   "hides": [
+    "heading",
+    "sort",
+    "filter",
+    "query",
+    "children"
+   ],
+   "events": {
+    "tc-agent-open": "onAgentOpen",
+    "tc-sort-change": null,
+    "tc-filter-change": null,
+    "tc-query-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-agent-list",
+   "className": "TcAgentList",
+   "module": "@adamstavely/trenchcoat/agent-list",
+   "data": [
+    "agents",
+    "filter",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "sort",
+     "attribute": "sort"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-agent-open",
+     "cancelable": false
+    },
+    {
+     "name": "tc-sort-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "sort",
+     "event": "tc-sort-change"
+    },
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28367,
+  "gzip": 8924
+ }
+}

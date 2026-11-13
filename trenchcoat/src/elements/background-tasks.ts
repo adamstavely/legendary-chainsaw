@@ -1,6 +1,7 @@
 import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
@@ -29,6 +30,11 @@ import { safeUrl } from "./internal/safe-url";
  * preventDefault(), the element applies it to `tasks` itself (Cancel removes the task, Retry queues it again, Open
  * follows `result.href`). Finished and failed tasks are announced politely ("Export Q3 revenue ready"); progress
  * ticks aren't. More than 60 tasks are windowed (RowWindowController).
+ *
+ * Notify when done. With `notifiable`, each running or queued task gets a bell: pressed, the person is told when it
+ * finishes – the element fires tc-notify once the app moves it to done or failed, alongside the usual announcement.
+ * `notify` lists the watched tasks (a cancelable tc-notify-change). With `notifyChannels` – "In app", "Email", "Push" –
+ * the bell opens a short list of checkboxes under the task instead, and `notifyVia` keeps each task's channels.
  *
  * Keyboard. The indicator is a button (aria-expanded, named with the counts); Enter or Space opens the panel and
  * focus goes to the first task. In the list, ↑ ↓ Home End move between tasks (one tab stop); Tab reaches the focused
@@ -77,6 +83,10 @@ export type BackgroundTasksClearDetail = { cleared: BackgroundTask[]; tasks: Bac
 /** tc-open-change: whether the panel is opening or closing */
 export type BackgroundTasksOpenChange = { open: boolean };
 export type BackgroundTasksLayout = "indicator" | "panel";
+/** tc-notify-change: the watched tasks as they'll be, the task that changed, and its channels when there are any */
+export type BackgroundTasksNotifyChange = { notify: string[]; id: string; on: boolean; channels?: string[]; notifyVia: Record<string, string[]> };
+/** tc-notify: a watched task finished */
+export type BackgroundTasksNotify = { id: string; status: "done" | "failed"; task: BackgroundTask; channels?: string[] };
 
 const SECTIONS: { status: BackgroundTaskStatus; title: string }[] = [
   { status: "running", title: "Running" },
@@ -116,6 +126,9 @@ const KIND_ICONS: Record<BackgroundTaskKind, TemplateResult> = {
 /** The indicator's and the card header's icon: stacked layers – work underneath what you're doing */
 const LAYERS = svg`<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>`;
 const CHECK = svg`<path d="M20 6 9 17l-5-5"/>`;
+/* bell, bell-ring */
+const BELL = svg`<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>`;
+const BELL_ON = svg`${BELL}<path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/>`;
 const ALERT = svg`<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>`;
 const icon = (paths: TemplateResult, cls = "") =>
   html`<svg class=${`ui-bgt__svg ${cls}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
@@ -131,6 +144,8 @@ type Counts = { running: number; queued: number; done: number; failed: number; a
  * @fires tc-task-open - Open was chosen on a done task; detail `{ task, tasks }`. Cancelable: preventDefault() stops a `result.href` link being followed
  * @fires tc-clear-finished - Clear finished was chosen; detail `{ cleared, tasks }` (`tasks` without the done and failed ones). Cancelable: preventDefault() and the app clears them
  * @fires tc-open-change - The panel is opening or closing; detail `{ open }`. Cancelable: preventDefault() keeps it as it is
+ * @fires tc-notify-change - The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: BackgroundTasksNotifyChange); cancelable – prevented, nothing changes
+ * @fires tc-notify - A watched task finished ({ id, status, task, channels }: BackgroundTasksNotify)
  */
 export class TcBackgroundTasks extends TcElement {
   static override ui = "bgt";
@@ -147,6 +162,14 @@ export class TcBackgroundTasks extends TcElement {
   @property({ attribute: "empty-text" }) accessor emptyText = "Nothing running in the background";
   /** What's announced when a task finishes or fails; default “<label> ready” and “<label> failed” */
   @property({ attribute: false }) accessor announce: ((task: BackgroundTask) => string) | undefined = undefined;
+  /** Offer "notify me when it's done" on running and queued tasks */
+  @property({ type: Boolean }) accessor notifiable = false;
+  /** The tasks the person will be told about when they finish */
+  @property({ attribute: false }) accessor notify: string[] = [];
+  /** Ways to be told – "In app", "Email", "Push"; given, the bell opens a choice of them */
+  @property({ attribute: false }) accessor notifyChannels: string[] = [];
+  /** The channels chosen for each watched task, with `notifyChannels` */
+  @property({ attribute: false }) accessor notifyVia: Record<string, string[]> = {};
 
   /** @internal Finished tasks the person has seen in the open panel – they no longer turn the indicator to a check or an alert */
   @state() accessor seen: ReadonlySet<string> = new Set();
@@ -154,12 +177,15 @@ export class TcBackgroundTasks extends TcElement {
   @state() accessor activeId = "";
   /** @internal The polite status line */
   @state() accessor status = "";
+  /** @internal The task whose channel list is open */
+  @state() accessor channelsFor = "";
 
   private readonly uid = `tc-bgt${++instances}`;
   /** Statuses at the last update, to tell what just finished */
   private known = new Map<string, BackgroundTaskStatus>();
   private flip = false;
   private focusAfter: string | null = null;
+  private finishedWatched: BackgroundTasksNotify[] = [];
 
   private readonly pop = new PopoverController(this, {
     popover: () => this.querySelector<HTMLElement>(".ui-bgt__pop"),
@@ -248,6 +274,10 @@ export class TcBackgroundTasks extends TcElement {
       const before = this.known;
       const news = this.tasks.filter((t) => finished(t) && before.has(t.id) && before.get(t.id) !== t.status);
       if (news.length) this.say(news.map((t) => this.announce?.(t) ?? `${t.label} ${t.status === "done" ? "ready" : "failed"}`).join(". "));
+      if (this.notifiable)
+        for (const t of news)
+          if (this.notify.includes(t.id))
+            this.finishedWatched.push({ id: t.id, status: t.status as "done" | "failed", task: t, channels: this.notifyChannels.length ? (this.notifyVia[t.id] ?? []) : undefined });
       this.known = new Map(this.tasks.map((t) => [t.id, t.status]));
     }
     if (changed.has("layout") && this.layout === "panel" && !this.hasAttribute("role")) this.setAttribute("role", "region");
@@ -261,6 +291,7 @@ export class TcBackgroundTasks extends TcElement {
       if (done.some((id) => !this.seen.has(id))) this.seen = new Set([...this.seen, ...done]);
     }
     if (!this.tasks.some((t) => t.id === this.activeId)) this.activeId = this.ordered[0]?.id ?? "";
+    if (this.channelsFor && !this.tasks.some((t) => t.id === this.channelsFor && this.canNotify(t))) this.channelsFor = "";
   }
 
   protected override updated(changed: PropertyValues<this>) {
@@ -274,6 +305,10 @@ export class TcBackgroundTasks extends TcElement {
       // Not every engine scrolls a just-rendered row into view on focus; make sure, so the window can let go of it
       row?.scrollIntoView({ block: "nearest" });
     }
+    // A watched task finished: tell the app, after the update that shows it
+    const done = this.finishedWatched;
+    this.finishedWatched = [];
+    for (const d of done) this.emit<BackgroundTasksNotify>("tc-notify", d);
   }
 
   /* ---------- Actions ---------- */
@@ -327,12 +362,58 @@ export class TcBackgroundTasks extends TcElement {
     }
   }
 
+  /** Running and queued tasks can be watched */
+  private canNotify(t: BackgroundTask) {
+    return this.notifiable && (t.status === "running" || t.status === "queued");
+  }
+
+  /** Switches watching a task, or one of its channels */
+  private setNotify(task: BackgroundTask, on: boolean, channels?: string[]) {
+    const notify = on ? [...this.notify.filter((id) => id !== task.id), task.id] : this.notify.filter((id) => id !== task.id);
+    const notifyVia = { ...this.notifyVia };
+    if (channels && channels.length) notifyVia[task.id] = channels;
+    else delete notifyVia[task.id];
+    const detail: BackgroundTasksNotifyChange = { notify, id: task.id, on, notifyVia, ...(channels ? { channels } : {}) };
+    if (!this.emit<BackgroundTasksNotifyChange>("tc-notify-change", detail, { cancelable: true })) {
+      this.requestUpdate();
+      return;
+    }
+    this.notify = notify;
+    this.notifyVia = notifyVia;
+    this.say(on ? `${channels?.length ? `You'll be told by ${channels.join(", ")}` : "You'll be told"} when ${task.label} finishes` : `No longer watching ${task.label}`);
+  }
+
+  private onBell(task: BackgroundTask) {
+    if (this.notifyChannels.length) {
+      this.channelsFor = this.channelsFor === task.id ? "" : task.id;
+      if (this.channelsFor) this.updateComplete.then(() => this.querySelector<HTMLInputElement>(`.ui-bgt__channels[data-id="${CSS.escape(task.id)}"] input`)?.focus());
+      return;
+    }
+    this.setNotify(task, !this.notify.includes(task.id));
+  }
+
+  private onChannel(task: BackgroundTask, channel: string, checked: boolean) {
+    const now = this.notifyVia[task.id] ?? [];
+    const channels = this.notifyChannels.filter((c) => (c === channel ? checked : now.includes(c)));
+    this.setNotify(task, channels.length > 0, channels);
+  }
+
+  private onChannelsKey(e: KeyboardEvent, task: BackgroundTask) {
+    if (e.key !== "Escape") return;
+    // The channel list closes first; the panel stays open
+    e.preventDefault();
+    e.stopPropagation();
+    this.channelsFor = "";
+    this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-bgt__bell[data-id="${CSS.escape(task.id)}"]`)?.focus());
+  }
+
   /* ---------- Keyboard ---------- */
 
   private onListKey = (e: KeyboardEvent) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const keys = ["ArrowDown", "ArrowUp", "Home", "End"];
     if (!keys.includes(e.key)) return;
+    if ((e.target as Element).closest(".ui-bgt__channels")) return;
     const from = (e.target as Element).closest<HTMLElement>(".ui-bgt__row");
     if (!from) return;
     const list = this.ordered;
@@ -471,6 +552,28 @@ export class TcBackgroundTasks extends TcElement {
     const running = t.status === "running";
     const pct = t.progress == null ? null : Math.round(clamp01(t.progress) * 100);
     const acts: TemplateResult[] = [];
+    const watchable = this.canNotify(t);
+    const watched = watchable && this.notify.includes(t.id);
+    const menu = watchable && this.notifyChannels.length > 0;
+    const open = menu && this.channelsFor === t.id;
+    const via = this.notifyVia[t.id] ?? [];
+    if (watchable)
+      acts.push(
+        html`<button
+          type="button"
+          class="ui-bgt__bell"
+          data-id=${t.id}
+          data-focus-key=${t.id}
+          tabindex=${tab}
+          ?data-on=${watched}
+          aria-pressed=${ifDefined(menu ? undefined : watched ? "true" : "false")}
+          aria-expanded=${ifDefined(menu ? (open ? "true" : "false") : undefined)}
+          aria-controls=${ifDefined(open ? `${rid}-ch` : undefined)}
+          @click=${() => this.onBell(t)}
+        >
+          ${icon(watched ? BELL_ON : BELL)}<span class="ui-bgt__sr">Notify me when ${t.label} finishes${menu && watched && via.length ? `: ${via.join(", ")}` : ""}</span>
+        </button>`,
+      );
     if ((t.status === "running" || t.status === "queued") && t.cancelable !== false)
       acts.push(html`<button type="button" class="ui-bgt__act ui-bgt__act--ghost" data-act="cancel" data-focus-key=${t.id} tabindex=${tab} aria-label=${`Cancel ${t.label}`} @click=${() => this.cancel(t)}>Cancel</button>`);
     if (t.status === "failed" && t.retryable !== false)
@@ -496,6 +599,16 @@ export class TcBackgroundTasks extends TcElement {
         <span class="ui-bgt__meta" id=${`${rid}-m`}>${this.meta(t)}</span>
       </div>
       ${acts.length ? html`<div class="ui-bgt__acts">${acts}</div>` : nothing}
+      ${open
+        ? html`<fieldset class="ui-bgt__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.onChannelsKey(e, t)}>
+            <legend class="ui-bgt__channels-title">Tell me about ${t.label} by</legend>
+            ${this.notifyChannels.map(
+              (c) => html`<label class="ui-bgt__channel"
+                ><input type="checkbox" tabindex=${tab} .checked=${live(via.includes(c))} @change=${(e: Event) => this.onChannel(t, c, (e.target as HTMLInputElement).checked)} />${c}</label
+              >`,
+            )}
+          </fieldset>`
+        : nothing}
     </li>`;
   }
 
@@ -714,6 +827,15 @@ export class TcBackgroundTasks extends TcElement {
 .ui-bgt__act--ghost:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-bgt__act--secondary { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
 .ui-bgt__act--secondary:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-bgt__bell { display: inline-grid; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); }
+.ui-bgt__bell:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-bgt__bell[data-on] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
+.ui-bgt__bell > .ui-bgt__svg { width: 16px; height: 16px; stroke-width: 2; }
+.ui-bgt__channels { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: var(--tc-space-0-5) var(--tc-space-3); min-width: 0; margin: var(--tc-space-1-5) 0 0; padding: var(--tc-space-2) var(--tc-space-2-5); border: 0; border-radius: var(--tc-radius-md); background: var(--tc-surface-well); }
+.ui-bgt__channels-title { float: left; width: 100%; padding: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-bgt__channel { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); cursor: pointer; }
+.ui-bgt__channel > input { margin: 0; accent-color: var(--tc-accent-solid); }
+.ui-bgt__channel > input:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-bgt__foot { display: flex; justify-content: flex-end; }
 :where([data-look="standard"], [data-look="standard"] *)[layout="panel"] > .ui-bgt__foot { padding: var(--tc-space-1-5) 0 0; }
 :where([data-look="clean"], [data-look="clean"] *)[layout="panel"] > .ui-bgt__foot { padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-2-5); border-top: var(--tc-hairline) solid var(--tc-border-subtle); }
@@ -737,6 +859,7 @@ export class TcBackgroundTasks extends TcElement {
   .ui-bgt__arc, .ui-bgt__fill { stroke: Highlight; background: Highlight; }
   .ui-bgt__badge { border: 1px solid CanvasText; }
   .ui-bgt__bar { border: 1px solid CanvasText; }
+  .ui-bgt__bell[data-on] { outline: 2px solid Highlight; }
 }
 `;
 }

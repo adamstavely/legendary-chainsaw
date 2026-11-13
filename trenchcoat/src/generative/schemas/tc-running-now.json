@@ -59,10 +59,44 @@
         },
         "working": {
           "type": "string"
+        },
+        "notify": {
+          "type": "string"
+        },
+        "notifyBy": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
       "description": "Words the page can rename, merged over defaultRunningNowLabels"
+    },
+    "notifiable": {
+      "type": "boolean",
+      "description": "Offer \"notify me when it's done\" on the tasks still going"
+    },
+    "notify": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The tasks the person will be told about when they finish"
+    },
+    "notifyChannels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ways to be told – \"In app\", \"Email\", \"Push\"; given, the bell opens a choice of them"
+    },
+    "notifyVia": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "description": "The channels chosen for each watched task, with `notifyChannels`"
     }
   },
   "additionalProperties": false,

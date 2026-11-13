@@ -158,12 +158,40 @@ export class ApprovalCard {
   @Input() set argsLabel(v: TcApprovalCard["argsLabel"]) {
     this.#el.argsLabel = v;
   }
+  /** Lets the person change the arguments before approving: Edit beside them turns each one into a field */
+  @Input() set editableArgs(v: TcApprovalCard["editableArgs"] | "" | "true" | "false") {
+    this.#el.editableArgs = typeof v === "string" ? v !== "false" : v;
+  }
+  /** The arguments' JSON Schema (its `properties`): types and choices for the fields */
+  @Input() set argsSchema(v: TcApprovalCard["argsSchema"]) {
+    this.#el.argsSchema = v;
+  }
+  /** The arguments' Edit button label */
+  @Input() set editArgsLabel(v: TcApprovalCard["editArgsLabel"]) {
+    this.#el.editArgsLabel = v;
+  }
+  /** Its label while editing */
+  @Input() set doneArgsLabel(v: TcApprovalCard["doneArgsLabel"]) {
+    this.#el.doneArgsLabel = v;
+  }
+  /** The Reset button's label – it puts every argument back */
+  @Input() set resetArgsLabel(v: TcApprovalCard["resetArgsLabel"]) {
+    this.#el.resetArgsLabel = v;
+  }
+  /** The Approve button's label once an argument has changed */
+  @Input() set approveEditedLabel(v: TcApprovalCard["approveEditedLabel"]) {
+    this.#el.approveEditedLabel = v;
+  }
+  /** The heading of the diff of changed arguments */
+  @Input() set changesLabel(v: TcApprovalCard["changesLabel"]) {
+    this.#el.changesLabel = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcApprovalCard["look"]) {
     this.#el.look = v;
   }
   /**
-   * The card was approved, denied or expired; detail `{ status }`. Cancelable: preventDefault() keeps the status (controlled use)
+   * The card was approved, denied or expired; detail `{ status }`, plus `{ args, edited }` on approve with `editableArgs`. Cancelable: preventDefault() keeps the status (controlled use)
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-status-change") readonly tcStatusChange = new EventEmitter<CustomEvent<{ status: TcApprovalCard["status"] }>>();

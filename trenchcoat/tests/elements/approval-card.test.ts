@@ -618,3 +618,230 @@ async function axeDetail(wrap: Element) {
 
 // Keep the detail types in use for the type check
 export type { ApprovalDeny };
+
+describe("tc-approval-card – editable arguments", () => {
+  const ARGS = { dataset: "field-survey-2026", rows: 48210, dry_run: false, tags: ["merge", "ids"], note: "Nightly batch" };
+  const SCHEMA = {
+    properties: {
+      dataset: { type: "string" as const, enum: ["field-survey-2026", "field-survey-2025"], title: "Dataset" },
+      rows: { type: "integer" as const, title: "Rows", description: "How many rows to merge" },
+      dry_run: { type: "boolean" as const, title: "Dry run" },
+    },
+  };
+  const edit = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-ap__args-edit")!;
+  const field = (el: Element, key: string) => el.querySelector<HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement>(`[id$="-argform-${key}"]`)!;
+  const type = async (el: TcApprovalCard, f: HTMLInputElement | HTMLTextAreaElement, value: string) => {
+    f.value = value;
+    f.dispatchEvent(new Event("input", { bubbles: true }));
+    await updates(el);
+  };
+
+  test("off by default: no Edit, the arguments as a code block, Approve's event has only the status", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run migration" .args=${ARGS}></tc-approval-card>`);
+    expect(el.querySelector(".ui-ap__args-edit")).toBeNull();
+    const seen = record(el);
+    btn(el, "Approve")!.click();
+    await updates(el);
+    expect(seen).toEqual([["tc-status-change", { status: "approved" }]]);
+  });
+
+  test("Edit turns each argument into the field its schema or value asks for, focused first; Done turns them back", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run migration" editable-args .args=${ARGS} .argsSchema=${SCHEMA}></tc-approval-card>`);
+    expect(edit(el).textContent!.replace(/\s+/g, " ").trim()).toBe("Edit arguments");
+    expect(edit(el).getAttribute("aria-expanded")).toBe("false");
+    edit(el).click();
+    await updates(el);
+    await settle();
+    expect(edit(el).getAttribute("aria-expanded")).toBe("true");
+    const form = el.querySelector(".ui-ap__argform")!;
+    expect(form.getAttribute("role")).toBe("group");
+    expect(edit(el).getAttribute("aria-controls")).toBe(form.id);
+    expect(field(el, "dataset").tagName).toBe("SELECT");
+    expect([...field(el, "dataset").options].map((o) => o.value)).toEqual(["field-survey-2026", "field-survey-2025"]);
+    expect(field(el, "rows").type).toBe("number");
+    expect(field(el, "rows").step).toBe("1");
+    expect(field(el, "dry_run").type).toBe("checkbox");
+    expect(field(el, "tags").tagName).toBe("TEXTAREA");
+    expect(JSON.parse(field(el, "tags").value)).toEqual(["merge", "ids"]);
+    expect(field(el, "note").type).toBe("text");
+    // Labels: the schema's title with the key, else the key; the description describes the field
+    const rowsLabel = el.querySelector<HTMLLabelElement>(`label[for="${field(el, "rows").id}"]`)!;
+    expect(rowsLabel.textContent!.replace(/\s+/g, " ").trim()).toBe("Rows rows");
+    expect(document.getElementById(field(el, "rows").getAttribute("aria-describedby")!)!.textContent).toBe("How many rows to merge");
+    expect(document.activeElement).toBe(field(el, "dataset"));
+    edit(el).click();
+    await updates(el);
+    expect(el.querySelector(".ui-ap__argform")).toBeNull();
+    expect(el.querySelector('.ui-ap__code[data-kind="args"]')).not.toBeNull();
+  });
+
+  test("changes are marked, shown as a diff, and Approve with changes sends the edited args with edited: true", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run migration" editable-args .args=${ARGS} .argsSchema=${SCHEMA}></tc-approval-card>`);
+    const decisions: unknown[] = [];
+    el.onApprove = (d) => void decisions.push(d);
+    edit(el).click();
+    await updates(el);
+    await type(el, field(el, "rows"), "1000");
+    field(el, "dry_run").click();
+    await updates(el);
+    const sel = field(el, "dataset");
+    sel.value = "field-survey-2025";
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+    await updates(el);
+    expect(el.querySelectorAll(".ui-ap__argrow[data-edited]")).toHaveLength(3);
+    expect([...el.querySelectorAll(".ui-ap__argrow[data-edited] .ui-ap__edited")].map((e) => e.textContent)).toEqual(["Edited", "Edited", "Edited"]);
+    // Typing it back to the original is no longer a change
+    await type(el, field(el, "rows"), "48210");
+    expect(el.querySelectorAll(".ui-ap__argrow[data-edited]")).toHaveLength(2);
+    await type(el, field(el, "rows"), "1000");
+    const diff = el.querySelector(".ui-ap__argdiff .ui-ap__code")!;
+    expect(diff.getAttribute("aria-label")).toBe("Your changes: arguments");
+    const lines = [...diff.querySelectorAll(".ui-ap__line")].map((l) => `${l.getAttribute("data-kind")} ${l.querySelector(".ui-ap__lc")!.textContent}`);
+    expect(lines).toEqual([
+      "remove Removed: dataset: \"field-survey-2026\"",
+      "add Added: dataset: \"field-survey-2025\"",
+      "remove Removed: rows: 48210",
+      "add Added: rows: 1000",
+      "remove Removed: dry_run: false",
+      "add Added: dry_run: true",
+    ]);
+    expect(el.editedArgs).toEqual({ ...ARGS, rows: 1000, dry_run: true, dataset: "field-survey-2025" });
+    expect(el.argsEdited).toBe(true);
+    const approve = el.querySelector<HTMLButtonElement>(".ui-ap__approve")!;
+    expect([...approve.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.textContent).join("").trim()).toBe("Approve with changes");
+    const seen = record(el);
+    approve.click();
+    await updates(el);
+    expect(decisions).toEqual([{ always: false, args: { ...ARGS, rows: 1000, dry_run: true, dataset: "field-survey-2025" }, edited: true }]);
+    expect(seen).toEqual([["tc-status-change", { status: "approved", args: { ...ARGS, rows: 1000, dry_run: true, dataset: "field-survey-2025" }, edited: true }]]);
+  });
+
+  test("unchanged: Approve keeps its label and sends the original args with edited: false", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run migration" editable-args .args=${ARGS}></tc-approval-card>`);
+    const seen = record(el);
+    btn(el, "Approve")!.click();
+    await updates(el);
+    expect(seen).toEqual([["tc-status-change", { status: "approved", args: ARGS, edited: false }]]);
+  });
+
+  test("JSON fields are checked as typed: invalid holds Approve back and focuses the field; Reset puts everything back", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run migration" editable-args .args=${ARGS}></tc-approval-card>`);
+    edit(el).click();
+    await updates(el);
+    const tags = field(el, "tags");
+    await type(el, tags, '["merge", ');
+    expect(tags.getAttribute("aria-invalid")).toBe("true");
+    expect(document.getElementById(tags.getAttribute("aria-describedby")!.split(" ")[0])!.textContent).toBe("Not valid JSON yet");
+    const seen = record(el);
+    el.querySelector<HTMLButtonElement>(".ui-ap__approve")!.click();
+    await updates(el);
+    await settle();
+    expect(seen).toEqual([]);
+    expect(el.status).toBe("pending");
+    expect(document.activeElement).toBe(field(el, "tags"));
+    expect(el.querySelector(".ui-ap__sr[role=status], [role=status]")?.textContent ?? "").toContain("Fix tags before approving");
+    await type(el, field(el, "tags"), '["merge"]');
+    expect(field(el, "tags").getAttribute("aria-invalid")).toBe("false");
+    expect(el.editedArgs!.tags).toEqual(["merge"]);
+    const reset = el.querySelector<HTMLButtonElement>(".ui-ap__args-reset")!;
+    expect(reset.textContent!.trim()).toBe("Reset");
+    reset.click();
+    await updates(el);
+    expect(el.argsEdited).toBe(false);
+    expect(el.querySelector(".ui-ap__args-reset")).toBeNull();
+    expect(JSON.parse(field(el, "tags").value)).toEqual(["merge", "ids"]);
+  });
+
+  test("Escape in an argument field leaves editing, keeps the changes and doesn't deny; new args start over", async () => {
+    const el = await fixture<TcApprovalCard>(html`<tc-approval-card heading="Run migration" editable-args .args=${ARGS}></tc-approval-card>`);
+    const seen = record(el);
+    edit(el).click();
+    await updates(el);
+    await type(el, field(el, "note"), "Weekly batch");
+    field(el, "note").focus();
+    key(field(el, "note"), "Escape");
+    await updates(el);
+    await settle();
+    expect(seen).toEqual([]);
+    expect(el.querySelector(".ui-ap__argform")).toBeNull();
+    expect(document.activeElement).toBe(edit(el));
+    expect(el.editedArgs!.note).toBe("Weekly batch");
+    // The changed block shows the edited value
+    expect(el.querySelector('.ui-ap__code[data-kind="args"]')!.textContent).toContain("Weekly batch");
+    el.args = { ...ARGS, rows: 10 };
+    await updates(el);
+    expect(el.argsEdited).toBe(false);
+    expect(el.querySelector(".ui-ap__argdiff")).toBeNull();
+  });
+
+  test("React: onStatusChange gets the approved args and whether they were edited", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const calls: unknown[][] = [];
+    await act(async () =>
+      root.render(
+        React.createElement(ApprovalCard, {
+          title: "Run migration",
+          args: ARGS,
+          editableArgs: true,
+          argsSchema: SCHEMA,
+          onStatusChange: (...a: unknown[]) => void calls.push(a),
+        }),
+      ),
+    );
+    const el = host.querySelector<TcApprovalCard>("tc-approval-card")!;
+    await settle(host);
+    edit(el).click();
+    await updates(el);
+    await type(el, field(el, "rows"), "500");
+    // A parent re-render doesn't undo the edit
+    await act(async () =>
+      root.render(
+        React.createElement(ApprovalCard, {
+          title: "Run migration",
+          args: ARGS,
+          editableArgs: true,
+          argsSchema: SCHEMA,
+          onStatusChange: (...a: unknown[]) => void calls.push(a),
+        }),
+      ),
+    );
+    expect(el.editedArgs!.rows).toBe(500);
+    el.querySelector<HTMLButtonElement>(".ui-ap__approve")!.click();
+    await updates(el);
+    expect(calls).toEqual([["approved", { args: { ...ARGS, rows: 500 }, edited: true }]]);
+    await act(async () => root.unmount());
+  });
+
+  test("axe: editing arguments, with a change and an invalid field, in both looks and both themes", async () => {
+    const wrap = document.body.appendChild(document.createElement("div"));
+    for (const theme of ["light", "dark"]) {
+      const box = document.createElement("div");
+      box.dataset.tcTheme = theme;
+      box.style.cssText = "padding: 16px; background: var(--tc-surface-base)";
+      for (const look of ["standard", "clean"]) {
+        const card = document.createElement("tc-approval-card");
+        Object.assign(card, { look, heading: "Run migration", editableArgs: true, args: ARGS, argsSchema: SCHEMA });
+        box.append(card);
+      }
+      wrap.append(box);
+    }
+    await settle(wrap);
+    const cards = [...wrap.querySelectorAll<TcApprovalCard>("tc-approval-card")];
+    for (const [i, card] of cards.entries()) {
+      edit(card).click();
+      await updates(card);
+      await type(card, field(card, "rows"), "1000");
+      if (i % 2) await type(card, field(card, "tags"), "[oops");
+      else {
+        // One card shows the code block with its diff
+        edit(card).click();
+        await updates(card);
+      }
+    }
+    await settle(wrap);
+    await Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished));
+    const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+    expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+});

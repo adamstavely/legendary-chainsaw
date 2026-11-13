@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { copyText } from "./internal/util";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
@@ -28,6 +29,10 @@ import type { SegmentOption } from "./segmented-control";
  * definition as JSON; an event trigger without an event, or a weekly one without a day, is invalid; a form reset
  * brings back the first value. Next run times are counted from `now` (ms), which defaults to when the element
  * connects – the clock is never read while rendering. Times are in the browser's time zone.
+ *
+ * With `webhookUrl`, a third kind joins them: a request arriving at that address. It shows the address with Copy, the
+ * HTTP method, an optional header that must carry a shared secret, a sample payload the page supplies with Send test
+ * request (a cancelable `tc-webhook-test` – the page sends it), and how the last request went (`webhookLast`).
  */
 
 export type TriggerFrequency = "hourly" | "daily" | "weekly" | "monthly";
@@ -44,11 +49,32 @@ export type TriggerSchedule = {
 /** Only between these days, "YYYY-MM-DD", both included */
 export type TriggerActive = { start: string; end: string };
 export type TriggerCondition = { field: string; operator: TriggerOperator; value: string };
+export type TriggerMethod = "POST" | "PUT" | "GET";
+/** A webhook trigger's settings */
+export type TriggerWebhook = {
+  /** POST by default */
+  method?: TriggerMethod;
+  /** A header every request must carry with the shared secret, e.g. "X-Signature"; none: any request starts it */
+  secretHeader?: string;
+};
+/** The last request the webhook received */
+export type TriggerWebhookRequest = {
+  /** Epoch ms */
+  at: number;
+  /** The HTTP status it was answered with */
+  status: number;
+  /** What happened, in words – "Started run 418", "Missing X-Signature header" */
+  message?: string;
+};
+/** tc-webhook-test: what to send */
+export type TriggerWebhookTest = { url: string; method: TriggerMethod; secretHeader?: string; payload?: string };
 export type TriggerValue = {
-  kind: "event" | "schedule";
+  kind: "event" | "schedule" | "webhook";
   /** The id of the event, for kind "event" */
   event?: string;
   schedule?: TriggerSchedule;
+  /** For kind "webhook" */
+  webhook?: TriggerWebhook;
   active?: TriggerActive | null;
   conditions: TriggerCondition[];
   /** Whether all conditions must hold, or any one */
@@ -170,12 +196,18 @@ function scheduleText(s: TriggerSchedule) {
   return `every ${list(days.map((d) => DAY_NAMES[d]))} ${at}`;
 }
 
-/** The trigger as one sentence: "Runs every Monday at 9:00 AM, only if Stage is Won." */
-export function describeTrigger(value: TriggerValue, events: TriggerEvent[] = [], fields?: TriggerField[]): string {
+/** The trigger as one sentence: "Runs every Monday at 9:00 AM, only if Stage is Won." A webhook trigger names its
+ *  address when `webhookUrl` is given */
+export function describeTrigger(value: TriggerValue, events: TriggerEvent[] = [], fields?: TriggerField[], webhookUrl?: string): string {
   const ev = value.kind === "event" ? events.find((e) => e.id === value.event) : undefined;
   if (value.kind === "event" && !ev) return "Pick the event that starts this automation.";
   const fieldList = fields ?? ev?.fields ?? [];
-  let text = value.kind === "event" ? `Runs when ${ev!.phrase ?? lower(ev!.label)}` : `Runs ${scheduleText(value.schedule ?? DEFAULT_SCHEDULE)}`;
+  let text =
+    value.kind === "event"
+      ? `Runs when ${ev!.phrase ?? lower(ev!.label)}`
+      : value.kind === "webhook"
+        ? `Runs when a ${value.webhook?.method ?? "POST"} request reaches ${webhookUrl || "its webhook address"}${value.webhook?.secretHeader?.trim() ? ` with the ${value.webhook.secretHeader.trim()} header` : ""}`
+        : `Runs ${scheduleText(value.schedule ?? DEFAULT_SCHEDULE)}`;
   const start = value.active ? fromIso(value.active.start) : null;
   const end = value.active ? fromIso(value.active.end) : null;
   if (start && end) text += `, ${start.getTime() === end.getTime() ? "on" : "from"} ${formatDateRange({ start, end }).replace(" – ", " to ")}`;
@@ -208,11 +240,13 @@ function iconEl(d: string) {
   s.append(p);
   return s;
 }
-let kindIcons: { event: Element; schedule: Element } | null = null;
+let kindIcons: { event: Element; schedule: Element; webhook: Element } | null = null;
 const getKindIcons = () =>
   (kindIcons ??= {
     event: iconEl("M8.9 1.75 3.5 9h4l-.4 5.25L12.5 7h-4l.4-5.25Z"),
     schedule: iconEl("M8 2.25a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5ZM8 4.75V8l2.25 1.5"),
+    // After Lucide: arrow-right-to-line – a request arriving
+    webhook: iconEl("M2.25 8h8M7.25 4.75 10.5 8l-3.25 3.25M13.75 3.25v9.5"),
   });
 
 const summaryIcon = (look: Look) =>
@@ -226,6 +260,21 @@ const chevronDown = html`<svg class="ui-tgb__select-chevron" viewBox="0 0 16 16"
 /* ---------- The element ---------- */
 
 const DEFAULT_SCHEDULE: TriggerSchedule = { frequency: "weekly", days: [1], time: "09:00" };
+const METHODS: SegmentOption[] = [
+  { value: "POST", label: "POST" },
+  { value: "PUT", label: "PUT" },
+  { value: "GET", label: "GET" },
+];
+const fmtAgo = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
+/** "2 minutes ago", "yesterday" – from ms to now */
+function ago(at: number, now: number) {
+  const s = Math.round((at - now) / 1000);
+  const a = Math.abs(s);
+  if (a < 45) return "just now";
+  if (a < 2700) return fmtAgo.format(Math.round(s / 60), "minute");
+  if (a < 79200) return fmtAgo.format(Math.round(s / 3600), "hour");
+  return fmtAgo.format(Math.round(s / 86400), "day");
+}
 const DEFAULT_VALUE: TriggerValue = { kind: "schedule", schedule: DEFAULT_SCHEDULE, active: null, conditions: [], match: "all" };
 const FREQUENCIES: { value: TriggerFrequency; label: string }[] = [
   { value: "hourly", label: "Hourly" },
@@ -252,6 +301,8 @@ let instances = 0;
  * When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.
  * @tag tc-trigger-builder
  * @fires tc-value-change - The trigger changed ({ value: TriggerValue }); cancelable – prevent it to control `value`
+ * @fires tc-webhook-test - Send test request was pressed ({ url, method, secretHeader, payload }: TriggerWebhookTest); cancelable – prevented, the button doesn't wait for `webhookLast`
+ * @fires tc-copy - Copy was pressed on the webhook address ({ text }); cancelable – prevented, nothing is written to the clipboard
  */
 export class TcTriggerBuilder extends TcElement {
   static override ui = "tgb";
@@ -263,6 +314,14 @@ export class TcTriggerBuilder extends TcElement {
   @property({ attribute: false }) accessor events: TriggerEvent[] = [];
   /** What a schedule's conditions can test (none: schedules have no conditions) */
   @property({ attribute: false }) accessor scheduleFields: TriggerField[] = [];
+  /** The webhook address a request starts it from; offers the webhook kind when set */
+  @property({ attribute: "webhook-url" }) accessor webhookUrl = "";
+  /** A sample request body (JSON text) to show and send as a test */
+  @property({ attribute: false }) accessor webhookSample: string | undefined = undefined;
+  /** How the last request to the webhook went; a new value also ends a test that's waiting */
+  @property({ attribute: false }) accessor webhookLast: TriggerWebhookRequest | null = null;
+  /** What a webhook's conditions can test – fields of the request body (none: no conditions) */
+  @property({ attribute: false }) accessor webhookFields: TriggerField[] = [];
   /** Names the group, shown at the top */
   @property() accessor heading = "Trigger";
   /** Counts the next runs from here (ms since epoch); unset: when the element connected */
@@ -279,6 +338,8 @@ export class TcTriggerBuilder extends TcElement {
   @state() private accessor formDisabled = false;
   @state() private accessor connectedAt = 0;
   @state() private accessor announcement = "";
+  @state() private accessor testing = false;
+  @state() private accessor copied = false;
 
   private readonly internals: ElementInternals;
   private readonly uid = `tc-tgb${++instances}`;
@@ -327,7 +388,10 @@ export class TcTriggerBuilder extends TcElement {
   }
   /** What the conditions can test now */
   private get fields(): TriggerField[] {
-    return this.value.kind === "event" ? (this.event?.fields ?? []) : this.scheduleFields;
+    return this.value.kind === "event" ? (this.event?.fields ?? []) : this.value.kind === "webhook" ? this.webhookFields : this.scheduleFields;
+  }
+  private get method(): TriggerMethod {
+    return this.value.webhook?.method ?? "POST";
   }
 
   /** The upcoming runs of a schedule (empty for an event trigger) */
@@ -336,7 +400,8 @@ export class TcTriggerBuilder extends TcElement {
   }
   /** The trigger in one sentence */
   get summary(): string {
-    return describeTrigger(this.value, this.events, this.value.kind === "schedule" ? this.scheduleFields : undefined);
+    const k = this.value.kind;
+    return describeTrigger(this.value, this.events, k === "schedule" ? this.scheduleFields : k === "webhook" ? this.webhookFields : undefined, this.webhookUrl);
   }
 
   private commit(patch: Partial<TriggerValue>) {
@@ -368,6 +433,23 @@ export class TcTriggerBuilder extends TcElement {
   /** Inner controls' own events stop here: the page hears this element's tc-value-change only */
   private stop = (e: Event) => e.stopPropagation();
 
+  private setWebhook(patch: Partial<TriggerWebhook>) {
+    this.commit({ webhook: { method: this.method, ...this.value.webhook, ...patch } });
+  }
+  private async copyUrl() {
+    if (!this.webhookUrl || !this.emit("tc-copy", { text: this.webhookUrl }, { cancelable: true })) return;
+    if (await copyText(this.webhookUrl)) {
+      this.copied = true;
+      this.announcement = "Copied the webhook address";
+    } else this.announcement = "Couldn't copy the address.";
+  }
+  private sendTest() {
+    const secretHeader = this.value.webhook?.secretHeader?.trim() || undefined;
+    if (!this.emit<TriggerWebhookTest>("tc-webhook-test", { url: this.webhookUrl, method: this.method, secretHeader, payload: this.webhookSample }, { cancelable: true })) return;
+    this.testing = true;
+    this.announcement = "Sending a test request…";
+  }
+
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
@@ -375,6 +457,11 @@ export class TcTriggerBuilder extends TcElement {
     this.toggleAttribute("data-disabled", this.isDisabled);
     this.dataset.kind = this.value.kind;
     if (changed.has("value") && changed.get("value") !== undefined) this.announcement = this.summary;
+    if (changed.has("webhookLast") && changed.get("webhookLast") !== undefined && this.webhookLast) {
+      this.testing = false;
+      this.announcement = `Last request: ${this.requestText(this.webhookLast)}`;
+    }
+    if (changed.has("webhookUrl")) this.copied = false;
   }
 
   protected override updated(changed: PropertyValues) {
@@ -396,6 +483,7 @@ export class TcTriggerBuilder extends TcElement {
     this.internals.setFormValue(this.name && !disabled ? JSON.stringify(this.value) : null);
     const v = this.value;
     if (!disabled && v.kind === "event" && !this.event) this.internals.setValidity({ valueMissing: true }, "Pick an event.", this.querySelector<HTMLElement>(".ui-tgb__event input") ?? undefined);
+    else if (!disabled && v.kind === "webhook" && !this.webhookUrl) this.internals.setValidity({ valueMissing: true }, "There's no webhook address yet.");
     else if (!disabled && v.kind === "schedule" && this.schedule.frequency === "weekly" && !this.schedule.days?.length)
       this.internals.setValidity({ valueMissing: true }, "Pick at least one day.", this.querySelector<HTMLElement>(".ui-tgb__day") ?? undefined);
     else this.internals.setValidity({});
@@ -539,6 +627,71 @@ export class TcTriggerBuilder extends TcElement {
     `;
   }
 
+  /** "200 · Started run 418" */
+  private requestText(r: TriggerWebhookRequest) {
+    const ok = r.status >= 200 && r.status < 300;
+    return `${r.status} · ${r.message ?? (ok ? "Accepted" : "Rejected")}`;
+  }
+
+  private webhookRows(look: Look) {
+    const disabled = this.isDisabled;
+    const last = this.webhookLast;
+    const ok = last ? last.status >= 200 && last.status < 300 : false;
+    const url = this.webhookUrl
+      ? html`<div class="ui-tgb__address">
+          <code class="ui-tgb__url" id=${`${this.uid}-url-text`}>${this.webhookUrl}</code>
+          <button type="button" class="ui-tgb__copy" ?disabled=${disabled} @click=${() => this.copyUrl()}>${this.copied ? "Copied" : "Copy"}<span class="ui-tgb__sr"> webhook address</span></button>
+        </div>`
+      : html`<span class="ui-tgb__unit">No address yet – it appears once the trigger is saved.</span>`;
+    const method = html`<tc-segmented-control
+      look=${look}
+      class="ui-tgb__seg ui-tgb__method"
+      size="sm"
+      aria-labelledby=${`${this.uid}-method`}
+      .options=${METHODS}
+      .value=${this.method}
+      ?disabled=${disabled}
+      @tc-value-change=${(e: CustomEvent<{ value: string }>) => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setWebhook({ method: e.detail.value as TriggerMethod });
+      }}
+    ></tc-segmented-control>`;
+    const secret = html`<span class="ui-tgb__inline ui-tgb__secret-wrap">
+      <input
+        class="ui-tgb__input ui-tgb__secret"
+        type="text"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="X-Signature"
+        aria-labelledby=${`${this.uid}-secret`}
+        aria-describedby=${`${this.uid}-secret-hint`}
+        .value=${live(this.value.webhook?.secretHeader ?? "")}
+        ?disabled=${disabled}
+        @change=${(e: Event) => this.setWebhook({ secretHeader: (e.target as HTMLInputElement).value.trim() || undefined })}
+      /><span class="ui-tgb__unit" id=${`${this.uid}-secret-hint`}>Optional – requests without it are turned away</span>
+    </span>`;
+    const test = html`<div class="ui-tgb__test-box">
+      ${this.webhookSample !== undefined
+        ? html`<pre class="ui-tgb__payload" tabindex="0" role="region" aria-labelledby=${`${this.uid}-test`}>${this.webhookSample}</pre>`
+        : nothing}
+      <div class="ui-tgb__test-row">
+        <button type="button" class="ui-tgb__send" ?disabled=${disabled || !this.webhookUrl || this.testing} @click=${() => this.sendTest()}>${this.testing ? "Sending…" : "Send test request"}</button>
+        ${last
+          ? html`<span class="ui-tgb__last" data-ok=${ok ? "true" : "false"}
+              ><span class="ui-tgb__last-mark" aria-hidden="true"></span>Last request ${ago(last.at, this.nowMs)}: <strong>${this.requestText(last)}</strong></span
+            >`
+          : html`<span class="ui-tgb__unit">No requests yet</span>`}
+      </div>
+    </div>`;
+    return html`
+      ${this.row("url", "Address", url)}
+      ${this.row("method", "Method", method)}
+      ${this.row("secret", "Secret header", secret)}
+      ${this.row("test", "Test", test)}
+    `;
+  }
+
   private conditionRows(look: Look) {
     const fields = this.fields;
     if (!fields.length) return nothing;
@@ -642,6 +795,7 @@ export class TcTriggerBuilder extends TcElement {
       .options=${[
         { value: "event", label: "An event happens", icon: icons.event },
         { value: "schedule", label: "On a schedule", icon: icons.schedule },
+        ...(this.webhookUrl || v.kind === "webhook" ? [{ value: "webhook", label: "A request arrives", icon: icons.webhook }] : []),
       ] as SegmentOption[]}
       .value=${v.kind}
       ?disabled=${disabled}
@@ -650,7 +804,7 @@ export class TcTriggerBuilder extends TcElement {
         e.preventDefault();
         const kind = e.detail.value as TriggerValue["kind"];
         // Conditions test the other kind's fields: they don't carry over
-        this.commit({ kind, conditions: [], ...(kind === "schedule" ? { schedule: this.schedule } : {}) });
+        this.commit({ kind, conditions: [], ...(kind === "schedule" ? { schedule: this.schedule } : kind === "webhook" ? { webhook: { method: this.method, ...v.webhook } } : {}) });
       }}
     ></tc-segmented-control>`;
     const eventOptions: ComboboxOption[] = this.events.map((e) => ({ value: e.id, label: e.label, hint: e.hint, group: e.group, icon: e.icon }));
@@ -687,7 +841,7 @@ export class TcTriggerBuilder extends TcElement {
     const body = html`
       <div class="ui-tgb__rows">
         ${this.row("when", "When", kindSeg)}
-        ${v.kind === "event" ? this.row("event", "Event", eventPicker) : this.scheduleRows(look)}
+        ${v.kind === "event" ? this.row("event", "Event", eventPicker) : v.kind === "webhook" ? this.webhookRows(look) : this.scheduleRows(look)}
         ${this.conditionRows(look)}
       </div>
       <div class="ui-tgb__summary">${summaryIcon(look)}<p class="ui-tgb__sentence">${this.summary}</p></div>
@@ -713,7 +867,7 @@ export class TcTriggerBuilder extends TcElement {
     return html`
       <span class="ui-tgb__sr" role="status">${this.announcement}</span>
       ${head}${clean ? body : html`<div class="ui-tgb__card">${body}</div>`}
-      <div class="ui-tgb__foot">${v.kind === "schedule" ? `Times in ${tz}` : "Runs each time the event happens"}</div>
+      <div class="ui-tgb__foot">${v.kind === "schedule" ? `Times in ${tz}` : v.kind === "webhook" ? "Runs each time a request arrives" : "Runs each time the event happens"}</div>
     `;
   }
 
@@ -757,9 +911,9 @@ export class TcTriggerBuilder extends TcElement {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.ui-tgb__day, .ui-tgb__remove, .ui-tgb__add { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.ui-tgb__day:focus-visible, .ui-tgb__remove:focus-visible, .ui-tgb__add:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-.ui-tgb__day:disabled, .ui-tgb__remove:disabled, .ui-tgb__add:disabled, .ui-tgb__input:disabled { cursor: not-allowed; opacity: 0.55; }
+.ui-tgb__day, .ui-tgb__remove, .ui-tgb__add, .ui-tgb__copy, .ui-tgb__send { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ui-tgb__day:focus-visible, .ui-tgb__remove:focus-visible, .ui-tgb__add:focus-visible, .ui-tgb__copy:focus-visible, .ui-tgb__send:focus-visible, .ui-tgb__payload:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-tgb__day:disabled, .ui-tgb__remove:disabled, .ui-tgb__add:disabled, .ui-tgb__copy:disabled, .ui-tgb__send:disabled, .ui-tgb__input:disabled { cursor: not-allowed; opacity: 0.55; }
 
 /* ---------- Rows: a label column and the controls ---------- */
 .ui-tgb__rows { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-4); }
@@ -867,6 +1021,54 @@ export class TcTriggerBuilder extends TcElement {
 }
 .ui-tgb__add:not(:disabled):hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 
+/* ---------- Webhook ---------- */
+.ui-tgb__address { display: flex; align-items: center; gap: var(--tc-space-2); width: 100%; min-width: 0; }
+.ui-tgb__url {
+  flex: 1;
+  min-width: 0;
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-fill-subtle);
+  color: var(--tc-text-primary);
+  font-family: var(--tc-font-mono);
+  font-size: var(--tc-font-size-sm);
+  overflow-wrap: anywhere;
+}
+.ui-tgb__copy, .ui-tgb__send {
+  flex: none;
+  height: var(--tc-control-h-sm);
+  padding: 0 var(--tc-control-px-sm);
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-action-secondary-bg);
+  box-shadow: var(--tc-action-secondary-shadow);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-tgb__copy:not(:disabled):hover, .ui-tgb__send:not(:disabled):hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-tgb__secret-wrap { flex-wrap: wrap; }
+.ui-tgb__secret { width: 160px; font-family: var(--tc-font-mono); }
+.ui-tgb__test-box { display: grid; gap: var(--tc-space-2); width: 100%; min-width: 0; }
+.ui-tgb__payload {
+  max-height: 160px;
+  margin: 0;
+  padding: var(--tc-space-2) var(--tc-space-2-5);
+  overflow: auto;
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-fill-subtle);
+  color: var(--tc-text-secondary);
+  font-family: var(--tc-font-mono);
+  font-size: var(--tc-font-size-xs);
+  line-height: var(--tc-line-height-normal);
+}
+.ui-tgb__test-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2) var(--tc-space-3); }
+.ui-tgb__last { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); }
+.ui-tgb__last strong { font-weight: var(--tc-font-weight-medium); }
+.ui-tgb__last[data-ok="true"] strong { color: var(--tc-status-success-fg); }
+.ui-tgb__last[data-ok="false"] strong { color: var(--tc-status-danger-fg); }
+.ui-tgb__last-mark { flex: none; width: var(--tc-space-2); height: var(--tc-space-2); border-radius: var(--tc-radius-full); background: var(--tc-status-success-fg); }
+.ui-tgb__last[data-ok="false"] .ui-tgb__last-mark { border-radius: 0; background: var(--tc-status-danger-fg); }
+
 /* ---------- The sentence ---------- */
 .ui-tgb__summary {
   display: flex;
@@ -930,12 +1132,12 @@ export class TcTriggerBuilder extends TcElement {
 }
 /* Touch screens: bigger tap targets */
 @media (pointer: coarse) {
-  .ui-tgb__input, .ui-tgb__day, .ui-tgb__add { height: 40px; }
+  .ui-tgb__input, .ui-tgb__day, .ui-tgb__add, .ui-tgb__copy, .ui-tgb__send { height: 40px; }
   .ui-tgb__remove { width: 40px; height: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-tgb__cond, .ui-tgb__sentence { animation: none; }
-  .ui-tgb__input, .ui-tgb__day, .ui-tgb__remove, .ui-tgb__add { transition: none; }
+  .ui-tgb__input, .ui-tgb__day, .ui-tgb__remove, .ui-tgb__add, .ui-tgb__copy, .ui-tgb__send { transition: none; }
 }
 [data-ui="tgb"][data-disabled] .ui-tgb__sentence { color: var(--tc-text-muted); }
 `;

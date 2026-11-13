@@ -41,12 +41,37 @@ function MockPage({ tab }: { tab: string }) {
   );
 }
 
+/* Model-written HTML for the second pane: a summary card whose script calls a helper it never defined, and the
+   corrected version Ask to fix "gets back" */
+const SUMMARY = (fixed: boolean) => `<!doctype html>
+<html>
+<head>
+<style>
+  body { font: 14px system-ui; margin: 16px; color: #1f1f1f; }
+  .card { border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 14px; }
+  .total { font-size: 24px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div>Q3 travel spend · audit sample</div>
+  <div class="total" id="total">–</div>
+</div>
+<script>
+  const claims = [412.5, 88, 1210.4, 64.25];
+  ${fixed ? "const sum = (xs) => xs.reduce((a, b) => a + b, 0);" : 'console.warn("Totals are rounded to the cent");'}
+  document.getElementById("total").textContent = "$" + sum(claims).toFixed(2);
+</script>
+</body>
+</html>`;
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { PreviewFrame } = ui;
   const [tabs, setTabs] = useState(TABS);
   const [active, setActive] = useState<string | null>("freezers");
   const [failed, setFailed] = useState(false);
   const [said, setSaid] = useState("Switch between phone, tablet and desktop, or type an address and press Enter.");
+  const [fixed, setFixed] = useState(false);
   const tab = tabs.find((t) => t.id === active) ?? tabs[0];
   return (
     <div style={{ width: "100%", maxWidth: 760, display: "grid", gap: 8 }}>
@@ -85,6 +110,22 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         {said}{" "}
         <button type="button" style={textButton} onClick={() => setFailed(!failed)}>
           {failed ? "Bring it back" : "Show the error state"}
+        </button>
+      </div>
+      <PreviewFrame
+        title="Model-written HTML"
+        description="Runs sandboxed – scripts only, no network"
+        html={SUMMARY(fixed)}
+        height={160}
+        onFixRequest={() => {
+          setFixed(true);
+          setSaid("Asked the model to fix it – the corrected card is running");
+        }}
+      />
+      <div style={{ ...caption, textAlign: "center" }}>
+        The card's script calls a helper it never defined.{" "}
+        <button type="button" style={textButton} onClick={() => setFixed(!fixed)}>
+          {fixed ? "Break it again" : "Fix it"}
         </button>
       </div>
     </div>

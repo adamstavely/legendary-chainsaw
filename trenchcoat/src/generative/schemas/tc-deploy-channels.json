@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-deploy-channels.json",
+  "title": "tc-deploy-channels",
+  "description": "Where an agent can be reached – one row per channel with its status in words, the version it serves, last week's traffic and Set up, Configure, Pause or Resume.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DeployChannel"
+      },
+      "description": "The channels. Pause and Resume change a row's status here unless a tc-channels-change listener prevents it"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "object",
+          "properties": {
+            "live": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            },
+            "paused": {
+              "type": "string"
+            },
+            "draft": {
+              "type": "string"
+            },
+            "not-set-up": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "setup": {
+              "type": "string"
+            },
+            "configure": {
+              "type": "string"
+            },
+            "pause": {
+              "type": "string"
+            },
+            "resume": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "live": {
+              "type": "string"
+            },
+            "draft": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "traffic": {
+          "type": "string",
+          "description": "\"{n} messages in the last 7 days\""
+        },
+        "noTraffic": {
+          "type": "string"
+        },
+        "live": {
+          "type": "string",
+          "description": "Header summary: \"{live} live\" and \"{attention} need attention\""
+        },
+        "attention": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string",
+          "description": "Announced after Pause / Resume: \"{name} paused\", \"{name} is live again\""
+        },
+        "resumed": {
+          "type": "string"
+        }
+      },
+      "description": "Words the component uses, merged over defaultDeployChannelsLabels"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers; unset follows the page"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DeployChannel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/DeployChannelKind"
+        },
+        "name": {
+          "type": "string",
+          "description": "What people call it: \"Intranet widget\", \"Team chat\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quieter line: where it is, an address or a number"
+        },
+        "status": {
+          "$ref": "#/definitions/DeployChannelStatus"
+        },
+        "version": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "live"
+          ],
+          "description": "Which version of the agent it answers with; unset for a channel that isn't set up"
+        },
+        "traffic": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Messages per day over the last 7 days, oldest first"
+        },
+        "error": {
+          "type": "string",
+          "description": "What's wrong, for a channel whose status is \"error\""
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "DeployChannelKind": {
+      "type": "string",
+      "enum": [
+        "api",
+        "chat",
+        "custom",
+        "email",
+        "sms",
+        "voice",
+        "widget"
+      ]
+    },
+    "DeployChannelStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "error",
+        "live",
+        "not-set-up",
+        "paused"
+      ]
+    }
+  }
+}

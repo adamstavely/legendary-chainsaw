@@ -89,10 +89,10 @@
         "expired": {
           "type": "string"
         },
-        "untested": {
+        "testing": {
           "type": "string"
         },
-        "testing": {
+        "untested": {
           "type": "string"
         },
         "healthy": {

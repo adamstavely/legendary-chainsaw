@@ -170,6 +170,49 @@
     "argsLabel": {
       "type": "string",
       "description": "The heading of the arguments"
+    },
+    "editableArgs": {
+      "type": "boolean",
+      "description": "Lets the person change the arguments before approving: Edit beside them turns each one into a field"
+    },
+    "argsSchema": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ApprovalArgSchema"
+          }
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "description": "The arguments' JSON Schema (its `properties`): types and choices for the fields"
+    },
+    "editArgsLabel": {
+      "type": "string",
+      "description": "The arguments' Edit button label"
+    },
+    "doneArgsLabel": {
+      "type": "string",
+      "description": "Its label while editing"
+    },
+    "resetArgsLabel": {
+      "type": "string",
+      "description": "The Reset button's label – it puts every argument back"
+    },
+    "approveEditedLabel": {
+      "type": "string",
+      "description": "The Approve button's label once an argument has changed"
+    },
+    "changesLabel": {
+      "type": "string",
+      "description": "The heading of the diff of changed arguments"
     }
   },
   "additionalProperties": false,
@@ -238,6 +281,40 @@
       ],
       "additionalProperties": false,
       "description": "One line of a file change: unchanged context, an added line or a removed one"
+    },
+    "ApprovalArgSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "array",
+            "boolean",
+            "integer",
+            "number",
+            "object",
+            "string"
+          ]
+        },
+        "enum": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What one argument may be, in JSON Schema's words: a type, a list of choices, a friendlier name"
     }
   }
 }

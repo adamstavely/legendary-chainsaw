@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 dist/
 coverage/
 .vite/
@@ -16,7 +16,7 @@ custom-elements.json
 
 # Example apps: their installs, builds and the packed package they install
 examples/.packed/
-examples/*/node_modules/
+examples/*/node_modules
 examples/*/package-lock.json
 examples/*/dist/
 examples/*/.next/

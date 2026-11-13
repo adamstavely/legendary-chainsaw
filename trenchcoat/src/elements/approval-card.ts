@@ -25,6 +25,9 @@ import { safeUrl } from "./internal/safe-url";
  * turns the text details into fields (each change fires a cancelable tc-details-change); `evidence` – chips that open
  * the sources the request rests on. Two more show what exactly would change: `diff` – a file change as a small unified
  * diff (+ / −, and "Added:" / "Removed:" for screen readers) – and `args` – the call's arguments as a readable code block.
+ * With `editableArgs`, Edit beside the arguments turns each one into a field – text, number, a yes / no box or a choice
+ * from `argsSchema`, anything else as JSON checked as it's typed. Changed arguments say "Edited" and a diff against the
+ * original sits under the block; Approve becomes "Approve with changes" and its events carry `args` and `edited`.
  */
 
 // The header icon: a shield with a check – a request to approve
@@ -57,9 +60,21 @@ export type ApprovalDiffLine = { kind: "context" | "add" | "remove"; text: strin
 export type ApprovalDiff = { path: string; lines: ApprovalDiffLine[] };
 /** The call's arguments – any JSON-like value, shown as a readable code block */
 export type ApprovalArgs = Record<string, unknown>;
+/** What one argument may be, in JSON Schema's words: a type, a list of choices, a friendlier name */
+export type ApprovalArgSchema = { type?: "string" | "number" | "integer" | "boolean" | "object" | "array"; enum?: (string | number | boolean)[]; title?: string; description?: string };
+/** The arguments' schema – a JSON Schema object's `properties`, the subset the editor reads */
+export type ApprovalArgsSchema = { properties?: Record<string, ApprovalArgSchema>; required?: string[] };
 
 /** Details of the events */
-export type ApprovalStatusChange = { status: ApprovalStatus };
+export type ApprovalStatusChange = {
+  status: ApprovalStatus;
+  /** With `editableArgs`, on approve: the arguments as approved – edited or not */
+  args?: ApprovalArgs;
+  /** With `editableArgs`, on approve: whether any argument was changed */
+  edited?: boolean;
+};
+/** What onApprove is called with */
+export type ApprovalDecision = { always: boolean; args?: ApprovalArgs; edited?: boolean };
 export type ApprovalDeny = { reason: DenyReason };
 export type ApprovalDetailsChange = { details: ApprovalDetail[]; index: number; label: string; value: string };
 export type ApprovalEvidenceSelect = { evidence: ApprovalEvidence; index: number };
@@ -69,7 +84,7 @@ const RISK_LABEL: Record<ApprovalRisk, string> = { low: "Low", medium: "Medium",
 const WARN_AT = 20_000;
 
 /** Escape belongs to the content it was pressed in (a field or menu inside the preview), not to Deny */
-const ownsEscape = (el: Element | null) => !!el?.closest?.(".ui-ap__custom, .ui-ap__details, textarea, select, [contenteditable=''], [contenteditable='true'], input:not([type='checkbox'])");
+const ownsEscape = (el: Element | null) => !!el?.closest?.(".ui-ap__custom, .ui-ap__details, .ui-ap__argform, textarea, select, [contenteditable=''], [contenteditable='true'], input:not([type='checkbox'])");
 const timerText = (s: number) => `Expires in ${s} seconds unless approved. The timer pauses while the card is hovered or focused.`;
 /** 0:42, 2:05 */
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -105,6 +120,27 @@ function argsText(args: ApprovalArgs) {
   } catch {
     return String(args);
   }
+}
+
+/** JSON for a value on one line, for the edited-arguments diff */
+const oneLine = (v: unknown) => {
+  try {
+    return JSON.stringify(v) ?? String(v);
+  } catch {
+    return String(v);
+  }
+};
+/** Two argument values are the same, compared as JSON */
+const sameValue = (a: unknown, b: unknown) => a === b || oneLine(a) === oneLine(b);
+/** Which field an argument gets: from the schema first, else from its value */
+function fieldKind(value: unknown, schema?: ApprovalArgSchema): "choice" | "boolean" | "number" | "integer" | "text" | "json" {
+  if (schema?.enum?.length) return "choice";
+  const t = schema?.type;
+  if (t === "boolean" || (!t && typeof value === "boolean")) return "boolean";
+  if (t === "integer") return "integer";
+  if (t === "number" || (!t && typeof value === "number")) return "number";
+  if (t === "string" || (!t && typeof value === "string")) return "text";
+  return "json";
 }
 
 /**
@@ -164,7 +200,7 @@ let uid = 0;
 /**
  * An agent's request for approval, with Approve / Deny, an optional countdown, and a compact row once decided.
  * @tag tc-approval-card
- * @fires tc-status-change - The card was approved, denied or expired; detail `{ status }`. Cancelable: preventDefault() keeps the status (controlled use)
+ * @fires tc-status-change - The card was approved, denied or expired; detail `{ status }`, plus `{ args, edited }` on approve with `editableArgs`. Cancelable: preventDefault() keeps the status (controlled use)
  * @fires tc-deny - Denied by the user or by the countdown; detail `{ reason: "user" | "timeout" }`
  * @fires tc-expire - The countdown ran out (tc-deny fires too); detail: null
  * @fires tc-edit - Edit was pressed (shown with `editable`); detail: null
@@ -192,7 +228,7 @@ export class TcApprovalCard extends TcElement {
    * Called on Approve with the "Always allow" choice. Return a promise to show a spinner and lock the card until it
    * settles; a rejection keeps it pending and shows `errorLabel`, and Approve can be pressed again to retry
    */
-  @property({ attribute: false }) accessor onApprove: ((decision: { always: boolean }) => void | Promise<unknown>) | undefined = undefined;
+  @property({ attribute: false }) accessor onApprove: ((decision: ApprovalDecision) => void | Promise<unknown>) | undefined = undefined;
   /** Shown under the buttons when an onApprove promise rejects */
   @property({ attribute: "error-label" }) accessor errorLabel = "Couldn't approve. Try again.";
   /** Shows an "Edit" button (it fires tc-edit) */
@@ -247,6 +283,20 @@ export class TcApprovalCard extends TcElement {
   @property({ attribute: false }) accessor args: ApprovalArgs | undefined = undefined;
   /** The heading of the arguments */
   @property({ attribute: "args-label" }) accessor argsLabel = "Arguments";
+  /** Lets the person change the arguments before approving: Edit beside them turns each one into a field */
+  @property({ type: Boolean, attribute: "editable-args" }) accessor editableArgs = false;
+  /** The arguments' JSON Schema (its `properties`): types and choices for the fields */
+  @property({ attribute: false }) accessor argsSchema: ApprovalArgsSchema | undefined = undefined;
+  /** The arguments' Edit button label */
+  @property({ attribute: "edit-args-label" }) accessor editArgsLabel = "Edit";
+  /** Its label while editing */
+  @property({ attribute: "done-args-label" }) accessor doneArgsLabel = "Done";
+  /** The Reset button's label – it puts every argument back */
+  @property({ attribute: "reset-args-label" }) accessor resetArgsLabel = "Reset";
+  /** The Approve button's label once an argument has changed */
+  @property({ attribute: "approve-edited-label" }) accessor approveEditedLabel = "Approve with changes";
+  /** The heading of the diff of changed arguments */
+  @property({ attribute: "changes-label" }) accessor changesLabel = "Your changes";
 
   /** @internal */ @state() accessor always = false;
   /** @internal */ @state() accessor busy = false;
@@ -271,6 +321,12 @@ export class TcApprovalCard extends TcElement {
   @state() accessor editingDetails = false;
   /** @internal The detail values when editing first opened for this request – edited rows are marked against them */
   @state() accessor detailsBefore: (string | Element)[] | null = null;
+  /** @internal Editing the arguments */
+  @state() accessor editingArgs = false;
+  /** @internal Changed arguments, by key – the rest are as `args` has them */
+  @state() accessor argEdits: Record<string, unknown> = {};
+  /** @internal What's typed in a JSON field that doesn't parse yet, by key */
+  @state() accessor argDrafts: Record<string, string> = {};
 
   private readonly uid = `tc-ap-${++uid}`;
   private prevStatus: ApprovalStatus | undefined = undefined;
@@ -292,6 +348,24 @@ export class TcApprovalCard extends TcElement {
     super();
     // Safety net: focus never drops to <body> when a focused control inside the card goes away
     new FocusRescueController(this, () => (this.resolved ? this.rowEl : this.approveBtn));
+  }
+
+  /** The arguments as they'd be approved now: `args` with the person's changes */
+  get editedArgs(): ApprovalArgs | undefined {
+    if (!this.args) return undefined;
+    return { ...this.args, ...this.argEdits };
+  }
+  /** Some argument differs from `args` */
+  get argsEdited() {
+    const args = this.args;
+    return !!args && Object.entries(this.argEdits).some(([k, v]) => !sameValue(v, args[k]));
+  }
+  private get argsInvalid() {
+    return Object.keys(this.argDrafts).length > 0;
+  }
+  private get argsEditable() {
+    const a = this.args;
+    return this.editableArgs && !!a && typeof a === "object" && !Array.isArray(a) && Object.keys(a).length > 0;
   }
 
   /** @internal */
@@ -377,15 +451,23 @@ export class TcApprovalCard extends TcElement {
   };
 
   private setStatus(next: ApprovalStatus) {
-    if (this.emit<ApprovalStatusChange>("tc-status-change", { status: next }, { cancelable: true })) this.status = next;
+    const extra = next === "approved" && this.argsEditable ? { args: this.editedArgs, edited: this.argsEdited } : {};
+    if (this.emit<ApprovalStatusChange>("tc-status-change", { status: next, ...extra }, { cancelable: true })) this.status = next;
   }
 
   private async approve() {
     if (this.resolved || this.busy) return;
+    if (this.argsEditable && this.argsInvalid) {
+      // A JSON field that doesn't parse can't be approved: say so and go to it
+      this.editingArgs = true;
+      this.announce = `Fix ${Object.keys(this.argDrafts)[0]} before approving: it isn't valid JSON.`;
+      void this.updateComplete.then(() => this.querySelector<HTMLElement>('.ui-ap__argfield[aria-invalid="true"]')?.focus());
+      return;
+    }
     this.failed = false;
     let result: void | Promise<unknown>;
     try {
-      result = this.onApprove?.({ always: this.always });
+      result = this.onApprove?.(this.argsEditable ? { always: this.always, args: this.editedArgs, edited: this.argsEdited } : { always: this.always });
     } catch {
       this.failed = true;
       return;
@@ -443,6 +525,54 @@ export class TcApprovalCard extends TcElement {
     this.details = details;
   }
 
+  private toggleArgs() {
+    if (this.busy) return;
+    this.editingArgs = !this.editingArgs;
+    if (this.editingArgs) void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ap__argfield")?.focus());
+  }
+  private resetArgs() {
+    if (this.busy) return;
+    this.argEdits = {};
+    this.argDrafts = {};
+    this.announce = "Arguments put back as the agent asked";
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(this.editingArgs ? ".ui-ap__argfield" : ".ui-ap__args-edit")?.focus());
+  }
+  private setArg(key: string, value: unknown) {
+    const { [key]: _, ...drafts } = this.argDrafts;
+    this.argDrafts = drafts;
+    const edits = { ...this.argEdits };
+    if (sameValue(value, this.args?.[key])) delete edits[key];
+    else edits[key] = value;
+    this.argEdits = edits;
+  }
+  private onArgInput(key: string, kind: ReturnType<typeof fieldKind>, field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, schema?: ApprovalArgSchema) {
+    if (kind === "boolean") return this.setArg(key, (field as HTMLInputElement).checked);
+    if (kind === "choice") {
+      const choice = schema?.enum?.find((c) => String(c) === field.value);
+      return this.setArg(key, choice ?? field.value);
+    }
+    if (kind === "number" || kind === "integer") {
+      const n = field.value.trim() === "" ? NaN : Number(field.value);
+      if (Number.isFinite(n) && (kind === "number" || Number.isInteger(n))) return this.setArg(key, n);
+      this.argDrafts = { ...this.argDrafts, [key]: field.value };
+      return;
+    }
+    if (kind === "text") return this.setArg(key, field.value);
+    try {
+      this.setArg(key, JSON.parse(field.value));
+    } catch {
+      this.argDrafts = { ...this.argDrafts, [key]: field.value };
+    }
+  }
+  private onArgsKey = (e: KeyboardEvent) => {
+    if (e.key !== "Escape" || e.isComposing) return;
+    // Escape leaves the editor, keeping the changes – it never denies from inside it
+    e.preventDefault();
+    e.stopPropagation();
+    this.editingArgs = false;
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ap__args-edit")?.focus());
+  };
+
   private stopTimer() {
     // The button goes away with the countdown – focus moves on to Approve first
     rescueFocus(this.querySelector(".ui-ap__stop"), [this.approveBtn]);
@@ -451,6 +581,11 @@ export class TcApprovalCard extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // New arguments are a new request: the person's changes were to the old ones
+    if (changed.has("args") && changed.get("args") !== undefined) {
+      this.argEdits = {};
+      this.argDrafts = {};
+    }
     const status = this.status;
     if (this.prevStatus === undefined) {
       this.left = this.total;
@@ -458,6 +593,9 @@ export class TcApprovalCard extends TcElement {
       if (status === "pending") {
         this.editingDetails = false;
         this.detailsBefore = null;
+        this.editingArgs = false;
+        this.argEdits = {};
+        this.argDrafts = {};
         this.leaving = false;
         this.entering = true;
         this.always = false;
@@ -613,7 +751,7 @@ export class TcApprovalCard extends TcElement {
           aria-disabled=${ifDefined(busy ? "true" : undefined)}
           @click=${() => void this.approve()}
         >
-          ${this.approveLabel}${busy
+          ${this.argsEditable && this.argsEdited ? this.approveEditedLabel : this.approveLabel}${busy
             ? html`<svg class="ui-ap__spinner" viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="6"></circle>`}</svg>`
             : this.shortcuts
               ? html`<kbd class="ui-ap__kbd" aria-hidden="true">${this.mod === "⌘" ? "⌘↵" : "Ctrl ↵"}</kbd>`
@@ -654,7 +792,7 @@ export class TcApprovalCard extends TcElement {
             ${body ? html`<div class="ui-ap__custom">${content(body)}</div>` : nothing}
             ${details?.length ? this.renderDetails(details, leaving) : nothing}
             ${diff ? renderApprovalDiff(diff, this.diffLabel) : nothing}
-            ${args ? renderApprovalArgs(args, this.argsLabel) : nothing}
+            ${args ? (this.argsEditable ? this.renderArgsEditor(args, leaving) : renderApprovalArgs(args, this.argsLabel)) : nothing}
           </div>`
         : nothing;
     const outcomes = this.renderConsequences();
@@ -736,6 +874,106 @@ export class TcApprovalCard extends TcElement {
         })}
       </dl>
       ${toggle}`;
+  }
+
+  /** The arguments with Edit: the code block, or a field per argument while editing, and the changes as a diff */
+  private renderArgsEditor(args: ApprovalArgs, leaving: boolean) {
+    const editing = this.editingArgs;
+    const shown = this.editedArgs ?? args;
+    const edited = this.argsEdited;
+    const formId = `${this.uid}-argform`;
+    const tools = html`<div class="ui-ap__args-tools">
+      <button
+        type="button"
+        class="ui-ap__btn ui-ap__btn--ghost ui-ap__args-toggle ui-ap__args-edit"
+        aria-expanded=${editing ? "true" : "false"}
+        aria-controls=${ifDefined(leaving || !editing ? undefined : formId)}
+        aria-disabled=${ifDefined(this.busy ? "true" : undefined)}
+        @click=${() => this.toggleArgs()}
+      >${editing ? checkIcon : pencilIcon}${editing ? this.doneArgsLabel : this.editArgsLabel}<span class="tc-sr-only"> ${this.argsLabel.toLowerCase()}</span></button>
+      ${edited || this.argsInvalid
+        ? html`<button type="button" class="ui-ap__btn ui-ap__btn--ghost ui-ap__args-toggle ui-ap__args-reset" aria-disabled=${ifDefined(this.busy ? "true" : undefined)} @click=${() => this.resetArgs()}>${this.resetArgsLabel}</button>`
+        : nothing}
+    </div>`;
+    if (!editing)
+      return html`${renderApprovalArgs(shown, this.argsLabel)}${tools}${edited ? this.renderArgsDiff(args) : nothing}`;
+    const props = this.argsSchema?.properties ?? {};
+    const required = new Set(this.argsSchema?.required ?? []);
+    return html`<div class="ui-ap__code-sec">
+        <div class="ui-ap__code-head"><span class="ui-ap__code-label" id=${`${formId}-label`}>${this.argsLabel}</span></div>
+        <div class="ui-ap__argform" id=${ifDefined(leaving ? undefined : formId)} role="group" aria-labelledby=${`${formId}-label`} @keydown=${this.onArgsKey}>
+          ${Object.keys(args).map((key) => {
+            const schema = props[key];
+            const value = shown[key];
+            const kind = fieldKind(args[key], schema);
+            const id = `${formId}-${key}`;
+            const changed = key in this.argEdits && !sameValue(this.argEdits[key], args[key]);
+            const draft = this.argDrafts[key];
+            const invalid = draft !== undefined;
+            const hint = schema?.description;
+            const describedBy = [invalid ? `${id}-error` : "", hint ? `${id}-hint` : ""].filter(Boolean).join(" ") || undefined;
+            const label = schema?.title ?? key;
+            const onInput = (e: Event) => this.onArgInput(key, kind, e.target as HTMLInputElement, schema);
+            let field: unknown;
+            if (kind === "boolean")
+              field = html`<input id=${id} class="ui-ap__argfield ui-ap__argcheck" type="checkbox" .checked=${live(value === true)} ?disabled=${this.busy} aria-describedby=${ifDefined(describedBy)} @change=${onInput} />`;
+            else if (kind === "choice")
+              field = html`<select id=${id} class="ui-ap__argfield ui-ap__arg" ?disabled=${this.busy} aria-describedby=${ifDefined(describedBy)} @change=${onInput}>
+                ${schema!.enum!.map((c) => html`<option value=${String(c)} ?selected=${sameValue(c, value)}>${String(c)}</option>`)}
+              </select>`;
+            else if (kind === "json" || (kind === "text" && typeof value === "string" && (value.includes("\n") || value.length > 60)))
+              field = html`<textarea
+                id=${id}
+                class="ui-ap__argfield ui-ap__arg ui-ap__argarea"
+                rows=${kind === "json" ? 3 : 2}
+                spellcheck=${kind === "json" ? "false" : "true"}
+                ?disabled=${this.busy}
+                aria-invalid=${invalid ? "true" : "false"}
+                aria-describedby=${ifDefined(describedBy)}
+                .value=${live(draft ?? (kind === "json" ? argsText(value as ApprovalArgs) : String(value ?? "")))}
+                @input=${onInput}
+              ></textarea>`;
+            else
+              field = html`<input
+                id=${id}
+                class="ui-ap__argfield ui-ap__arg"
+                type=${kind === "text" ? "text" : "number"}
+                .step=${kind === "integer" ? "1" : "any"}
+                spellcheck="false"
+                autocomplete="off"
+                ?required=${required.has(key)}
+                ?disabled=${this.busy}
+                aria-invalid=${invalid ? "true" : "false"}
+                aria-describedby=${ifDefined(describedBy)}
+                .value=${live(draft ?? (value === undefined || value === null ? "" : String(value)))}
+                @input=${onInput}
+              />`;
+            return html`<div class="ui-ap__argrow" data-kind=${kind} ?data-edited=${changed} ?data-invalid=${invalid}>
+              <label class="ui-ap__arglabel" for=${id}>${label}${label !== key ? html` <code class="ui-ap__argkey">${key}</code>` : nothing}</label>
+              <div class="ui-ap__argctl">
+                ${field}
+                ${changed ? html`<span class="ui-ap__edited">Edited</span>` : nothing}
+              </div>
+              ${hint ? html`<p class="ui-ap__arghint" id=${`${id}-hint`}>${hint}</p>` : nothing}
+              ${invalid ? html`<p class="ui-ap__argerror" id=${`${id}-error`}>${kind === "json" ? "Not valid JSON yet" : "Not a whole number"}</p>` : nothing}
+            </div>`;
+          })}
+        </div>
+      </div>
+      ${tools}${edited ? this.renderArgsDiff(args) : nothing}`;
+  }
+
+  /** The changed arguments as a small diff: the agent's value removed, the person's added */
+  private renderArgsDiff(args: ApprovalArgs) {
+    const lines: ApprovalDiffLine[] = [];
+    // In the arguments' own order, however they were edited
+    for (const key of Object.keys(args)) {
+      if (!(key in this.argEdits)) continue;
+      const value = this.argEdits[key];
+      if (sameValue(value, args[key])) continue;
+      lines.push({ kind: "remove", text: `${key}: ${oneLine(args[key])}` }, { kind: "add", text: `${key}: ${oneLine(value)}` });
+    }
+    return lines.length ? html`<div class="ui-ap__argdiff">${renderApprovalDiff({ path: this.argsLabel.toLowerCase(), lines }, this.changesLabel)}</div>` : nothing;
   }
 
   private renderConsequences() {
@@ -1334,6 +1572,24 @@ export class TcApprovalCard extends TcElement {
   margin: 0;
   color: var(--tc-text-primary);
   line-height: var(--tc-line-height-snug);
+}
+/* Editable arguments: Edit and Reset under the block, a field per argument, and the changes as a diff */
+.ui-ap__args-tools { display: flex; flex-wrap: wrap; gap: var(--tc-space-1); }
+.ui-ap__argform { display: grid; gap: var(--tc-space-2); padding: var(--tc-space-2-5) var(--tc-space-3); border-radius: var(--tc-radius-lg); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+.ui-ap__argrow { display: grid; grid-template-columns: minmax(6rem, max-content) minmax(0, 1fr); align-items: center; column-gap: var(--tc-space-3); row-gap: var(--tc-space-1); }
+.ui-ap__arglabel { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); }
+.ui-ap__argkey { color: var(--tc-text-muted); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); }
+.ui-ap__argctl { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; }
+.ui-ap__argctl > .ui-ap__arg { flex: 1; }
+.ui-ap__argarea { height: auto; padding: var(--tc-space-1-5) var(--tc-space-2); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-snug); resize: vertical; }
+.ui-ap__argcheck { width: var(--tc-space-4); height: var(--tc-space-4); margin: 0; accent-color: var(--tc-accent); }
+.ui-ap__arghint, .ui-ap__argerror { grid-column: 2; margin: 0; font-size: var(--tc-font-size-xs); }
+.ui-ap__arghint { color: var(--tc-text-muted); }
+.ui-ap__argerror { color: var(--tc-status-danger-fg); }
+.ui-ap__argrow[data-invalid] .ui-ap__arg { box-shadow: inset 0 0 0 var(--tc-focus-ring-width) var(--tc-status-danger-fg); }
+@container (max-width: 26rem) {
+  .ui-ap__argrow { grid-template-columns: minmax(0, 1fr); }
+  .ui-ap__arghint, .ui-ap__argerror { grid-column: 1; }
 }
 /* Edit arguments: the text details become fields */
 .ui-ap__args-toggle {

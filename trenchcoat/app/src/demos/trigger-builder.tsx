@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { TriggerEvent, TriggerField, TriggerValue } from "../../../src/elements/react";
+import type { TriggerEvent, TriggerField, TriggerValue, TriggerWebhookRequest } from "../../../src/elements/react";
 import { buttonSm, caption } from "../demo-kit";
 
 const icon = (d: string) => (
@@ -61,6 +61,14 @@ const SCHEDULE_FIELDS: TriggerField[] = [
   { id: "pipeline", label: "Pipeline", type: "select", options: ["New business", "Renewals", "Expansion"] },
 ];
 
+/** What an invoice-matching agent's webhook receives */
+const WEBHOOK_URL = "https://hooks.example.org/agents/invoice-match/7f3a91";
+const WEBHOOK_SAMPLE = JSON.stringify({ invoice: "INV-20418", vendor: "Northwind Lab Supplies", amount: 1840.5, currency: "EUR" }, null, 2);
+const WEBHOOK_FIELDS: TriggerField[] = [
+  { id: "amount", label: "Amount", type: "number" },
+  { id: "currency", label: "Currency", type: "select", options: ["EUR", "USD", "GBP"] },
+];
+
 const EXAMPLES: { label: string; value: TriggerValue }[] = [
   { label: "Every Monday at 9", value: { kind: "schedule", schedule: { frequency: "weekly", days: [1], time: "09:00" }, active: null, conditions: [], match: "all" } },
   {
@@ -79,14 +87,31 @@ const EXAMPLES: { label: string; value: TriggerValue }[] = [
     label: "Month-end in Q4",
     value: { kind: "schedule", schedule: { frequency: "monthly", dayOfMonth: 31, time: "17:30" }, active: { start: "2026-10-01", end: "2026-12-31" }, conditions: [{ field: "open_deals", operator: "gt", value: "0" }], match: "all" },
   },
+  {
+    label: "When an invoice arrives",
+    value: { kind: "webhook", webhook: { method: "POST", secretHeader: "X-Signature" }, conditions: [{ field: "amount", operator: "gt", value: "1000" }], match: "all" },
+  },
 ];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { TriggerBuilder } = ui;
   const [value, setValue] = useState<TriggerValue>(EXAMPLES[0].value);
+  const [last, setLast] = useState<TriggerWebhookRequest>(() => ({ at: Date.now() - 3 * 60_000, status: 200, message: "Started run 418" }));
   return (
     <div style={{ width: "100%", maxWidth: 560, display: "grid", gap: 12 }}>
-      <TriggerBuilder title="Run this automation" events={EVENTS} scheduleFields={SCHEDULE_FIELDS} value={value} onChange={setValue} name="trigger" />
+      <TriggerBuilder
+        title="Run this automation"
+        events={EVENTS}
+        scheduleFields={SCHEDULE_FIELDS}
+        webhookUrl={WEBHOOK_URL}
+        webhookSample={WEBHOOK_SAMPLE}
+        webhookFields={WEBHOOK_FIELDS}
+        webhookLast={last}
+        onWebhookTest={() => void setTimeout(() => setLast({ at: Date.now(), status: 202, message: "Test received – no run started" }), 900)}
+        value={value}
+        onChange={setValue}
+        name="trigger"
+      />
       <div style={{ ...caption, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
         {EXAMPLES.map((x) => (
           <button key={x.label} type="button" style={buttonSm} onClick={() => setValue(x.value)}>

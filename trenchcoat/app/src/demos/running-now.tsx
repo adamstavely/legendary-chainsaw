@@ -5,7 +5,8 @@ import { caption, surface, textButton } from "../demo-kit";
 
 /* A records audit run by a research institute's agents: vendor checks and document classification are going, a
    report draft waits for a decision, and an export finished. Every couple of seconds the running tasks move on; the
-   classification finishes, then the vendor checks need the person too. Review, Stop and Open just report. */
+   classification finishes, then the vendor checks need the person too. Review, Stop and Open just report. The bell
+   on a running task asks to be told when it finishes – the classification is watched from the start. */
 
 const T0 = Date.UTC(2026, 10, 10, 9, 0, 0);
 const TICK = 2000;
@@ -33,6 +34,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [tasks, setTasks] = useState(START);
   const [now, setNow] = useState(T0);
   const [last, setLast] = useState("");
+  const [notify, setNotify] = useState<string[]>(["classify"]);
   const moving = tasks.some((t) => t.status === "running" && t.progress != null);
 
   useEffect(() => {
@@ -52,6 +54,10 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         <RunningNow
           tasks={tasks}
           now={now}
+          notifiable
+          notify={notify}
+          onNotifyChange={(next) => setNotify(next)}
+          onNotify={(task, status) => setLast(`You asked to hear about it: ${task.title} ${status === "done" ? "finished" : "failed"}`)}
           onTaskAction={(action, task) => {
             setLast(`${action === "review" ? "Reviewing" : action === "stop" ? "Stopped" : "Opened"} ${task.title}`);
             if (action === "stop") setTasks((ts) => ts.map((t) => (t.id === task.id ? { ...t, status: "failed", ended: now } : t)));
@@ -67,6 +73,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             setTasks(START);
             setNow(T0);
             setLast("");
+            setNotify(["classify"]);
           }}
         >
           Replay

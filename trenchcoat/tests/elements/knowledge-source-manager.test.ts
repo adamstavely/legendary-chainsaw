@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/knowledge-source-manager";
-import type { KnowledgePauseEvent, KnowledgeSource, KnowledgeSourceEvent, KnowledgeSourcesChange, TcKnowledgeSourceManager } from "../../src/elements/knowledge-source-manager";
+import { knowledgeUrl, type KnowledgePauseEvent, type KnowledgeSource, type KnowledgeSourceEvent, type KnowledgeSourcesAdd, type KnowledgeSourcesChange, type TcKnowledgeSourceManager } from "../../src/elements/knowledge-source-manager";
 import { KnowledgeSourceManager } from "../../src/elements/react/knowledge-source-manager";
 import { cleanup, fixture, settle } from "./helpers";
 
@@ -357,6 +357,271 @@ describe("tc-knowledge-source-manager", () => {
       const [, b] = wrap.querySelectorAll<TcKnowledgeSourceManager>("tc-knowledge-source-manager");
       b.querySelector<HTMLButtonElement>(".ui-ksm__remove")!.click();
       await settle();
+      for (const a of wrap.getAnimations?.({ subtree: true }) ?? []) a.finish();
+      await settle();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+  }
+});
+
+describe("tc-knowledge-source-manager – Add sources", () => {
+  const inline = (look: "standard" | "clean" = "standard", sources = SOURCES) =>
+    fixture<TcKnowledgeSourceManager>(html`<tc-knowledge-source-manager look=${look} add-inline .sources=${sources} now=${NOW} accept=".pdf,.md,text/*" max-file-size="1048576"></tc-knowledge-source-manager>`);
+  const add = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-ksm__add")!;
+  const adder = (el: Element) => el.querySelector<HTMLElement>(".ui-ksm__adder");
+  const status = (el: Element) => text(el.querySelector(":scope > [role=status]"));
+  const file = (name: string, size = 2048, type = "") => new File([new Uint8Array(size)], name, { type });
+  const pick = async (el: TcKnowledgeSourceManager, files: File[]) => {
+    const input = el.querySelector<HTMLInputElement>(".ui-ksm__file")!;
+    const dt = new DataTransfer();
+    for (const f of files) dt.items.add(f);
+    input.files = dt.files;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    await settle();
+  };
+  const pending = (el: Element) => [...el.querySelectorAll(".ui-ksm__pending-row")].map((r) => `${text(r.querySelector(".ui-ksm__pending-name"))} | ${text(r.querySelector(".ui-ksm__pending-info"))}`);
+  const typeLinks = async (el: TcKnowledgeSourceManager, value: string) => {
+    const field = el.querySelector<HTMLTextAreaElement>(".ui-ksm__links-field")!;
+    field.value = value;
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+  };
+
+  test("knowledgeUrl: adds a scheme, keeps http(s) only, refuses words", () => {
+    expect(knowledgeUrl("help.example.com/guides")).toBe("https://help.example.com/guides");
+    expect(knowledgeUrl(" http://intranet.example.org/a, ")).toBe("http://intranet.example.org/a");
+    expect(knowledgeUrl("ftp://files.example.com")).toBeNull();
+    expect(knowledgeUrl("javascript:alert(1)")).toBeNull();
+    expect(knowledgeUrl("ledger")).toBeNull();
+  });
+
+  test("off by default: Add source fires tc-add and opens nothing", async () => {
+    const el = await mount();
+    let added = 0;
+    el.addEventListener("tc-add", () => added++);
+    expect(add(el).hasAttribute("aria-expanded")).toBe(false);
+    add(el).click();
+    await settle();
+    expect(added).toBe(1);
+    expect(adder(el)).toBeNull();
+  });
+
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: Add source opens the panel instead of tc-add, focuses Choose files; Escape closes it and returns`, async () => {
+      const el = await inline(look);
+      let added = 0;
+      el.addEventListener("tc-add", () => added++);
+      expect(add(el).getAttribute("aria-expanded")).toBe("false");
+      add(el).click();
+      await settle();
+      expect(added).toBe(0);
+      const panel = adder(el)!;
+      expect(add(el).getAttribute("aria-expanded")).toBe("true");
+      expect(add(el).getAttribute("aria-controls")).toBe(panel.id);
+      expect(document.getElementById(panel.getAttribute("aria-labelledby")!)!.textContent).toBe("Add sources");
+      const choose = el.querySelector<HTMLButtonElement>(".ui-ksm__choose")!;
+      expect(document.activeElement).toBe(choose);
+      expect(text(document.getElementById(choose.getAttribute("aria-describedby")!))).toBe("Drop files here (.pdf, .md, text/*, up to 1.0 MB)");
+      expect(el.querySelector<HTMLInputElement>(".ui-ksm__file")!.accept).toBe(".pdf,.md,text/*");
+      await pick(el, [file("Q3-ledger.pdf")]);
+      key(choose, "Escape");
+      await settle();
+      expect(adder(el)).toBeNull();
+      expect(document.activeElement).toBe(add(el));
+      // Opening again starts empty
+      add(el).click();
+      await settle();
+      expect(pending(el)).toEqual([]);
+    });
+  }
+
+  test("files: picked or dropped, typed and sized; the wrong type or too big are turned away with why; repeats dropped", async () => {
+    const el = await inline();
+    add(el).click();
+    await settle();
+    await pick(el, [file("Q3-ledger.pdf", 1_300_000 / 2), file("scan.tiff", 100, "image/tiff"), file("huge.pdf", 2 * 1024 * 1024)]);
+    expect(pending(el)).toEqual(["Q3-ledger.pdf | PDF · 635 KB"]);
+    expect([...el.querySelectorAll(".ui-ksm__away li")].map((li) => text(li))).toEqual(["scan.tiff isn't a type this takes", "huge.pdf is over 1.0 MB"]);
+    expect(status(el)).toBe("Added 1 file to the list. scan.tiff isn't a type this takes. huge.pdf is over 1.0 MB");
+    const drop = el.querySelector<HTMLElement>(".ui-ksm__drop")!;
+    const dt = new DataTransfer();
+    dt.items.add(file("notes.md", 300, "text/markdown"));
+    dt.items.add(file("Q3-ledger.pdf", 1_300_000 / 2));
+    drop.dispatchEvent(new DragEvent("dragover", { bubbles: true, cancelable: true, dataTransfer: dt }));
+    await settle();
+    expect(drop.hasAttribute("data-over")).toBe(true);
+    drop.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: dt }));
+    await settle();
+    expect(drop.hasAttribute("data-over")).toBe(false);
+    expect(pending(el)).toEqual(["Q3-ledger.pdf | PDF · 635 KB", "notes.md | MD · 1 KB"]);
+  });
+
+  test("links: one or many, checked; repeats and existing sources dropped; what isn't a link stays to fix; crawl depth", async () => {
+    const el = await inline();
+    add(el).click();
+    await settle();
+    await typeLinks(el, "audit.example.org/policy https://audit.example.org/policy/ ledger\nhttps://help.example.com");
+    el.querySelector<HTMLButtonElement>(".ui-ksm__add-links")!.click();
+    await settle();
+    expect(pending(el)).toEqual(["audit.example.org/policy | Link · this page"]);
+    const field = el.querySelector<HTMLTextAreaElement>(".ui-ksm__links-field")!;
+    expect(field.value).toBe("ledger");
+    expect(field.getAttribute("aria-invalid")).toBe("true");
+    expect(text(document.getElementById(field.getAttribute("aria-describedby")!))).toMatch(/^Not a link: ledger\./);
+    expect(status(el)).toBe("Added 1 link to the list. 2 links already there. 1 entry isn't a link");
+    // Typing clears the complaint; Ctrl/⌘+Enter adds
+    await typeLinks(el, "https://records.example.org/2026");
+    expect(field.getAttribute("aria-invalid")).toBe("false");
+    key(field, "Enter");
+    field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", ctrlKey: true, metaKey: true, bubbles: true, cancelable: true }));
+    await settle();
+    expect(pending(el)).toHaveLength(2);
+    const section = el.querySelector<HTMLInputElement>('.ui-ksm__depth input[value="section"]')!;
+    expect(text(el.querySelector(".ui-ksm__depth legend"))).toBe("Crawl");
+    section.click();
+    await settle();
+    expect(pending(el)[0]).toBe("audit.example.org/policy | Link · this section of the site");
+  });
+
+  test("paste text: a disclosure with a title; taking items off moves focus to the next Remove", async () => {
+    const el = await inline();
+    add(el).click();
+    await settle();
+    const toggle = el.querySelector<HTMLButtonElement>(".ui-ksm__paste-toggle")!;
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    toggle.click();
+    await settle();
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    const title = el.querySelector<HTMLInputElement>(`#${toggle.getAttribute("aria-controls")} input`)!;
+    expect(document.activeElement).toBe(title);
+    title.value = "Interview notes";
+    title.dispatchEvent(new Event("input", { bubbles: true }));
+    const body = el.querySelector<HTMLTextAreaElement>(".ui-ksm__paste-body textarea")!;
+    body.value = "The vendor confirmed the backup schedule.";
+    body.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-ksm__add-text")!.click();
+    await settle();
+    expect(pending(el)).toEqual(["Interview notes | Text · 41 characters"]);
+    expect(document.activeElement).toBe(toggle);
+    await pick(el, [file("a.md", 10, "text/markdown"), file("b.md", 10, "text/markdown")]);
+    const removes = () => [...el.querySelectorAll<HTMLButtonElement>(".ui-ksm__pending-remove")];
+    expect(text(removes()[0])).toBe("Remove Interview notes");
+    removes()[0].click();
+    await settle();
+    expect(pending(el).map((p) => p.split(" | ")[0])).toEqual(["a.md", "b.md"]);
+    expect(document.activeElement).toBe(removes()[0]);
+    expect(status(el)).toBe("Removed Interview notes from the list");
+  });
+
+  test("Add fires tc-sources-add, then lists the new sources as queued through tc-sources-change; prevented, nothing is listed", async () => {
+    const el = await inline();
+    const adds: KnowledgeSourcesAdd[] = [];
+    const changes: KnowledgeSourcesChange[] = [];
+    el.addEventListener("tc-sources-add", (e) => adds.push((e as CustomEvent<KnowledgeSourcesAdd>).detail));
+    el.addEventListener("tc-sources-change", (e) => changes.push((e as CustomEvent<KnowledgeSourcesChange>).detail));
+    add(el).click();
+    await settle();
+    const submit = el.querySelector<HTMLButtonElement>(".ui-ksm__adder-submit")!;
+    expect(submit.getAttribute("aria-disabled")).toBe("true");
+    submit.click();
+    await settle();
+    expect(adds).toEqual([]);
+    expect(status(el)).toMatch(/^Nothing to add yet/);
+    await pick(el, [file("Q3-ledger.pdf")]);
+    await typeLinks(el, "audit.example.org/policy");
+    el.querySelector<HTMLButtonElement>(".ui-ksm__add-links")!.click();
+    await settle();
+    expect(text(submit)).toBe("Add 2 sources");
+    submit.click();
+    await settle();
+    expect(adds).toHaveLength(1);
+    expect(adds[0].files.map((f) => f.name)).toEqual(["Q3-ledger.pdf"]);
+    expect(adds[0].urls).toEqual(["https://audit.example.org/policy"]);
+    expect(adds[0].depth).toBe("page");
+    expect(adds[0].texts).toEqual([]);
+    expect(changes).toHaveLength(1);
+    expect(changes[0].change.type).toBe("add");
+    expect(changes[0].change.added!.map((s) => [s.name, s.kind, s.state])).toEqual([
+      ["Q3-ledger.pdf", "file", "queued"],
+      ["audit.example.org/policy", "site", "queued"],
+    ]);
+    expect(el.sources).toHaveLength(SOURCES.length + 2);
+    expect(rows(el).slice(-2).map((r) => text(r.querySelector(".ui-ksm__state")))).toEqual(["Queued", "Queued"]);
+    expect(adder(el)).toBeNull();
+    expect(document.activeElement).toBe(add(el));
+    expect(status(el)).toBe("Adding 2 sources");
+
+    // Prevented: the app lists them itself – the panel closes, nothing is added here
+    el.addEventListener("tc-sources-add", (e) => e.preventDefault());
+    add(el).click();
+    await settle();
+    await pick(el, [file("notes.md", 10, "text/markdown")]);
+    el.querySelector<HTMLButtonElement>(".ui-ksm__adder-submit")!.click();
+    await settle();
+    expect(adds).toHaveLength(2);
+    expect(changes).toHaveLength(1);
+    expect(el.sources).toHaveLength(SOURCES.length + 2);
+    expect(adder(el)).toBeNull();
+  });
+
+  test("React: onSourcesAdd opens the panel; uncontrolled additions survive a re-render; returning false lists nothing", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const got: KnowledgeSourcesAdd[] = [];
+    let answer: boolean | undefined = undefined;
+    const render = () =>
+      act(async () =>
+        root.render(
+          React.createElement(KnowledgeSourceManager, {
+            defaultSources: SOURCES,
+            now: NOW,
+            onSourcesAdd: (a: KnowledgeSourcesAdd) => {
+              got.push(a);
+              return answer;
+            },
+          }),
+        ),
+      );
+    await render();
+    const el = host.querySelector<TcKnowledgeSourceManager>("tc-knowledge-source-manager")!;
+    expect(el.addInline).toBe(true);
+    add(el).click();
+    await settle();
+    await pick(el, [file("Q3-ledger.pdf")]);
+    el.querySelector<HTMLButtonElement>(".ui-ksm__adder-submit")!.click();
+    await settle();
+    expect(got).toHaveLength(1);
+    await render();
+    await settle();
+    expect(el.sources.map((s) => s.name)).toContain("Q3-ledger.pdf");
+    answer = false;
+    add(el).click();
+    await settle();
+    await pick(el, [file("b.pdf")]);
+    el.querySelector<HTMLButtonElement>(".ui-ksm__adder-submit")!.click();
+    await settle();
+    expect(got).toHaveLength(2);
+    expect(el.sources.map((s) => s.name)).not.toContain("b.pdf");
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const) {
+    test(`axe (${theme}): the Add sources panel with files, links, pasted text, a refusal and a bad link, in both looks`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
+        <tc-knowledge-source-manager add-inline accept=".pdf" .sources=${SOURCES} now=${NOW}></tc-knowledge-source-manager>
+        <tc-knowledge-source-manager look="clean" add-inline accept=".pdf" .sources=${SOURCES} now=${NOW}></tc-knowledge-source-manager>
+      </div>`);
+      for (const el of wrap.querySelectorAll<TcKnowledgeSourceManager>("tc-knowledge-source-manager")) {
+        add(el).click();
+        await settle();
+        await pick(el, [file("Q3-ledger.pdf"), file("scan.tiff", 10, "image/tiff")]);
+        await typeLinks(el, "audit.example.org ledger");
+        el.querySelector<HTMLButtonElement>(".ui-ksm__add-links")!.click();
+        el.querySelector<HTMLButtonElement>(".ui-ksm__paste-toggle")!.click();
+        await settle();
+      }
       for (const a of wrap.getAnimations?.({ subtree: true }) ?? []) a.finish();
       await settle();
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });

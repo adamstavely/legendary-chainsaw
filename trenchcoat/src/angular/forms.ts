@@ -6,6 +6,7 @@
 import { Directive, ElementRef, forwardRef, inject, isDevMode } from "@angular/core";
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from "@angular/forms";
 import type { TcAnswerArena } from "@adamstavely/trenchcoat/answer-arena";
+import type { TcChannelSetup } from "@adamstavely/trenchcoat/channel-setup";
 import type { TcChatComposer } from "@adamstavely/trenchcoat/chat-composer";
 import type { TcChatHistory } from "@adamstavely/trenchcoat/chat-history";
 import type { TcCheckbox } from "@adamstavely/trenchcoat/checkbox";
@@ -17,6 +18,7 @@ import type { TcDataHandlingPolicy } from "@adamstavely/trenchcoat/data-handling
 import type { TcDateRangePicker } from "@adamstavely/trenchcoat/date-range-picker";
 import type { TcDecisionCard } from "@adamstavely/trenchcoat/decision-card";
 import type { TcDropzone } from "@adamstavely/trenchcoat/dropzone";
+import type { TcEmbedConfigurator } from "@adamstavely/trenchcoat/embed-configurator";
 import type { TcEvaluationDatasetEditor } from "@adamstavely/trenchcoat/evaluation-dataset-editor";
 import type { TcFacetSidebar } from "@adamstavely/trenchcoat/facet-sidebar";
 import type { TcFeedbackRubric } from "@adamstavely/trenchcoat/feedback-rubric";
@@ -99,6 +101,14 @@ abstract class ValueAccessor<E extends HTMLElement & { value: unknown }> impleme
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AnswerArenaValueAccessor), multi: true }],
 })
 export class AnswerArenaValueAccessor extends ValueAccessor<TcAnswerArena> {}
+
+/** ngModel, formControl and formControlName on <tc-channel-setup> */
+@Directive({
+  selector: "tc-channel-setup[ngModel], tc-channel-setup[formControl], tc-channel-setup[formControlName]",
+  standalone: true,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ChannelSetupValueAccessor), multi: true }],
+})
+export class ChannelSetupValueAccessor extends ValueAccessor<TcChannelSetup> {}
 
 /** ngModel, formControl and formControlName on <tc-chat-composer> */
 @Directive({
@@ -187,6 +197,14 @@ export class DecisionCardValueAccessor extends ValueAccessor<TcDecisionCard> {}
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DropzoneValueAccessor), multi: true }],
 })
 export class DropzoneValueAccessor extends ValueAccessor<TcDropzone> {}
+
+/** ngModel, formControl and formControlName on <tc-embed-configurator> */
+@Directive({
+  selector: "tc-embed-configurator[ngModel], tc-embed-configurator[formControl], tc-embed-configurator[formControlName]",
+  standalone: true,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EmbedConfiguratorValueAccessor), multi: true }],
+})
+export class EmbedConfiguratorValueAccessor extends ValueAccessor<TcEmbedConfigurator> {}
 
 /** ngModel, formControl and formControlName on <tc-evaluation-dataset-editor> */
 @Directive({
@@ -525,4 +543,4 @@ export class TreeSelectValueAccessor extends ValueAccessor<TcTreeSelect> {}
 export class TriggerBuilderValueAccessor extends ValueAccessor<TcTriggerBuilder> {}
 
 /** Every value accessor, for a standalone component's imports */
-export const TRENCHCOAT_FORMS = [AnswerArenaValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ColorPickerValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DecisionCardValueAccessor, DropzoneValueAccessor, EvaluationDatasetEditorValueAccessor, FacetSidebarValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, GaugeValueAccessor, GhostCompletionValueAccessor, InstructionEditorValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SelectValueAccessor, SensitivityLabelPickerValueAccessor, SignaturePadValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TagInputValueAccessor, TeamFlagPickerValueAccessor, TerminalValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TreeSelectValueAccessor, TriggerBuilderValueAccessor] as const;
+export const TRENCHCOAT_FORMS = [AnswerArenaValueAccessor, ChannelSetupValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ColorPickerValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DecisionCardValueAccessor, DropzoneValueAccessor, EmbedConfiguratorValueAccessor, EvaluationDatasetEditorValueAccessor, FacetSidebarValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, GaugeValueAccessor, GhostCompletionValueAccessor, InstructionEditorValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SelectValueAccessor, SensitivityLabelPickerValueAccessor, SignaturePadValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TagInputValueAccessor, TeamFlagPickerValueAccessor, TerminalValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TreeSelectValueAccessor, TriggerBuilderValueAccessor] as const;

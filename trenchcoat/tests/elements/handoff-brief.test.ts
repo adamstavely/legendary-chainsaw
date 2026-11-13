@@ -2,7 +2,8 @@
  * <tc-handoff-brief> in real browsers: the host and both looks, the three sections, acknowledging each one (toggle,
  * progress, cancelable tc-acknowledged-change), the access block and Request access (no resolver, resolver success,
  * failure and retry, prevented), Accept only when ready (cancelable tc-accept), focus after accepting, empty sections,
- * the React wrapper and axe.
+ * the React wrapper and axe. An in-flight run: the sender's view, choosing a receiver and the pause, Hand off and Cancel
+ * handoff (both cancelable), the wrapper, and axe.
  */
 import { html } from "lit";
 import axe from "axe-core";
@@ -11,7 +12,7 @@ import { createRoot } from "react-dom/client";
 import { act } from "react";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/handoff-brief";
-import type { HandoffBriefAccess, HandoffBriefItem, TcHandoffBrief } from "../../src/elements/handoff-brief";
+import type { HandoffBriefAccess, HandoffBriefItem, HandoffBriefPerson, HandoffBriefRun, TcHandoffBrief } from "../../src/elements/handoff-brief";
 import { HandoffBrief } from "../../src/elements/react/handoff-brief";
 import { cleanup, fixture, settle } from "./helpers";
 
@@ -227,12 +228,202 @@ describe("tc-handoff-brief", () => {
     await act(async () => root.unmount());
   });
 
+  describe("an in-flight run", () => {
+    const RUN: HandoffBriefRun = { id: "r1", title: "Reconcile the Q3 ledger", status: "running", step: "Matching invoices", startedAt: Date.UTC(2026, 9, 23, 14, 2), owner: "Ana" };
+    const PEOPLE: HandoffBriefPerson[] = [
+      { id: "sam", name: "Sam Patel", role: "Analyst" },
+      { id: "priya", name: "Priya Shah" },
+    ];
+    const makeRun = (look = "standard") =>
+      fixture<TcHandoffBrief>(
+        html`<tc-handoff-brief look=${look} locale="en-GB" .from=${{ name: "Ana" }} summary="Two-thirds done." .unresolved=${OPEN} .run=${RUN} .people=${PEOPLE}></tc-handoff-brief>`,
+      );
+    const select = (el: Element) => el.querySelector<HTMLSelectElement>(".ui-hob__select")!;
+    const choose = async (el: Element, value: string) => {
+      select(el).value = value;
+      select(el).dispatchEvent(new Event("change", { bubbles: true }));
+      await settle();
+    };
+    const handOff = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-hob__handoff")!;
+
+    for (const look of ["standard", "clean"] as const) {
+      test(`${look}: the sender's view – the run first, what goes with it, the sections without Acknowledge`, async () => {
+        const el = await makeRun(look);
+        expect(el.dataset.state).toBe("sending");
+        const run = el.querySelector(".ui-hob__run")!;
+        expect(el.querySelector(".ui-hob__body")!.firstElementChild).toBe(run);
+        expect(document.getElementById(run.getAttribute("aria-labelledby")!)!.textContent).toBe("In-flight run");
+        expect(plain(el.querySelector(".ui-hob__run-title")!.textContent)).toBe("Running Reconcile the Q3 ledger");
+        expect(plain(el.querySelector(".ui-hob__run-step")!.textContent)).toBe("Now: Matching invoices");
+        expect(el.querySelector(".ui-hob__run-meta")!.textContent).toMatch(/^Started by Ana at \d{1,2}:02/);
+        expect([...el.querySelectorAll(".ui-hob__takes .ui-hob__item")].map((li) => plain(li.textContent))).toEqual([
+          "Its pending approvals",
+          "Its notifications",
+          "Stopping or pausing it",
+        ]);
+        expect(plain(el.querySelector(".tc-head__aside")!.textContent)).toBe("Running");
+        expect(acks(el)).toHaveLength(0);
+        expect(el.querySelectorAll(".ui-hob__section")).toHaveLength(2);
+        expect(el.querySelector('[role="progressbar"]')).toBe(null);
+        expect([...select(el).options].map((o) => o.textContent)).toEqual(["Choose a person", "Sam Patel – Analyst", "Priya Shah"]);
+        expect(handOff(el).disabled).toBe(true);
+        expect(el.querySelector(".ui-hob__hint")!.textContent).toBe("Choose who takes the run over.");
+        expect(!!el.querySelector(".ui-hob__card .ui-hob__foot")).toBe(look === "clean");
+      });
+    }
+
+    test("choosing a receiver and the pause; Hand off sends it and the card waits; Cancel handoff takes it back", async () => {
+      const el = await makeRun();
+      const seen: [string, unknown][] = [];
+      for (const n of ["tc-handoff-to-change", "tc-pause-until-accepted-change", "tc-handoff", "tc-handoff-cancel"])
+        el.addEventListener(n, (e) => seen.push([n, (e as CustomEvent).detail]));
+      await choose(el, "priya");
+      expect(el.handoffTo).toBe("priya");
+      expect(seen[0]).toEqual(["tc-handoff-to-change", { handoffTo: "priya", person: PEOPLE[1] }]);
+      expect(el.querySelector(".tc-head__sub")!.textContent).toBe("From Ana to Priya Shah");
+      expect(el.querySelector(".ui-hob__takes-label")!.textContent).toBe("Priya Shah takes over");
+      expect(el.querySelector(".ui-hob__hint")!.textContent).toBe("Priya Shah will be asked to accept. The run pauses until then.");
+      expect(handOff(el).disabled).toBe(false);
+      const radios = el.querySelectorAll<HTMLInputElement>(".ui-hob__radio input");
+      expect([radios[0].checked, radios[1].checked]).toEqual([true, false]);
+      radios[1].click();
+      await settle();
+      expect(el.pauseUntilAccepted).toBe(false);
+      expect(seen[1]).toEqual(["tc-pause-until-accepted-change", { pauseUntilAccepted: false }]);
+      expect(el.querySelector(".ui-hob__hint")!.textContent).toBe("Priya Shah will be asked to accept.");
+      const note = el.querySelector<HTMLTextAreaElement>(".ui-hob__textarea")!;
+      note.value = "  The duplicates are vendors 14 and 21.  ";
+      note.dispatchEvent(new Event("input", { bubbles: true }));
+      handOff(el).focus();
+      handOff(el).click();
+      await settle();
+      expect(seen[2]).toEqual(["tc-handoff", { to: PEOPLE[1], run: RUN, pauseUntilAccepted: false, note: "The duplicates are vendors 14 and 21." }]);
+      expect(el.handoffState).toBe("sent");
+      expect(el.getAttribute("handoff-state")).toBe("sent");
+      expect(el.dataset.state).toBe("sent");
+      expect(plain(el.querySelector('.ui-hob__state[data-state="waiting"]')!.textContent)).toBe("Waiting for Priya Shah to accept. The run keeps going meanwhile. Cancel handoff");
+      expect(el.querySelector(".ui-hob__form")).toBe(null);
+      expect(el.querySelector(".ui-hob__foot")).toBe(null);
+      expect(plain(el.querySelector(".tc-head__aside")!.textContent)).toBe("Handoff sent");
+      await expect.poll(() => document.activeElement?.classList.contains("ui-hob__state")).toBe(true);
+      expect(status(el)).toBe("Handed off to Priya Shah. Waiting for Priya Shah to accept.");
+      el.querySelector<HTMLButtonElement>(".ui-hob__cancel")!.click();
+      await settle();
+      expect(seen[3]).toEqual(["tc-handoff-cancel", { to: PEOPLE[1], run: RUN }]);
+      expect(el.handoffState).toBe("");
+      expect(status(el)).toBe("Handoff cancelled. The run is still yours.");
+      expect(select(el).value).toBe("priya");
+    });
+
+    test("prevented: the receiver, the pause, Hand off and Cancel stay as they were", async () => {
+      const el = await makeRun();
+      el.addEventListener("tc-handoff-to-change", (e) => e.preventDefault());
+      await choose(el, "sam");
+      expect(el.handoffTo).toBe("");
+      expect(select(el).value).toBe("");
+      el.handoffTo = "sam";
+      await settle();
+      expect(select(el).value).toBe("sam");
+      el.addEventListener("tc-pause-until-accepted-change", (e) => e.preventDefault());
+      const radios = el.querySelectorAll<HTMLInputElement>(".ui-hob__radio input");
+      radios[1].click();
+      await settle();
+      expect(el.pauseUntilAccepted).toBe(true);
+      expect([radios[0].checked, radios[1].checked]).toEqual([true, false]);
+      const stop = (e: Event) => e.preventDefault();
+      el.addEventListener("tc-handoff", stop);
+      handOff(el).click();
+      await settle();
+      expect(el.handoffState).toBe("");
+      el.removeEventListener("tc-handoff", stop);
+      handOff(el).click();
+      await settle();
+      expect(el.handoffState).toBe("sent");
+      expect(plain(el.querySelector(".ui-hob__state-text")!.textContent)).toBe("Waiting for Sam Patel to accept. The run is paused until they do.");
+      el.addEventListener("tc-handoff-cancel", (e) => e.preventDefault());
+      el.querySelector<HTMLButtonElement>(".ui-hob__cancel")!.click();
+      await settle();
+      expect(el.handoffState).toBe("sent");
+    });
+
+    test("the run's status and step follow the page; paused and waiting say so; renamed takes-over; without a run nothing changes", async () => {
+      const el = await makeRun();
+      el.run = { ...RUN, status: "waiting", step: "Asking about vendor 14" };
+      el.takesOver = ["Its open question"];
+      await settle();
+      expect(plain(el.querySelector(".ui-hob__run-status")!.textContent)).toBe("Waiting for input");
+      expect(el.querySelector(".ui-hob__run-status")!.getAttribute("data-status")).toBe("waiting");
+      expect(plain(el.querySelector(".ui-hob__run-step")!.textContent)).toBe("Now: Asking about vendor 14");
+      expect(plain(el.querySelector(".tc-head__aside")!.textContent)).toBe("Waiting for input");
+      expect([...el.querySelectorAll(".ui-hob__takes li")].map((li) => li.textContent)).toEqual(["Its open question"]);
+      el.run = { ...RUN, status: "paused" };
+      await settle();
+      expect(plain(el.querySelector(".ui-hob__run-status")!.textContent)).toBe("Paused");
+      el.run = undefined;
+      await settle();
+      expect(el.dataset.state).toBe("open");
+      expect(el.querySelector(".ui-hob__run")).toBe(null);
+      expect(acks(el)).toHaveLength(2);
+      expect(acceptBtn(el)!.textContent!.trim()).toBe("Accept handoff");
+    });
+
+    test("the wrapper: the receiver survives a re-render; onHandoff and onHandoffCancel; controlled handoffState", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const calls: unknown[] = [];
+      const render = (n: number, extra: Record<string, unknown> = {}) =>
+        root.render(
+          React.createElement(HandoffBrief, {
+            title: `Run ${n}`,
+            summary: "S",
+            run: RUN,
+            people: PEOPLE,
+            onHandoffToChange: (to, person) => calls.push(["to", to, person?.name]),
+            onHandoff: (h) => void calls.push(["handoff", h.to.id, h.pauseUntilAccepted]),
+            onHandoffCancel: () => void calls.push(["cancel"]),
+            ...extra,
+          }),
+        );
+      await act(async () => render(0));
+      await settle();
+      const el = host.querySelector("tc-handoff-brief")!;
+      await choose(el, "sam");
+      await act(async () => render(1));
+      await settle();
+      expect(el.handoffTo).toBe("sam");
+      expect(select(el).value).toBe("sam");
+      handOff(el).click();
+      await settle();
+      await act(async () => render(2));
+      await settle();
+      expect(el.handoffState).toBe("sent");
+      el.querySelector<HTMLButtonElement>(".ui-hob__cancel")!.click();
+      await settle();
+      expect(el.handoffState).toBe("");
+      expect(calls).toEqual([["to", "sam", "Sam Patel"], ["handoff", "sam", true], ["cancel"]]);
+      // Controlled: Hand off reports, and the card waits only once the parent says so
+      await act(async () => render(3, { handoffState: "" }));
+      await settle();
+      handOff(el).click();
+      await settle();
+      expect(el.handoffState).toBe("");
+      await act(async () => render(4, { handoffState: "sent" }));
+      await settle();
+      expect(el.handoffState).toBe("sent");
+      expect(el.querySelector(".ui-hob__cancel")).not.toBe(null);
+      await act(async () => root.unmount());
+    });
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe: no violations in either look (${theme})`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10" : ""}>
         <tc-handoff-brief .from=${{ name: "Ana" }} summary="S" .unresolved=${OPEN} .commitments=${PROMISED} .acknowledged=${["summary"]}></tc-handoff-brief>
         <tc-handoff-brief look="clean" heading="Blocked" summary="S" .missing=${MISSING} access-request="failed"></tc-handoff-brief>
         <tc-handoff-brief look="clean" heading="Accepted" summary="S" accepted .acknowledged=${["summary"]}></tc-handoff-brief>
+        <tc-handoff-brief heading="Run" summary="S" .run=${{ id: "r", title: "Reconcile", status: "running", step: "Matching", owner: "Ana" }} .people=${[{ id: "p", name: "Priya" }]} handoff-to="p"></tc-handoff-brief>
+        <tc-handoff-brief look="clean" heading="Run waiting" summary="S" .run=${{ id: "r", title: "Reconcile", status: "waiting" }} .people=${[{ id: "p", name: "Priya" }]} handoff-to="p" handoff-state="sent"></tc-handoff-brief>
       </div>`);
       await wait(400);
       document.getAnimations().forEach((a) => a.effect?.getTiming().iterations !== Infinity && a.finish());

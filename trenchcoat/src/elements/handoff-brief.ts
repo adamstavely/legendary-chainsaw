@@ -1,5 +1,6 @@
 import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
+import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
@@ -20,13 +21,44 @@ import { FocusRescueController, RequestController } from "./internal/controllers
  *
  * Unlike tc-handoff (an agent hands a running task to a person and takes it back), this is a person handing their work
  * on for good.
+ *
+ * In-flight runs. Given a `run` – an agent run that's still going – the card is the sender's: it leads with the run's
+ * status and current step, what the receiver takes over (pending approvals, notifications, stopping it), whether the
+ * run pauses until they accept, who receives it (from `people`) and a note. The sections show what they'll read, without
+ * Acknowledge. Hand off is a cancelable tc-handoff; not prevented, the card waits – "Waiting for Priya to accept" – with
+ * Cancel handoff (tc-handoff-cancel). Without `run`, nothing changes.
+ *
+ *   <tc-handoff-brief .run=${{ id: "r1", title: "Reconcile Q3 ledger", status: "running", step: "Matching invoices" }}
+ *     .people=${[{ id: "priya", name: "Priya Shah" }]} summary="…"></tc-handoff-brief>
  * Standard: the header on the gray tray, the white card, the Accept row on the tray. Clean: one white card – the header
  * its first row, the Accept row its last under a hairline.
  * Keyboard: Tab reaches each section's Acknowledge toggle (Enter or Space), Request access, and Accept.
  */
 
 export type HandoffBriefSection = "summary" | "unresolved" | "commitments";
-export type HandoffBriefPerson = { name: string; role?: string };
+export type HandoffBriefPerson = {
+  name: string;
+  role?: string;
+  /** Tells people apart in `people` and `handoffTo`; the name when left out */
+  id?: string;
+};
+/** Where an in-flight run stands */
+export type HandoffBriefRunStatus = "running" | "paused" | "waiting";
+/** An agent run that's still going, handed on with the work */
+export type HandoffBriefRun = {
+  id: string;
+  /** What the run is doing – "Reconcile Q3 ledger" */
+  title: string;
+  status: HandoffBriefRunStatus;
+  /** The step it's on – "Matching invoices to payments" */
+  step?: string;
+  /** When it started, epoch ms */
+  startedAt?: number;
+  /** Who started it */
+  owner?: string;
+};
+/** Where a handoff of a run stands: not sent yet, or sent and waiting for the receiver */
+export type HandoffBriefHandoffState = "" | "sent";
 export type HandoffBriefItem = {
   id: string;
   /** The item in a sentence */
@@ -51,11 +83,19 @@ export type HandoffBriefRequest = "pending" | "requested" | "failed";
 export type HandoffBriefAcknowledgedChange = { acknowledged: HandoffBriefSection[]; section: HandoffBriefSection; on: boolean };
 export type HandoffBriefAccessRequest = { items: HandoffBriefAccess[] };
 export type HandoffBriefAccept = { acknowledged: HandoffBriefSection[] };
+export type HandoffBriefHandoff = { to: HandoffBriefPerson; run: HandoffBriefRun; pauseUntilAccepted: boolean; note: string };
+export type HandoffBriefHandoffCancel = { to: HandoffBriefPerson | undefined; run: HandoffBriefRun };
+export type HandoffBriefHandoffToChange = { handoffTo: string; person: HandoffBriefPerson | undefined };
+export type HandoffBriefPauseChange = { pauseUntilAccepted: boolean };
 /** Sends an access request; resolve when sent, reject if it couldn't be. The signal aborts when the element leaves the page */
 export type HandoffBriefAccessResolver = (items: HandoffBriefAccess[], signal: AbortSignal) => Promise<unknown>;
 
 const SECTIONS: HandoffBriefSection[] = ["summary", "unresolved", "commitments"];
 const DEFAULT_TITLES: Record<HandoffBriefSection, string> = { summary: "Summary", unresolved: "Unresolved items", commitments: "Commitments made" };
+const RUN_STATUS: Record<HandoffBriefRunStatus, string> = { running: "Running", paused: "Paused", waiting: "Waiting for input" };
+/** What the receiver of a run takes over, unless the page says otherwise */
+export const defaultHandoffTakesOver = ["Its pending approvals", "Its notifications", "Stopping or pausing it"];
+const personId = (p: HandoffBriefPerson) => p.id ?? p.name;
 
 /* After Lucide (ISC, lucide.dev): clipboard-list (the header), lock, check, circle-check, loader */
 const headIcon = svg`<rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path>`;
@@ -75,6 +115,10 @@ let instances = 0;
  * @fires tc-acknowledged-change - A section was acknowledged or un-acknowledged ({ acknowledged, section, on }: HandoffBriefAcknowledgedChange); cancelable
  * @fires tc-access-request - Request access (or Retry) was pressed ({ items }: HandoffBriefAccessRequest); cancelable – prevented, the app sets `accessRequest` itself
  * @fires tc-accept - Accept handoff was pressed ({ acknowledged }: HandoffBriefAccept); cancelable – not prevented, `accepted` becomes true
+ * @fires tc-handoff-to-change - A receiver was chosen for the run ({ handoffTo, person }: HandoffBriefHandoffToChange); cancelable – prevented, the choice stays as it was
+ * @fires tc-pause-until-accepted-change - Pause until accepted was switched ({ pauseUntilAccepted }: HandoffBriefPauseChange); cancelable
+ * @fires tc-handoff - Hand off was pressed ({ to, run, pauseUntilAccepted, note }: HandoffBriefHandoff); cancelable – not prevented, `handoffState` becomes "sent"
+ * @fires tc-handoff-cancel - Cancel handoff was pressed while waiting ({ to, run }: HandoffBriefHandoffCancel); cancelable – not prevented, `handoffState` goes back to ""
  */
 export class TcHandoffBrief extends TcElement {
   static override ui = "hob";
@@ -107,6 +151,22 @@ export class TcHandoffBrief extends TcElement {
   @property({ attribute: false }) accessor sectionTitles: Partial<Record<HandoffBriefSection, string>> = {};
   /** The accept button's text */
   @property({ attribute: "accept-label" }) accessor acceptLabel = "Accept handoff";
+  /** An agent run that's still going, to hand on with the work – set, the card is the sender's */
+  @property({ attribute: false }) accessor run: HandoffBriefRun | undefined = undefined;
+  /** Who the run can be handed to */
+  @property({ attribute: false }) accessor people: HandoffBriefPerson[] = [];
+  /** The chosen receiver: a person's id (or name) from `people` */
+  @property({ attribute: "handoff-to" }) accessor handoffTo = "";
+  /** Whether the run pauses until the receiver accepts */
+  @property({ type: Boolean, attribute: "pause-until-accepted" }) accessor pauseUntilAccepted = true;
+  /** The note for the receiver */
+  @property({ attribute: "handoff-note" }) accessor handoffNote = "";
+  /** "sent" once the run is handed off and waiting for the receiver; the element sets it when tc-handoff isn't prevented */
+  @property({ attribute: "handoff-state", reflect: true }) accessor handoffState: HandoffBriefHandoffState = "";
+  /** What the receiver takes over with the run, one line each */
+  @property({ attribute: false }) accessor takesOver: string[] = defaultHandoffTakesOver;
+  /** Locale for the run's start time */
+  @property() accessor locale: string | undefined = undefined;
 
   /** @internal The polite announcement */
   @state() private accessor announce = "";
@@ -142,6 +202,14 @@ export class TcHandoffBrief extends TcElement {
   /** @internal */
   private get ready() {
     return !this.blocked && this.done.length === this.present.length && this.present.length > 0;
+  }
+  /** @internal The card hands a run on: the sender's view */
+  private get sending() {
+    return !!this.run;
+  }
+  /** @internal The chosen receiver */
+  private get receiver() {
+    return this.handoffTo ? this.people.find((p) => personId(p) === this.handoffTo) : undefined;
   }
   /** @internal */
   private titleOf(s: HandoffBriefSection) {
@@ -185,11 +253,51 @@ export class TcHandoffBrief extends TcElement {
     this.accepted = true;
   };
 
+  private chooseReceiver = (e: Event) => {
+    const handoffTo = (e.target as HTMLSelectElement).value;
+    const person = this.people.find((p) => personId(p) === handoffTo);
+    if (!this.emit<HandoffBriefHandoffToChange>("tc-handoff-to-change", { handoffTo, person }, { cancelable: true })) {
+      // live() puts the select back on the next render
+      this.requestUpdate();
+      return;
+    }
+    this.handoffTo = handoffTo;
+  };
+
+  private choosePause(pauseUntilAccepted: boolean) {
+    if (pauseUntilAccepted === this.pauseUntilAccepted) return;
+    if (!this.emit<HandoffBriefPauseChange>("tc-pause-until-accepted-change", { pauseUntilAccepted }, { cancelable: true })) {
+      // Lit's live() puts the checked radio back on the next render
+      this.requestUpdate();
+      return;
+    }
+    this.pauseUntilAccepted = pauseUntilAccepted;
+  }
+
+  private handOff = () => {
+    const run = this.run;
+    const to = this.receiver;
+    if (!run || !to || this.handoffState === "sent") return;
+    if (!this.emit<HandoffBriefHandoff>("tc-handoff", { to, run, pauseUntilAccepted: this.pauseUntilAccepted, note: this.handoffNote.trim() }, { cancelable: true })) return;
+    this.handoffState = "sent";
+  };
+
+  private cancelHandoff = () => {
+    const run = this.run;
+    if (!run || this.handoffState !== "sent") return;
+    if (!this.emit<HandoffBriefHandoffCancel>("tc-handoff-cancel", { to: this.receiver, run }, { cancelable: true })) return;
+    this.handoffState = "";
+  };
+
   /* ---------- Update ---------- */
 
   protected override willUpdate(changed: PropertyValues<this>) {
     super.willUpdate(changed);
-    this.dataset.state = this.accepted ? "accepted" : this.blocked ? "blocked" : this.ready ? "ready" : "open";
+    this.dataset.state = this.sending ? (this.handoffState === "sent" ? "sent" : "sending") : this.accepted ? "accepted" : this.blocked ? "blocked" : this.ready ? "ready" : "open";
+    if (this.sending && changed.has("handoffState") && changed.get("handoffState") !== undefined) {
+      const name = this.receiver?.name ?? "them";
+      this.announce = this.handoffState === "sent" ? `Handed off to ${name}. Waiting for ${name} to accept.` : "Handoff cancelled. The run is still yours.";
+    }
     if (changed.has("accepted") && changed.get("accepted") !== undefined && this.accepted) this.announce = `Handoff accepted. The work is yours now.`;
     if (changed.has("missing") && changed.get("missing") !== undefined && (changed.get("missing") as HandoffBriefAccess[]).length && !this.missing.length) {
       this.announce = "Access granted. Nothing blocks the handoff.";
@@ -252,6 +360,79 @@ export class TcHandoffBrief extends TcElement {
     </div>`;
   }
 
+  /** The in-flight run, what goes with it, and – until it's sent – the receiver, the pause choice and a note */
+  private renderRun(run: HandoffBriefRun) {
+    const sent = this.handoffState === "sent";
+    const started =
+      run.startedAt != null ? new Intl.DateTimeFormat(this.locale, { hour: "numeric", minute: "2-digit" }).format(new Date(run.startedAt)) : "";
+    const meta = [run.owner ? `Started by ${run.owner}` : "", started ? `${run.owner ? "at" : "Started"} ${started}` : ""].filter(Boolean).join(" ");
+    const to = this.receiver;
+    const runId = `${this.uid}-run`;
+    return html`<section class="ui-hob__run" aria-labelledby=${runId}>
+      <h4 class="ui-hob__run-label" id=${runId}>In-flight run</h4>
+      <div class="ui-hob__run-card">
+        <p class="ui-hob__run-title">
+          <span class="ui-hob__run-status" data-status=${run.status}><span class="ui-hob__run-dot" aria-hidden="true"></span>${RUN_STATUS[run.status]}</span>
+          <span class="ui-hob__run-name">${run.title}</span>
+        </p>
+        ${run.step ? html`<p class="ui-hob__run-step"><span class="ui-hob__run-key">Now:</span> ${run.step}</p>` : nothing}
+        ${meta ? html`<p class="ui-hob__run-meta">${meta}</p>` : nothing}
+      </div>
+      ${this.takesOver.length
+        ? html`<div class="ui-hob__takes">
+            <p class="ui-hob__takes-label" id=${`${this.uid}-takes`}>${to ? `${to.name} takes over` : "They take over"}</p>
+            <ul class="ui-hob__items" aria-labelledby=${`${this.uid}-takes`}>
+              ${this.takesOver.map((t) => html`<li class="ui-hob__item"><span class="ui-hob__bullet" aria-hidden="true"></span><span class="ui-hob__item-text">${t}</span></li>`)}
+            </ul>
+          </div>`
+        : nothing}
+      ${sent
+        ? html`<div class="ui-hob__state" data-state="waiting" tabindex="-1">
+            <span class="ui-hob__state-icon" aria-hidden="true">${spinIcon()}</span>
+            <div class="ui-hob__state-body">
+              <p class="ui-hob__state-text">
+                <b>Waiting for ${to?.name ?? "them"} to accept.</b>
+                ${this.pauseUntilAccepted ? "The run is paused until they do." : "The run keeps going meanwhile."}
+              </p>
+              <div class="ui-hob__access"><button type="button" class="tc-btn-sm ui-hob__cancel" @click=${this.cancelHandoff}>Cancel handoff</button></div>
+            </div>
+          </div>`
+        : html`<div class="ui-hob__form">
+            <div class="ui-hob__field">
+              <label class="ui-hob__field-label" for=${`${this.uid}-to`}>Hand to</label>
+              <select id=${`${this.uid}-to`} class="ui-hob__select" .value=${live(to ? personId(to) : "")} @change=${this.chooseReceiver}>
+                <option value="" ?selected=${!to}>Choose a person</option>
+                ${this.people.map(
+                  // ?selected picks the option in a select that's just been drawn; live() keeps it right after that
+                  (p) => html`<option value=${personId(p)} ?selected=${!!to && personId(p) === personId(to)}>${p.role ? `${p.name} – ${p.role}` : p.name}</option>`,
+                )}
+              </select>
+            </div>
+            <fieldset class="ui-hob__choice">
+              <legend class="ui-hob__field-label">Until they accept</legend>
+              <label class="ui-hob__radio"
+                ><input type="radio" name=${`${this.uid}-pause`} .checked=${live(this.pauseUntilAccepted)} @change=${() => this.choosePause(true)} />
+                Pause the run</label
+              >
+              <label class="ui-hob__radio"
+                ><input type="radio" name=${`${this.uid}-pause`} .checked=${live(!this.pauseUntilAccepted)} @change=${() => this.choosePause(false)} />
+                Keep it running</label
+              >
+            </fieldset>
+            <div class="ui-hob__field">
+              <label class="ui-hob__field-label" for=${`${this.uid}-note`}>Note <span class="ui-hob__optional">(optional)</span></label>
+              <textarea
+                id=${`${this.uid}-note`}
+                class="ui-hob__textarea"
+                rows="2"
+                .value=${this.handoffNote}
+                @input=${(e: Event) => (this.handoffNote = (e.target as HTMLTextAreaElement).value)}
+              ></textarea>
+            </div>
+          </div>`}
+    </section>`;
+  }
+
   private renderSection(s: HandoffBriefSection, n: number) {
     const on = this.acknowledged.includes(s);
     const titleId = `${this.uid}-${s}`;
@@ -262,7 +443,7 @@ export class TcHandoffBrief extends TcElement {
         <h4 class="ui-hob__section-title" id=${titleId}>
           <span class="ui-hob__num" aria-hidden="true">${on ? checkIcon() : n}</span>${this.titleOf(s)}${count ? html`<span class="ui-hob__count">${count}</span>` : nothing}
         </h4>
-        ${this.accepted
+        ${this.accepted || this.sending
           ? nothing
           : html`<button
               type="button"
@@ -293,12 +474,17 @@ export class TcHandoffBrief extends TcElement {
   protected override render() {
     const present = this.present;
     const blocked = this.blocked;
-    const aside = this.accepted
+    const run = this.run;
+    const sent = this.handoffState === "sent";
+    const aside = run
+      ? html`<span class="ui-hob__pill" data-tone="neutral">${sent ? "Handoff sent" : RUN_STATUS[run.status]}</span>`
+      : this.accepted
       ? html`<span class="ui-hob__pill" data-tone="success">Accepted</span>`
       : blocked
         ? html`<span class="ui-hob__pill" data-tone="danger">Blocked</span>`
         : html`<span class="ui-hob__pill" data-tone=${this.ready ? "success" : "neutral"}>${this.done.length}/${present.length} acknowledged</span>`;
-    const who = [this.from.name && this.to.name ? `From ${this.from.name} to ${this.to.name}` : this.from.name ? `From ${this.from.name}` : "", this.at]
+    const toName = run ? this.receiver?.name : this.to.name;
+    const who = [this.from.name && toName ? `From ${this.from.name} to ${toName}` : this.from.name ? `From ${this.from.name}` : "", this.at]
       .filter(Boolean)
       .join(" · ");
     const head = cardHead({ icon: headIcon, title: this.heading, subtitle: who || undefined, id: `${this.uid}-title`, aside });
@@ -309,7 +495,19 @@ export class TcHandoffBrief extends TcElement {
       : remaining > 0
         ? `Acknowledge ${remaining === 1 ? "1 more section" : `${remaining} more sections`} to accept.`
         : "You'll own the open items and the commitments.";
-    const foot = this.accepted
+    const runHint = this.receiver
+      ? `${this.receiver.name} will be asked to accept.${this.pauseUntilAccepted ? " The run pauses until then." : ""}`
+      : "Choose who takes the run over.";
+    const foot = run
+      ? sent
+        ? nothing
+        : html`<div class="ui-hob__foot">
+            <p class="ui-hob__hint" id=${`${this.uid}-hint`}>${runHint}</p>
+            <button type="button" class="ui-hob__btn ui-hob__btn--primary ui-hob__handoff" ?disabled=${!this.receiver} aria-describedby=${`${this.uid}-hint`} @click=${this.handOff}>
+              Hand off
+            </button>
+          </div>`
+      : this.accepted
       ? nothing
       : html`<div class="ui-hob__foot">
           <p class="ui-hob__hint" id=${`${this.uid}-hint`}>${hint}</p>
@@ -321,10 +519,13 @@ export class TcHandoffBrief extends TcElement {
       <div class="ui-hob__card">
         ${clean ? head : nothing}
         <div class="ui-hob__body">
-          ${this.renderState()}
+          ${run ? this.renderRun(run) : this.renderState()}
           ${present.length
-            ? html`<div class="ui-hob__sections">${present.map((s, i) => this.renderSection(s, i + 1))}</div>`
-            : html`<p class="ui-hob__empty">Nothing in this handoff yet.</p>`}
+            ? html`${run ? html`<p class="ui-hob__run-label">What they'll read</p>` : nothing}
+                <div class="ui-hob__sections">${present.map((s, i) => this.renderSection(s, i + 1))}</div>`
+            : run
+              ? nothing
+              : html`<p class="ui-hob__empty">Nothing in this handoff yet.</p>`}
         </div>
         ${clean ? foot : nothing}
       </div>
@@ -422,6 +623,39 @@ export class TcHandoffBrief extends TcElement {
 .ui-hob__btn:disabled { opacity: 0.4; cursor: not-allowed; }
 [data-ui="hob"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-hob__empty { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+/* An in-flight run, handed on */
+.ui-hob__run { display: grid; gap: var(--tc-space-3); }
+.ui-hob__run-label { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-hob__run-card { display: grid; gap: var(--tc-space-1); padding: var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-surface-well); }
+.ui-hob__run-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; }
+.ui-hob__run-name { min-width: 0; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); overflow-wrap: anywhere; }
+.ui-hob__run-status { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
+.ui-hob__run-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--tc-icon-muted); }
+.ui-hob__run-status[data-status="running"] { color: var(--tc-status-success-fg); }
+.ui-hob__run-status[data-status="running"] .ui-hob__run-dot { background: var(--tc-status-success-solid); animation: ui-hob-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) infinite; }
+.ui-hob__run-status[data-status="waiting"] { color: var(--tc-status-warning-fg); }
+.ui-hob__run-status[data-status="waiting"] .ui-hob__run-dot { background: var(--tc-status-warning-solid); }
+.ui-hob__run-step, .ui-hob__run-meta { font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); overflow-wrap: anywhere; }
+.ui-hob__run-meta { color: var(--tc-text-muted); }
+.ui-hob__run-key { color: var(--tc-text-muted); }
+.ui-hob__takes { display: grid; gap: var(--tc-space-1-5); }
+.ui-hob__takes-label { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
+.ui-hob__takes .ui-hob__items { padding-left: 0; }
+.ui-hob__form { display: grid; gap: var(--tc-space-3); }
+.ui-hob__field { display: grid; gap: var(--tc-space-1); }
+.ui-hob__field-label { padding: 0; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
+.ui-hob__optional { font-weight: var(--tc-font-weight-regular); color: var(--tc-text-muted); }
+.ui-hob__select, .ui-hob__textarea { width: 100%; border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); color: var(--tc-text-primary); font: inherit; }
+.ui-hob__select { height: var(--tc-field-h); padding: 0 var(--tc-space-1); }
+.ui-hob__textarea { padding: var(--tc-space-1-5) var(--tc-field-px); resize: vertical; }
+.ui-hob__select:focus, .ui-hob__textarea:focus { outline: 0; box-shadow: var(--tc-field-shadow-focus); }
+.ui-hob__choice { display: flex; flex-wrap: wrap; gap: var(--tc-space-1) var(--tc-space-4); margin: 0; padding: 0; border: 0; min-width: 0; }
+.ui-hob__choice > legend { width: 100%; margin-bottom: var(--tc-space-1); }
+.ui-hob__radio { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); cursor: pointer; }
+.ui-hob__radio > input { margin: 0; accent-color: var(--tc-accent-solid); }
+.ui-hob__radio > input:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-hob__state[data-state="waiting"] { padding: var(--tc-space-3); background: var(--tc-surface-well); animation: ui-hob-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
+[data-state="waiting"] > .ui-hob__state-icon { color: var(--tc-text-muted); }
 @container (max-width: 400px) {
   .ui-hob__body { padding: var(--tc-space-3-5); }
   .ui-hob__summary, .ui-hob__items { padding-left: 0; }
@@ -430,6 +664,7 @@ export class TcHandoffBrief extends TcElement {
 }
 @keyframes ui-hob-in { from { opacity: 0; transform: translateY(-2px); } }
 @keyframes ui-hob-spin { to { transform: rotate(360deg); } }
+@keyframes ui-hob-pulse { 50% { opacity: 0.4; } }
 @media (prefers-reduced-motion: reduce) {
   [data-ui="hob"] *, [data-ui="hob"] *::before, [data-ui="hob"] *::after { animation: none !important; transition: none !important; }
 }
@@ -437,6 +672,7 @@ export class TcHandoffBrief extends TcElement {
   .ui-hob__pill, .ui-hob__ack, .ui-hob__btn, .ui-hob__state[data-state="blocked"], .ui-hob__state[data-state="accepted"] { border: 1px solid CanvasText; }
   .ui-hob__step { border: 1px solid CanvasText; }
   .ui-hob__step[data-done] { background: Highlight; }
+  .ui-hob__run-dot { background: CanvasText; }
   .ui-hob__ack[aria-pressed="true"] { outline: 2px solid Highlight; }
 }
 `;

@@ -9,7 +9,7 @@
 A live status of agents' background tasks for a header or sidebar – one quiet pill, "3 running · 2 need you", opening a panel of tasks under Needs you, Running and Recently done, each with a filling ring, its agent, elapsed time and Review, Stop or Open
 
 - **Element:** `<tc-running-now>`
-- **Size:** 11.6 KB gzip · 35.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.0 KB gzip · 41.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -37,11 +37,17 @@ for a task that needs the person, Stop for a running one, Open for a finished on
 It's about the agents, and above all about which of them is waiting on the person. Background Tasks is for the
 person's own jobs – exports, uploads, reindexes – with Cancel, Retry and Clear finished.
 
+With `notifiable`, each task that's running or needing the person gets a bell: “Notify me when Export Q3 revenue finishes”. Pressed, the
+element fires `tc-notify` once the page moves that task to done or failed, so the page can send the notice, and the
+usual announcement says it finished. `notify` holds the watched tasks. Give `notifyChannels` – “In app”, “Email”,
+“Push” – and the bell opens a short list of checkboxes under the task instead; `notifyVia` keeps each task's channels.
+
 ### When to use
 
 - An app where agents work in the background and sometimes stop to ask for a decision or an approval.
 - A header or sidebar slot that should say, at a glance, whether anything needs the person.
 - Getting from "2 need you" to the task that needs them in two clicks.
+- People who start long work and want to step away until it's done (`notifiable`).
 
 ### When not to use
 
@@ -60,6 +66,8 @@ person's own jobs – exports, uploads, reindexes – with Cancel, Retry and Cle
 4. **Group** `.ui-rnw__label` – Needs you, Running or Recently done, with its count
 5. **Task** `.ui-rnw__row` – the ring, the task's title, and the agent, progress and elapsed time
 6. **Action** `.ui-rnw__act` – Review, Stop or Open
+7. **Bell** `.ui-rnw__bell` – notify me when this task finishes (`notifiable`); highlighted while it's on
+8. **Channels** `.ui-rnw__channels` – how to be told, with `notifyChannels`
 
 ## Looks
 
@@ -181,6 +189,10 @@ export class RunningNowExample {
 | `open` | `open` | `boolean` | `false` | Whether the panel is open |
 | `now` | `now` | `number \| undefined` | `undefined` | The time now, epoch ms; leave it unset and the element keeps its own clock while the panel is open |
 | `labels` | – | `Partial<RunningNowLabels>` | `{}` | Words the page can rename, merged over defaultRunningNowLabels |
+| `notifiable` | `notifiable` | `boolean` | `false` | Offer "notify me when it's done" on the tasks still going |
+| `notify` | – | `string[]` | `[]` | The tasks the person will be told about when they finish |
+| `notifyChannels` | – | `string[]` | `[]` | Ways to be told – "In app", "Email", "Push"; given, the bell opens a choice of them |
+| `notifyVia` | – | `Record<string, string[]>` | `{}` | The channels chosen for each watched task, with `notifyChannels` |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -189,6 +201,8 @@ export class RunningNowExample {
 | --- | --- | --- | --- |
 | `tc-task-action` | – | Yes | Review, Stop or Open was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open |
 | `tc-open-change` | – | Yes | The panel is opening or closing ({ open }: RunningNowOpenChange); cancelable – prevented, it stays as it is |
+| `tc-notify-change` | – | Yes | The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: RunningNowNotifyChange); cancelable – prevented, nothing changes |
+| `tc-notify` | – | No | A watched task finished ({ id, status, task, channels }: RunningNowNotify) |
 
 #### Component tokens
 
@@ -198,9 +212,9 @@ export class RunningNowExample {
 | --- | --- | --- |
 | `--tc-rnw-ring` | `16px` | both |
 
-#### Design tokens it reads (67)
+#### Design tokens it reads (73)
 
-`--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-lg`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-duration-fast`, `--tc-duration-shimmer`, `--tc-duration-slowest`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-menu-item-hover`, `--tc-menu-item-radius`, `--tc-meter-fill`, `--tc-meter-track`, `--tc-radius-full`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-fg`, `--tc-status-warning-solid`, `--tc-surface-inverse`, `--tc-surface-raised`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-title-color`, `--tc-title-font-size`, `--tc-title-font-weight`, `--tc-title-line-height`, `--tc-title-tracking`
+`--tc-accent-solid`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-lg`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-duration-fast`, `--tc-duration-shimmer`, `--tc-duration-slowest`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-menu-item-hover`, `--tc-menu-item-radius`, `--tc-meter-fill`, `--tc-meter-track`, `--tc-radius-full`, `--tc-radius-md`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-fg`, `--tc-status-warning-solid`, `--tc-surface-inverse`, `--tc-surface-raised`, `--tc-surface-well`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-title-color`, `--tc-title-font-size`, `--tc-title-font-weight`, `--tc-title-line-height`, `--tc-title-tracking`
 
 #### Functions
 
@@ -230,8 +244,11 @@ export class RunningNowExample {
 | --- | --- | --- | --- | --- | --- |
 | `tasks` | `el.tasks = …;` | `<… tasks={…} />` | `<tc-running-now :tasks="…">` | `<tc-running-now [tasks]="…">` | `<tc-running-now {tasks}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-running-now :labels="…">` | `<tc-running-now [labels]="…">` | `<tc-running-now {labels}>` |
+| `notify` | `el.notify = …;` | `<… notify={…} />` | `<tc-running-now :notify="…">` | `<tc-running-now [notify]="…">` | `<tc-running-now {notify}>` |
+| `notifyChannels` | `el.notifyChannels = …;` | `<… notifyChannels={…} />` | `<tc-running-now :notifyChannels="…">` | `<tc-running-now [notifyChannels]="…">` | `<tc-running-now {notifyChannels}>` |
+| `notifyVia` | `el.notifyVia = …;` | `<… notifyVia={…} />` | `<tc-running-now :notifyVia="…">` | `<tc-running-now [notifyVia]="…">` | `<tc-running-now {notifyVia}>` |
 
-*Also attributes: `heading`, `open`, `now` – see the API table.*
+*Also attributes: `heading`, `open`, `now`, `notifiable` – see the API table.*
 
 ### Events
 
@@ -239,10 +256,14 @@ export class RunningNowExample {
 | --- | --- | --- | --- | --- | --- | --- |
 | `tc-task-action` | Yes | `el.addEventListener("tc-task-action", (e) => …)` | `onTaskAction={…}` | `@tc-task-action="…"` | `(tc-task-action)="…($event)"` | `el.addEventListener("tc-task-action", …)` |
 | `tc-open-change` | Yes | `el.addEventListener("tc-open-change", (e) => …)` | `onOpenChange={…}` | `@tc-open-change="…"` | `(tc-open-change)="…($event)"` | `el.addEventListener("tc-open-change", …)` |
+| `tc-notify-change` | Yes | `el.addEventListener("tc-notify-change", (e) => …)` | `ref.current.addEventListener("tc-notify-change", …)` | `@tc-notify-change="…"` | `(tc-notify-change)="…($event)"` | `el.addEventListener("tc-notify-change", …)` |
+| `tc-notify` | No | `el.addEventListener("tc-notify", (e) => …)` | `onNotify={…}` | `@tc-notify="…"` | `(tc-notify)="…($event)"` | `el.addEventListener("tc-notify", …)` |
+
+*React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-The element changes `open` itself unless a listener calls `preventDefault()` on `tc-open-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `open` and `notify` itself unless a listener calls `preventDefault()` on `tc-open-change` or `tc-notify-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -377,6 +398,12 @@ No slots: everything it shows comes from its properties.
 | `open` | `boolean` | Whether the panel is open. Controlled when defined |
 | `defaultOpen` | `boolean` | Whether the panel starts open when uncontrolled |
 | `onOpenChange` | `(open: boolean) => void` | The panel opened or closed |
+| `notify` | `string[]` | The watched tasks (with `notifiable`). Controlled when defined |
+| `defaultNotify` | `string[]` | The watched tasks when uncontrolled |
+| `notifyVia` | `Record<string, string[]>` | The channels chosen per watched task (with `notifyChannels`). Controlled when defined |
+| `defaultNotifyVia` | `Record<string, string[]>` | The channels per task when uncontrolled |
+| `onNotifyChange` | `(notify: string[], change: RunningNowNotifyChange) => void` | The bell or a channel was switched – the watched tasks as they are now, and the change |
+| `onNotify` | `(task: RunningTask, status: "done" \| "failed", channels?: string[]) => void` | A watched task finished |
 | `onTaskAction` | `(action: RunningNowAction, task: RunningTask) => boolean \| void` | Review, Stop or Open was chosen on a task; return false to keep the panel open |
 
 *Renamed or hidden on the wrapper: `heading`, `children`*
@@ -393,6 +420,8 @@ Follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patter
 | ↓ / ↑ | In the list: the next or previous task |
 | Home / End | In the list: the first or last task |
 | Tab | From a task to its action (the list is one tab stop) |
+| Enter / Space | On a bell: watches the task or stops watching it – or, with channels, opens or closes its list |
+| Escape | In a channel list: closes it and returns focus to its bell (the panel stays open) |
 | Escape | Closes the panel and returns focus to the pill |
 
 ### Screen readers
@@ -403,6 +432,10 @@ by its label, such as "Needs you 1". A task is named by its title and described 
 6m 00s". Actions are named with the task: "Review Draft the audit report". A polite status line says a task that
 needs the person or finished – "Check vendor records needs you. Classify contracts done" – once the changes have held
 for a moment; progress ticks are never announced.
+
+A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finishes”; with channels it's a disclosure
+(`aria-expanded`) whose name adds the chosen channels, and the list is a `fieldset` of checkboxes named “Tell me about
+<task> by”. Switching it is announced – “You'll be told when … finishes”, “No longer watching …”.
 
 ### Every component
 
@@ -448,14 +481,14 @@ for a moment; progress ticks are never announced.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 19.2 KB | 6.5 KB |
-| Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
+| **This component alone** | 24.6 KB | 8.0 KB |
+| Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -463,8 +496,8 @@ for a moment; progress ticks are never announced.
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **35.8 KB** | **11.6 KB** |
-| With Lit – the first component on a page | 58.4 KB | 19.0 KB |
+| **Added to a page that already has Lit** | **41.3 KB** | **13.0 KB** |
+| With Lit – the first component on a page | 64.4 KB | 20.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -472,11 +505,11 @@ for a moment; progress ticks are never announced.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 11 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of tasks replaced |
-| First on the page | 12 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | tasks: first render, 11 nodes; update 0.2 ms |
-| 1,000 items | 3.2 ms | tasks: first render, 11 nodes; update 0.7 ms |
+| First render | **0.5 ms** | the gallery demo's data, 11 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | one item of tasks replaced |
+| First on the page | 8.6 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.4 ms | tasks: first render, 11 nodes; update 0.1 ms |
+| 1,000 items | 0.9 ms | tasks: first render, 11 nodes; update 0.1 ms |
 
 What it renders doesn't grow with tasks (tested to 1,000 items).
 
@@ -501,6 +534,7 @@ What it renders doesn't grow with tasks (tested to 1,000 items).
 - Set `needs-you` only when the agent can't go on without the person – a decision, an approval, missing access.
 - Give `started` (and `ended` once it's done) so the elapsed time is right; pass `now` if your app keeps the clock.
 - Leave `progress` out when the agent can't tell; the ring turns instead of pretending.
+- Word channels as people know them – “In app”, “Email”, “Push” – and offer only the ones that work for them.
 
 ## Do and don't
 
@@ -509,6 +543,7 @@ What it renders doesn't grow with tasks (tested to 1,000 items).
 - Put it where people look for status – at the end of the app's header, or at the top of a sidebar.
 - Take Review straight to the decision the agent needs; prevent the event to keep the panel open instead.
 - Drop finished tasks from the list after a while; "Recently done" is for the last few.
+- Send the notice when `tc-notify` fires, on the channels in its detail; the element doesn't send anything.
 
 ### Don't
 

@@ -87,10 +87,10 @@
     "sourceLabels": {
       "type": "object",
       "properties": {
-        "agent": {
+        "model": {
           "type": "string"
         },
-        "model": {
+        "agent": {
           "type": "string"
         },
         "grounded": {
@@ -127,13 +127,13 @@
     "verdicts": {
       "type": "object",
       "properties": {
-        "agent": {
+        "model": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/VerificationVerdict"
           }
         },
-        "model": {
+        "agent": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/VerificationVerdict"

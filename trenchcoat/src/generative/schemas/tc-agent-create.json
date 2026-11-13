@@ -1,0 +1,240 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-create.json",
+  "title": "tc-agent-create",
+  "description": "Describe an agent and get a working draft to edit: name, instructions, tools, model, triggers and open questions.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "What the agent should do, in the person's words. Changed by the user unless a tc-prompt-change listener calls preventDefault()"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Example descriptions, as chips that fill the field"
+    },
+    "draft": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentDraftTool"
+          }
+        },
+        "model": {
+          "type": "string"
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentDraftTrigger"
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentDraftQuestion"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "instructions",
+        "tools",
+        "model",
+        "triggers",
+        "questions"
+      ],
+      "additionalProperties": false,
+      "description": "The draft the page streams back; null before Generate. Changed by edits unless a tc-draft-change listener calls preventDefault()"
+    },
+    "streaming": {
+      "type": "boolean",
+      "description": "The draft is still streaming in. Set by Generate; the page clears it when the draft is done"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentCreateModel"
+      },
+      "description": "The models to choose from; the draft's own model is offered too"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "prompt": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "examples": {
+          "type": "string"
+        },
+        "generate": {
+          "type": "string"
+        },
+        "regenerate": {
+          "type": "string"
+        },
+        "needPrompt": {
+          "type": "string"
+        },
+        "draft": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "needName": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "string"
+        },
+        "noTools": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "triggers": {
+          "type": "string"
+        },
+        "noTriggers": {
+          "type": "string"
+        },
+        "addTrigger": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "questions": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "startOver": {
+          "type": "string"
+        },
+        "writing": {
+          "type": "string"
+        },
+        "ready": {
+          "type": "string"
+        },
+        "waitDraft": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentDraftTool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "AgentDraftTrigger": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "AgentDraftQuestion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "question"
+      ],
+      "additionalProperties": false
+    },
+    "AgentCreateModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

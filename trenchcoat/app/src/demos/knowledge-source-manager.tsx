@@ -6,7 +6,8 @@ import { caption, textButton } from "../demo-kit";
 /* A support team's knowledge base. Product docs are indexing and the macros wait their turn; the pricing PDFs failed,
    release notes are stale and an old copy of the help centre duplicates the new one. Resync, Pause and Add are acted
    on by this page standing in for the app – it moves sources through queued → indexing → ready, one tick at a time,
-   and stops ticking once nothing is indexing. "2,000 sources" shows the list windowed. */
+   and stops ticking once nothing is indexing. Add source opens the built-in Add sources panel: drop files, paste
+   links or text, and what's added joins the queue. "2,000 sources" shows the list windowed. */
 
 const NOW = Date.parse("2026-10-24T12:00:00Z");
 const H = 3_600_000;
@@ -45,12 +46,6 @@ const START: KnowledgeSource[] = [
   { id: "forum", name: "Community forum", kind: "site", location: "https://community.example.com", state: "ready", docs: 4_820, chunks: 41_200, lastSync: NOW - 6 * H, schedule: "daily" },
 ];
 
-const ADDS: Omit<KnowledgeSource, "id" | "state">[] = [
-  { name: "Onboarding guides", kind: "file", location: "Uploads / onboarding / 9 files", docs: 9, schedule: "manual" },
-  { name: "Status page", kind: "site", location: "https://status.example.com", docs: 40, schedule: "hourly" },
-  { name: "Sales playbooks", kind: "connector", location: "Docs workspace · Sales", docs: 75, schedule: "daily" },
-];
-
 const KINDS = ["file", "site", "connector"];
 const many = (): KnowledgeSource[] =>
   Array.from({ length: 2000 }, (_, i) => ({
@@ -87,7 +82,6 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const { KnowledgeSourceManager } = ui;
   const [sources, setSources] = useState(START);
   const [note, setNote] = useState("Pick a source to see its sync, warnings and actions.");
-  const [added, setAdded] = useState(0);
   const busy = sources.some((s) => s.state === "indexing" || s.state === "queued");
 
   // One timeout at a time, and none once nothing is indexing
@@ -104,15 +98,20 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         sources={sources}
         onSourcesChange={(next, change) => {
           setSources(next);
-          setNote(change.type === "remove" ? `Removed ${change.source.name} – its chunks leave the index.` : `${change.source.name} now syncs ${change.source.schedule}.`);
+          setNote(
+            change.type === "remove"
+              ? `Removed ${change.source.name} – its chunks leave the index.`
+              : change.type === "add"
+                ? `Added ${(change.added ?? [change.source]).map((s) => s.name).join(", ")} – they wait in the queue for an indexer.`
+                : `${change.source.name} now syncs ${change.source.schedule}.`,
+          );
         }}
         now={NOW}
-        onAdd={() => {
-          const add = ADDS[added % ADDS.length];
-          setAdded((n) => n + 1);
-          setSources((list) => [...list, { ...add, id: `add-${added}`, state: "queued" }]);
-          setNote(`Added ${add.name} – it waits in the queue for an indexer.`);
-        }}
+        accept=".pdf,.docx,.md,.txt,.html"
+        maxFileSize={25 * 1024 * 1024}
+        onSourcesAdd={({ files, urls, texts, depth }) =>
+          setNote(`Ingesting ${files.length} files, ${urls.length} links (${depth === "page" ? "pages only" : "their site sections"}) and ${texts.length} pasted texts.`)
+        }
         onResync={(s) => {
           setSources((list) => list.map((x) => (x.id === s.id ? { ...x, state: "queued", error: undefined } : x)));
           setNote(`${s.name} is queued to sync.`);

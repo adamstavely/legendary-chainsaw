@@ -2,6 +2,45 @@
 
 # Changelog
 
+## 0.24.0 – Agent setup and deploy
+
+- **Agent List:** every agent in a workspace with the failing ones lifted into Needs attention and why in words; search,
+  status filter and sort, and a row that opens the agent.
+- **Agent Summary:** one agent's profile – status, model, tools, owner and versions, two weeks of runs as a chart with a
+  table, success rate, median run and cost, recent failures, and Edit, Run test and Pause.
+- **Agent Create:** describe an agent and get a streamed draft to edit – name, instructions, tools, model, triggers and
+  open questions – then Create.
+- **Workflow Canvas:** an agent workflow as a node graph – drag, connect and arrange steps with the pointer or the
+  keyboard, pan and zoom, watch a run colour each step, or read it as a list.
+- **Step Picker:** search step kinds and tools to add next, grouped, with suggested and recent steps first – inline or
+  as a popover.
+- **Step Inspector:** a step's inputs as typed values or mappings from earlier steps' outputs, missing inputs in words,
+  a test run, and its input and output.
+- **Secrets Manager:** write-only secrets for agents – missing ones first with the agents that need them, set and
+  replace without ever showing a value, delete that names what breaks.
+- **Trigger List:** every way an agent starts, each with a switch – what starts it in words, when it last fired,
+  errors, Edit and Add trigger by kind.
+- **Deploy Channels:** where an agent can be reached – status in words, the version it serves, last week's traffic, and
+  Set up, Configure, Pause or Resume.
+- **Channel Setup:** connect a channel and set when the agent replies – Connect, Where, When it replies (including
+  business hours), Test and Go live, each step checked in words.
+- **Embed Widget:** the chat a visitor opens on a website – a corner launcher with an unread count, a greeting,
+  starters, the conversation with a person taking over, styled by the site's accent, radius and side.
+- **Embed Configurator:** style the site widget beside a live preview, with the accent checked for contrast in words,
+  and copy its install snippet.
+- **Trigger Builder:** a webhook kind (with `webhookUrl`) – the address with Copy, the method, a secret header, a sample
+  payload with Send test request, and the last request in words.
+- **Knowledge Source Manager:** with `add-inline`, Add source opens a panel to drop files, paste links (checked and
+  deduplicated, with how far to crawl) or paste text; Add fires `tc-sources-add`.
+- **Approval Card:** `editable-args` lets people change a call's arguments before approving – typed fields, JSON checked
+  as it's typed, a diff of the changes, Reset, and "Approve with changes".
+- **Preview Frame:** `html` runs model-written HTML in a scripts-only sandbox with no network unless `allow-network`;
+  its errors feed the console count and a problems list with Ask to fix.
+- **Handoff Brief:** hand on an agent run that's still going – its status and step, what the receiver takes over, pause
+  until they accept, then "Waiting for … to accept" with Cancel handoff.
+- **Running Now** and **Background Tasks:** `notifiable` adds a bell on tasks still going – tell me when it finishes,
+  optionally by channel.
+- **Standalone gallery and `docs/`:** rebuilt with the above.
 ## 0.22.1 – A comment thread's first reply shows in full; read-only threads
 
 - **Comment Thread:** the first reply on an empty thread shows in full – the list was held at its empty height, so the

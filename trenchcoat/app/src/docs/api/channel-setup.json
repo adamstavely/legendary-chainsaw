@@ -1,0 +1,618 @@
+{
+ "elements": [
+  {
+   "tag": "tc-channel-setup",
+   "className": "TcChannelSetup",
+   "description": "Connect one channel and set when the agent replies there – Connect, Where, When it replies, Test and Go live, each checked in words before the next.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Set up a channel\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "channel",
+     "attribute": "channel",
+     "type": "string",
+     "default": "\"this channel\"",
+     "description": "The channel's name, used in the words: \"Team chat\"",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string",
+     "default": "\"The agent\"",
+     "description": "The agent's name, used in the words: \"Policy Q&A\"",
+     "readonly": false
+    },
+    {
+     "name": "step",
+     "attribute": "step",
+     "type": "ChannelSetupStep",
+     "default": "\"connect\"",
+     "description": "The current step. Changed by Next, Back and the step list unless a tc-step-change listener prevents it",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ChannelSetupValue",
+     "default": null,
+     "description": "The settings. Changed by the user unless a tc-value-change listener prevents it",
+     "readonly": false
+    },
+    {
+     "name": "account",
+     "attribute": "account",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The connected account's name; empty while not connected",
+     "readonly": false
+    },
+    {
+     "name": "connecting",
+     "attribute": "connecting",
+     "type": "boolean",
+     "default": "false",
+     "description": "The page is authorizing: Connect waits",
+     "readonly": false
+    },
+    {
+     "name": "targets",
+     "attribute": null,
+     "type": "ChannelTarget[]",
+     "default": "[]",
+     "description": "The places to pick in Where",
+     "readonly": false
+    },
+    {
+     "name": "timeZones",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"UTC\", \"Europe/London\", \"Europe/Lisbon\", \"Europe/Berlin\", \"America/New_York\", \"America/Chicago\", \"America/Los_Angeles\", \"Asia/Singapore\", \"Australia/Sydney\"]",
+     "description": "The time zones offered for business hours",
+     "readonly": false
+    },
+    {
+     "name": "testMessage",
+     "attribute": "test-message",
+     "type": "string",
+     "default": "\"Hello! Can you tell me what you help with?\"",
+     "description": "The message Send test sends; editable in the Test step",
+     "readonly": false
+    },
+    {
+     "name": "testing",
+     "attribute": "testing",
+     "type": "boolean",
+     "default": "false",
+     "description": "A test is on its way: Send test waits",
+     "readonly": false
+    },
+    {
+     "name": "testResult",
+     "attribute": null,
+     "type": "ChannelTestResult | null",
+     "default": "null",
+     "description": "The page's result for the last test; null before one",
+     "readonly": false
+    },
+    {
+     "name": "live",
+     "attribute": "live",
+     "type": "boolean",
+     "default": "false",
+     "description": "The channel is live: the setup shows its done state",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "ChannelSetupLabelsInput",
+     "default": "{}",
+     "description": "Words the component uses, merged over defaultChannelSetupLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-connect",
+     "detail": "",
+     "description": "Connect was pressed; the page authorizes, then sets `account` ({ step }: { step: \"connect\" })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-step-change",
+     "detail": "",
+     "description": "The step is changing ({ step, previous }: ChannelStepChange); cancelable – prevented, the step stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The settings changed ({ value }: ChannelValueChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-test",
+     "detail": "",
+     "description": "Send test was pressed ({ message, value }: ChannelTest); cancelable – not prevented, `testing` turns on until the page sets `testResult`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-go-live",
+     "detail": "",
+     "description": "Go live was pressed ({ value, account }: ChannelGoLive); cancelable – not prevented, the setup shows it's live",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "chs",
+   "cssProperties": [
+    {
+     "name": "--tc-chs-mark",
+     "value": "22px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-chs-glyph",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-control",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-sunken",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "channelStepProblem",
+   "signature": "channelStepProblem(step: ChannelSetupStep, ctx: { account: string; value: ChannelSetupValue; testResult: ChannelTestResult | null }): \"\" | keyof ChannelSetupLabels[\"errors\"]",
+   "description": "What stops a step: the key of its error in labels.errors, or \"\" when it's fine"
+  }
+ ],
+ "react": [
+  {
+   "component": "ChannelSetup",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"Set up a channel\" by default"
+    },
+    {
+     "name": "step",
+     "type": "ChannelSetupStep",
+     "optional": true,
+     "description": "The current step – controlled when given"
+    },
+    {
+     "name": "defaultStep",
+     "type": "ChannelSetupStep",
+     "optional": true,
+     "description": "On mount, when `step` isn't controlled"
+    },
+    {
+     "name": "onStepChange",
+     "type": "(step: ChannelSetupStep) => void",
+     "optional": true,
+     "description": "Called with the next step – Next, Back or a step in the list"
+    },
+    {
+     "name": "value",
+     "type": "ChannelSetupValue",
+     "optional": true,
+     "description": "The settings – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ChannelSetupValue",
+     "optional": true,
+     "description": "On mount, when `value` isn't controlled"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(value: ChannelSetupValue) => void",
+     "optional": true,
+     "description": "Called with the next settings as they're edited"
+    },
+    {
+     "name": "onConnect",
+     "type": "() => void",
+     "optional": true,
+     "description": "Connect was pressed: authorize, then pass `account`"
+    },
+    {
+     "name": "onTest",
+     "type": "(message: string, value: ChannelSetupValue) => boolean | void",
+     "optional": true,
+     "description": "Send test was pressed: send it, then pass `testResult`. Return false to stop the button waiting"
+    },
+    {
+     "name": "onGoLive",
+     "type": "(value: ChannelSetupValue, account: string) => boolean | void",
+     "optional": true,
+     "description": "Go live was pressed. Return false to stay on the summary"
+    }
+   ],
+   "hides": [
+    "heading",
+    "step",
+    "value",
+    "defaultValue",
+    "children"
+   ],
+   "events": {
+    "tc-connect": "onConnect",
+    "tc-step-change": null,
+    "tc-value-change": null,
+    "tc-test": "onTest",
+    "tc-go-live": "onGoLive"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-channel-setup",
+   "className": "TcChannelSetup",
+   "module": "@adamstavely/trenchcoat/channel-setup",
+   "data": [
+    "value",
+    "targets",
+    "timeZones",
+    "testResult",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "channel",
+     "attribute": "channel"
+    },
+    {
+     "name": "agent",
+     "attribute": "agent"
+    },
+    {
+     "name": "step",
+     "attribute": "step"
+    },
+    {
+     "name": "account",
+     "attribute": "account"
+    },
+    {
+     "name": "connecting",
+     "attribute": "connecting"
+    },
+    {
+     "name": "testMessage",
+     "attribute": "test-message"
+    },
+    {
+     "name": "testing",
+     "attribute": "testing"
+    },
+    {
+     "name": "live",
+     "attribute": "live"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-connect",
+     "cancelable": false
+    },
+    {
+     "name": "tc-step-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-test",
+     "cancelable": true
+    },
+    {
+     "name": "tc-go-live",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "step",
+     "event": "tc-step-change"
+    },
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 35819,
+  "gzip": 10699
+ }
+}

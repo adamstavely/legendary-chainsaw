@@ -1,0 +1,601 @@
+{
+ "elements": [
+  {
+   "tag": "tc-embed-widget",
+   "className": "TcEmbedWidget",
+   "description": "The chat a visitor opens on a website: a corner launcher with an unread count, and a panel with a greeting,\nstarters, the conversation and a message field, styled by `theme`.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Assistant\"",
+     "description": "The agent's name in the header (theme.title overrides it)",
+     "readonly": false
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle",
+     "type": "string",
+     "default": "\"Typically replies in a minute\"",
+     "description": "The line under the name, e.g. how fast it replies",
+     "readonly": false
+    },
+    {
+     "name": "avatar",
+     "attribute": "avatar",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The agent's picture – a URL; initials of the name when there's none",
+     "readonly": false
+    },
+    {
+     "name": "greeting",
+     "attribute": "greeting",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The first message, from the agent (theme.greeting overrides it)",
+     "readonly": false
+    },
+    {
+     "name": "starters",
+     "attribute": null,
+     "type": "EmbedStarter[]",
+     "default": "[]",
+     "description": "Starter questions, shown until the visitor has written",
+     "readonly": false
+    },
+    {
+     "name": "messages",
+     "attribute": null,
+     "type": "EmbedMessage[]",
+     "default": "[]",
+     "description": "The conversation, oldest first – the page appends the visitor's messages and the replies",
+     "readonly": false
+    },
+    {
+     "name": "typing",
+     "attribute": "typing",
+     "type": "boolean",
+     "default": "false",
+     "description": "The agent is writing a reply: dots at the end of the conversation",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "The panel is open",
+     "readonly": false
+    },
+    {
+     "name": "unread",
+     "attribute": "unread",
+     "type": "number",
+     "default": "0",
+     "description": "Messages the visitor hasn't seen, as a count on the launcher while the panel is closed",
+     "readonly": false
+    },
+    {
+     "name": "floating",
+     "attribute": "floating",
+     "type": "boolean",
+     "default": "false",
+     "description": "Pin the widget to the window's corner, as on a site; otherwise it sits in the page's flow",
+     "readonly": false
+    },
+    {
+     "name": "position",
+     "attribute": "position",
+     "type": "EmbedPosition",
+     "default": "\"right\"",
+     "description": "Which corner the launcher sits in (theme.position overrides it)",
+     "readonly": false
+    },
+    {
+     "name": "theme",
+     "attribute": null,
+     "type": "EmbedTheme",
+     "default": "{}",
+     "description": "How the site styles it: accent, radius, side, greeting, title and launcher words",
+     "readonly": false
+    },
+    {
+     "name": "privacy",
+     "attribute": "privacy",
+     "type": "string",
+     "default": "\"AI answers can be wrong. Don't share passwords or payment details.\"",
+     "description": "The privacy line under the message field; empty hides it",
+     "readonly": false
+    },
+    {
+     "name": "privacyHref",
+     "attribute": "privacy-href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where the privacy line's link goes; none hides the link",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<EmbedWidgetLabels>",
+     "default": "{}",
+     "description": "The widget's words, merged over defaultEmbedWidgetLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The launcher, Close or Escape opened or closed the panel ({ open }: EmbedOpenChange); cancelable – prevented, `open` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-send",
+     "detail": "",
+     "description": "The visitor sent a message or picked a starter ({ text, starter }: EmbedSend); cancelable – prevented, the field keeps the text. The page appends the messages",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "emw",
+   "cssProperties": [
+    {
+     "name": "--tc-emw-accent",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-emw-on-accent",
+     "value": "var(--tc-text-on-accent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-emw-radius",
+     "value": "var(--tc-radius-xl)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-emw-w",
+     "value": "360px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-emw-h",
+     "value": "520px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-md",
+    "--tc-border-default",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-lg",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-full",
+    "--tc-radius-xl",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-base",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "parseEmbedHex",
+   "signature": "parseEmbedHex(text: string | null | undefined): [number, number, number] | null",
+   "description": "A hex colour (\"#abc\" or \"#aabbcc\") as 0–255 channels, or null"
+  },
+  {
+   "name": "embedContrast",
+   "signature": "embedContrast(a: string, b: string): number | null",
+   "description": "The WCAG contrast ratio between two hex colours (1–21), or null when either isn't one"
+  },
+  {
+   "name": "EMBED_DARK_TEXT",
+   "signature": "EMBED_DARK_TEXT: string",
+   "description": "The near-black and white the widget puts on its accent, for the contrast sums"
+  },
+  {
+   "name": "embedAccentText",
+   "signature": "embedAccentText(accent: string): { text: \"light\" | \"dark\"; ratio: number } | null",
+   "description": "Which text reads better on the accent – \"light\" (white) or \"dark\" – and its contrast ratio"
+  }
+ ],
+ "react": [
+  {
+   "component": "EmbedWidget",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The agent's name in the header (theme.title overrides it)"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "The panel is open – controlled when given"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Open on mount when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The panel opened or closed"
+    },
+    {
+     "name": "onSend",
+     "type": "(text: string, starter: EmbedStarter | null) => void | false",
+     "optional": true,
+     "description": "The visitor sent a message or picked a starter – append it and the reply to `messages`; return false to keep the text in the field"
+    }
+   ],
+   "hides": [
+    "heading",
+    "open",
+    "children"
+   ],
+   "events": {
+    "tc-open-change": null,
+    "tc-send": "onSend"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-embed-widget",
+   "className": "TcEmbedWidget",
+   "module": "@adamstavely/trenchcoat/embed-widget",
+   "data": [
+    "starters",
+    "messages",
+    "theme",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle"
+    },
+    {
+     "name": "avatar",
+     "attribute": "avatar"
+    },
+    {
+     "name": "greeting",
+     "attribute": "greeting"
+    },
+    {
+     "name": "typing",
+     "attribute": "typing"
+    },
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "unread",
+     "attribute": "unread"
+    },
+    {
+     "name": "floating",
+     "attribute": "floating"
+    },
+    {
+     "name": "position",
+     "attribute": "position"
+    },
+    {
+     "name": "privacy",
+     "attribute": "privacy"
+    },
+    {
+     "name": "privacyHref",
+     "attribute": "privacy-href"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-send",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "field-sizing",
+    "name": "field-sizing",
+    "bcd": "css.properties.field-sizing",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "152",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 1,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29120,
+  "gzip": 9190
+ }
+}

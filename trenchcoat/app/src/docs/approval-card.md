@@ -22,6 +22,12 @@ Two more show exactly what would change: `diff` – a file change as a small uni
 above the lines – and `args` – the call's arguments as a readable code block with its keys, strings and numbers
 coloured. Both sit in the preview and scroll past `--tc-approval-card-code-max`.
 
+`editableArgs` lets people change those arguments before approving. Edit, under the arguments, turns each one into a
+field: text, a number, a yes / no box, or a choice when `argsSchema` lists them. Anything else, such as a list or an
+object, becomes JSON that's checked as it's typed. A changed argument says "Edited", and a small diff under the block
+shows each change, the agent's value removed and the person's added. Approve becomes "Approve with changes", and
+`onApprove` and `tc-status-change` carry `args` (as they'll run) and `edited`. Reset puts every argument back.
+
 ## When to use
 
 - An agent is about to send, pay, delete or publish, and a person must say yes first.
@@ -30,6 +36,8 @@ coloured. Both sit in the preview and scroll past `--tc-approval-card-code-max`.
 - High-stakes requests where people need the reason, the consequences or the sources – add `why`, `consequences`
   and `evidence`.
 - Actions whose arguments a person may correct rather than deny – set `editable-details`.
+- A tool call whose JSON arguments a person may fix before it runs (a smaller batch, a dry run first) – set
+  `editable-args`, with `argsSchema` for types and choices.
 - Changes people should read line by line before saying yes – a file edit as `diff`, a command or migration as `args`.
 
 ## When not to use
@@ -47,6 +55,9 @@ coloured. Both sit in the preview and scroll past `--tc-approval-card-code-max`.
 3. **Preview** `.ui-ap__preview` – custom content and the key-value details
    - **Diff** `.ui-ap__code-sec` – the file's path and +/− counts above the changed lines, `.ui-ap__line` each
    - **Arguments** `.ui-ap__code` – the call's arguments as indented JSON
+   - **Argument fields** `.ui-ap__argform` – with `editableArgs`, while editing: a row `.ui-ap__argrow` per argument
+   - **Your changes** `.ui-ap__argdiff` – each changed argument, the old value removed and the new added
+   - **Edit / Reset** `.ui-ap__args-tools` – Edit (Done while editing) and, once something changed, Reset
 4. **Always allow** `.ui-ap__always` – approve this action from now on
 5. **Countdown** `.ui-ap__timer` – the time left, and Stop
 6. **Buttons** `.ui-ap__actions` – Edit, Deny and Approve, with their shortcuts
@@ -70,6 +81,9 @@ Clean; `--tc-approval-card-code-max` (220px) is the height they scroll past.
 | Enter / Space | On “Edit arguments”, turns the text details into fields and focuses the first; on “Done”, turns them back |
 | Escape | In an argument field, leaves “Edit arguments” (keeping the edits) and returns focus to its button – it doesn't deny |
 | Tab, then arrow keys | The diff and the arguments are each one tab stop; the arrow keys scroll them |
+| Enter / Space | On the arguments' Edit, turns them into fields and focuses the first; on Done, back to the code block |
+| Escape | In an argument field, leaves editing (keeping the changes) and returns focus to Edit – it doesn't deny |
+| ⌘ Enter / Ctrl Enter | In an argument field, approves with the changes – unless a JSON field doesn't parse, which is then focused |
 
 ## Screen readers
 
@@ -86,6 +100,12 @@ With `why`, the card is also described by the reason line. Each argument field i
 
 The diff is a region named “Changes: report.config.ts”; each changed line starts with “Added:” or “Removed:” – the
 + and − are hidden – and the counts read “1 added, 1 removed”. The arguments are a region named “Arguments”.
+
+With `editableArgs`, Edit reads “Edit arguments” and says whether it's expanded. The fields are a group named
+“Arguments”, each labelled by its schema `title` or its key, with the schema's `description` as its description. A
+changed field says “Edited”; a JSON field that doesn't parse is `aria-invalid` and described by “Not valid JSON yet”.
+Approving then is held back: a status message says which field to fix, and focus goes to it. Reset is announced
+(“Arguments put back as the agent asked”), and the changes are a region named “Your changes: arguments”.
 
 ## Content
 
@@ -109,6 +129,9 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 - Use `editable-details` for short values a person might correct – a recipient, an amount, a date – and set
   `editable: false` on rows that must not change.
 - Handle `tc-details-change` and run the action with the edited arguments, not the agent's originals.
+- With `editable-args`, run the call with `args` from `onApprove` or `tc-status-change` – and record `edited`, so the
+  run's history says a person changed it.
+- Give `argsSchema` `title`s and `enum`s for arguments people should pick rather than type.
 
 ## Don't
 
@@ -116,6 +139,7 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 - Don't hide the risk badge on high-risk actions to make the card calmer.
 - Don't turn off `allow-stop-timer` unless the deadline is real and can't be extended.
 - Don't fill `why` and `consequences` with boilerplate on every card – they lose their weight.
+- Don't offer `editable-args` for arguments a person can't judge, like ids or hashes – mark those calls read-only.
 
 ## Example
 
@@ -182,6 +206,19 @@ export function MoveEmbargo() {
         ],
       }}
       args={{ branch: "survey-2026", commit: true }}
+    />
+  );
+}
+
+export function RunMigration({ run }: { run: (args: Record<string, unknown>, edited: boolean) => void }) {
+  return (
+    <ApprovalCard
+      title="Run the station ID migration"
+      risk="high"
+      args={{ dataset: "field-survey-2026", rows: 48210, dry_run: false }}
+      editableArgs
+      argsSchema={{ properties: { rows: { type: "integer", title: "Rows" }, dry_run: { type: "boolean", title: "Dry run" } } }}
+      onApprove={({ args, edited }) => run(args ?? {}, !!edited)}
     />
   );
 }

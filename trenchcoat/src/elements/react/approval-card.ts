@@ -2,6 +2,7 @@ import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
 import {
   TcApprovalCard,
+  type ApprovalArgs,
   type ApprovalDeny,
   type ApprovalDetailsChange,
   type ApprovalEvidence,
@@ -12,7 +13,19 @@ import {
 } from "../approval-card";
 import { h, isNode, useStaged } from "./internal";
 
-export type { ApprovalArgs, ApprovalConsequences, ApprovalDiff, ApprovalDiffLine, ApprovalEvidence, ApprovalRisk, ApprovalStatus, DenyReason } from "../approval-card";
+export type {
+  ApprovalArgs,
+  ApprovalArgSchema,
+  ApprovalArgsSchema,
+  ApprovalConsequences,
+  ApprovalDecision,
+  ApprovalDiff,
+  ApprovalDiffLine,
+  ApprovalEvidence,
+  ApprovalRisk,
+  ApprovalStatus,
+  DenyReason,
+} from "../approval-card";
 /** React nodes in place of elements */
 export type ApprovalDetail = {
   label: string;
@@ -55,8 +68,11 @@ export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusCh
   status?: ApprovalStatus;
   /** Starting status when `status` isn't controlled */
   defaultStatus?: ApprovalStatus;
-  /** Called with the new status whenever the card is approved, denied or expires (controlled or not) */
-  onStatusChange?: (status: ApprovalStatus) => void;
+  /**
+   * Called with the new status whenever the card is approved, denied or expires (controlled or not). With
+   * `editableArgs`, an approve also passes the arguments as approved and whether the person changed them
+   */
+  onStatusChange?: (status: ApprovalStatus, change?: { args?: ApprovalArgs; edited?: boolean }) => void;
   /** Called when the card is denied, by the user or by the countdown (`reason: "timeout"`) */
   onDeny?: (decision: { reason: DenyReason }) => void;
   /** Shows an "Edit" button */
@@ -125,7 +141,7 @@ export function ApprovalCard({
   rows?.forEach((d, i) => stage(`detail-${i}`, d.value));
   const { stage: box, els } = useStaged(staged);
   const pick = (key: string, n: React.ReactNode) => textOf(n) ?? (n == null || n === false ? undefined : els[key]);
-  const s = useValue(status, defaultStatus, onStatusChange);
+  const s = useValue(status, defaultStatus, undefined);
   return h(React.Fragment, null, box, h(RawApprovalCard, {
     ...props,
     heading: title,
@@ -136,7 +152,12 @@ export function ApprovalCard({
     details: rows?.map((d, i) => ({ label: d.label, value: pick(`detail-${i}`, d.value) ?? "", ...(d.editable === undefined ? {} : { editable: d.editable }) })),
     status: s.value,
     editable: !!onEdit,
-    onTcStatusChange: (e: CustomEvent<ApprovalStatusChange>) => s.handler(e.detail.status, e),
+    onTcStatusChange: (e: CustomEvent<ApprovalStatusChange>) => {
+      s.handler(e.detail.status, e);
+      const { args, edited } = e.detail;
+      if (args !== undefined) onStatusChange?.(e.detail.status, { args, edited });
+      else onStatusChange?.(e.detail.status);
+    },
     onTcDeny: (e: CustomEvent<ApprovalDeny>) => onDeny?.(e.detail),
     onTcEdit: () => onEdit?.(),
     onTcExpire: () => onExpire?.(),

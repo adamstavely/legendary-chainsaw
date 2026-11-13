@@ -392,3 +392,132 @@ describe("tc-trigger-builder", () => {
     expect(css).toMatch(/prefers-reduced-motion[^{]*\{[^}]*\.ui-tgb__cond, \.ui-tgb__sentence \{ animation: none; \}/);
   });
 });
+
+describe("webhook trigger", () => {
+  const URL_ = "https://hooks.example.org/agents/invoice-match/7f3a91";
+  const HOOK: TriggerValue = { kind: "webhook", webhook: { method: "POST", secretHeader: "X-Signature" }, conditions: [], match: "all" };
+  const SAMPLE = '{ "invoice": "INV-20418" }';
+  const FIELDS: TriggerField[] = [{ id: "amount", label: "Amount", type: "number" }];
+  const mountHook = (value: TriggerValue = HOOK, look: "standard" | "clean" = "standard") =>
+    fixture<TcTriggerBuilder>(html`<tc-trigger-builder look=${look} .events=${EVENTS} webhook-url=${URL_} .webhookSample=${SAMPLE} .webhookFields=${FIELDS} .value=${value} .now=${NOW}></tc-trigger-builder>`);
+
+  test("the kind is offered only with an address; existing triggers don't change", async () => {
+    const plain = await mount();
+    expect(plain.querySelectorAll(".ui-tgb__kind .ui-seg__opt")).toHaveLength(2);
+    const el = await mountHook(WEEKLY);
+    expect(el.querySelectorAll(".ui-tgb__kind .ui-seg__opt")).toHaveLength(3);
+    segOption(el, "A request arrives").click();
+    await settle();
+    expect(el.value.kind).toBe("webhook");
+    expect(el.value.webhook).toEqual({ method: "POST" });
+    expect(el.value.conditions).toEqual([]);
+    expect(el.dataset.kind).toBe("webhook");
+    expect(sentence(el)).toBe(`Runs when a POST request reaches ${URL_}.`);
+    expect(el.querySelector(".ui-tgb__foot")!.textContent).toBe("Runs each time a request arrives");
+    expect(el.querySelector(".ui-tgb__runs")).toBeNull();
+  });
+
+  test("address with Copy, method, secret header, conditions on the body and the sentence", async () => {
+    const el = await mountHook();
+    expect(el.querySelector(".ui-tgb__url")!.textContent).toBe(URL_);
+    expect(sentence(el)).toBe(`Runs when a POST request reaches ${URL_} with the X-Signature header.`);
+    const copy = vi.fn();
+    on(el, "tc-copy", (e) => copy(e.detail.text));
+    const write = vi.spyOn(navigator.clipboard, "writeText").mockResolvedValue();
+    el.querySelector<HTMLButtonElement>(".ui-tgb__copy")!.click();
+    await expect.poll(() => el.querySelector(".ui-tgb__copy")!.textContent).toContain("Copied");
+    expect(copy).toHaveBeenCalledWith(URL_);
+    expect(write).toHaveBeenCalledWith(URL_);
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Copied the webhook address");
+    segOption(el, "PUT").click();
+    await settle();
+    expect(el.value.webhook!.method).toBe("PUT");
+    await change(el.querySelector<HTMLInputElement>(".ui-tgb__secret")!, "  ");
+    expect(el.value.webhook!.secretHeader).toBeUndefined();
+    expect(sentence(el)).toBe(`Runs when a PUT request reaches ${URL_}.`);
+    el.querySelector<HTMLButtonElement>(".ui-tgb__add")!.click();
+    await settle();
+    await change(el.querySelector<HTMLInputElement>(".ui-tgb__value")!, "1000");
+    expect(sentence(el)).toBe(`Runs when a PUT request reaches ${URL_}, only if Amount is 1,000.`);
+  });
+
+  test("Copy prevented: nothing is written", async () => {
+    const el = await mountHook();
+    const write = vi.spyOn(navigator.clipboard, "writeText").mockResolvedValue();
+    on(el, "tc-copy", (e) => e.preventDefault());
+    el.querySelector<HTMLButtonElement>(".ui-tgb__copy")!.click();
+    await settle();
+    expect(write).not.toHaveBeenCalled();
+    expect(el.querySelector(".ui-tgb__copy")!.textContent).not.toContain("Copied");
+  });
+
+  test("Send test request waits for webhookLast; prevented, it doesn't wait", async () => {
+    const el = await mountHook();
+    expect(el.querySelector(".ui-tgb__payload")!.textContent).toBe(SAMPLE);
+    expect(el.querySelector(".ui-tgb__last")).toBeNull();
+    const tests: unknown[] = [];
+    on(el, "tc-webhook-test", (e) => tests.push(e.detail));
+    const send = el.querySelector<HTMLButtonElement>(".ui-tgb__send")!;
+    send.click();
+    await settle();
+    expect(tests).toEqual([{ url: URL_, method: "POST", secretHeader: "X-Signature", payload: SAMPLE }]);
+    expect(send.disabled).toBe(true);
+    expect(send.textContent).toBe("Sending…");
+    el.webhookLast = { at: NOW - 120_000, status: 401, message: "Missing X-Signature header" };
+    await settle();
+    expect(send.disabled).toBe(false);
+    const last = el.querySelector(".ui-tgb__last")!;
+    expect(last.getAttribute("data-ok")).toBe("false");
+    expect(last.textContent!.replace(/\s+/g, " ").trim()).toBe("Last request 2 minutes ago: 401 · Missing X-Signature header");
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Last request: 401 · Missing X-Signature header");
+    on(el, "tc-webhook-test", (e) => e.preventDefault());
+    send.click();
+    await settle();
+    expect(send.disabled).toBe(false);
+  });
+
+  test("forms: invalid without an address; the definition is JSON", async () => {
+    const form = await fixture<HTMLFormElement>(html`<form><tc-trigger-builder name="t" .value=${HOOK} .now=${NOW}></tc-trigger-builder></form>`);
+    const el = form.querySelector<TcTriggerBuilder>("tc-trigger-builder")!;
+    expect(form.checkValidity()).toBe(false);
+    expect(el.querySelector(".ui-tgb__send")!.hasAttribute("disabled")).toBe(true);
+    el.webhookUrl = URL_;
+    await settle();
+    expect(form.checkValidity()).toBe(true);
+    expect(JSON.parse(new FormData(form).get("t") as string)).toEqual(HOOK);
+  });
+
+  test("React: onWebhookTest and onCopyAddress; returning false prevents", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const onWebhookTest = vi.fn(() => false);
+    const onCopyAddress = vi.fn(() => false);
+    await act(async () =>
+      root.render(React.createElement(TriggerBuilder, { events: WRAPPER_EVENTS, webhookUrl: URL_, webhookSample: SAMPLE, defaultValue: HOOK, now: NOW, onWebhookTest, onCopyAddress })),
+    );
+    await settle();
+    const el = host.querySelector<TcTriggerBuilder>("tc-trigger-builder")!;
+    const write = vi.spyOn(navigator.clipboard, "writeText").mockResolvedValue();
+    await act(async () => el.querySelector<HTMLButtonElement>(".ui-tgb__send")!.click());
+    await settle();
+    expect(onWebhookTest).toHaveBeenCalledWith({ url: URL_, method: "POST", secretHeader: "X-Signature", payload: SAMPLE });
+    expect(el.querySelector<HTMLButtonElement>(".ui-tgb__send")!.disabled).toBe(false);
+    await act(async () => el.querySelector<HTMLButtonElement>(".ui-tgb__copy")!.click());
+    await settle();
+    expect(onCopyAddress).toHaveBeenCalledWith(URL_);
+    expect(write).not.toHaveBeenCalled();
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const)
+    test(`axe: a webhook trigger in both looks (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme}>
+        <tc-trigger-builder webhook-url=${URL_} .webhookSample=${SAMPLE} .webhookLast=${{ at: NOW - 60_000, status: 200, message: "Started run 418" }} .now=${NOW} .value=${HOOK}></tc-trigger-builder>
+        <tc-trigger-builder look="clean" heading="Clean webhook" webhook-url=${URL_} .webhookSample=${SAMPLE} .webhookLast=${{ at: NOW - 60_000, status: 500 }} .now=${NOW} .value=${HOOK}></tc-trigger-builder>
+      </div>`);
+      await settle();
+      for (const a of document.getAnimations()) if (a.effect?.getTiming().iterations !== Infinity) a.finish();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+});

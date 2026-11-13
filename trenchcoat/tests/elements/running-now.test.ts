@@ -1,7 +1,8 @@
 /*
  * <tc-running-now> in real browsers: the host and both looks, the pill's words and ring, the panel (groups, focus,
  * keys, Escape), actions as a cancelable event, elapsed times from `now` and the own clock, debounced announcements,
- * "All done", the React wrapper and axe.
+ * "All done", the React wrapper and axe. Notify when done: opt-in bells on tasks still going, the cancelable
+ * tc-notify-change, tc-notify when a watched task finishes, channels, the wrapper and axe.
  */
 import { html } from "lit";
 import axe from "axe-core";
@@ -206,12 +207,169 @@ describe("tc-running-now", () => {
     await act(async () => root.unmount());
   });
 
+  describe("notify when done", () => {
+    const makeN = (o: { look?: string; channels?: string[]; notify?: string[] } = {}) =>
+      fixture<TcRunningNow>(
+        html`<tc-running-now look=${o.look ?? "standard"} notifiable .tasks=${TASKS} .now=${NOW} .notify=${o.notify ?? []} .notifyChannels=${o.channels ?? []}></tc-running-now>`,
+      );
+    const bell = (el: Element, id: string) => row(el, id).querySelector<HTMLButtonElement>(".ui-rnw__bell");
+
+    test("opt-in: without `notifiable` there are no bells; with it, only tasks still going get one", async () => {
+      const plainEl = await make();
+      await openPanel(plainEl);
+      expect(plainEl.querySelectorAll(".ui-rnw__bell")).toHaveLength(0);
+      const el = await makeN();
+      await openPanel(el);
+      expect([...el.querySelectorAll<HTMLElement>(".ui-rnw__row")].filter((r) => r.querySelector(".ui-rnw__bell")).map((r) => r.dataset.id)).toEqual(["draft", "vendors", "classify"]);
+      const b = bell(el, "vendors")!;
+      expect(plain(b.textContent)).toBe("Notify me when Check vendor records finishes");
+      expect(b.getAttribute("aria-pressed")).toBe("false");
+      expect(b.hasAttribute("aria-expanded")).toBe(false);
+      // One tab stop for the list: the active row's bell and action take part, the others' don't
+      expect(bell(el, "draft")!.tabIndex).toBe(0);
+      expect(b.tabIndex).toBe(-1);
+      await expect.poll(() => document.activeElement).toBe(row(el, "draft"));
+      await userEvent.keyboard("{Tab}");
+      expect(document.activeElement).toBe(bell(el, "draft"));
+      await userEvent.keyboard("{Enter}");
+      await settle();
+      expect(el.notify).toEqual(["draft"]);
+    });
+
+    test("the bell: a cancelable tc-notify-change, pressed while on, announced; tc-notify once a watched task finishes", async () => {
+      const el = await makeN();
+      await openPanel(el);
+      const changes: unknown[] = [];
+      const notices: unknown[] = [];
+      el.addEventListener("tc-notify-change", (e) => changes.push((e as CustomEvent).detail));
+      el.addEventListener("tc-notify", (e) => notices.push((e as CustomEvent).detail));
+      bell(el, "vendors")!.click();
+      await settle();
+      expect(changes).toEqual([{ notify: ["vendors"], id: "vendors", on: true, notifyVia: {} }]);
+      expect(el.notify).toEqual(["vendors"]);
+      expect(bell(el, "vendors")!.getAttribute("aria-pressed")).toBe("true");
+      expect(bell(el, "vendors")!.hasAttribute("data-on")).toBe(true);
+      expect(status(el)).toBe("You'll be told when Check vendor records finishes");
+      const stop = (e: Event) => e.preventDefault();
+      el.addEventListener("tc-notify-change", stop);
+      bell(el, "classify")!.click();
+      await settle();
+      expect(el.notify).toEqual(["vendors"]);
+      expect(bell(el, "classify")!.getAttribute("aria-pressed")).toBe("false");
+      el.removeEventListener("tc-notify-change", stop);
+      // The watched one finishes: tc-notify, and the bell goes with its state; the unwatched one finishing is quiet
+      el.tasks = TASKS.map((t) => (t.id === "vendors" ? { ...t, status: "done", ended: NOW } : t.id === "classify" ? { ...t, status: "failed" } : t));
+      await settle();
+      expect(notices).toEqual([{ id: "vendors", status: "done", task: el.tasks[0], channels: undefined }]);
+      expect(bell(el, "vendors")).toBeNull();
+      await expect.poll(() => status(el)).toBe("Check vendor records done. Classify contracts failed");
+      el.tasks = [...el.tasks];
+      await settle();
+      expect(notices).toHaveLength(1);
+      bell(el, "draft")!.click();
+      await settle();
+      bell(el, "draft")!.click();
+      await settle();
+      expect(el.notify).toEqual(["vendors"]);
+      expect(status(el)).toBe("No longer watching Draft the audit report");
+    });
+
+    test("channels: the bell opens a list of checkboxes; each one is a change; Escape closes the list, not the panel", async () => {
+      const el = await makeN({ channels: ["In app", "Email", "Push"] });
+      await openPanel(el);
+      const changes: { notify: string[]; channels?: string[]; notifyVia: Record<string, string[]> }[] = [];
+      const notices: unknown[] = [];
+      el.addEventListener("tc-notify-change", (e) => changes.push((e as CustomEvent).detail));
+      el.addEventListener("tc-notify", (e) => notices.push((e as CustomEvent).detail));
+      const b = bell(el, "vendors")!;
+      expect(b.getAttribute("aria-expanded")).toBe("false");
+      expect(b.hasAttribute("aria-pressed")).toBe(false);
+      b.click();
+      await settle();
+      const list = row(el, "vendors").querySelector<HTMLFieldSetElement>(".ui-rnw__channels")!;
+      expect(b.getAttribute("aria-expanded")).toBe("true");
+      expect(b.getAttribute("aria-controls")).toBe(list.id);
+      expect(plain(list.querySelector("legend")!.textContent)).toBe("Tell me about Check vendor records by");
+      const boxes = [...list.querySelectorAll<HTMLInputElement>("input[type=checkbox]")];
+      expect(boxes.map((x) => plain(x.parentElement!.textContent))).toEqual(["In app", "Email", "Push"]);
+      await expect.poll(() => document.activeElement).toBe(boxes[0]);
+      boxes[1].click();
+      await settle();
+      boxes[2].click();
+      await settle();
+      expect(changes.map((c) => [c.notify, c.channels])).toEqual([
+        [["vendors"], ["Email"]],
+        [["vendors"], ["Email", "Push"]],
+      ]);
+      expect(el.notifyVia).toEqual({ vendors: ["Email", "Push"] });
+      expect(plain(b.textContent)).toBe("Notify me when Check vendor records finishes: Email, Push");
+      expect(status(el)).toBe("You'll be told by Email, Push when Check vendor records finishes");
+      // Arrow keys in the list don't move between tasks
+      boxes[2].focus();
+      await userEvent.keyboard("{ArrowDown}");
+      expect(document.activeElement).toBe(boxes[2]);
+      await userEvent.keyboard("{Escape}");
+      await settle();
+      expect(el.open).toBe(true);
+      expect(row(el, "vendors").querySelector(".ui-rnw__channels")).toBeNull();
+      await expect.poll(() => document.activeElement).toBe(bell(el, "vendors"));
+      el.tasks = TASKS.map((t) => (t.id === "vendors" ? { ...t, status: "done", ended: NOW } : t));
+      await settle();
+      expect(notices).toEqual([{ id: "vendors", status: "done", task: el.tasks[0], channels: ["Email", "Push"] }]);
+      // Every channel off is not watching
+      el.tasks = TASKS;
+      await settle();
+      bell(el, "vendors")!.click();
+      await settle();
+      for (const x of row(el, "vendors").querySelectorAll<HTMLInputElement>(".ui-rnw__channels input:checked")) {
+        x.click();
+        await settle();
+      }
+      expect(el.notify).toEqual([]);
+      expect(el.notifyVia).toEqual({});
+    });
+
+    test("the wrapper: watched tasks survive a re-render uncontrolled, stay put controlled; onNotify", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const calls: unknown[] = [];
+      const render = (n: number, tasks = TASKS) =>
+        root.render(
+          React.createElement("div", null,
+            React.createElement(RunningNow, { title: `Free ${n}`, tasks, now: NOW, defaultOpen: true, notifiable: true, onNotifyChange: (next) => calls.push(["free", next]), onNotify: (t, st) => calls.push(["done", t.id, st]) }),
+            React.createElement(RunningNow, { tasks, now: NOW, notifiable: true, notify: ["draft"], onNotifyChange: (next) => calls.push(["held", next]) }),
+          ),
+        );
+      await act(async () => render(0));
+      await settle();
+      const [free, held] = [...host.querySelectorAll<TcRunningNow>("tc-running-now")];
+      bell(free, "vendors")!.click();
+      await act(async () => settle());
+      await act(async () => render(1));
+      await settle();
+      expect(free.notify).toEqual(["vendors"]);
+      await act(async () => render(2, TASKS.map((t) => (t.id === "vendors" ? { ...t, status: "done" as const } : t))));
+      await settle();
+      pill(held).click();
+      await act(async () => settle());
+      bell(held, "classify")!.click();
+      await act(async () => settle());
+      expect(held.notify).toEqual(["draft"]);
+      expect(bell(held, "classify")!.getAttribute("aria-pressed")).toBe("false");
+      expect(calls).toEqual([["free", ["vendors"]], ["done", "vendors", "done"], ["held", ["draft", "classify"]]]);
+      await act(async () => root.unmount());
+    });
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe: no violations in either look, with the panel open (${theme})`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10; color-scheme: dark; padding: 8px" : "padding: 8px"}>
         <tc-running-now .tasks=${TASKS} .now=${NOW}></tc-running-now>
         <tc-running-now look="clean" .tasks=${TASKS} .now=${NOW}></tc-running-now>
         <tc-running-now .tasks=${[]}></tc-running-now>
+        <tc-running-now notifiable .notify=${["vendors"]} .tasks=${TASKS} .now=${NOW}></tc-running-now>
+        <tc-running-now look="clean" notifiable .notifyChannels=${["In app", "Email"]} .notifyVia=${{ vendors: ["Email"] }} .notify=${["vendors"]} .tasks=${TASKS} .now=${NOW}></tc-running-now>
       </div>`);
       const [std, clean] = [...wrap.querySelectorAll<TcRunningNow>("tc-running-now")];
       await openPanel(clean);
@@ -221,6 +379,21 @@ describe("tc-running-now", () => {
       clean.open = false;
       await settle();
       await openPanel(std);
+      await finish(wrap);
+      result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+      // With bells, and a channel list open
+      const [, , , bells, chans] = [...wrap.querySelectorAll<TcRunningNow>("tc-running-now")];
+      for (const [shown, hidden] of [
+        [bells, std],
+        [chans, bells],
+      ] as const) {
+        hidden.open = false;
+        await settle();
+        await openPanel(shown);
+      }
+      chans.querySelector<HTMLButtonElement>('.ui-rnw__row[data-id="vendors"] .ui-rnw__bell')!.click();
+      await settle();
       await finish(wrap);
       result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);

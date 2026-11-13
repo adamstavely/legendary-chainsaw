@@ -9,7 +9,7 @@
 An agent asks before it acts – risk badge, preview with an optional diff or arguments, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 
 - **Element:** `<tc-approval-card>`
-- **Size:** 16.3 KB gzip · 58.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.8 KB gzip · 68.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -43,6 +43,12 @@ Two more show exactly what would change: `diff` – a file change as a small uni
 above the lines – and `args` – the call's arguments as a readable code block with its keys, strings and numbers
 coloured. Both sit in the preview and scroll past `--tc-approval-card-code-max`.
 
+`editableArgs` lets people change those arguments before approving. Edit, under the arguments, turns each one into a
+field: text, a number, a yes / no box, or a choice when `argsSchema` lists them. Anything else, such as a list or an
+object, becomes JSON that's checked as it's typed. A changed argument says "Edited", and a small diff under the block
+shows each change, the agent's value removed and the person's added. Approve becomes "Approve with changes", and
+`onApprove` and `tc-status-change` carry `args` (as they'll run) and `edited`. Reset puts every argument back.
+
 ### When to use
 
 - An agent is about to send, pay, delete or publish, and a person must say yes first.
@@ -51,6 +57,8 @@ coloured. Both sit in the preview and scroll past `--tc-approval-card-code-max`.
 - High-stakes requests where people need the reason, the consequences or the sources – add `why`, `consequences`
   and `evidence`.
 - Actions whose arguments a person may correct rather than deny – set `editable-details`.
+- A tool call whose JSON arguments a person may fix before it runs (a smaller batch, a dry run first) – set
+  `editable-args`, with `argsSchema` for types and choices.
 - Changes people should read line by line before saying yes – a file edit as `diff`, a command or migration as `args`.
 
 ### When not to use
@@ -151,6 +159,19 @@ export function MoveEmbargo() {
     />
   );
 }
+
+export function RunMigration({ run }: { run: (args: Record<string, unknown>, edited: boolean) => void }) {
+  return (
+    <ApprovalCard
+      title="Run the station ID migration"
+      risk="high"
+      args={{ dataset: "field-survey-2026", rows: 48210, dry_run: false }}
+      editableArgs
+      argsSchema={{ properties: { rows: { type: "integer", title: "Rows" }, dry_run: { type: "boolean", title: "Dry run" } } }}
+      onApprove={({ args, edited }) => run(args ?? {}, !!edited)}
+    />
+  );
+}
 ```
 
 ### Vue / Nuxt
@@ -231,7 +252,7 @@ export class ApprovalCardExample {
 | `details` | – | `ApprovalDetail[] \| undefined` | `undefined` | Key-value rows in the preview, e.g. To, Subject, Scheduled |
 | `preview` | – | `string \| Element \| undefined` | `undefined` | Anything to show above the details, e.g. a recipient list: text, or an element (cloned) |
 | `status` | `status` | `ApprovalStatus` | `"pending"` | The status |
-| `onApprove` | – | `((decision: { always: boolean }) => void \| Promise<unknown>) \| undefined` | `undefined` | Called on Approve with the "Always allow" choice. Return a promise to show a spinner and lock the card until it settles; a rejection keeps it pending and shows `errorLabel`, and Approve can be pressed again to retry |
+| `onApprove` | – | `((decision: ApprovalDecision) => void \| Promise<unknown>) \| undefined` | `undefined` | Called on Approve with the "Always allow" choice. Return a promise to show a spinner and lock the card until it settles; a rejection keeps it pending and shows `errorLabel`, and Approve can be pressed again to retry |
 | `errorLabel` | `error-label` | `string` | `"Couldn't approve. Try again."` | Shown under the buttons when an onApprove promise rejects |
 | `editable` | `editable` | `boolean` | `false` | Shows an "Edit" button (it fires tc-edit) |
 | `expiresIn` | `expires-in` | `number \| undefined` | `undefined` | Seconds until the request expires and is denied with reason "timeout" |
@@ -259,13 +280,22 @@ export class ApprovalCardExample {
 | `diffLabel` | `diff-label` | `string` | `"Changes"` | The heading of the diff |
 | `args` | – | `ApprovalArgs \| undefined` | `undefined` | The call's arguments, shown as a readable code block |
 | `argsLabel` | `args-label` | `string` | `"Arguments"` | The heading of the arguments |
+| `editableArgs` | `editable-args` | `boolean` | `false` | Lets the person change the arguments before approving: Edit beside them turns each one into a field |
+| `argsSchema` | – | `ApprovalArgsSchema \| undefined` | `undefined` | The arguments' JSON Schema (its `properties`): types and choices for the fields |
+| `editArgsLabel` | `edit-args-label` | `string` | `"Edit"` | The arguments' Edit button label |
+| `doneArgsLabel` | `done-args-label` | `string` | `"Done"` | Its label while editing |
+| `resetArgsLabel` | `reset-args-label` | `string` | `"Reset"` | The Reset button's label – it puts every argument back |
+| `approveEditedLabel` | `approve-edited-label` | `string` | `"Approve with changes"` | The Approve button's label once an argument has changed |
+| `changesLabel` | `changes-label` | `string` | `"Your changes"` | The heading of the diff of changed arguments |
+| `editedArgs` | – | `ApprovalArgs \| undefined` | – | The arguments as they'd be approved now: `args` with the person's changes |
+| `argsEdited` | – | `` | – | Some argument differs from `args` |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
 
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
-| `tc-status-change` | – | Yes | The card was approved, denied or expired; detail `{ status }`. Cancelable: preventDefault() keeps the status (controlled use) |
+| `tc-status-change` | – | Yes | The card was approved, denied or expired; detail `{ status }`, plus `{ args, edited }` on approve with `editableArgs`. Cancelable: preventDefault() keeps the status (controlled use) |
 | `tc-deny` | – | No | Denied by the user or by the countdown; detail `{ reason: "user" \| "timeout" }` |
 | `tc-expire` | – | No | The countdown ran out (tc-deny fires too); detail: null |
 | `tc-edit` | – | No | Edit was pressed (shown with `editable`); detail: null |
@@ -282,9 +312,9 @@ export class ApprovalCardExample {
 | `--tc-approval-card-spin` | `800ms` | both |
 | `--tc-approval-card-code-max` | `220px` | both |
 
-#### Design tokens it reads (109)
+#### Design tokens it reads (110)
 
-`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-active`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-control`, `--tc-border-control-hover`, `--tc-border-default`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-shimmer`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-duration-slowest`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-mono`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-hairline`, `--tc-icon-muted`, `--tc-kbd-bg`, `--tc-kbd-fg`, `--tc-kbd-font-size`, `--tc-kbd-font-weight`, `--tc-kbd-h`, `--tc-kbd-on-inverse-bg`, `--tc-kbd-px`, `--tc-kbd-radius`, `--tc-kbd-shadow`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-size-lg`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-xs`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-control`, `--tc-surface-inverse`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-syntax-keyword`, `--tc-syntax-number`, `--tc-syntax-property`, `--tc-syntax-string`, `--tc-syntax-text`, `--tc-text-muted`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tracking-normal`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-active`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-control`, `--tc-border-control-hover`, `--tc-border-default`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-shimmer`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-duration-slowest`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-mono`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-hairline`, `--tc-icon-muted`, `--tc-kbd-bg`, `--tc-kbd-fg`, `--tc-kbd-font-size`, `--tc-kbd-font-weight`, `--tc-kbd-h`, `--tc-kbd-on-inverse-bg`, `--tc-kbd-px`, `--tc-kbd-radius`, `--tc-kbd-shadow`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-size-lg`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-xs`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-control`, `--tc-surface-inverse`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-syntax-keyword`, `--tc-syntax-number`, `--tc-syntax-property`, `--tc-syntax-string`, `--tc-syntax-text`, `--tc-text-muted`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tracking-normal`, `--tc-tray-inset`, `--tc-tray-radius`
 
 ## Frameworks
 
@@ -314,21 +344,20 @@ export class ApprovalCardExample {
 | `evidence` | `el.evidence = …;` | `<… evidence={…} />` | `<tc-approval-card :evidence="…">` | `<tc-approval-card [evidence]="…">` | `<tc-approval-card {evidence}>` |
 | `diff` | `el.diff = …;` | `<… diff={…} />` | `<tc-approval-card :diff="…">` | `<tc-approval-card [diff]="…">` | `<tc-approval-card {diff}>` |
 | `args` | `el.args = …;` | `<… args={…} />` | `<tc-approval-card :args="…">` | `<tc-approval-card [args]="…">` | `<tc-approval-card {args}>` |
+| `argsSchema` | `el.argsSchema = …;` | `<… argsSchema={…} />` | `<tc-approval-card :argsSchema="…">` | `<tc-approval-card [argsSchema]="…">` | `<tc-approval-card {argsSchema}>` |
 
-*Also attributes: `heading`, `risk`, `status`, `error-label`, `editable`, `expires-in`, `allow-stop-timer`, `stop-timer-label` and 17 more – see the API table.*
+*Also attributes: `heading`, `risk`, `status`, `error-label`, `editable`, `expires-in`, `allow-stop-timer`, `stop-timer-label` and 23 more – see the API table.*
 
 ### Events
 
 | Event | Cancelable | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
 | --- | --- | --- | --- | --- | --- | --- |
-| `tc-status-change` | Yes | `el.addEventListener("tc-status-change", (e) => …)` | `ref.current.addEventListener("tc-status-change", …)` | `@tc-status-change="…"` | `(tc-status-change)="…($event)"` | `el.addEventListener("tc-status-change", …)` |
+| `tc-status-change` | Yes | `el.addEventListener("tc-status-change", (e) => …)` | `onStatusChange={…}` | `@tc-status-change="…"` | `(tc-status-change)="…($event)"` | `el.addEventListener("tc-status-change", …)` |
 | `tc-deny` | No | `el.addEventListener("tc-deny", (e) => …)` | `onDeny={…}` | `@tc-deny="…"` | `(tc-deny)="…($event)"` | `el.addEventListener("tc-deny", …)` |
 | `tc-expire` | No | `el.addEventListener("tc-expire", (e) => …)` | `onExpire={…}` | `@tc-expire="…"` | `(tc-expire)="…($event)"` | `el.addEventListener("tc-expire", …)` |
 | `tc-edit` | No | `el.addEventListener("tc-edit", (e) => …)` | `onEdit={…}` | `@tc-edit="…"` | `(tc-edit)="…($event)"` | `el.addEventListener("tc-edit", …)` |
 | `tc-details-change` | Yes | `el.addEventListener("tc-details-change", (e) => …)` | `onDetailsChange={…}` | `@tc-details-change="…"` | `(tc-details-change)="…($event)"` | `el.addEventListener("tc-details-change", …)` |
 | `tc-evidence-select` | No | `el.addEventListener("tc-evidence-select", (e) => …)` | `onEvidenceSelect={…}` | `@tc-evidence-select="…"` | `(tc-evidence-select)="…($event)"` | `el.addEventListener("tc-evidence-select", …)` |
-
-*React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
@@ -472,7 +501,7 @@ No slots: everything it shows comes from its properties (and, in React, the wrap
 | `label` | `React.ReactNode` | Small label on the gray tray above the card |
 | `status` | `ApprovalStatus` | The status. Controlled when defined – the card then only asks for changes through `onStatusChange` |
 | `defaultStatus` | `ApprovalStatus` | Starting status when `status` isn't controlled |
-| `onStatusChange` | `(status: ApprovalStatus) => void` | Called with the new status whenever the card is approved, denied or expires (controlled or not) |
+| `onStatusChange` | `(status: ApprovalStatus, change?: { args?: ApprovalArgs; edited?: boolean }) => void` | Called with the new status whenever the card is approved, denied or expires (controlled or not). With `editableArgs`, an approve also passes the arguments as approved and whether the person changed them |
 | `onDeny` | `(decision: { reason: DenyReason }) => void` | Called when the card is denied, by the user or by the countdown (`reason: "timeout"`) |
 | `onEdit` | `() => void` | Shows an "Edit" button |
 | `onExpire` | `() => void` | Called when the countdown runs out (onDeny is called too) |
@@ -494,6 +523,9 @@ No slots: everything it shows comes from its properties (and, in React, the wrap
 | Enter / Space | On “Edit arguments”, turns the text details into fields and focuses the first; on “Done”, turns them back |
 | Escape | In an argument field, leaves “Edit arguments” (keeping the edits) and returns focus to its button – it doesn't deny |
 | Tab, then arrow keys | The diff and the arguments are each one tab stop; the arrow keys scroll them |
+| Enter / Space | On the arguments' Edit, turns them into fields and focuses the first; on Done, back to the code block |
+| Escape | In an argument field, leaves editing (keeping the changes) and returns focus to Edit – it doesn't deny |
+| ⌘ Enter / Ctrl Enter | In an argument field, approves with the changes – unless a JSON field doesn't parse, which is then focused |
 
 ### Screen readers
 
@@ -510,6 +542,12 @@ With `why`, the card is also described by the reason line. Each argument field i
 
 The diff is a region named “Changes: report.config.ts”; each changed line starts with “Added:” or “Removed:” – the
 + and − are hidden – and the counts read “1 added, 1 removed”. The arguments are a region named “Arguments”.
+
+With `editableArgs`, Edit reads “Edit arguments” and says whether it's expanded. The fields are a group named
+“Arguments”, each labelled by its schema `title` or its key, with the schema's `description` as its description. A
+changed field says “Edited”; a JSON field that doesn't parse is `aria-invalid` and described by “Not valid JSON yet”.
+Approving then is held back: a status message says which field to fix, and focus goes to it. Reset is announced
+(“Arguments put back as the agent asked”), and the changes are a region named “Your changes: arguments”.
 
 ### Every component
 
@@ -554,13 +592,13 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 49.9 KB | 13.5 KB |
+| **This component alone** | 59.4 KB | 15.8 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -569,8 +607,8 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **58.7 KB** | **16.3 KB** |
-| With Lit – the first component on a page | 79.4 KB | 23.0 KB |
+| **Added to a page that already has Lit** | **68.2 KB** | **18.8 KB** |
+| With Lit – the first component on a page | 88.9 KB | 25.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -578,13 +616,13 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.5 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of details replaced |
-| First on the page | 30 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.1 ms | details: first render, 350 nodes; update 0.6 ms |
-| 1,000 items | 24 ms | details: first render, 3,050 nodes; update 1.7 ms |
+| First render | **2.1 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of details replaced |
+| First on the page | 31 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.8 ms | details: first render, 350 nodes; update 0.4 ms |
+| 1,000 items | 16 ms | details: first render, 3,050 nodes; update 1.5 ms |
 
-1,000 items of details: 24 ms, 3,050 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of details: 16 ms, 3,050 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -625,6 +663,9 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 - Use `editable-details` for short values a person might correct – a recipient, an amount, a date – and set
   `editable: false` on rows that must not change.
 - Handle `tc-details-change` and run the action with the edited arguments, not the agent's originals.
+- With `editable-args`, run the call with `args` from `onApprove` or `tc-status-change` – and record `edited`, so the
+  run's history says a person changed it.
+- Give `argsSchema` `title`s and `enum`s for arguments people should pick rather than type.
 
 ### Don't
 
@@ -632,6 +673,7 @@ The diff is a region named “Changes: report.config.ts”; each changed line st
 - Don't hide the risk badge on high-risk actions to make the card calmer.
 - Don't turn off `allow-stop-timer` unless the deadline is real and can't be extended.
 - Don't fill `why` and `consequences` with boilerplate on every card – they lose their weight.
+- Don't offer `editable-args` for arguments a person can't judge, like ids or hashes – mark those calls read-only.
 
 ## Related
 

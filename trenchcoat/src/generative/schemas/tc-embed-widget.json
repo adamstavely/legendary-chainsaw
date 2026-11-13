@@ -1,0 +1,201 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-embed-widget.json",
+  "title": "tc-embed-widget",
+  "description": "The chat a visitor opens on a website: a corner launcher with an unread count, and a panel with a greeting,\nstarters, the conversation and a message field, styled by `theme`.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The agent's name in the header (theme.title overrides it)"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "The line under the name, e.g. how fast it replies"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "The agent's picture – a URL; initials of the name when there's none"
+    },
+    "greeting": {
+      "type": "string",
+      "description": "The first message, from the agent (theme.greeting overrides it)"
+    },
+    "starters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EmbedStarter"
+      },
+      "description": "Starter questions, shown until the visitor has written"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EmbedMessage"
+      },
+      "description": "The conversation, oldest first – the page appends the visitor's messages and the replies"
+    },
+    "typing": {
+      "type": "boolean",
+      "description": "The agent is writing a reply: dots at the end of the conversation"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "The panel is open"
+    },
+    "unread": {
+      "type": "number",
+      "description": "Messages the visitor hasn't seen, as a count on the launcher while the panel is closed"
+    },
+    "floating": {
+      "type": "boolean",
+      "description": "Pin the widget to the window's corner, as on a site; otherwise it sits in the page's flow"
+    },
+    "position": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "description": "Which corner the launcher sits in (theme.position overrides it)"
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "accent": {
+          "type": "string"
+        },
+        "radius": {
+          "type": "number"
+        },
+        "position": {
+          "$ref": "#/definitions/EmbedPosition"
+        },
+        "greeting": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "launcherLabel": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "How the site styles it: accent, radius, side, greeting, title and launcher words"
+    },
+    "privacy": {
+      "type": "string",
+      "description": "The privacy line under the message field; empty hides it"
+    },
+    "privacyHref": {
+      "type": "string",
+      "description": "Where the privacy line's link goes; none hides the link",
+      "format": "uri-reference"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "launcher": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "conversation": {
+          "type": "string"
+        },
+        "starters": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "you": {
+          "type": "string"
+        },
+        "typing": {
+          "type": "string"
+        },
+        "unread": {
+          "type": "string"
+        },
+        "privacyLink": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The widget's words, merged over defaultEmbedWidgetLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EmbedStarter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A starter question shown before the visitor has written"
+    },
+    "EmbedMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "$ref": "#/definitions/EmbedMessageFrom"
+        },
+        "text": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "A person's name (from \"human\", or who joined for \"handoff\")"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "EmbedMessageFrom": {
+      "type": "string",
+      "enum": [
+        "assistant",
+        "handoff",
+        "human",
+        "visitor"
+      ],
+      "description": "Who a message is from: the visitor, the AI assistant, a person who took over, or a notice that one joined"
+    },
+    "EmbedPosition": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ]
+    }
+  }
+}

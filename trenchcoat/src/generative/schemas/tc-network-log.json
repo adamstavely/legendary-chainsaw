@@ -72,10 +72,10 @@
         "empty": {
           "type": "string"
         },
-        "size": {
+        "name": {
           "type": "string"
         },
-        "name": {
+        "size": {
           "type": "string"
         },
         "failed": {
@@ -90,10 +90,10 @@
         "type": {
           "type": "string"
         },
-        "time": {
+        "noMatches": {
           "type": "string"
         },
-        "noMatches": {
+        "time": {
           "type": "string"
         },
         "url": {

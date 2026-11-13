@@ -1,0 +1,239 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-list.json",
+  "title": "tc-agent-list",
+  "description": "Every agent in a workspace, with the failing ones lifted first; search, status filter and sort.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentListItem"
+      },
+      "description": "The agents"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "cost",
+        "failures",
+        "lastRun",
+        "name"
+      ],
+      "description": "The order: \"name\", \"lastRun\", \"failures\" or \"cost\". Changed by the user unless a tc-sort-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentListStatus"
+      },
+      "description": "The statuses shown; empty shows every one. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text. Changed by the user unless a tc-query-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\", epoch ms – last runs read as \"2 h ago\" when it's given, else as a date"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The cost's currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates, numbers and money"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
+        },
+        "live": {
+          "type": "string"
+        },
+        "failing": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "sortBy": {
+          "type": "string"
+        },
+        "sortName": {
+          "type": "string"
+        },
+        "sortLastRun": {
+          "type": "string"
+        },
+        "sortFailures": {
+          "type": "string"
+        },
+        "sortCost": {
+          "type": "string"
+        },
+        "attention": {
+          "type": "string"
+        },
+        "others": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "neverRun": {
+          "type": "string"
+        },
+        "lastRun": {
+          "type": "string"
+        },
+        "runs": {
+          "type": "string"
+        },
+        "failures": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "succeeded": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "shown": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "whyFailures": {
+          "type": "string"
+        },
+        "whyLastRun": {
+          "type": "string"
+        },
+        "whyBoth": {
+          "type": "string"
+        },
+        "whyFailing": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentListItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentListStatus"
+        },
+        "model": {
+          "type": "string"
+        },
+        "lastRun": {
+          "type": "object",
+          "properties": {
+            "at": {
+              "type": "number"
+            },
+            "status": {
+              "$ref": "#/definitions/AgentListRunStatus"
+            }
+          },
+          "required": [
+            "at",
+            "status"
+          ],
+          "additionalProperties": false,
+          "description": "The last run: when (epoch ms) and how it went"
+        },
+        "runs7d": {
+          "type": "number",
+          "description": "Runs in the last 7 days"
+        },
+        "failureRate": {
+          "type": "number",
+          "description": "The share of those runs that failed, 0–1"
+        },
+        "cost7d": {
+          "type": "number",
+          "description": "What the last 7 days cost"
+        },
+        "attention": {
+          "type": "string",
+          "description": "Why it needs attention, in words; by default worked out from the failures"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentListStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "failing",
+        "live",
+        "paused"
+      ]
+    },
+    "AgentListRunStatus": {
+      "type": "string",
+      "enum": [
+        "failed",
+        "running",
+        "succeeded"
+      ]
+    }
+  }
+}
