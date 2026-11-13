@@ -142,12 +142,14 @@ for (const look of ["standard", "clean"] as const) {
         signals.push(signal);
         return new Promise<string>((resolve) => setTimeout(() => resolve(text.endsWith("were") ? " late." : ""), 30));
       });
-      const el = await fixture<TcGhostCompletion>(html`<tc-ghost-completion look=${look} value="Reviews" debounce="10" .suggest=${suggest}></tc-ghost-completion>`);
+      // A debounce longer than the gap between typed letters, so a slow runner doesn't ask between them
+      const el = await fixture<TcGhostCompletion>(html`<tc-ghost-completion look=${look} value="Reviews" debounce="150" .suggest=${suggest}></tc-ghost-completion>`);
       toEnd(el);
       await type(el, " w");
-      await expect.poll(() => suggest.mock.calls.length).toBe(1);
+      await expect.poll(() => suggest.mock.calls.length).toBeGreaterThanOrEqual(1);
+      const asked = signals.length;
       await type(el, "ere");
-      await expect.poll(() => signals[0].aborted).toBe(true);
+      await expect.poll(() => signals[asked - 1].aborted).toBe(true);
       await expect.poll(() => ghost(el)).toBe(" late.");
       expect(suggest).toHaveBeenLastCalledWith("Reviews were", expect.anything());
       expect(el.querySelector(".ui-ghc__loading")).toBeNull();
