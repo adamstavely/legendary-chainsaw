@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-rate-limit-status.json",
+  "title": "tc-rate-limit-status",
+  "description": "Usage against each provider's rate limits – requests, input and output tokens a minute as meters, the headroom in\nwords with a countdown when limited, 429s in the last hour, the tier and a sparkline, tightest first.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading, e.g. the window the numbers cover"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RateLimitRow"
+      },
+      "description": "One row per provider and model"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "name",
+        "tightest"
+      ],
+      "description": "The order: the tightest headroom first, or by provider and model. Changed by the user unless a tc-sort-change listener calls preventDefault()"
+    },
+    "hideSort": {
+      "type": "boolean",
+      "description": "Hides the sort select"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms, for the reset countdown; leave it unset and the element keeps its own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "requests": {
+              "type": "string"
+            },
+            "inputTokens": {
+              "type": "string"
+            },
+            "outputTokens": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "units": {
+          "type": "object",
+          "properties": {
+            "requests": {
+              "type": "string"
+            },
+            "inputTokens": {
+              "type": "string"
+            },
+            "outputTokens": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "headroom": {
+          "type": "object",
+          "properties": {
+            "plenty": {
+              "type": "string"
+            },
+            "near": {
+              "type": "string"
+            },
+            "limited": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "sorts": {
+          "type": "object",
+          "properties": {
+            "tightest": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resetsIn": {
+          "type": "string"
+        },
+        "sort": {
+          "type": "string"
+        },
+        "throttled": {
+          "type": "string"
+        },
+        "throttledOne": {
+          "type": "string"
+        },
+        "noThrottled": {
+          "type": "string"
+        },
+        "peak": {
+          "type": "string"
+        },
+        "limitedCount": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "description": "The element's words, merged over defaultRateLimitStatusLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RateLimitRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string",
+          "description": "Who serves the model, e.g. \"Model provider\""
+        },
+        "model": {
+          "type": "string",
+          "description": "The model, e.g. \"large-1\""
+        },
+        "tier": {
+          "type": "string",
+          "description": "The account's tier with that provider, e.g. \"Tier 3\""
+        },
+        "requests": {
+          "$ref": "#/definitions/RateLimitUsage"
+        },
+        "inputTokens": {
+          "$ref": "#/definitions/RateLimitUsage"
+        },
+        "outputTokens": {
+          "$ref": "#/definitions/RateLimitUsage"
+        },
+        "resetAt": {
+          "type": "number",
+          "description": "When the limited window resets, epoch ms"
+        },
+        "throttled": {
+          "type": "number",
+          "description": "Requests turned away with a 429 in the last hour"
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "The last hour's peak use, one value a minute (or any even step), as a share of the tightest limit – 0 to 1 or more"
+        }
+      },
+      "required": [
+        "id",
+        "provider",
+        "model"
+      ],
+      "additionalProperties": false
+    },
+    "RateLimitUsage": {
+      "type": "object",
+      "properties": {
+        "used": {
+          "type": "number",
+          "description": "Used in the current minute"
+        },
+        "limit": {
+          "type": "number",
+          "description": "The limit a minute"
+        }
+      },
+      "required": [
+        "used",
+        "limit"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

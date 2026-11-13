@@ -6,13 +6,13 @@ Each component page has a **Performance** section: what the component costs to d
 and update, how far it scales, and what it does when nobody's using it. The numbers come from `npm run measure:perf`
 and live in `app/src/docs/perf.json`; each page says when it was measured.
 
-*483 components measured, between 2026-10-27 and 2026-11-13, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
+*495 components measured, between 2026-10-27 and 2026-11-13, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
 
 ### Largest, on a page that has Lit
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 2817.5 KB | 11335.0 KB | 10.6 KB |
+| [generated-ui](../components/generated-ui.md) | 2881.6 KB | 11604.9 KB | 10.6 KB |
 | [ai-side-pane](../blocks/ai-side-pane.md) | 163.1 KB | 687.1 KB | 11.2 KB |
 | [small-multiples](../components/small-multiples.md) | 146.4 KB | 457.5 KB | 6.0 KB |
 | [chart](../components/chart.md) | 143.0 KB | 447.5 KB | 2.4 KB |

@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-endpoint-bar.json",
+  "title": "tc-endpoint-bar",
+  "description": "One API endpoint on one line – the method badge, the base URL or an environment select, the path with its\n{params} picked out and described, Copy URL and Try it, with Deprecated and Beta badges.",
+  "type": "object",
+  "properties": {
+    "method": {
+      "type": "string",
+      "enum": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "description": "The HTTP method"
+    },
+    "path": {
+      "type": "string",
+      "description": "The path, with parameters in braces, e.g. \"/v1/records/{record_id}\""
+    },
+    "params": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EndpointParam"
+      },
+      "description": "The path parameters' descriptions, by name"
+    },
+    "environments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EndpointEnvironment"
+      },
+      "description": "The environments to pick between; with one or none, the base URL is plain text"
+    },
+    "environment": {
+      "type": "string",
+      "description": "The picked environment's id; by default the first. Changed by the select unless a tc-environment-change listener calls preventDefault()"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "The base URL when there are no environments"
+    },
+    "summary": {
+      "type": "string",
+      "description": "A short summary after the path, e.g. \"Get a record\""
+    },
+    "deprecated": {
+      "type": "boolean",
+      "description": "Marks the endpoint deprecated"
+    },
+    "beta": {
+      "type": "boolean",
+      "description": "Marks the endpoint beta"
+    },
+    "hideTry": {
+      "type": "boolean",
+      "description": "Hides Try it"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "environment": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "tryIt": {
+          "type": "string"
+        },
+        "deprecated": {
+          "type": "string"
+        },
+        "beta": {
+          "type": "string"
+        },
+        "param": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The element's words, merged over defaultEndpointBarLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EndpointParam": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name inside the braces, e.g. \"record_id\""
+        },
+        "description": {
+          "type": "string",
+          "description": "What it is, for the tooltip"
+        },
+        "type": {
+          "type": "string",
+          "description": "Its type, e.g. \"string\""
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "EndpointEnvironment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What the select shows, e.g. \"Production\""
+        },
+        "baseUrl": {
+          "type": "string",
+          "description": "e.g. \"https://records.example.org\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "baseUrl"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

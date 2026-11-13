@@ -1,0 +1,623 @@
+{
+ "elements": [
+  {
+   "tag": "tc-api-reference-nav",
+   "className": "TcApiReferenceNav",
+   "description": "An API reference's side navigation: endpoints grouped by resource, with method badges, a filter and the current page.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"API reference\"",
+     "description": "The header's title",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quiet line under the title: the version, the base URL",
+     "readonly": false
+    },
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "ApiNavGroup[]",
+     "default": "[]",
+     "description": "The resources and their endpoints, in order",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": "current",
+     "type": "string | null",
+     "default": "null",
+     "description": "The current endpoint's id – aria-current=\"page\". Set by a click unless a tc-navigate listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The filter's text. Changed by typing unless a tc-query-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "showPaths",
+     "attribute": "show-paths",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show each endpoint's path instead of its name. Changed by the Paths switch unless a tc-show-paths-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "collapsed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids of closed groups. Changed by opening and closing unless a tc-collapsed-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "hideFilter",
+     "attribute": "hide-filter",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hide the filter field (for a short reference)",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ApiNavLabels>",
+     "default": "{}",
+     "description": "The words, merged over defaultApiNavLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-navigate",
+     "detail": "",
+     "description": "An endpoint was chosen ({ id, href, endpoint, current }: ApiNavNavigate); cancelable – prevented, a link isn't followed and `current` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The filter changed ({ query }: ApiNavQueryChange); cancelable – prevented, `query` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-show-paths-change",
+     "detail": "",
+     "description": "The Paths switch was pressed ({ showPaths }: ApiNavShowPathsChange); cancelable – prevented, `showPaths` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-collapsed-change",
+     "detail": "",
+     "description": "A group was opened or closed ({ collapsed, id, open }: ApiNavCollapsedChange); cancelable – prevented, `collapsed` stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "arn",
+   "cssProperties": [
+    {
+     "name": "--tc-arn-max-h",
+     "value": "520px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-arn-method-w",
+     "value": "44px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-arn-icon",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-caption-tracking",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "apiMethodTone",
+   "signature": "apiMethodTone(method: string): \"read\" | \"create\" | \"change\" | \"delete\" | \"other\"",
+   "description": "The tone a method's badge takes: reads in blue, creates in green, changes in amber, deletes in red"
+  },
+  {
+   "name": "apiEndpointMatches",
+   "signature": "apiEndpointMatches(endpoint: ApiEndpoint, query: string): void",
+   "description": "Whether an endpoint matches a filter: every word must be in its name, path or method"
+  }
+ ],
+ "react": [
+  {
+   "component": "ApiReferenceNav",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The header's title"
+    },
+    {
+     "name": "current",
+     "type": "string | null",
+     "optional": true,
+     "description": "The current endpoint's id – controlled when given; your router sets it"
+    },
+    {
+     "name": "defaultCurrent",
+     "type": "string | null",
+     "optional": true,
+     "description": "The current endpoint at first, when `current` isn't controlled; then a click moves it"
+    },
+    {
+     "name": "onNavigate",
+     "type": "(id: string, href: string | undefined, event: CustomEvent<ApiNavNavigate>) => void",
+     "optional": true,
+     "description": "An endpoint was chosen; call `event.preventDefault()` to route a link yourself instead of following it"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The filter's text – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The filter's text at first, when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the filter's new text"
+    },
+    {
+     "name": "showPaths",
+     "type": "boolean",
+     "optional": true,
+     "description": "Paths instead of names – controlled when given"
+    },
+    {
+     "name": "defaultShowPaths",
+     "type": "boolean",
+     "optional": true,
+     "description": "Paths at first, when `showPaths` isn't controlled"
+    },
+    {
+     "name": "onShowPathsChange",
+     "type": "(showPaths: boolean) => void",
+     "optional": true,
+     "description": "Called when the Paths switch is pressed"
+    },
+    {
+     "name": "collapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ids of closed groups – controlled when given"
+    },
+    {
+     "name": "defaultCollapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "The closed groups at first, when `collapsed` isn't controlled"
+    },
+    {
+     "name": "onCollapsedChange",
+     "type": "(collapsed: string[]) => void",
+     "optional": true,
+     "description": "Called with the closed groups after one is opened or closed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "current",
+    "query",
+    "showPaths",
+    "collapsed"
+   ],
+   "events": {
+    "tc-navigate": "onNavigate",
+    "tc-query-change": null,
+    "tc-show-paths-change": null,
+    "tc-collapsed-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-api-reference-nav",
+   "className": "TcApiReferenceNav",
+   "module": "@adamstavely/trenchcoat/api-reference-nav",
+   "data": [
+    "groups",
+    "collapsed",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "current",
+     "attribute": "current"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "showPaths",
+     "attribute": "show-paths"
+    },
+    {
+     "name": "hideFilter",
+     "attribute": "hide-filter"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-navigate",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-show-paths-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-collapsed-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "current",
+     "event": "tc-navigate"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    },
+    {
+     "property": "showPaths",
+     "event": "tc-show-paths-change"
+    },
+    {
+     "property": "collapsed",
+     "event": "tc-collapsed-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28306,
+  "gzip": 9038
+ }
+}

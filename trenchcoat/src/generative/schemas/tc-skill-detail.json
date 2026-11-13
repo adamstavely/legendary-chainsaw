@@ -1,0 +1,321 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-skill-detail.json",
+  "title": "tc-skill-detail",
+  "description": "One skill: who made it and its version, when a model picks it, the tools it may use and what they can do, its files,\nrecent runs, and Enable, Update, Export and Remove – asking first before turning on anything risky or removing it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The skill's name, shown as the heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "What it does, under the name"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who made it: \"Built-in\", \"Your team\", a plugin's name, \"Community\""
+    },
+    "version": {
+      "type": "string",
+      "description": "Its version, e.g. \"1.4.0\""
+    },
+    "available": {
+      "type": "string",
+      "description": "A newer version that's available, e.g. \"1.5.0\"; shows Update"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "It's on. Changed by the switch unless a tc-enabled-change listener calls preventDefault()"
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "When a model picks it: the phrases from its description"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SkillDetailTool"
+      },
+      "description": "The tools it may use, with what each is allowed to do"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SkillDetailFile"
+      },
+      "description": "Its files, paths from the skill's root"
+    },
+    "file": {
+      "type": "string",
+      "description": "The file shown; null shows the first. Changed by picking unless a tc-file-change listener calls preventDefault()"
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SkillDetailRun"
+      },
+      "description": "Recent runs, newest first"
+    },
+    "usedBy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The agents that use it – named when removing"
+    },
+    "noRemove": {
+      "type": "boolean",
+      "description": "Hide Remove"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms, for \"3 h ago\"; without it, runs show their date"
+    },
+    "locale": {
+      "type": "string",
+      "description": "For dates and relative times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "read": {
+              "type": "string"
+            },
+            "write": {
+              "type": "string"
+            },
+            "run": {
+              "type": "string"
+            },
+            "network": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "read",
+            "write",
+            "run",
+            "network"
+          ],
+          "additionalProperties": false
+        },
+        "outcomes": {
+          "type": "object",
+          "properties": {
+            "succeeded": {
+              "type": "string"
+            },
+            "failed": {
+              "type": "string"
+            },
+            "cancelled": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "updateAvailable": {
+          "type": "string"
+        },
+        "update": {
+          "type": "string"
+        },
+        "triggers": {
+          "type": "string"
+        },
+        "noTriggers": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "string"
+        },
+        "noTools": {
+          "type": "string"
+        },
+        "files": {
+          "type": "string"
+        },
+        "noFiles": {
+          "type": "string"
+        },
+        "noPreview": {
+          "type": "string"
+        },
+        "runs": {
+          "type": "string"
+        },
+        "noRuns": {
+          "type": "string"
+        },
+        "export": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "riskTitle": {
+          "type": "string"
+        },
+        "riskLead": {
+          "type": "string"
+        },
+        "risks": {
+          "type": "object",
+          "properties": {
+            "network": {
+              "type": "string"
+            },
+            "run": {
+              "type": "string"
+            },
+            "write": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "network",
+            "run",
+            "write"
+          ],
+          "additionalProperties": false
+        },
+        "turnOn": {
+          "type": "string"
+        },
+        "removeTitle": {
+          "type": "string"
+        },
+        "removeUsed": {
+          "type": "string"
+        },
+        "removeUnused": {
+          "type": "string"
+        },
+        "announceOn": {
+          "type": "string"
+        },
+        "announceOff": {
+          "type": "string"
+        },
+        "announceRemoved": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words to rename, merged over defaultSkillDetailLabels; {name}, {version} and {agents} are filled in"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SkillDetailTool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "permission": {
+          "$ref": "#/definitions/SkillPermission"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "permission"
+      ],
+      "additionalProperties": false,
+      "description": "A tool the skill may call"
+    },
+    "SkillPermission": {
+      "type": "string",
+      "enum": [
+        "network",
+        "read",
+        "run",
+        "write"
+      ],
+      "description": "What a tool lets the skill do"
+    },
+    "SkillDetailFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "description": "A file in the skill's folder; `path` from the skill's root, e.g. \"scripts/check.py\""
+    },
+    "SkillDetailRun": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/definitions/SkillRunOutcome"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "agent",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "description": "One time the skill ran"
+    },
+    "SkillRunOutcome": {
+      "type": "string",
+      "enum": [
+        "cancelled",
+        "failed",
+        "succeeded"
+      ]
+    }
+  }
+}

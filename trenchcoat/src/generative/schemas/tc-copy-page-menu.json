@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-copy-page-menu.json",
+  "title": "tc-copy-page-menu",
+  "description": "A docs page's Copy page button: copy it as Markdown for a model, view it, copy its link, open it in an assistant, download it.",
+  "type": "object",
+  "properties": {
+    "markdown": {
+      "type": "string",
+      "description": "The page as Markdown; when it's empty, `getMarkdown` is asked"
+    },
+    "url": {
+      "type": "string",
+      "description": "The page's address, for Copy link and the assistants' prompt; without it those items aren't offered"
+    },
+    "pageTitle": {
+      "type": "string",
+      "description": "The page's title, for the download's file name and the dialog"
+    },
+    "filename": {
+      "type": "string",
+      "description": "The download's file name; defaults to the title in dashes, then .md"
+    },
+    "assistants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CopyPageAssistant"
+      },
+      "description": "Chat assistants to open the page in, in order"
+    },
+    "hideDownload": {
+      "type": "boolean",
+      "description": "Hide Download .md"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "The menu is open. Changed by the arrow button unless a tc-open-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "copyMarkdown": {
+          "type": "string"
+        },
+        "copyMarkdownHint": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        },
+        "viewHint": {
+          "type": "string"
+        },
+        "copyLink": {
+          "type": "string"
+        },
+        "openIn": {
+          "type": "string"
+        },
+        "download": {
+          "type": "string"
+        },
+        "downloadHint": {
+          "type": "string"
+        },
+        "dialogTitle": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words, merged over defaultCopyPageLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CopyPageAssistant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Its name, shown as \"Open in <label>\""
+        },
+        "urlTemplate": {
+          "type": "string",
+          "description": "Its new-chat URL, with \"{prompt}\" where the prompt goes (URL-encoded for you): \"https://chat.example.org/new?q={prompt}\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "urlTemplate"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,371 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-schema-fields.json",
+  "title": "tc-schema-fields",
+  "description": "An API's fields from a JSON Schema: name, type in words, required, default, limits and meaning, with nested objects folding under their field.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "enum": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SchemaFieldValue"
+          }
+        },
+        "const": {
+          "$ref": "#/definitions/SchemaFieldValue"
+        },
+        "default": {},
+        "deprecated": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonSchema"
+          }
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "items": {
+          "$ref": "#/definitions/JsonSchema"
+        },
+        "$ref": {
+          "type": "string"
+        },
+        "$defs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonSchema"
+          }
+        },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonSchema"
+          }
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "exclusiveMinimum": {
+          "type": "number"
+        },
+        "exclusiveMaximum": {
+          "type": "number"
+        },
+        "minLength": {
+          "type": "number"
+        },
+        "maxLength": {
+          "type": "number"
+        },
+        "minItems": {
+          "type": "number"
+        },
+        "maxItems": {
+          "type": "number"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "multipleOf": {
+          "type": "number"
+        },
+        "uniqueItems": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": {},
+      "description": "A JSON Schema for an object; its properties become the fields"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SchemaField"
+      },
+      "description": "The fields themselves; wins over `schema`"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The paths of fields whose children are showing (\"owner\", \"owner.address\"). Changed by the toggles unless a tc-expanded-change listener calls preventDefault()"
+    },
+    "query": {
+      "type": "string",
+      "description": "The filter text. Changed by typing unless a tc-query-change listener calls preventDefault()"
+    },
+    "searchThreshold": {
+      "type": "number",
+      "description": "How many fields bring up the filter box; 0 always shows it"
+    },
+    "idPrefix": {
+      "type": "string",
+      "description": "What anchors start with: `<id-prefix>-owner.email`"
+    },
+    "anchorBase": {
+      "type": "string",
+      "description": "The address Copy link puts before the anchor; the page's own address when empty"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "string"
+        },
+        "deprecated": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "oneOf": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "expandAll": {
+          "type": "string"
+        },
+        "collapseAll": {
+          "type": "string"
+        },
+        "copyLink": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SchemaFieldValue": {
+      "type": [
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ],
+      "description": "A value an enum or a default can hold"
+    },
+    "JsonSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "enum": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SchemaFieldValue"
+          }
+        },
+        "const": {
+          "$ref": "#/definitions/SchemaFieldValue"
+        },
+        "default": {},
+        "deprecated": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonSchema"
+          }
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "items": {
+          "$ref": "#/definitions/JsonSchema"
+        },
+        "$ref": {
+          "type": "string"
+        },
+        "$defs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonSchema"
+          }
+        },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonSchema"
+          }
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "exclusiveMinimum": {
+          "type": "number"
+        },
+        "exclusiveMaximum": {
+          "type": "number"
+        },
+        "minLength": {
+          "type": "number"
+        },
+        "maxLength": {
+          "type": "number"
+        },
+        "minItems": {
+          "type": "number"
+        },
+        "maxItems": {
+          "type": "number"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "multipleOf": {
+          "type": "number"
+        },
+        "uniqueItems": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": {},
+      "description": "The JSON Schema keywords the element reads; anything else is ignored"
+    },
+    "SchemaField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "\"string\", \"integer\", \"object\", \"array\"…; several joined with \" or \""
+        },
+        "format": {
+          "type": "string",
+          "description": "A format the type carries: \"email\", \"date-time\", \"uri\""
+        },
+        "items": {
+          "type": "string",
+          "description": "For arrays: what the items are (\"Tag\", \"string\")"
+        },
+        "enum": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SchemaFieldValue"
+          },
+          "description": "The only values allowed"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "deprecated": {
+          "type": "boolean"
+        },
+        "default": {
+          "description": "Used when the field is left out; undefined for none"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it means; `code`, **bold** and [links](https://…) are drawn"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Limits in words: \"1–200 characters\", \"Pattern: ^REC-\\d+$\""
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SchemaField"
+          },
+          "description": "The fields of a nested object, or of an array's objects"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "One field, as the element draws it"
+    }
+  }
+}

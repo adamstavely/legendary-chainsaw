@@ -181,7 +181,7 @@ for (const el of elements.filter((e) => e.props.length)) {
   const defs = schema.definitions ?? {};
   const reaches = (node, seen = new Set()) => {
     if (!node || typeof node !== "object") return false;
-    if (node.$ref) {
+    if (typeof node.$ref === "string") {
       const name = decodeURIComponent(node.$ref.replace("#/definitions/", ""));
       if (DOMISH.test(name)) return true;
       if (seen.has(name)) return false;
@@ -221,7 +221,7 @@ for (const el of elements.filter((e) => e.props.length)) {
   const bound = boundFields(el.slug);
   const mark = (node, kind, seen = new Set()) => {
     if (!node || typeof node !== "object") return;
-    if (node.$ref) {
+    if (typeof node.$ref === "string") {
       const name = decodeURIComponent(node.$ref.replace("#/definitions/", ""));
       if (!seen.has(name)) mark(defs[name], kind, new Set([...seen, name]));
       return;
@@ -243,7 +243,7 @@ for (const el of elements.filter((e) => e.props.length)) {
   const used = new Set();
   const collect = (node) => {
     if (!node || typeof node !== "object") return;
-    if (node.$ref) {
+    if (typeof node.$ref === "string") {
       const name = decodeURIComponent(node.$ref.replace("#/definitions/", ""));
       if (!used.has(name)) {
         used.add(name);

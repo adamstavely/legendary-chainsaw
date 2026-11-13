@@ -42,10 +42,10 @@
         "draft": {
           "type": "string"
         },
-        "active": {
+        "deprecated": {
           "type": "string"
         },
-        "deprecated": {
+        "active": {
           "type": "string"
         }
       },

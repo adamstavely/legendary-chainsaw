@@ -1,0 +1,783 @@
+{
+ "elements": [
+  {
+   "tag": "tc-skill-detail",
+   "className": "TcSkillDetail",
+   "description": "One skill: who made it and its version, when a model picks it, the tools it may use and what they can do, its files,\nrecent runs, and Enable, Update, Export and Remove – asking first before turning on anything risky or removing it.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The skill's name, shown as the heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What it does, under the name",
+     "readonly": false
+    },
+    {
+     "name": "author",
+     "attribute": "author",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Who made it: \"Built-in\", \"Your team\", a plugin's name, \"Community\"",
+     "readonly": false
+    },
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Its version, e.g. \"1.4.0\"",
+     "readonly": false
+    },
+    {
+     "name": "available",
+     "attribute": "available",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A newer version that's available, e.g. \"1.5.0\"; shows Update",
+     "readonly": false
+    },
+    {
+     "name": "enabled",
+     "attribute": "enabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "It's on. Changed by the switch unless a tc-enabled-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "triggers",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "When a model picks it: the phrases from its description",
+     "readonly": false
+    },
+    {
+     "name": "tools",
+     "attribute": null,
+     "type": "SkillDetailTool[]",
+     "default": "[]",
+     "description": "The tools it may use, with what each is allowed to do",
+     "readonly": false
+    },
+    {
+     "name": "files",
+     "attribute": null,
+     "type": "SkillDetailFile[]",
+     "default": "[]",
+     "description": "Its files, paths from the skill's root",
+     "readonly": false
+    },
+    {
+     "name": "file",
+     "attribute": "file",
+     "type": "string | null",
+     "default": "null",
+     "description": "The file shown; null shows the first. Changed by picking unless a tc-file-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "runs",
+     "attribute": null,
+     "type": "SkillDetailRun[]",
+     "default": "[]",
+     "description": "Recent runs, newest first",
+     "readonly": false
+    },
+    {
+     "name": "usedBy",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The agents that use it – named when removing",
+     "readonly": false
+    },
+    {
+     "name": "noRemove",
+     "attribute": "no-remove",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hide Remove",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, epoch ms, for \"3 h ago\"; without it, runs show their date",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "For dates and relative times",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<SkillDetailLabels>",
+     "default": "{}",
+     "description": "Words to rename, merged over defaultSkillDetailLabels; {name}, {version} and {agents} are filled in",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-enabled-change",
+     "detail": "",
+     "description": "The skill was turned on or off ({ enabled }: SkillDetailEnabledChange); cancelable – prevented, `enabled` stays as it was. Turning on a risky skill fires it only after Turn on is pressed",
+     "cancelable": true
+    },
+    {
+     "name": "tc-file-change",
+     "detail": "",
+     "description": "Another file was picked ({ file }: SkillDetailFileChange); cancelable – prevented, `file` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update",
+     "detail": "",
+     "description": "Update was pressed ({ version }: SkillDetailUpdate)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was pressed (detail: {})",
+     "cancelable": false
+    },
+    {
+     "name": "tc-remove",
+     "detail": "",
+     "description": "Remove was confirmed ({ name, usedBy }: SkillDetailRemove); cancelable – prevented, nothing is announced",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "skd",
+   "cssProperties": [
+    {
+     "name": "--tc-skd-files-w",
+     "value": "200px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-skd-mark",
+     "value": "8px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-danger-bg",
+    "--tc-action-danger-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "skillRisks",
+   "signature": "skillRisks(tools: readonly SkillDetailTool[]): Exclude<SkillPermission, \"read\">[]",
+   "description": "The risky permissions among a skill's tools, in a fixed order"
+  }
+ ],
+ "react": [
+  {
+   "component": "SkillDetail",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The skill's name, shown as the heading"
+    },
+    {
+     "name": "enabled",
+     "type": "boolean",
+     "optional": true,
+     "description": "It's on – controlled when given"
+    },
+    {
+     "name": "defaultEnabled",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it's on at mount, when `enabled` isn't controlled"
+    },
+    {
+     "name": "onEnabledChange",
+     "type": "(enabled: boolean) => void",
+     "optional": true,
+     "description": "Called when it's turned on (after a risky skill's Turn on) or off"
+    },
+    {
+     "name": "file",
+     "type": "string | null",
+     "optional": true,
+     "description": "The file shown, or null for the first – controlled when given"
+    },
+    {
+     "name": "defaultFile",
+     "type": "string | null",
+     "optional": true,
+     "description": "The file shown at mount, when `file` isn't controlled"
+    },
+    {
+     "name": "onFileChange",
+     "type": "(file: string) => void",
+     "optional": true,
+     "description": "Called with the path of the file picked"
+    },
+    {
+     "name": "onUpdate",
+     "type": "(version: string) => void",
+     "optional": true,
+     "description": "Update was pressed: install `version`"
+    },
+    {
+     "name": "onExport",
+     "type": "() => void",
+     "optional": true,
+     "description": "Export was pressed"
+    },
+    {
+     "name": "onRemove",
+     "type": "(name: string, usedBy: string[]) => boolean | void",
+     "optional": true,
+     "description": "Remove was confirmed: remove it; return false to skip the announcement"
+    }
+   ],
+   "hides": [
+    "heading",
+    "enabled",
+    "file",
+    "children"
+   ],
+   "events": {
+    "tc-enabled-change": "onEnabledChange",
+    "tc-file-change": null,
+    "tc-update": "onUpdate",
+    "tc-export": "onExport",
+    "tc-remove": "onRemove"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-skill-detail",
+   "className": "TcSkillDetail",
+   "module": "@adamstavely/trenchcoat/skill-detail",
+   "data": [
+    "triggers",
+    "tools",
+    "files",
+    "runs",
+    "usedBy",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "author",
+     "attribute": "author"
+    },
+    {
+     "name": "version",
+     "attribute": "version"
+    },
+    {
+     "name": "available",
+     "attribute": "available"
+    },
+    {
+     "name": "enabled",
+     "attribute": "enabled"
+    },
+    {
+     "name": "file",
+     "attribute": "file"
+    },
+    {
+     "name": "noRemove",
+     "attribute": "no-remove"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-enabled-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-file-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update",
+     "cancelable": false
+    },
+    {
+     "name": "tc-export",
+     "cancelable": false
+    },
+    {
+     "name": "tc-remove",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "enabled",
+     "event": "tc-enabled-change"
+    },
+    {
+     "property": "file",
+     "event": "tc-file-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "inline-diff",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "code-block",
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "inline-diff",
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "code-block",
+     "internal/kit",
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "code-block",
+     "internal/base",
+     "inline-diff",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "code-block"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "code-block"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (code-block)",
+   "setTimeout (inline-diff)"
+  ],
+  "frames": [],
+  "animations": 2,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "ResizeObserver (inline-diff)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document keydown (inline-diff)",
+   "document pointerdown (inline-diff)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "code-block",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (code-block)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (inline-diff)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 114835,
+  "gzip": 30042
+ }
+}

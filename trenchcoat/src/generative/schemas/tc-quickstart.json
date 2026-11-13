@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-quickstart.json",
+  "title": "tc-quickstart",
+  "description": "A first API request with the key filled in – language tabs, four numbered steps, the key masked until revealed,\nCopy that warns when it copies the key, and Run it with the response the page passes back.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "The API's base URL, e.g. \"https://api.example.com\""
+    },
+    "endpoint": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "$ref": "#/definitions/QuickstartMethod"
+        },
+        "path": {
+          "type": "string"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "method",
+        "path"
+      ],
+      "additionalProperties": false,
+      "description": "The request to make: method, path and an optional JSON body"
+    },
+    "apiKey": {
+      "type": "string",
+      "description": "The person's API key – shown masked until revealed, and copied whole"
+    },
+    "envVar": {
+      "type": "string",
+      "description": "The environment variable the key goes into"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "curl",
+        "go",
+        "python",
+        "typescript"
+      ],
+      "description": "The language shown. Changed by the tabs unless a tc-language-change listener calls preventDefault()"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuickstartLanguage"
+      },
+      "description": "The languages offered, in order"
+    },
+    "storageKey": {
+      "type": "string",
+      "description": "A localStorage key to remember the chosen language under; none by default"
+    },
+    "response": {
+      "type": "string",
+      "description": "The response to show in step 4, as text; null before a run"
+    },
+    "responseStatus": {
+      "type": "string",
+      "description": "The response's status, e.g. \"200 OK\""
+    },
+    "running": {
+      "type": "boolean",
+      "description": "A request is on its way: Run it waits and the response area is busy"
+    },
+    "hideRun": {
+      "type": "boolean",
+      "description": "Hides Run it and step 4"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "languages": {
+          "type": "object",
+          "properties": {
+            "curl": {
+              "type": "string"
+            },
+            "python": {
+              "type": "string"
+            },
+            "typescript": {
+              "type": "string"
+            },
+            "go": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "steps": {
+          "type": "object",
+          "properties": {
+            "install": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "request": {
+              "type": "string"
+            },
+            "response": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "install": {
+          "type": "object",
+          "properties": {
+            "curl": {
+              "type": "string"
+            },
+            "python": {
+              "type": "string"
+            },
+            "typescript": {
+              "type": "string"
+            },
+            "go": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "reveal": {
+          "type": "string"
+        },
+        "hide": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "copiedKey": {
+          "type": "string"
+        },
+        "run": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "responseEmpty": {
+          "type": "string"
+        },
+        "responseReceived": {
+          "type": "string"
+        },
+        "noKey": {
+          "type": "string"
+        }
+      },
+      "description": "The element's words, merged over defaultQuickstartLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "QuickstartMethod": {
+      "type": "string",
+      "enum": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST",
+        "PUT"
+      ]
+    },
+    "QuickstartLanguage": {
+      "type": "string",
+      "enum": [
+        "curl",
+        "go",
+        "python",
+        "typescript"
+      ]
+    }
+  }
+}

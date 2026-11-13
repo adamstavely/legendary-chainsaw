@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-api-reference-nav.json",
+  "title": "tc-api-reference-nav",
+  "description": "An API reference's side navigation: endpoints grouped by resource, with method badges, a filter and the current page.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The header's title"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the title: the version, the base URL"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApiNavGroup"
+      },
+      "description": "The resources and their endpoints, in order"
+    },
+    "current": {
+      "type": "string",
+      "description": "The current endpoint's id – aria-current=\"page\". Set by a click unless a tc-navigate listener calls preventDefault()"
+    },
+    "query": {
+      "type": "string",
+      "description": "The filter's text. Changed by typing unless a tc-query-change listener calls preventDefault()"
+    },
+    "showPaths": {
+      "type": "boolean",
+      "description": "Show each endpoint's path instead of its name. Changed by the Paths switch unless a tc-show-paths-change listener calls preventDefault()"
+    },
+    "collapsed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of closed groups. Changed by opening and closing unless a tc-collapsed-change listener calls preventDefault()"
+    },
+    "hideFilter": {
+      "type": "boolean",
+      "description": "Hide the filter field (for a short reference)"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "type": "string"
+        },
+        "filterPlaceholder": {
+          "type": "string"
+        },
+        "showPaths": {
+          "type": "string"
+        },
+        "deprecated": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "matches": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words, merged over defaultApiNavLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ApiNavGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The resource, \"Records\""
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApiEndpoint"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "endpoints"
+      ],
+      "additionalProperties": false
+    },
+    "ApiEndpoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Your key: `current` names it, tc-navigate hands it back"
+        },
+        "name": {
+          "type": "string",
+          "description": "Its short name, \"List records\""
+        },
+        "method": {
+          "$ref": "#/definitions/ApiMethod"
+        },
+        "path": {
+          "type": "string",
+          "description": "\"/v1/records/{id}\" – shown with the Paths switch, and matched by the filter"
+        },
+        "href": {
+          "type": "string",
+          "description": "Its page; without one the row is a button that only fires tc-navigate",
+          "format": "uri-reference"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "description": "Struck through and labelled Deprecated; still reachable"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "method",
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "ApiMethod": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "PATCH",
+            "POST",
+            "PUT"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "An HTTP method; anything else is shown as given, in a neutral badge"
+    }
+  }
+}

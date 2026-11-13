@@ -1,0 +1,614 @@
+{
+ "elements": [
+  {
+   "tag": "tc-response-examples",
+   "className": "TcResponseExamples",
+   "description": "An endpoint's example responses, one tab per status, each with its meaning, headers and a pretty-printed body to copy.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Responses\"",
+     "description": "The heading – often the endpoint, \"GET /records/{id}\"",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "examples",
+     "attribute": null,
+     "type": "ResponseExample[]",
+     "default": "[]",
+     "description": "The example responses, one tab each, in the order given",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The tab showing, by its status (\"200\"); the first when empty or unknown. Changed by the tabs unless a tc-status-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "mediaType",
+     "attribute": "media-type",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The body's media type; the status's first when empty or not among its bodies. Changed by the select unless a tc-media-type-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "headersOpen",
+     "attribute": "headers-open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the headers open",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "360",
+     "description": "The tallest the body gets before it scrolls, in px; 0 for no limit",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ResponseExamplesLabels>",
+     "default": "{}",
+     "description": "Rename any of the words, over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-status-change",
+     "detail": "",
+     "description": "Another status's tab was chosen ({ status, example }: ResponseExamplesStatusChange); cancelable – prevented, `status` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-media-type-change",
+     "detail": "",
+     "description": "Another media type was chosen for the body ({ mediaType, status }: ResponseExamplesMediaTypeChange); cancelable – prevented, `mediaType` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rex",
+   "cssProperties": [
+    {
+     "name": "--tc-rex-indicator",
+     "value": "2px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultResponseExamplesLabels",
+   "signature": "defaultResponseExamplesLabels: ResponseExamplesLabels",
+   "description": "The words used when the page gives none"
+  },
+  {
+   "name": "responseStatusClass",
+   "signature": "responseStatusClass(status: number | string): ResponseStatusClass",
+   "description": "The status's class from its first digit: 2xx success, 4xx client error…"
+  },
+  {
+   "name": "responseReason",
+   "signature": "responseReason(status: number | string): void",
+   "description": "The standard reason phrase for a code, or \"\""
+  },
+  {
+   "name": "responseBodies",
+   "signature": "responseBodies(ex: ResponseExample): ResponseExampleBody[]",
+   "description": "The bodies of an example, in order"
+  },
+  {
+   "name": "responseBodyText",
+   "signature": "responseBodyText(body: ResponseExampleBody): string",
+   "description": "A body as text: JSON values and JSON text pretty-printed, other text as it is"
+  }
+ ],
+ "react": [
+  {
+   "component": "ResponseExamples",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – often the endpoint, \"GET /records/{id}\""
+    },
+    {
+     "name": "status",
+     "type": "string",
+     "optional": true,
+     "description": "The status whose tab is showing (\"200\") – controlled when given"
+    },
+    {
+     "name": "defaultStatus",
+     "type": "string",
+     "optional": true,
+     "description": "On mount, when `status` isn't controlled; the first tab when empty"
+    },
+    {
+     "name": "onStatusChange",
+     "type": "(status: string) => void",
+     "optional": true,
+     "description": "Called with the status of the tab chosen"
+    },
+    {
+     "name": "mediaType",
+     "type": "string",
+     "optional": true,
+     "description": "The body's media type – controlled when given"
+    },
+    {
+     "name": "defaultMediaType",
+     "type": "string",
+     "optional": true,
+     "description": "On mount, when `mediaType` isn't controlled; the status's first when empty"
+    },
+    {
+     "name": "onMediaTypeChange",
+     "type": "(mediaType: string) => void",
+     "optional": true,
+     "description": "Called with the media type chosen for the body"
+    }
+   ],
+   "hides": [
+    "heading",
+    "status",
+    "mediaType",
+    "children"
+   ],
+   "events": {
+    "tc-status-change": null,
+    "tc-media-type-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-response-examples",
+   "className": "TcResponseExamples",
+   "module": "@adamstavely/trenchcoat/response-examples",
+   "data": [
+    "examples",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "mediaType",
+     "attribute": "media-type"
+    },
+    {
+     "name": "headersOpen",
+     "attribute": "headers-open"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-status-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-media-type-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "status",
+     "event": "tc-status-change"
+    },
+    {
+     "property": "mediaType",
+     "event": "tc-media-type-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "inline-diff",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "code-block",
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "code-block",
+     "internal/kit",
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "code-block",
+     "internal/base",
+     "inline-diff",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "code-block"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "inline-diff"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "code-block"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (code-block)",
+   "setTimeout (inline-diff)"
+  ],
+  "frames": [],
+  "animations": 2,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "ResizeObserver (inline-diff)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document keydown (inline-diff)",
+   "document pointerdown (inline-diff)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "code-block",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (code-block)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (inline-diff)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 101202,
+  "gzip": 27046
+ }
+}

@@ -1,0 +1,308 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-request-log.json",
+  "title": "tc-request-log",
+  "description": "Every request an app made to a model provider, one line each – time, model, endpoint, status, latency, tokens, cost and cache – with status and model filters and a detail of bodies and headers, secrets masked, and Copy as cURL.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading"
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProviderRequest"
+      },
+      "description": "The requests, in any order – the list shows the newest first"
+    },
+    "classes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RequestStatusClass"
+      },
+      "description": "The status classes that show; empty shows them all"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The models that show; empty shows them all"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open request's id"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "Put before each request's endpoint for Copy as cURL, when it has no `url`"
+    },
+    "redact": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Header and body keys to mask, compared without case, - or _"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code for costs"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for times, numbers and amounts"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the list scrolls"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "2xx": {
+          "type": "string"
+        },
+        "4xx": {
+          "type": "string"
+        },
+        "5xx": {
+          "type": "string"
+        },
+        "rate-limited": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "median": {
+          "type": "string"
+        },
+        "latency": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
+        "request": {
+          "type": "string"
+        },
+        "requests": {
+          "type": "string"
+        },
+        "requestHeaders": {
+          "type": "string"
+        },
+        "responseHeaders": {
+          "type": "string"
+        },
+        "noHeaders": {
+          "type": "string"
+        },
+        "noBody": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "string"
+        },
+        "cache": {
+          "type": "string"
+        },
+        "hit": {
+          "type": "string"
+        },
+        "miss": {
+          "type": "string"
+        },
+        "classFilter": {
+          "type": "string"
+        },
+        "modelFilter": {
+          "type": "string"
+        },
+        "requestTab": {
+          "type": "string"
+        },
+        "responseTab": {
+          "type": "string"
+        },
+        "headersTab": {
+          "type": "string"
+        },
+        "copyCurl": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProviderRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identity"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was sent, epoch ms"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "The path called, e.g. /v1/messages"
+        },
+        "method": {
+          "type": "string",
+          "description": "GET, POST…; POST when left out"
+        },
+        "status": {
+          "type": "number",
+          "description": "The HTTP status; 0 when no response came"
+        },
+        "latency": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        },
+        "inputTokens": {
+          "type": "number"
+        },
+        "outputTokens": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "cacheHit": {
+          "type": "boolean",
+          "description": "The provider's cache answered all or part of it"
+        },
+        "url": {
+          "type": "string",
+          "description": "The full URL, for Copy as cURL; else `baseUrl` + `endpoint`"
+        },
+        "requestHeaders": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "responseHeaders": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "requestBody": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/JsonValue"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "The request body: an object is shown in a JSON Viewer, a string as text"
+        },
+        "responseBody": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/JsonValue"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "The response body: an object is shown in a JSON Viewer, a string as text"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "provider",
+        "model",
+        "endpoint",
+        "status",
+        "latency"
+      ],
+      "additionalProperties": false
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Any JSON value"
+    },
+    "RequestStatusClass": {
+      "type": "string",
+      "enum": [
+        "2xx",
+        "4xx",
+        "5xx",
+        "rate-limited"
+      ]
+    }
+  }
+}

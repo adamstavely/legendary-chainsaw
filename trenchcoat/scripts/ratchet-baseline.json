@@ -421,6 +421,9 @@
   "src/elements/pull-request.ts": {
     "clock/environment read": 1
   },
+  "src/elements/rate-limit-status.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/region-dach.ts": {
     "literal spacing": 4
   },

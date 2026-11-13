@@ -11,31 +11,31 @@
    "features": [
     "light-dark"
    ],
-   "elements": 483
+   "elements": 495
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 483
+   "elements": 495
   },
   "firefox": {
    "features": [
     "has"
    ],
-   "elements": 105
+   "elements": 110
   },
   "safari": {
    "features": [
     "light-dark"
    ],
-   "elements": 483
+   "elements": 495
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 483
+   "elements": 495
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 483
+   "elements": 495
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 483
+   "elements": 495
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 483
+   "elements": 495
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 482
+   "elements": 494
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 351
+   "elements": 362
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 225
+   "elements": 229
   },
   {
    "id": "resize-observer",
@@ -140,21 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 197
-  },
-  {
-   "id": "intersection-observer",
-   "name": "IntersectionObserver",
-   "bcd": "api.IntersectionObserver",
-   "versions": {
-    "chrome": "51",
-    "edge": "15",
-    "firefox": "55",
-    "safari": "12.1",
-    "safari_ios": "12.2"
-   },
-   "progressive": false,
-   "elements": 170
+   "elements": 199
   },
   {
    "id": "inert",
@@ -169,7 +155,21 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 169
+   "elements": 172
+  },
+  {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   },
+   "progressive": false,
+   "elements": 172
   },
   {
    "id": "has",
@@ -184,7 +184,7 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 105
+   "elements": 110
   },
   {
    "id": "individual-transforms",
@@ -212,7 +212,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 71
+   "elements": 72
   },
   {
    "id": "mask",
@@ -230,20 +230,6 @@
    "elements": 61
   },
   {
-   "id": "object-hasown",
-   "name": "Object.hasOwn()",
-   "bcd": "javascript.builtins.Object.hasOwn",
-   "versions": {
-    "chrome": "93",
-    "edge": "93",
-    "firefox": "92",
-    "safari": "15.4",
-    "safari_ios": "15.4"
-   },
-   "progressive": false,
-   "elements": 54
-  },
-  {
    "id": "clipboard",
    "name": "Async Clipboard (writeText)",
    "bcd": "api.Clipboard.writeText",
@@ -256,7 +242,21 @@
    },
    "progressive": false,
    "why": "Copy buttons.",
-   "elements": 53
+   "elements": 61
+  },
+  {
+   "id": "object-hasown",
+   "name": "Object.hasOwn()",
+   "bcd": "javascript.builtins.Object.hasOwn",
+   "versions": {
+    "chrome": "93",
+    "edge": "93",
+    "firefox": "92",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 56
   },
   {
    "id": "form-associated",
@@ -289,6 +289,20 @@
    "elements": 22
   },
   {
+   "id": "relative-time-format",
+   "name": "Intl.RelativeTimeFormat",
+   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+   "versions": {
+    "chrome": "71",
+    "edge": "79",
+    "firefox": "65",
+    "safari": "14",
+    "safari_ios": "14"
+   },
+   "progressive": false,
+   "elements": 19
+  },
+  {
    "id": "array-at",
    "name": "Array.prototype.at()",
    "bcd": "javascript.builtins.Array.at",
@@ -303,20 +317,6 @@
    "elements": 17
   },
   {
-   "id": "relative-time-format",
-   "name": "Intl.RelativeTimeFormat",
-   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
-   "versions": {
-    "chrome": "71",
-    "edge": "79",
-    "firefox": "65",
-    "safari": "14",
-    "safari_ios": "14"
-   },
-   "progressive": false,
-   "elements": 16
-  },
-  {
    "id": "dialog",
    "name": "<dialog> and showModal()",
    "bcd": "api.HTMLDialogElement.showModal",
@@ -329,7 +329,7 @@
    },
    "progressive": false,
    "why": "Modals trap focus, close on Escape and sit in the top layer.",
-   "elements": 14
+   "elements": 16
   },
   {
    "id": "structured-clone",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 483
+   "elements": 495
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 482
+   "elements": 494
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 128
+   "elements": 130
   },
   {
    "id": "overscroll-contain",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 86
+   "elements": 91
   },
   {
    "id": "popover",

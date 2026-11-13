@@ -1,0 +1,682 @@
+{
+ "elements": [
+  {
+   "tag": "tc-run-log",
+   "className": "TcRunLog",
+   "description": "Every agent run on one line – status, agent, trigger, when, duration, steps, tokens, cost and user – with filters, search, a time range, errors that open in place, and new runs held behind Show new.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Runs\"",
+     "description": "The heading; empty leaves the header out",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small text under the heading",
+     "readonly": false
+    },
+    {
+     "name": "runs",
+     "attribute": null,
+     "type": "RunLogRun[]",
+     "default": "[]",
+     "description": "The runs, in any order – the list shows the newest first",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": null,
+     "type": "RunLogFilter",
+     "default": "{ status: [], agents: [], triggers: [] }",
+     "description": "The status, agent and trigger chips that are on; an empty list means all",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "RunLogRange",
+     "default": "\"all\"",
+     "description": "How far back runs show, from `now` (or the newest run when `now` isn't given)",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The failed runs whose error is open",
+     "readonly": false
+    },
+    {
+     "name": "live",
+     "attribute": "live",
+     "type": "boolean",
+     "default": "false",
+     "description": "Holds runs that arrive after the first render behind Show new",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | null",
+     "default": "null",
+     "description": "The current time, epoch ms – \"Started\" reads relative to it; without it, a date and time",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "ISO 4217 currency code for costs",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Locale for dates, numbers and amounts",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "420",
+     "description": "Height in px at which the list scrolls",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<RunLogLabels>",
+     "default": "{}",
+     "description": "Renames the words it uses",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "A status, agent or trigger chip was toggled, or the filters cleared ({ filter }: RunLogFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search changed ({ query }: RunLogQueryChange); cancelable – prevented, `query` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-range-change",
+     "detail": "",
+     "description": "The time range changed ({ range }: RunLogRangeChange); cancelable – prevented, `range` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "A failed run's error was shown or hidden ({ expanded, id, open }: RunLogExpandedChange); cancelable – prevented, `expanded` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-run-open",
+     "detail": "",
+     "description": "A run was opened: Enter on its line, or a click ({ id, run }: RunLogOpen)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-show-new",
+     "detail": "",
+     "description": "Show new let the waiting runs in ({ ids }: RunLogShowNew)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "runl",
+   "cssProperties": [
+    {
+     "name": "--tc-runl-cols",
+     "value": "7.5rem minmax(6rem, 1.4fr) minmax(5rem, 1fr) 6.5rem 4.5rem 3.5rem 4rem 4.5rem minmax(4rem, 1fr)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-runl-cols-narrow",
+     "value": "6.5rem minmax(0, 1fr) 5.5rem 4.5rem",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-runl-icon",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-border-control",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-pill-radius",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "filterRuns",
+   "signature": "filterRuns(runs: RunLogRun[], filter: RunLogFilter, query: string, range: RunLogRange, reference: number): void",
+   "description": "The runs a filter, search and range keep, newest first. `reference` is \"now\" for the range"
+  }
+ ],
+ "react": [
+  {
+   "component": "RunLog",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"\" leaves the header out"
+    },
+    {
+     "name": "filter",
+     "type": "RunLogFilter",
+     "optional": true,
+     "description": "The status, agent and trigger chips that are on – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "RunLogFilter",
+     "optional": true,
+     "description": "The chips on at first, when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: RunLogFilter) => void",
+     "optional": true,
+     "description": "A chip was toggled or the filters cleared"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search at first, when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "The search changed"
+    },
+    {
+     "name": "range",
+     "type": "RunLogRange",
+     "optional": true,
+     "description": "How far back runs show – controlled when given"
+    },
+    {
+     "name": "defaultRange",
+     "type": "RunLogRange",
+     "optional": true,
+     "description": "The range at first, when `range` isn't controlled"
+    },
+    {
+     "name": "onRangeChange",
+     "type": "(range: RunLogRange) => void",
+     "optional": true,
+     "description": "The range changed"
+    },
+    {
+     "name": "expanded",
+     "type": "string[]",
+     "optional": true,
+     "description": "The failed runs whose error is open – controlled when given"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "string[]",
+     "optional": true,
+     "description": "The errors open at first, when `expanded` isn't controlled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: string[]) => void",
+     "optional": true,
+     "description": "A failed run's error was shown or hidden"
+    },
+    {
+     "name": "onRunOpen",
+     "type": "(id: string, run: RunLogRun) => void",
+     "optional": true,
+     "description": "A run was opened"
+    },
+    {
+     "name": "onShowNew",
+     "type": "(ids: string[]) => void",
+     "optional": true,
+     "description": "Show new let the waiting runs in"
+    }
+   ],
+   "hides": [
+    "heading",
+    "filter",
+    "query",
+    "range",
+    "expanded",
+    "children"
+   ],
+   "events": {
+    "tc-filter-change": null,
+    "tc-query-change": null,
+    "tc-range-change": null,
+    "tc-expanded-change": null,
+    "tc-run-open": "onRunOpen",
+    "tc-show-new": "onShowNew"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-run-log",
+   "className": "TcRunLog",
+   "module": "@adamstavely/trenchcoat/run-log",
+   "data": [
+    "runs",
+    "filter",
+    "expanded",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "range",
+     "attribute": "range"
+    },
+    {
+     "name": "live",
+     "attribute": "live"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-range-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-run-open",
+     "cancelable": false
+    },
+    {
+     "name": "tc-show-new",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    },
+    {
+     "property": "range",
+     "event": "tc-range-change"
+    },
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 33212,
+  "gzip": 10319
+ }
+}
