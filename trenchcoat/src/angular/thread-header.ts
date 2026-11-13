@@ -60,7 +60,7 @@ export class ThreadHeader {
     this.#el.look = v;
   }
   /**
-   * The title was renamed ({ title, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was
+   * The title was renamed ({ title, heading, previous }: ThreadHeaderTitleChange); cancelable – prevented, `heading` stays as it was
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-title-change") readonly tcTitleChange = new EventEmitter<CustomEvent<ThreadHeaderTitleChange>>();
