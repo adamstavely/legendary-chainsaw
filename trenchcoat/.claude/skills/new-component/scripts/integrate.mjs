@@ -8,7 +8,7 @@
 //      Markdown and rebuild the standalone gallery (both mirrored to the trenchcoat-docs repo on merge)
 //      and, when the canvas is checked out beside trenchcoat/, re-sort its Similar layout for the new thumbnails
 //   4. run every check – the same ones as CI's check job
-//   5. run the new components' tests in Chromium, Firefox and WebKit, then the React suite
+//   5. run the new components' tests in Chromium, Firefox and WebKit, then the React suite and the canvas's tests
 //
 //   node .claude/skills/new-component/scripts/integrate.mjs --slugs status-tracker,coverage-ring
 //   node .claude/skills/new-component/scripts/integrate.mjs --slugs … --skip-tests      steps 1–4 only
@@ -95,6 +95,9 @@ if (existsSync("../canvas/node_modules")) run("npm --prefix ../canvas run -s sim
 else if (existsSync("../canvas")) console.log("   canvas has no node_modules: run npm ci && npm run similarity in canvas/, or its CI fails");
 
 step("checks");
+// check:snippets quietly skips when the framework example apps aren't installed, and CI then finds what it missed
+const missing = ["react", "vue", "angular", "svelte"].filter((a) => !existsSync(`examples/${a}/node_modules`));
+if (missing.length) console.log(`   ⚠ examples/${missing.join(", ")} not installed – check:snippets will skip; run npm run examples once (or link node_modules from a checkout that has them)`);
 for (const c of ["typecheck", "lint", "check:prefixes", "check:ratchet", "check:tokens", "check:contrast", "check:dead-css", "check:docs", "check:docs-md", "check:lit", "check:angular", "check:generative", "check:snippets"]) {
   process.stdout.write(`   ${c} … `);
   run(`npm run -s ${c}`, { quiet: true });
@@ -119,5 +122,11 @@ if (!args.includes("--skip-tests")) {
   process.stdout.write("   react … ");
   const out = run("npx vitest run --project react", { quiet: true });
   console.log(/Tests\s+(\d+ passed[^\n]*)/.exec(out)?.[1] ?? "ok");
+  // The canvas reads Trenchcoat from source – its docs examples, catalogue and the Similar layout – so check it too
+  if (existsSync("../canvas/node_modules")) {
+    process.stdout.write("   canvas … ");
+    const canvas = run("npm --prefix ../canvas test", { quiet: true });
+    console.log(/Tests\s+(\d+ passed[^\n]*)/.exec(canvas)?.[1] ?? "ok");
+  }
 }
 console.log("\n✓ integrated – now look at each component in the gallery, then commit trenchcoat/ only");

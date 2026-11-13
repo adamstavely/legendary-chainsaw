@@ -8,9 +8,9 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-345 items · 345 files
+355 items · 355 files
 
-## Agents (49)
+## Agents (51)
 
 - [Agent Cursors](agent-cursors.md) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
 - [Agent Findings](agent-findings.md) – A group of agents checking something – one row per agent with its progress, beside a feed of what they've found, newest first, with severity in words, filters and new findings announced
@@ -54,8 +54,10 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Run Compare](run-compare.md) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
 - [Running Now](running-now.md) – A live status of agents' background tasks for a header or sidebar – one quiet pill, "3 running · 2 need you", opening a panel of tasks under Needs you, Running and Recently done, each with a filling ring, its agent, elapsed time and Review, Stop or Open
 - [Sandbox Log](sandbox-log.md) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
+- [Schedule Card](schedule-card.md) – A recurring agent task at a glance – the schedule in words, a live countdown to the next run, the last runs as marks in words with when and how long, and Run now, Pause / Resume and Edit
 - [Scheduled Runs](scheduled-runs.md) – Agent tasks placed into a week's sessions under usage limits – pinned first, big tasks split into linked parts, small ones filling gaps, and an Unscheduled list
 - [Subagent List](subagent-list.md) – The sub-agents a session started, grouped Active and Done with counts – each with its own drawn mark, what it's doing now, and a clock that ticks while it runs or how long ago it finished; waiting and failed in words, choose one to open it
+- [Test Run Result](test-run-result.md) – A test run that shows only what failed – counts in words over a bar, each failure opening to its message, expected against received, the stack trimmed to the project's own frames and a link to the file and line, passed tests folded into one line, and Re-run failed
 - [Tool Access Map](tool-access-map.md) – One agent in the middle and every tool it can reach around it – used, failed, running, not used yet or no access, in words – with each tool's calls and a replay
 - [Tool Call Card](tool-call-card.md) – An agent's tool call in one line – live timer, status and summary, folds open to highlighted arguments and result with copy, retry on errors and a group that sums them up
 - [Tool Permissions](tool-permissions.md) – Which agent may use which tools – allow, ask or deny per cell, presets for the common setups, and a summary of what you changed
@@ -79,12 +81,13 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Retrieval Settings](retrieval-settings.md) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
 - [Tool Configuration](tool-configuration.md) – A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs
 
-## AI & chat (48)
+## AI & chat (56)
 
 - [Agent Face](agent-face.md) – Donovan's animated face, which shows what the agent is doing – nine states that blend on springs, blinks and glances, a nod or a hop, sharp from 16 to 256 px and resting when it isn't busy
 - [AI Answer](ai-answer.md) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
 - [AI Summary](ai-summary.md) – The gist of a thread, meeting or set of documents – a TL;DR, a summary that streams in, key points citing their sources as numbered chips, open questions, a note when the sources have moved on, and feedback, Sources, Copy and Regenerate
 - [Answer Arena](answer-arena.md) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
+- [Before After](before-after.md) – An original and its edit in one frame with a divider to drag between them – labelled sides, arrow keys on the divider, vertical stacking, and a switch to side by side
 - [Chat Composer](chat-composer.md) – Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 - [Chat History](chat-history.md) – Your conversations, grouped by date – search, pin, folders, rename and delete with undo, smooth with thousands of chats
 - [Chat Minimap](chat-minimap.md) – A rail of ticks beside a long chat, one per message you sent, longer for longer ones – the one in view lit, the message on hover or with the arrow keys, a click to jump back to it – following the chat as it scrolls
@@ -97,6 +100,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Conversation Branches](conversation-branches.md) – Edit a past message and the conversation forks – a 2 / 3 switcher on the edited message, and each branch's replies below it
 - [Diff Table](diff-table.md) – An AI's proposed edits to a table, reviewed in place – old values struck and new ones marked, added and removed rows, accept or reject per edit, per row or all, undo, a popover with the reason, and edits that sweep in while streaming
 - [Digest](digest.md) – A one-minute digest of a pile of information, arranged around what the reader needs – what matters, what to do (ticked off as you go), what changed and what's safe to ignore, with a reading-time estimate and points that cite their sources
+- [Edit Region](edit-region.md) – Brush a mask over an image and say what should change – brush, eraser and a box you move from the keyboard, undo and redo, how much is selected, and Generate with the mask as a PNG at the image's size
 - [Email Draft](email-draft.md) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
 - [Extraction Review](extraction-review.md) – Fields pulled from a document, each linked to its place on the page – confidence per field, accept, correct or reject, field by field from the keyboard
 - [Feedback Rubric](feedback-rubric.md) – Rate an answer the useful way – rubric criteria, what kind of failure it was, and the answer it should have been, ready for training and evals
@@ -108,15 +112,21 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Image Grid](image-grid.md) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
 - [Inline Diff](inline-diff.md) – AI edits to prose shown inline – struck and added words you accept or reject one by one, with keys, a popover and undo
 - [JSON Viewer](json-viewer.md) – A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields, Copy and Download – inline or as a dialog
+- [Line Items](line-items.md) – Rows a model reads off an invoice, receipt or claim, to fix, total and confirm – rows that stream in, "Check" on the cells it wasn't sure of, every cell edited in place with locale numbers, a subtotal, tax and total that recompute as you type, and a warning when the total doesn't match the document's
+- [Map Itinerary](map-itinerary.md) – A trip planned day by day – the days as tabs, each day's stops in order with times, kinds and travel between them, and the stops on a map drawn from their coordinates, the chosen day's route standing out and tiles loading only on request
 - [Memory Panel](memory-panel.md) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 - [Mention Picker](mention-picker.md) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 - [Message Actions](message-actions.md) – The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
+- [Message Drafts](message-drafts.md) – A short text message drafted in two to four tones – edit in place with its length in characters and SMS messages (GSM or Unicode), then Copy, Send or Open in Messages; sending folds it into a receipt
 - [Message Status](message-status.md) – The quiet row under a sent message – a read receipt from sending to delivered to read (or Not sent with Retry), a relative time that keeps itself fresh, and Copy, Send again, Branch into a new chat and Edit
 - [Model Picker](model-picker.md) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
 - [Multiplayer Thread](multiplayer-thread.md) – One chat thread shared by several people and one model – grouped messages with names, joins and leaves, who's here and typing, @-mentions, a switch for whether the model answers every message or only when mentioned, and "Replying to" on its answers
 - [Pixel Loader](pixel-loader.md) – A small working row – a 5 × 5 grid of dots lit in a wave, a snake, a twinkle or an orbit, a shimmering label and the time since the work started, settling into a check or a cross when it ends
+- [Point and Ask](point-and-ask.md) – Pin or box parts of an image and ask about them – numbered marks you drag, nudge and resize from the keyboard, a question per mark and one over all, and answers streamed back under each
 - [Prompt Library](prompt-library.md) – Saved prompt templates with variables – type straight into the sentence, watch the finished prompt assemble below, and use it once every variable is filled
 - [Prompt Starters](prompt-starters.md) – Where to begin, and what to ask next – suggestions for an empty chat and follow-ups after an answer, from the conversation's context
+- [Recipe Card](recipe-card.md) – A recipe ready to cook from – servings that scale every quantity (½, 1⅓), metric or imperial with oven temperatures converted, ingredients to tick off, and numbered steps with the current one marked and timers on the steps that name a time
+- [Region Overlay](region-overlay.md) – What a vision model read, drawn on the image – numbered boxes linked to a list with each region's kind, confidence in a word and a percentage and the text it read, filtered by kind and a confidence threshold, with the boxes switched off to see the image plainly
 - [Response Selection](response-selection.md) – Select part of a model's answer and act on it – reply quoting it, ask why, or request an edit that comes back as a diff to accept or reject
 - [Retrieval Inspector](retrieval-inspector.md) – What the model was given to answer with – every retrieved chunk with its score, source, freshness, and whether the answer used it
 - [Selection Translate](selection-translate.md) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original

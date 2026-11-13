@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-test-run-result.json",
+  "title": "tc-test-run-result",
+  "description": "A test run that shows only what failed: counts in words over a bar, the failures with their message, diff and stack, and Re-run failed.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "command": {
+      "type": "string",
+      "description": "The command that ran the tests – \"npx vitest run\""
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TestCase"
+      },
+      "description": "The tests: the failures with their details, and any passed or skipped ones to list"
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "passed": {
+          "type": "number"
+        },
+        "failed": {
+          "type": "number"
+        },
+        "skipped": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Totals, for tests left out of `tests`"
+    },
+    "total": {
+      "type": "number",
+      "description": "How many tests the run has, so the bar can fill towards it while running"
+    },
+    "duration": {
+      "type": "number",
+      "description": "How long the run took, in ms"
+    },
+    "running": {
+      "type": "boolean",
+      "description": "The run is still going: the counts are live and Re-run waits"
+    },
+    "open": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The failures that are open, by id. Unset: the first failure"
+    },
+    "noRerun": {
+      "type": "boolean",
+      "description": "Hides Re-run failed"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TestCase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The test's own name – \"rejects a negative amount\""
+        },
+        "suite": {
+          "type": "string",
+          "description": "Where it sits – the file or describe path, \"ledger › postings\""
+        },
+        "status": {
+          "$ref": "#/definitions/TestStatus"
+        },
+        "durationMs": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        },
+        "message": {
+          "type": "string",
+          "description": "The assertion's message – \"expected 1240 to be 1214.5\""
+        },
+        "expected": {
+          "type": "string",
+          "description": "What the test expected, as text; with `received`, drawn as a line diff"
+        },
+        "received": {
+          "type": "string",
+          "description": "What it got"
+        },
+        "stack": {
+          "type": "string",
+          "description": "The stack as printed; trimmed to the project's frames for display"
+        },
+        "file": {
+          "type": "string",
+          "description": "The file to open, when the stack doesn't say"
+        },
+        "line": {
+          "type": "number",
+          "description": "The line in it"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "TestStatus": {
+      "type": "string",
+      "enum": [
+        "failed",
+        "passed",
+        "skipped"
+      ]
+    }
+  }
+}

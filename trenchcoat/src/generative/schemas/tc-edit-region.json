@@ -1,0 +1,231 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-edit-region.json",
+  "title": "tc-edit-region",
+  "description": "Brush a mask over an image and say what should change – brush, eraser and a keyboard-movable box, undo and redo,\nhow much is selected, and Generate with the mask as a PNG.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The title above the image"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the title"
+    },
+    "src": {
+      "type": "string",
+      "description": "The image to edit",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "alt": {
+      "type": "string",
+      "description": "What the image shows, for screen readers"
+    },
+    "mask": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EditRegionOp"
+      },
+      "description": "The mask: brush strokes, erasures and boxes in fractions of the image"
+    },
+    "tool": {
+      "type": "string",
+      "enum": [
+        "box",
+        "brush",
+        "erase"
+      ],
+      "description": "The tool in use"
+    },
+    "brushSize": {
+      "type": "number",
+      "description": "The brush's width in px on the image as shown"
+    },
+    "minBrush": {
+      "type": "number",
+      "description": "The smallest and largest brush the slider offers, in px"
+    },
+    "maxBrush": {
+      "type": "number",
+      "description": "The largest brush the slider offers, in px"
+    },
+    "instruction": {
+      "type": "string",
+      "description": "What should change"
+    },
+    "busy": {
+      "type": "boolean",
+      "description": "Holds everything while the page generates; Generate turns it on unless tc-edit is prevented"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "tools": {
+          "type": "string"
+        },
+        "brush": {
+          "type": "string"
+        },
+        "erase": {
+          "type": "string"
+        },
+        "box": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        },
+        "redo": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "generate": {
+          "type": "string"
+        },
+        "generating": {
+          "type": "string"
+        },
+        "nothing": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "string"
+        },
+        "tiny": {
+          "type": "string"
+        },
+        "draft": {
+          "type": "string"
+        },
+        "addBox": {
+          "type": "string"
+        },
+        "boxKeys": {
+          "type": "string"
+        },
+        "canvasKeys": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "undone": {
+          "type": "string"
+        },
+        "redone": {
+          "type": "string"
+        },
+        "cleared": {
+          "type": "string"
+        },
+        "needsMask": {
+          "type": "string"
+        },
+        "needsInstruction": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename (merged over defaultEditRegionLabels)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EditRegionOp": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "box"
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "w": {
+              "type": "number"
+            },
+            "h": {
+              "type": "number"
+            },
+            "erase": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "x",
+            "y",
+            "w",
+            "h"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "brush"
+            },
+            "size": {
+              "type": "number"
+            },
+            "points": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EditRegionPoint"
+              }
+            },
+            "erase": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "size",
+            "points"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "One change to the mask: a brush stroke (its width a fraction of the image's width) or a box; `erase` takes paint away"
+    },
+    "EditRegionPoint": {
+      "type": "array",
+      "minItems": 2,
+      "items": [
+        {
+          "type": "number",
+          "title": "x"
+        },
+        {
+          "type": "number",
+          "title": "y"
+        }
+      ],
+      "maxItems": 2,
+      "description": "A point across the image: x and y as fractions (0–1) of its width and height"
+    }
+  }
+}

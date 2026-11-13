@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-line-items.json",
+  "title": "tc-line-items",
+  "description": "Rows a model reads off a document, for a person to fix, total and confirm.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "source": {
+      "type": "string",
+      "description": "The document the rows came from – shown under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LineItem"
+      },
+      "description": "The rows"
+    },
+    "streaming": {
+      "type": "boolean",
+      "description": "Rows are still arriving: the grid is busy and Confirm waits"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The ISO 4217 currency of the amounts"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers and amounts, and for reading what's typed"
+    },
+    "taxRate": {
+      "type": "number",
+      "description": "Tax as a fraction of the subtotal – 0.08 for 8 %; 0 hides the tax row"
+    },
+    "statedTotal": {
+      "type": "number",
+      "description": "The total the document itself states; a different total is called out"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "Confidence below this (0–1) marks a row \"Low confidence\""
+    },
+    "confirmLabel": {
+      "type": "string",
+      "description": "The label of the button that hands the rows back"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LineItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "What was bought – \"Conference registration\""
+        },
+        "quantity": {
+          "type": "number",
+          "description": "How many; 1 when left out"
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The price of one, in the document's currency"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The row's amount when the document states it; else quantity × unit price"
+        },
+        "category": {
+          "type": "string",
+          "description": "A quiet line under the description – \"Travel\", \"Lodging\""
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the model was of the row, 0 to 1; below the threshold the row says \"Low confidence\""
+        },
+        "uncertain": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineItemField"
+          },
+          "description": "The cells the model wasn't sure of; each says \"Check\" until someone edits it"
+        },
+        "flag": {
+          "type": "string",
+          "description": "A warning about the row, in words – \"No receipt attached\""
+        }
+      },
+      "required": [
+        "id",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "LineItemField": {
+      "type": "string",
+      "enum": [
+        "amount",
+        "description",
+        "quantity",
+        "unitPrice"
+      ],
+      "description": "A cell a person can edit"
+    }
+  }
+}

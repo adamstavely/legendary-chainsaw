@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-map-itinerary.json",
+  "title": "tc-map-itinerary",
+  "description": "A trip planned day by day – the days as tabs, each day's stops in order with times and travel, and the stops on a\nmap drawn from their coordinates, the chosen day's route standing out.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the map's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ItineraryDay"
+      },
+      "description": "The days, in order, each with its stops in order"
+    },
+    "day": {
+      "type": "string",
+      "description": "The chosen day's id; by default the first. Changed by the user unless a tc-day-change listener calls preventDefault()"
+    },
+    "stop": {
+      "type": "string",
+      "description": "The picked stop's id. Changed by the user unless a tc-stop-select listener calls preventDefault()"
+    },
+    "fit": {
+      "type": "string",
+      "enum": [
+        "all",
+        "day"
+      ],
+      "description": "What the map fits: the chosen \"day\", or \"all\" days"
+    },
+    "kinds": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "icon": {
+            "$ref": "#/definitions/ItineraryKindIcon"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Kinds' names and icons, merged over the defaults (sight, food, stay, transport, venue, other)"
+    },
+    "tileUrl": {
+      "type": "string",
+      "description": "A map tile URL template with {z}, {x} and {y} (and optionally {s}); nothing loads until \"Show map tiles\""
+    },
+    "tileAttribution": {
+      "type": "string",
+      "description": "The tiles' credit, shown on the map once they load, e.g. \"© OpenStreetMap contributors\""
+    },
+    "tileNote": {
+      "type": "string",
+      "description": "Says where the tiles load from beside Show map tiles; by default the template's host"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ItineraryDay": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Day 1\", \"Arrival\""
+        },
+        "date": {
+          "type": "number",
+          "description": "The day's date, epoch ms"
+        },
+        "stops": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItineraryStop"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "stops"
+      ],
+      "additionalProperties": false
+    },
+    "ItineraryStop": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "lng": {
+          "type": "number"
+        },
+        "time": {
+          "type": "string",
+          "description": "When, in the trip's own words: \"10:00\", \"Afternoon\""
+        },
+        "kind": {
+          "type": "string",
+          "description": "A key of `kinds`: sight, food, stay, transport, venue, other – or the page's own"
+        },
+        "duration": {
+          "type": "string",
+          "description": "How long to stay, in words: \"1 h 30 min\""
+        },
+        "travel": {
+          "type": "string",
+          "description": "Getting here from the stop before, in words: \"12 min walk\""
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line, e.g. \"Booked under the institute's name\""
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "lat",
+        "lng"
+      ],
+      "additionalProperties": false
+    },
+    "ItineraryKindIcon": {
+      "type": "string",
+      "enum": [
+        "food",
+        "pin",
+        "sight",
+        "stay",
+        "transport",
+        "venue"
+      ]
+    }
+  }
+}

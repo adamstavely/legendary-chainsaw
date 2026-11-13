@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-region-overlay.json",
+  "title": "tc-region-overlay",
+  "description": "What a vision model read, drawn on the image: numbered boxes linked to a list with each region's kind, confidence and\nread text, filtered by kind and a confidence threshold.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – the file or the model"
+    },
+    "src": {
+      "type": "string",
+      "description": "The image the model read – a data: URL works too",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "alt": {
+      "type": "string",
+      "description": "What the image is, for people who can't see it"
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OverlayRegion"
+      },
+      "description": "The regions the model found"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected region's id, or null"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "Regions under this confidence (0–1) are hidden"
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The kinds shown; null shows every kind"
+    },
+    "showBoxes": {
+      "type": "boolean",
+      "description": "Whether the boxes are drawn on the image"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "type": "object",
+          "properties": {
+            "high": {
+              "type": "string"
+            },
+            "medium": {
+              "type": "string"
+            },
+            "low": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "showBoxes": {
+          "type": "string"
+        },
+        "threshold": {
+          "type": "string"
+        },
+        "kinds": {
+          "type": "string"
+        },
+        "list": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noText": {
+          "type": "string"
+        },
+        "kindNames": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "The kind names; kinds not listed show as given"
+        }
+      },
+      "description": "Names the page can change, merged over defaultRegionOverlayLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "OverlayRegion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is, e.g. \"Auditor's signature\""
+        },
+        "kind": {
+          "$ref": "#/definitions/RegionKind"
+        },
+        "box": {
+          "$ref": "#/definitions/RegionBox"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the model is, 0 to 1"
+        },
+        "text": {
+          "type": "string",
+          "description": "What the model read there, if it read text"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "box",
+        "confidence"
+      ],
+      "additionalProperties": false
+    },
+    "RegionKind": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "face-blurred",
+            "figure",
+            "object",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "What kind of region the model found; any other string works too and is shown as given"
+    },
+    "RegionBox": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "additionalProperties": false,
+      "description": "Where a region sits, as fractions (0–1) of the image's width and height"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-before-after.json",
+  "title": "tc-before-after",
+  "description": "An original and its edit in one frame, with a divider to drag between them – or side by side.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – what was edited"
+    },
+    "beforeImage": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "src",
+        "alt"
+      ],
+      "additionalProperties": false,
+      "description": "The original"
+    },
+    "afterImage": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "src",
+        "alt"
+      ],
+      "additionalProperties": false,
+      "description": "The edit"
+    },
+    "position": {
+      "type": "number",
+      "description": "How much of the original shows, 0–100"
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "description": "\"horizontal\": the divider moves left and right; \"vertical\": up and down, the original above"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "side-by-side",
+        "slider"
+      ],
+      "description": "\"slider\", or \"side-by-side\" for two columns"
+    },
+    "hideMode": {
+      "type": "boolean",
+      "description": "Hides the Side by side switch"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-schedule-card.json",
+  "title": "tc-schedule-card",
+  "description": "A recurring agent task at a glance – the schedule in words, a live countdown to the next run, the last runs as\nmarks, and Run now, Pause / Resume and Edit.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The task's name, and the card's heading"
+    },
+    "schedule": {
+      "type": "string",
+      "description": "The schedule in words, e.g. \"Every weekday at 09:00, Europe/London\""
+    },
+    "nextRun": {
+      "type": "number",
+      "description": "When it runs next, epoch ms; null when nothing is scheduled"
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScheduleRun"
+      },
+      "description": "The last runs, oldest first"
+    },
+    "maxRuns": {
+      "type": "number",
+      "description": "How many of the last runs the strip shows"
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "Paused: no countdown, and Resume in place of Pause. Changed by the user unless a tc-paused-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; leave it unset and the element keeps its own clock"
+    },
+    "hideEdit": {
+      "type": "boolean",
+      "description": "Hides Edit"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "statuses": {
+          "type": "object",
+          "properties": {
+            "succeeded": {
+              "type": "string"
+            },
+            "failed": {
+              "type": "string"
+            },
+            "skipped": {
+              "type": "string"
+            },
+            "running": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "runNow": {
+          "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
+        },
+        "nextRun": {
+          "type": "string"
+        },
+        "due": {
+          "type": "string"
+        },
+        "noNextRun": {
+          "type": "string"
+        },
+        "lastRuns": {
+          "type": "string"
+        },
+        "noRuns": {
+          "type": "string"
+        }
+      },
+      "description": "The card's words, merged over defaultScheduleCardLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ScheduleRun": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it started, epoch ms"
+        },
+        "status": {
+          "$ref": "#/definitions/ScheduleRunStatus"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long it took, ms"
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line for the tooltip, e.g. \"3 invoices didn't match\""
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "ScheduleRunStatus": {
+      "type": "string",
+      "enum": [
+        "failed",
+        "running",
+        "skipped",
+        "succeeded"
+      ]
+    }
+  }
+}

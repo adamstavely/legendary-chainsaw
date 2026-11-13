@@ -1,0 +1,214 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-recipe-card.json",
+  "title": "tc-recipe-card",
+  "description": "A recipe ready to cook from – servings that scale every quantity, metric or imperial, ingredients to tick off, and\nnumbered steps with timers.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The recipe's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line about it, under the name"
+    },
+    "prepMinutes": {
+      "type": "number",
+      "description": "Preparation time in minutes"
+    },
+    "cookMinutes": {
+      "type": "number",
+      "description": "Cooking time in minutes"
+    },
+    "baseServings": {
+      "type": "number",
+      "description": "How many the quantities in `ingredients` serve"
+    },
+    "servings": {
+      "type": "number",
+      "description": "How many to cook for – quantities scale to it. Changed by the user unless tc-servings-change is prevented"
+    },
+    "minServings": {
+      "type": "number",
+      "description": "The fewest servings the stepper allows"
+    },
+    "maxServings": {
+      "type": "number",
+      "description": "The most servings the stepper allows"
+    },
+    "units": {
+      "type": "string",
+      "enum": [
+        "imperial",
+        "metric"
+      ],
+      "description": "Metric or imperial. Changed by the user unless tc-units-change is prevented"
+    },
+    "ingredients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RecipeIngredient"
+      },
+      "description": "The ingredients, with quantities for `baseServings`"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RecipeStep"
+      },
+      "description": "The method, in order. A step that names a time gets a timer"
+    },
+    "step": {
+      "type": "number",
+      "description": "The current step's index. Changed by the user unless tc-step-change is prevented"
+    },
+    "checked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ingredient ids ticked off"
+    },
+    "tickMs": {
+      "type": "number",
+      "description": "How long one second of a timer lasts, in ms – 1000; shorter for tests and demos"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "prep": {
+          "type": "string"
+        },
+        "cook": {
+          "type": "string"
+        },
+        "servings": {
+          "type": "string"
+        },
+        "fewer": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "metric": {
+          "type": "string"
+        },
+        "imperial": {
+          "type": "string"
+        },
+        "units": {
+          "type": "string"
+        },
+        "ingredients": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        },
+        "reset": {
+          "type": "string"
+        },
+        "timerDone": {
+          "type": "string"
+        },
+        "toTaste": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words to use instead of the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RecipeIngredient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable id; defaults to the ingredient's position"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "How much, for `baseServings`; leave out for \"to taste\""
+        },
+        "unit": {
+          "$ref": "#/definitions/RecipeUnit"
+        },
+        "name": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string",
+          "description": "A short note after the name: \"finely chopped\""
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "RecipeUnit": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "cup",
+            "fl oz",
+            "g",
+            "kg",
+            "l",
+            "lb",
+            "ml",
+            "oz",
+            "tbsp",
+            "tsp"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Units a quantity can carry. Spoons and counts (\"\" or a word like \"clove\") don't convert"
+    },
+    "RecipeStep": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "timer": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  }
+}
