@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-file-import.json",
+  "title": "tc-file-import",
+  "description": "Drop a CSV, TSV or Excel file and see what was read: rows and columns found, the delimiter, the header row, a\npreview with each column's type in words, problems in words, and Continue.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – what the rows will become"
+    },
+    "headerRow": {
+      "type": "boolean",
+      "description": "Whether the first row holds the column names. Changed by its checkbox unless a tc-header-row-change listener calls preventDefault()"
+    },
+    "accept": {
+      "type": "string",
+      "description": "The file types the picker offers, as for an input's accept"
+    },
+    "previewRows": {
+      "type": "number",
+      "description": "How many rows the preview shows"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "drop": {
+          "type": "string"
+        },
+        "browse": {
+          "type": "string"
+        },
+        "choose": {
+          "type": "string"
+        },
+        "release": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        },
+        "reading": {
+          "type": "string"
+        },
+        "another": {
+          "type": "string"
+        },
+        "headerRow": {
+          "type": "string"
+        },
+        "continue": {
+          "type": "string"
+        },
+        "noRows": {
+          "type": "string"
+        },
+        "excel": {
+          "type": "string"
+        },
+        "unreadable": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over defaultFileImportLabels"
+    }
+  },
+  "additionalProperties": false
+}

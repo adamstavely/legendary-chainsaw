@@ -32,15 +32,15 @@
     "kindLabels": {
       "type": "object",
       "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        },
         "email": {
           "type": "string"
         },
         "phone": {
           "type": "string"
-        },
-        "url": {
-          "type": "string",
-          "format": "uri-reference"
         },
         "handle": {
           "type": "string"

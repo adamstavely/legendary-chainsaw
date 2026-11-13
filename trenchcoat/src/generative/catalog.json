@@ -272,6 +272,16 @@
     ]
   },
   {
+    "tag": "tc-ai-column-create",
+    "name": "AiColumnCreate",
+    "description": "One prompt filled in for every row of a table: name, type, a prompt with column variables, model and web access,",
+    "events": [
+      "tc-value-change",
+      "tc-preview",
+      "tc-create"
+    ]
+  },
+  {
     "tag": "tc-ai-side-pane",
     "name": "AiSidePane",
     "description": "An assistant docked beside a page: a conversation about what's on it, with history, starters, a reflection gate for",
@@ -712,6 +722,19 @@
     ]
   },
   {
+    "tag": "tc-cell-inspector",
+    "name": "CellInspector",
+    "description": "Why one AI-filled cell says what it says – the value and confidence, the prompt with the row filled in, reasoning,",
+    "events": [
+      "tc-value-change",
+      "tc-status-change",
+      "tc-accept",
+      "tc-rerun",
+      "tc-flag",
+      "tc-close"
+    ]
+  },
+  {
     "tag": "tc-change-impact",
     "name": "ChangeImpact",
     "description": "Before against after for one change – per-criterion differences with a verdict in words, a dumbbell row each, cost and",
@@ -915,6 +938,15 @@
       "tc-value-change",
       "tc-format-change",
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-column-mapper",
+    "name": "ColumnMapper",
+    "description": "Match a file's columns to your fields: a model's suggestion per column with its confidence in words, a select of",
+    "events": [
+      "tc-mapping-change",
+      "tc-continue"
     ]
   },
   {
@@ -1283,6 +1315,12 @@
     ]
   },
   {
+    "tag": "tc-downloading",
+    "name": "Downloading",
+    "description": "A document with a badge showing an arrow dropping into a tray, for a file or an export on its way to the person.",
+    "events": []
+  },
+  {
     "tag": "tc-drag-lift",
     "name": "DragLift",
     "description": "Lifts its child while it's dragged, following the pointer and leaving a gap.",
@@ -1364,6 +1402,16 @@
     "description": "Whether reviews are genuine: an index with its band and trend, the signals it is built from – each with its value,",
     "events": [
       "tc-signal-open"
+    ]
+  },
+  {
+    "tag": "tc-enrichment-grid",
+    "name": "EnrichmentGrid",
+    "description": "A table a model fills in, cell by cell, with the run's progress, Pause / Resume and Retry failed.",
+    "events": [
+      "tc-run-change",
+      "tc-retry",
+      "tc-cell-select"
     ]
   },
   {
@@ -1554,6 +1602,17 @@
     "events": [
       "tc-flag-change",
       "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-file-import",
+    "name": "FileImport",
+    "description": "Drop a CSV, TSV or Excel file and see what was read: rows and columns found, the delimiter, the header row, a",
+    "events": [
+      "tc-file-change",
+      "tc-header-row-change",
+      "tc-parsed",
+      "tc-continue"
     ]
   },
   {
@@ -1838,6 +1897,17 @@
       "tc-tiles-change",
       "tc-compare-change",
       "tc-split-change"
+    ]
+  },
+  {
+    "tag": "tc-import-review",
+    "name": "ImportReview",
+    "description": "Rows of an import, checked before they land: cell problems in words, duplicates by a key with Keep this and Merge,",
+    "events": [
+      "tc-rows-change",
+      "tc-filter-change",
+      "tc-skip-problems-change",
+      "tc-import"
     ]
   },
   {
@@ -3103,6 +3173,16 @@
     ]
   },
   {
+    "tag": "tc-run-estimate",
+    "name": "RunEstimate",
+    "description": "What a bulk run will cost before it starts – cells, tokens, web lookups, a cost range and the time, where the money",
+    "events": [
+      "tc-sample-change",
+      "tc-cap-change",
+      "tc-start"
+    ]
+  },
+  {
     "tag": "tc-run-manifest",
     "name": "RunManifest",
     "description": "A run's reproducibility record: model, settings, instruction hash, sources, intent and the verification summary,",
@@ -3911,6 +3991,12 @@
     "tag": "tc-upload-failed",
     "name": "UploadFailed",
     "description": "A file lifted above an open tray, its upload arrow stopping short, with a cross badge, for an upload that didn't finish.",
+    "events": []
+  },
+  {
+    "tag": "tc-uploading",
+    "name": "Uploading",
+    "description": "A document with a badge showing an arrow rising out of a tray, for a file on its way up.",
     "events": []
   },
   {

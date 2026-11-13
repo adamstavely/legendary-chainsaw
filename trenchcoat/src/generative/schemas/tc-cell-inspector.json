@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-cell-inspector.json",
+  "title": "tc-cell-inspector",
+  "description": "Why one AI-filled cell says what it says – the value and confidence, the prompt with the row filled in, reasoning,\nsources, tokens and cost, and history – with Accept, Edit value, Re-run and Mark as wrong.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading – the column's name – and the region's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – which row: \"Northwind Analytics · row 214\""
+    },
+    "value": {
+      "type": "string",
+      "description": "The cell's value. Changed by Edit value unless a tc-value-change listener calls preventDefault()"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "edited",
+        "flagged",
+        "new",
+        "running"
+      ],
+      "description": "Where the cell stands. Changed by the actions unless a tc-status-change listener calls preventDefault()"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The column's prompt, with {{variable}} where the row's values go"
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "This row's values, by variable name"
+    },
+    "model": {
+      "type": "string",
+      "description": "The model that filled the cell"
+    },
+    "at": {
+      "type": "number",
+      "description": "When it was filled, epoch ms"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms – turns times into \"3 min ago\"; unset shows dates"
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "The model's reasoning summary, folded away until opened"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CellSource"
+      },
+      "description": "The sources the model used"
+    },
+    "confidence": {
+      "type": "number",
+      "description": "How sure the model was, 0–1; unset hides it"
+    },
+    "tokensIn": {
+      "type": "number",
+      "description": "Input tokens this cell used"
+    },
+    "tokensOut": {
+      "type": "number",
+      "description": "Output tokens this cell used"
+    },
+    "cost": {
+      "type": "number",
+      "description": "What this cell cost, in `currency`"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CellHistoryEntry"
+      },
+      "description": "Earlier values, newest first"
+    },
+    "closable": {
+      "type": "boolean",
+      "description": "Show a close button – the panel's own; Escape fires tc-close either way"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "flagged": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "new": {
+          "type": "string"
+        },
+        "accepted": {
+          "type": "string"
+        },
+        "edited": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for each status"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency of the cost"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers, money and dates"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CellSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "description": "Opens the source; only http(s), mailto and relative links are kept",
+          "format": "uri-reference"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "The passage the model used, quoted"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "CellHistoryEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value it had"
+        },
+        "at": {
+          "type": "number",
+          "description": "When, epoch ms"
+        },
+        "by": {
+          "type": "string",
+          "description": "Who or what set it: \"Analyst model\", \"Priya Shah\""
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "model",
+            "person"
+          ],
+          "description": "A model run or a person (default \"model\")"
+        },
+        "note": {
+          "type": "string",
+          "description": "Why it changed: \"Re-run after the prompt changed\""
+        }
+      },
+      "required": [
+        "id",
+        "value",
+        "at",
+        "by"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

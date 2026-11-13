@@ -112,13 +112,13 @@
         "noMatches": {
           "type": "string"
         },
+        "problems": {
+          "type": "string"
+        },
         "line": {
           "type": "string"
         },
         "warnings": {
-          "type": "string"
-        },
-        "problems": {
           "type": "string"
         },
         "problem": {

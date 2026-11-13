@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 474
+   "elements": 483
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 474
+   "elements": 483
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 474
+   "elements": 483
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 474
+   "elements": 483
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 474
+   "elements": 483
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 474
+   "elements": 483
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 474
+   "elements": 483
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 473
+   "elements": 482
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 344
+   "elements": 351
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 220
+   "elements": 225
   },
   {
    "id": "resize-observer",
@@ -140,7 +140,21 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 196
+   "elements": 197
+  },
+  {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   },
+   "progressive": false,
+   "elements": 170
   },
   {
    "id": "inert",
@@ -156,20 +170,6 @@
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
    "elements": 169
-  },
-  {
-   "id": "intersection-observer",
-   "name": "IntersectionObserver",
-   "bcd": "api.IntersectionObserver",
-   "versions": {
-    "chrome": "51",
-    "edge": "15",
-    "firefox": "55",
-    "safari": "12.1",
-    "safari_ios": "12.2"
-   },
-   "progressive": false,
-   "elements": 168
   },
   {
    "id": "has",
@@ -212,7 +212,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 69
+   "elements": 71
   },
   {
    "id": "mask",
@@ -286,7 +286,7 @@
    },
    "progressive": false,
    "why": "Sizes relative to the component's own width.",
-   "elements": 21
+   "elements": 22
   },
   {
    "id": "array-at",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 474
+   "elements": 483
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 473
+   "elements": 482
   },
   {
    "id": "scrollbar-width",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 83
+   "elements": 86
   },
   {
    "id": "popover",
