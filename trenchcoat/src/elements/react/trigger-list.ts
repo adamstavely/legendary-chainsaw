@@ -42,9 +42,8 @@ export function TriggerList({ title, triggers, defaultTriggers = NONE, onTrigger
     heading: title ?? "",
     triggers: t.value,
     onTcEnabledChange: (e: CustomEvent<TriggerEnabledChange>) => {
-      const next = t.value.map((x) => (x.id === e.detail.id ? { ...x, enabled: e.detail.enabled } : x));
-      t.handler(next, e);
-      onTriggersChange?.(next, e.detail);
+      t.handler(e.detail.triggers, e);
+      onTriggersChange?.(e.detail.triggers, e.detail);
     },
     onTcEdit: (e: CustomEvent<TriggerListEdit>) => onEdit?.(e.detail.id, e.detail.trigger),
     onTcAdd: (e: CustomEvent<TriggerListAdd>) => onAdd?.(e.detail.kind),

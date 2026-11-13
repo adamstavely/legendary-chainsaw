@@ -48,7 +48,7 @@ export class TriggerList {
     this.#el.look = v;
   }
   /**
-   * A switch was flipped ({ id, enabled, trigger }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state
+   * A switch was flipped ({ id, enabled, trigger, triggers }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-enabled-change") readonly tcEnabledChange = new EventEmitter<CustomEvent<TriggerEnabledChange>>();

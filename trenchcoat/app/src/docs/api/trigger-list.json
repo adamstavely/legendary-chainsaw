@@ -74,7 +74,7 @@
     {
      "name": "tc-enabled-change",
      "detail": "",
-     "description": "A switch was flipped ({ id, enabled, trigger }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state",
+     "description": "A switch was flipped ({ id, enabled, trigger, triggers }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state",
      "cancelable": true
     },
     {
@@ -490,7 +490,7 @@
   "windowed": false
  },
  "size": {
-  "min": 24522,
-  "gzip": 8104
+  "min": 24541,
+  "gzip": 8116
  }
 }

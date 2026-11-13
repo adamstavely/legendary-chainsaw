@@ -30,7 +30,8 @@ export type AgentTrigger = {
   /** What's going wrong, in words: "Signature header missing on the last 3 requests" */
   error?: string;
 };
-export type TriggerEnabledChange = { id: string; enabled: boolean; trigger: AgentTrigger };
+/** `triggers` is the whole list with the switch applied, under the property's own name */
+export type TriggerEnabledChange = { id: string; enabled: boolean; trigger: AgentTrigger; triggers: AgentTrigger[] };
 export type TriggerListEdit = { id: string; trigger: AgentTrigger };
 export type TriggerListAdd = { kind: TriggerKind };
 
@@ -108,7 +109,7 @@ export function triggerAgo(at: number, now: number, locale?: string) {
 /**
  * Every way an agent starts, each with a switch – what starts it in words, when it last fired, errors, Edit and Add.
  * @tag tc-trigger-list
- * @fires tc-enabled-change - A switch was flipped ({ id, enabled, trigger }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state
+ * @fires tc-enabled-change - A switch was flipped ({ id, enabled, trigger, triggers }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state
  * @fires tc-edit - Edit was pressed ({ id, trigger }: TriggerListEdit)
  * @fires tc-add - A kind was picked from Add trigger ({ kind }: TriggerListAdd)
  */
@@ -163,11 +164,12 @@ export class TcTriggerList extends TcElement {
   }
 
   private flip(t: AgentTrigger, enabled: boolean, input: HTMLInputElement) {
-    if (!this.emit<TriggerEnabledChange>("tc-enabled-change", { id: t.id, enabled, trigger: t }, { cancelable: true })) {
+    const triggers = this.triggers.map((x) => (x.id === t.id ? { ...x, enabled } : x));
+    if (!this.emit<TriggerEnabledChange>("tc-enabled-change", { id: t.id, enabled, trigger: t, triggers }, { cancelable: true })) {
       input.checked = t.enabled;
       return;
     }
-    this.triggers = this.triggers.map((x) => (x.id === t.id ? { ...x, enabled } : x));
+    this.triggers = triggers;
     const w = this.words;
     this.announce = (enabled ? w.announceOn : w.announceOff).replace("{summary}", t.summary);
   }

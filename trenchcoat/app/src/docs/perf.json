@@ -20059,7 +20059,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-13",
-   "hash": "02385b99cf162412",
+   "hash": "6c3a3a18a36aab19",
    "bundle": {
     "own": {
      "min": 34126,
@@ -21729,7 +21729,7 @@
      {
       "name": "trigger-list",
       "kind": "element",
-      "min": 14644
+      "min": 14663
      },
      {
       "name": "message-drafts",
@@ -24683,21 +24683,21 @@
      }
     ],
     "withoutLit": {
-     "min": 11144320,
-     "gzip": 2777060
+     "min": 11144339,
+     "gzip": 2777064
     },
     "withLit": {
-     "min": 11071706,
-     "gzip": 2751835
+     "min": 11071725,
+     "gzip": 2751840
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 5.7,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 8.5,
+    "first": 1.2,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -51818,11 +51818,11 @@
   },
   "trigger-list": {
    "measuredAt": "2026-11-13",
-   "hash": "95fbdb71672ed527",
+   "hash": "f1c3daecc499ff06",
    "bundle": {
     "own": {
-     "min": 16708,
-     "gzip": 5800
+     "min": 16727,
+     "gzip": 5807
     },
     "shared": [
      {
@@ -51867,21 +51867,21 @@
      }
     ],
     "withoutLit": {
-     "min": 24522,
-     "gzip": 8104
+     "min": 24541,
+     "gzip": 8116
     },
     "withLit": {
-     "min": 46871,
-     "gzip": 15479
+     "min": 46890,
+     "gzip": 15485
     }
    },
    "render": {
     "tag": "tc-trigger-list",
     "source": "demo",
     "runs": 7,
-    "cold": 23.7,
-    "first": 2.7,
-    "update": 0.5,
+    "cold": 23.4,
+    "first": 2.9,
+    "update": 0.6,
     "updateKind": "one item of triggers replaced",
     "nodes": 134,
     "scale": {
@@ -51890,14 +51890,14 @@
      "points": [
       {
        "items": 100,
-       "first": 18.1,
-       "update": 2,
+       "first": 17.6,
+       "update": 1.7,
        "nodes": 1958
       },
       {
        "items": 1000,
-       "first": 107.5,
-       "update": 10.7,
+       "first": 116.2,
+       "update": 11.3,
        "nodes": 19238
       }
      ]

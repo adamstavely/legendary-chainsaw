@@ -9,7 +9,7 @@
 Every way an agent starts, one row each – schedule, webhook, event, email or manual in words, when it last fired and how often this week, errors in words, a switch to turn it off, Edit, and Add trigger by kind
 
 - **Element:** `<tc-trigger-list>`
-- **Size:** 7.9 KB gzip · 23.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.9 KB gzip · 24.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -177,7 +177,7 @@ export class TriggerListExample {
 
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
-| `tc-enabled-change` | – | Yes | A switch was flipped ({ id, enabled, trigger }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state |
+| `tc-enabled-change` | – | Yes | A switch was flipped ({ id, enabled, trigger, triggers }: TriggerEnabledChange); cancelable – prevented, the trigger keeps its state |
 | `tc-edit` | – | No | Edit was pressed ({ id, trigger }: TriggerListEdit) |
 | `tc-add` | – | No | A kind was picked from Add trigger ({ kind }: TriggerListAdd) |
 
@@ -451,7 +451,7 @@ The triggers are a list named by the heading. Each switch is a native checkbox w
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **23.9 KB** | **7.9 KB** |
+| **Added to a page that already has Lit** | **24.0 KB** | **7.9 KB** |
 | With Lit – the first component on a page | 45.8 KB | 15.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
@@ -460,13 +460,13 @@ The triggers are a list named by the heading. Each switch is a native checkbox w
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.7 ms** | the gallery demo's data, 134 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of triggers replaced |
-| First on the page | 24 ms | default properties; includes adding its CSS to the document |
-| 100 items | 18 ms | triggers: first render, 1,958 nodes; update 2.0 ms |
-| 1,000 items | 108 ms | triggers: first render, 19,238 nodes; update 11 ms |
+| First render | **2.9 ms** | the gallery demo's data, 134 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of triggers replaced |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| 100 items | 18 ms | triggers: first render, 1,958 nodes; update 1.7 ms |
+| 1,000 items | 116 ms | triggers: first render, 19,238 nodes; update 11 ms |
 
-1,000 items of triggers: 108 ms. It renders every item, so a first render passes 50 ms (a long task) at about 470 items – page or filter longer lists.
+1,000 items of triggers: 116 ms. It renders every item, so a first render passes 50 ms (a long task) at about 430 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
