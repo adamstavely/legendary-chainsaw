@@ -13,11 +13,17 @@ until the person opens it. It opens a panel that lists the tasks under Running, 
 its progress, the time left and elapsed as the app reports them, and Cancel, Retry or Open. The app owns the tasks:
 every action is a cancelable event.
 
+With `notifiable`, each task that's running or queued gets a bell: “Notify me when Export Q3 revenue finishes”. Pressed, the
+element fires `tc-notify` once the app moves that task to done or failed, so the app can send the notice, and the
+usual announcement says it finished. `notify` holds the watched tasks. Give `notifyChannels` – “In app”, “Email”,
+“Push” – and the bell opens a short list of checkboxes under the task instead; `notifyVia` keeps each task's channels.
+
 ## When to use
 
 - Exports, uploads, imports and reindexes that take more than a few seconds and shouldn't block the page.
 - Agent runs the person started and wants to come back to when they're done.
 - Anywhere people need to find a finished file again, or retry what failed, without a notification for every job.
+- People who start long work and want to step away until it's done (`notifiable`).
 
 ## When not to use
 
@@ -34,6 +40,8 @@ every action is a cancelable event.
 5. **Progress** `.ui-bgt__bar` – how far a running task is, or a sliding bar while it's working
 6. **Actions** `.ui-bgt__acts` – Cancel, Retry or Open
 7. **Clear finished** `.ui-bgt__clear` – removes the done and failed tasks
+8. **Bell** `.ui-bgt__bell` – notify me when this task finishes (`notifiable`); highlighted while it's on
+9. **Channels** `.ui-bgt__channels` – how to be told, with `notifyChannels`
 
 ## Looks
 
@@ -50,6 +58,8 @@ use the menu surface with a plain title row, since a popover carries no card hea
 | ↓ / ↑ | In the list: the next or previous task |
 | Home / End | In the list: the first or last task |
 | Tab | From a task to its actions, then Clear finished (the list is one tab stop) |
+| Enter / Space | On a bell: watches the task or stops watching it – or, with channels, opens or closes its list |
+| Escape | In a channel list: closes it and returns focus to its bell (the panel stays open) |
 | Escape | Closes the panel and returns focus to the indicator |
 
 ## Screen readers
@@ -63,6 +73,10 @@ actions are named with the task: “Cancel Export Q3 revenue”, “Retry Upload
 status region says “Export Q3 revenue ready” or “Upload assets failed” when a task finishes or fails – never each
 progress tick – and “… cancelled”, “… queued again” and “Cleared 2 finished tasks” after an action.
 
+A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finishes”; with channels it's a disclosure
+(`aria-expanded`) whose name adds the chosen channels, and the list is a `fieldset` of checkboxes named “Tell me about
+<task> by”. Switching it is announced – “You'll be told when … finishes”, “No longer watching …”.
+
 ## Content
 
 - Label a task with what it does to what, in a few words: “Export Q3 revenue”, “Upload brand-assets.zip”.
@@ -72,6 +86,7 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 - Write `error` as what happened, not a code: “Connection lost at 62%”.
 - Give a done task a `result` with the file's name, so Open says what it opens.
 - Use `announce` to word the announcements your own way (“Your export is ready”).
+- Word channels as people know them – “In app”, “Email”, “Push” – and offer only the ones that work for them.
 
 ## Do
 
@@ -79,6 +94,7 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
   happens on your server.
 - Mark jobs that can't be stopped with `cancelable: false` and ones that can't be repeated with `retryable: false`.
 - Put the indicator where people look for status – at the end of the app's header.
+- Send the notice when `tc-notify` fires, on the channels in its detail; the element doesn't send anything.
 
 ## Don't
 

@@ -54,6 +54,18 @@
     "maxHeight": {
       "type": "number",
       "description": "The list's height before it scrolls, in px"
+    },
+    "addInline": {
+      "type": "boolean",
+      "description": "Add source opens the Add sources panel – files, links and pasted text – instead of firing tc-add"
+    },
+    "accept": {
+      "type": "string",
+      "description": "The files the panel's picker and drop area take, as an input's `accept`: \".pdf,.docx,text/*\""
+    },
+    "maxFileSize": {
+      "type": "number",
+      "description": "The largest file the panel takes, in bytes; larger ones are turned away with a reason"
     }
   },
   "additionalProperties": false,

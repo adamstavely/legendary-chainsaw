@@ -12,10 +12,15 @@ two dates; then add conditions such as “only if Amount is more than 10,000”,
 read back as one plain sentence, and a schedule lists its next five runs, so people can check it does what they meant
 before they save. It is a form control: with `name` it submits the definition as JSON.
 
+Give it `webhookUrl` and a third kind appears: a request arriving at that address. It shows the address with Copy,
+the HTTP method, an optional header that must carry a shared secret, a sample payload with Send test request, and how
+the last request went.
+
 ## When to use
 
 - Setting up a scheduled report, a recurring agent run or a workflow that reacts to events in another system.
 - Anywhere people would otherwise write a cron expression or a rule by hand.
+- Agents another system starts by calling a URL – a webhook, with its address, method and a test request.
 - Forms where the trigger is saved with other settings – it validates and resets with the form.
 
 ## When not to use
@@ -26,12 +31,15 @@ before they save. It is a form control: with `name` it submits the definition as
 
 ## Anatomy
 
-1. **When** `.ui-tgb__kind` – an event happens, or on a schedule
+1. **When** `.ui-tgb__kind` – an event happens, on a schedule, or (with `webhookUrl`) a request arrives
 2. **Rows** `.ui-tgb__rows` – the event, or Repeats, On, At and Active, each with its label
-3. **Conditions** `.ui-tgb__conds` – All or Any, one row per condition, and Add condition
-4. **Sentence** `.ui-tgb__summary` – the trigger as one plain sentence
-5. **Next runs** `.ui-tgb__runs` – the upcoming run times, the first one marked
-6. **Foot** `.ui-tgb__foot` – the time zone, or “Runs each time the event happens”
+3. **Webhook** – the address `.ui-tgb__url` with Copy `.ui-tgb__copy`, the method `.ui-tgb__method`, the secret
+   header `.ui-tgb__secret`, the sample payload `.ui-tgb__payload`, Send test request `.ui-tgb__send` and the last
+   request `.ui-tgb__last`
+4. **Conditions** `.ui-tgb__conds` – All or Any, one row per condition, and Add condition
+5. **Sentence** `.ui-tgb__summary` – the trigger as one plain sentence
+6. **Next runs** `.ui-tgb__runs` – the upcoming run times, the first one marked
+7. **Foot** `.ui-tgb__foot` – the time zone, “Runs each time the event happens” or “Runs each time a request arrives”
 
 ## Looks
 
@@ -44,7 +52,7 @@ and date-range picker in the matching look; in a narrow container the labels sit
 | Key | What it does |
 |---|---|
 | Tab | Moves through the controls row by row, then the conditions and Add condition |
-| ← / → / ↑ / ↓ | In When, Repeats, Active and All / Any: picks the previous or next option |
+| ← / → / ↑ / ↓ | In When, Repeats, Method, Active and All / Any: picks the previous or next option |
 | Home / End | In those same controls: picks the first or last option |
 | Space / Enter | On a day: turns it on or off; on Add condition or ×: adds or removes a condition |
 | ↓ / ↑, Enter, Escape | In the event field: the combobox's keys – open, move, pick, close |
@@ -60,7 +68,11 @@ the weekdays are a group of toggle buttons with `aria-pressed` and full day name
 is named by its place: “Condition 1 field”, “Condition 1 test”, “Condition 1 value”, “Remove condition 1”. The next
 runs are a list named “Next runs”. After each change a status region reads the new sentence – “Runs every Monday at
 9:00 AM, only if Open deals is more than 0.” – but not on first render. In a form, an event trigger without an event
-is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick at least one day.”).
+is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick at least one day.”) and a webhook one
+without an address. For a webhook, Copy reads “Copy webhook address”, the sample payload is a focusable region named
+“Test”, the secret header field is described by its hint, and the status region says “Copied the webhook address”,
+“Sending a test request…” and then how the request went – “Last request: 202 · Test received”. The last request's
+status is in words and a mark (a dot when accepted, a square when not), not colour alone.
 
 ## Content
 
@@ -69,14 +81,17 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 - Use `hint` for where the event comes from (“CRM”, “Stripe”) and `group` to gather related events.
 - Name condition fields as people know them – “Amount”, “Stage”, “Priority” – and give `select` fields their options.
 - Set `heading` to what the trigger starts: “Run this automation”, “Send the weekly report”.
+- Give the last request's `message` in words people can act on: “Started run 418”, “Missing X-Signature header”.
 
 ## Do
 
 - Give `scheduleFields` only when a scheduled run can check something first; without them a schedule has no conditions.
 - Pass `now` when the page knows the time it should count from (server time, a test); otherwise it's when the
   element connected.
-- Store the value as it is – `kind`, `event` or `schedule`, `active`, `conditions` and `match` – and run it on the
-  server with the same rules; `nextTriggerRuns` and `describeTrigger` are exported to help.
+- Store the value as it is – `kind`, `event`, `schedule` or `webhook`, `active`, `conditions` and `match` – and run it
+  on the server with the same rules; `nextTriggerRuns` and `describeTrigger` are exported to help.
+- Answer `tc-webhook-test` by sending the request from the server, then set `webhookLast` with how it went – the
+  button waits for it.
 
 ## Don't
 
@@ -84,6 +99,7 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
   browser's time zone.
 - Don't offer events without `fields` if people will want to narrow them – conditions come from the event's fields.
 - Don't keep conditions when the kind changes: the builder drops them, because they test the other kind's fields.
+- Don't put the shared secret itself in `secretHeader` – it names the header; the secret lives on the server.
 
 ## Example
 

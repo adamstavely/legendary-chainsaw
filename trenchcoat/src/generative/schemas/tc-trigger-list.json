@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-trigger-list.json",
+  "title": "tc-trigger-list",
+  "description": "Every way an agent starts, each with a switch – what starts it in words, when it last fired, errors, Edit and Add.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"Triggers\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading, such as the agent's name"
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentTrigger"
+      },
+      "description": "The triggers. A flipped switch changes `enabled` unless a tc-enabled-change listener calls preventDefault()"
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TriggerKind"
+      },
+      "description": "The kinds Add trigger offers; none: no Add trigger"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" for \"3 hours ago\", epoch ms; without it, last-fired times are dates. The element doesn't read the clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates and relative times"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kinds": {
+          "type": "object",
+          "properties": {
+            "schedule": {
+              "type": "string"
+            },
+            "webhook": {
+              "type": "string"
+            },
+            "event": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "manual": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "heading": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string",
+          "description": "{on} and {n}"
+        },
+        "on": {
+          "type": "string"
+        },
+        "off": {
+          "type": "string"
+        },
+        "switchName": {
+          "type": "string",
+          "description": "{summary}"
+        },
+        "lastFired": {
+          "type": "string",
+          "description": "{when}"
+        },
+        "never": {
+          "type": "string"
+        },
+        "fires": {
+          "type": "string",
+          "description": "{n}"
+        },
+        "firesOne": {
+          "type": "string"
+        },
+        "firesNone": {
+          "type": "string"
+        },
+        "failing": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "announceOn": {
+          "type": "string",
+          "description": "{summary}"
+        },
+        "announceOff": {
+          "type": "string",
+          "description": "{summary}"
+        }
+      },
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentTrigger": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/TriggerKind"
+        },
+        "summary": {
+          "type": "string",
+          "description": "What starts it, in words: \"Every weekday at 09:00\", \"POST /hooks/inv-7f3a\", \"When an invoice is uploaded\""
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "lastFired": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "fires7d": {
+          "type": "number",
+          "description": "How many times it fired in the last seven days"
+        },
+        "error": {
+          "type": "string",
+          "description": "What's going wrong, in words: \"Signature header missing on the last 3 requests\""
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "summary",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "TriggerKind": {
+      "type": "string",
+      "enum": [
+        "email",
+        "event",
+        "manual",
+        "schedule",
+        "webhook"
+      ]
+    }
+  }
+}

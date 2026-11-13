@@ -1,0 +1,366 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-channel-setup.json",
+  "title": "tc-channel-setup",
+  "description": "Connect one channel and set when the agent replies there – Connect, Where, When it replies, Test and Go live, each checked in words before the next.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "channel": {
+      "type": "string",
+      "description": "The channel's name, used in the words: \"Team chat\""
+    },
+    "agent": {
+      "type": "string",
+      "description": "The agent's name, used in the words: \"Policy Q&A\""
+    },
+    "step": {
+      "type": "string",
+      "enum": [
+        "connect",
+        "live",
+        "test",
+        "when",
+        "where"
+      ],
+      "description": "The current step. Changed by Next, Back and the step list unless a tc-step-change listener prevents it"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replies": {
+          "$ref": "#/definitions/ChannelReplyMode"
+        },
+        "hours": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            },
+            "timeZone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "from",
+            "to",
+            "timeZone"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "targets",
+        "replies",
+        "hours"
+      ],
+      "additionalProperties": false,
+      "description": "The settings. Changed by the user unless a tc-value-change listener prevents it"
+    },
+    "account": {
+      "type": "string",
+      "description": "The connected account's name; empty while not connected"
+    },
+    "connecting": {
+      "type": "boolean",
+      "description": "The page is authorizing: Connect waits"
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChannelTarget"
+      },
+      "description": "The places to pick in Where"
+    },
+    "timeZones": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The time zones offered for business hours"
+    },
+    "testMessage": {
+      "type": "string",
+      "description": "The message Send test sends; editable in the Test step"
+    },
+    "testing": {
+      "type": "boolean",
+      "description": "A test is on its way: Send test waits"
+    },
+    "testResult": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "reply": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "additionalProperties": false,
+      "description": "The page's result for the last test; null before one"
+    },
+    "live": {
+      "type": "boolean",
+      "description": "The channel is live: the setup shows its done state"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "object",
+          "properties": {
+            "connect": {
+              "type": "string"
+            },
+            "where": {
+              "type": "string"
+            },
+            "when": {
+              "type": "string"
+            },
+            "test": {
+              "type": "string"
+            },
+            "live": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "headings": {
+          "type": "object",
+          "properties": {
+            "connect": {
+              "type": "string"
+            },
+            "where": {
+              "type": "string"
+            },
+            "when": {
+              "type": "string"
+            },
+            "test": {
+              "type": "string"
+            },
+            "live": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "replies": {
+          "type": "object",
+          "properties": {
+            "every": {
+              "type": "string"
+            },
+            "mentions": {
+              "type": "string"
+            },
+            "direct": {
+              "type": "string"
+            },
+            "hours": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "repliesHint": {
+          "type": "object",
+          "properties": {
+            "every": {
+              "type": "string"
+            },
+            "mentions": {
+              "type": "string"
+            },
+            "direct": {
+              "type": "string"
+            },
+            "hours": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "errors": {
+          "type": "object",
+          "properties": {
+            "connect": {
+              "type": "string"
+            },
+            "where": {
+              "type": "string"
+            },
+            "hoursMissing": {
+              "type": "string"
+            },
+            "hoursOrder": {
+              "type": "string"
+            },
+            "timeZone": {
+              "type": "string"
+            },
+            "test": {
+              "type": "string"
+            },
+            "testFailed": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "connect": {
+          "type": "string"
+        },
+        "reconnect": {
+          "type": "string"
+        },
+        "connecting": {
+          "type": "string"
+        },
+        "connected": {
+          "type": "string",
+          "description": "\"Connected as {account}\""
+        },
+        "search": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "string",
+          "description": "\"{n} selected\""
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "noTargets": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "testMessage": {
+          "type": "string"
+        },
+        "sendTest": {
+          "type": "string"
+        },
+        "sending": {
+          "type": "string"
+        },
+        "testPassed": {
+          "type": "string"
+        },
+        "testFailed": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "goLive": {
+          "type": "string"
+        },
+        "isLive": {
+          "type": "string",
+          "description": "\"{agent} is live in {channel}\""
+        },
+        "stepOf": {
+          "type": "string",
+          "description": "\"Step {n} of {total}\""
+        },
+        "progress": {
+          "type": "string",
+          "description": "Names the step list"
+        },
+        "done": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        },
+        "summaryAccount": {
+          "type": "string"
+        },
+        "summaryWhere": {
+          "type": "string"
+        },
+        "summaryWhen": {
+          "type": "string"
+        },
+        "summaryTest": {
+          "type": "string"
+        },
+        "hoursRange": {
+          "type": "string",
+          "description": "\"{from}–{to} ({zone})\""
+        }
+      },
+      "description": "Words the component uses, merged over defaultChannelSetupLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ChannelReplyMode": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "every",
+        "hours",
+        "mentions"
+      ]
+    },
+    "ChannelTarget": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

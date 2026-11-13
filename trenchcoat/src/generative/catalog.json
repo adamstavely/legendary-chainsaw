@@ -61,6 +61,18 @@
     ]
   },
   {
+    "tag": "tc-agent-create",
+    "name": "AgentCreate",
+    "description": "Describe an agent and get a working draft to edit: name, instructions, tools, model, triggers and open questions.",
+    "events": [
+      "tc-prompt-change",
+      "tc-generate",
+      "tc-draft-change",
+      "tc-create",
+      "tc-reset"
+    ]
+  },
+  {
     "tag": "tc-agent-face",
     "name": "AgentFace",
     "description": "Donovan's animated face, which shows what the agent is doing.",
@@ -145,6 +157,17 @@
     ]
   },
   {
+    "tag": "tc-agent-list",
+    "name": "AgentList",
+    "description": "Every agent in a workspace, with the failing ones lifted first; search, status filter and sort.",
+    "events": [
+      "tc-agent-open",
+      "tc-sort-change",
+      "tc-filter-change",
+      "tc-query-change"
+    ]
+  },
+  {
     "tag": "tc-agent-monitor",
     "name": "AgentMonitor",
     "description": "One agent at work: its current step, a clock, the cost so far, a strip of its steps and the finished ones.",
@@ -200,6 +223,14 @@
       "tc-remove",
       "tc-pause",
       "tc-resume"
+    ]
+  },
+  {
+    "tag": "tc-agent-summary",
+    "name": "AgentSummary",
+    "description": "One agent's profile: status, model, tools, owner, version, two weeks of runs, and recent failures.",
+    "events": [
+      "tc-action"
     ]
   },
   {
@@ -697,6 +728,18 @@
     "events": []
   },
   {
+    "tag": "tc-channel-setup",
+    "name": "ChannelSetup",
+    "description": "Connect one channel and set when the agent replies there – Connect, Where, When it replies, Test and Go live, each checked in words before the next.",
+    "events": [
+      "tc-connect",
+      "tc-step-change",
+      "tc-value-change",
+      "tc-test",
+      "tc-go-live"
+    ]
+  },
+  {
     "tag": "tc-chart",
     "name": "Chart",
     "description": "Any chart from a JSON spec – checked first, then drawn with the chart the spec names; what's wrong is shown instead",
@@ -1159,6 +1202,15 @@
     ]
   },
   {
+    "tag": "tc-deploy-channels",
+    "name": "DeployChannels",
+    "description": "Where an agent can be reached – one row per channel with its status in words, the version it serves, last week's traffic and Set up, Configure, Pause or Resume.",
+    "events": [
+      "tc-channel-action",
+      "tc-channels-change"
+    ]
+  },
+  {
     "tag": "tc-diff-table",
     "name": "DiffTable",
     "description": "An AI's proposed edits to a table, reviewed in place: struck and new values per cell, added and removed rows, and accept, reject and undo per edit, per row or for all.",
@@ -1271,6 +1323,24 @@
       "tc-tone-change",
       "tc-discard",
       "tc-undo"
+    ]
+  },
+  {
+    "tag": "tc-embed-configurator",
+    "name": "EmbedConfigurator",
+    "description": "Style a site's chat widget beside a live preview, and copy its install snippet.",
+    "events": [
+      "tc-value-change",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-embed-widget",
+    "name": "EmbedWidget",
+    "description": "The chat a visitor opens on a website: a corner launcher with an unread count, and a panel with a greeting,",
+    "events": [
+      "tc-open-change",
+      "tc-send"
     ]
   },
   {
@@ -1626,7 +1696,11 @@
     "events": [
       "tc-acknowledged-change",
       "tc-access-request",
-      "tc-accept"
+      "tc-accept",
+      "tc-handoff-to-change",
+      "tc-pause-until-accepted-change",
+      "tc-handoff",
+      "tc-handoff-cancel"
     ]
   },
   {
@@ -1888,7 +1962,8 @@
       "tc-add",
       "tc-resync",
       "tc-pause",
-      "tc-review-chunks"
+      "tc-review-chunks",
+      "tc-sources-add"
     ]
   },
   {
@@ -2468,7 +2543,8 @@
       "tc-reload",
       "tc-start",
       "tc-open-external",
-      "tc-console"
+      "tc-console",
+      "tc-fix-request"
     ]
   },
   {
@@ -2956,7 +3032,9 @@
     "description": "A live status of agents' background tasks for a header or sidebar – a quiet pill with how many are running and how",
     "events": [
       "tc-task-action",
-      "tc-open-change"
+      "tc-open-change",
+      "tc-notify-change",
+      "tc-notify"
     ]
   },
   {
@@ -3070,6 +3148,16 @@
       "tc-replacement-change",
       "tc-replace",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-secrets-manager",
+    "name": "SecretsManager",
+    "description": "Write-only secrets for agents – missing ones first with the agents that need them, set and replace without ever",
+    "events": [
+      "tc-secret-set",
+      "tc-secret-delete",
+      "tc-secrets-change"
     ]
   },
   {
@@ -3344,6 +3432,25 @@
     "description": "A status tracker – a fixed sequence of steps on a line, each cleared, pending, blocked or not reached, with the line",
     "events": [
       "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-step-inspector",
+    "name": "StepInspector",
+    "description": "One workflow step's settings – its inputs, each a typed value or a mapping from an earlier step's output – with a",
+    "events": [
+      "tc-step-change",
+      "tc-test"
+    ]
+  },
+  {
+    "tag": "tc-step-picker",
+    "name": "StepPicker",
+    "description": "Search step kinds and tools to add next to a workflow – grouped, with suggested and recent steps first.",
+    "events": [
+      "tc-pick",
+      "tc-query-change",
+      "tc-open-change"
     ]
   },
   {
@@ -3681,7 +3788,19 @@
     "name": "TriggerBuilder",
     "description": "When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.",
     "events": [
-      "tc-value-change"
+      "tc-value-change",
+      "tc-webhook-test",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-trigger-list",
+    "name": "TriggerList",
+    "description": "Every way an agent starts, each with a switch – what starts it in words, when it last fired, errors, Edit and Add.",
+    "events": [
+      "tc-enabled-change",
+      "tc-edit",
+      "tc-add"
     ]
   },
   {
@@ -3800,6 +3919,18 @@
     "description": "A work item card – title, status, a note, progress, due date, people, what it delivers, spent against budget and",
     "events": [
       "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-workflow-canvas",
+    "name": "WorkflowCanvas",
+    "description": "An agent workflow as a node graph – step cards joined by connectors, panned, zoomed, edited with the pointer or",
+    "events": [
+      "tc-nodes-change",
+      "tc-edges-change",
+      "tc-selected-change",
+      "tc-add-request",
+      "tc-view-change"
     ]
   },
   {

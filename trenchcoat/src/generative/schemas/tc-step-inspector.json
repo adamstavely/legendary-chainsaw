@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-step-inspector.json",
+  "title": "tc-step-inspector",
+  "description": "One workflow step's settings – its inputs, each a typed value or a mapping from an earlier step's output – with a\ntest run and its input and output.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, over the step's title when no step is selected"
+    },
+    "step": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/WorkflowKind"
+        },
+        "title": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StepInput"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "inputs"
+      ],
+      "additionalProperties": false,
+      "description": "The step being edited, or null for none"
+    },
+    "upstream": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UpstreamStep"
+      },
+      "description": "The steps before this one, whose outputs its inputs can be mapped from"
+    },
+    "lastRun": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "failed",
+            "succeeded"
+          ]
+        },
+        "duration": {
+          "type": "string"
+        },
+        "input": {},
+        "output": {},
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "The last test run, if any"
+    },
+    "testing": {
+      "type": "boolean",
+      "description": "A test run is in flight"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Viewing only: nothing can be changed or tested"
+    },
+    "kinds": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "icon": {
+            "$ref": "#/definitions/TemplateResult"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Labels and icons for kinds the page adds, merged over the workflow defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WorkflowKind": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "approval",
+            "condition",
+            "llm",
+            "output",
+            "tool",
+            "trigger"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "StepInput": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "long",
+            "number",
+            "select",
+            "text"
+          ],
+          "description": "\"text\" (the default), \"number\", \"long\" (several lines) or \"select\" (with `options`)"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "description": "One quiet line on what it's for"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/definitions/StepInputSource",
+          "description": "Where the value comes from; none yet when left out"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "StepInputSource": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ref"
+            },
+            "ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "ref"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "value"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UpstreamStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/WorkflowKind"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UpstreamOutput"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "outputs"
+      ],
+      "additionalProperties": false
+    },
+    "UpstreamOutput": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "sample": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "TemplateResult": {
+      "$ref": "#/definitions/UncompiledTemplateResult%3Calias-1%3E",
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg } .\n\nA `TemplateResult` object holds all the information about a template expression required to render it: the template strings, expression values, and type of template (html or svg).\n\n`TemplateResult` objects do not create any DOM on their own. To create or update DOM you need to render the `TemplateResult`. See [Rendering](https://lit.dev/docs/components/rendering) for more information.\n\nIn Lit 4, this type will be an alias of MaybeCompiledTemplateResult, so that code will get type errors if it assumes that Lit templates are not compiled. When deliberately working with only one, use either  {@linkcode  CompiledTemplateResult }  or  {@linkcode  UncompiledTemplateResult }  explicitly."
+    },
+    "UncompiledTemplateResult<alias-1>": {
+      "type": "object",
+      "properties": {
+        "_$litType$": {
+          "type": "number",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strings": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            },
+            "raw": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "length",
+            "raw"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "_$litType$",
+        "strings",
+        "values"
+      ],
+      "additionalProperties": false,
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg }  when it hasn't been compiled by"
+    }
+  }
+}

@@ -73,13 +73,13 @@
         "empty": {
           "type": "string"
         },
+        "clear": {
+          "type": "string"
+        },
         "messages": {
           "type": "string"
         },
         "stack": {
-          "type": "string"
-        },
-        "clear": {
           "type": "string"
         },
         "message": {

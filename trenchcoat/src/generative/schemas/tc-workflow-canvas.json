@@ -1,0 +1,221 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-workflow-canvas.json",
+  "title": "tc-workflow-canvas",
+  "description": "An agent workflow as a node graph – step cards joined by connectors, panned, zoomed, edited with the pointer or\nthe keyboard, and coloured by status while it runs.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WorkflowNode"
+      },
+      "description": "The steps, each with its position on the canvas"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WorkflowEdge"
+      },
+      "description": "The connectors between steps"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected step. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "canvas",
+        "list"
+      ],
+      "description": "\"canvas\" (the default) or \"list\" – the same steps as a list. Changed by the user unless prevented"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Watching only: no moving, connecting, adding or removing"
+    },
+    "kinds": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "icon": {
+            "$ref": "#/definitions/TemplateResult"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Labels and icons for kinds, merged over the defaults (trigger, llm, tool, condition, approval, output)"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "idle": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for each run status, merged over `defaultWorkflowStatusLabels`"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WorkflowNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/WorkflowKind"
+        },
+        "title": {
+          "type": "string"
+        },
+        "x": {
+          "type": "number",
+          "description": "Position on the canvas, px at 100% zoom – the card's top-left corner"
+        },
+        "y": {
+          "type": "number"
+        },
+        "status": {
+          "$ref": "#/definitions/WorkflowStatus",
+          "description": "Run status; leave it out before a run"
+        },
+        "summary": {
+          "type": "string",
+          "description": "One quiet line under the title: what the step does, or what it found"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "x",
+        "y"
+      ],
+      "additionalProperties": false
+    },
+    "WorkflowKind": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "approval",
+            "condition",
+            "llm",
+            "output",
+            "tool",
+            "trigger"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "WorkflowStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "idle",
+        "running",
+        "skipped"
+      ]
+    },
+    "WorkflowEdge": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "TemplateResult": {
+      "$ref": "#/definitions/UncompiledTemplateResult%3Calias-1%3E",
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg } .\n\nA `TemplateResult` object holds all the information about a template expression required to render it: the template strings, expression values, and type of template (html or svg).\n\n`TemplateResult` objects do not create any DOM on their own. To create or update DOM you need to render the `TemplateResult`. See [Rendering](https://lit.dev/docs/components/rendering) for more information.\n\nIn Lit 4, this type will be an alias of MaybeCompiledTemplateResult, so that code will get type errors if it assumes that Lit templates are not compiled. When deliberately working with only one, use either  {@linkcode  CompiledTemplateResult }  or  {@linkcode  UncompiledTemplateResult }  explicitly."
+    },
+    "UncompiledTemplateResult<alias-1>": {
+      "type": "object",
+      "properties": {
+        "_$litType$": {
+          "type": "number",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strings": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            },
+            "raw": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "length",
+            "raw"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "_$litType$",
+        "strings",
+        "values"
+      ],
+      "additionalProperties": false,
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg }  when it hasn't been compiled by"
+    }
+  }
+}

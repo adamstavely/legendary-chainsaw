@@ -106,13 +106,13 @@
         "severity": {
           "type": "string"
         },
+        "errors": {
+          "type": "string"
+        },
         "noMatches": {
           "type": "string"
         },
         "line": {
-          "type": "string"
-        },
-        "errors": {
           "type": "string"
         },
         "warnings": {
@@ -121,10 +121,10 @@
         "problems": {
           "type": "string"
         },
-        "infos": {
+        "problem": {
           "type": "string"
         },
-        "problem": {
+        "infos": {
           "type": "string"
         }
       },

@@ -46,6 +46,38 @@
      "readonly": false
     },
     {
+     "name": "notifiable",
+     "attribute": "notifiable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offer \"notify me when it's done\" on the tasks still going",
+     "readonly": false
+    },
+    {
+     "name": "notify",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The tasks the person will be told about when they finish",
+     "readonly": false
+    },
+    {
+     "name": "notifyChannels",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ways to be told – \"In app\", \"Email\", \"Push\"; given, the bell opens a choice of them",
+     "readonly": false
+    },
+    {
+     "name": "notifyVia",
+     "attribute": null,
+     "type": "Record<string, string[]>",
+     "default": "{}",
+     "description": "The channels chosen for each watched task, with `notifyChannels`",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -66,6 +98,18 @@
      "detail": "",
      "description": "The panel is opening or closing ({ open }: RunningNowOpenChange); cancelable – prevented, it stays as it is",
      "cancelable": true
+    },
+    {
+     "name": "tc-notify-change",
+     "detail": "",
+     "description": "The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: RunningNowNotifyChange); cancelable – prevented, nothing changes",
+     "cancelable": true
+    },
+    {
+     "name": "tc-notify",
+     "detail": "",
+     "description": "A watched task finished ({ id, status, task, channels }: RunningNowNotify)",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -81,6 +125,9 @@
     }
    ],
    "tokens": [
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-action-secondary-bg",
@@ -117,6 +164,7 @@
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-hairline",
+    "--tc-icon-muted",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-menu-item-hover",
@@ -124,6 +172,7 @@
     "--tc-meter-fill",
     "--tc-meter-track",
     "--tc-radius-full",
+    "--tc-radius-md",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
@@ -140,6 +189,7 @@
     "--tc-status-warning-solid",
     "--tc-surface-inverse",
     "--tc-surface-raised",
+    "--tc-surface-well",
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
@@ -188,6 +238,42 @@
      "description": "The panel opened or closed"
     },
     {
+     "name": "notify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks (with `notifiable`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks when uncontrolled"
+    },
+    {
+     "name": "notifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels chosen per watched task (with `notifyChannels`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels per task when uncontrolled"
+    },
+    {
+     "name": "onNotifyChange",
+     "type": "(notify: string[], change: RunningNowNotifyChange) => void",
+     "optional": true,
+     "description": "The bell or a channel was switched – the watched tasks as they are now, and the change"
+    },
+    {
+     "name": "onNotify",
+     "type": "(task: RunningTask, status: \"done\" | \"failed\", channels?: string[]) => void",
+     "optional": true,
+     "description": "A watched task finished"
+    },
+    {
      "name": "onTaskAction",
      "type": "(action: RunningNowAction, task: RunningTask) => boolean | void",
      "optional": true,
@@ -197,7 +283,9 @@
    "hides": [],
    "events": {
     "tc-task-action": "onTcTaskAction",
-    "tc-open-change": "onTcOpenChange"
+    "tc-open-change": "onTcOpenChange",
+    "tc-notify-change": "onTcNotifyChange",
+    "tc-notify": "onTcNotify"
    }
   },
   {
@@ -229,6 +317,42 @@
      "description": "The panel opened or closed"
     },
     {
+     "name": "notify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks (with `notifiable`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks when uncontrolled"
+    },
+    {
+     "name": "notifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels chosen per watched task (with `notifyChannels`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels per task when uncontrolled"
+    },
+    {
+     "name": "onNotifyChange",
+     "type": "(notify: string[], change: RunningNowNotifyChange) => void",
+     "optional": true,
+     "description": "The bell or a channel was switched – the watched tasks as they are now, and the change"
+    },
+    {
+     "name": "onNotify",
+     "type": "(task: RunningTask, status: \"done\" | \"failed\", channels?: string[]) => void",
+     "optional": true,
+     "description": "A watched task finished"
+    },
+    {
      "name": "onTaskAction",
      "type": "(action: RunningNowAction, task: RunningTask) => boolean | void",
      "optional": true,
@@ -241,7 +365,9 @@
    ],
    "events": {
     "tc-task-action": "onTaskAction",
-    "tc-open-change": "onOpenChange"
+    "tc-open-change": "onOpenChange",
+    "tc-notify-change": null,
+    "tc-notify": "onNotify"
    }
   }
  ],
@@ -253,7 +379,10 @@
    "module": "@adamstavely/trenchcoat/running-now",
    "data": [
     "tasks",
-    "labels"
+    "labels",
+    "notify",
+    "notifyChannels",
+    "notifyVia"
    ],
    "attributes": [
     {
@@ -267,6 +396,10 @@
     {
      "name": "now",
      "attribute": "now"
+    },
+    {
+     "name": "notifiable",
+     "attribute": "notifiable"
     }
    ],
    "events": [
@@ -277,12 +410,24 @@
     {
      "name": "tc-open-change",
      "cancelable": true
+    },
+    {
+     "name": "tc-notify-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-notify",
+     "cancelable": false
     }
    ],
    "controlled": [
     {
      "property": "open",
      "event": "tc-open-change"
+    },
+    {
+     "property": "notify",
+     "event": "tc-notify-change"
     }
    ],
    "form": null,
@@ -562,7 +707,7 @@
   "windowed": false
  },
  "size": {
-  "min": 36709,
-  "gzip": 11829
+  "min": 42253,
+  "gzip": 13338
  }
 }

@@ -1,7 +1,8 @@
 /*
  * <tc-background-tasks> in real browsers: the host and both looks, the indicator (counts, ring, check and alert),
  * the panel as a dialog (focus, Escape), the list's keyboard, the actions as cancelable events, announcements,
- * windowing, the React wrapper and axe.
+ * windowing, the React wrapper and axe. Notify when done: opt-in bells on running and queued tasks, the cancelable
+ * tc-notify-change, tc-notify when a watched task finishes, channels, the wrapper and axe.
  */
 import { html } from "lit";
 import axe from "axe-core";
@@ -373,6 +374,137 @@ describe("tc-background-tasks", () => {
     await act(async () => root.unmount());
   });
 
+  describe("notify when done", () => {
+    const makeN = (o: { layout?: string; channels?: string[]; notify?: string[] } = {}) =>
+      fixture<TcBackgroundTasks>(
+        html`<tc-background-tasks layout=${o.layout ?? "panel"} notifiable .tasks=${TASKS} .notify=${o.notify ?? []} .notifyChannels=${o.channels ?? []}></tc-background-tasks>`,
+      );
+    const bell = (el: Element, id: string) => row(el, id).querySelector<HTMLButtonElement>(".ui-bgt__bell");
+
+    test("opt-in: without `notifiable` there are no bells; with it, running and queued tasks get one, before Cancel", async () => {
+      expect((await make({ layout: "panel" })).querySelectorAll(".ui-bgt__bell")).toHaveLength(0);
+      const el = await makeN();
+      expect(rows(el).filter((r) => r.querySelector(".ui-bgt__bell")).map((r) => r.dataset.id)).toEqual(["exp", "sum", "idx"]);
+      const b = bell(el, "exp")!;
+      expect(plain(b.textContent)).toBe("Notify me when Export Q3 revenue finishes");
+      expect(b.getAttribute("aria-pressed")).toBe("false");
+      expect(b.nextElementSibling!.getAttribute("data-act")).toBe("cancel");
+      expect(b.tabIndex).toBe(0);
+      expect(bell(el, "sum")!.tabIndex).toBe(-1);
+      row(el, "exp").focus();
+      await userEvent.keyboard("{Tab}");
+      expect(document.activeElement).toBe(b);
+      await userEvent.keyboard(" ");
+      await settle();
+      expect(el.notify).toEqual(["exp"]);
+    });
+
+    test("the bell: a cancelable tc-notify-change, pressed while on, announced; tc-notify once a watched task finishes", async () => {
+      const el = await makeN();
+      const changes: unknown[] = [];
+      const notices: unknown[] = [];
+      el.addEventListener("tc-notify-change", (e) => changes.push((e as CustomEvent).detail));
+      el.addEventListener("tc-notify", (e) => notices.push((e as CustomEvent).detail));
+      bell(el, "idx")!.click();
+      await settle();
+      expect(changes).toEqual([{ notify: ["idx"], id: "idx", on: true, notifyVia: {} }]);
+      expect(bell(el, "idx")!.getAttribute("aria-pressed")).toBe("true");
+      expect(bell(el, "idx")!.hasAttribute("data-on")).toBe(true);
+      expect(status(el)).toBe("You'll be told when Reindex help center finishes");
+      const stop = (e: Event) => e.preventDefault();
+      el.addEventListener("tc-notify-change", stop);
+      bell(el, "exp")!.click();
+      await settle();
+      expect(el.notify).toEqual(["idx"]);
+      el.removeEventListener("tc-notify-change", stop);
+      // idx runs, then fails; exp (not watched) finishes quietly
+      el.tasks = TASKS.map((t) => (t.id === "idx" ? { ...t, status: "running" } : t));
+      await settle();
+      expect(notices).toEqual([]);
+      el.tasks = el.tasks.map((t) => (t.id === "idx" ? { ...t, status: "failed", error: "Disk full" } : t.id === "exp" ? { ...t, status: "done" } : t));
+      await settle();
+      expect(notices).toEqual([{ id: "idx", status: "failed", task: el.tasks[2], channels: undefined }]);
+      expect(status(el)).toBe("Export Q3 revenue ready. Reindex help center failed");
+      expect(bell(el, "idx")).toBeNull();
+    });
+
+    test("channels: the bell opens a list of checkboxes; Escape closes it and returns focus to the bell", async () => {
+      const el = await makeN({ channels: ["In app", "Email", "Push"] });
+      const notices: unknown[] = [];
+      el.addEventListener("tc-notify", (e) => notices.push((e as CustomEvent).detail));
+      const b = bell(el, "exp")!;
+      expect(b.getAttribute("aria-expanded")).toBe("false");
+      b.click();
+      await settle();
+      const list = row(el, "exp").querySelector<HTMLFieldSetElement>(".ui-bgt__channels")!;
+      expect(b.getAttribute("aria-controls")).toBe(list.id);
+      expect(plain(list.querySelector("legend")!.textContent)).toBe("Tell me about Export Q3 revenue by");
+      const boxes = [...list.querySelectorAll<HTMLInputElement>("input")];
+      await expect.poll(() => document.activeElement).toBe(boxes[0]);
+      boxes[0].click();
+      await settle();
+      expect(el.notify).toEqual(["exp"]);
+      expect(el.notifyVia).toEqual({ exp: ["In app"] });
+      expect(plain(b.textContent)).toBe("Notify me when Export Q3 revenue finishes: In app");
+      boxes[0].focus();
+      await userEvent.keyboard("{ArrowDown}");
+      expect(document.activeElement).toBe(boxes[0]);
+      await userEvent.keyboard("{Escape}");
+      await settle();
+      expect(row(el, "exp").querySelector(".ui-bgt__channels")).toBeNull();
+      await expect.poll(() => document.activeElement).toBe(bell(el, "exp"));
+      el.tasks = TASKS.map((t) => (t.id === "exp" ? { ...t, status: "done" } : t));
+      await settle();
+      expect(notices).toEqual([{ id: "exp", status: "done", task: el.tasks[0], channels: ["In app"] }]);
+    });
+
+    test("in the popover, Escape in a channel list leaves the panel open", async () => {
+      const el = await makeN({ layout: "indicator", channels: ["In app", "Email"] });
+      await openPanel(el);
+      bell(el, "exp")!.click();
+      await settle();
+      await expect.poll(() => document.activeElement?.tagName).toBe("INPUT");
+      await userEvent.keyboard("{Escape}");
+      await settle();
+      expect(el.open).toBe(true);
+      expect(pop(el)).not.toBeNull();
+      await expect.poll(() => document.activeElement).toBe(bell(el, "exp"));
+      await userEvent.keyboard("{Escape}");
+      await settle();
+      expect(el.open).toBe(false);
+    });
+
+    test("the wrapper: watched tasks survive a re-render uncontrolled, stay put controlled; onNotify", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const calls: unknown[] = [];
+      const render = (n: number, tasks = TASKS) =>
+        root.render(
+          React.createElement("div", null,
+            React.createElement(BackgroundTasks, { title: `Free ${n}`, layout: "panel", tasks, notifiable: true, onNotifyChange: (next) => calls.push(["free", next]), onNotify: (t, st) => calls.push(["done", t.id, st]) }),
+            React.createElement(BackgroundTasks, { layout: "panel", tasks, notifiable: true, notify: ["idx"], onNotifyChange: (next) => calls.push(["held", next]) }),
+          ),
+        );
+      await act(async () => render(0));
+      await settle();
+      const [free, held] = [...host.querySelectorAll<TcBackgroundTasks>("tc-background-tasks")];
+      bell(free, "exp")!.click();
+      await act(async () => settle());
+      await act(async () => render(1));
+      await settle();
+      expect(free.notify).toEqual(["exp"]);
+      await act(async () => render(2, TASKS.map((t) => (t.id === "exp" ? { ...t, status: "done" as const } : t))));
+      await settle();
+      bell(held, "sum")!.click();
+      await act(async () => settle());
+      expect(held.notify).toEqual(["idx"]);
+      expect(bell(held, "sum")!.getAttribute("aria-pressed")).toBe("false");
+      expect(calls).toEqual([["free", ["exp"]], ["done", "exp", "done"], ["held", ["idx", "sum"]]]);
+      await act(async () => root.unmount());
+    });
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe: no violations in either look, the indicator with its panel open and the panel inline (${theme})`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10; color-scheme: dark" : ""}>
@@ -381,7 +513,12 @@ describe("tc-background-tasks", () => {
         <tc-background-tasks layout="panel" .tasks=${TASKS}></tc-background-tasks>
         <tc-background-tasks layout="panel" look="clean" .tasks=${TASKS}></tc-background-tasks>
         <tc-background-tasks layout="panel" .tasks=${[]}></tc-background-tasks>
+        <tc-background-tasks layout="panel" notifiable .notify=${["exp"]} .tasks=${TASKS}></tc-background-tasks>
+        <tc-background-tasks layout="panel" look="clean" notifiable .notifyChannels=${["In app", "Email"]} .notifyVia=${{ exp: ["Email"] }} .notify=${["exp"]} .tasks=${TASKS}></tc-background-tasks>
       </div>`);
+      const chans = [...wrap.querySelectorAll<TcBackgroundTasks>("tc-background-tasks")][6];
+      chans.querySelector<HTMLButtonElement>('.ui-bgt__row[data-id="exp"] .ui-bgt__bell')!.click();
+      await settle();
       const [std, clean] = [...wrap.querySelectorAll<TcBackgroundTasks>("tc-background-tasks")];
       await openPanel(std);
       await wait(300);

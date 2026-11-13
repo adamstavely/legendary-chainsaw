@@ -10,11 +10,11 @@ features that set those versions, and the features it uses only where they exist
 
 | Browser | Works fully from | Set by | At that version |
 | --- | --- | --- | --- |
-| Chrome | **123** | light-dark() | 453 components |
-| Edge | **123** | light-dark() | 453 components |
-| Firefox | **121** | :has() | 103 components |
-| Safari (macOS) | **17.5** | light-dark() | 453 components |
-| Safari (iOS, iPadOS) | **17.5** | light-dark() | 453 components |
+| Chrome | **123** | light-dark() | 465 components |
+| Edge | **123** | light-dark() | 465 components |
+| Firefox | **121** | :has() | 105 components |
+| Safari (macOS) | **17.5** | light-dark() | 465 components |
+| Safari (iOS, iPadOS) | **17.5** | light-dark() | 465 components |
 
 *Tested in Chromium 156, Firefox 157 and WebKit 27.2 (Playwright 1.64.0).*
 
@@ -22,36 +22,36 @@ features that set those versions, and the features it uses only where they exist
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Components | Kind |
 | --- | --- | --- | --- | --- | --- | --- |
-| light-dark() | 123 | 120 | 17.5 | 17.5 | 453 | Needed |
-| color-mix() | 111 | 113 | 16.2 | 16.2 | 453 | Needed |
-| :is() and :where() | 88 | 78 | 14 | 14 | 453 | Needed |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | 452 | Needed |
-| Container size queries | 105 | 110 | 16 | 16 | 324 | Needed |
-| inset | 87 | 66 | 14.1 | 14.1 | 212 | Needed |
-| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 190 | Needed |
-| IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 166 | Needed |
-| inert | 102 | 112 | 15.5 | 15.5 | 163 | Needed |
-| :has() | 105 | 121 | 15.4 | 15.4 | 103 | Needed |
+| light-dark() | 123 | 120 | 17.5 | 17.5 | 465 | Needed |
+| color-mix() | 111 | 113 | 16.2 | 16.2 | 465 | Needed |
+| :is() and :where() | 88 | 78 | 14 | 14 | 465 | Needed |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | 464 | Needed |
+| Container size queries | 105 | 110 | 16 | 16 | 335 | Needed |
+| inset | 87 | 66 | 14.1 | 14.1 | 217 | Needed |
+| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 194 | Needed |
+| IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 167 | Needed |
+| inert | 102 | 112 | 15.5 | 15.5 | 166 | Needed |
+| :has() | 105 | 121 | 15.4 | 15.4 | 105 | Needed |
+| translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 69 | Needed |
 | aspect-ratio | 88 | 89 | 15 | 15 | 68 | Needed |
-| translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 68 | Needed |
-| CSS masks | 1 | 53 | 4 | 3.2 | 60 | Needed |
+| CSS masks | 1 | 53 | 4 | 3.2 | 61 | Needed |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | 54 | Needed |
-| Async Clipboard (writeText) | 66 | 63 | 13.1 | 13.4 | 49 | Needed |
-| Form association (ElementInternals) | 77 | 98 | 16.4 | 16.4 | 34 | Needed |
+| Async Clipboard (writeText) | 66 | 63 | 13.1 | 13.4 | 51 | Needed |
+| Form association (ElementInternals) | 77 | 98 | 16.4 | 16.4 | 36 | Needed |
 | Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | 20 | Needed |
-| Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 14 | Needed |
-| Intl.RelativeTimeFormat | 71 | 65 | 14 | 14 | 13 | Needed |
+| Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 17 | Needed |
+| Intl.RelativeTimeFormat | 71 | 65 | 14 | 14 | 16 | Needed |
 | <dialog> and showModal() | 37 | 98 | 15.4 | 15.4 | 13 | Needed |
-| structuredClone() | 98 | 94 | 15.4 | 15.4 | 10 | Needed |
-| conic-gradient() | 69 | 83 | 12.1 | 12.1 | 5 | Needed |
+| structuredClone() | 98 | 94 | 15.4 | 15.4 | 11 | Needed |
+| conic-gradient() | 69 | 83 | 12.1 | 12.1 | 6 | Needed |
 | ARIA reflection (element.ariaBusy…) | 81 | 119 | 12.1 | 12.1 | 2 | Needed |
-| forced-colors media query | 89 | 89 | 16 | 16 | 453 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
-| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 452 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
-| scrollbar-width | 121 | 64 | 18.2 | 18.2 | 126 | Progressive – Scrollbars keep the browser's default width. |
-| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 80 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
-| Popover API | 114 | 125 | 17 | 18.3 | 38 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
-| @property | 85 | 128 | 16.4 | 16.4 | 27 | Progressive – The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
-| field-sizing | 123 | 152 | 26.2 | 26.2 | 20 | Progressive – Text fields grow with their text. Without it they keep their minimum height and scroll. |
+| forced-colors media query | 89 | 89 | 16 | 16 | 465 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 464 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
+| scrollbar-width | 121 | 64 | 18.2 | 18.2 | 128 | Progressive – Scrollbars keep the browser's default width. |
+| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 82 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
+| Popover API | 114 | 125 | 17 | 18.3 | 39 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
+| @property | 85 | 128 | 16.4 | 16.4 | 28 | Progressive – The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
+| field-sizing | 123 | 152 | 26.2 | 26.2 | 22 | Progressive – Text fields grow with their text. Without it they keep their minimum height and scroll. |
 | text-wrap: pretty | 117 | No | 26 | 26 | 17 | Progressive – Paragraphs may end on a single short word. |
 | scrollbar-color | 121 | 64 | 26.2 | 26.2 | 10 | Progressive – Scrollbars keep the browser's default colours. |
 | backdrop-filter | 76 | 103 | 18 | 18 | 10 | Progressive – What's behind a translucent surface isn't blurred; the surface keeps its fill. |

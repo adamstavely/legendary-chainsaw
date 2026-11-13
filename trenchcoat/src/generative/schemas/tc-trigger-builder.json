@@ -12,7 +12,8 @@
           "type": "string",
           "enum": [
             "event",
-            "schedule"
+            "schedule",
+            "webhook"
           ]
         },
         "event": {
@@ -20,6 +21,9 @@
         },
         "schedule": {
           "$ref": "#/definitions/TriggerSchedule"
+        },
+        "webhook": {
+          "$ref": "#/definitions/TriggerWebhook"
         },
         "active": {
           "anyOf": [
@@ -66,6 +70,41 @@
         "$ref": "#/definitions/TriggerField"
       },
       "description": "What a schedule's conditions can test (none: schedules have no conditions)"
+    },
+    "webhookUrl": {
+      "type": "string",
+      "description": "The webhook address a request starts it from; offers the webhook kind when set"
+    },
+    "webhookSample": {
+      "type": "string",
+      "description": "A sample request body (JSON text) to show and send as a test"
+    },
+    "webhookLast": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "type": "number"
+        },
+        "status": {
+          "type": "number"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "at",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "How the last request to the webhook went; a new value also ends a test that's waiting"
+    },
+    "webhookFields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TriggerField"
+      },
+      "description": "What a webhook's conditions can test – fields of the request body (none: no conditions)"
     },
     "heading": {
       "type": "string",
@@ -129,6 +168,29 @@
         "hourly",
         "monthly",
         "weekly"
+      ]
+    },
+    "TriggerWebhook": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "$ref": "#/definitions/TriggerMethod",
+          "description": "POST by default"
+        },
+        "secretHeader": {
+          "type": "string",
+          "description": "A header every request must carry with the shared secret, e.g. \"X-Signature\"; none: any request starts it"
+        }
+      },
+      "additionalProperties": false,
+      "description": "A webhook trigger's settings"
+    },
+    "TriggerMethod": {
+      "type": "string",
+      "enum": [
+        "GET",
+        "POST",
+        "PUT"
       ]
     },
     "TriggerActive": {

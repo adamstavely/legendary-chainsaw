@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { BackgroundTask, BackgroundTasksChange } from "../../../src/elements/react";
+import type { BackgroundTask, BackgroundTasksChange, BackgroundTasksNotifyChange } from "../../../src/elements/react";
 import { caption, surface, textButton } from "../demo-kit";
 
 /* A workspace header with the background-tasks indicator, and the same tasks shown inline below it. An export, an
    upload and an agent run are going; a reindex waits its turn. The upload drops its connection and fails; a moment
    later it's retried (or press Retry yourself) and finishes. The export finishes with a file to open. Everything
-   stops once the last task is done. */
+   stops once the last task is done. The bell on a running or queued task asks to be told when it finishes; in the
+   inline panel it offers In app, Email or Push. */
 
 const TICK = 700;
 
@@ -49,6 +50,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [retried, setRetried] = useState(false);
   const failedAt = useRef<number | null>(null);
   const [last, setLast] = useState("");
+  const [notify, setNotify] = useState<string[]>(["export"]);
+  const [notifyVia, setNotifyVia] = useState<Record<string, string[]>>({ export: ["In app"] });
   const busy = tasks.some((t) => t.status === "running" || t.status === "queued");
   const failed = tasks.find((t) => t.status === "failed");
   // The clock runs only while something is running or queued, or a failure waits for its retry
@@ -87,7 +90,21 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     return false;
   };
 
+  const notifyProps = {
+    notifiable: true,
+    notify,
+    notifyVia,
+    onNotifyChange: (next: string[], change: BackgroundTasksNotifyChange) => {
+      setNotify(next);
+      setNotifyVia(change.notifyVia);
+    },
+    onNotify: (t: BackgroundTask, status: "done" | "failed", channels?: string[]) =>
+      setLast(`${t.label} ${status === "done" ? "finished" : "failed"} – you'd hear by ${channels?.length ? channels.join(" and ") : "in-app notice"}`),
+  };
+
   const replay = () => {
+    setNotify(["export"]);
+    setNotifyVia({ export: ["In app"] });
     setTasks(START);
     setTick(0);
     setRetried(false);
@@ -112,6 +129,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           tasks={tasks}
           onTasksChange={onTasksChange}
           onOpen={onOpen}
+          {...notifyProps}
         />
       </header>
       <BackgroundTasks
@@ -119,6 +137,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         tasks={tasks}
         onTasksChange={onTasksChange}
         onOpen={onOpen}
+        {...notifyProps}
+        notifyChannels={["In app", "Email", "Push"]}
       />
       <p style={{ ...caption, margin: 0, textAlign: "center" }}>
         {last || (busy ? "Tasks progress on their own – open the indicator in the header" : "All done")}{" "}

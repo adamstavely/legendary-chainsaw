@@ -54,6 +54,38 @@
      "readonly": false
     },
     {
+     "name": "notifiable",
+     "attribute": "notifiable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offer \"notify me when it's done\" on running and queued tasks",
+     "readonly": false
+    },
+    {
+     "name": "notify",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The tasks the person will be told about when they finish",
+     "readonly": false
+    },
+    {
+     "name": "notifyChannels",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ways to be told – \"In app\", \"Email\", \"Push\"; given, the bell opens a choice of them",
+     "readonly": false
+    },
+    {
+     "name": "notifyVia",
+     "attribute": null,
+     "type": "Record<string, string[]>",
+     "default": "{}",
+     "description": "The channels chosen for each watched task, with `notifyChannels`",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -92,6 +124,18 @@
      "detail": "",
      "description": "The panel is opening or closing; detail `{ open }`. Cancelable: preventDefault() keeps it as it is",
      "cancelable": true
+    },
+    {
+     "name": "tc-notify-change",
+     "detail": "",
+     "description": "The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: BackgroundTasksNotifyChange); cancelable – prevented, nothing changes",
+     "cancelable": true
+    },
+    {
+     "name": "tc-notify",
+     "detail": "",
+     "description": "A watched task finished ({ id, status, task, channels }: BackgroundTasksNotify)",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -277,6 +321,42 @@
      "type": "(open: boolean) => void",
      "optional": true,
      "description": "The panel opened or closed"
+    },
+    {
+     "name": "notify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks (with `notifiable`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks when uncontrolled"
+    },
+    {
+     "name": "notifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels chosen per watched task (with `notifyChannels`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels per task when uncontrolled"
+    },
+    {
+     "name": "onNotifyChange",
+     "type": "(notify: string[], change: BackgroundTasksNotifyChange) => void",
+     "optional": true,
+     "description": "The bell or a channel was switched – the watched tasks as they are now, and the change"
+    },
+    {
+     "name": "onNotify",
+     "type": "(task: BackgroundTask, status: \"done\" | \"failed\", channels?: string[]) => void",
+     "optional": true,
+     "description": "A watched task finished"
     }
    ],
    "hides": [],
@@ -285,7 +365,9 @@
     "tc-task-retry": "onTcTaskRetry",
     "tc-task-open": "onTcTaskOpen",
     "tc-clear-finished": "onTcClearFinished",
-    "tc-open-change": "onTcOpenChange"
+    "tc-open-change": "onTcOpenChange",
+    "tc-notify-change": "onTcNotifyChange",
+    "tc-notify": "onTcNotify"
    }
   },
   {
@@ -357,6 +439,42 @@
      "type": "(open: boolean) => void",
      "optional": true,
      "description": "The panel opened or closed"
+    },
+    {
+     "name": "notify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks (with `notifiable`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotify",
+     "type": "string[]",
+     "optional": true,
+     "description": "The watched tasks when uncontrolled"
+    },
+    {
+     "name": "notifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels chosen per watched task (with `notifyChannels`). Controlled when defined"
+    },
+    {
+     "name": "defaultNotifyVia",
+     "type": "Record<string, string[]>",
+     "optional": true,
+     "description": "The channels per task when uncontrolled"
+    },
+    {
+     "name": "onNotifyChange",
+     "type": "(notify: string[], change: BackgroundTasksNotifyChange) => void",
+     "optional": true,
+     "description": "The bell or a channel was switched – the watched tasks as they are now, and the change"
+    },
+    {
+     "name": "onNotify",
+     "type": "(task: BackgroundTask, status: \"done\" | \"failed\", channels?: string[]) => void",
+     "optional": true,
+     "description": "A watched task finished"
     }
    ],
    "hides": [
@@ -368,7 +486,9 @@
     "tc-task-retry": "onRetry",
     "tc-task-open": "onOpen",
     "tc-clear-finished": "onClearFinished",
-    "tc-open-change": "onOpenChange"
+    "tc-open-change": "onOpenChange",
+    "tc-notify-change": null,
+    "tc-notify": "onNotify"
    }
   }
  ],
@@ -382,7 +502,10 @@
    "module": "@adamstavely/trenchcoat/background-tasks",
    "data": [
     "tasks",
-    "announce"
+    "announce",
+    "notify",
+    "notifyChannels",
+    "notifyVia"
    ],
    "attributes": [
     {
@@ -400,6 +523,10 @@
     {
      "name": "emptyText",
      "attribute": "empty-text"
+    },
+    {
+     "name": "notifiable",
+     "attribute": "notifiable"
     }
    ],
    "events": [
@@ -422,12 +549,24 @@
     {
      "name": "tc-open-change",
      "cancelable": true
+    },
+    {
+     "name": "tc-notify-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-notify",
+     "cancelable": false
     }
    ],
    "controlled": [
     {
      "property": "open",
      "event": "tc-open-change"
+    },
+    {
+     "property": "notify",
+     "event": "tc-notify-change"
     }
    ],
    "form": null,
@@ -727,7 +866,7 @@
   "windowed": true
  },
  "size": {
-  "min": 49506,
-  "gzip": 15343
+  "min": 54507,
+  "gzip": 16782
  }
 }

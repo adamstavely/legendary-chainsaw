@@ -16,11 +16,17 @@ for a task that needs the person, Stop for a running one, Open for a finished on
 It's about the agents, and above all about which of them is waiting on the person. Background Tasks is for the
 person's own jobs – exports, uploads, reindexes – with Cancel, Retry and Clear finished.
 
+With `notifiable`, each task that's running or needing the person gets a bell: “Notify me when Export Q3 revenue finishes”. Pressed, the
+element fires `tc-notify` once the page moves that task to done or failed, so the page can send the notice, and the
+usual announcement says it finished. `notify` holds the watched tasks. Give `notifyChannels` – “In app”, “Email”,
+“Push” – and the bell opens a short list of checkboxes under the task instead; `notifyVia` keeps each task's channels.
+
 ## When to use
 
 - An app where agents work in the background and sometimes stop to ask for a decision or an approval.
 - A header or sidebar slot that should say, at a glance, whether anything needs the person.
 - Getting from "2 need you" to the task that needs them in two clicks.
+- People who start long work and want to step away until it's done (`notifiable`).
 
 ## When not to use
 
@@ -37,6 +43,8 @@ person's own jobs – exports, uploads, reindexes – with Cancel, Retry and Cle
 4. **Group** `.ui-rnw__label` – Needs you, Running or Recently done, with its count
 5. **Task** `.ui-rnw__row` – the ring, the task's title, and the agent, progress and elapsed time
 6. **Action** `.ui-rnw__act` – Review, Stop or Open
+7. **Bell** `.ui-rnw__bell` – notify me when this task finishes (`notifiable`); highlighted while it's on
+8. **Channels** `.ui-rnw__channels` – how to be told, with `notifyChannels`
 
 ## Looks
 
@@ -52,6 +60,8 @@ ring size.
 | ↓ / ↑ | In the list: the next or previous task |
 | Home / End | In the list: the first or last task |
 | Tab | From a task to its action (the list is one tab stop) |
+| Enter / Space | On a bell: watches the task or stops watching it – or, with channels, opens or closes its list |
+| Escape | In a channel list: closes it and returns focus to its bell (the panel stays open) |
 | Escape | Closes the panel and returns focus to the pill |
 
 ## Screen readers
@@ -63,6 +73,10 @@ by its label, such as "Needs you 1". A task is named by its title and described 
 needs the person or finished – "Check vendor records needs you. Classify contracts done" – once the changes have held
 for a moment; progress ticks are never announced.
 
+A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finishes”; with channels it's a disclosure
+(`aria-expanded`) whose name adds the chosen channels, and the list is a `fieldset` of checkboxes named “Tell me about
+<task> by”. Switching it is announced – “You'll be told when … finishes”, “No longer watching …”.
+
 ## Content
 
 - Title a task with what the agent is doing to what: "Check vendor records", "Draft the audit report".
@@ -70,12 +84,14 @@ for a moment; progress ticks are never announced.
 - Set `needs-you` only when the agent can't go on without the person – a decision, an approval, missing access.
 - Give `started` (and `ended` once it's done) so the elapsed time is right; pass `now` if your app keeps the clock.
 - Leave `progress` out when the agent can't tell; the ring turns instead of pretending.
+- Word channels as people know them – “In app”, “Email”, “Push” – and offer only the ones that work for them.
 
 ## Do
 
 - Put it where people look for status – at the end of the app's header, or at the top of a sidebar.
 - Take Review straight to the decision the agent needs; prevent the event to keep the panel open instead.
 - Drop finished tasks from the list after a while; "Recently done" is for the last few.
+- Send the notice when `tc-notify` fires, on the channels in its detail; the element doesn't send anything.
 
 ## Don't
 

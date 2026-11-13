@@ -15,6 +15,10 @@ import { cardHead } from "./internal/card-head";
  *   · phone and tablet widths are drawn at their own size and zoomed down to fit, centred, with the size shown
  *   · `loading`, `error` and the empty state ("No preview running", with an optional Start) are the page's to set
  *   · the viewport switch is a radio group and the tabs a tab list, each one tab stop moved with the arrow keys
+ *   · `html` runs model-written HTML instead: a srcdoc iframe sandboxed to scripts only (an opaque origin, so it can't
+ *     reach this page), with a Content-Security-Policy that blocks the network unless `allowNetwork` is set. A small
+ *     script inside reports console messages, uncaught errors and unhandled rejections back by postMessage, checked
+ *     against the frame's window; they feed the console count and an errors panel with Ask to fix
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-preview-frame src="http://localhost:5173/" viewport="phone"></tc-preview-frame>
@@ -51,6 +55,15 @@ export type PreviewFrameLabels = {
   local: string;
   insecure: string;
   loading: string;
+  sandboxed: string;
+  problems: string;
+  problem: string;
+  line: string;
+  askToFix: string;
+  askedToFix: string;
+  newError: string;
+  rejection: string;
+  hidden: string;
 };
 
 /** Details of the events */
@@ -59,6 +72,9 @@ export type PreviewViewportChange = { viewport: PreviewViewport };
 export type PreviewActiveChange = { active: string; tab: PreviewTab };
 export type PreviewTabEvent = { id: string; tab: PreviewTab };
 export type PreviewExternal = { url: string };
+/** One problem the sandboxed `html` reported: a console.error, an uncaught error or an unhandled rejection */
+export type PreviewError = { message: string; kind: "console" | "error" | "rejection"; line?: number; column?: number };
+export type PreviewFixRequest = { errors: PreviewError[] };
 
 /** The words used when the page gives none */
 export const defaultPreviewFrameLabels: PreviewFrameLabels = {
@@ -89,6 +105,15 @@ export const defaultPreviewFrameLabels: PreviewFrameLabels = {
   local: "Local",
   insecure: "Not secure",
   loading: "Loading",
+  sandboxed: "Sandboxed",
+  problems: "problems",
+  problem: "problem",
+  line: "line",
+  askToFix: "Ask to fix",
+  askedToFix: "Sent to fix",
+  newError: "Error in the preview:",
+  rejection: "Unhandled rejection:",
+  hidden: "An error was thrown – this browser hides its message inside the sandbox",
 };
 
 /** The widths phone and tablet are drawn at, in CSS px */
@@ -159,6 +184,25 @@ const hostOf = (url: string) => {
   }
 };
 
+/** The Content-Security-Policy put in the sandboxed document: inline code runs, nothing is fetched unless allowed */
+export function previewPolicy(allowNetwork = false) {
+  return allowNetwork
+    ? "default-src * data: blob: 'unsafe-inline' 'unsafe-eval'"
+    : "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' data: blob:; style-src 'unsafe-inline' data:; img-src data: blob:; font-src data:; media-src data: blob:; connect-src 'none'; frame-src 'none'; form-action 'none'";
+}
+/* Runs first inside the sandboxed document: reports console.error and console.warn, uncaught errors and unhandled
+   rejections to the parent. One line, so the page's own line numbers stay as they were */
+const BRIDGE = `(function(){var p=window.parent,t=function(v){try{if(v instanceof Error)return v.message||String(v);if(typeof v==="string")return v;return JSON.stringify(v)}catch(e){return String(v)}},s=function(m){try{p.postMessage(Object.assign({tcPreview:1},m),"*")}catch(e){}};["error","warn"].forEach(function(l){var o=console[l];console[l]=function(){s({type:"console",level:l,message:Array.prototype.map.call(arguments,t).join(" ").slice(0,500)});return o.apply(console,arguments)}});window.addEventListener("error",function(e){s({type:"error",message:String(e.message||"Error").slice(0,500),line:e.lineno,column:e.colno})});window.addEventListener("unhandledrejection",function(e){s({type:"rejection",message:t(e.reason).slice(0,500)})})})();`;
+/** The document the iframe gets for `html`: the policy and the reporting script first in its head, the page's markup as written */
+export function previewDocument(markup: string, allowNetwork = false) {
+  const inject = `<meta http-equiv="Content-Security-Policy" content="${previewPolicy(allowNetwork)}"><script>${BRIDGE}</script>`;
+  const head = /<head(\s[^>]*)?>/i.exec(markup);
+  if (head) return markup.slice(0, head.index + head[0].length) + inject + markup.slice(head.index + head[0].length);
+  const root = /<html(\s[^>]*)?>/i.exec(markup);
+  if (root) return markup.slice(0, root.index + root[0].length) + `<head>${inject}</head>` + markup.slice(root.index + root[0].length);
+  return `<!doctype html><html><head><meta charset="utf-8">${inject}</head><body>${markup}</body></html>`;
+}
+
 let instances = 0;
 
 /**
@@ -175,6 +219,7 @@ let instances = 0;
  * @fires tc-start - Start was pressed in the empty state (detail: null)
  * @fires tc-open-external - Open in a new window was pressed ({ url }: PreviewExternal)
  * @fires tc-console - The console count was pressed (detail: null)
+ * @fires tc-fix-request - Ask to fix was pressed under the errors from `html` ({ errors }: PreviewFixRequest); cancelable – prevented, nothing is announced
  */
 export class TcPreviewFrame extends TcElement {
   static override ui = "pvf";
@@ -215,12 +260,21 @@ export class TcPreviewFrame extends TcElement {
   @property({ attribute: false }) accessor labels: Partial<PreviewFrameLabels> = {};
   /** Drops the tray and card */
   @property({ type: Boolean, reflect: true }) accessor bare = false;
+  /** Model-written HTML to run instead of `src`: a srcdoc iframe sandboxed to scripts only, its errors reported back */
+  @property({ attribute: false }) accessor html = "";
+  /** Lets the `html` reach the network; by default its policy blocks every request */
+  @property({ type: Boolean, attribute: "allow-network" }) accessor allowNetwork = false;
 
   /** What's typed in the address, until Enter or Escape */
   @state() private accessor draft: string | null = null;
   @state() private accessor hasContent = false;
   @state() private accessor zoom = 1;
   @state() private accessor announcement = "";
+  /** What the sandboxed `html` reported since it last loaded */
+  @state() private accessor problems: PreviewError[] = [];
+  @state() private accessor warnings = 0;
+  /** Bumped by Reload in `html` mode, so the document runs again */
+  @state() private accessor runs = 0;
 
   /** Where the user went from the address, per tab id ("" without tabs) – kept here, not in `src` or `url`, so a React
    * re-render that sets them again doesn't undo it */
@@ -237,7 +291,7 @@ export class TcPreviewFrame extends TcElement {
   }
   /** The address shown */
   get address() {
-    return this.navigation || this.url || this.activeTab?.url || this.src;
+    return this.navigation || this.url || this.activeTab?.url || this.src || (this.html ? "about:srcdoc" : "");
   }
   private get frameSrc() {
     return this.navigation || this.src || this.activeTab?.url || "";
@@ -252,14 +306,21 @@ export class TcPreviewFrame extends TcElement {
     return this.viewport === "desktop" ? 0 : PREVIEW_WIDTHS[this.viewport];
   }
 
+  /** The errors the sandboxed `html` reported since it last loaded */
+  get errors(): PreviewError[] {
+    return this.problems;
+  }
+
   override connectedCallback() {
     super.connectedCallback();
+    window.addEventListener("message", this.onMessage);
     this.children$ = new MutationObserver(() => this.readChildren());
     this.children$.observe(this, { childList: true });
     this.readChildren();
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
+    window.removeEventListener("message", this.onMessage);
     this.children$?.disconnect();
     this.sizer?.disconnect();
     this.sizer = undefined;
@@ -281,7 +342,34 @@ export class TcPreviewFrame extends TcElement {
     if (changed.has("url") || changed.has("src")) this.navigations = new Map();
     else if (changed.has("tabs")) this.navigations = new Map([...this.navigations].filter(([id, visit]) => (id === "" && !this.tabs.length) || this.tabs.some((tab) => tab.id === id && tab.url === visit.base)));
     if (changed.has("loading") && this.hasUpdated) this.announcement = this.loading ? this.word("loading") : "";
+    // A new document starts with a clean slate
+    if (changed.has("html") || changed.has("allowNetwork") || changed.has("runs")) {
+      this.problems = [];
+      this.warnings = 0;
+    }
   }
+
+  /** Reports from the sandboxed document – only from this element's own frame's window */
+  private onMessage = (e: MessageEvent) => {
+    const frame = this.frame;
+    if (!this.html || !frame || !frame.dataset.html || e.source !== frame.contentWindow) return;
+    const data = e.data as { tcPreview?: unknown; type?: unknown; level?: unknown; message?: unknown; line?: unknown; column?: unknown } | null;
+    if (!data || data.tcPreview !== 1) return;
+    const message = typeof data.message === "string" ? data.message : "";
+    const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) && v > 0 ? v : undefined);
+    if (data.type === "console" && data.level === "warn") {
+      this.warnings += 1;
+      return;
+    }
+    const kind = data.type === "error" ? "error" : data.type === "rejection" ? "rejection" : data.type === "console" ? "console" : null;
+    if (!kind) return;
+    // Safari keeps an uncaught error's message from a sandbox without same-origin: say so rather than "Script error."
+    const masked = kind === "error" && /^Script error\.?$/.test(message) && !num(data.line);
+    const problem: PreviewError = { message: masked ? this.word("hidden") : message, kind, line: num(data.line), column: num(data.column) };
+    // Announce the first problem of a run, not every one after it
+    if (!this.problems.length) this.announcement = `${this.word(kind === "rejection" ? "rejection" : "newError")} ${message}`;
+    this.problems = [...this.problems, problem].slice(-50);
+  };
 
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
@@ -420,10 +508,39 @@ export class TcPreviewFrame extends TcElement {
     return this.frame;
   }
 
+  /** The iframe for `html`: srcdoc, sandboxed to scripts only – never same-origin – and made again when it should run again */
+  private htmlFrame(title: string) {
+    const doc = previewDocument(this.html, this.allowNetwork);
+    const key = `${this.runs}`;
+    if (!this.frame || this.frame.srcdoc !== doc || this.frame.dataset.run !== key || !this.frame.dataset.html) {
+      const f = document.createElement("iframe");
+      f.className = "ui-pvf__frame";
+      f.setAttribute("sandbox", "allow-scripts");
+      f.referrerPolicy = "no-referrer";
+      f.dataset.html = "true";
+      f.dataset.run = key;
+      f.srcdoc = doc;
+      this.frame = f;
+    }
+    this.frame.title = title;
+    return this.frame;
+  }
+
+  private askToFix() {
+    if (!this.problems.length) return;
+    if (!this.emit<PreviewFixRequest>("tc-fix-request", { errors: [...this.problems] }, { cancelable: true })) return;
+    this.announcement = this.word("askedToFix");
+  }
+
   /* ---------- Rendering ---------- */
 
   private toolButton(name: "back" | "forward" | "reload", disabled: boolean, event: string) {
-    return html`<button type="button" class="ui-pvf__tool" data-tool=${name} title=${this.word(name)} ?disabled=${disabled} @click=${() => this.emit(event, null)}>
+    const press = () => {
+      this.emit(event, null);
+      // Model-written HTML has no server to ask: Reload runs it again
+      if (name === "reload" && this.html && !this.hasContent) this.runs += 1;
+    };
+    return html`<button type="button" class="ui-pvf__tool" data-tool=${name} title=${this.word(name)} ?disabled=${disabled} @click=${press}>
       ${glyph(ICON[name])}<span class="ui-pvf__sr">${this.word(name)}</span>
     </button>`;
   }
@@ -451,7 +568,7 @@ export class TcPreviewFrame extends TcElement {
   }
 
   private renderConsole() {
-    const c = this.consoleCount;
+    const c = this.consoleCount ?? (this.html ? { errors: this.problems.length, warnings: this.warnings } : undefined);
     if (!c) return nothing;
     const errors = c.errors ?? 0;
     const warnings = c.warnings ?? 0;
@@ -463,7 +580,7 @@ export class TcPreviewFrame extends TcElement {
 
   private renderBar() {
     const address = this.draft ?? this.address;
-    const kind = previewSecurity(this.address);
+    const kind = this.html && !this.navigation && !this.url ? "" : previewSecurity(this.address);
     const inputId = `${this.uid}-address`;
     return html`<div class="ui-pvf__bar">
       <div class="ui-pvf__nav">
@@ -515,10 +632,11 @@ export class TcPreviewFrame extends TcElement {
   }
 
   private renderStage() {
-    const src = this.frameSrc;
+    const markup = !this.hasContent && !!this.html;
+    const src = markup ? "" : this.frameSrc;
     const bad = !this.hasContent && !!src && !frameable(src);
     const failed = !!this.error || bad;
-    const empty = !failed && !this.hasContent && !src;
+    const empty = !failed && !this.hasContent && !src && !markup;
     const w = this.width;
     const title = this.activeTab?.title || this.heading || "Preview";
     let body: TemplateResult | typeof nothing = nothing;
@@ -536,6 +654,8 @@ export class TcPreviewFrame extends TcElement {
         <p class="ui-pvf__notice-text">${this.word("emptyHint")}</p>
         ${this.startable ? html`<button type="button" class="ui-pvf__btn" @click=${() => this.emit("tc-start", null)}>${this.word("start")}</button>` : nothing}
       </div>`;
+    } else if (markup) {
+      body = html`${this.htmlFrame(title)}`;
     } else if (!this.hasContent) {
       body = html`${this.frameFor(src, title)}`;
     }
@@ -549,7 +669,31 @@ export class TcPreviewFrame extends TcElement {
       >
         ${this.loading ? html`<span class="ui-pvf__progress" aria-hidden="true"></span>` : nothing} ${body}
       </div>
+      ${markup && !failed ? this.renderProblems() : nothing}
       ${w ? html`<p class="ui-pvf__size">${this.word(this.viewport)} · ${w} px${pct < 100 ? html` · ${pct}%` : nothing}</p>` : nothing}`;
+  }
+
+  /** The errors the sandboxed `html` reported, with Ask to fix */
+  private renderProblems() {
+    const list = this.problems;
+    if (!list.length) return nothing;
+    const id = `${this.uid}-problems`;
+    const count = `${list.length} ${this.word(list.length === 1 ? "problem" : "problems")}`;
+    return html`<section class="ui-pvf__errors" aria-labelledby=${id}>
+      <div class="ui-pvf__errors-head">
+        ${glyph(ICON.error)}
+        <h3 class="ui-pvf__errors-title" id=${id}>${count}</h3>
+        <button type="button" class="ui-pvf__btn ui-pvf__fix" @click=${() => this.askToFix()}>${this.word("askToFix")}</button>
+      </div>
+      <ol class="ui-pvf__errors-list">
+        ${list.map(
+          (p) => html`<li class="ui-pvf__error" data-kind=${p.kind}>
+            <span class="ui-pvf__error-msg">${p.kind === "rejection" ? html`<span class="ui-pvf__error-kind">${this.word("rejection")}</span> ` : nothing}${p.message}</span>
+            ${p.line ? html`<span class="ui-pvf__error-line">${this.word("line")} ${p.line}${p.column ? html`:${p.column}` : nothing}</span>` : nothing}
+          </li>`,
+        )}
+      </ol>
+    </section>`;
   }
 
   protected override render() {
@@ -565,6 +709,8 @@ export class TcPreviewFrame extends TcElement {
   --tc-pvf-inset: var(--tc-space-4);
   /* The page area's backdrop behind a phone or tablet */
   --tc-pvf-backdrop: var(--tc-surface-sunken);
+  /* The tallest the errors list grows before it scrolls */
+  --tc-pvf-errors-h: 8rem;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -583,7 +729,7 @@ export class TcPreviewFrame extends TcElement {
 /* Standard: a gray tray holding a white card. The card is drawn behind the rows, as the page's children are the host's own */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="pvf"] { padding: var(--tc-tray-inset); border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="pvf"]:not([bare]) > .ui-pvf__card {
-  grid-row: 2 / 6;
+  grid-row: 2 / 7;
   grid-column: 1;
   border-radius: var(--tc-card-radius);
   background: var(--tc-surface-on-tray);
@@ -601,13 +747,14 @@ export class TcPreviewFrame extends TcElement {
 
 /* Rows: header, tabs, toolbar, page area, size */
 [data-ui="pvf"] > .tc-head { grid-row: 1; }
-.ui-pvf__card { grid-row: 2 / 6; grid-column: 1; }
+.ui-pvf__card { grid-row: 2 / 7; grid-column: 1; }
 .ui-pvf__tabs { grid-row: 2; grid-column: 1; position: relative; display: flex; align-items: end; gap: var(--tc-space-1); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-2) 0; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-pvf__bar { grid-row: 3; grid-column: 1; position: relative; display: flex; align-items: center; gap: var(--tc-space-1); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-2); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-pvf__stage { grid-row: 4; grid-column: 1; }
 [data-ui="pvf"] > :not(.tc-head, [class^="ui-pvf__"], [class*=" ui-pvf__"]) { grid-row: 4; grid-column: 1; }
-.ui-pvf__size { grid-row: 5; grid-column: 1; }
-.ui-pvf__status { grid-row: 6; }
+.ui-pvf__errors { grid-row: 5; grid-column: 1; }
+.ui-pvf__size { grid-row: 6; grid-column: 1; }
+.ui-pvf__status { grid-row: 7; }
 
 .ui-pvf__tablist { display: flex; align-items: end; gap: var(--tc-space-0-5); min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .ui-pvf__tabwrap { position: relative; display: flex; align-items: center; flex: 0 1 12rem; min-width: 6rem; border-radius: var(--tc-radius-md) var(--tc-radius-md) 0 0; }
@@ -703,6 +850,15 @@ export class TcPreviewFrame extends TcElement {
 .ui-pvf__notice-text { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); }
 .ui-pvf__btn { margin-top: var(--tc-space-2); min-height: var(--tc-control-h-sm); padding: 0 var(--tc-space-3); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); }
 .ui-pvf__btn:hover { background: var(--tc-fill-hover); }
+.ui-pvf__errors { position: relative; display: grid; gap: var(--tc-space-1-5); padding: var(--tc-space-2) var(--tc-space-3); border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-pvf__errors-head { display: flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-status-danger-fg); }
+.ui-pvf__errors-title { flex: 1; margin: 0; color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); }
+.ui-pvf__fix { margin-top: 0; }
+.ui-pvf__errors-list { display: grid; gap: var(--tc-space-1); max-height: var(--tc-pvf-errors-h); margin: 0; padding: 0; overflow: auto; list-style: none; }
+.ui-pvf__error { display: flex; align-items: baseline; gap: var(--tc-space-2); min-width: 0; color: var(--tc-text-secondary); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); }
+.ui-pvf__error-msg { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ui-pvf__error-kind { color: var(--tc-status-danger-fg); }
+.ui-pvf__error-line { flex: none; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 .ui-pvf__size { position: relative; margin: 0; padding: var(--tc-space-1-5) var(--tc-space-3); border-top: var(--tc-hairline) solid var(--tc-divider); color: var(--tc-text-muted); font-size: var(--tc-font-size-xs); font-variant-numeric: tabular-nums; text-align: center; }
 
 /* Narrow, as in a side panel: the address takes its own line under the buttons */

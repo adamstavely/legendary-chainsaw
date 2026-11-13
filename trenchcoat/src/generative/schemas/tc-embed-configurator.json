@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-embed-configurator.json",
+  "title": "tc-embed-configurator",
+  "description": "Style a site's chat widget beside a live preview, and copy its install snippet.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "greeting": {
+          "type": "string"
+        },
+        "starters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "accent": {
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/definitions/EmbedPosition"
+        },
+        "radius": {
+          "type": "number"
+        },
+        "launcherLabel": {
+          "type": "string"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "greeting",
+        "starters",
+        "accent",
+        "position",
+        "radius",
+        "launcherLabel",
+        "domains"
+      ],
+      "additionalProperties": false,
+      "description": "The settings"
+    },
+    "scriptSrc": {
+      "type": "string",
+      "description": "The widget's script, for the snippet"
+    },
+    "widgetId": {
+      "type": "string",
+      "description": "The widget's id, for the snippet"
+    },
+    "swatches": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Colours offered under the colour picker"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "settings": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "greeting": {
+          "type": "string"
+        },
+        "starters": {
+          "type": "string"
+        },
+        "starter": {
+          "type": "string"
+        },
+        "addStarter": {
+          "type": "string"
+        },
+        "startersLimit": {
+          "type": "string"
+        },
+        "moveUp": {
+          "type": "string"
+        },
+        "moveDown": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "moved": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "changeAccent": {
+          "type": "string"
+        },
+        "doneAccent": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "right": {
+          "type": "string"
+        },
+        "left": {
+          "type": "string"
+        },
+        "radius": {
+          "type": "string"
+        },
+        "launcher": {
+          "type": "string"
+        },
+        "domains": {
+          "type": "string"
+        },
+        "domainsHint": {
+          "type": "string"
+        },
+        "preview": {
+          "type": "string"
+        },
+        "previewHint": {
+          "type": "string"
+        },
+        "previewReply": {
+          "type": "string"
+        },
+        "snippet": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The configurator's words, merged over defaultEmbedConfiguratorLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EmbedPosition": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ]
+    }
+  }
+}

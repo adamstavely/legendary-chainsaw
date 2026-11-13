@@ -9,7 +9,7 @@
 Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 
 - **Element:** `<tc-background-tasks>`
-- **Size:** 15.0 KB gzip · 48.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.4 KB gzip · 53.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -34,11 +34,17 @@ until the person opens it. It opens a panel that lists the tasks under Running, 
 its progress, the time left and elapsed as the app reports them, and Cancel, Retry or Open. The app owns the tasks:
 every action is a cancelable event.
 
+With `notifiable`, each task that's running or queued gets a bell: “Notify me when Export Q3 revenue finishes”. Pressed, the
+element fires `tc-notify` once the app moves that task to done or failed, so the app can send the notice, and the
+usual announcement says it finished. `notify` holds the watched tasks. Give `notifyChannels` – “In app”, “Email”,
+“Push” – and the bell opens a short list of checkboxes under the task instead; `notifyVia` keeps each task's channels.
+
 ### When to use
 
 - Exports, uploads, imports and reindexes that take more than a few seconds and shouldn't block the page.
 - Agent runs the person started and wants to come back to when they're done.
 - Anywhere people need to find a finished file again, or retry what failed, without a notification for every job.
+- People who start long work and want to step away until it's done (`notifiable`).
 
 ### When not to use
 
@@ -57,6 +63,8 @@ every action is a cancelable event.
 5. **Progress** `.ui-bgt__bar` – how far a running task is, or a sliding bar while it's working
 6. **Actions** `.ui-bgt__acts` – Cancel, Retry or Open
 7. **Clear finished** `.ui-bgt__clear` – removes the done and failed tasks
+8. **Bell** `.ui-bgt__bell` – notify me when this task finishes (`notifiable`); highlighted while it's on
+9. **Channels** `.ui-bgt__channels` – how to be told, with `notifyChannels`
 
 ## Looks
 
@@ -180,6 +188,10 @@ export class BackgroundTasksExample {
 | `heading` | `heading` | `string` | `"Background tasks"` | The panel's title, and the start of the indicator's name |
 | `emptyText` | `empty-text` | `string` | `"Nothing running in the background"` | Shown in the panel when there are no tasks |
 | `announce` | – | `((task: BackgroundTask) => string) \| undefined` | `undefined` | What's announced when a task finishes or fails; default “&lt;label> ready” and “&lt;label> failed” |
+| `notifiable` | `notifiable` | `boolean` | `false` | Offer "notify me when it's done" on running and queued tasks |
+| `notify` | – | `string[]` | `[]` | The tasks the person will be told about when they finish |
+| `notifyChannels` | – | `string[]` | `[]` | Ways to be told – "In app", "Email", "Push"; given, the bell opens a choice of them |
+| `notifyVia` | – | `Record<string, string[]>` | `{}` | The channels chosen for each watched task, with `notifyChannels` |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -191,6 +203,8 @@ export class BackgroundTasksExample {
 | `tc-task-open` | – | Yes | Open was chosen on a done task; detail `{ task, tasks }`. Cancelable: preventDefault() stops a `result.href` link being followed |
 | `tc-clear-finished` | – | Yes | Clear finished was chosen; detail `{ cleared, tasks }` (`tasks` without the done and failed ones). Cancelable: preventDefault() and the app clears them |
 | `tc-open-change` | – | Yes | The panel is opening or closing; detail `{ open }`. Cancelable: preventDefault() keeps it as it is |
+| `tc-notify-change` | – | Yes | The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: BackgroundTasksNotifyChange); cancelable – prevented, nothing changes |
+| `tc-notify` | – | No | A watched task finished ({ id, status, task, channels }: BackgroundTasksNotify) |
 
 #### Component tokens
 
@@ -232,8 +246,11 @@ export class BackgroundTasksExample {
 | --- | --- | --- | --- | --- | --- |
 | `tasks` | `el.tasks = …;` | `<… tasks={…} />` | `<tc-background-tasks :tasks="…">` | `<tc-background-tasks [tasks]="…">` | `<tc-background-tasks {tasks}>` |
 | `announce` | `el.announce = …;` | `<… announce={…} />` | `<tc-background-tasks :announce="…">` | `<tc-background-tasks [announce]="…">` | `<tc-background-tasks {announce}>` |
+| `notify` | `el.notify = …;` | `<… notify={…} />` | `<tc-background-tasks :notify="…">` | `<tc-background-tasks [notify]="…">` | `<tc-background-tasks {notify}>` |
+| `notifyChannels` | `el.notifyChannels = …;` | `<… notifyChannels={…} />` | `<tc-background-tasks :notifyChannels="…">` | `<tc-background-tasks [notifyChannels]="…">` | `<tc-background-tasks {notifyChannels}>` |
+| `notifyVia` | `el.notifyVia = …;` | `<… notifyVia={…} />` | `<tc-background-tasks :notifyVia="…">` | `<tc-background-tasks [notifyVia]="…">` | `<tc-background-tasks {notifyVia}>` |
 
-*Also attributes: `layout`, `open`, `heading`, `empty-text` – see the API table.*
+*Also attributes: `layout`, `open`, `heading`, `empty-text`, `notifiable` – see the API table.*
 
 ### Events
 
@@ -244,10 +261,14 @@ export class BackgroundTasksExample {
 | `tc-task-open` | Yes | `el.addEventListener("tc-task-open", (e) => …)` | `onOpen={…}` | `@tc-task-open="…"` | `(tc-task-open)="…($event)"` | `el.addEventListener("tc-task-open", …)` |
 | `tc-clear-finished` | Yes | `el.addEventListener("tc-clear-finished", (e) => …)` | `onClearFinished={…}` | `@tc-clear-finished="…"` | `(tc-clear-finished)="…($event)"` | `el.addEventListener("tc-clear-finished", …)` |
 | `tc-open-change` | Yes | `el.addEventListener("tc-open-change", (e) => …)` | `onOpenChange={…}` | `@tc-open-change="…"` | `(tc-open-change)="…($event)"` | `el.addEventListener("tc-open-change", …)` |
+| `tc-notify-change` | Yes | `el.addEventListener("tc-notify-change", (e) => …)` | `ref.current.addEventListener("tc-notify-change", …)` | `@tc-notify-change="…"` | `(tc-notify-change)="…($event)"` | `el.addEventListener("tc-notify-change", …)` |
+| `tc-notify` | No | `el.addEventListener("tc-notify", (e) => …)` | `onNotify={…}` | `@tc-notify="…"` | `(tc-notify)="…($event)"` | `el.addEventListener("tc-notify", …)` |
+
+*React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-The element changes `open` itself unless a listener calls `preventDefault()` on `tc-open-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `open` and `notify` itself unless a listener calls `preventDefault()` on `tc-open-change` or `tc-notify-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -389,6 +410,12 @@ No slots: everything it shows comes from its properties.
 | `open` | `boolean` | Whether the indicator's panel is open. Controlled when defined |
 | `defaultOpen` | `boolean` | Whether the panel starts open when uncontrolled |
 | `onOpenChange` | `(open: boolean) => void` | The panel opened or closed |
+| `notify` | `string[]` | The watched tasks (with `notifiable`). Controlled when defined |
+| `defaultNotify` | `string[]` | The watched tasks when uncontrolled |
+| `notifyVia` | `Record<string, string[]>` | The channels chosen per watched task (with `notifyChannels`). Controlled when defined |
+| `defaultNotifyVia` | `Record<string, string[]>` | The channels per task when uncontrolled |
+| `onNotifyChange` | `(notify: string[], change: BackgroundTasksNotifyChange) => void` | The bell or a channel was switched – the watched tasks as they are now, and the change |
+| `onNotify` | `(task: BackgroundTask, status: "done" \| "failed", channels?: string[]) => void` | A watched task finished |
 
 *Renamed or hidden on the wrapper: `heading`, `children`*
 
@@ -404,6 +431,8 @@ Follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patter
 | ↓ / ↑ | In the list: the next or previous task |
 | Home / End | In the list: the first or last task |
 | Tab | From a task to its actions, then Clear finished (the list is one tab stop) |
+| Enter / Space | On a bell: watches the task or stops watching it – or, with channels, opens or closes its list |
+| Escape | In a channel list: closes it and returns focus to its bell (the panel stays open) |
 | Escape | Closes the panel and returns focus to the indicator |
 
 ### Screen readers
@@ -416,6 +445,10 @@ task's bar is a `progressbar` named by the label, with its percentage, or “Wor
 actions are named with the task: “Cancel Export Q3 revenue”, “Retry Upload assets”, “Open invoices.zip”. A polite
 status region says “Export Q3 revenue ready” or “Upload assets failed” when a task finishes or fails – never each
 progress tick – and “… cancelled”, “… queued again” and “Cleared 2 finished tasks” after an action.
+
+A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finishes”; with channels it's a disclosure
+(`aria-expanded`) whose name adds the chosen channels, and the list is a `fieldset` of checkboxes named “Tell me about
+<task> by”. Switching it is announced – “You'll be told when … finishes”, “No longer watching …”.
 
 ### Every component
 
@@ -462,14 +495,14 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 29.0 KB | 9.1 KB |
-| Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
+| **This component alone** | 33.9 KB | 10.3 KB |
+| Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
@@ -478,8 +511,8 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **48.3 KB** | **15.0 KB** |
-| With Lit – the first component on a page | 70.9 KB | 22.4 KB |
+| **Added to a page that already has Lit** | **53.2 KB** | **16.4 KB** |
+| With Lit – the first component on a page | 76.3 KB | 23.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,12 +520,12 @@ progress tick – and “… cancelled”, “… queued again” and “Cleared
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of tasks replaced |
+| First render | **1.0 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of tasks replaced |
 | First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 9.1 ms | tasks: first render, 10 nodes; update 3.7 ms |
+| 10,000 items | 8.2 ms | tasks: first render, 10 nodes; update 6.3 ms |
 
-Windowed: 10,000 items of tasks render 10 nodes in 9.1 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of tasks render 10 nodes in 8.2 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -518,6 +551,7 @@ Windowed: 10,000 items of tasks render 10 nodes in 9.1 ms – only the rows near
 - Write `error` as what happened, not a code: “Connection lost at 62%”.
 - Give a done task a `result` with the file's name, so Open says what it opens.
 - Use `announce` to word the announcements your own way (“Your export is ready”).
+- Word channels as people know them – “In app”, “Email”, “Push” – and offer only the ones that work for them.
 
 ## Do and don't
 
@@ -527,6 +561,7 @@ Windowed: 10,000 items of tasks render 10 nodes in 9.1 ms – only the rows near
   happens on your server.
 - Mark jobs that can't be stopped with `cancelable: false` and ones that can't be repeated with `retryable: false`.
 - Put the indicator where people look for status – at the end of the app's header.
+- Send the notice when `tc-notify` fires, on the channels in its detail; the element doesn't send anything.
 
 ### Don't
 

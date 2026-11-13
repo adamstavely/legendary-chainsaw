@@ -30,6 +30,38 @@
      "readonly": false
     },
     {
+     "name": "webhookUrl",
+     "attribute": "webhook-url",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The webhook address a request starts it from; offers the webhook kind when set",
+     "readonly": false
+    },
+    {
+     "name": "webhookSample",
+     "attribute": null,
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A sample request body (JSON text) to show and send as a test",
+     "readonly": false
+    },
+    {
+     "name": "webhookLast",
+     "attribute": null,
+     "type": "TriggerWebhookRequest | null",
+     "default": "null",
+     "description": "How the last request to the webhook went; a new value also ends a test that's waiting",
+     "readonly": false
+    },
+    {
+     "name": "webhookFields",
+     "attribute": null,
+     "type": "TriggerField[]",
+     "default": "[]",
+     "description": "What a webhook's conditions can test – fields of the request body (none: no conditions)",
+     "readonly": false
+    },
+    {
      "name": "heading",
      "attribute": "heading",
      "type": "string",
@@ -108,6 +140,18 @@
      "detail": "",
      "description": "The trigger changed ({ value: TriggerValue }); cancelable – prevent it to control `value`",
      "cancelable": true
+    },
+    {
+     "name": "tc-webhook-test",
+     "detail": "",
+     "description": "Send test request was pressed ({ url, method, secretHeader, payload }: TriggerWebhookTest); cancelable – prevented, the button doesn't wait for `webhookLast`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was pressed on the webhook address ({ text }); cancelable – prevented, nothing is written to the clipboard",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -150,15 +194,18 @@
     "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
     "--tc-line-height-tight",
+    "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-md",
     "--tc-space-0-5",
@@ -170,6 +217,8 @@
     "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
     "--tc-surface-inverse",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
@@ -194,8 +243,8 @@
   },
   {
    "name": "describeTrigger",
-   "signature": "describeTrigger(value: TriggerValue, events: TriggerEvent[], fields?: TriggerField[]): string",
-   "description": "The trigger as one sentence: \"Runs every Monday at 9:00 AM, only if Stage is Won.\""
+   "signature": "describeTrigger(value: TriggerValue, events: TriggerEvent[], fields?: TriggerField[], webhookUrl?: string): string",
+   "description": "The trigger as one sentence: \"Runs every Monday at 9:00 AM, only if Stage is Won.\" A webhook trigger names its\naddress when `webhookUrl` is given"
   }
  ],
  "react": [
@@ -232,6 +281,18 @@
      "type": "(value: TriggerValue) => void",
      "optional": true,
      "description": "Called with the whole definition after every change"
+    },
+    {
+     "name": "onWebhookTest",
+     "type": "(test: TriggerWebhookTest) => void | boolean",
+     "optional": true,
+     "description": "Send test request was pressed: send it, then pass how it went as `webhookLast`. Return false to stop the button waiting"
+    },
+    {
+     "name": "onCopyAddress",
+     "type": "(text: string) => void | boolean",
+     "optional": true,
+     "description": "Copy was pressed on the webhook address. Return false to keep it off the clipboard"
     }
    ],
    "hides": [
@@ -242,7 +303,9 @@
     "onChange"
    ],
    "events": {
-    "tc-value-change": "onChange"
+    "tc-value-change": "onChange",
+    "tc-webhook-test": "onWebhookTest",
+    "tc-copy": "onCopyAddress"
    }
   }
  ],
@@ -257,9 +320,16 @@
    "data": [
     "value",
     "events",
-    "scheduleFields"
+    "scheduleFields",
+    "webhookSample",
+    "webhookLast",
+    "webhookFields"
    ],
    "attributes": [
+    {
+     "name": "webhookUrl",
+     "attribute": "webhook-url"
+    },
     {
      "name": "heading",
      "attribute": "heading"
@@ -288,6 +358,14 @@
    "events": [
     {
      "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-webhook-test",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
      "cancelable": true
     }
    ],
@@ -496,6 +574,39 @@
     ]
    },
    {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
     "id": "resize-observer",
     "name": "ResizeObserver",
     "bcd": "api.ResizeObserver",
@@ -662,7 +773,7 @@
   "windowed": false
  },
  "size": {
-  "min": 176099,
-  "gzip": 41390
+  "min": 184057,
+  "gzip": 43425
  }
 }

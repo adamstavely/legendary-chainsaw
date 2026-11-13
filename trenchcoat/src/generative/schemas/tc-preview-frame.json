@@ -169,6 +169,33 @@
         },
         "loading": {
           "type": "string"
+        },
+        "sandboxed": {
+          "type": "string"
+        },
+        "problems": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        },
+        "line": {
+          "type": "string"
+        },
+        "askToFix": {
+          "type": "string"
+        },
+        "askedToFix": {
+          "type": "string"
+        },
+        "newError": {
+          "type": "string"
+        },
+        "rejection": {
+          "type": "string"
+        },
+        "hidden": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -177,6 +204,14 @@
     "bare": {
       "type": "boolean",
       "description": "Drops the tray and card"
+    },
+    "html": {
+      "type": "string",
+      "description": "Model-written HTML to run instead of `src`: a srcdoc iframe sandboxed to scripts only, its errors reported back"
+    },
+    "allowNetwork": {
+      "type": "boolean",
+      "description": "Lets the `html` reach the network; by default its policy blocks every request"
     }
   },
   "additionalProperties": false,

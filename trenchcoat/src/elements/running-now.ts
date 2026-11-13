@@ -1,6 +1,7 @@
 import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
@@ -23,6 +24,12 @@ import { PopoverController } from "./internal/popover";
  * are a cancelable tc-task-action. Elapsed times come from `started` and `now`, or the element's own clock, which
  * ticks only while the panel is open. Changes are announced politely once they settle – a task that needs the person,
  * one that finished – never a progress tick.
+ *
+ * Notify when done. With `notifiable`, each task still going (running or needing the person) gets a bell: pressed, the
+ * person is told when it finishes – the element fires tc-notify once the page moves it to done or failed, and the
+ * announcement says so. `notify` lists the watched tasks (a cancelable tc-notify-change). With `notifyChannels` –
+ * "In app", "Email", "Push" – the bell opens a short list of checkboxes under the task instead, and `notifyVia` keeps
+ * the channels chosen for each.
  *
  * Keyboard. The pill is a button; Enter or Space opens the panel and focus goes to the first task. ↑ ↓ Home End move
  * between tasks (one tab stop); Tab reaches the focused task's action. Escape closes the panel back to the pill.
@@ -47,6 +54,10 @@ export type RunningTask = {
 };
 
 export type RunningNowAction = "open" | "review" | "stop";
+/** tc-notify-change: the watched tasks as they'll be, the task that changed, and its channels when there are any */
+export type RunningNowNotifyChange = { notify: string[]; id: string; on: boolean; channels?: string[]; notifyVia: Record<string, string[]> };
+/** tc-notify: a watched task finished */
+export type RunningNowNotify = { id: string; status: "done" | "failed"; task: RunningTask; channels?: string[] };
 /** tc-task-action: an action on a task. Prevented, the panel stays open */
 export type RunningTaskAction = { id: string; action: RunningNowAction; task: RunningTask };
 /** tc-open-change: the panel is opening or closing */
@@ -64,6 +75,10 @@ export type RunningNowLabels = {
   open: string;
   failed: string;
   working: string;
+  /** The bell's name – {task} is the task's title */
+  notify: string;
+  /** Above a watched task's channels – {task} is the task's title */
+  notifyBy: string;
 };
 
 export const defaultRunningNowLabels: RunningNowLabels = {
@@ -78,6 +93,8 @@ export const defaultRunningNowLabels: RunningNowLabels = {
   open: "Open",
   failed: "Failed",
   working: "Working",
+  notify: "Notify me when {task} finishes",
+  notifyBy: "Tell me about {task} by",
 };
 
 type Group = { key: "needs-you" | "running" | "done"; statuses: RunningTaskStatus[] };
@@ -102,9 +119,13 @@ export function runningTime(ms: number): string {
   return `${Math.floor(s / 3600)}h ${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}m`;
 }
 
-/* check, x: Lucide (ISC, lucide.dev) */
+/* check, x, bell, bell-ring: Lucide (ISC, lucide.dev) */
 const CHECK = svg`<path d="M20 6 9 17l-5-5"/>`;
+const BELL = svg`<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>`;
+const BELL_ON = svg`${BELL}<path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/>`;
 const CROSS = svg`<path d="M18 6 6 18"/><path d="m6 6 12 12"/>`;
+const bell = (on: boolean) =>
+  html`<svg class="ui-rnw__bell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${on ? BELL_ON : BELL}</svg>`;
 const glyph = (paths: TemplateResult) =>
   html`<svg class="ui-rnw__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
 
@@ -123,6 +144,8 @@ let instances = 0;
  * @tag tc-running-now
  * @fires tc-task-action - Review, Stop or Open was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open
  * @fires tc-open-change - The panel is opening or closing ({ open }: RunningNowOpenChange); cancelable – prevented, it stays as it is
+ * @fires tc-notify-change - The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: RunningNowNotifyChange); cancelable – prevented, nothing changes
+ * @fires tc-notify - A watched task finished ({ id, status, task, channels }: RunningNowNotify)
  */
 export class TcRunningNow extends TcElement {
   static override ui = "rnw";
@@ -137,6 +160,14 @@ export class TcRunningNow extends TcElement {
   @property({ type: Number }) accessor now: number | undefined = undefined;
   /** Words the page can rename, merged over defaultRunningNowLabels */
   @property({ attribute: false }) accessor labels: Partial<RunningNowLabels> = {};
+  /** Offer "notify me when it's done" on the tasks still going */
+  @property({ type: Boolean }) accessor notifiable = false;
+  /** The tasks the person will be told about when they finish */
+  @property({ attribute: false }) accessor notify: string[] = [];
+  /** Ways to be told – "In app", "Email", "Push"; given, the bell opens a choice of them */
+  @property({ attribute: false }) accessor notifyChannels: string[] = [];
+  /** The channels chosen for each watched task, with `notifyChannels` */
+  @property({ attribute: false }) accessor notifyVia: Record<string, string[]> = {};
 
   /** @internal The task row that holds the list's tab stop */
   @state() accessor activeId = "";
@@ -146,6 +177,8 @@ export class TcRunningNow extends TcElement {
   @state() accessor allDone = false;
   /** @internal The element's own clock, while the panel is open */
   @state() accessor clock = 0;
+  /** @internal The task whose channel list is open */
+  @state() accessor channelsFor = "";
 
   private readonly uid = `tc-rnw${++instances}`;
   private known: Map<string, RunningTaskStatus> | null = null;
@@ -154,6 +187,7 @@ export class TcRunningNow extends TcElement {
   private doneTimer = 0;
   private tickTimer = 0;
   private flip = false;
+  private finishedWatched: RunningNowNotify[] = [];
 
   private readonly pop = new PopoverController(this, {
     popover: () => this.querySelector<HTMLElement>(".ui-rnw__pop"),
@@ -236,6 +270,10 @@ export class TcRunningNow extends TcElement {
           if (t.status === "needs-you") this.pending.push(`${t.title} needs you`);
           else if (t.status === "done") this.pending.push(`${t.title} done`);
           else if (t.status === "failed") this.pending.push(`${t.title} failed`);
+          if ((t.status === "done" || t.status === "failed") && this.notifiable && this.notify.includes(t.id)) {
+            const channels = this.notifyChannels.length ? (this.notifyVia[t.id] ?? []) : undefined;
+            this.finishedWatched.push({ id: t.id, status: t.status, task: t, channels });
+          }
         }
         const wasActive = [...before.values()].some((s) => s === "running" || s === "needs-you");
         if (wasActive && !c.running && !c.needsYou && this.tasks.length) {
@@ -257,7 +295,16 @@ export class TcRunningNow extends TcElement {
     if (wantOpen && !this.pop.open) this.pop.show({ focus: true });
     else if (!wantOpen && this.pop.open) this.pop.close("api");
     if (!this.tasks.some((t) => t.id === this.activeId)) this.activeId = this.ordered[0]?.id ?? "";
+    if (this.channelsFor && !this.tasks.some((t) => t.id === this.channelsFor && this.canNotify(t))) this.channelsFor = "";
     this.syncClock();
+  }
+
+  protected override updated(changed: PropertyValues<this>) {
+    super.updated(changed);
+    // A watched task finished: tell the page, after the update that shows it
+    const done = this.finishedWatched;
+    this.finishedWatched = [];
+    for (const d of done) this.emit<RunningNowNotify>("tc-notify", d);
   }
 
   /** The own clock ticks once a second, only while the panel is open, `now` isn't given and something has a start */
@@ -286,11 +333,57 @@ export class TcRunningNow extends TcElement {
     if (action !== "stop") this.setOpen(false);
   }
 
+  /** Tasks still going can be watched */
+  private canNotify(t: RunningTask) {
+    return this.notifiable && (t.status === "running" || t.status === "needs-you");
+  }
+
+  /** Switches watching a task, or one of its channels */
+  private setNotify(task: RunningTask, on: boolean, channels?: string[]) {
+    const notify = on ? [...this.notify.filter((id) => id !== task.id), task.id] : this.notify.filter((id) => id !== task.id);
+    const notifyVia = { ...this.notifyVia };
+    if (channels && channels.length) notifyVia[task.id] = channels;
+    else delete notifyVia[task.id];
+    const detail: RunningNowNotifyChange = { notify, id: task.id, on, notifyVia, ...(channels ? { channels } : {}) };
+    if (!this.emit<RunningNowNotifyChange>("tc-notify-change", detail, { cancelable: true })) {
+      this.requestUpdate();
+      return;
+    }
+    this.notify = notify;
+    this.notifyVia = notifyVia;
+    this.say(on ? `${channels?.length ? `You'll be told by ${channels.join(", ")}` : "You'll be told"} when ${task.title} finishes` : `No longer watching ${task.title}`);
+  }
+
+  private onBell(task: RunningTask) {
+    if (this.notifyChannels.length) {
+      this.channelsFor = this.channelsFor === task.id ? "" : task.id;
+      if (this.channelsFor) this.updateComplete.then(() => this.querySelector<HTMLInputElement>(`.ui-rnw__channels[data-id="${CSS.escape(task.id)}"] input`)?.focus());
+      return;
+    }
+    this.setNotify(task, !this.notify.includes(task.id));
+  }
+
+  private onChannel(task: RunningTask, channel: string, checked: boolean) {
+    const now = this.notifyVia[task.id] ?? [];
+    const channels = this.notifyChannels.filter((c) => (c === channel ? checked : now.includes(c)));
+    this.setNotify(task, channels.length > 0, channels);
+  }
+
+  private onChannelsKey(e: KeyboardEvent, task: RunningTask) {
+    if (e.key !== "Escape") return;
+    // The channel list closes first; the panel stays open
+    e.preventDefault();
+    e.stopPropagation();
+    this.channelsFor = "";
+    this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-rnw__bell[data-id="${CSS.escape(task.id)}"]`)?.focus());
+  }
+
   /* ---------- Keyboard ---------- */
 
   private onListKey = (e: KeyboardEvent) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) return;
+    if ((e.target as Element).closest(".ui-rnw__channels")) return;
     const from = (e.target as Element).closest<HTMLElement>(".ui-rnw__row");
     if (!from) return;
     const list = this.ordered;
@@ -378,15 +471,48 @@ export class TcRunningNow extends TcElement {
         : t.status === "failed"
           ? html`<span class="ui-rnw__ring ui-rnw__ring--failed">${glyph(CROSS)}</span>`
           : ring(t.status === "running" ? (t.progress == null ? null : t.progress) : clamp01(t.progress ?? 1), "ui-rnw__ring");
-    return html`<li class="ui-rnw__row" data-id=${t.id} data-status=${t.status} data-focus-key=${t.id} tabindex=${tab} aria-labelledby=${`${rid}-l`} aria-describedby=${`${rid}-m`}>
+    const watchable = this.canNotify(t);
+    const watched = watchable && this.notify.includes(t.id);
+    const menu = watchable && this.notifyChannels.length > 0;
+    const open = menu && this.channelsFor === t.id;
+    const via = this.notifyVia[t.id] ?? [];
+    const bellName = w.notify.replace("{task}", t.title);
+    const bellBtn = watchable
+      ? html`<button
+          type="button"
+          class="ui-rnw__bell"
+          data-id=${t.id}
+          data-focus-key=${t.id}
+          tabindex=${tab}
+          ?data-on=${watched}
+          aria-pressed=${ifDefined(menu ? undefined : watched ? "true" : "false")}
+          aria-expanded=${ifDefined(menu ? (open ? "true" : "false") : undefined)}
+          aria-controls=${ifDefined(open ? `${rid}-ch` : undefined)}
+          @click=${() => this.onBell(t)}
+        >
+          ${bell(watched)}<span class="ui-rnw__sr">${bellName}${menu && watched && via.length ? `: ${via.join(", ")}` : ""}</span>
+        </button>`
+      : nothing;
+    return html`<li class="ui-rnw__row" data-id=${t.id} data-status=${t.status} ?data-bell=${watchable} data-focus-key=${t.id} tabindex=${tab} aria-labelledby=${`${rid}-l`} aria-describedby=${`${rid}-m`}>
       ${mark}
       <span class="ui-rnw__main">
         <span class="ui-rnw__name" id=${`${rid}-l`}>${t.title}</span>
         <span class="ui-rnw__meta" id=${`${rid}-m`}>${meta}</span>
       </span>
+      ${bellBtn}
       <button type="button" class="ui-rnw__act" data-act=${action} ?data-primary=${action === "review"} tabindex=${tab} data-focus-key=${t.id} @click=${() => this.act(t)}>
         ${actionText}<span class="ui-rnw__sr"> ${t.title}</span>
       </button>
+      ${open
+        ? html`<fieldset class="ui-rnw__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.onChannelsKey(e, t)}>
+            <legend class="ui-rnw__channels-title">${w.notifyBy.replace("{task}", t.title)}</legend>
+            ${this.notifyChannels.map(
+              (c) => html`<label class="ui-rnw__channel"
+                ><input type="checkbox" tabindex=${tab} .checked=${live(via.includes(c))} @change=${(e: Event) => this.onChannel(t, c, (e.target as HTMLInputElement).checked)} />${c}</label
+              >`,
+            )}
+          </fieldset>`
+        : nothing}
     </li>`;
   }
 
@@ -499,6 +625,17 @@ export class TcRunningNow extends TcElement {
 .ui-rnw__act:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-rnw__act[data-primary] { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
 .ui-rnw__act[data-primary]:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-rnw__row[data-bell] { grid-template-columns: auto minmax(0, 1fr) auto auto; column-gap: var(--tc-space-2); }
+.ui-rnw__row[data-bell] > .ui-rnw__ring { margin-right: var(--tc-space-1); }
+.ui-rnw__bell { display: inline-grid; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); }
+.ui-rnw__bell:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-rnw__bell[data-on] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
+.ui-rnw__bell-icon { width: 16px; height: 16px; }
+.ui-rnw__channels { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: var(--tc-space-0-5) var(--tc-space-3); min-width: 0; margin: var(--tc-space-1-5) 0 0; padding: var(--tc-space-2) var(--tc-space-2-5); border: 0; border-radius: var(--tc-radius-md); background: var(--tc-surface-well); }
+.ui-rnw__channels-title { float: left; width: 100%; padding: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-rnw__channel { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); cursor: pointer; }
+.ui-rnw__channel > input { margin: 0; accent-color: var(--tc-accent-solid); }
+.ui-rnw__channel > input:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-rnw__empty { margin: 0; padding: var(--tc-space-6) var(--tc-space-4); color: var(--tc-text-muted); text-align: center; }
 
 @keyframes ui-rnw-spin { to { transform: rotate(270deg); } }
@@ -509,6 +646,7 @@ export class TcRunningNow extends TcElement {
 @media (forced-colors: active) {
   .ui-rnw__arc { stroke: Highlight; }
   .ui-rnw__pill { border: 1px solid CanvasText; }
+  .ui-rnw__bell[data-on] { outline: 2px solid Highlight; }
 }
 `;
 }

@@ -4,7 +4,7 @@
 
 A UI kit for AI-native products. Components, illustrations and motion are moving to Lit web components that any framework can use, packaged with one stylesheet, `tokens.css`. Blocks and Screens are single React files you can copy.
 
-- [Components](components/README.md): 355
+- [Components](components/README.md): 367
 - [Blocks](blocks/README.md): 23
 - [Screens](screens/README.md): 22
 - [Illustrations](illustrations/README.md): 46
@@ -18,13 +18,13 @@ Motion → Components → Blocks → Screens, + Illustrations
 
 ### [Components](components/README.md)
 
-355 items · 355 files
+367 items · 367 files
 
 **Interactive building blocks for AI-native products**
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-Agent Cursors · Agent Findings · Agent Fleet · Agent Graph · Agent Handoff …
+Agent Create · Agent Cursors · Agent Findings · Agent Fleet · Agent Graph …
 
 ### [Blocks](blocks/README.md)
 

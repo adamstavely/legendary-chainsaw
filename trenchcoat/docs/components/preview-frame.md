@@ -9,7 +9,7 @@
 a browser pane around a page the app supplies: address, back, forward and reload, phone, tablet and desktop widths zoomed to fit, a console count, tabs, and loading, error and empty states.
 
 - **Element:** `<tc-preview-frame>`
-- **Size:** 11.4 KB gzip · 37.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.3 KB gzip · 43.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -35,10 +35,15 @@ screenshot, and they stay where the page put them.
 Phone and tablet are drawn at 375 and 768 CSS pixels and zoomed down to fit the pane, centred, with the size shown under
 them. Loading, error and empty states are the page's to set.
 
+Set `html` instead of `src` to run HTML a model wrote. It runs in a sandboxed frame that can't reach your page or, by
+default, the network. Console errors, uncaught errors and unhandled rejections from it come back to the pane. They feed
+the console count and a list of problems under the page, with **Ask to fix** to send them back to the model.
+
 ### When to use
 
 - Previewing the app a session is building, beside its terminal and processes.
 - Showing one page at several widths without leaving the panel.
+- Running HTML, CSS and JavaScript a model just wrote, and catching what breaks so it can be fixed (`html`).
 
 ### When not to use
 
@@ -59,12 +64,14 @@ them. Loading, error and empty states are the page's to set.
 7. **Loading bar** `.ui-pvf__progress` – runs while `loading`
 8. **Notice** `.ui-pvf__notice` – "Couldn't load …" with Retry, or "No preview running" with Start
 9. **Size** `.ui-pvf__size` – the width and zoom, at phone and tablet
+10. **Problems** `.ui-pvf__errors` – with `html`, what the page reported: each message `.ui-pvf__error` with its line,
 
 ## Looks
 
 Standard puts the header on the gray tray above a white card; Clean is one white card with the header as its first row.
 `bare` drops the tray and card. A page can set `--tc-pvf-inset`, the gap around a phone or tablet, and
-`--tc-pvf-backdrop`, the colour behind it.
+`--tc-pvf-backdrop`, the colour behind it, and `--tc-pvf-errors-h`, the tallest the problems list grows before it
+scrolls.
 
 Below about 30rem, as in a side panel, the address takes its own line under the buttons.
 
@@ -197,7 +204,10 @@ export class PreviewFrameExample {
 | `noNewTab` | `no-new-tab` | `boolean` | `false` | Hides the New tab button |
 | `labels` | – | `Partial<PreviewFrameLabels>` | `{}` | Rename any of the words, over the defaults |
 | `bare` | `bare` | `boolean` | `false` | Drops the tray and card |
+| `html` | – | `string` | `""` | Model-written HTML to run instead of `src`: a srcdoc iframe sandboxed to scripts only, its errors reported back |
+| `allowNetwork` | `allow-network` | `boolean` | `false` | Lets the `html` reach the network; by default its policy blocks every request |
 | `address` | – | `` | – | The address shown |
+| `errors` | – | `PreviewError[]` | – | The errors the sandboxed `html` reported since it last loaded |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -215,6 +225,7 @@ export class PreviewFrameExample {
 | `tc-start` | – | No | Start was pressed in the empty state (detail: null) |
 | `tc-open-external` | – | No | Open in a new window was pressed ({ url }: PreviewExternal) |
 | `tc-console` | – | No | The console count was pressed (detail: null) |
+| `tc-fix-request` | – | Yes | Ask to fix was pressed under the errors from `html` ({ errors }: PreviewFixRequest); cancelable – prevented, nothing is announced |
 
 #### Component tokens
 
@@ -224,6 +235,7 @@ export class PreviewFrameExample {
 | --- | --- | --- |
 | `--tc-pvf-inset` | `var(--tc-space-4)` | both |
 | `--tc-pvf-backdrop` | `var(--tc-surface-sunken)` | both |
+| `--tc-pvf-errors-h` | `8rem` | both |
 | `--tc-pvf-w` | `100%` | not set – this fallback applies |
 | `--tc-pvf-zoom` | `1` | not set – this fallback applies |
 
@@ -241,6 +253,8 @@ export class PreviewFrameExample {
 | `PREVIEW_WIDTHS: Record<Exclude<PreviewViewport, "desktop">, number>` | The widths phone and tablet are drawn at, in CSS px |
 | `normalizePreviewUrl(typed: string): void` | Adds a scheme to a typed address: http for local hosts, https for the rest |
 | `previewSecurity(url: string): "secure" \| "local" \| "insecure" \| ""` | The address's kind, for its icon: "secure", "local", "insecure" or "" for anything else |
+| `previewPolicy(allowNetwork: unknown): void` | The Content-Security-Policy put in the sandboxed document: inline code runs, nothing is fetched unless allowed |
+| `previewDocument(markup: string, allowNetwork: unknown): void` | The document the iframe gets for `html`: the policy and the reporting script first in its head, the page's markup as written |
 
 ## Frameworks
 
@@ -263,8 +277,9 @@ export class PreviewFrameExample {
 | `consoleCount` | `el.consoleCount = …;` | `<… consoleCount={…} />` | `<tc-preview-frame :consoleCount="…">` | `<tc-preview-frame [consoleCount]="…">` | `<tc-preview-frame {consoleCount}>` |
 | `tabs` | `el.tabs = …;` | `<… tabs={…} />` | `<tc-preview-frame :tabs="…">` | `<tc-preview-frame [tabs]="…">` | `<tc-preview-frame {tabs}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-preview-frame :labels="…">` | `<tc-preview-frame [labels]="…">` | `<tc-preview-frame {labels}>` |
+| `html` | `el.html = …;` | `<… html={…} />` | `<tc-preview-frame :html="…">` | `<tc-preview-frame [html]="…">` | `<tc-preview-frame {html}>` |
 
-*Also attributes: `heading`, `description`, `src`, `url`, `sandbox`, `viewport`, `height`, `loading` and 7 more – see the API table.*
+*Also attributes: `heading`, `description`, `src`, `url`, `sandbox`, `viewport`, `height`, `loading` and 8 more – see the API table.*
 
 ### Events
 
@@ -281,6 +296,7 @@ export class PreviewFrameExample {
 | `tc-start` | No | `el.addEventListener("tc-start", (e) => …)` | `onTcStart={…}` | `@tc-start="…"` | `(tc-start)="…($event)"` | `el.addEventListener("tc-start", …)` |
 | `tc-open-external` | No | `el.addEventListener("tc-open-external", (e) => …)` | `onTcOpenExternal={…}` | `@tc-open-external="…"` | `(tc-open-external)="…($event)"` | `el.addEventListener("tc-open-external", …)` |
 | `tc-console` | No | `el.addEventListener("tc-console", (e) => …)` | `onTcConsole={…}` | `@tc-console="…"` | `(tc-console)="…($event)"` | `el.addEventListener("tc-console", …)` |
+| `tc-fix-request` | Yes | `el.addEventListener("tc-fix-request", (e) => …)` | `onFixRequest={…}` | `@tc-fix-request="…"` | `(tc-fix-request)="…($event)"` | `el.addEventListener("tc-fix-request", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -412,6 +428,7 @@ No slots: everything it shows comes from its properties (and, in React, the wrap
 | `active` | `string \| null` | The active tab's id – controlled when given |
 | `defaultActive` | `string \| null` | The active tab at first, when `active` isn't controlled |
 | `onActiveChange` | `(active: string \| null, tab?: PreviewTab) => void` | A tab was chosen |
+| `onFixRequest` | `(errors: PreviewError[], event: CustomEvent<PreviewFixRequest>) => boolean \| void` | Ask to fix was pressed under the errors from `html`; return false to stop the "Sent to fix" announcement |
 | `children` | `React.ReactNode` | Shown instead of the iframe: a mock page, a canvas, a screenshot |
 
 *Renamed or hidden on the wrapper: `heading`, `viewport`, `active`*
@@ -430,6 +447,7 @@ Follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/
 | ← / → | In the widths or the tabs, chooses the previous or next |
 | Home / End | In the widths or the tabs, chooses the first or last |
 | Delete / Backspace | On a tab, closes it |
+| Tab, then Enter | Under the problems from `html`, Ask to fix |
 
 The tabs and the widths are one tab stop each.
 
@@ -440,6 +458,10 @@ Every icon button has its name in screen-reader text: "Back", "Reload", "Phone".
 the tabs a tab list named "Pages", whose close buttons are for the pointer only – Delete closes a tab from the
 keyboard. The console button reads its counts, such as "2 errors, 1 warning". The iframe is titled by the tab or the
 heading. The page area is `aria-busy` while loading, and a load failure is an alert.
+
+With `html`, the problems list is a section named by its count ("2 problems"), and each line in it reads its message and
+line number. The first problem of each run is announced politely ("Error in the preview: sum is not defined"); the rest
+are not, so a page that logs in a loop doesn't flood the announcements. "Sent to fix" is announced after Ask to fix.
 
 ### Every component
 
@@ -484,13 +506,13 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 29.9 KB | 9.4 KB |
+| **This component alone** | 36.0 KB | 11.2 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -498,8 +520,8 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **37.4 KB** | **11.4 KB** |
-| With Lit – the first component on a page | 60.5 KB | 19.1 KB |
+| **Added to a page that already has Lit** | **43.5 KB** | **13.3 KB** |
+| With Lit – the first component on a page | 66.7 KB | 20.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -507,13 +529,13 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 100 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of tabs replaced |
-| First on the page | 24 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.5 ms | tabs: first render, 786 nodes; update 0.7 ms |
-| 1,000 items | 38 ms | tabs: first render, 7,086 nodes; update 4.5 ms |
+| First render | **1.4 ms** | the gallery demo's data, 100 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of tabs replaced |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.6 ms | tabs: first render, 786 nodes; update 0.3 ms |
+| 1,000 items | 22 ms | tabs: first render, 7,086 nodes; update 3.1 ms |
 
-1,000 items of tabs: 38 ms, 7,086 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of tabs: 22 ms, 7,086 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -525,6 +547,7 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 - 2 infinite CSS animations.
 - Stops or pauses under reduced motion.
 - Observers: `ResizeObserver`, `MutationObserver`, `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController).
+- Listens on the page: `window error`, `window unhandledrejection`, `window message`.
 - Doesn't read the clock.
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
@@ -534,6 +557,8 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
 - Give each tab a short `title` people would say: "Freezers", "Samples".
 - Set `error` to what went wrong and what to do next: "The dev server stopped answering. Restart it, then retry."
 - Keep `src` on the app's own dev server; only http, https and about:blank are loaded.
+- Give `html` a whole document or a fragment. A fragment is wrapped in a document, and line numbers in the problems
+  list count from the markup as you passed it.
 
 ## Do and don't
 
@@ -543,12 +568,16 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
   `canGoBack` and `canGoForward`.
 - Pass a narrower `sandbox` when the page doesn't need scripts or forms.
 - Prevent `tc-close` and update `tabs` yourself when the page owns the list.
+- With `html`, send `tc-fix-request`'s `errors` back to the model with the markup, then set the corrected `html`.
 
 ### Don't
 
 - Don't load pages you don't trust with `allow-same-origin` and `allow-scripts` together: the page could reach out of
   the sandbox.
 - Don't rely on the frame to report errors from another origin; the browser hides them, so the page sets `error`.
+- Don't set `allowNetwork` for markup you haven't read: it lets the model's code call any server, including your own
+  APIs with whatever cookies the browser sends.
+- Don't treat the problems list as proof the page works; it only catches what throws or logs an error.
 
 ## Related
 

@@ -30,6 +30,14 @@ const EMBARGO: ApprovalDiff = {
   ],
 };
 const MIGRATION = { migration: "2026_11_06_merge_station_ids", dataset: "field-survey-2026", rows: 48210, dry_run: false };
+/* The migration's arguments can be changed before approving: a dry run first, or a smaller batch */
+const MIGRATION_SCHEMA = {
+  properties: {
+    dataset: { type: "string" as const, enum: ["field-survey-2026", "field-survey-2025"], title: "Dataset" },
+    rows: { type: "integer" as const, title: "Rows", description: "How many rows to merge in this batch" },
+    dry_run: { type: "boolean" as const, title: "Dry run" },
+  },
+};
 
 const Recipients = () => (
   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -110,11 +118,19 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           risk={kind === "diff" ? "medium" : "high"}
           diff={kind === "diff" ? EMBARGO : undefined}
           args={kind === "args" ? MIGRATION : undefined}
+          editableArgs={kind === "args"}
+          argsSchema={kind === "args" ? MIGRATION_SCHEMA : undefined}
           allowAlways={false}
           status={status}
-          onApprove={() => {
+          onApprove={({ edited, args }) => {
             setStatus("approved");
-            setNote(kind === "diff" ? "Approved – the config change is committed." : "Approved – the migration is running.");
+            setNote(
+              kind === "diff"
+                ? "Approved – the config change is committed."
+                : edited
+                  ? `Approved with changes – ${args?.dry_run ? "a dry run" : "the migration"} is running.`
+                  : "Approved – the migration is running.",
+            );
           }}
           onDeny={() => {
             setStatus("denied");
@@ -126,7 +142,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       <p style={{ ...caption, margin: 0, textAlign: "center" }}>
         Show a request with{" "}
         <button type="button" style={textButton} onClick={() => show("diff")}>a file change</button>,{" "}
-        <button type="button" style={textButton} onClick={() => show("args")}>a call's arguments</button> or{" "}
+        <button type="button" style={textButton} onClick={() => show("args")}>a call's arguments to edit</button> or{" "}
         <button type="button" style={textButton} onClick={() => show("email")}>a preview</button>
       </p>
     </div>

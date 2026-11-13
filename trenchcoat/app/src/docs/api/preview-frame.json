@@ -150,11 +150,35 @@
      "readonly": false
     },
     {
+     "name": "html",
+     "attribute": null,
+     "type": "string",
+     "default": "\"\"",
+     "description": "Model-written HTML to run instead of `src`: a srcdoc iframe sandboxed to scripts only, its errors reported back",
+     "readonly": false
+    },
+    {
+     "name": "allowNetwork",
+     "attribute": "allow-network",
+     "type": "boolean",
+     "default": "false",
+     "description": "Lets the `html` reach the network; by default its policy blocks every request",
+     "readonly": false
+    },
+    {
      "name": "address",
      "attribute": null,
      "type": "",
      "default": null,
      "description": "The address shown",
+     "readonly": true
+    },
+    {
+     "name": "errors",
+     "attribute": null,
+     "type": "PreviewError[]",
+     "default": null,
+     "description": "The errors the sandboxed `html` reported since it last loaded",
      "readonly": true
     },
     {
@@ -232,6 +256,12 @@
      "detail": "",
      "description": "The console count was pressed (detail: null)",
      "cancelable": false
+    },
+    {
+     "name": "tc-fix-request",
+     "detail": "",
+     "description": "Ask to fix was pressed under the errors from `html` ({ errors }: PreviewFixRequest); cancelable – prevented, nothing is announced",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -248,6 +278,13 @@
     {
      "name": "--tc-pvf-backdrop",
      "value": "var(--tc-surface-sunken)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-pvf-errors-h",
+     "value": "8rem",
      "looks": [
       "both"
      ]
@@ -355,6 +392,16 @@
    "name": "previewSecurity",
    "signature": "previewSecurity(url: string): \"secure\" | \"local\" | \"insecure\" | \"\"",
    "description": "The address's kind, for its icon: \"secure\", \"local\", \"insecure\" or \"\" for anything else"
+  },
+  {
+   "name": "previewPolicy",
+   "signature": "previewPolicy(allowNetwork: unknown): void",
+   "description": "The Content-Security-Policy put in the sandboxed document: inline code runs, nothing is fetched unless allowed"
+  },
+  {
+   "name": "previewDocument",
+   "signature": "previewDocument(markup: string, allowNetwork: unknown): void",
+   "description": "The document the iframe gets for `html`: the policy and the reporting script first in its head, the page's markup as written"
   }
  ],
  "react": [
@@ -405,6 +452,12 @@
      "description": "A tab was chosen"
     },
     {
+     "name": "onFixRequest",
+     "type": "(errors: PreviewError[], event: CustomEvent<PreviewFixRequest>) => boolean | void",
+     "optional": true,
+     "description": "Ask to fix was pressed under the errors from `html`; return false to stop the \"Sent to fix\" announcement"
+    },
+    {
      "name": "children",
      "type": "React.ReactNode",
      "optional": true,
@@ -427,7 +480,8 @@
     "tc-reload": "onTcReload",
     "tc-start": "onTcStart",
     "tc-open-external": "onTcOpenExternal",
-    "tc-console": "onTcConsole"
+    "tc-console": "onTcConsole",
+    "tc-fix-request": "onFixRequest"
    }
   }
  ],
@@ -440,7 +494,8 @@
    "data": [
     "consoleCount",
     "tabs",
-    "labels"
+    "labels",
+    "html"
    ],
    "attributes": [
     {
@@ -502,6 +557,10 @@
     {
      "name": "bare",
      "attribute": "bare"
+    },
+    {
+     "name": "allowNetwork",
+     "attribute": "allow-network"
     }
    ],
    "events": [
@@ -548,6 +607,10 @@
     {
      "name": "tc-console",
      "cancelable": false
+    },
+    {
+     "name": "tc-fix-request",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -794,7 +857,11 @@
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [],
-  "listeners": [],
+  "listeners": [
+   "window error",
+   "window unhandledrejection",
+   "window message"
+  ],
   "pauses": {
    "offscreen": [],
    "hidden": [],
@@ -806,7 +873,7 @@
   "windowed": false
  },
  "size": {
-  "min": 38247,
-  "gzip": 11692
+  "min": 44527,
+  "gzip": 13635
  }
 }

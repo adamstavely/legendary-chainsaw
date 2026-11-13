@@ -9,7 +9,7 @@
 Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
 
 - **Element:** `<tc-knowledge-source-manager>`
-- **Size:** 13.3 KB gzip · 46.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.6 KB gzip · 62.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -34,16 +34,30 @@ beside the list with its warnings explained, its sync schedule, and Review chunk
 asks first and says what leaves the index. It stays fast with thousands of sources. The element ingests nothing –
 Add, Resync, Pause and Review chunks are events, and the app reports progress back through `sources`.
 
+With `add-inline`, Add source opens an **Add sources** panel at the top of the card instead of firing `tc-add`. It has
+three ways in:
+
+- **Files:** a drop area and Choose files, limited by `accept` and `max-file-size`.
+- **Links:** one or many, on lines or with spaces between them. Each is checked, and links already waiting or already
+  a source are dropped. You choose how far to crawl: this page only, or the section of the site under it.
+- **Paste text:** pasted text with a title.
+
+Everything waiting shows as a row with its type and size, and can be taken off again. Add fires `tc-sources-add` with
+the files, links, crawl depth and texts. Unless that's prevented, the new sources join the list as queued through
+`tc-sources-change` (`type: "add"`), until the app passes the real ones.
+
 ### When to use
 
 - The sources page of an assistant, a help-centre search or any product built on retrieval.
 - Anywhere people need to see why answers are missing something: a failed import, a stale site, two copies of the
   same documents.
 - As the first step of a knowledge workflow, handing off to chunk review and to `retrieval-settings`.
+- Letting people add files, links and notes in place, with `add-inline`, when the app has no picker of its own.
 
 ### When not to use
 
-- Uploading files and watching each upload – use [Dropzone](dropzone.md), then add the uploads as a source.
+- Uploading files and watching each upload's progress – use [Dropzone](dropzone.md), then add the uploads as a source. The Add
+  sources panel hands files over without uploading them.
 - Tuning how sources are searched – use [Retrieval Settings](retrieval-settings.md).
 - Seeing which chunks one answer used – use [Retrieval Inspector](retrieval-inspector.md).
 
@@ -56,6 +70,7 @@ Add, Resync, Pause and Review chunks are events, and the app reports progress ba
 3. **Source** `.ui-ksm__row` – name and flags, counts and sync (or the failure), and the state
 4. **State** `.ui-ksm__state` – an icon and a label; a ring that fills while indexing
 5. **Open source** `.ui-ksm__detail` – facts, warnings, the schedule and the actions
+6. **Add sources** `.ui-ksm__adder` – with `add-inline`: the drop area `.ui-ksm__drop`, links `.ui-ksm__links` with
 
 ## Looks
 
@@ -83,6 +98,10 @@ container the state shows as its icon alone.
   ];
   ksm.addEventListener("tc-resync", (e) => console.log("sync", e.detail.source.id));
   ksm.addEventListener("tc-review-chunks", (e) => console.log("review", e.detail.source.id));
+  // Add source opens the built-in panel: files, links and pasted text
+  ksm.addInline = true;
+  ksm.accept = ".pdf,.docx,.md";
+  ksm.addEventListener("tc-sources-add", (e) => console.log("ingest", e.detail.files, e.detail.urls, e.detail.depth, e.detail.texts));
 </script>
 ```
 
@@ -99,7 +118,8 @@ export function Sources({ initial }: { initial: KnowledgeSource[] }) {
     <KnowledgeSourceManager
       sources={sources}
       onSourcesChange={setSources}
-      onAdd={() => console.log("open the picker")}
+      accept=".pdf,.docx,.md"
+      onSourcesAdd={({ files, urls, depth, texts }) => console.log("ingest", files, urls, depth, texts)}
       onResync={(s) => setSources((list) => list.map((x) => (x.id === s.id ? { ...x, state: "queued" } : x)))}
       onReviewChunks={(s) => console.log("review", s.id)}
     />
@@ -188,19 +208,23 @@ export class KnowledgeSourceManagerExample {
 | `noAdd` | `no-add` | `boolean` | `false` | Hides Add source, for a read-only view |
 | `noReview` | `no-review` | `boolean` | `false` | Hides Review chunks, when the app has no chunk review |
 | `maxHeight` | `max-height` | `number` | `420` | The list's height before it scrolls, in px |
+| `addInline` | `add-inline` | `boolean` | `false` | Add source opens the Add sources panel – files, links and pasted text – instead of firing tc-add |
+| `accept` | `accept` | `string` | `""` | The files the panel's picker and drop area take, as an input's `accept`: ".pdf,.docx,text/*" |
+| `maxFileSize` | `max-file-size` | `number \| undefined` | `undefined` | The largest file the panel takes, in bytes; larger ones are turned away with a reason |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
 
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
-| `tc-sources-change` | – | Yes | A source was removed or its schedule changed ({ sources, change: { type, source } }: KnowledgeSourcesChange); cancelable – prevent it to control `sources` |
+| `tc-sources-change` | – | Yes | A source was removed, its schedule changed, or sources were added from the Add sources panel ({ sources, change: { type, source, added } }: KnowledgeSourcesChange); cancelable – prevent it to control `sources` |
 | `tc-selected-change` | – | Yes | A source was picked or the open one closed ({ selected, source }: KnowledgeSelectedChange); cancelable |
 | `tc-show-change` | – | Yes | All or Needs attention was picked ({ show }: KnowledgeShowChange); cancelable |
 | `tc-add` | – | No | Add source was pressed – open your own picker; detail: null |
 | `tc-resync` | – | No | Resync (or Retry, for a failed source) was pressed ({ source }: KnowledgeSourceEvent) |
 | `tc-pause` | – | No | Pause or Resume was pressed ({ source, paused }: KnowledgePauseEvent – `paused` is what was asked for) |
 | `tc-review-chunks` | – | No | Review chunks was pressed – open your chunk review for the source ({ source }: KnowledgeSourceEvent) |
+| `tc-sources-add` | – | Yes | With `addInline`, Add was pressed in the Add sources panel ({ files, urls, depth, texts }: KnowledgeSourcesAdd); cancelable – prevented, the panel closes without listing them as queued sources |
 
 #### Component tokens
 
@@ -211,9 +235,17 @@ export class KnowledgeSourceManagerExample {
 | `--tc-knowledge-source-manager-row` | `60px` | both |
 | `--tc-knowledge-source-manager-side` | `340px` | both |
 
-#### Design tokens it reads (101)
+#### Design tokens it reads (107)
 
-`--tc-action-danger-bg`, `--tc-action-danger-bg-hover`, `--tc-action-danger-fg`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-subtle`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-duration-slow`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-selected`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-seg-pad`, `--tc-seg-thumb-bg`, `--tc-seg-thumb-shadow`, `--tc-seg-track-bg`, `--tc-seg-track-radius`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-space-7`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-info-bg`, `--tc-status-info-fg`, `--tc-status-info-solid`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tone-teal-bg`, `--tc-tone-teal-fg`, `--tc-tone-violet-bg`, `--tc-tone-violet-fg`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-action-danger-bg`, `--tc-action-danger-bg-hover`, `--tc-action-danger-fg`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-border-subtle`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-duration-slow`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-selected`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-seg-pad`, `--tc-seg-thumb-bg`, `--tc-seg-thumb-shadow`, `--tc-seg-track-bg`, `--tc-seg-track-radius`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-space-7`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-info-bg`, `--tc-status-info-fg`, `--tc-status-info-solid`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tone-teal-bg`, `--tc-tone-teal-fg`, `--tc-tone-violet-bg`, `--tc-tone-violet-fg`, `--tc-tray-inset`, `--tc-tray-radius`
+
+#### Functions
+
+*Exported from the module next to the element.*
+
+| Function | Description |
+| --- | --- |
+| `knowledgeUrl(typed: string): string \| null` | A link as typed, made whole: a scheme added when it has none; null when it isn't an http(s) address |
 
 ## Frameworks
 
@@ -236,7 +268,7 @@ export class KnowledgeSourceManagerExample {
 | `sources` | `el.sources = …;` | `<… sources={…} />` | `<tc-knowledge-source-manager :sources="…">` | `<tc-knowledge-source-manager [sources]="…">` | `<tc-knowledge-source-manager {sources}>` |
 | `schedules` | `el.schedules = …;` | `<… schedules={…} />` | `<tc-knowledge-source-manager :schedules="…">` | `<tc-knowledge-source-manager [schedules]="…">` | `<tc-knowledge-source-manager {schedules}>` |
 
-*Also attributes: `heading`, `selected`, `show`, `now`, `add-label`, `no-add`, `no-review`, `max-height` – see the API table.*
+*Also attributes: `heading`, `selected`, `show`, `now`, `add-label`, `no-add`, `no-review`, `max-height` and 3 more – see the API table.*
 
 ### Events
 
@@ -249,6 +281,7 @@ export class KnowledgeSourceManagerExample {
 | `tc-resync` | No | `el.addEventListener("tc-resync", (e) => …)` | `onResync={…}` | `@tc-resync="…"` | `(tc-resync)="…($event)"` | `el.addEventListener("tc-resync", …)` |
 | `tc-pause` | No | `el.addEventListener("tc-pause", (e) => …)` | `onPauseChange={…}` | `@tc-pause="…"` | `(tc-pause)="…($event)"` | `el.addEventListener("tc-pause", …)` |
 | `tc-review-chunks` | No | `el.addEventListener("tc-review-chunks", (e) => …)` | `onReviewChunks={…}` | `@tc-review-chunks="…"` | `(tc-review-chunks)="…($event)"` | `el.addEventListener("tc-review-chunks", …)` |
+| `tc-sources-add` | Yes | `el.addEventListener("tc-sources-add", (e) => …)` | `onSourcesAdd={…}` | `@tc-sources-add="…"` | `(tc-sources-add)="…($event)"` | `el.addEventListener("tc-sources-add", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -376,17 +409,18 @@ No slots: everything it shows comes from its properties.
 | `title` | `string` | The heading |
 | `sources` | `KnowledgeSource[]` | The sources – controlled when given |
 | `defaultSources` | `KnowledgeSource[]` | The sources on mount when `sources` isn't controlled |
-| `onSourcesChange` | `(sources: KnowledgeSource[], change: KnowledgeSourcesChange["change"]) => void` | The sources changed: one was removed or its schedule changed |
+| `onSourcesChange` | `(sources: KnowledgeSource[], change: KnowledgeSourcesChange["change"]) => void` | The sources changed: one was removed, its schedule changed, or new ones were added as queued from the panel |
 | `selected` | `string \| null` | The open source's id – controlled when given (null for none) |
 | `onSelectedChange` | `(selected: string \| null) => void` | A source was picked or the open one closed |
 | `show` | `KnowledgeShow` | Which sources show – controlled when given |
 | `onShowChange` | `(show: KnowledgeShow) => void` | All or Needs attention was picked |
-| `onAdd` | `() => void` | Add source was pressed – open your picker; without it there's no Add source button |
+| `onAdd` | `() => void` | Add source was pressed – open your picker; without it (or onSourcesAdd) there's no Add source button |
+| `onSourcesAdd` | `(add: KnowledgeSourcesAdd) => boolean \| void` | Given, Add source opens the built-in Add sources panel – files, links and pasted text – and this is called with what to add. Start ingesting them; return false to stop them being listed as queued (you'll pass the real ones) |
 | `onResync` | `(source: KnowledgeSource) => void` | Resync or Retry was pressed |
 | `onPauseChange` | `(source: KnowledgeSource, paused: boolean) => void` | Pause or Resume was pressed; `paused` is what was asked for |
 | `onReviewChunks` | `(source: KnowledgeSource) => void` | Review chunks was pressed – open your chunk review; without it there's no Review chunks button |
 
-*Renamed or hidden on the wrapper: `heading`, `sources`, `selected`, `show`, `noAdd`, `noReview`, `children`*
+*Renamed or hidden on the wrapper: `heading`, `sources`, `selected`, `show`, `noAdd`, `noReview`, `addInline`, `children`*
 
 ## Accessibility
 
@@ -403,6 +437,12 @@ Follows the WAI-ARIA [Listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/
 | Delete / Backspace | In the list: asks to remove the source in focus (focus goes to Cancel) |
 | Escape | In the list or the open source: closes it; while confirming a removal, cancels and returns to Remove |
 | ← / → / ↑ / ↓ | In the filter: switches between All and Needs attention |
+| Enter / Space | On Add source with `add-inline`: opens or closes the Add sources panel, focusing Choose files |
+| ⌘ Enter / Ctrl Enter | In the links field: adds the links to the waiting list |
+| Escape | Anywhere in the Add sources panel: closes it, dropping what's waiting, and returns to Add source |
+
+The crawl choice is a pair of native radio buttons, moved with the arrow keys. Taking an item off the waiting list moves
+focus to the next one's Remove.
 
 After a removal the next source opens and focus returns to the list; when the last source goes, focus moves to Add
 source.
@@ -416,6 +456,15 @@ The open source is a section named by the source; indexing shows a `progressbar`
 removal question is a group named by its sentence – “Remove Pricing PDFs? Its 240 chunks leave the index and answers
 stop citing it.” A status region says when a source finishes or fails (“Product docs is ready”, “Pricing PDFs failed:
 …”), when one is removed, and how many sources the filter shows.
+
+With `add-inline`, Add source says whether the panel is expanded. The panel is a section named “Add sources”. Choose
+files is described by the drop area's line, which gives the allowed types and size. The links field is labelled
+“Links”; when some entries aren't links it's `aria-invalid` and described by which ones. The crawl choice is a group
+named “Crawl”, and Paste text says whether it's expanded. The waiting list is a list named “To add”. Each row reads its
+name, type and size (“Q3-ledger.pdf, PDF · 1.2 MB”), and its Remove button is named “Remove Q3-ledger.pdf”. The status
+region says what joined the list, what was turned away and why (“Scan.tiff isn't a type this takes”), what was
+already there, and “Adding 3 sources” once added. Add is `aria-disabled` while nothing is waiting, and pressing it then
+says what to do first.
 
 ### Every component
 
@@ -459,13 +508,13 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 35.8 KB | 10.3 KB |
+| **This component alone** | 52.6 KB | 14.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.9 KB | – |
@@ -474,8 +523,8 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **46.0 KB** | **13.3 KB** |
-| With Lit – the first component on a page | 69.1 KB | 20.9 KB |
+| **Added to a page that already has Lit** | **62.8 KB** | **17.6 KB** |
+| With Lit – the first component on a page | 85.9 KB | 25.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -483,12 +532,12 @@ stop citing it.” A status region says when a source finishes or fails (“Prod
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.7 ms** | the gallery demo's data, 160 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of sources replaced |
-| First on the page | 21 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 9.3 ms | sources: first render, 820 nodes; update 2.8 ms |
+| First render | **1.3 ms** | the gallery demo's data, 160 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of sources replaced |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 5.9 ms | sources: first render, 820 nodes; update 1.9 ms |
 
-Windowed: 10,000 items of sources render 820 nodes in 9.3 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of sources render 820 nodes in 5.9 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -511,6 +560,7 @@ Windowed: 10,000 items of sources render 820 nodes in 9.3 ms – only the rows n
   versions or turn on OCR.”
 - Pass `stale` as the reason when you have one (“12 pages changed since”); `true` gets a generic line.
 - Point `duplicateOf` at the other source's id, so the warning names it.
+- Set `accept` to what the indexer really reads, so the drop area turns the rest away with a reason before Add.
 
 ## Do and don't
 
@@ -519,12 +569,14 @@ Windowed: 10,000 items of sources render 820 nodes in 9.3 ms – only the rows n
 - Send `now`, so last syncs read “2h ago” rather than a date.
 - Move sources through queued → indexing → ready yourself and pass `progress`; the element only shows it.
 - Wire `onReviewChunks` to your chunk editor, so a stale or duplicate source can be checked before it's removed.
+- Start ingesting on `tc-sources-add`, then replace the queued placeholders with your own sources and ids.
 
 ### Don't
 
 - Don't remove a source without the confirmation – chunks leave the index and answers change.
 - Don't mark sources stale on a timer alone; say what changed.
 - Don't use it as an upload queue – a source is something that syncs, not a one-off file transfer.
+- Don't crawl a whole site when people chose this page only – `depth` is their decision about what's answered from.
 
 ## Related
 

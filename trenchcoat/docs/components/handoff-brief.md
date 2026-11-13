@@ -9,7 +9,7 @@
 Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 
 - **Element:** `<tc-handoff-brief>`
-- **Size:** 9.3 KB gzip · 31.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.6 KB gzip · 41.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -34,11 +34,18 @@ the top shows how far they are. If the work refers to material the receiver can'
 the card leads with exactly what's missing and a Request access button, and Accept stays off until access is
 granted.
 
+It also hands on an agent run that's still going. Given a `run`, the card is the sender's: it leads with the run's
+status and the step it's on, says what the receiver takes over (its pending approvals, its notifications, stopping
+it), asks whether the run should pause until they accept, and offers the people to hand it to and a note. The
+sections show what the receiver will read, without Acknowledge. Hand off sends it and the card waits – “Waiting for
+Priya to accept” – with Cancel handoff.
+
 ### When to use
 
 - Reassigning work between people: a colleague going on leave, changing teams or handing over a shift.
 - Anywhere a receiver must confirm they've read the open items and commitments before taking over.
 - When access to the underlying material has to be checked before the handover completes.
+- Handing an agent run that's still going to a teammate, with the context they need to pick it up (`run`).
 
 ### When not to use
 
@@ -55,14 +62,18 @@ granted.
 2. **Section** `.ui-hob__section` – summary, unresolved items or commitments made
 3. **Acknowledge** `.ui-hob__ack` – the receiver's acknowledgement of one section
 4. **Missing** `.ui-hob__missing` – the material the receiver can't open
-5. **Accept** `.ui-hob__foot` – what's left to do, and Accept handoff
+5. **Accept** `.ui-hob__foot` – what's left to do, and Accept handoff (Hand off, for a run)
+6. **Run** `.ui-hob__run-card` – an in-flight run: its status in a mark and a word, its title, the step it's on, and
+7. **Takes over** `.ui-hob__takes` – what the receiver of a run takes over
+8. **Receiver and choices** `.ui-hob__form` – Hand to, whether the run pauses until they accept, and a note
 
 ## Looks
 
 Standard puts the header on the gray tray, the state and sections on a white card, and the Accept row back on the
 tray. Clean is one white card with the Accept row as its last row under a hairline. Both colour the state – red
 when blocked, green once accepted – and number each section, turning the number into a check when it's
-acknowledged.
+acknowledged. A run sits in a well, its status a dot and a word – green and pulsing while running, amber while it
+waits for input – and the waiting line after Hand off is quiet, with a turning mark.
 
 ## Usage
 
@@ -107,6 +118,25 @@ export function ReviewHandoff({ missing, onAccepted }: { missing: HandoffBriefAc
       acknowledged={acknowledged}
       onAcknowledgedChange={setAcknowledged}
       onAccept={onAccepted}
+    />
+  );
+}
+
+export function RunHandoff({ send }: { send: (to: string, pause: boolean, note: string) => void }) {
+  const [to, setTo] = useState("");
+  return (
+    <HandoffBrief
+      title="Hand on a running task"
+      from={{ name: "Ana Ruiz" }}
+      run={{ id: "recon-q3", title: "Reconcile the Q3 ledger", status: "running", step: "Matching invoices to payments" }}
+      people={[
+        { id: "sam", name: "Sam Patel" },
+        { id: "priya", name: "Priya Shah" },
+      ]}
+      handoffTo={to}
+      onHandoffToChange={setTo}
+      summary="About 60% of invoices matched."
+      onHandoff={(h) => send(h.to.name, h.pauseUntilAccepted, h.note)}
     />
   );
 }
@@ -197,6 +227,14 @@ export class HandoffBriefExample {
 | `accepted` | `accepted` | `boolean` | `false` | The receiver accepted the work |
 | `sectionTitles` | – | `Partial<Record<HandoffBriefSection, string>>` | `{}` | Names of the three sections |
 | `acceptLabel` | `accept-label` | `string` | `"Accept handoff"` | The accept button's text |
+| `run` | – | `HandoffBriefRun \| undefined` | `undefined` | An agent run that's still going, to hand on with the work – set, the card is the sender's |
+| `people` | – | `HandoffBriefPerson[]` | `[]` | Who the run can be handed to |
+| `handoffTo` | `handoff-to` | `string` | `""` | The chosen receiver: a person's id (or name) from `people` |
+| `pauseUntilAccepted` | `pause-until-accepted` | `boolean` | `true` | Whether the run pauses until the receiver accepts |
+| `handoffNote` | `handoff-note` | `string` | `""` | The note for the receiver |
+| `handoffState` | `handoff-state` | `HandoffBriefHandoffState` | `""` | "sent" once the run is handed off and waiting for the receiver; the element sets it when tc-handoff isn't prevented |
+| `takesOver` | – | `string[]` | `["Its pending approvals", "Its notifications", "Stopping or pausing it"]` | What the receiver takes over with the run, one line each |
+| `locale` | `locale` | `string \| undefined` | `undefined` | Locale for the run's start time |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -206,10 +244,22 @@ export class HandoffBriefExample {
 | `tc-acknowledged-change` | – | Yes | A section was acknowledged or un-acknowledged ({ acknowledged, section, on }: HandoffBriefAcknowledgedChange); cancelable |
 | `tc-access-request` | – | Yes | Request access (or Retry) was pressed ({ items }: HandoffBriefAccessRequest); cancelable – prevented, the app sets `accessRequest` itself |
 | `tc-accept` | – | Yes | Accept handoff was pressed ({ acknowledged }: HandoffBriefAccept); cancelable – not prevented, `accepted` becomes true |
+| `tc-handoff-to-change` | – | Yes | A receiver was chosen for the run ({ handoffTo, person }: HandoffBriefHandoffToChange); cancelable – prevented, the choice stays as it was |
+| `tc-pause-until-accepted-change` | – | Yes | Pause until accepted was switched ({ pauseUntilAccepted }: HandoffBriefPauseChange); cancelable |
+| `tc-handoff` | – | Yes | Hand off was pressed ({ to, run, pauseUntilAccepted, note }: HandoffBriefHandoff); cancelable – not prevented, `handoffState` becomes "sent" |
+| `tc-handoff-cancel` | – | Yes | Cancel handoff was pressed while waiting ({ to, run }: HandoffBriefHandoffCancel); cancelable – not prevented, `handoffState` goes back to "" |
 
-#### Design tokens it reads (70)
+#### Design tokens it reads (88)
 
-`--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-strong`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slowest`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-none`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-meter-h`, `--tc-meter-radius`, `--tc-meter-track`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-badge`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-7`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-success-solid`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent-solid`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-strong`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-shimmer`, `--tc-duration-slowest`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-fill-default`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-2xs`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-none`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-meter-h`, `--tc-meter-radius`, `--tc-meter-track`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-badge`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-7`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-success-solid`, `--tc-status-warning-fg`, `--tc-status-warning-solid`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-surface-well`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tray-inset`, `--tc-tray-radius`
+
+#### Functions
+
+*Exported from the module next to the element.*
+
+| Function | Description |
+| --- | --- |
+| `defaultHandoffTakesOver: array` | What the receiver of a run takes over, unless the page says otherwise |
 
 ## Frameworks
 
@@ -237,8 +287,11 @@ export class HandoffBriefExample {
 | `missing` | `el.missing = …;` | `<… missing={…} />` | `<tc-handoff-brief :missing="…">` | `<tc-handoff-brief [missing]="…">` | `<tc-handoff-brief {missing}>` |
 | `requestAccess` | `el.requestAccess = …;` | `<… requestAccess={…} />` | `<tc-handoff-brief :requestAccess="…">` | `<tc-handoff-brief [requestAccess]="…">` | `<tc-handoff-brief {requestAccess}>` |
 | `sectionTitles` | `el.sectionTitles = …;` | `<… sectionTitles={…} />` | `<tc-handoff-brief :sectionTitles="…">` | `<tc-handoff-brief [sectionTitles]="…">` | `<tc-handoff-brief {sectionTitles}>` |
+| `run` | `el.run = …;` | `<… run={…} />` | `<tc-handoff-brief :run="…">` | `<tc-handoff-brief [run]="…">` | `<tc-handoff-brief {run}>` |
+| `people` | `el.people = …;` | `<… people={…} />` | `<tc-handoff-brief :people="…">` | `<tc-handoff-brief [people]="…">` | `<tc-handoff-brief {people}>` |
+| `takesOver` | `el.takesOver = …;` | `<… takesOver={…} />` | `<tc-handoff-brief :takesOver="…">` | `<tc-handoff-brief [takesOver]="…">` | `<tc-handoff-brief {takesOver}>` |
 
-*Also attributes: `heading`, `at`, `summary`, `access-request`, `accepted`, `accept-label` – see the API table.*
+*Also attributes: `heading`, `at`, `summary`, `access-request`, `accepted`, `accept-label`, `handoff-to`, `pause-until-accepted` and 3 more – see the API table.*
 
 ### Events
 
@@ -247,10 +300,14 @@ export class HandoffBriefExample {
 | `tc-acknowledged-change` | Yes | `el.addEventListener("tc-acknowledged-change", (e) => …)` | `onAcknowledgedChange={…}` | `@tc-acknowledged-change="…"` | `(tc-acknowledged-change)="…($event)"` | `el.addEventListener("tc-acknowledged-change", …)` |
 | `tc-access-request` | Yes | `el.addEventListener("tc-access-request", (e) => …)` | `onRequestAccess={…}` | `@tc-access-request="…"` | `(tc-access-request)="…($event)"` | `el.addEventListener("tc-access-request", …)` |
 | `tc-accept` | Yes | `el.addEventListener("tc-accept", (e) => …)` | `onAccept={…}` | `@tc-accept="…"` | `(tc-accept)="…($event)"` | `el.addEventListener("tc-accept", …)` |
+| `tc-handoff-to-change` | Yes | `el.addEventListener("tc-handoff-to-change", (e) => …)` | `onHandoffToChange={…}` | `@tc-handoff-to-change="…"` | `(tc-handoff-to-change)="…($event)"` | `el.addEventListener("tc-handoff-to-change", …)` |
+| `tc-pause-until-accepted-change` | Yes | `el.addEventListener("tc-pause-until-accepted-change", (e) => …)` | `onPauseUntilAcceptedChange={…}` | `@tc-pause-until-accepted-change="…"` | `(tc-pause-until-accepted-change)="…($event)"` | `el.addEventListener("tc-pause-until-accepted-change", …)` |
+| `tc-handoff` | Yes | `el.addEventListener("tc-handoff", (e) => …)` | `onHandoff={…}` | `@tc-handoff="…"` | `(tc-handoff)="…($event)"` | `el.addEventListener("tc-handoff", …)` |
+| `tc-handoff-cancel` | Yes | `el.addEventListener("tc-handoff-cancel", (e) => …)` | `onHandoffCancel={…}` | `@tc-handoff-cancel="…"` | `(tc-handoff-cancel)="…($event)"` | `el.addEventListener("tc-handoff-cancel", …)` |
 
 ### Controlled
 
-The element changes `acknowledged` itself unless a listener calls `preventDefault()` on `tc-acknowledged-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `acknowledged`, `handoffTo` and `pauseUntilAccepted` itself unless a listener calls `preventDefault()` on `tc-acknowledged-change`, `tc-handoff-to-change` or `tc-pause-until-accepted-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -389,8 +446,17 @@ No slots: everything it shows comes from its properties.
 | `accepted` | `boolean` | Whether the receiver has accepted – controlled when given |
 | `defaultAccepted` | `boolean` | Whether it starts accepted, when `accepted` isn't set |
 | `onAccept` | `() => void` | Called when the receiver accepts the handoff |
+| `handoffTo` | `string` | The run's receiver (a person's id, or name) – controlled when given |
+| `defaultHandoffTo` | `string` | The receiver chosen at first, when `handoffTo` isn't set |
+| `onHandoffToChange` | `(handoffTo: string, person: HandoffBriefPerson \| undefined) => void` | Called with the receiver whenever one is chosen |
+| `pauseUntilAccepted` | `boolean` | Whether the run pauses until the receiver accepts – controlled when given |
+| `defaultPauseUntilAccepted` | `boolean` | Whether it pauses at first, when `pauseUntilAccepted` isn't set (default true) |
+| `onPauseUntilAcceptedChange` | `(pauseUntilAccepted: boolean) => void` | Called when the pause choice changes |
+| `handoffState` | `HandoffBriefHandoffState` | Where the run's handoff stands – controlled when given |
+| `onHandoff` | `(handoff: HandoffBriefHandoff) => boolean \| void` | Called when Hand off is pressed; return false to keep the card as it is |
+| `onHandoffCancel` | `(detail: HandoffBriefHandoffCancel) => boolean \| void` | Called when Cancel handoff is pressed; return false to keep waiting |
 
-*Renamed or hidden on the wrapper: `heading`, `acknowledged`, `accepted`, `children`*
+*Renamed or hidden on the wrapper: `heading`, `acknowledged`, `accepted`, `handoffTo`, `pauseUntilAccepted`, `handoffState`, `children`*
 
 ## Accessibility
 
@@ -403,8 +469,11 @@ Follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/b
 | Tab | Moves to Request access (when blocked), each section's Acknowledge, then Accept handoff |
 | Enter / Space | Presses the focused button: acknowledges or un-acknowledges a section, requests access, accepts |
 
-Accept handoff is disabled until it can be pressed; the hint beside it says why. After accepting, focus moves to the
-“Accepted” line.
+With a `run`, Tab reaches Hand to (a native select), the pause choice (two radio buttons – arrow keys switch them),
+the note, then Hand off; after it's sent, Cancel handoff.
+
+Accept handoff and Hand off are disabled until they can be pressed; the hint beside each says why. After accepting,
+focus moves to the “Accepted” line; after handing off, to the “Waiting for …” line.
 
 ### Screen readers
 
@@ -415,6 +484,11 @@ material is a list named “What you can't open”. Accept is described by its h
 accept.”, “Blocked until you can open everything it refers to.”). A polite status announces each acknowledgement
 (“Summary acknowledged. 1 of 3.”), the access request, “Access granted. Nothing blocks the handoff.” and “Handoff
 accepted. The work is yours now.”
+
+With a run, the run is a `region` named “In-flight run”; its status is a word as well as a colour. The receiver, the
+pause choice (a `fieldset` named “Until they accept”) and the note are labelled form controls, and Hand off is
+described by its hint (“Priya Shah will be asked to accept. The run pauses until then.”). The status announces
+“Handed off to Priya Shah. Waiting for Priya Shah to accept.” and “Handoff cancelled. The run is still yours.”
 
 ### Every component
 
@@ -456,22 +530,22 @@ accepted. The work is yours now.”
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 22.5 KB | 6.7 KB |
-| Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
+| **This component alone** | 32.9 KB | 9.0 KB |
+| Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **31.3 KB** | **9.3 KB** |
-| With Lit – the first component on a page | 53.2 KB | 16.5 KB |
+| **Added to a page that already has Lit** | **41.8 KB** | **11.6 KB** |
+| With Lit – the first component on a page | 64.2 KB | 18.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -479,13 +553,13 @@ accepted. The work is yours now.”
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 80 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of unresolved replaced |
-| First on the page | 24 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.7 ms | unresolved: first render, 501 nodes; update 0.4 ms |
-| 1,000 items | 36 ms | unresolved: first render, 4,401 nodes; update 2.2 ms |
+| First render | **1.1 ms** | the gallery demo's data, 80 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of unresolved replaced |
+| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.3 ms | unresolved: first render, 501 nodes; update 0.2 ms |
+| 1,000 items | 28 ms | unresolved: first render, 4,401 nodes; update 2.4 ms |
 
-1,000 items of unresolved: 36 ms, 4,401 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of unresolved: 28 ms, 4,401 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -494,7 +568,7 @@ accepted. The work is yours now.”
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - No animation-frame loop.
 - No timers.
-- 1 infinite CSS animation.
+- 2 infinite CSS animations.
 - Stops or pauses under reduced motion.
 - Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController).
 - Doesn't read the clock.
@@ -507,6 +581,9 @@ accepted. The work is yours now.”
 - Phrase unresolved items as things to do (“Confirm Northwind's Q3 capacity”), with `detail` for context.
 - Put the deadline or the person a commitment was made to in `meta`.
 - Name missing material as the receiver would find it, and say where the brief refers to it in `where`.
+- Title a run with what it's doing (“Reconcile the Q3 ledger”) and give `step` in words, with its place if you know
+  it (“Matching invoices to payments, step 3 of 5”).
+- Change `takesOver` to what really moves with the run in your app – nothing it doesn't.
 
 ## Do and don't
 
@@ -515,12 +592,16 @@ accepted. The work is yours now.”
 - Clear `missing` as soon as access is granted, so the block lifts without a reload.
 - Record `acknowledged` with the handoff – it shows the receiver saw each section.
 - Let the receiver acknowledge while blocked; only Accept waits for access.
+- Keep the run's `status` and `step` current while the card is open – it's a live run.
+- Default to pausing a run until the receiver accepts, so nothing happens with no one watching.
 
 ### Don't
 
 - Don't collapse the three sections into one “I've read this”.
 - Don't let the handoff complete with references the receiver can't open.
-- Don't use it for a handoff the sender can take back mid-task – that's `handoff`.
+- Don't use it for a handoff the sender can take back mid-task – that's `handoff`. (Cancel handoff only withdraws
+  an offer the receiver hasn't accepted yet.)
+- Don't offer people who can't open what the run touches; leave them out of `people`.
 
 ## Related
 

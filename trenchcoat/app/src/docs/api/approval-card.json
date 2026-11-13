@@ -64,7 +64,7 @@
     {
      "name": "onApprove",
      "attribute": null,
-     "type": "((decision: { always: boolean }) => void | Promise<unknown>) | undefined",
+     "type": "((decision: ApprovalDecision) => void | Promise<unknown>) | undefined",
      "default": "undefined",
      "description": "Called on Approve with the \"Always allow\" choice. Return a promise to show a spinner and lock the card until it\nsettles; a rejection keeps it pending and shows `errorLabel`, and Approve can be pressed again to retry",
      "readonly": false
@@ -286,6 +286,78 @@
      "readonly": false
     },
     {
+     "name": "editableArgs",
+     "attribute": "editable-args",
+     "type": "boolean",
+     "default": "false",
+     "description": "Lets the person change the arguments before approving: Edit beside them turns each one into a field",
+     "readonly": false
+    },
+    {
+     "name": "argsSchema",
+     "attribute": null,
+     "type": "ApprovalArgsSchema | undefined",
+     "default": "undefined",
+     "description": "The arguments' JSON Schema (its `properties`): types and choices for the fields",
+     "readonly": false
+    },
+    {
+     "name": "editArgsLabel",
+     "attribute": "edit-args-label",
+     "type": "string",
+     "default": "\"Edit\"",
+     "description": "The arguments' Edit button label",
+     "readonly": false
+    },
+    {
+     "name": "doneArgsLabel",
+     "attribute": "done-args-label",
+     "type": "string",
+     "default": "\"Done\"",
+     "description": "Its label while editing",
+     "readonly": false
+    },
+    {
+     "name": "resetArgsLabel",
+     "attribute": "reset-args-label",
+     "type": "string",
+     "default": "\"Reset\"",
+     "description": "The Reset button's label – it puts every argument back",
+     "readonly": false
+    },
+    {
+     "name": "approveEditedLabel",
+     "attribute": "approve-edited-label",
+     "type": "string",
+     "default": "\"Approve with changes\"",
+     "description": "The Approve button's label once an argument has changed",
+     "readonly": false
+    },
+    {
+     "name": "changesLabel",
+     "attribute": "changes-label",
+     "type": "string",
+     "default": "\"Your changes\"",
+     "description": "The heading of the diff of changed arguments",
+     "readonly": false
+    },
+    {
+     "name": "editedArgs",
+     "attribute": null,
+     "type": "ApprovalArgs | undefined",
+     "default": null,
+     "description": "The arguments as they'd be approved now: `args` with the person's changes",
+     "readonly": true
+    },
+    {
+     "name": "argsEdited",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Some argument differs from `args`",
+     "readonly": true
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -298,7 +370,7 @@
     {
      "name": "tc-status-change",
      "detail": "",
-     "description": "The card was approved, denied or expired; detail `{ status }`. Cancelable: preventDefault() keeps the status (controlled use)",
+     "description": "The card was approved, denied or expired; detail `{ status }`, plus `{ args, edited }` on approve with `editableArgs`. Cancelable: preventDefault() keeps the status (controlled use)",
      "cancelable": true
     },
     {
@@ -410,6 +482,7 @@
     "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-hairline",
     "--tc-icon-muted",
@@ -533,9 +606,9 @@
     },
     {
      "name": "onStatusChange",
-     "type": "(status: ApprovalStatus) => void",
+     "type": "(status: ApprovalStatus, change?: { args?: ApprovalArgs; edited?: boolean }) => void",
      "optional": true,
-     "description": "Called with the new status whenever the card is approved, denied or expires (controlled or not)"
+     "description": "Called with the new status whenever the card is approved, denied or expires (controlled or not). With\n`editableArgs`, an approve also passes the arguments as approved and whether the person changed them"
     },
     {
      "name": "onDeny",
@@ -580,7 +653,7 @@
     "editable"
    ],
    "events": {
-    "tc-status-change": null,
+    "tc-status-change": "onStatusChange",
     "tc-deny": "onDeny",
     "tc-edit": "onEdit",
     "tc-expire": "onExpire",
@@ -607,7 +680,8 @@
     "consequences",
     "evidence",
     "diff",
-    "args"
+    "args",
+    "argsSchema"
    ],
    "attributes": [
     {
@@ -709,6 +783,30 @@
     {
      "name": "argsLabel",
      "attribute": "args-label"
+    },
+    {
+     "name": "editableArgs",
+     "attribute": "editable-args"
+    },
+    {
+     "name": "editArgsLabel",
+     "attribute": "edit-args-label"
+    },
+    {
+     "name": "doneArgsLabel",
+     "attribute": "done-args-label"
+    },
+    {
+     "name": "resetArgsLabel",
+     "attribute": "reset-args-label"
+    },
+    {
+     "name": "approveEditedLabel",
+     "attribute": "approve-edited-label"
+    },
+    {
+     "name": "changesLabel",
+     "attribute": "changes-label"
     }
    ],
    "events": [
@@ -1004,7 +1102,7 @@
   "windowed": false
  },
  "size": {
-  "min": 60135,
-  "gzip": 16718
+  "min": 69812,
+  "gzip": 19204
  }
 }

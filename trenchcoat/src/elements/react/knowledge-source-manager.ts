@@ -8,12 +8,13 @@ import {
   type KnowledgeShowChange,
   type KnowledgeSource,
   type KnowledgeSourceEvent,
+  type KnowledgeSourcesAdd,
   type KnowledgeSourcesChange,
 } from "../knowledge-source-manager";
 import { h, useControlled } from "./internal";
 
-export type { KnowledgeSchedule, KnowledgeShow, KnowledgeSource, KnowledgeSourceState } from "../knowledge-source-manager";
-export { KNOWLEDGE_SCHEDULES } from "../knowledge-source-manager";
+export type { KnowledgeCrawlDepth, KnowledgeSchedule, KnowledgeShow, KnowledgeSource, KnowledgeSourcesAdd, KnowledgeSourceState, KnowledgeText } from "../knowledge-source-manager";
+export { KNOWLEDGE_SCHEDULES, knowledgeUrl } from "../knowledge-source-manager";
 
 const RawKnowledgeSourceManager = createComponent({
   tagName: "tc-knowledge-source-manager",
@@ -27,11 +28,12 @@ const RawKnowledgeSourceManager = createComponent({
     onTcResync: "tc-resync" as EventName<CustomEvent<KnowledgeSourceEvent>>,
     onTcPause: "tc-pause" as EventName<CustomEvent<KnowledgePauseEvent>>,
     onTcReviewChunks: "tc-review-chunks" as EventName<CustomEvent<KnowledgeSourceEvent>>,
+    onTcSourcesAdd: "tc-sources-add" as EventName<CustomEvent<KnowledgeSourcesAdd>>,
   },
 });
 
 type RawProps = React.ComponentProps<typeof RawKnowledgeSourceManager>;
-type Owned = "heading" | "sources" | "selected" | "show" | "noAdd" | "noReview" | "onTcSourcesChange" | "onTcSelectedChange" | "onTcShowChange" | "onTcAdd" | "onTcResync" | "onTcPause" | "onTcReviewChunks" | "children";
+type Owned = "heading" | "sources" | "selected" | "show" | "noAdd" | "noReview" | "addInline" | "onTcSourcesChange" | "onTcSelectedChange" | "onTcShowChange" | "onTcAdd" | "onTcResync" | "onTcPause" | "onTcReviewChunks" | "onTcSourcesAdd" | "children";
 export type KnowledgeSourceManagerProps = Omit<RawProps, Owned> & {
   /** The heading */
   title?: string;
@@ -39,7 +41,7 @@ export type KnowledgeSourceManagerProps = Omit<RawProps, Owned> & {
   sources?: KnowledgeSource[];
   /** The sources on mount when `sources` isn't controlled */
   defaultSources?: KnowledgeSource[];
-  /** The sources changed: one was removed or its schedule changed */
+  /** The sources changed: one was removed, its schedule changed, or new ones were added as queued from the panel */
   onSourcesChange?: (sources: KnowledgeSource[], change: KnowledgeSourcesChange["change"]) => void;
   /** The open source's id – controlled when given (null for none) */
   selected?: string | null;
@@ -49,8 +51,13 @@ export type KnowledgeSourceManagerProps = Omit<RawProps, Owned> & {
   show?: KnowledgeShow;
   /** All or Needs attention was picked */
   onShowChange?: (show: KnowledgeShow) => void;
-  /** Add source was pressed – open your picker; without it there's no Add source button */
+  /** Add source was pressed – open your picker; without it (or onSourcesAdd) there's no Add source button */
   onAdd?: () => void;
+  /**
+   * Given, Add source opens the built-in Add sources panel – files, links and pasted text – and this is called with
+   * what to add. Start ingesting them; return false to stop them being listed as queued (you'll pass the real ones)
+   */
+  onSourcesAdd?: (add: KnowledgeSourcesAdd) => boolean | void;
   /** Resync or Retry was pressed */
   onResync?: (source: KnowledgeSource) => void;
   /** Pause or Resume was pressed; `paused` is what was asked for */
@@ -60,7 +67,7 @@ export type KnowledgeSourceManagerProps = Omit<RawProps, Owned> & {
 };
 const NONE: KnowledgeSource[] = [];
 
-export function KnowledgeSourceManager({ title, sources, defaultSources = NONE, onSourcesChange, selected, onSelectedChange, show, onShowChange, onAdd, onResync, onPauseChange, onReviewChunks, ...props }: KnowledgeSourceManagerProps) {
+export function KnowledgeSourceManager({ title, sources, defaultSources = NONE, onSourcesChange, selected, onSelectedChange, show, onShowChange, onAdd, onSourcesAdd, onResync, onPauseChange, onReviewChunks, ...props }: KnowledgeSourceManagerProps) {
   const lastChange = React.useRef<KnowledgeSourcesChange["change"] | null>(null);
   const onChange = React.useCallback((next: KnowledgeSource[]) => lastChange.current && onSourcesChange?.(next, lastChange.current), [onSourcesChange]);
   const s = useControlled(sources, defaultSources, onChange);
@@ -72,7 +79,8 @@ export function KnowledgeSourceManager({ title, sources, defaultSources = NONE, 
     sources: s.value,
     selected: sel.value,
     show: sh.value,
-    noAdd: !onAdd,
+    noAdd: !onAdd && !onSourcesAdd,
+    addInline: !!onSourcesAdd,
     noReview: !onReviewChunks,
     onTcSourcesChange: (e: CustomEvent<KnowledgeSourcesChange>) => {
       lastChange.current = e.detail.change;
@@ -84,5 +92,8 @@ export function KnowledgeSourceManager({ title, sources, defaultSources = NONE, 
     onTcResync: (e: CustomEvent<KnowledgeSourceEvent>) => onResync?.(e.detail.source),
     onTcPause: (e: CustomEvent<KnowledgePauseEvent>) => onPauseChange?.(e.detail.source, e.detail.paused),
     onTcReviewChunks: (e: CustomEvent<KnowledgeSourceEvent>) => onReviewChunks?.(e.detail.source),
+    onTcSourcesAdd: (e: CustomEvent<KnowledgeSourcesAdd>) => {
+      if (onSourcesAdd?.(e.detail) === false) e.preventDefault();
+    },
   });
 }

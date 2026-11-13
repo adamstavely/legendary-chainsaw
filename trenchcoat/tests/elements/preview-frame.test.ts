@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/preview-frame";
-import { normalizePreviewUrl, previewSecurity, type PreviewTab, type TcPreviewFrame } from "../../src/elements/preview-frame";
+import { normalizePreviewUrl, previewDocument, previewPolicy, previewSecurity, type PreviewTab, type TcPreviewFrame } from "../../src/elements/preview-frame";
 import { PreviewFrame } from "../../src/elements/react/preview-frame";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -414,4 +414,189 @@ describe("tc-preview-frame – unsafe addresses, React navigation and closing ta
     await act(async () => root.unmount());
     wrap.remove();
   });
+});
+
+describe("tc-preview-frame – model-written html", () => {
+  const BROKEN = `<p id="out"></p>\n<script>\ndocument.getElementById("out").textContent = total([1, 2]);\n</script>`;
+  const status = (el: Element) => el.querySelector(".ui-pvf__status")!.textContent!.trim();
+
+  test("previewDocument puts the policy and the reporter first, without moving the page's lines", () => {
+    const whole = `<!doctype html>\n<html>\n<head>\n<title>x</title>\n</head>\n<body>hi</body>\n</html>`;
+    const doc = previewDocument(whole);
+    expect(doc.startsWith("<!doctype html>\n<html>\n<head><meta http-equiv=\"Content-Security-Policy\"")).toBe(true);
+    expect(doc.split("\n").length).toBe(whole.split("\n").length);
+    expect(doc.indexOf("<title>")).toBeGreaterThan(doc.indexOf("<script>"));
+    expect(previewDocument("<html><body>x</body></html>")).toMatch(/^<html><head><meta http-equiv="Content-Security-Policy"/);
+    const fragment = previewDocument("<p>x</p>");
+    expect(fragment).toMatch(/^<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy"/);
+    expect(fragment.endsWith("<body><p>x</p></body></html>")).toBe(true);
+    expect(previewPolicy()).toContain("connect-src 'none'");
+    expect(previewPolicy()).toContain("default-src 'none'");
+    expect(previewPolicy(true)).toContain("default-src *");
+  });
+
+  test("runs in a srcdoc frame sandboxed to scripts only, with the network blocked", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame heading="Generated card" .html=${"<p>Hello</p>"}></tc-preview-frame>`);
+    const frame = el.querySelector<HTMLIFrameElement>("iframe.ui-pvf__frame")!;
+    expect(frame.getAttribute("sandbox")).toBe("allow-scripts");
+    expect(frame.hasAttribute("src")).toBe(false);
+    expect(frame.srcdoc).toContain("connect-src 'none'");
+    expect(frame.srcdoc).toContain("<p>Hello</p>");
+    expect(frame.title).toBe("Generated card");
+    expect(el.querySelector(".ui-pvf__notice")).toBeNull();
+    expect(input(el).value).toBe("about:srcdoc");
+    expect(el.querySelector(".ui-pvf__lock")).toBeNull();
+    expect(tool(el, "external").disabled).toBe(true);
+    // The page's own sandbox is for src only
+    el.sandbox = "allow-scripts allow-same-origin";
+    await settle();
+    expect(el.querySelector("iframe")!.getAttribute("sandbox")).toBe("allow-scripts");
+    el.allowNetwork = true;
+    await settle();
+    expect(el.querySelector<HTMLIFrameElement>("iframe")!.srcdoc).toContain("default-src *");
+  });
+
+  test("errors, console errors and rejections come back: the console count, the problems list and one announcement", async () => {
+    const markup = `<script>
+console.warn("rounded");
+console.error("Totals are off by", 2);
+Promise.reject(new Error("no ledger"));
+total([1]);
+</script>`;
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${markup}></tc-preview-frame>`);
+    await expect.poll(() => el.errors.length, { timeout: 10000 }).toBe(3);
+    const kinds = el.errors.map((e) => e.kind).sort();
+    expect(kinds).toEqual(["console", "error", "rejection"]);
+    expect(el.errors.find((e) => e.kind === "console")!.message).toBe("Totals are off by 2");
+    expect(el.errors.find((e) => e.kind === "rejection")!.message).toBe("no ledger");
+    const thrown = el.errors.find((e) => e.kind === "error")!;
+    // Safari hides an uncaught error's message and line in a sandbox without same-origin, and the pane says so
+    if (/hides its message/.test(thrown.message)) expect(thrown.line).toBeUndefined();
+    else {
+      expect(thrown.message).toMatch(/total/);
+      expect(thrown.line).toBe(5);
+    }
+    await settle();
+    const con = el.querySelector(".ui-pvf__console")!;
+    expect(con.textContent!.replace(/\s+/g, " ").trim()).toBe("3 errors, 1 warning");
+    const section = el.querySelector(".ui-pvf__errors")!;
+    expect(section.getAttribute("aria-labelledby")).toBe(section.querySelector("h3")!.id);
+    expect(section.querySelector("h3")!.textContent).toBe("3 problems");
+    expect(el.querySelectorAll(".ui-pvf__error")).toHaveLength(3);
+    if (thrown.line) expect(section.textContent).toContain("line 5");
+    // Only the first problem of the run was announced
+    expect(status(el)).toMatch(/^Error in the preview: Totals are off by 2$/);
+  });
+
+  test("the policy blocks the network: a fetch from the html fails", async () => {
+    const markup = `<script>fetch("https://example.com/").then(() => console.error("reached"), () => console.error("blocked"));</script>`;
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${markup}></tc-preview-frame>`);
+    await expect.poll(() => el.errors.map((e) => e.message), { timeout: 10000 }).toContain("blocked");
+    expect(el.errors.map((e) => e.message)).not.toContain("reached");
+  });
+
+  test("messages from any window but its own frame are ignored", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${BROKEN}></tc-preview-frame>`);
+    window.postMessage({ tcPreview: 1, type: "error", message: "forged" }, "*");
+    await expect.poll(() => el.errors.length, { timeout: 10000 }).toBe(1);
+    expect(el.errors.map((e) => e.message)).not.toContain("forged");
+    // Another frame's reports don't count either
+    const other = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${"<script>total()</script>"}></tc-preview-frame>`);
+    await expect.poll(() => other.errors.length, { timeout: 10000 }).toBe(1);
+    expect(el.errors).toHaveLength(1);
+  });
+
+  test("Ask to fix sends the errors, cancelable; Reload runs the html again with a clean slate", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${BROKEN}></tc-preview-frame>`);
+    await expect.poll(() => el.querySelector(".ui-pvf__fix"), { timeout: 10000 }).not.toBeNull();
+    const seen: unknown[] = [];
+    const stop = (e: Event) => {
+      seen.push((e as CustomEvent).detail);
+      e.preventDefault();
+    };
+    el.addEventListener("tc-fix-request", stop);
+    const fix = el.querySelector<HTMLButtonElement>(".ui-pvf__fix")!;
+    expect(fix.textContent!.trim()).toBe("Ask to fix");
+    fix.focus();
+    fix.click();
+    await settle();
+    expect(seen).toHaveLength(1);
+    expect((seen[0] as { errors: { message: string }[] }).errors[0].message).toMatch(/total|hides its message/);
+    expect(status(el)).not.toBe("Sent to fix");
+    el.removeEventListener("tc-fix-request", stop);
+    fix.click();
+    await settle();
+    expect(status(el)).toBe("Sent to fix");
+
+    const before = el.querySelector("iframe");
+    const reloads: unknown[] = [];
+    el.addEventListener("tc-reload", (e) => reloads.push(e));
+    tool(el, "reload").click();
+    await settle();
+    expect(reloads).toHaveLength(1);
+    expect(el.querySelector("iframe")).not.toBe(before);
+    expect(el.errors.length).toBeLessThanOrEqual(1);
+    await expect.poll(() => el.errors.length, { timeout: 10000 }).toBe(1);
+    // New markup starts over too
+    el.html = "<p>Fixed</p>";
+    await settle();
+    expect(el.errors).toEqual([]);
+    expect(el.querySelector(".ui-pvf__errors")).toBeNull();
+    expect(el.querySelector(".ui-pvf__console")!.textContent!.replace(/\s+/g, " ").trim()).toBe("0 errors, 0 warnings");
+  });
+
+  test("a page-given console count wins, and children still show instead of the html", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${BROKEN} .consoleCount=${{ errors: 9, warnings: 0 }}></tc-preview-frame>`);
+    await expect.poll(() => el.errors.length, { timeout: 10000 }).toBe(1);
+    await settle();
+    expect(el.querySelector(".ui-pvf__console")!.textContent!.replace(/\s+/g, " ").trim()).toBe("9 errors, 0 warnings");
+    const kids = await fixture<TcPreviewFrame>(html`<tc-preview-frame .html=${BROKEN}>${page()}</tc-preview-frame>`);
+    expect(kids.querySelector("iframe")).toBeNull();
+    expect(kids.querySelector(".mock-page")).not.toBeNull();
+  });
+
+  test("React: onFixRequest gets the errors; returning false stops the announcement", async () => {
+    const wrap = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(wrap);
+    const got: string[][] = [];
+    let answer: boolean | undefined = false;
+    await act(async () =>
+      root.render(
+        React.createElement(PreviewFrame, {
+          html: BROKEN,
+          onFixRequest: (errors) => {
+            got.push(errors.map((e) => e.message));
+            return answer;
+          },
+        }),
+      ),
+    );
+    const el = wrap.querySelector<TcPreviewFrame>("tc-preview-frame")!;
+    await expect.poll(() => el.querySelector(".ui-pvf__fix"), { timeout: 10000 }).not.toBeNull();
+    el.querySelector<HTMLButtonElement>(".ui-pvf__fix")!.click();
+    await settle();
+    expect(got).toHaveLength(1);
+    expect(got[0][0]).toMatch(/total|hides its message/);
+    expect(status(el)).not.toBe("Sent to fix");
+    answer = undefined;
+    el.querySelector<HTMLButtonElement>(".ui-pvf__fix")!.click();
+    await settle();
+    expect(status(el)).toBe("Sent to fix");
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const) {
+    test(`axe (${theme}): the problems list in both looks`, async () => {
+      const wrap = document.body.appendChild(document.createElement("div"));
+      wrap.style.colorScheme = theme;
+      wrap.innerHTML = `<tc-preview-frame look="standard" heading="A"></tc-preview-frame><tc-preview-frame look="clean" heading="B"></tc-preview-frame>`;
+      const els = [...wrap.querySelectorAll<TcPreviewFrame>("tc-preview-frame")];
+      for (const el of els) el.html = BROKEN;
+      await settle(wrap);
+      for (const el of els) await expect.poll(() => el.querySelector(".ui-pvf__errors"), { timeout: 10000 }).not.toBeNull();
+      await finish(wrap);
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+  }
 });

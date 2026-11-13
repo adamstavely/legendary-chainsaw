@@ -58,10 +58,10 @@
     "sourceLabels": {
       "type": "object",
       "properties": {
-        "agent": {
+        "model": {
           "type": "string"
         },
-        "model": {
+        "agent": {
           "type": "string"
         },
         "grounded": {
@@ -98,10 +98,10 @@
     "sourceNotes": {
       "type": "object",
       "properties": {
-        "agent": {
+        "model": {
           "type": "string"
         },
-        "model": {
+        "agent": {
           "type": "string"
         },
         "grounded": {
@@ -186,10 +186,10 @@
     "confidenceCeilings": {
       "type": "object",
       "properties": {
-        "agent": {
+        "model": {
           "type": "number"
         },
-        "model": {
+        "agent": {
           "type": "number"
         },
         "grounded": {

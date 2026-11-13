@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-step-picker.json",
+  "title": "tc-step-picker",
+  "description": "Search step kinds and tools to add next to a workflow – grouped, with suggested and recent steps first.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StepPickerItem"
+      },
+      "description": "Every step that can be added"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StepPickerGroup"
+      },
+      "description": "The groups, in order; an item whose group isn't here is left out"
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StepSuggestion"
+      },
+      "description": "Steps to suggest when nothing is typed, each with why (\"Usually comes after Classify\")"
+    },
+    "recent": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of recently added steps, newest first – shown when nothing is typed"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text. Changed by the user unless a tc-query-change listener calls preventDefault()"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder text in the search field"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "inline",
+        "popover"
+      ],
+      "description": "\"inline\" (the default) or \"popover\" – floated by `anchor` while `open`"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "In popover layout: whether it's showing. Closed by the user (Escape, outside, a pick) unless prevented"
+    },
+    "kinds": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "icon": {
+            "$ref": "#/definitions/TemplateResult"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Labels and icons for kinds the page adds, merged over the workflow defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "StepPickerItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/WorkflowKind",
+          "description": "The kind of step it adds – sets the icon (trigger, llm, tool, condition, approval, output, or your own)"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One line on what it does"
+        },
+        "group": {
+          "type": "string",
+          "description": "The group's id it's listed under"
+        },
+        "tool": {
+          "type": "string",
+          "description": "The tool or integration it uses, e.g. \"Ledger API\" – shown as a tag and sent with the pick"
+        },
+        "keywords": {
+          "type": "string",
+          "description": "More words that should find it"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "label",
+        "group"
+      ],
+      "additionalProperties": false
+    },
+    "WorkflowKind": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "approval",
+            "condition",
+            "llm",
+            "output",
+            "tool",
+            "trigger"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "StepPickerGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "StepSuggestion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "TemplateResult": {
+      "$ref": "#/definitions/UncompiledTemplateResult%3Calias-1%3E",
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg } .\n\nA `TemplateResult` object holds all the information about a template expression required to render it: the template strings, expression values, and type of template (html or svg).\n\n`TemplateResult` objects do not create any DOM on their own. To create or update DOM you need to render the `TemplateResult`. See [Rendering](https://lit.dev/docs/components/rendering) for more information.\n\nIn Lit 4, this type will be an alias of MaybeCompiledTemplateResult, so that code will get type errors if it assumes that Lit templates are not compiled. When deliberately working with only one, use either  {@linkcode  CompiledTemplateResult }  or  {@linkcode  UncompiledTemplateResult }  explicitly."
+    },
+    "UncompiledTemplateResult<alias-1>": {
+      "type": "object",
+      "properties": {
+        "_$litType$": {
+          "type": "number",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strings": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            },
+            "raw": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "length",
+            "raw"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "_$litType$",
+        "strings",
+        "values"
+      ],
+      "additionalProperties": false,
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg }  when it hasn't been compiled by"
+    }
+  }
+}

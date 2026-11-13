@@ -63,13 +63,13 @@
         "pending": {
           "type": "string"
         },
+        "failing": {
+          "type": "string"
+        },
         "skipped": {
           "type": "string"
         },
         "passing": {
-          "type": "string"
-        },
-        "failing": {
           "type": "string"
         }
       },

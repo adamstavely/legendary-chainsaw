@@ -1,0 +1,493 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-summary",
+   "className": "TcAgentSummary",
+   "description": "One agent's profile: status, model, tools, owner, version, two weeks of runs, and recent failures.",
+   "properties": [
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"Agent\"",
+     "description": "The agent's name, the heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A line under the name: what the agent does",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "AgentSummaryStatus",
+     "default": "\"live\"",
+     "description": "Where it stands: \"live\", \"draft\", \"paused\" or \"failing\"",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The model it runs on",
+     "readonly": false
+    },
+    {
+     "name": "tools",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The tools it may call, as words",
+     "readonly": false
+    },
+    {
+     "name": "owner",
+     "attribute": "owner",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Who owns it",
+     "readonly": false
+    },
+    {
+     "name": "liveVersion",
+     "attribute": "live-version",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The version that's live, e.g. \"v12\"",
+     "readonly": false
+    },
+    {
+     "name": "draftVersion",
+     "attribute": "draft-version",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A draft version waiting to go live, e.g. \"v13\"",
+     "readonly": false
+    },
+    {
+     "name": "days",
+     "attribute": null,
+     "type": "AgentSummaryDay[]",
+     "default": "[]",
+     "description": "Runs per day, oldest first – usually the last 14",
+     "readonly": false
+    },
+    {
+     "name": "medianDuration",
+     "attribute": "median-duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The median run time, ms",
+     "readonly": false
+    },
+    {
+     "name": "cost",
+     "attribute": "cost",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "What the period cost",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The cost's currency, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "failures",
+     "attribute": null,
+     "type": "AgentSummaryFailure[]",
+     "default": "[]",
+     "description": "Recent failures, newest first",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": "actions",
+     "type": "boolean",
+     "default": "true",
+     "description": "Offer Edit, Run test and Pause / Resume; set actions=\"false\" to only show",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for dates, numbers and money",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<AgentSummaryLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "Edit, Run test, Pause or Resume was pressed ({ action }: AgentSummaryActionDetail); cancelable – prevented, Pause and Resume leave `status` as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agsm",
+   "cssProperties": [
+    {
+     "name": "--tc-agsm-chart-h",
+     "value": "var(--tc-space-16)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agsm-mark",
+     "value": "var(--tc-space-2)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-secondary-shadow",
+    "--tc-border-selected",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-radius-md",
+    "--tc-fill-default",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-line-height-normal",
+    "--tc-meter-fill",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "agentSummaryTotals",
+   "signature": "agentSummaryTotals(days: AgentSummaryDay[]): void",
+   "description": "Runs, successes and failures over the days, and the success rate (null with no runs)"
+  }
+ ],
+ "react": [
+  {
+   "component": "AgentSummary",
+   "exported": true,
+   "props": [
+    {
+     "name": "onAction",
+     "type": "(action: AgentSummaryAction) => boolean | void",
+     "optional": true,
+     "description": "Edit, Run test, Pause or Resume was pressed; return false to stop Pause and Resume changing the status"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-action": "onAction"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-agent-summary",
+   "className": "TcAgentSummary",
+   "module": "@adamstavely/trenchcoat/agent-summary",
+   "data": [
+    "tools",
+    "days",
+    "failures",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "model",
+     "attribute": "model"
+    },
+    {
+     "name": "owner",
+     "attribute": "owner"
+    },
+    {
+     "name": "liveVersion",
+     "attribute": "live-version"
+    },
+    {
+     "name": "draftVersion",
+     "attribute": "draft-version"
+    },
+    {
+     "name": "medianDuration",
+     "attribute": "median-duration"
+    },
+    {
+     "name": "cost",
+     "attribute": "cost"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "actions",
+     "attribute": "actions"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-action",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 27089,
+  "gzip": 8263
+ }
+}

@@ -9,7 +9,7 @@
 “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
 - **Element:** `<tc-trigger-builder>`
-- **Size:** 40.4 KB gzip · 172.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 42.4 KB gzip · 179.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -33,10 +33,15 @@ two dates; then add conditions such as “only if Amount is more than 10,000”,
 read back as one plain sentence, and a schedule lists its next five runs, so people can check it does what they meant
 before they save. It is a form control: with `name` it submits the definition as JSON.
 
+Give it `webhookUrl` and a third kind appears: a request arriving at that address. It shows the address with Copy,
+the HTTP method, an optional header that must carry a shared secret, a sample payload with Send test request, and how
+the last request went.
+
 ### When to use
 
 - Setting up a scheduled report, a recurring agent run or a workflow that reacts to events in another system.
 - Anywhere people would otherwise write a cron expression or a rule by hand.
+- Agents another system starts by calling a URL – a webhook, with its address, method and a test request.
 - Forms where the trigger is saved with other settings – it validates and resets with the form.
 
 ### When not to use
@@ -49,12 +54,12 @@ before they save. It is a form control: with `name` it submits the definition as
 
 *Turn on “Show anatomy” on the example to see each part numbered on the live component.*
 
-1. **When** `.ui-tgb__kind` – an event happens, or on a schedule
+1. **When** `.ui-tgb__kind` – an event happens, on a schedule, or (with `webhookUrl`) a request arrives
 2. **Rows** `.ui-tgb__rows` – the event, or Repeats, On, At and Active, each with its label
-3. **Conditions** `.ui-tgb__conds` – All or Any, one row per condition, and Add condition
-4. **Sentence** `.ui-tgb__summary` – the trigger as one plain sentence
-5. **Next runs** `.ui-tgb__runs` – the upcoming run times, the first one marked
-6. **Foot** `.ui-tgb__foot` – the time zone, or “Runs each time the event happens”
+4. **Conditions** `.ui-tgb__conds` – All or Any, one row per condition, and Add condition
+5. **Sentence** `.ui-tgb__summary` – the trigger as one plain sentence
+6. **Next runs** `.ui-tgb__runs` – the upcoming run times, the first one marked
+7. **Foot** `.ui-tgb__foot` – the time zone, “Runs each time the event happens” or “Runs each time a request arrives”
 
 ## Looks
 
@@ -187,6 +192,10 @@ export class TriggerBuilderExample {
 | `value` | – | `TriggerValue` | `{ kind: "schedule", schedule: DEFAULT_SCHEDULE, active: null, conditions: [], match: "all" }` | The trigger definition. Changed by the user unless a tc-value-change listener calls preventDefault() |
 | `events` | – | `TriggerEvent[]` | `[]` | The events a trigger can listen for |
 | `scheduleFields` | – | `TriggerField[]` | `[]` | What a schedule's conditions can test (none: schedules have no conditions) |
+| `webhookUrl` | `webhook-url` | `string` | `""` | The webhook address a request starts it from; offers the webhook kind when set |
+| `webhookSample` | – | `string \| undefined` | `undefined` | A sample request body (JSON text) to show and send as a test |
+| `webhookLast` | – | `TriggerWebhookRequest \| null` | `null` | How the last request to the webhook went; a new value also ends a test that's waiting |
+| `webhookFields` | – | `TriggerField[]` | `[]` | What a webhook's conditions can test – fields of the request body (none: no conditions) |
 | `heading` | `heading` | `string` | `"Trigger"` | Names the group, shown at the top |
 | `now` | `now` | `number \| undefined` | `undefined` | Counts the next runs from here (ms since epoch); unset: when the element connected |
 | `runCount` | `run-count` | `number` | `5` | How many next runs to list |
@@ -202,10 +211,12 @@ export class TriggerBuilderExample {
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
 | `tc-value-change` | – | Yes | The trigger changed ({ value: TriggerValue }); cancelable – prevent it to control `value` |
+| `tc-webhook-test` | – | Yes | Send test request was pressed ({ url, method, secretHeader, payload }: TriggerWebhookTest); cancelable – prevented, the button doesn't wait for `webhookLast` |
+| `tc-copy` | – | Yes | Copy was pressed on the webhook address ({ text }); cancelable – prevented, nothing is written to the clipboard |
 
-#### Design tokens it reads (68)
+#### Design tokens it reads (73)
 
-`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-hover`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-7`, `--tc-surface-inverse`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-on-inverse`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-secondary-bg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-hover`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-mono`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-7`, `--tc-status-danger-fg`, `--tc-status-success-fg`, `--tc-surface-inverse`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-on-inverse`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
 
 #### Functions
 
@@ -214,7 +225,7 @@ export class TriggerBuilderExample {
 | Function | Description |
 | --- | --- |
 | `nextTriggerRuns(schedule: TriggerSchedule, now: number, count: unknown, active?: TriggerActive \| null): number[]` | The next `count` run times (ms) of a schedule after `now`, inside `active` when given |
-| `describeTrigger(value: TriggerValue, events: TriggerEvent[], fields?: TriggerField[]): string` | The trigger as one sentence: "Runs every Monday at 9:00 AM, only if Stage is Won." |
+| `describeTrigger(value: TriggerValue, events: TriggerEvent[], fields?: TriggerField[], webhookUrl?: string): string` | The trigger as one sentence: "Runs every Monday at 9:00 AM, only if Stage is Won." A webhook trigger names its address when `webhookUrl` is given |
 
 ## Frameworks
 
@@ -237,14 +248,19 @@ export class TriggerBuilderExample {
 | `value` | `el.value = …;` | `<… value={…} />` | `<tc-trigger-builder :value="…">` | `<tc-trigger-builder [value]="…">` | `<tc-trigger-builder {value}>` |
 | `events` | `el.events = …;` | `<… events={…} />` | `<tc-trigger-builder :events="…">` | `<tc-trigger-builder [events]="…">` | `<tc-trigger-builder {events}>` |
 | `scheduleFields` | `el.scheduleFields = …;` | `<… scheduleFields={…} />` | `<tc-trigger-builder :scheduleFields="…">` | `<tc-trigger-builder [scheduleFields]="…">` | `<tc-trigger-builder {scheduleFields}>` |
+| `webhookSample` | `el.webhookSample = …;` | `<… webhookSample={…} />` | `<tc-trigger-builder :webhookSample="…">` | `<tc-trigger-builder [webhookSample]="…">` | `<tc-trigger-builder {webhookSample}>` |
+| `webhookLast` | `el.webhookLast = …;` | `<… webhookLast={…} />` | `<tc-trigger-builder :webhookLast="…">` | `<tc-trigger-builder [webhookLast]="…">` | `<tc-trigger-builder {webhookLast}>` |
+| `webhookFields` | `el.webhookFields = …;` | `<… webhookFields={…} />` | `<tc-trigger-builder :webhookFields="…">` | `<tc-trigger-builder [webhookFields]="…">` | `<tc-trigger-builder {webhookFields}>` |
 
-*Also attributes: `heading`, `now`, `run-count`, `time-zone`, `name`, `disabled` – see the API table.*
+*Also attributes: `webhook-url`, `heading`, `now`, `run-count`, `time-zone`, `name`, `disabled` – see the API table.*
 
 ### Events
 
 | Event | Cancelable | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
 | --- | --- | --- | --- | --- | --- | --- |
 | `tc-value-change` | Yes | `el.addEventListener("tc-value-change", (e) => …)` | `onChange={…}` | `@tc-value-change="…"` | `(tc-value-change)="…($event)"` | `el.addEventListener("tc-value-change", …)` |
+| `tc-webhook-test` | Yes | `el.addEventListener("tc-webhook-test", (e) => …)` | `onWebhookTest={…}` | `@tc-webhook-test="…"` | `(tc-webhook-test)="…($event)"` | `el.addEventListener("tc-webhook-test", …)` |
+| `tc-copy` | Yes | `el.addEventListener("tc-copy", (e) => …)` | `onCopyAddress={…}` | `@tc-copy="…"` | `(tc-copy)="…($event)"` | `el.addEventListener("tc-copy", …)` |
 
 ### Controlled
 
@@ -433,6 +449,8 @@ No slots: everything it shows comes from its properties.
 | `value` | `TriggerValue` | The trigger definition (controlled) |
 | `defaultValue` | `TriggerValue` | The trigger definition to start with when uncontrolled |
 | `onChange` | `(value: TriggerValue) => void` | Called with the whole definition after every change |
+| `onWebhookTest` | `(test: TriggerWebhookTest) => void \| boolean` | Send test request was pressed: send it, then pass how it went as `webhookLast`. Return false to stop the button waiting |
+| `onCopyAddress` | `(text: string) => void \| boolean` | Copy was pressed on the webhook address. Return false to keep it off the clipboard |
 
 *Renamed or hidden on the wrapper: `value`, `defaultValue`, `events`, `heading`, `onChange`*
 
@@ -445,7 +463,7 @@ Follows the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patte
 | Key | What it does |
 |---|---|
 | Tab | Moves through the controls row by row, then the conditions and Add condition |
-| ← / → / ↑ / ↓ | In When, Repeats, Active and All / Any: picks the previous or next option |
+| ← / → / ↑ / ↓ | In When, Repeats, Method, Active and All / Any: picks the previous or next option |
 | Home / End | In those same controls: picks the first or last option |
 | Space / Enter | On a day: turns it on or off; on Add condition or ×: adds or removes a condition |
 | ↓ / ↑, Enter, Escape | In the event field: the combobox's keys – open, move, pick, close |
@@ -461,7 +479,11 @@ the weekdays are a group of toggle buttons with `aria-pressed` and full day name
 is named by its place: “Condition 1 field”, “Condition 1 test”, “Condition 1 value”, “Remove condition 1”. The next
 runs are a list named “Next runs”. After each change a status region reads the new sentence – “Runs every Monday at
 9:00 AM, only if Open deals is more than 0.” – but not on first render. In a form, an event trigger without an event
-is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick at least one day.”).
+is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick at least one day.”) and a webhook one
+without an address. For a webhook, Copy reads “Copy webhook address”, the sample payload is a focusable region named
+“Test”, the secret header field is described by its hint, and the status region says “Copied the webhook address”,
+“Sending a test request…” and then how the request went – “Last request: 202 · Test received”. The last request's
+status is in words and a mark (a dot when accepted, a square when not), not colour alone.
 
 ### Every component
 
@@ -494,6 +516,8 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 | inset | 87 | 66 | 14.1 | 14.1 | date-range-picker | – |
 | translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | segmented-control | – |
 | :is() and :where() | 88 | 78 | 14 | 14 | itself, combobox, internal/base, date-range-picker, segmented-control, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| Intl.RelativeTimeFormat | 71 (Edge 79) | 65 | 14 | 14 | itself | – |
+| Async Clipboard (writeText) | 66 (Edge 79) | 63 | 13.1 | 13.4 | internal/util | Copy buttons. |
 | ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | combobox, date-range-picker, segmented-control | – |
 | CSS masks (with the -webkit- prefix) | Any (Edge 79) | 53 | 4 | 3.2 | segmented-control | – |
 
@@ -511,13 +535,13 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 34.5 KB | 10.5 KB |
+| **This component alone** | 42.1 KB | 12.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 2.0 KB | – |
@@ -525,15 +549,15 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
+| `internal/util` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [date-range-picker](date-range-picker.md) · Element it renders | 55.3 KB | – |
 | [combobox](combobox.md) · Element it renders | 41.5 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **172.0 KB** | **40.4 KB** |
-| With Lit – the first component on a page | 194.5 KB | 47.8 KB |
+| **Added to a page that already has Lit** | **179.7 KB** | **42.4 KB** |
+| With Lit – the first component on a page | 202.3 KB | 49.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -541,11 +565,11 @@ is invalid (“Pick an event.”), and so is a weekly one without a day (“Pick
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.5 ms** | the gallery demo's data, 135 DOM nodes – to layout, median of 7 |
+| First render | **3.3 ms** | the gallery demo's data, 143 DOM nodes – to layout, median of 7 |
 | Typical update | **0.9 ms** | one item of events replaced |
-| First on the page | 35 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.6 ms | events: first render, 135 nodes; update 0.4 ms |
-| 1,000 items | 3.1 ms | events: first render, 135 nodes; update 0.3 ms |
+| First on the page | 34 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.2 ms | events: first render, 143 nodes; update 0.2 ms |
+| 1,000 items | 2.1 ms | events: first render, 143 nodes; update 0.2 ms |
 
 What it renders doesn't grow with events (tested to 1,000 items).
 
@@ -570,6 +594,7 @@ What it renders doesn't grow with events (tested to 1,000 items).
 - Use `hint` for where the event comes from (“CRM”, “Stripe”) and `group` to gather related events.
 - Name condition fields as people know them – “Amount”, “Stage”, “Priority” – and give `select` fields their options.
 - Set `heading` to what the trigger starts: “Run this automation”, “Send the weekly report”.
+- Give the last request's `message` in words people can act on: “Started run 418”, “Missing X-Signature header”.
 
 ## Do and don't
 
@@ -578,8 +603,10 @@ What it renders doesn't grow with events (tested to 1,000 items).
 - Give `scheduleFields` only when a scheduled run can check something first; without them a schedule has no conditions.
 - Pass `now` when the page knows the time it should count from (server time, a test); otherwise it's when the
   element connected.
-- Store the value as it is – `kind`, `event` or `schedule`, `active`, `conditions` and `match` – and run it on the
-  server with the same rules; `nextTriggerRuns` and `describeTrigger` are exported to help.
+- Store the value as it is – `kind`, `event`, `schedule` or `webhook`, `active`, `conditions` and `match` – and run it
+  on the server with the same rules; `nextTriggerRuns` and `describeTrigger` are exported to help.
+- Answer `tc-webhook-test` by sending the request from the server, then set `webhookLast` with how it went – the
+  button waits for it.
 
 ### Don't
 
@@ -587,6 +614,7 @@ What it renders doesn't grow with events (tested to 1,000 items).
   browser's time zone.
 - Don't offer events without `fields` if people will want to narrow them – conditions come from the event's fields.
 - Don't keep conditions when the kind changes: the builder drops them, because they test the other kind's fields.
+- Don't put the shared secret itself in `secretHeader` – it names the header; the secret lives on the server.
 
 ## Related
 
