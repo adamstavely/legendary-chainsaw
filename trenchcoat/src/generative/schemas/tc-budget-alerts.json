@@ -47,6 +47,10 @@
     "locale": {
       "type": "string",
       "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone the crossing dates are given in, e.g. \"Europe/London\"; by default the browser's"
     }
   },
   "additionalProperties": false,

@@ -7713,11 +7713,11 @@
   },
   "budget-alerts": {
    "measuredAt": "2026-11-13",
-   "hash": "dbf56c0c28158589",
+   "hash": "ba28e250a95fd698",
    "bundle": {
     "own": {
-     "min": 20427,
-     "gzip": 6639
+     "min": 20565,
+     "gzip": 6694
     },
     "shared": [
      {
@@ -7757,21 +7757,21 @@
      }
     ],
     "withoutLit": {
-     "min": 28060,
-     "gzip": 8936
+     "min": 28199,
+     "gzip": 8982
     },
     "withLit": {
-     "min": 50409,
-     "gzip": 16349
+     "min": 50548,
+     "gzip": 16404
     }
    },
    "render": {
     "tag": "tc-budget-alerts",
     "source": "demo",
     "runs": 7,
-    "cold": 28.3,
-    "first": 2.5,
-    "update": 1.1,
+    "cold": 18.2,
+    "first": 4.4,
+    "update": 1.2,
     "updateKind": "one item of alerts replaced",
     "nodes": 87,
     "scale": {
@@ -7780,14 +7780,14 @@
      "points": [
       {
        "items": 100,
-       "first": 37.4,
-       "update": 14.4,
+       "first": 26.2,
+       "update": 15.2,
        "nodes": 1736
       },
       {
        "items": 1000,
-       "first": 223.8,
-       "update": 121.7,
+       "first": 225.7,
+       "update": 122.9,
        "nodes": 17036
       }
      ]
@@ -21636,7 +21636,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-13",
-   "hash": "5903f654284fe33b",
+   "hash": "7b2ecfb6f7bafc90",
    "bundle": {
     "own": {
      "min": 34126,
@@ -23184,6 +23184,11 @@
       "min": 18654
      },
      {
+      "name": "budget-alerts",
+      "kind": "element",
+      "min": 18528
+     },
+     {
       "name": "entity-timeline",
       "kind": "element",
       "min": 18424
@@ -23192,11 +23197,6 @@
       "name": "session-list",
       "kind": "element",
       "min": 18396
-     },
-     {
-      "name": "budget-alerts",
-      "kind": "element",
-      "min": 18378
      },
      {
       "name": "profile-header",
@@ -25879,6 +25879,11 @@
       "min": 1965
      },
      {
+      "name": "src/generative/schemas/tc-budget-alerts.json",
+      "kind": "other",
+      "min": 1958
+     },
+     {
       "name": "src/generative/schemas/tc-activity-calendar.json",
       "kind": "other",
       "min": 1947
@@ -25952,11 +25957,6 @@
       "name": "src/generative/schemas/tc-session-tabs.json",
       "kind": "other",
       "min": 1827
-     },
-     {
-      "name": "src/generative/schemas/tc-budget-alerts.json",
-      "kind": "other",
-      "min": 1825
      },
      {
       "name": "src/generative/schemas/tc-attestation-check.json",
@@ -26690,20 +26690,20 @@
      }
     ],
     "withoutLit": {
-     "min": 12183754,
-     "gzip": 3017839
+     "min": 12184038,
+     "gzip": 3017891
     },
     "withLit": {
-     "min": 12100624,
-     "gzip": 2989810
+     "min": 12100907,
+     "gzip": 2989934
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 7,
-    "first": 1.5,
+    "cold": 7.9,
+    "first": 1.6,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,

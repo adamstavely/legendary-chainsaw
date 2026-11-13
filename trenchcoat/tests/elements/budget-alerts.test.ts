@@ -26,7 +26,7 @@ const NOW = Date.UTC(2026, 10, 11, 12);
 const END = Date.UTC(2026, 10, 30, 12);
 const make = (look: "standard" | "clean" = "standard") =>
   fixture<TcBudgetAlerts>(
-    html`<tc-budget-alerts look=${look} locale="en-GB" currency="USD" budget="5000" spent="2000" forecast="6000" .now=${NOW} .end=${END} .alerts=${ALERTS}></tc-budget-alerts>`,
+    html`<tc-budget-alerts look=${look} locale="en-GB" time-zone="UTC" currency="USD" budget="5000" spent="2000" forecast="6000" .now=${NOW} .end=${END} .alerts=${ALERTS}></tc-budget-alerts>`,
   );
 const marker = (el: Element, id: string) => el.querySelector<HTMLElement>(`.ui-bal__marker[data-id="${id}"]`)!;
 const key = (t: Element, k: string, init: KeyboardEventInit = {}) => t.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true, ...init }));
@@ -50,7 +50,7 @@ describe("tc-budget-alerts", () => {
       expect(m.getAttribute("aria-valuetext")).toBe("Alert at US$4,000, 80% of budget");
       expect([...el.querySelectorAll<HTMLElement>(".ui-bal__alert")].map((r) => r.dataset.id)).toEqual(["a30", "a80"]);
       expect(el.querySelector('.ui-bal__alert[data-id="a30"] .ui-bal__cross')!.textContent).toBe("Already passed");
-      expect(el.querySelector('.ui-bal__alert[data-id="a80"] .ui-bal__cross')!.textContent).toBe("Forecast crosses 80% around 20 Nov");
+      expect(el.querySelector('.ui-bal__alert[data-id="a80"] .ui-bal__cross')!.textContent).toBe("Forecast crosses 80% around 21 Nov");
     });
   }
 

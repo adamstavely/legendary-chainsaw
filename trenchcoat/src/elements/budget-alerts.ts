@@ -80,6 +80,8 @@ export class TcBudgetAlerts extends TcElement {
   @property() accessor currency = "USD";
   /** The language for numbers and dates, e.g. "en-GB"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
+  /** The time zone the crossing dates are given in, e.g. "Europe/London"; by default the browser's */
+  @property({ attribute: "time-zone" }) accessor timeZone: string | undefined = undefined;
 
   /** The alert being dragged */
   @state() private accessor dragging: string | null = null;
@@ -110,7 +112,7 @@ export class TcBudgetAlerts extends TcElement {
     return new Intl.NumberFormat(this.locale, { style: "percent", maximumFractionDigits: 0 }).format(v);
   }
   private date(t: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short" }).format(t);
+    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", timeZone: this.timeZone }).format(t);
   }
   /** "Alert at $4,000, 80% of budget" */
   valueText(a: Pick<BudgetAlert, "at">) {

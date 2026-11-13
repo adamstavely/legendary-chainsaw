@@ -9,7 +9,7 @@
 A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
 
 - **Element:** `<tc-generated-ui>`
-- **Size:** 2947.1 KB gzip · 11898.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 2947.2 KB gzip · 11898.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -646,9 +646,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [quality-alerts](quality-alerts.md) · Element it renders | 18.3 KB | – |
 | [validity-badge](validity-badge.md) · Element it renders | 18.3 KB | – |
 | [results-list](results-list.md) · Element it renders | 18.2 KB | – |
+| [budget-alerts](budget-alerts.md) · Element it renders | 18.1 KB | – |
 | [entity-timeline](entity-timeline.md) · Element it renders | 18.0 KB | – |
 | [session-list](session-list.md) · Element it renders | 18.0 KB | – |
-| [budget-alerts](budget-alerts.md) · Element it renders | 17.9 KB | – |
 | [profile-header](profile-header.md) · Element it renders | 17.9 KB | – |
 | [api-reference-nav](api-reference-nav.md) · Element it renders | 17.9 KB | – |
 | [breakpoint-overlay](breakpoint-overlay.md) · Element it renders | 17.8 KB | – |
@@ -1185,6 +1185,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-team-flag-editor.json` · Dependency | 1.9 KB | – |
 | `src/generative/schemas/tc-agent-ledger.json` · Dependency | 1.9 KB | – |
 | `src/generative/schemas/tc-audience-mix.json` · Dependency | 1.9 KB | – |
+| `src/generative/schemas/tc-budget-alerts.json` · Dependency | 1.9 KB | – |
 | `src/generative/schemas/tc-activity-calendar.json` · Dependency | 1.9 KB | – |
 | `src/generative/schemas/tc-day-rhythm.json` · Dependency | 1.9 KB | – |
 | `src/generative/schemas/tc-select.json` · Dependency | 1.9 KB | – |
@@ -1200,7 +1201,6 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-side-nav.json` · Dependency | 1.8 KB | – |
 | `src/generative/schemas/tc-evidence-gallery.json` · Dependency | 1.8 KB | – |
 | `src/generative/schemas/tc-session-tabs.json` · Dependency | 1.8 KB | – |
-| `src/generative/schemas/tc-budget-alerts.json` · Dependency | 1.8 KB | – |
 | `src/generative/schemas/tc-attestation-check.json` · Dependency | 1.8 KB | – |
 | `src/generative/schemas/tc-coverage-ring.json` · Dependency | 1.8 KB | – |
 | `src/generative/schemas/tc-agent-plan.json` · Dependency | 1.7 KB | – |
@@ -1347,8 +1347,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/vendor/agent-face/element/no-dom.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
 | `src/vendor/agent-face/engine/index.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **11898.2 KB** | **2947.1 KB** |
-| With Lit – the first component on a page | 11817.0 KB | 2919.7 KB |
+| **Added to a page that already has Lit** | **11898.5 KB** | **2947.2 KB** |
+| With Lit – the first component on a page | 11817.3 KB | 2919.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -1356,9 +1356,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.5 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| First render | **1.6 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 7.0 ms | default properties; includes adding its CSS to the document |
+| First on the page | 7.9 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

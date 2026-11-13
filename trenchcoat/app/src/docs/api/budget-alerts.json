@@ -86,6 +86,14 @@
      "readonly": false
     },
     {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The time zone the crossing dates are given in, e.g. \"Europe/London\"; by default the browser's",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -292,6 +300,10 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
     }
    ],
    "events": [
@@ -500,7 +512,7 @@
   "windowed": false
  },
  "size": {
-  "min": 28060,
-  "gzip": 8936
+  "min": 28199,
+  "gzip": 8982
  }
 }

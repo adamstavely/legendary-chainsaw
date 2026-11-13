@@ -55,6 +55,10 @@ export class BudgetAlerts {
   @Input() set locale(v: TcBudgetAlerts["locale"]) {
     this.#el.locale = v;
   }
+  /** The time zone the crossing dates are given in, e.g. "Europe/London"; by default the browser's */
+  @Input() set timeZone(v: TcBudgetAlerts["timeZone"]) {
+    this.#el.timeZone = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcBudgetAlerts["look"]) {
     this.#el.look = v;

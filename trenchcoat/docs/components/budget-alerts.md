@@ -9,7 +9,7 @@
 Spend alerts set by dragging markers along the month's budget – spent so far and the forecast hatched beyond it, a line at the budget, each alert a slider ("Alert at $4,000, 80% of budget") moved by pointer or keys, added by clicking the bar, with its channel, recipients and when the forecast crosses it
 
 - **Element:** `<tc-budget-alerts>`
-- **Size:** 8.7 KB gzip · 27.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.8 KB gzip · 27.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -175,6 +175,7 @@ export class BudgetAlertsExample {
 | `end` | `end` | `number \| undefined` | `undefined` | The period's last moment, as epoch ms |
 | `currency` | `currency` | `string` | `"USD"` | The currency, an ISO 4217 code |
 | `locale` | `locale` | `string \| undefined` | `undefined` | The language for numbers and dates, e.g. "en-GB"; by default the browser's |
+| `timeZone` | `time-zone` | `string \| undefined` | `undefined` | The time zone the crossing dates are given in, e.g. "Europe/London"; by default the browser's |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -232,7 +233,7 @@ export class BudgetAlertsExample {
 | --- | --- | --- | --- | --- | --- |
 | `alerts` | `el.alerts = …;` | `<… alerts={…} />` | `<tc-budget-alerts :alerts="…">` | `<tc-budget-alerts [alerts]="…">` | `<tc-budget-alerts {alerts}>` |
 
-*Also attributes: `heading`, `description`, `budget`, `spent`, `forecast`, `now`, `end`, `currency` and 1 more – see the API table.*
+*Also attributes: `heading`, `description`, `budget`, `spent`, `forecast`, `now`, `end`, `currency` and 2 more – see the API table.*
 
 ### Events
 
@@ -437,7 +438,7 @@ are confirmed in a polite status message.
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 19.9 KB | 6.5 KB |
+| **This component alone** | 20.1 KB | 6.5 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -445,8 +446,8 @@ are confirmed in a polite status message.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **27.4 KB** | **8.7 KB** |
-| With Lit – the first component on a page | 49.2 KB | 16.0 KB |
+| **Added to a page that already has Lit** | **27.5 KB** | **8.8 KB** |
+| With Lit – the first component on a page | 49.4 KB | 16.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -454,13 +455,13 @@ are confirmed in a polite status message.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.5 ms** | the gallery demo's data, 87 DOM nodes – to layout, median of 7 |
-| Typical update | **1.1 ms** | one item of alerts replaced |
-| First on the page | 28 ms | default properties; includes adding its CSS to the document |
-| 100 items | 37 ms | alerts: first render, 1,736 nodes; update 14 ms |
-| 1,000 items | 224 ms | alerts: first render, 17,036 nodes; update 122 ms |
+| First render | **4.4 ms** | the gallery demo's data, 87 DOM nodes – to layout, median of 7 |
+| Typical update | **1.2 ms** | one item of alerts replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 26 ms | alerts: first render, 1,736 nodes; update 15 ms |
+| 1,000 items | 226 ms | alerts: first render, 17,036 nodes; update 123 ms |
 
-1,000 items of alerts: 224 ms. It renders every item, so a first render passes 50 ms (a long task) at about 220 items – page or filter longer lists.
+1,000 items of alerts: 226 ms. It renders every item, so a first render passes 50 ms (a long task) at about 220 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
