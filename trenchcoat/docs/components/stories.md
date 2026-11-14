@@ -9,7 +9,7 @@
 Avatars for people and accounts with a gradient ring for something new – open one for a "what changed" brief: a bento grid of metric, status, note, list, image and link tiles
 
 - **Element:** `<tc-stories>`
-- **Size:** 14.3 KB gzip · 49.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.3 KB gzip · 49.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

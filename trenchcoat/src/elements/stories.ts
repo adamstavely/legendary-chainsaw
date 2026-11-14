@@ -457,11 +457,11 @@ export class TcStories extends TcElement {
             data-kind=${e.kind === "account" ? "account" : "person"}
             data-state=${fresh ? "new" : "seen"}
             aria-haspopup="dialog"
-            aria-label=${`${e.name}, ${fresh ? `${fresh} ${this.newLabel}` : this.seenLabel}`}
             @click=${() => this.request(e.id)}
           >
             <span class="ui-sty__ring"><span class="ui-sty__face">${this.face(e)}</span></span>
-            <span class="ui-sty__label">${e.name}</span>
+            <!-- Named by its own text, so the visible name starts the accessible one (WCAG 2.5.3); the count is read, not shown -->
+            <span class="ui-sty__label">${e.name}</span><span class="tc-sr-only">, ${fresh ? `${fresh} ${this.newLabel}` : this.seenLabel}</span>
           </button>`;
         },
       )}
