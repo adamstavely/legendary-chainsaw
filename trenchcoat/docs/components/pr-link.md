@@ -9,7 +9,7 @@
 A pull request named in running text – its state's mark and owner/repo#number · title as a link, with a card of its state, author, lines changed and files on hover or focus; compact for just #number
 
 - **Element:** `<tc-pr-link>`
-- **Size:** 10.1 KB gzip · 30.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.3 KB gzip · 30.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

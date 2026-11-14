@@ -9,7 +9,7 @@
 A button that grows into its menu – the surface stretches out of the button's box, the items rise in turn, and it shrinks back into the button on closing, with the menu button pattern's keys
 
 - **Element:** `<tc-menu-morph>`
-- **Size:** 7.0 KB gzip · 19.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.2 KB gzip · 19.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -31,13 +31,15 @@ A button that grows into its menu. The menu's surface starts as the button's own
 the items rise one after another, and when the menu closes it shrinks back into the button – so it's clear where the
 menu came from and where it went. The button and the menu are yours: mark the button `data-menu-trigger` and the
 panel `data-menu`, and the element adds the menu button pattern's roles and keys. The panel opens below the button,
-above it when there's no room, and floats in the top layer where the browser has the Popover API. For people who ask
+above it when there's no room – or, with `side="right"` or `side="left"`, beside it, lined up with its top and on the
+other side when there's no room – and floats in the top layer where the browser has the Popover API. For people who ask
 for reduced motion, the menu opens and closes without the morph.
 
 ### When to use
 
 - An actions menu on a row, a card or a finding – a handful of commands behind one button.
 - A small "more" menu in a toolbar where a plain popover would appear from nowhere.
+- A tool's options in a vertical tool rail – `side="right"` opens it beside the rail instead of over it.
 
 ### When not to use
 
@@ -156,8 +158,8 @@ export class MenuMorphExample {
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `open` | `open` | `boolean` | `false` | Whether the menu is open. Changed by the user unless a tc-open-change listener calls preventDefault() |
-| `align` | `align` | `MenuMorphAlign` | `"start"` | Where the menu lines up with the trigger |
-| `side` | `side` | `MenuMorphSide` | `"bottom"` | The side the menu prefers – it flips when there's no room |
+| `align` | `align` | `MenuMorphAlign` | `"start"` | Where the menu lines up with the trigger – along its width above or below, along its height beside it ("start" = its top) |
+| `side` | `side` | `MenuMorphSide` | `"bottom"` | The side of the trigger the menu prefers: top, bottom, left or right – it flips to the opposite side when there's no room |
 | `gap` | `gap` | `number` | `6` | Space between the trigger and the menu, px |
 | `duration` | `duration` | `number \| undefined` | `undefined` | Length of the morph in ms; default the --tc-duration-base token |
 

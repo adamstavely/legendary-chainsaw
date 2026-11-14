@@ -9,7 +9,7 @@
 The profile card behind any name – picture, pronouns, title and team, status, local time and time difference, manager, Email, Message, View profile and links – on hover, focus or tap
 
 - **Element:** `<tc-person-hovercard>`
-- **Size:** 12.0 KB gzip · 36.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.1 KB gzip · 36.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

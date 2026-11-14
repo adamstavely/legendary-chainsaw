@@ -9,7 +9,7 @@
 Picks one of a team's flags for a file – a small button with the flag's colour and name, opening a list of flags with what each one means.
 
 - **Element:** `<tc-team-flag-picker>`
-- **Size:** 9.0 KB gzip · 26.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.2 KB gzip · 26.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

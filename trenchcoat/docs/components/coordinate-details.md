@@ -9,7 +9,7 @@
 Coordinates in text, checked and marked – hover, focus or right-click one for the place, decimal and DMS with Copy, mapping links and a map that loads only on request
 
 - **Element:** `<tc-coordinate-details>`
-- **Size:** 19.0 KB gzip · 62.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.2 KB gzip · 63.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

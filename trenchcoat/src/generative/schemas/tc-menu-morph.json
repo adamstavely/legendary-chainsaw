@@ -16,15 +16,17 @@
         "end",
         "start"
       ],
-      "description": "Where the menu lines up with the trigger"
+      "description": "Where the menu lines up with the trigger – along its width above or below, along its height beside it (\"start\" = its top)"
     },
     "side": {
       "type": "string",
       "enum": [
         "bottom",
+        "left",
+        "right",
         "top"
       ],
-      "description": "The side the menu prefers – it flips when there's no room"
+      "description": "The side of the trigger the menu prefers: top, bottom, left or right – it flips to the opposite side when there's no room"
     },
     "gap": {
       "type": "number",

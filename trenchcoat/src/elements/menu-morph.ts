@@ -22,7 +22,8 @@ import { placePopover, type PopoverAlign, type PopoverSide } from "./internal/po
  * ends and a letter jumps to the next item starting with it; choosing an item closes the menu (unless the item has
  * data-keep-open) and Escape, Tab or a click outside close it too. Focus goes back to the trigger when it was in the
  * menu. The panel sits in the top layer where the Popover API exists, below the trigger (above when there's no room),
- * and follows it on scroll. With reduced motion it opens and closes without the morph.
+ * or beside it with side="left" / "right" (the other side when there's no room; `align` then runs down the trigger,
+ * "start" lining up with its top – for a vertical tool rail), and follows it on scroll. With reduced motion it opens and closes without the morph.
  */
 
 export type MenuMorphOpenChange = { open: boolean };
@@ -47,9 +48,9 @@ export class TcMenuMorph extends TcElement {
 
   /** Whether the menu is open. Changed by the user unless a tc-open-change listener calls preventDefault() */
   @property({ type: Boolean, reflect: true }) accessor open = false;
-  /** Where the menu lines up with the trigger */
+  /** Where the menu lines up with the trigger – along its width above or below, along its height beside it ("start" = its top) */
   @property() accessor align: MenuMorphAlign = "start";
-  /** The side the menu prefers – it flips when there's no room */
+  /** The side of the trigger the menu prefers: top, bottom, left or right – it flips to the opposite side when there's no room */
   @property() accessor side: MenuMorphSide = "bottom";
   /** Space between the trigger and the menu, px */
   @property({ type: Number }) accessor gap = 6;
@@ -221,16 +222,18 @@ export class TcMenuMorph extends TcElement {
     const p = panel.getBoundingClientRect();
     const t = trigger.getBoundingClientRect();
     if (!p.width || !p.height) return null;
-    const above = panel.dataset.side === "top";
-    // The trigger-sized window the surface starts from: at the panel's edge nearest the trigger, under its x
+    const side = panel.dataset.side;
+    const above = side === "top";
+    const beside = side === "left" || side === "right";
+    // The trigger-sized window the surface starts from: at the panel's edge nearest the trigger, in line with it
     const w = Math.min(t.width, p.width);
     const h = Math.min(t.height, p.height);
-    const left = Math.min(Math.max(t.left - p.left, 0), p.width - w);
+    const left = beside ? (side === "left" ? p.width - w : 0) : Math.min(Math.max(t.left - p.left, 0), p.width - w);
     const right = p.width - w - left;
-    const top = above ? p.height - h : 0;
+    const top = beside ? Math.min(Math.max(t.top - p.top, 0), p.height - h) : above ? p.height - h : 0;
     const bottom = p.height - h - top;
-    const dx = t.left - (p.left + left);
-    const dy = above ? t.bottom - p.bottom : t.top - p.top;
+    const dx = beside ? (side === "left" ? t.right - p.right : t.left - p.left) : t.left - (p.left + left);
+    const dy = beside ? t.top - (p.top + top) : above ? t.bottom - p.bottom : t.top - p.top;
     const style = getComputedStyle(this);
     const tr = getComputedStyle(trigger).borderTopLeftRadius || "0px";
     const pr = getComputedStyle(panel).borderTopLeftRadius || "0px";
@@ -265,7 +268,7 @@ export class TcMenuMorph extends TcElement {
     return surface;
   }
 
-  /** Below the trigger, or above when there's no room; lined up by `align` */
+  /** On its `side` of the trigger, or the opposite one when there's no room; lined up by `align` */
   private place = () => {
     this.frame = 0;
     const panel = this.panel();

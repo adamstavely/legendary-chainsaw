@@ -9,7 +9,7 @@
 Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 
 - **Element:** `<tc-chat-composer>`
-- **Size:** 86.8 KB gzip · 372.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 87.0 KB gzip · 373.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

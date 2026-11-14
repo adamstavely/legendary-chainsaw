@@ -9,7 +9,7 @@
 Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 
 - **Element:** `<tc-background-tasks>`
-- **Size:** 16.4 KB gzip · 53.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.6 KB gzip · 53.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

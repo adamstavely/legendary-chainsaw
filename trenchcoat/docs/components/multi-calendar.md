@@ -9,7 +9,7 @@
 A calendar of calendars: many people's Google, Outlook, Exchange and iCal calendars in one Day, Week, Month, Agenda or People view, with show/hide per calendar, conflicts across a person's calendars, and create, edit, drag-to-move and delete on writable ones
 
 - **Element:** `<tc-multi-calendar>`
-- **Size:** 27.2 KB gzip · 101.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.4 KB gzip · 101.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

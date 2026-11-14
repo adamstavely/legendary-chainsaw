@@ -9,7 +9,7 @@
 Search and run anything from one field – tool actions with logos and ⌘1–⌘5, everyday commands with icons
 
 - **Element:** `<tc-command-menu>`
-- **Size:** 19.5 KB gzip · 61.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.7 KB gzip · 61.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

@@ -9,7 +9,7 @@
 The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
 
 - **Element:** `<tc-session-context-bar>`
-- **Size:** 11.7 KB gzip · 36.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.9 KB gzip · 37.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

@@ -9,7 +9,7 @@
 The formatting bar that floats over selected text: quick actions, toggles like bold and italic that show what's on, menus for text style, colour and list, and a link – it fires commands for the page's editor to apply.
 
 - **Element:** `<tc-selection-toolbar>`
-- **Size:** 14.0 KB gzip · 44.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.3 KB gzip · 45.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

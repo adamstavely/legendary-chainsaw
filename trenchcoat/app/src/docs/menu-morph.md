@@ -10,13 +10,15 @@ A button that grows into its menu. The menu's surface starts as the button's own
 the items rise one after another, and when the menu closes it shrinks back into the button – so it's clear where the
 menu came from and where it went. The button and the menu are yours: mark the button `data-menu-trigger` and the
 panel `data-menu`, and the element adds the menu button pattern's roles and keys. The panel opens below the button,
-above it when there's no room, and floats in the top layer where the browser has the Popover API. For people who ask
+above it when there's no room – or, with `side="right"` or `side="left"`, beside it, lined up with its top and on the
+other side when there's no room – and floats in the top layer where the browser has the Popover API. For people who ask
 for reduced motion, the menu opens and closes without the morph.
 
 ## When to use
 
 - An actions menu on a row, a card or a finding – a handful of commands behind one button.
 - A small "more" menu in a toolbar where a plain popover would appear from nowhere.
+- A tool's options in a vertical tool rail – `side="right"` opens it beside the rail instead of over it.
 
 ## When not to use
 
@@ -73,6 +75,20 @@ you give it an `aria-label`, is labelled by the button. Items are `role="menuite
 
   document.querySelector("tc-menu-morph").addEventListener("tc-open-change", (e) => console.log("open:", e.detail.open));
 </script>
+```
+
+A tool rail down the left of a canvas opens its menus to the right, lined up with the button's top (`align` runs
+down the button when the menu is beside it):
+
+```html
+<tc-menu-morph side="right">
+  <button type="button" data-menu-trigger aria-label="Shapes">…</button>
+  <div data-menu aria-label="Shapes">
+    <button type="button" role="menuitem">Rectangle</button>
+    <button type="button" role="menuitem">Ellipse</button>
+    <button type="button" role="menuitem">Arrow</button>
+  </div>
+</tc-menu-morph>
 ```
 
 ```tsx

@@ -9,7 +9,7 @@
 Sets a file's classification – a mark and word on a small button, a list of labels with what each means, and a reason asked before lowering it
 
 - **Element:** `<tc-sensitivity-label-picker>`
-- **Size:** 9.7 KB gzip · 28.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.8 KB gzip · 28.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

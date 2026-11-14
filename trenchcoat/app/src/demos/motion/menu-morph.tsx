@@ -3,6 +3,7 @@ import type * as UI from "../../../../src/elements/react";
 import { buttonSm, caption, surface } from "../../demo-kit";
 
 const ACTIONS = ["Assign reviewer", "Request evidence", "Mark as duplicate", "Export finding"];
+const SHAPES = ["Rectangle", "Ellipse", "Arrow"];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { MenuMorph } = ui;
@@ -26,6 +27,21 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             ))}
           </div>
         </MenuMorph>
+      </div>
+      <div style={{ ...surface, display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, fontSize: 13 }}>
+        <MenuMorph side="right">
+          <button type="button" data-menu-trigger style={buttonSm}>
+            Shapes
+          </button>
+          <div data-menu aria-label="Shapes">
+            {SHAPES.map((a) => (
+              <button key={a} type="button" role="menuitem" onClick={() => setLast(a)}>
+                {a}
+              </button>
+            ))}
+          </div>
+        </MenuMorph>
+        <div style={caption}>side="right" – opens beside the button, lined up with its top</div>
       </div>
       <p style={{ ...caption, margin: 0 }} aria-live="polite">
         {last ? `Chose “${last}”.` : "Open Actions with a click, or focus it and press ↓."}

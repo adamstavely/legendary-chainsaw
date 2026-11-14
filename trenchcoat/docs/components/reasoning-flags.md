@@ -9,7 +9,7 @@
 Inline markers for weak reasoning in an answer – circular, hedged then certain, self-contradicting or overconfident – each with an explanation
 
 - **Element:** `<tc-reasoning-flags>`
-- **Size:** 10.9 KB gzip · 33.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.1 KB gzip · 33.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

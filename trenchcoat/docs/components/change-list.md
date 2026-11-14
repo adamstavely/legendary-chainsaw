@@ -9,7 +9,7 @@
 Proposed code changes as compact rows – state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.
 
 - **Element:** `<tc-change-list>`
-- **Size:** 12.5 KB gzip · 42.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.6 KB gzip · 42.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

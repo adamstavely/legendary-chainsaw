@@ -9,7 +9,7 @@
 A live status of agents' background tasks for a header or sidebar – one quiet pill, "3 running · 2 need you", opening a panel of tasks under Needs you, Running and Recently done, each with a filling ring, its agent, elapsed time and Review, Stop or Open
 
 - **Element:** `<tc-running-now>`
-- **Size:** 13.0 KB gzip · 41.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.2 KB gzip · 41.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

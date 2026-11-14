@@ -9,7 +9,7 @@
 DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, found, checked and marked – hover, focus or right-click one for its normalised value with Copy, its range, algorithm, year or carrier, doi.org and NVD links, and what your sources know (severity, owner, status)
 
 - **Element:** `<tc-identifier-details>`
-- **Size:** 15.9 KB gzip · 46.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.1 KB gzip · 47.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

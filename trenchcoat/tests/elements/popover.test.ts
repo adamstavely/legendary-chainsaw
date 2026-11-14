@@ -53,6 +53,23 @@ describe("placePopover", () => {
     expect(placePopover(rect(2, 300), SIZE, VP, { align: "start", margin: 16 }).left).toBe(16);
   });
 
+  test("beside the anchor: left or right, aligned along its height, flipped when there's no room", () => {
+    const right = placePopover(rect(300, 300), SIZE, VP, { side: "right", align: "start" });
+    expect(right).toMatchObject({ side: "right", flipped: false, left: 408, top: 300, shift: 0, arrowY: 10 });
+    expect(placePopover(rect(300, 300), SIZE, VP, { side: "left" })).toMatchObject({ side: "left", left: 92, top: 290 });
+    expect(placePopover(rect(300, 300), SIZE, VP, { side: "left", align: "end" }).top).toBe(280);
+    // No room to the right of an anchor at the right edge: it goes left; none to the left of one at the left edge: right
+    expect(placePopover(rect(680, 300), SIZE, VP, { side: "right" })).toMatchObject({ side: "left", flipped: true, left: 472 });
+    expect(placePopover(rect(20, 300), SIZE, VP, { side: "left" })).toMatchObject({ side: "right", flipped: true, left: 128 });
+  });
+
+  test("beside the anchor, it shifts up or down to stay inside; the arrow still points at the anchor", () => {
+    const low = placePopover(rect(300, 580), { width: 200, height: 100 }, VP, { side: "right", align: "start" });
+    expect(low.top).toBe(600 - 8 - 100);
+    expect(low.shift).toBe(492 - 580);
+    expect(low.arrowY).toBe(98);
+  });
+
   test("an anchor scrolled out of view is reported", () => {
     expect(placePopover(rect(300, -100), SIZE, VP).offscreen).toBe(true);
     expect(placePopover(rect(300, 700), SIZE, VP).offscreen).toBe(true);
