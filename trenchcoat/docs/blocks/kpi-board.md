@@ -9,7 +9,7 @@
 The top of a dashboard – three trend cards, an overview chart that compares this period with the last, and a focus card; hover shows any day's value and every number rolls when the range changes (uses `button`)
 
 - **Element:** `<tc-kpi-board>`
-- **Size:** 15.6 KB gzip · 54.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.7 KB gzip · 54.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

@@ -9,7 +9,7 @@
 Pricing section with a monthly / yearly switch, three plan cards and collapsible details (uses `segmented-control` and `button`)
 
 - **Element:** `<tc-pricing-plans>`
-- **Size:** 20.3 KB gzip · 75.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 20.4 KB gzip · 76.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

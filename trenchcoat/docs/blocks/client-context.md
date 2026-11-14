@@ -9,7 +9,7 @@
 A client workspace with live numbers and a shared context timeline – switch clients, search, filter and add notes or files (uses `button`, `segmented-control`)
 
 - **Element:** `<tc-client-context>`
-- **Size:** 28.4 KB gzip · 113.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 28.5 KB gzip · 113.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

@@ -9,7 +9,7 @@
 What must pass before something is released – a summary card that opens a dialog with the checks as a progress tracker, sign-offs to give, and each blocker linked (uses `@adamstavely/trenchcoat/react`: `dialog`, `progress-tracker`, `button`)
 
 - **Element:** `<tc-publish-readiness>`
-- **Size:** 21.0 KB gzip · 81.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.1 KB gzip · 81.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

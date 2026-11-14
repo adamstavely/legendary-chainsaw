@@ -9,7 +9,7 @@
 Kanban board with drag and drop, quick add, a detail panel, search, label filters and a compact view (uses `button`)
 
 - **Element:** `<tc-task-board>`
-- **Size:** 15.9 KB gzip · 57.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.9 KB gzip · 58.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

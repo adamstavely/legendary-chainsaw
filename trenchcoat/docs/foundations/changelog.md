@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.28.3 – Icon-only buttons are real targets
+
+- **Button:** an icon-only button's native `<button>` fills the chip, so voice control, screen magnifiers and pointer
+  tools find a target the size of the button. It held only visually hidden text before, so it was 0×0, and clicks
+  reached it only through a stretched `::after`.
+- **Canvas app:** a card's Move and More like this buttons show only at 100% zoom or closer, where they're full size
+  (WCAG 2.5.8). Further out they were specks; Alt+arrows still move a card, and the Layout control has Similar.
+
 ## 0.28.2 – Notifications bell
 
 - **Notifications:** the bell is named by its own text ("Notifications, 7 unread", as screen-reader text) instead of an

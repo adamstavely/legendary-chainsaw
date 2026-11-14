@@ -9,7 +9,7 @@
 Slim gradient panels with one open product screen in the middle – pick a panel and it glides open (uses `button`)
 
 - **Element:** `<tc-agent-gallery>`
-- **Size:** 15.1 KB gzip · 51.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.2 KB gzip · 51.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

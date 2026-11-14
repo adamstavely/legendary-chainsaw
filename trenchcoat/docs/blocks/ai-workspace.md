@@ -9,7 +9,7 @@
 Complete assistant app – sidebar, welcome, streaming chat and projects, built on the Chat Composer (uses `chat-composer`, `button`)
 
 - **Element:** `<tc-ai-workspace>`
-- **Size:** 101.9 KB gzip · 434.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 102.0 KB gzip · 434.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

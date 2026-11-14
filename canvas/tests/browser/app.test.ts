@@ -37,6 +37,11 @@ const segment = (label: string, value: string) =>
 /** A native button by its accessible name (tc-buttons render one inside) */
 const button = (name: string, within: ParentNode = host) =>
   [...within.querySelectorAll<HTMLButtonElement>("button")].find((b) => (b.getAttribute("aria-label") ?? b.textContent)?.trim() === name)!;
+/** Zoom to 100%, where a card's header buttons are full size (further out they're left out) */
+const fullSize = async () => {
+  [...host.querySelectorAll<HTMLButtonElement>("button")].find((b) => b.getAttribute("aria-label")?.endsWith("reset to 100%"))!.click();
+  await settle();
+};
 const currentTitle = () => host.querySelector<HTMLButtonElement>('.card__title[tabindex="0"]')!;
 
 beforeEach(async () => {
@@ -115,6 +120,8 @@ describe("the canvas", () => {
   it("moves a card in the Free layout with buttons and Alt+arrows", async () => {
     segment("Layout", "Free").click();
     await settle();
+    expect(button("Move right", currentTitle().closest("[data-piece]")!), "zoomed out, the card's buttons are left out").toBeUndefined();
+    await fullSize();
     const card = currentTitle().closest<HTMLElement>("[data-piece]")!;
     const x = () => new DOMMatrix(getComputedStyle(card).transform).m41;
     const start = x();
@@ -156,6 +163,7 @@ describe("the Similar layout", () => {
   });
 
   it("shows the current piece among its look-alikes with More like this", async () => {
+    await fullSize();
     const title = currentTitle();
     const id = title.closest<HTMLElement>("[data-piece]")!.dataset.piece!;
     title.focus();
