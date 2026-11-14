@@ -63,6 +63,8 @@ const make = (opts: { look?: "standard" | "clean"; seen?: StorySeen; addable?: b
 const avatars = (el: Element) => [...el.querySelectorAll<HTMLButtonElement>(".ui-sty__row > .ui-sty__person")];
 const avatarOf = (el: Element, id: string) => el.querySelector<HTMLButtonElement>(`.ui-sty__person[data-entry="${id}"]`)!;
 const dialog = (el: Element) => el.querySelector<HTMLDialogElement>(".ui-sty__viewer")!;
+/** A tile's accessible name: its text, less the aria-hidden initials. */
+const tileName = (b: Element) => [...b.querySelectorAll(".ui-sty__label, .tc-sr-only")].map((n) => n.textContent).join("");
 const name = (el: Element) => document.getElementById(dialog(el).getAttribute("aria-labelledby")!)!.textContent;
 const sub = (el: Element) => dialog(el).querySelector(".tc-head__sub")!.textContent;
 const tiles = (el: Element) => [...el.querySelectorAll<HTMLElement>(".ui-sty__tile")];
@@ -91,7 +93,7 @@ describe("tc-stories", () => {
       expect(row.getAttribute("role")).toBe("toolbar");
       expect(row.getAttribute("aria-label")).toBe("Updates");
       // Entries with no updates are left out
-      expect(avatars(el).map((b) => b.getAttribute("aria-label"))).toEqual(["Maya Chen, 4 new", "Northwind, 3 new", "Leo Park, seen"]);
+      expect(avatars(el).map(tileName)).toEqual(["Maya Chen, 4 new", "Northwind, 3 new", "Leo Park, seen"]);
       expect(avatars(el).map((b) => b.dataset.state)).toEqual(["new", "new", "seen"]);
       expect(avatars(el).map((b) => b.dataset.kind)).toEqual(["person", "account", "person"]);
       expect(avatarOf(el, "maya").getAttribute("aria-haspopup")).toBe("dialog");
@@ -122,7 +124,7 @@ describe("tc-stories", () => {
     expect(el.entries).toBe(el.people);
     expect(avatars(el)[0].classList.contains("ui-sty__add")).toBe(true);
     expect(avatars(el)[0].textContent!.trim()).toBe("Add update");
-    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, seen");
+    expect(tileName(avatarOf(el, "maya"))).toBe("Maya Chen, seen");
     let added = 0;
     el.addEventListener("tc-add", () => added++);
     avatars(el)[0].click();
@@ -177,7 +179,7 @@ describe("tc-stories", () => {
     expect(seens[0].entry.id).toBe("maya");
     expect(seens[0].updates.map((u) => u.id)).toEqual(["m-conv", "m-price", "m-note", "m-report"]);
     expect([...(el.seen as Set<string>)].sort()).toEqual(["l-launch", "l-shot", "m-conv", "m-note", "m-price", "m-report", "m-setup"]);
-    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, seen");
+    expect(tileName(avatarOf(el, "maya"))).toBe("Maya Chen, seen");
     // The summary, marked as generated
     expect(d.querySelector(".ui-sty__summary-text")!.textContent).toBe("Conversion is up and pricing is in review.");
     expect(d.querySelector(".ui-sty__generated")!.textContent!.trim()).toBe("AI summary");
@@ -370,7 +372,7 @@ describe("tc-stories", () => {
     el.open = null;
     await settle();
     expect(dialog(el).open).toBe(false);
-    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, 4 new");
+    expect(tileName(avatarOf(el, "maya"))).toBe("Maya Chen, 4 new");
   });
 
   test("updates that arrive while the brief is open are marked New and seen in a second batch", async () => {
@@ -495,7 +497,7 @@ describe("tc-stories", () => {
     await act(async () => bump());
     await settle();
     expect(dialog(el).open).toBe(false);
-    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, seen");
+    expect(tileName(avatarOf(el, "maya"))).toBe("Maya Chen, seen");
     expect(log).toEqual([["add"], ["open", "maya"], ["seen", "maya", 4], ["action", "m-report"], ["open", "northwind"], ["seen", "northwind", 3], ["open", null]]);
     await act(async () => root.unmount());
   });

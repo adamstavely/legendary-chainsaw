@@ -1,9 +1,12 @@
 # Changelog
 
-## 0.28.1 – Angular 22
+## 0.28.1 – Angular 22, Stories names
 
 - **Angular bindings:** the `@angular/core` and `@angular/forms` peer range now allows Angular 22. The wrappers are
   compiled in partial mode, so Angular 22 apps link them unchanged.
+- **Stories:** a tile is named by its own text – the name, then the new or seen count in screen-reader text – instead of
+  an `aria-label`, so its visible name starts its accessible one (WCAG 2.5.3). axe flagged the old name as not matching
+  the tile's visible initials and name.
 
 ## 0.28.0 – Admin: spend, governance and data
 
