@@ -90,6 +90,15 @@ describe("tc-embed-widget", () => {
     expect(changes).toEqual([true, false]);
   });
 
+  test("the focused field shows one ring: the message box's, not an outline of its own as well", async () => {
+    const el = await make({ open: true });
+    field(el).focus();
+    await settle();
+    expect(field(el).matches(":focus-visible")).toBe(true);
+    expect(getComputedStyle(field(el)).outlineStyle).toBe("none");
+    expect(getComputedStyle(el.querySelector(".ui-emw__compose")!).boxShadow).not.toBe("none");
+  });
+
   test("Close in the header closes; tc-open-change is cancelable", async () => {
     const el = await make({ open: true });
     el.querySelector<HTMLButtonElement>(".ui-emw__close")!.click();
