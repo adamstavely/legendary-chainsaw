@@ -9,7 +9,7 @@
 The chat a visitor opens on a website – a corner launcher with an unread count, and a panel with the agent's name and reply time, a greeting, starter questions, the conversation with a person taking over, a message field and a privacy line, styled by the site's accent, radius and side
 
 - **Element:** `<tc-embed-widget>`
-- **Size:** 9.0 KB gzip · 28.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.0 KB gzip · 28.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
