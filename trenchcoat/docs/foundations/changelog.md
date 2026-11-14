@@ -2,6 +2,12 @@
 
 # Changelog
 
+## 0.28.5 – Embed Widget: no outline from the host page's focus style
+
+- **Embed Widget:** the message field keeps a `:focus-visible` rule of its own, so a host page's global
+  `textarea:focus-visible` outline no longer draws a second ring inside the message box. 0.28.4 dropped that rule
+  along with the widget's own outline.
+
 ## 0.28.4 – Embed Widget: one focus ring on the message field
 
 - **Embed Widget:** the focused message field shows only the message box's ring. The widget's shared focus outline
