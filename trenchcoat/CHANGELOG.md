@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.28.1 – Angular 22, Stories names, icon-only buttons
+## 0.28.1 – Angular 22 and accessibility fixes
 
 - **Angular bindings:** the `@angular/core` and `@angular/forms` peer range now allows Angular 22. The wrappers are
   compiled in partial mode, so Angular 22 apps link them unchanged.
@@ -9,6 +9,8 @@
   the tile's visible initials and name.
 - **Button:** an icon-only button's native `<button>` now fills the chip. It took clicks through its `::after` before,
   but its own box was 0×0, which voice control, magnifiers and test tools read as nothing to press.
+- **Approval Card:** the ⌘↵ hint on Approve, in dark mode, goes from 4.0:1 to about 5.7:1 against its key cap (WCAG
+  1.4.3).
 
 ## 0.28.0 – Admin: spend, governance and data
 

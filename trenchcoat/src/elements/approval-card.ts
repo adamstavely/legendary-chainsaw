@@ -1057,7 +1057,7 @@ export class TcApprovalCard extends TcElement {
    with actions="tray"); Clean's default actions="card" drops the tray. */
 [data-ui="ap"] {
   /* The shortcut chip's text inside the ink primary button */
-  --tc-approval-card-primary-kbd-fg: light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.6));
+  --tc-approval-card-primary-kbd-fg: light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.72));
   --tc-approval-card-spin: 800ms;
   /* The tallest a diff or the arguments get before they scroll */
   --tc-approval-card-code-max: 220px;
