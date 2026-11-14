@@ -9,7 +9,7 @@
 Style a site's chat widget beside a live preview – title, greeting, up to four starter prompts to add, move and remove, an accent with its contrast in words, the corner, the radius, the launcher's words and the domains it may load on, with the install snippet to copy
 
 - **Element:** `<tc-embed-configurator>`
-- **Size:** 51.0 KB gzip · 200.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 51.0 KB gzip · 199.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

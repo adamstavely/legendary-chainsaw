@@ -383,7 +383,7 @@ export class TcEmbedWidget extends TcElement {
 [data-ui="emw"][floating] { position: fixed; inset-block-end: var(--tc-space-5); inset-inline-end: var(--tc-space-5); z-index: var(--tc-z-popover); }
 [data-ui="emw"][floating][data-side="left"] { inset-inline-end: auto; inset-inline-start: var(--tc-space-5); }
 :where([data-ui="emw"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-[data-ui="emw"] :is(button, a, textarea, .ui-emw__log):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+[data-ui="emw"] :is(button, a, .ui-emw__log):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="emw"] p, [data-ui="emw"] h3, [data-ui="emw"] ol { margin: 0; padding: 0; }
 .ui-emw__icon { display: block; flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *) .ui-emw__icon { stroke-width: 1.75; }
@@ -440,7 +440,6 @@ export class TcEmbedWidget extends TcElement {
 .ui-emw__compose { display: flex; align-items: flex-end; gap: var(--tc-space-2); margin: 0 var(--tc-space-3); padding: var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-3); border-radius: max(0px, calc(var(--tc-emw-radius) - var(--tc-space-1))); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); }
 .ui-emw__compose:focus-within { box-shadow: var(--tc-field-shadow-focus); }
 .ui-emw__field { flex: 1; min-width: 0; max-height: calc(5 * 1lh); margin: 0; padding: var(--tc-space-1) 0; border: 0; background: none; font: inherit; color: var(--tc-text-primary); resize: none; field-sizing: content; outline: none; }
-.ui-emw__field:focus-visible { outline: none; }
 .ui-emw__field::placeholder { color: var(--tc-text-placeholder); }
 .ui-emw__send { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-radius-full); background: var(--tc-emw-accent); color: var(--tc-emw-on-accent); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-emw__send .ui-emw__icon { width: 16px; height: 16px; }
