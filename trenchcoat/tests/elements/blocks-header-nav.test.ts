@@ -62,11 +62,14 @@ afterEach(async () => {
   cleanup();
 });
 
+/** A button's name: its aria-label, or (the bell) its own screen-reader text */
+const accName = (b: Element) => b.getAttribute("aria-label") ?? b.querySelector(".tc-sr-only")?.textContent ?? null;
+
 describe("blocks/header-nav", () => {
   test("the three triggers render in order, as one set: the same size and shape, named popup buttons", async () => {
     const host = await mount();
     const buttons = [...host.querySelectorAll<HTMLButtonElement>(".ui-ntc__trigger, .ui-apk__trigger, .ui-hn__me")];
-    expect(buttons.map((b) => b.getAttribute("aria-label"))).toEqual(["Notifications, 2 unread", "Apps", "Account: Ada Lovelace"]);
+    expect(buttons.map(accName)).toEqual(["Notifications, 2 unread", "Apps", "Account: Ada Lovelace"]);
     for (const b of buttons) {
       expect(b.getAttribute("aria-haspopup")).toBe("dialog");
       expect(b.getAttribute("aria-expanded")).toBe("false");
@@ -141,7 +144,7 @@ describe("blocks/header-nav", () => {
     const order: string[] = [];
     for (let i = 0; i < 3; i++) {
       await userEvent.tab();
-      order.push(document.activeElement?.getAttribute("aria-label") ?? "");
+      order.push(document.activeElement ? (accName(document.activeElement) ?? "") : "");
     }
     expect(order).toEqual(["Notifications, 2 unread", "Apps", "Account: Ada Lovelace"]);
   });
