@@ -9,7 +9,7 @@ import axe from "axe-core";
 import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import "../../src/elements/embed-widget";
 import { embedAccentText, embedContrast, parseEmbedHex, type EmbedMessage, type EmbedSend, type EmbedStarter, type TcEmbedWidget } from "../../src/elements/embed-widget";
 import { EmbedWidget } from "../../src/elements/react/embed-widget";
@@ -91,6 +91,11 @@ describe("tc-embed-widget", () => {
   });
 
   test("the focused field shows one ring: the message box's, not an outline of its own as well", async () => {
+    // A host page's global focus style, as many apps have, mustn't add a second outline either
+    const host = document.createElement("style");
+    host.textContent = ":focus-visible, textarea:focus-visible { outline: 3px solid rgb(255, 0, 0); }";
+    document.head.append(host);
+    onTestFinished(() => host.remove());
     const el = await make({ open: true });
     field(el).focus();
     await settle();

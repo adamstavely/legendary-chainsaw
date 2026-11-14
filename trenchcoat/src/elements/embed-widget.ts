@@ -440,6 +440,8 @@ export class TcEmbedWidget extends TcElement {
 .ui-emw__compose { display: flex; align-items: flex-end; gap: var(--tc-space-2); margin: 0 var(--tc-space-3); padding: var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-3); border-radius: max(0px, calc(var(--tc-emw-radius) - var(--tc-space-1))); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); }
 .ui-emw__compose:focus-within { box-shadow: var(--tc-field-shadow-focus); }
 .ui-emw__field { flex: 1; min-width: 0; max-height: calc(5 * 1lh); margin: 0; padding: var(--tc-space-1) 0; border: 0; background: none; font: inherit; color: var(--tc-text-primary); resize: none; field-sizing: content; outline: none; }
+/* Its focus shows as the message box's ring. :focus-visible here also outranks a host page's textarea:focus-visible */
+.ui-emw__field:focus-visible { outline: none; }
 .ui-emw__field::placeholder { color: var(--tc-text-placeholder); }
 .ui-emw__send { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-radius-full); background: var(--tc-emw-accent); color: var(--tc-emw-on-accent); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-emw__send .ui-emw__icon { width: 16px; height: 16px; }
