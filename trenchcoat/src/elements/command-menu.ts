@@ -247,6 +247,8 @@ export class TcCommandMenu extends TcElement {
     align: "start",
     gap: 4,
     returnFocus: () => this.input,
+    // Tab out of the field and the results go too, so they never sit over what has focus next (WCAG 2.4.11)
+    closeOnFocusOut: true,
     onClose: () => this.requestUpdate(),
   });
 

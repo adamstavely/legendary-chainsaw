@@ -326,6 +326,22 @@ describe("tc-command-menu as a header search", () => {
     expect(input.value).toBe("neur");
   });
 
+  test("popover: focus leaving the field closes the results, so they never cover what has focus next", async () => {
+    const el = await make();
+    const after = Object.assign(document.createElement("button"), { type: "button", textContent: "After" });
+    el.parentElement!.after(after);
+    const input = combobox(el);
+    input.focus();
+    await settle();
+    await expect.poll(() => pop(el)?.hasAttribute("data-placed")).toBe(true);
+    after.focus();
+    await settle();
+    expect(pop(el)).toBeNull();
+    expect(input.getAttribute("aria-expanded")).toBe("false");
+    expect(document.activeElement).toBe(after);
+    after.remove();
+  });
+
   test("popover: ↓ moves, Enter runs the active row and closes; a click runs one too", async () => {
     const el = await make();
     const ran: string[] = [];

@@ -9,6 +9,8 @@
 - **Stories:** a tile is named by its own text – the name, then the new or seen count in screen-reader text – instead of
   an `aria-label`, so its visible name starts its accessible one (WCAG 2.5.3). axe flagged the old name as not matching
   the tile's visible initials and name.
+- **Command Menu:** in popover layout, the results close when focus leaves the field (Tab, Shift+Tab), so they no
+  longer stay open over whatever has focus next (WCAG 2.4.11).
 - **Approval Card:** the ⌘↵ hint on Approve, in dark mode, goes from 4.0:1 to about 5.7:1 against its key cap (WCAG
   1.4.3).
 
