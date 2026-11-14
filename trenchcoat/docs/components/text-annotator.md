@@ -9,7 +9,7 @@
 Highlight text in a document in a colour and comment on it – marks in the text, comments in the margin, edit, resolve and filter
 
 - **Element:** `<tc-text-annotator>`
-- **Size:** 21.0 KB gzip · 69.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.2 KB gzip · 70.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

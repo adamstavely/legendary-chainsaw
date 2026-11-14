@@ -9,7 +9,7 @@
 The right end of an app header – notifications bell, app picker and the person's avatar, which opens their account card; one popover at a time, the three as one set of round buttons, and it fits a 320 px header (uses `@adamstavely/trenchcoat/react`: `notifications`, `app-picker`, `profile-menu`)
 
 - **Element:** `<tc-header-nav>`
-- **Size:** 15.1 KB gzip · 51.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.3 KB gzip · 52.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

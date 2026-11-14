@@ -163,6 +163,31 @@ describe("tc-menu-morph", () => {
     expect(panel(el).getBoundingClientRect().bottom).toBeLessThanOrEqual(trigger(el).getBoundingClientRect().top);
   });
 
+  test('side="right" opens beside the trigger, lined up with its top; with no room it flips left', async () => {
+    const el = await fixture<TcMenuMorph>(html`<tc-menu-morph side="right" style="position: fixed; top: 40px; left: 8px">
+      <button type="button" data-menu-trigger>Tools</button>
+      <div data-menu aria-label="Tools"><button role="menuitem">One</button><button role="menuitem">Two</button></div>
+    </tc-menu-morph>`);
+    el.open = true;
+    await settle();
+    await finish(panel(el));
+    const t = trigger(el).getBoundingClientRect();
+    const p = panel(el).getBoundingClientRect();
+    expect(panel(el).dataset.side).toBe("right");
+    expect(p.left).toBeCloseTo(t.right + el.gap, 0);
+    expect(p.top).toBeCloseTo(t.top, 0);
+
+    el.open = false;
+    await expect.poll(() => panel(el).hidden, { timeout: 3000 }).toBe(true);
+    el.style.left = "auto";
+    el.style.right = "4px";
+    el.open = true;
+    await settle();
+    await finish(panel(el));
+    expect(panel(el).dataset.side).toBe("left");
+    expect(panel(el).getBoundingClientRect().right).toBeLessThanOrEqual(trigger(el).getBoundingClientRect().left);
+  });
+
   test("closing shrinks it back before it hides; nothing is left on the panel afterwards", async () => {
     const el = await menu(true);
     await finish(panel(el));

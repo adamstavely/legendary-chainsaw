@@ -9,7 +9,7 @@
 One file in one place – what it is, the team's flag on it, what's in it, its versions, and who it's shared with after their entitlements are checked (uses `team-flag-picker`, `file-summary`, `version-history`, `share-panel`)
 
 - **Element:** `<tc-file-details>`
-- **Size:** 33.4 KB gzip · 123.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 33.7 KB gzip · 124.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

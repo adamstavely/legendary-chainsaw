@@ -9,7 +9,7 @@
 Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
 
 - **Element:** `<tc-share-panel>`
-- **Size:** 13.4 KB gzip · 43.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.6 KB gzip · 44.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

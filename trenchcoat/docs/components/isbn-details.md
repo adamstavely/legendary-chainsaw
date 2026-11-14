@@ -9,7 +9,7 @@
 ISBN numbers in text, validated and marked – hover or focus one for the book's cover, title, authors, publisher, year and pages
 
 - **Element:** `<tc-isbn-details>`
-- **Size:** 12.7 KB gzip · 37.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.8 KB gzip · 38.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

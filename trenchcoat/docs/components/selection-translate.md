@@ -9,7 +9,7 @@
 Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 
 - **Element:** `<tc-selection-translate>`
-- **Size:** 16.2 KB gzip · 51.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.4 KB gzip · 51.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

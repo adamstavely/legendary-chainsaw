@@ -9,7 +9,7 @@
 What to add next to a workflow – a search over step kinds and tools grouped as Triggers, AI, Tools, Logic, People and Output, led by suggested steps with why and recent ones, inline or as a popover by the button that opened it
 
 - **Element:** `<tc-step-picker>`
-- **Size:** 21.2 KB gzip · 72.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.4 KB gzip · 73.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

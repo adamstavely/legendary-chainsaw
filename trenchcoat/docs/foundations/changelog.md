@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.29.0 – Menus beside their trigger
+
+- **Menu Morph:** `side="left"` and `side="right"` open the menu beside its trigger – lined up with the trigger's top
+  (`align` runs down it), on the opposite side when there's no room, and morphing out of the trigger's edge. For a
+  vertical tool rail, whose menus covered the rail before.
+- **Popovers:** `placePopover()` and `PopoverController` take `side: "left" | "right"` too; a placement reports
+  `arrowY` and the popover gets `--tc-pop-arrow-y` for an arrow beside the anchor.
+
 ## 0.28.5 – Embed Widget: no outline from the host page's focus style
 
 - **Embed Widget:** the message field keeps a `:focus-visible` rule of its own, so a host page's global

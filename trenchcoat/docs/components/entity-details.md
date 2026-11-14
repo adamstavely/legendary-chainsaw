@@ -9,7 +9,7 @@
 Email addresses, phone numbers, links and @handles in text, found and marked – hover, focus or right-click one for its domain, country or site (with an http warning), Copy, Write email / Call / Open, and what your directory knows about it
 
 - **Element:** `<tc-entity-details>`
-- **Size:** 15.1 KB gzip · 43.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.3 KB gzip · 44.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

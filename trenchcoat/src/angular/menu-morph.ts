@@ -19,11 +19,11 @@ export class MenuMorph {
   @Input() set open(v: TcMenuMorph["open"] | "" | "true" | "false") {
     this.#el.open = typeof v === "string" ? v !== "false" : v;
   }
-  /** Where the menu lines up with the trigger */
+  /** Where the menu lines up with the trigger – along its width above or below, along its height beside it ("start" = its top) */
   @Input() set align(v: TcMenuMorph["align"]) {
     this.#el.align = v;
   }
-  /** The side the menu prefers – it flips when there's no room */
+  /** The side of the trigger the menu prefers: top, bottom, left or right – it flips to the opposite side when there's no room */
   @Input() set side(v: TcMenuMorph["side"]) {
     this.#el.side = v;
   }

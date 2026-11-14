@@ -9,7 +9,7 @@
 The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 
 - **Element:** `<tc-notifications>`
-- **Size:** 18.1 KB gzip · 61.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.3 KB gzip · 61.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

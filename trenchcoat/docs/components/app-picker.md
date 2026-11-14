@@ -9,7 +9,7 @@
 The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 
 - **Element:** `<tc-app-picker>`
-- **Size:** 16.3 KB gzip · 53.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 16.5 KB gzip · 54.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

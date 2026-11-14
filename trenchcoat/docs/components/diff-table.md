@@ -9,7 +9,7 @@
 An AI's proposed edits to a table, reviewed in place – old values struck and new ones marked, added and removed rows, accept or reject per edit, per row or all, undo, a popover with the reason, and edits that sweep in while streaming
 
 - **Element:** `<tc-diff-table>`
-- **Size:** 12.2 KB gzip · 39.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.4 KB gzip · 39.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

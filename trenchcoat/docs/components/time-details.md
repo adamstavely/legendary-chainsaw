@@ -9,7 +9,7 @@
 Times in text, found and underlined – hover or focus one for “Your local time”: the time in the reader’s own zone, with the weekday and date when the day changes; times without a zone, versions and rooms stay plain
 
 - **Element:** `<tc-time-details>`
-- **Size:** 11.0 KB gzip · 29.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.1 KB gzip · 30.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

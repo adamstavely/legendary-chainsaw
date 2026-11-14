@@ -19,12 +19,13 @@ import { adoptStyles } from "./styles";
  *   · the top layer – where the Popover API exists the element becomes `popover="manual"` and is shown with
  *     showPopover(), so no `overflow` or transformed ancestor clips it (`topLayer: false` opts out). Elsewhere it's
  *     `position: fixed` at `--tc-z-popover`
- *   · placement – above the anchor by default (`side`), centred (`align`), flipped to the other side when it doesn't
- *     fit, shifted to stay `margin` px inside the viewport, followed on scroll, resize and size changes. Outside the
+ *   · placement – above the anchor by default (`side`: top, bottom, left or right), centred along its edge (`align`;
+ *     beside it, "start" lines up with its top), flipped to the opposite side when it doesn't fit, shifted to stay `margin` px inside the viewport, followed on scroll, resize and size changes. Outside the
  *     top layer it corrects for a transformed or zoomed ancestor (which would make `fixed` relative to it); in it, for
  *     CSS zoom, which the top layer still inherits – a page zoomed to 90% places its popovers by its buttons. The element
- *     gets data-side ("top" / "bottom") and data-placed once it's in place (the base CSS keeps it invisible until
- *     then, so it never flashes at 0, 0), and `--tc-pop-arrow-x`, the anchor's centre in the popover's own pixels
+ *     gets data-side ("top" / "bottom" / "left" / "right") and data-placed once it's in place (the base CSS keeps it
+ *     invisible until then, so it never flashes at 0, 0), and `--tc-pop-arrow-x` / `--tc-pop-arrow-y`, the anchor's
+ *     centre in the popover's own pixels
  *   · Escape closes the topmost open popover anywhere on the page (WCAG 1.4.13) and, if focus was inside it, sends
  *     focus back to where it was when `show()` ran (or `returnFocus()`); a key handler that calls preventDefault()
  *     first keeps it open
@@ -51,7 +52,7 @@ import { adoptStyles } from "./styles";
  * uses, exported for anything that positions or focuses its own way.
  */
 
-export type PopoverSide = "top" | "bottom";
+export type PopoverSide = "top" | "bottom" | "left" | "right";
 export type PopoverAlign = "start" | "center" | "end";
 export type PopoverKind = "toolbar" | "dialog" | "tooltip";
 export type PopoverCloseReason = "escape" | "outside" | "api" | "anchor-gone";
@@ -61,7 +62,7 @@ export type PopoverRect = { left: number; top: number; width: number; height: nu
 export type PlaceOptions = {
   /** Preferred side of the anchor (default "top") */
   side?: PopoverSide;
-  /** Horizontal alignment with the anchor (default "center") */
+  /** Alignment along the anchor's edge (default "center"): horizontal above or below it, vertical beside it ("start" = its top) */
   align?: PopoverAlign;
   /** Space between the anchor and the popover, px (default 8) */
   gap?: number;
@@ -76,41 +77,60 @@ export type Placement = {
   side: PopoverSide;
   /** It moved to the other side because the preferred one had no room */
   flipped: boolean;
-  /** How far it was shifted sideways to stay inside the viewport (px, signed) */
+  /** How far it was shifted along the anchor's edge to stay inside the viewport (px, signed) – sideways above or below, up or down beside */
   shift: number;
-  /** The anchor's centre in the popover's coordinates, clamped inside it – for an arrow */
+  /** The anchor's horizontal centre in the popover's coordinates, clamped inside it – for an arrow above or below */
   arrowX: number;
+  /** The anchor's vertical centre in the popover's coordinates, clamped inside it – for an arrow beside it */
+  arrowY: number;
   /** The anchor is entirely out of the viewport (scrolled away) */
   offscreen: boolean;
 };
 
 /**
  * Where a `size` popover goes next to `anchor` inside `viewport` (all in the same pixels): the preferred side if it
- * fits, else the other side if that fits, else whichever has more room (then kept inside the viewport, even if it
- * covers the anchor). Sideways it's aligned, then shifted to stay `margin` inside; wider than the viewport, it starts
- * at the margin.
+ * fits, else the opposite side (top ↔ bottom, left ↔ right) if that fits, else whichever has more room (then kept
+ * inside the viewport, even if it covers the anchor). Along the anchor's edge it's aligned – horizontally for top and
+ * bottom, vertically for left and right, where "start" is the anchor's top – then shifted to stay `margin` inside;
+ * longer than the viewport, it starts at the margin.
  */
 export function placePopover(anchor: PopoverRect, size: { width: number; height: number }, viewport: { width: number; height: number }, options: PlaceOptions = {}): Placement {
   const { side = "top", align = "center", gap = 8, margin = 8 } = options;
   const { width: w, height: h } = size;
   const right = anchor.left + anchor.width;
   const bottom = anchor.top + anchor.height;
-  const room = { top: anchor.top - gap - margin, bottom: viewport.height - bottom - gap - margin };
-  const other: PopoverSide = side === "top" ? "bottom" : "top";
-  const final: PopoverSide = room[side] >= h ? side : room[other] >= h ? other : room[other] > room[side] ? other : side;
-  let top = final === "top" ? anchor.top - gap - h : bottom + gap;
-  top = Math.max(margin, Math.min(top, viewport.height - margin - h));
-  if (h > viewport.height - 2 * margin) top = margin;
-  const ideal = align === "start" ? anchor.left : align === "end" ? right - w : anchor.left + anchor.width / 2 - w / 2;
-  const left = w > viewport.width - 2 * margin ? margin : Math.max(margin, Math.min(ideal, viewport.width - margin - w));
-  const centre = anchor.left + anchor.width / 2 - left;
+  const room = { top: anchor.top - gap - margin, bottom: viewport.height - bottom - gap - margin, left: anchor.left - gap - margin, right: viewport.width - right - gap - margin };
+  const vertical = side === "top" || side === "bottom";
+  const other: PopoverSide = ({ top: "bottom", bottom: "top", left: "right", right: "left" } as const)[side];
+  const need = vertical ? h : w;
+  const final: PopoverSide = room[side] >= need ? side : room[other] >= need ? other : room[other] > room[side] ? other : side;
+  /** Along one axis: the ideal start for `align`, kept `margin` inside (or at the margin when it's too long) */
+  const along = (start: number, length: number, size: number, extent: number) => {
+    const ideal = align === "start" ? start : align === "end" ? start + length - size : start + length / 2 - size / 2;
+    return { ideal, at: size > extent - 2 * margin ? margin : Math.max(margin, Math.min(ideal, extent - margin - size)) };
+  };
+  /** Across: beside the anchor, kept inside the viewport */
+  const across = (at: number, size: number, extent: number) => (size > extent - 2 * margin ? margin : Math.max(margin, Math.min(at, extent - margin - size)));
+  let left: number, top: number, shift: number;
+  if (vertical) {
+    const x = along(anchor.left, anchor.width, w, viewport.width);
+    left = x.at;
+    shift = left - x.ideal;
+    top = across(final === "top" ? anchor.top - gap - h : bottom + gap, h, viewport.height);
+  } else {
+    const y = along(anchor.top, anchor.height, h, viewport.height);
+    top = y.at;
+    shift = top - y.ideal;
+    left = across(final === "left" ? anchor.left - gap - w : right + gap, w, viewport.width);
+  }
   return {
     left,
     top,
     side: final,
     flipped: final !== side,
-    shift: left - ideal,
-    arrowX: Math.max(0, Math.min(w, centre)),
+    shift,
+    arrowX: Math.max(0, Math.min(w, anchor.left + anchor.width / 2 - left)),
+    arrowY: Math.max(0, Math.min(h, anchor.top + anchor.height / 2 - top)),
     offscreen: bottom < 0 || anchor.top > viewport.height || right < 0 || anchor.left > viewport.width,
   };
 }
@@ -199,6 +219,8 @@ export const popoverCss = /* css */ `
 .tc-pop:not([data-placed]) { visibility: hidden; }
 .tc-pop[data-placed] { animation: tc-pop-in var(--tc-duration-fast) var(--tc-ease-move) both; }
 .tc-pop[data-side="bottom"] { --tc-pop-from: translateY(-4px); }
+.tc-pop[data-side="left"] { --tc-pop-from: translateX(4px); }
+.tc-pop[data-side="right"] { --tc-pop-from: translateX(-4px); }
 .tc-pop[data-offscreen] { visibility: hidden; }
 @keyframes tc-pop-in { from { opacity: 0; transform: var(--tc-pop-from, translateY(4px)) scale(0.98); } }
 @media (prefers-reduced-motion: reduce) { .tc-pop[data-placed] { animation: none; } }
@@ -403,6 +425,7 @@ export class PopoverController implements ReactiveController {
     pop.style.left = `${(p.left - origin.left) * scale}px`;
     pop.style.top = `${(p.top - origin.top) * scale}px`;
     pop.style.setProperty("--tc-pop-arrow-x", `${p.arrowX * scale}px`);
+    pop.style.setProperty("--tc-pop-arrow-y", `${p.arrowY * scale}px`);
     pop.dataset.side = p.side;
     pop.toggleAttribute("data-offscreen", p.offscreen && this.options.hideOffscreen !== false);
     pop.toggleAttribute("data-placed", true);

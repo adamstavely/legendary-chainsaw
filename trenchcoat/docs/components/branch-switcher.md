@@ -9,7 +9,7 @@
 the current branch with ahead/behind counts and a filterable list of worktrees, local and remote branches to switch to or create from.
 
 - **Element:** `<tc-branch-switcher>`
-- **Size:** 12.0 KB gzip · 36.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.2 KB gzip · 37.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

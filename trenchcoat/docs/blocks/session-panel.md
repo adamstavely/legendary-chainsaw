@@ -9,7 +9,7 @@
 The side panel of a working session – tools, where it runs, how full its context is, its connectors, outputs, subagents and background tasks, and the changes it has made (uses `tc-panel-card`, `tc-subagent-list`).
 
 - **Element:** `<tc-session-panel>`
-- **Size:** 26.8 KB gzip · 105.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.0 KB gzip · 105.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

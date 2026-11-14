@@ -9,7 +9,7 @@
 Select part of a model's answer and act on it – reply quoting it, ask why, or request an edit that comes back as a diff to accept or reject
 
 - **Element:** `<tc-response-selection>`
-- **Size:** 26.9 KB gzip · 101.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.1 KB gzip · 101.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
