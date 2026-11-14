@@ -59,6 +59,14 @@ describe("tc-button", () => {
     expect(status.getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 
+  test("icon only: the native button covers the whole chip, so it has a real size of its own", async () => {
+    const el = await fixture<TcButton>(html`<tc-button label="Close" hide-label>${icon()}</tc-button>`);
+    const chip = el.getBoundingClientRect();
+    const hit = inner(el).getBoundingClientRect();
+    expect(hit.width).toBeGreaterThanOrEqual(24);
+    expect([hit.left, hit.top, hit.width, hit.height]).toEqual([chip.left, chip.top, chip.width, chip.height]);
+  });
+
   test("aria attributes set on the host move to the inner button", async () => {
     const el = await fixture<TcButton>(html`<tc-button label="Menu" aria-expanded="false" aria-haspopup="menu"></tc-button>`);
     expect(el.hasAttribute("aria-expanded")).toBe(false);

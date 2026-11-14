@@ -213,6 +213,12 @@ export class TcButton extends TcElement {
   inset: 0;
   border-radius: inherit;
 }
+/* Icon only: the native button has no text box of its own, so it fills the chip – a real-sized target for voice
+   control, magnifiers and test tools, not only for clicks through its ::after */
+[data-ui="button"][data-icon-only] > .ui-button__hit {
+  position: absolute;
+  inset: 0;
+}
 /* Sizes follow --tc-control-h-sm/md/lg: Standard 28 · 32 · 40, Clean 24 · 28 · 32 */
 [data-ui="button"][size="sm"] {
   --tc-button-h: var(--tc-control-h-sm);
