@@ -273,6 +273,14 @@
      "fallback": true
     },
     {
+     "name": "--tc-notifications-badge-bg",
+     "value": "var(--tc-red-600)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-hn-ring",
      "value": "var(--tc-surface-raised)",
      "looks": [
@@ -352,6 +360,7 @@
     "--tc-menu-item-radius",
     "--tc-radius-full",
     "--tc-radius-md",
+    "--tc-red-600",
     "--tc-shadow-overlay",
     "--tc-shimmer",
     "--tc-space-0-5",
@@ -1162,7 +1171,7 @@
   "windowed": false
  },
  "size": {
-  "min": 62746,
-  "gzip": 18462
+  "min": 62896,
+  "gzip": 18560
  }
 }

@@ -99,16 +99,20 @@ describe("tc-notifications", () => {
     expect(notificationTime(NOW + HOUR, NOW, "en-GB")).toBe("now");
   });
 
+  const bellName = (b: Element) => b.querySelector(".tc-sr-only")!.textContent;
+
   test("the bell: a button named with the exact count; the badge caps at max, or is a dot", async () => {
     const el = await make();
     const b = bell(el);
+    // Named by its own text (WCAG 2.5.3): the count is screen-reader text, not an aria-label over the visible badge
+    expect(b.hasAttribute("aria-label")).toBe(false);
     expect(b.getAttribute("aria-haspopup")).toBe("dialog");
     expect(b.getAttribute("aria-expanded")).toBe("false");
-    expect(b.getAttribute("aria-label")).toBe("Notifications, 3 unread");
+    expect(bellName(b)).toBe("Notifications, 3 unread");
     expect(plain(b.querySelector(".ui-ntc__badge")!.textContent)).toBe("3");
     el.unreadCount = 12;
     await settle();
-    expect(b.getAttribute("aria-label")).toBe("Notifications, 12 unread");
+    expect(bellName(b)).toBe("Notifications, 12 unread");
     expect(plain(b.querySelector(".ui-ntc__badge")!.textContent)).toBe("9+");
     el.max = 99;
     await settle();
@@ -117,12 +121,12 @@ describe("tc-notifications", () => {
     await settle();
     expect(b.querySelector(".ui-ntc__badge")!.hasAttribute("data-dot")).toBe(true);
     expect(plain(b.querySelector(".ui-ntc__badge")!.textContent)).toBe("");
-    expect(b.getAttribute("aria-label")).toBe("Notifications, 12 unread");
+    expect(bellName(b)).toBe("Notifications, 12 unread");
     el.unreadCount = undefined;
     el.items = ITEMS.map((n) => ({ ...n, read: true }));
     await settle();
     expect(b.querySelector(".ui-ntc__badge")).toBeNull();
-    expect(b.getAttribute("aria-label")).toBe("Notifications");
+    expect(bellName(b)).toBe("Notifications");
   });
 
   test("grouped by day, newest first: Today, Yesterday, a weekday, then a date; relative times with the full time", async () => {

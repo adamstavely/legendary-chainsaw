@@ -2,6 +2,13 @@
 
 # Changelog
 
+## 0.28.2 – Notifications bell
+
+- **Notifications:** the bell is named by its own text ("Notifications, 7 unread", as screen-reader text) instead of an
+  `aria-label` over the visible count, so its visible label is part of its name (WCAG 2.5.3).
+- **Notifications:** the unread badge is red 600 behind its white numerals, 5.5:1 in both themes; red 500 (light) and
+  red 400 (dark) gave 3.9:1 and 2.9:1 (WCAG 1.4.3). `--tc-notifications-badge-bg` overrides it.
+
 ## 0.28.1 – Angular 22 and accessibility fixes
 
 - **Angular bindings:** the `@angular/core` and `@angular/forms` peer range now allows Angular 22. The wrappers are

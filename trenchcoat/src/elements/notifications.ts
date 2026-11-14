@@ -600,11 +600,10 @@ export class TcNotifications extends TcElement {
       aria-haspopup="dialog"
       aria-expanded=${this.open ? "true" : "false"}
       aria-controls=${ifDefined(this.pop.open ? `${this.uid}-panel` : undefined)}
-      aria-label=${n ? `${this.heading}, ${n} unread` : this.heading}
       @click=${() => this.setOpen(!this.open)}
       @keydown=${hushTip}
     >
-      ${icon(BELL, "ui-ntc__bell")}${keyed(this.pulses, badge === nothing ? nothing : html`<span class="ui-ntc__badge-wrap" ?data-pulse=${this.pulses > 0}>${badge}</span>`)}<span class="ui-ntc__tip" aria-hidden="true">${this.heading}</span>
+      ${icon(BELL, "ui-ntc__bell")}${keyed(this.pulses, badge === nothing ? nothing : html`<span class="ui-ntc__badge-wrap" ?data-pulse=${this.pulses > 0}>${badge}</span>`)}<span class="ui-ntc__tip" aria-hidden="true">${this.heading}</span><span class="tc-sr-only">${n ? `${this.heading}, ${n} unread` : this.heading}</span>
     </button>`;
   }
 
@@ -825,7 +824,8 @@ export class TcNotifications extends TcElement {
   height: 16px;
   padding: 0 var(--tc-space-1);
   border-radius: var(--tc-radius-full);
-  background: var(--tc-status-danger-solid);
+  /* Red 600: white 10px numerals need 4.5:1, which danger-solid (red 500 / red 400) doesn't give (WCAG 1.4.3) */
+  background: var(--tc-notifications-badge-bg, var(--tc-red-600));
   box-shadow: 0 0 0 2px var(--tc-surface-raised);
   color: var(--tc-text-on-accent);
   font-size: var(--tc-font-size-2xs);
