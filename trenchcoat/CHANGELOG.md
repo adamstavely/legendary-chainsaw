@@ -7,8 +7,6 @@
 - **Stories:** a tile is named by its own text – the name, then the new or seen count in screen-reader text – instead of
   an `aria-label`, so its visible name starts its accessible one (WCAG 2.5.3). axe flagged the old name as not matching
   the tile's visible initials and name.
-- **Button:** an icon-only button's native `<button>` now fills the chip. It took clicks through its `::after` before,
-  but its own box was 0×0, which voice control, magnifiers and test tools read as nothing to press.
 - **Approval Card:** the ⌘↵ hint on Approve, in dark mode, goes from 4.0:1 to about 5.7:1 against its key cap (WCAG
   1.4.3).
 
