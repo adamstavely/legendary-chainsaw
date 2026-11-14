@@ -8,6 +8,11 @@
 - **Popovers:** `placePopover()` and `PopoverController` take `side: "left" | "right"` too; a placement reports
   `arrowY` and the popover gets `--tc-pop-arrow-y` for an arrow beside the anchor.
 
+## 0.28.4 – Embed Widget: one focus ring on the message field
+
+- **Embed Widget:** the focused message field shows only the message box's ring. The widget's shared focus outline
+  outranked the field's own `outline: none`, so the field also drew an outline of its own inside the ring.
+
 ## 0.28.3 – Icon-only buttons are real targets
 
 - **Button:** an icon-only button's native `<button>` fills the chip, so voice control, screen magnifiers and pointer
