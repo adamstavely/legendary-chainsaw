@@ -2,6 +2,11 @@
 
 # Changelog
 
+## 0.28.1 – Angular 22
+
+- **Angular bindings:** the `@angular/core` and `@angular/forms` peer range now allows Angular 22. The wrappers are
+  compiled in partial mode, so Angular 22 apps link them unchanged.
+
 ## 0.28.0 – Admin: spend, governance and data
 
 - **Spend Breakdown:** AI spend by model, feature, user or team – a ranked list with shares and the change on the period

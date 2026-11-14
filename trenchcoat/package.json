@@ -1,6 +1,6 @@
 {
   "name": "@adamstavely/trenchcoat",
-  "version": "0.28.0",
+  "version": "0.28.1",
   "description": "Trenchcoat – Lit web components for AI-native products",
   "license": "UNLICENSED",
   "repository": {
@@ -184,8 +184,8 @@
     "vitest": "5.0.5"
   },
   "peerDependencies": {
-    "@angular/core": ">=19.0.0 <22.0.0",
-    "@angular/forms": ">=19.0.0 <22.0.0",
+    "@angular/core": ">=19.0.0 <23.0.0",
+    "@angular/forms": ">=19.0.0 <23.0.0",
     "react": ">=19"
   },
   "peerDependenciesMeta": {
