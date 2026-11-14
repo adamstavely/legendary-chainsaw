@@ -9,7 +9,7 @@
 A role's home dashboard – the headline that needs doing, the one thing first, KPI charts against last week and the service posture table with a state filter; switch roles at the top (uses `@adamstavely/trenchcoat/react`: `segmented-control`, `kpi-chart`, `data-table`, `button`)
 
 - **Element:** `<tc-oversight-home>`
-- **Size:** 33.9 KB gzip · 142.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 34.0 KB gzip · 143.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

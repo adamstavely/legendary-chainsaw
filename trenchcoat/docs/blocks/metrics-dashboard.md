@@ -9,7 +9,7 @@
 Sales overview – KPI cards pick the metric, one chart switches between dotted line and bars, with top products and channels (uses `button`, `segmented-control`)
 
 - **Element:** `<tc-metrics-dashboard>`
-- **Size:** 21.9 KB gzip · 85.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 22.0 KB gzip · 86.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

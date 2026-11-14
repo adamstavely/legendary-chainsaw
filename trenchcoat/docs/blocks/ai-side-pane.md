@@ -9,7 +9,7 @@
 An assistant docked beside a page with a chat about what's on it – resizable, collapses to a rail, opens with ⌘. and becomes a sheet on narrow screens; model, settings, prompts and page context in the composer (uses `chat-composer`, `ai-answer`, `claim-answer`, `message-actions`, `prompt-starters`, `chat-history`, `reflection-gate`, `button`)
 
 - **Element:** `<tc-ai-side-pane>`
-- **Size:** 163.1 KB gzip · 687.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 163.2 KB gzip · 687.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

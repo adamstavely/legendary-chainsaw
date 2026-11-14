@@ -9,7 +9,7 @@
 What an adversarial test broke – a findings list, then the picked one's severity, failed invariants, scenario, evidence and a response timeline with undo (uses `@adamstavely/trenchcoat/react`: `agent-ledger`, `button`)
 
 - **Element:** `<tc-red-team-finding>`
-- **Size:** 18.4 KB gzip · 72.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.4 KB gzip · 72.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

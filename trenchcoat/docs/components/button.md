@@ -9,7 +9,7 @@
 Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
 
 - **Element:** `<tc-button>`
-- **Size:** 7.2 KB gzip · 22.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.3 KB gzip · 22.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

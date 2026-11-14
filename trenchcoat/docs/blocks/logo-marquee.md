@@ -9,7 +9,7 @@
 The endless “Trusted by” strip – a seamless loop that eases to a stop on hover, scrubs with inertia and lifts the hovered logo to colour, with a Pause / Play button (uses `button`)
 
 - **Element:** `<tc-logo-marquee>`
-- **Size:** 11.8 KB gzip · 37.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.9 KB gzip · 38.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

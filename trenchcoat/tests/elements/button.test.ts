@@ -59,6 +59,19 @@ describe("tc-button", () => {
     expect(status.getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 
+  test("icon only: the native button fills the chip, so it's a real target (not 0×0)", async () => {
+    for (const size of ["sm", "md", "lg"]) {
+      const el = await fixture<TcButton>(html`<tc-button label="Close" hide-label size=${size}>${icon()}</tc-button>`);
+      const chip = el.getBoundingClientRect();
+      const hit = inner(el).getBoundingClientRect();
+      expect([hit.left, hit.top, hit.width, hit.height]).toEqual([chip.left, chip.top, chip.width, chip.height]);
+      expect(hit.width).toBeGreaterThanOrEqual(24);
+      // A click in the middle lands on the native button, not the icon under it
+      expect(document.elementFromPoint(chip.left + chip.width / 2, chip.top + chip.height / 2)).toBe(inner(el));
+      cleanup();
+    }
+  });
+
   test("aria attributes set on the host move to the inner button", async () => {
     const el = await fixture<TcButton>(html`<tc-button label="Menu" aria-expanded="false" aria-haspopup="menu"></tc-button>`);
     expect(el.hasAttribute("aria-expanded")).toBe(false);

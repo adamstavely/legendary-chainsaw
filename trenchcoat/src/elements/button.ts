@@ -246,6 +246,13 @@ export class TcButton extends TcElement {
   width: var(--tc-button-h);
   padding: 0;
 }
+/* Icon only: the native button holds no visible text, so it fills the chip itself – voice control, magnifiers and
+   pointer tools then find a real target, not a 0×0 box */
+[data-ui="button"][data-icon-only] > .ui-button__hit {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
 /* primary: flat ink (design decision 1) */
 [data-ui="button"][variant="primary"] {
   --tc-button-fg: var(--tc-action-primary-fg);

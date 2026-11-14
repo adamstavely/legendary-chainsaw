@@ -9,7 +9,7 @@
 The landing-page wall of quotes – columns that scroll endlessly in opposite directions, ease to a stop on hover and scrub with inertia, with a Pause / Play button (uses `button`)
 
 - **Element:** `<tc-testimonial-wall>`
-- **Size:** 12.4 KB gzip · 38.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 12.5 KB gzip · 39.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

@@ -574,6 +574,7 @@ const worldStyle = computed(() => ({ transform: `translate(${view.value.x}px, ${
               :look-alikes="alike(lookAlikesOf(piece.id))"
               :most-like="props.layout === 'similar' ? alike(neighboursOf(piece.id).slice(0, 3)) : []"
               :can-find-similar="props.layout !== 'similar' && compared(piece.id)"
+              :tools="view.zoom >= 1"
               :composition="props.layout === 'graph' ? compositionText(piece.id) : ''"
               :theme="theme"
               :look="look"

@@ -9,7 +9,7 @@
 Browse, search and connect integrations – categories, filters and app cards with a connect flow (uses `button`)
 
 - **Element:** `<tc-app-directory>`
-- **Size:** 25.0 KB gzip · 76.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 25.1 KB gzip · 76.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |

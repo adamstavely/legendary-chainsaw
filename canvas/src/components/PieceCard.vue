@@ -22,6 +22,11 @@ const props = defineProps<{
   mostLike: readonly Alike[];
   /** Offer "More like this", which shows the piece in the Similar layout */
   canFindSimilar: boolean;
+  /**
+   * Zoomed in far enough for the header's buttons to be full size (WCAG 2.5.8 target size). Further out they'd be
+   * specks, so they're left out: Alt+arrows still move the card, and the Layout control has Similar
+   */
+  tools: boolean;
   /** Graph layout: what it's built with and where it's used, said to screen readers (the links show it) */
   composition: string;
   theme: Theme;
@@ -86,10 +91,10 @@ const nudges: { direction: Direction; label: string; icon: typeof ArrowUp }[] = 
       </span>
       <!-- Said in the description above -->
       <span v-if="lookAlikes.length" class="card__badge" aria-hidden="true">Look-alike</span>
-      <tc-button v-if="canFindSimilar && current" variant="ghost" size="sm" hide-label label="More like this" @click="emit('similar')">
+      <tc-button v-if="canFindSimilar && current && tools" variant="ghost" size="sm" hide-label label="More like this" @click="emit('similar')">
         <Shapes slot="icon" :size="16" aria-hidden="true" />
       </tc-button>
-      <span v-if="movable && current" class="card__nudge" role="group" :aria-label="`Move ${piece.name}`">
+      <span v-if="movable && current && tools" class="card__nudge" role="group" :aria-label="`Move ${piece.name}`">
         <tc-button v-for="n in nudges" :key="n.direction" variant="ghost" size="sm" hide-label :label="`Move ${n.label}`" @click="emit('move', n.direction)">
           <component :is="n.icon" slot="icon" :size="16" aria-hidden="true" />
         </tc-button>

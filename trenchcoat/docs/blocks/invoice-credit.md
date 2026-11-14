@@ -9,7 +9,7 @@
 An invoice and its credit note stacked like paper – switch between them, pick lines to credit, adjust amounts and issue (uses `button`, `segmented-control`)
 
 - **Element:** `<tc-invoice-credit>`
-- **Size:** 19.3 KB gzip · 78.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.4 KB gzip · 78.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
