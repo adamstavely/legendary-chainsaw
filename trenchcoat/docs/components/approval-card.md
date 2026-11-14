@@ -308,7 +308,7 @@ export class ApprovalCardExample {
 
 | Custom property | Value | Look |
 | --- | --- | --- |
-| `--tc-approval-card-primary-kbd-fg` | `light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.6))` | both |
+| `--tc-approval-card-primary-kbd-fg` | `light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.72))` | both |
 | `--tc-approval-card-spin` | `800ms` | both |
 | `--tc-approval-card-code-max` | `220px` | both |
 
