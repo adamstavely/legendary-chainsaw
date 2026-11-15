@@ -11,7 +11,9 @@ import { TcElement } from "./internal/base";
  *   · ↓ / ↑ on the trigger open the list; in it the arrows, Home and End move (past disabled options), Enter or
  *     Space picks, typing jumps to the next option starting with those letters, Esc closes and returns focus to the
  *     trigger, Tab closes. A press outside closes it too
- *   · near the edge of the screen the list slides in to stay whole, and with too little room below it opens upward
+ *   · near the edge of the screen the list slides in to stay whole, and with too little room below it opens upward.
+ *     A box around the select that scrolls or clips (a side panel, say) counts as an edge too, and with no room for
+ *     the whole list on either side, the list gets shorter and scrolls
  *   · closed, the list takes no room at all, so a select near the edge of a narrow page never widens it
  *
  *   <tc-select label="Period" value="month" .options=${[{ value: "month", label: "This month" }, { value: "last", label: "Last month" }]}></tc-select>
@@ -86,6 +88,8 @@ export class TcSelect extends TcElement {
   @state() accessor shift = 0;
   /** @internal The list opens above the trigger */
   @state() accessor up = false;
+  /** @internal The tallest the list can be on its side of the trigger, when that's less than it wants */
+  @state() accessor room: number | undefined = undefined;
 
   private uid = `tc-select-${++uid}`;
   private typed = "";
@@ -94,21 +98,52 @@ export class TcSelect extends TcElement {
   private onDocDown = (e: PointerEvent) => {
     if (!this.contains(e.target as Node)) this.setOpen(false);
   };
-  /** Where the open list goes: slid in from the side edges, and above the trigger when it fits there but not below */
+  /** Where the open list goes: slid in from the side edges, above the trigger when it fits there but not below, and
+   *  shorter when it fits on neither side. The edges are the window's, or a nearer box's that scrolls or clips */
   private place = () => {
     const trigger = this.querySelector(".ui-select__trigger")?.getBoundingClientRect();
     const pop = this.querySelector<HTMLElement>(".ui-select__pop");
+    const list = this.querySelector<HTMLElement>(".ui-select__list");
     const width = pop?.offsetWidth ?? 0;
-    if (!trigger || !width) return;
-    const room = document.documentElement.clientWidth;
+    if (!trigger || !pop || !list || !width) return;
+    const box = this.bounds();
     const left = this.align === "end" ? trigger.right - width : trigger.left;
     const margin = 12;
-    this.shift = left < margin ? margin - left : left + width > room - margin ? Math.min(0, room - margin - (left + width)) : 0;
-    const height = pop!.offsetHeight + 6;
-    const below = document.documentElement.clientHeight - trigger.bottom - margin;
-    const above = trigger.top - margin;
+    this.shift = left < box.left + margin ? box.left + margin - left : left + width > box.right - margin ? Math.min(0, box.right - margin - (left + width)) : 0;
+    // The height the list wants: all its options, up to the stylesheet's cap
+    const wanted = Math.min(list.scrollHeight, 320, window.innerHeight * 0.6);
+    const chrome = pop.offsetHeight - list.clientHeight + 6;
+    const height = wanted + chrome;
+    const below = box.bottom - trigger.bottom - margin;
+    const above = trigger.top - box.top - margin;
     this.up = this.placement === "top" || (this.placement === "auto" && height > below && above > below);
+    const space = (this.up ? above : below) - chrome;
+    this.room = space < wanted ? Math.max(space, 96) : undefined;
   };
+
+  /** The box the open list stays inside: the window, narrowed by each box around the select that scrolls or clips */
+  private bounds() {
+    const root = document.documentElement;
+    const box = { top: 0, left: 0, bottom: root.clientHeight, right: root.clientWidth };
+    const parent = (el: Element): Element | null => el.parentElement ?? ((el.getRootNode() as ShadowRoot).host as Element | undefined) ?? null;
+    for (let el = parent(this); el && el !== root && el !== document.body; el = parent(el)) {
+      const style = getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      const top = r.top + el.clientTop;
+      const left = r.left + el.clientLeft;
+      if (style.overflowY !== "visible") {
+        box.top = Math.max(box.top, top);
+        box.bottom = Math.min(box.bottom, top + el.clientHeight);
+      }
+      if (style.overflowX !== "visible") {
+        box.left = Math.max(box.left, left);
+        box.right = Math.min(box.right, left + el.clientWidth);
+      }
+      // A fixed box isn't clipped by the boxes around it
+      if (style.position === "fixed") break;
+    }
+    return box;
+  }
 
   constructor() {
     super();
@@ -316,6 +351,7 @@ export class TcSelect extends TcElement {
         <div
           id=${`${this.uid}-list`}
           class="ui-select__list"
+          style=${styleMap(this.room !== undefined ? { maxHeight: `${this.room}px` } : {})}
           role="listbox"
           tabindex="0"
           aria-label=${ifDefined(showLabel ? undefined : this.label || "Options")}

@@ -2,6 +2,12 @@
 
 # Changelog
 
+## 0.29.2 – Select: open inside a scrolling panel
+
+- **Select:** a box around the select that scrolls or clips – a side panel, say – now counts as an edge, as the window
+  did. Near the panel's bottom the list opens upward instead of being cut off by it, and the list slides in from the
+  panel's sides. With room for the whole list on neither side, the list gets shorter and scrolls.
+
 ## 0.29.1 – Select: no room taken while closed, and opening upward
 
 - **Select:** closed, the list isn't laid out at all (`display: none`, moved discretely so the fades still run). It was

@@ -29,7 +29,9 @@ optional description line under each. Options can be disabled: they show, but ca
    `label-placement="start"` as well; otherwise read by screen readers only
 2. **Trigger** `.ui-select__trigger` – the chosen option's label, or the placeholder, and a chevron
 3. **List** `.ui-select__list` – the options, in a popover under the trigger, or above it when there's too little room
-   below. Closed, it isn't laid out at all, so a select at the edge of a narrow page never widens it
+   below. A box around the select that scrolls or clips, like a side panel, counts as an edge as much as the window
+   does; with room for the whole list on neither side, the list gets shorter and scrolls. Closed, it isn't laid out at
+   all, so a select at the edge of a narrow page never widens it
 4. **Option** `.ui-select__option` – label, optional description, and a check on the chosen one
 
 ## Looks

@@ -288,6 +288,39 @@ describe("tc-select placement", () => {
     expect(el.hasAttribute("data-up")).toBe(false);
   });
 
+  test("in a panel that scrolls, the panel's bottom counts as the edge: the list opens upward, inside the panel", async () => {
+    const panel = await fixture<HTMLDivElement>(html`<div style="position: fixed; left: 20px; top: 40px; width: 260px; height: 320px; overflow: hidden auto">
+      <div style="height: 250px"></div>
+      <tc-select label="Pick" .options=${periods}></tc-select>
+    </div>`);
+    const el = panel.querySelector<TcSelect>("tc-select")!;
+    el.open = true;
+    await settle(el);
+    await frame();
+    await settle(el);
+    expect(el.hasAttribute("data-up")).toBe(true);
+    const pop = el.querySelector(".ui-select__pop")!.getBoundingClientRect();
+    const box = panel.getBoundingClientRect();
+    expect(pop.top).toBeGreaterThanOrEqual(box.top);
+    expect(pop.bottom).toBeLessThanOrEqual(box.bottom);
+  });
+
+  test("with room for the whole list on neither side, the list gets shorter and scrolls, staying inside the panel", async () => {
+    const panel = await fixture<HTMLDivElement>(html`<div style="position: fixed; left: 20px; top: 40px; width: 260px; height: 200px; overflow: hidden auto">
+      <div style="height: 60px"></div>
+      <tc-select label="Pick" .options=${periods}></tc-select>
+    </div>`);
+    const el = panel.querySelector<TcSelect>("tc-select")!;
+    el.open = true;
+    await settle(el);
+    await frame();
+    await settle(el);
+    const list = el.querySelector<HTMLElement>(".ui-select__list")!;
+    expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
+    const pop = el.querySelector(".ui-select__pop")!.getBoundingClientRect();
+    expect(pop.bottom).toBeLessThanOrEqual(panel.getBoundingClientRect().bottom);
+  });
+
   test("with room below it opens downward, and placement top opens it upward anyway", async () => {
     const wrap = await fixture<HTMLDivElement>(html`<div style="position: fixed; left: 20px; top: 300px">
       <tc-select label="Pick" .options=${periods}></tc-select>
