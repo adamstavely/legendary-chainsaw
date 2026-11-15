@@ -38,6 +38,18 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-secret-field id="key" label="API key"></tc-secret-field>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/secret-field";
+  import "@adamstavely/trenchcoat/tokens.css";
+
+  const el = document.querySelector("#key");
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ```tsx
 import { SecretField } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";

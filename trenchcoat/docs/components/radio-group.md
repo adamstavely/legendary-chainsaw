@@ -42,20 +42,21 @@ Use existing read-only run and output components when users only need to inspect
 ### HTML
 
 ```html
-<tc-radio-group id="radio-group"></tc-radio-group>
+<tc-radio-group id="mode" label="Review mode"></tc-radio-group>
 
 <script type="module">
   import "@adamstavely/trenchcoat/radio-group";
   import "@adamstavely/trenchcoat/tokens.css";
 
-  const el = document.querySelector("#radio-group");
-  el.options = options; // SettingsRadioOption[], from your app
-  el.value = value; // string, from your app
-  el.addEventListener("tc-value-change", (e) => console.log(e.detail));
+  const el = document.querySelector("#mode");
+  el.options = [
+    { value: "ask", label: "Ask first" },
+    { value: "auto", label: "Automatic" },
+  ];
+  el.value = "ask";
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
 </script>
 ```
-
-*Generated from the element's API and compiled in `examples/html` by `npm run check:snippets`. The Frameworks section below covers events, control, slots, server rendering and types.*
 
 ### React / Next.js
 

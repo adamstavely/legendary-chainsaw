@@ -38,6 +38,19 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-checkbox id="citations" label="Include citations"></tc-checkbox>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/checkbox";
+  import "@adamstavely/trenchcoat/tokens.css";
+
+  const el = document.querySelector("#citations");
+  el.value = true;
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ```tsx
 import { Checkbox } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";

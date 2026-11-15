@@ -42,19 +42,17 @@ Use existing read-only run and output components when users only need to inspect
 ### HTML
 
 ```html
-<tc-slider-field id="slider-field"></tc-slider-field>
+<tc-slider-field id="temperature" label="Temperature" min="0" max="2" step="0.01"></tc-slider-field>
 
 <script type="module">
   import "@adamstavely/trenchcoat/slider-field";
   import "@adamstavely/trenchcoat/tokens.css";
 
-  const el = document.querySelector("#slider-field");
-  el.value = value; // number | null, from your app
-  el.addEventListener("tc-value-change", (e) => console.log(e.detail));
+  const el = document.querySelector("#temperature");
+  el.value = 0.7;
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
 </script>
 ```
-
-*Generated from the element's API and compiled in `examples/html` by `npm run check:snippets`. The Frameworks section below covers events, control, slots, server rendering and types.*
 
 ### React / Next.js
 

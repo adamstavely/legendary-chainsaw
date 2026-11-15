@@ -38,6 +38,19 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-switch id="caching" label="Enable caching"></tc-switch>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/switch";
+  import "@adamstavely/trenchcoat/tokens.css";
+
+  const el = document.querySelector("#caching");
+  el.value = true;
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ```tsx
 import { Switch } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";

@@ -38,6 +38,15 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-tooltip label="About sampling" text="Temperature changes sampling variability."></tc-tooltip>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/tooltip";
+  import "@adamstavely/trenchcoat/tokens.css";
+</script>
+```
+
 ```tsx
 import { Tooltip } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";

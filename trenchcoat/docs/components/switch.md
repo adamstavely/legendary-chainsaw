@@ -42,19 +42,17 @@ Use existing read-only run and output components when users only need to inspect
 ### HTML
 
 ```html
-<tc-switch id="switch"></tc-switch>
+<tc-switch id="caching" label="Enable caching"></tc-switch>
 
 <script type="module">
   import "@adamstavely/trenchcoat/switch";
   import "@adamstavely/trenchcoat/tokens.css";
 
-  const el = document.querySelector("#switch");
-  el.value = value; // boolean, from your app
-  el.addEventListener("tc-value-change", (e) => console.log(e.detail));
+  const el = document.querySelector("#caching");
+  el.value = true;
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
 </script>
 ```
-
-*Generated from the element's API and compiled in `examples/html` by `npm run check:snippets`. The Frameworks section below covers events, control, slots, server rendering and types.*
 
 ### React / Next.js
 

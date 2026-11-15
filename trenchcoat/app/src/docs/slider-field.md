@@ -38,6 +38,19 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-slider-field id="temperature" label="Temperature" min="0" max="2" step="0.01"></tc-slider-field>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/slider-field";
+  import "@adamstavely/trenchcoat/tokens.css";
+
+  const el = document.querySelector("#temperature");
+  el.value = 0.7;
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ```tsx
 import { SliderField } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
