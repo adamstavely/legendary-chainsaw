@@ -1,9 +1,15 @@
 # Changelog
 
-## 0.29.2 – Form controls run live on the canvas
+## 0.29.3 – Form controls run live on the canvas
 
 - **Checkbox, Number Field, Radio Group, Secret Field, Slider Field, Switch and Tooltip:** each docs page now has an
   HTML example beside the React one, so the canvas runs these controls live instead of showing only their thumbnails.
+
+## 0.29.2 – Select: open inside a scrolling panel
+
+- **Select:** a box around the select that scrolls or clips – a side panel, say – now counts as an edge, as the window
+  did. Near the panel's bottom the list opens upward instead of being cut off by it, and the list slides in from the
+  panel's sides. With room for the whole list on neither side, the list gets shorter and scrolls.
 
 ## 0.29.1 – Select: no room taken while closed, and opening upward
 
