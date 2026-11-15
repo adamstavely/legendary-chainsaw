@@ -70,6 +70,14 @@
      "readonly": false
     },
     {
+     "name": "placement",
+     "attribute": "placement",
+     "type": "\"auto\" | \"bottom\" | \"top\"",
+     "default": "\"auto\"",
+     "description": "Which side of the trigger the list opens on: \"auto\" (default) opens below unless there's more room above and too little below, as near the bottom of the window",
+     "readonly": false
+    },
+    {
      "name": "disabled",
      "attribute": "disabled",
      "type": "boolean",
@@ -275,6 +283,10 @@
      "attribute": "align"
     },
     {
+     "name": "placement",
+     "attribute": "placement"
+    },
+    {
      "name": "disabled",
      "attribute": "disabled"
     },
@@ -442,6 +454,23 @@
     ]
    },
    {
+    "id": "starting-style",
+    "name": "@starting-style",
+    "bcd": "css.at-rules.starting-style",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": "129",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": true,
+    "without": "Parts appear without their entry transition.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "adopted-stylesheets",
     "name": "adoptedStyleSheets",
     "bcd": "api.Document.adoptedStyleSheets",
@@ -523,7 +552,7 @@
   "windowed": false
  },
  "size": {
-  "min": 25032,
-  "gzip": 7952
+  "min": 26151,
+  "gzip": 8292
  }
 }

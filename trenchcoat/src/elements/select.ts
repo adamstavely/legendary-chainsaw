@@ -11,7 +11,8 @@ import { TcElement } from "./internal/base";
  *   · ↓ / ↑ on the trigger open the list; in it the arrows, Home and End move (past disabled options), Enter or
  *     Space picks, typing jumps to the next option starting with those letters, Esc closes and returns focus to the
  *     trigger, Tab closes. A press outside closes it too
- *   · near the edge of the screen the list slides in to stay whole
+ *   · near the edge of the screen the list slides in to stay whole, and with too little room below it opens upward
+ *   · closed, the list takes no room at all, so a select near the edge of a narrow page never widens it
  *
  *   <tc-select label="Period" value="month" .options=${[{ value: "month", label: "This month" }, { value: "last", label: "Last month" }]}></tc-select>
  *
@@ -70,6 +71,8 @@ export class TcSelect extends TcElement {
   @property({ type: Boolean }) accessor open = false;
   /** Which edge of the trigger the list lines up with */
   @property() accessor align: "start" | "end" = "start";
+  /** Which side of the trigger the list opens on: "auto" (default) opens below unless there's more room above and too little below, as near the bottom of the window */
+  @property() accessor placement: "auto" | "bottom" | "top" = "auto";
   /** Turns the control off; the hidden form input is disabled too */
   @property({ type: Boolean }) accessor disabled = false;
   /** Submits the chosen value with a native form, through a hidden input */
@@ -81,6 +84,8 @@ export class TcSelect extends TcElement {
   @state() accessor keyed = false;
   /** @internal How far the list slides in to stay whole near the edge of the screen */
   @state() accessor shift = 0;
+  /** @internal The list opens above the trigger */
+  @state() accessor up = false;
 
   private uid = `tc-select-${++uid}`;
   private typed = "";
@@ -89,14 +94,20 @@ export class TcSelect extends TcElement {
   private onDocDown = (e: PointerEvent) => {
     if (!this.contains(e.target as Node)) this.setOpen(false);
   };
-  private measureShift = () => {
+  /** Where the open list goes: slid in from the side edges, and above the trigger when it fits there but not below */
+  private place = () => {
     const trigger = this.querySelector(".ui-select__trigger")?.getBoundingClientRect();
-    const width = this.querySelector<HTMLElement>(".ui-select__pop")?.offsetWidth ?? 0;
+    const pop = this.querySelector<HTMLElement>(".ui-select__pop");
+    const width = pop?.offsetWidth ?? 0;
     if (!trigger || !width) return;
     const room = document.documentElement.clientWidth;
     const left = this.align === "end" ? trigger.right - width : trigger.left;
     const margin = 12;
     this.shift = left < margin ? margin - left : left + width > room - margin ? Math.min(0, room - margin - (left + width)) : 0;
+    const height = pop!.offsetHeight + 6;
+    const below = document.documentElement.clientHeight - trigger.bottom - margin;
+    const above = trigger.top - margin;
+    this.up = this.placement === "top" || (this.placement === "auto" && height > below && above > below);
   };
 
   constructor() {
@@ -114,7 +125,7 @@ export class TcSelect extends TcElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener("pointerdown", this.onDocDown);
-    window.removeEventListener("resize", this.measureShift);
+    window.removeEventListener("resize", this.place);
   }
 
   /* ---------- Derived ---------- */
@@ -234,6 +245,7 @@ export class TcSelect extends TcElement {
     this.toggleAttribute("data-open", this.open);
     this.toggleAttribute("data-disabled", this.disabled);
     this.dataset.align = this.align;
+    this.toggleAttribute("data-up", this.up);
     this.toggleAttribute("data-label-start", this.labelVisible && !!this.label && this.labelPlacement === "start");
   }
 
@@ -241,13 +253,13 @@ export class TcSelect extends TcElement {
     if (changed.has("open")) {
       if (this.open) {
         document.addEventListener("pointerdown", this.onDocDown);
-        window.addEventListener("resize", this.measureShift);
+        window.addEventListener("resize", this.place);
       } else {
         document.removeEventListener("pointerdown", this.onDocDown);
-        window.removeEventListener("resize", this.measureShift);
+        window.removeEventListener("resize", this.place);
       }
     }
-    if (this.open && (changed.has("open") || changed.has("align") || changed.has("options"))) this.measureShift();
+    if (this.open && (changed.has("open") || changed.has("align") || changed.has("placement") || changed.has("options"))) this.place();
     if (this.open && this.keyed && changed.has("active")) this.querySelector(`#${this.uid}-opt-${this.active}`)?.scrollIntoView({ block: "nearest" });
   }
 
@@ -376,12 +388,14 @@ export class TcSelect extends TcElement {
 .ui-select__chevron { color: var(--tc-icon-muted); transition: transform var(--tc-duration-slow) var(--tc-ease-emphasized); }
 .ui-select__trigger:disabled .ui-select__chevron { color: var(--tc-text-disabled); }
 [data-ui="select"][data-open] .ui-select__chevron { transform: rotate(180deg); }
-/* ----- List: the menu pattern, unfolding softly from the trigger ----- */
+/* ----- List: the menu pattern, unfolding softly from the trigger. Closed, it isn't laid out at all (display: none),
+   so a select near the edge of a narrow page never widens it; display moves discretely, so the fades still run ----- */
 .ui-select__pop {
   position: absolute;
   z-index: var(--tc-z-dropdown);
   top: calc(100% + 6px);
   left: 0;
+  display: none;
   width: max-content;
   min-width: max(100%, 180px);
   max-width: min(320px, calc(100vw - 32px));
@@ -391,12 +405,18 @@ export class TcSelect extends TcElement {
   box-shadow: var(--tc-menu-shadow);
   transform-origin: top left;
   opacity: 0;
-  visibility: hidden;
   transform: translateY(-4px) scale(0.97);
-  transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-emphasized), visibility 0s linear var(--tc-duration-base);
+  transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-emphasized), display var(--tc-duration-base) allow-discrete;
 }
 [data-ui="select"][data-align="end"] .ui-select__pop { left: auto; right: 0; transform-origin: top right; }
-[data-ui="select"][data-open] .ui-select__pop { opacity: 1; visibility: visible; transform: none; transition: opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-slow) var(--tc-ease-emphasized), visibility 0s; }
+/* Above the trigger: with too little room below (placement "auto") or asked for (placement "top") */
+[data-ui="select"][data-up] .ui-select__pop { top: auto; bottom: calc(100% + 6px); transform-origin: bottom left; transform: translateY(4px) scale(0.97); }
+[data-ui="select"][data-up][data-align="end"] .ui-select__pop { transform-origin: bottom right; }
+[data-ui="select"][data-open] .ui-select__pop { display: block; opacity: 1; transform: none; transition: opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-slow) var(--tc-ease-emphasized), display 0s allow-discrete; }
+@starting-style {
+  [data-ui="select"][data-open] .ui-select__pop { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  [data-ui="select"][data-open][data-up] .ui-select__pop { transform: translateY(4px) scale(0.97); }
+}
 .ui-select__list { display: grid; gap: var(--tc-hairline); max-height: min(320px, 60vh); overflow-y: auto; overscroll-behavior: contain; border-radius: var(--tc-menu-item-radius); }
 /* The active option carries the focus ring itself (aria-activedescendant), so the list draws none */
 .ui-select__list:focus-visible { outline: none; }

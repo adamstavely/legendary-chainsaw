@@ -245,3 +245,66 @@ describe("tc-select", () => {
     expect(new FormData(form).get("period")).toBe("this-year");
   });
 });
+
+describe("tc-select placement", () => {
+  const long: SelectOption[] = [
+    { value: "a", label: "A long option label that makes the list wide" },
+    { value: "b", label: "Another long option label" },
+  ];
+
+  test("closed, the list isn't laid out, so a select at the edge of a narrow box doesn't widen it", async () => {
+    const box = await fixture<HTMLDivElement>(html`<div style="width: 160px; overflow: auto; display: flex; justify-content: flex-end">
+      <tc-select label="Pick" .options=${long}></tc-select>
+    </div>`);
+    await finish(box);
+    const el = box.querySelector<TcSelect>("tc-select")!;
+    expect(getComputedStyle(el.querySelector(".ui-select__pop")!).display).toBe("none");
+    expect(box.scrollWidth).toBeLessThanOrEqual(box.clientWidth);
+    el.open = true;
+    await settle(el);
+    expect(getComputedStyle(el.querySelector(".ui-select__pop")!).display).toBe("block");
+  });
+
+  test("near the bottom of the window it opens upward, unless placement says bottom", async () => {
+    const wrap = await fixture<HTMLDivElement>(html`<div style="position: fixed; left: 20px; bottom: 8px">
+      <tc-select label="Pick" .options=${periods}></tc-select>
+    </div>`);
+    const el = wrap.querySelector<TcSelect>("tc-select")!;
+    el.open = true;
+    await settle(el);
+    await frame();
+    await settle(el);
+    expect(el.hasAttribute("data-up")).toBe(true);
+    const pop = el.querySelector(".ui-select__pop")!.getBoundingClientRect();
+    expect(pop.bottom).toBeLessThanOrEqual(trigger(el).getBoundingClientRect().top);
+
+    el.open = false;
+    el.placement = "bottom";
+    await settle(el);
+    el.open = true;
+    await settle(el);
+    await frame();
+    await settle(el);
+    expect(el.hasAttribute("data-up")).toBe(false);
+  });
+
+  test("with room below it opens downward, and placement top opens it upward anyway", async () => {
+    const wrap = await fixture<HTMLDivElement>(html`<div style="position: fixed; left: 20px; top: 300px">
+      <tc-select label="Pick" .options=${periods}></tc-select>
+    </div>`);
+    const el = wrap.querySelector<TcSelect>("tc-select")!;
+    el.open = true;
+    await settle(el);
+    await frame();
+    await settle(el);
+    expect(el.hasAttribute("data-up")).toBe(false);
+    el.open = false;
+    el.placement = "top";
+    await settle(el);
+    el.open = true;
+    await settle(el);
+    await frame();
+    await settle(el);
+    expect(el.hasAttribute("data-up")).toBe(true);
+  });
+});

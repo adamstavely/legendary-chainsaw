@@ -2,6 +2,13 @@
 
 # Changelog
 
+## 0.29.1 – Select: no room taken while closed, and opening upward
+
+- **Select:** closed, the list isn't laid out at all (`display: none`, moved discretely so the fades still run). It was
+  only hidden, so a select near the right edge of a narrow page widened it and broke reflow at 320 px (WCAG 1.4.10).
+- **Select:** `placement="auto" | "bottom" | "top"` (`"auto"` by default) – with too little room below and more above,
+  as in a composer's toolbar at the bottom of the window, the list opens above the trigger instead of off-screen.
+
 ## 0.29.0 – Menus beside their trigger
 
 - **Menu Morph:** `side="left"` and `side="right"` open the menu beside its trigger – lined up with the trigger's top

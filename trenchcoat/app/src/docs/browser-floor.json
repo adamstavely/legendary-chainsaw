@@ -553,6 +553,21 @@
    "progressive": true,
    "without": "Content can shift sideways when a scrollbar appears.",
    "elements": 3
+  },
+  {
+   "id": "starting-style",
+   "name": "@starting-style",
+   "bcd": "css.at-rules.starting-style",
+   "versions": {
+    "chrome": "117",
+    "edge": "117",
+    "firefox": "129",
+    "safari": "17.5",
+    "safari_ios": "17.5"
+   },
+   "progressive": true,
+   "without": "Parts appear without their entry transition.",
+   "elements": 1
   }
  ],
  "engines": {

@@ -48,6 +48,15 @@
       ],
       "description": "Which edge of the trigger the list lines up with"
     },
+    "placement": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "bottom",
+        "top"
+      ],
+      "description": "Which side of the trigger the list opens on: \"auto\" (default) opens below unless there's more room above and too little below, as near the bottom of the window"
+    },
     "disabled": {
       "type": "boolean",
       "description": "Turns the control off; the hidden form input is disabled too"

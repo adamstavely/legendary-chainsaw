@@ -378,8 +378,7 @@
     "safari": "17.5",
     "safari_ios": "17.5"
    },
-   "progressive": "Parts appear without their entry transition.",
-   "watch": true
+   "progressive": "Parts appear without their entry transition."
   },
   {
    "id": "nesting",
