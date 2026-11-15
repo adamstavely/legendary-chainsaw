@@ -9,7 +9,7 @@
 A plain single-choice dropdown – a secondary-button trigger with the chosen option opens a list with a check on it, optional descriptions and disabled options, arrow keys and type-ahead
 
 - **Element:** `<tc-select>`
-- **Size:** 8.1 KB gzip · 25.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.5 KB gzip · 26.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
