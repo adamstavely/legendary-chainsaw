@@ -47,6 +47,10 @@ export class Select {
   @Input() set align(v: TcSelect["align"]) {
     this.#el.align = v;
   }
+  /** Which side of the trigger the list opens on: "auto" (default) opens below unless there's more room above and too little below, as near the bottom of the window */
+  @Input() set placement(v: TcSelect["placement"]) {
+    this.#el.placement = v;
+  }
   /** Turns the control off; the hidden form input is disabled too */
   @Input() set disabled(v: TcSelect["disabled"] | "" | "true" | "false") {
     this.#el.disabled = typeof v === "string" ? v !== "false" : v;

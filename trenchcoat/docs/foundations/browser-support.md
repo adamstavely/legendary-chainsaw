@@ -57,6 +57,7 @@ features that set those versions, and the features it uses only where they exist
 | backdrop-filter | 76 | 103 | 18 | 18 | 10 | Progressive – What's behind a translucent surface isn't blurred; the surface keeps its fill. |
 | text-wrap: balance | 114 | 121 | 17.5 | 17.5 | 7 | Progressive – Titles break where the line fills up instead of into even lines. |
 | scrollbar-gutter | 94 | 97 | 18.2 | 18.2 | 3 | Progressive – Content can shift sideways when a scrollbar appears. |
+| @starting-style | 117 | 129 | 17.5 | 17.5 | 1 | Progressive – Parts appear without their entry transition. |
 
 The table above is generated: it's the highest floor of any component, with the features that set it. Every
 component reads the token dictionary, whose colours are `light-dark()` pairs, so `light-dark()` sets the floor for all

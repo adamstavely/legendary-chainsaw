@@ -9,7 +9,7 @@
 A plain single-choice dropdown – a secondary-button trigger with the chosen option opens a list with a check on it, optional descriptions and disabled options, arrow keys and type-ahead
 
 - **Element:** `<tc-select>`
-- **Size:** 7.8 KB gzip · 24.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.1 KB gzip · 25.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -50,7 +50,7 @@ optional description line under each. Options can be disabled: they show, but ca
 
 1. **Label** `.ui-select__label` – shown above the trigger with `label-visible`, or before it on the same line with
 2. **Trigger** `.ui-select__trigger` – the chosen option's label, or the placeholder, and a chevron
-3. **List** `.ui-select__list` – the options, in a popover under the trigger
+3. **List** `.ui-select__list` – the options, in a popover under the trigger, or above it when there's too little room
 4. **Option** `.ui-select__option` – label, optional description, and a check on the chosen one
 
 ## Looks
@@ -177,6 +177,7 @@ export class SelectExample {
 | `placeholder` | `placeholder` | `string` | `"Choose…"` | What the trigger says while no option is chosen |
 | `open` | `open` | `boolean` | `false` | Whether the list is open |
 | `align` | `align` | `"start" \| "end"` | `"start"` | Which edge of the trigger the list lines up with |
+| `placement` | `placement` | `"auto" \| "bottom" \| "top"` | `"auto"` | Which side of the trigger the list opens on: "auto" (default) opens below unless there's more room above and too little below, as near the bottom of the window |
 | `disabled` | `disabled` | `boolean` | `false` | Turns the control off; the hidden form input is disabled too |
 | `name` | `name` | `string \| undefined` | `undefined` | Submits the chosen value with a native form, through a hidden input |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
@@ -212,7 +213,7 @@ export class SelectExample {
 | --- | --- | --- | --- | --- | --- |
 | `options` | `el.options = …;` | `<… options={…} />` | `<tc-select :options="…">` | `<tc-select [options]="…">` | `<tc-select {options}>` |
 
-*Also attributes: `value`, `label`, `label-visible`, `label-placement`, `placeholder`, `open`, `align`, `disabled` and 1 more – see the API table.*
+*Also attributes: `value`, `label`, `label-visible`, `label-placement`, `placeholder`, `open`, `align`, `placement` and 2 more – see the API table.*
 
 ### Events
 
@@ -471,6 +472,7 @@ disabled ones carry `aria-disabled`. Option ids come from their position, never 
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
+| @starting-style | 117 | 129 | 17.5 | 17.5 | itself | Parts appear without their entry transition. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
 | forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself | Scrolling past the end of a list carries on scrolling the page. |
@@ -534,6 +536,9 @@ disabled ones carry `aria-disabled`. Option ids come from their position, never 
 ### Do
 
 - Use `align="end"` when the select sits at the right edge of a header.
+- Leave `placement` on `"auto"`: the list opens below the trigger, or above it when it doesn't fit below and there's
+  more room above, as in a composer's toolbar at the bottom of the window. Set `"top"` or `"bottom"` only when the page
+  knows better.
 - Show the label (`label-visible`) inside forms, where the trigger alone doesn't say what it sets.
 - In a toolbar or a page header, put the label on the trigger's line with `label-visible label-placement="start"`: a
   small caption (the `--tc-caption-*` tokens), vertically centred, with the list still opening under the trigger. The
