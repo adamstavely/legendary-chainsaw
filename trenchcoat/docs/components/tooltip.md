@@ -42,17 +42,13 @@ Use existing read-only run and output components when users only need to inspect
 ### HTML
 
 ```html
-<tc-tooltip id="tooltip"></tc-tooltip>
+<tc-tooltip label="About sampling" text="Temperature changes sampling variability."></tc-tooltip>
 
 <script type="module">
   import "@adamstavely/trenchcoat/tooltip";
   import "@adamstavely/trenchcoat/tokens.css";
-
-  const el = document.querySelector("#tooltip");
 </script>
 ```
-
-*Generated from the element's API and compiled in `examples/html` by `npm run check:snippets`. The Frameworks section below covers events, control, slots, server rendering and types.*
 
 ### React / Next.js
 

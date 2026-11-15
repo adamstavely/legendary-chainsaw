@@ -38,6 +38,23 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-radio-group id="mode" label="Review mode"></tc-radio-group>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/radio-group";
+  import "@adamstavely/trenchcoat/tokens.css";
+
+  const el = document.querySelector("#mode");
+  el.options = [
+    { value: "ask", label: "Ask first" },
+    { value: "auto", label: "Automatic" },
+  ];
+  el.value = "ask";
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ```tsx
 import { RadioGroup } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";

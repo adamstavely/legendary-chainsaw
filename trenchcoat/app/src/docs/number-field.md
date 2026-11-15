@@ -38,6 +38,19 @@ Don't treat client-side validation or policy previews as backend enforcement. Do
 
 ## Example
 
+```html
+<tc-number-field id="workers" label="Worker limit" min="1" max="32"></tc-number-field>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/number-field";
+  import "@adamstavely/trenchcoat/tokens.css";
+
+  const el = document.querySelector("#workers");
+  el.value = 4;
+  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+</script>
+```
+
 ```tsx
 import { NumberField } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
