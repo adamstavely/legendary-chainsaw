@@ -2,6 +2,11 @@
 
 # Changelog
 
+## 0.29.2 – Form controls run live on the canvas
+
+- **Checkbox, Number Field, Radio Group, Secret Field, Slider Field, Switch and Tooltip:** each docs page now has an
+  HTML example beside the React one, so the canvas runs these controls live instead of showing only their thumbnails.
+
 ## 0.29.1 – Select: no room taken while closed, and opening upward
 
 - **Select:** closed, the list isn't laid out at all (`display: none`, moved discretely so the fades still run). It was
