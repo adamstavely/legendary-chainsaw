@@ -55,19 +55,19 @@
     "labels": {
       "type": "object",
       "properties": {
-        "idle": {
-          "type": "string"
-        },
-        "running": {
-          "type": "string"
-        },
-        "done": {
+        "waiting": {
           "type": "string"
         },
         "failed": {
           "type": "string"
         },
-        "waiting": {
+        "done": {
+          "type": "string"
+        },
+        "idle": {
+          "type": "string"
+        },
+        "running": {
           "type": "string"
         },
         "pinned": {

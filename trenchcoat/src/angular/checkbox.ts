@@ -4,7 +4,7 @@ import type { TcCheckbox } from "@adamstavely/trenchcoat/checkbox";
 import "@adamstavely/trenchcoat/checkbox";
 
 /**
- * <tc-checkbox> for Angular: Checkbox for AI product settings.
+ * <tc-checkbox> for Angular: A yes / no choice saved with a form – label and second line, a partly-checked state, a card row and an error line.
  * 
  * imports: [Checkbox] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */
@@ -14,6 +14,18 @@ export class Checkbox {
   /** The element itself, for its methods */
   get element(): TcCheckbox {
     return this.#el;
+  }
+  /** Partly checked: a dash for a Select all over a list that's only partly picked; clicking it checks it */
+  @Input() set indeterminate(v: TcCheckbox["indeterminate"] | "" | "true" | "false") {
+    this.#el.indeterminate = typeof v === "string" ? v !== "false" : v;
+  }
+  /** "default" (a box and its label) or "card" (a bordered row, clickable anywhere) */
+  @Input() set variant(v: TcCheckbox["variant"]) {
+    this.#el.variant = v;
+  }
+  /** An error shown under the checkbox, e.g. "Accept the terms to go on"; empty shows none */
+  @Input() set errorMessage(v: TcCheckbox["errorMessage"]) {
+    this.#el.errorMessage = v;
   }
   /** Visible heading or field label. */
   @Input() set label(v: TcCheckbox["label"]) {

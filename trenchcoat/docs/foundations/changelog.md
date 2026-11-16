@@ -2,6 +2,28 @@
 
 # Changelog
 
+## 0.32.0 – Memory Graph, Agent Crew and Run Controls
+
+- **Memory Graph:** what an agent remembers and the tools it can reach, on a ring round it – each memory with the file, chat or email it came from, each tool with what it may do where, joined by curved connectors; a light runs out to the tool in use and in from what it recalls or learns. Switch any card off, forget a memory with Undo, or add a file or connect a tool from the agent. Narrow, it becomes the agent over two lists.
+- **Agent Crew:** a lead agent and its sub-agents as one live tree of cards, every agent on screen – what each does now, its context in words and a bar, its tools and the last thing it was handed; handoffs run as a light along the connectors. Open an agent to steer, pause or resume it; tabs switch between projects.
+- **Run Controls:** every control a running agent needs in one composer – Stop, then Resume from where the answer stopped, Retry or Dismiss; steer mid-answer or queue what's next; Chat or Act, permissions and how full the context is, folding into More when narrow.
+
+## 0.31.0 – Checkbox, Switch, Running Now, Decision Card, Approval Gates and Memory Panel grow
+
+- **Checkbox:** `indeterminate` shows a partly checked state for Select all (clicking checks it); `variant="card"` is a bordered row clickable anywhere; `error-message` (or a failed required check) shows an error under it; the check draws itself, except under reduced motion. The input is named by its label alone and described by its second line.
+- **Switch:** `placement="end"` puts the switch at the far end of a full-width settings row, with the label and second line on the left; the thumb stretches a little while pressed.
+- **Running Now:** with `pausable`, running tasks get Pause and paused ones Resume, both a cancelable `tc-task-action`; unless prevented the element sets the status itself. Paused tasks stay with the running ones and the pill counts them ("1 paused").
+- **Decision Card:** `kind="variant"` shows the options as preview tiles (`image`, `imageAlt`), picked like numbered options.
+- **Approval Gates:** "Change it first" edits a request's arguments as fields, and "Approve with changes" sends them (`args` and `edited` on `tc-decide` and `tc-gates-change`); the decided row says "Approved with changes", which arguments changed, and both versions. The React `onGatesChange` second argument now includes `args` and `edited`.
+- **Memory Panel:** memories the assistant picked up on its own (`pending: true`) wait under "Waiting for your OK" with Keep and Don't keep, which fire a cancelable `tc-consent` and call `onConsent`; they join their category only once kept.
+
+## 0.30.0 – Agent runs: Agent Sequence, Cost Waterfall, Diff Timeline and Agent Trail
+
+- **Agent Sequence:** one agent run as a sequence diagram – a lifeline for you, every agent and every tool; calls solid, replies dashed, failures in words, work bars, and frames round parallel and retried messages. Live runs draw new messages across; a click opens details.
+- **Cost Waterfall:** where a run's money and tokens went, each step stepping up to the total – by cost or in run order, cost or tokens, with details per step.
+- **Diff Timeline:** what a coding agent changed in a pull request, edit by edit – lines added and removed over the run, a row per file with its edits on a shared time axis, each edit's diff on hover, and a replay scrubber.
+- **Agent Trail:** the steps an agent works through as one quiet trail for a chat answer or side panel – done, current with live sub-steps, a step waiting for your OK with Approve and Decline, and what comes next.
+
 ## 0.29.3 – Form controls run live on the canvas
 
 - **Checkbox, Number Field, Radio Group, Secret Field, Slider Field, Switch and Tooltip:** each docs page now has an

@@ -1,0 +1,186 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-cost-waterfall.json",
+  "title": "tc-cost-waterfall",
+  "description": "Where the money and tokens of one agent run went, as a waterfall of its steps stepping up to the total.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "A line under the heading – the run or the agent"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CostStep"
+      },
+      "description": "The run's steps, in the order they ran"
+    },
+    "measure": {
+      "type": "string",
+      "enum": [
+        "cost",
+        "tokens"
+      ],
+      "description": "What the bars measure: \"cost\" or \"tokens\""
+    },
+    "order": {
+      "type": "string",
+      "enum": [
+        "cost",
+        "run"
+      ],
+      "description": "\"cost\" puts the most expensive step on top; \"run\" keeps the run's order"
+    },
+    "openId": {
+      "type": "string",
+      "description": "Id of the step whose details are open"
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code for every amount"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers and amounts"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "tool": {
+          "type": "string"
+        },
+        "llm": {
+          "type": "string"
+        },
+        "subagent": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "measure": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        },
+        "tokensIn": {
+          "type": "string"
+        },
+        "tokensOut": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string"
+        },
+        "byCost": {
+          "type": "string"
+        },
+        "inOrder": {
+          "type": "string"
+        },
+        "costliest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CostStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/CostStepKind"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model of an LLM call or a sub-agent"
+        },
+        "tokensIn": {
+          "type": "number"
+        },
+        "tokensOut": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What the step cost, in the element's currency"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        },
+        "running": {
+          "type": "boolean",
+          "description": "Still running – its numbers may still grow"
+        },
+        "input": {
+          "type": "string",
+          "description": "What went in and what came out – short previews for the details"
+        },
+        "output": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "cost"
+      ],
+      "additionalProperties": false
+    },
+    "CostStepKind": {
+      "type": "string",
+      "enum": [
+        "llm",
+        "subagent",
+        "tool"
+      ]
+    }
+  }
+}

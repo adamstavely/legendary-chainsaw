@@ -9,7 +9,7 @@
 A plain single-choice dropdown – a secondary-button trigger with the chosen option opens a list with a check on it, optional descriptions and disabled options, arrow keys and type-ahead
 
 - **Element:** `<tc-select>`
-- **Size:** 8.5 KB gzip · 26.4 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.4 KB gzip · 26.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -479,13 +479,13 @@ disabled ones carry `aria-disabled`. Option ids come from their position, never 
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 17.7 KB | 5.9 KB |
+| **This component alone** | 19.6 KB | 6.6 KB |
 | Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -493,8 +493,8 @@ disabled ones carry `aria-disabled`. Option ids come from their position, never 
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **24.4 KB** | **7.8 KB** |
-| With Lit – the first component on a page | 45.1 KB | 14.6 KB |
+| **Added to a page that already has Lit** | **26.4 KB** | **8.4 KB** |
+| With Lit – the first component on a page | 47.0 KB | 15.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -502,11 +502,11 @@ disabled ones carry `aria-disabled`. Option ids come from their position, never 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.0 ms** | the gallery demo's data, 35 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of options replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.4 ms | options: first render, 441 nodes; update 0.6 ms |
-| 1,000 items | 26 ms | options: first render, 4,341 nodes; update 2.5 ms |
+| First render | **2.2 ms** | the gallery demo's data, 35 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of options replaced |
+| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| 100 items | 11 ms | options: first render, 441 nodes; update 0.3 ms |
+| 1,000 items | 26 ms | options: first render, 4,341 nodes; update 2.6 ms |
 
 1,000 items of options: 26 ms, 4,341 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 

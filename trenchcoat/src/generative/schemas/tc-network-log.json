@@ -75,16 +75,16 @@
         "name": {
           "type": "string"
         },
-        "size": {
-          "type": "string"
-        },
         "failed": {
           "type": "string"
         },
-        "finished": {
+        "close": {
           "type": "string"
         },
-        "close": {
+        "size": {
+          "type": "string"
+        },
+        "finished": {
           "type": "string"
         },
         "url": {

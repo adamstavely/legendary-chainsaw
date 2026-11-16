@@ -30,13 +30,13 @@
     "labels": {
       "type": "object",
       "properties": {
-        "running": {
+        "waiting": {
           "type": "string"
         },
         "failed": {
           "type": "string"
         },
-        "waiting": {
+        "running": {
           "type": "string"
         },
         "tabs": {

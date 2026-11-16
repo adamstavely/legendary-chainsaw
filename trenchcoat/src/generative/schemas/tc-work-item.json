@@ -23,10 +23,10 @@
     "statusLabels": {
       "type": "object",
       "properties": {
-        "done": {
+        "paused": {
           "type": "string"
         },
-        "paused": {
+        "done": {
           "type": "string"
         },
         "review": {

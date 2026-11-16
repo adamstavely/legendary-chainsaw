@@ -9,7 +9,7 @@
 One question an agent needs answered before it carries on, docked above the composer – how long it has waited, numbered options with one recommended (focused, never picked), 1–9 to pick, Something else, or Approve and Decline with a reason, a queue to step through, and a receipt with Undo
 
 - **Element:** `<tc-decision-card>`
-- **Size:** 10.7 KB gzip · 37.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.1 KB gzip · 38.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -33,6 +33,10 @@ options – one of them may be Recommended, which takes the first focus but is n
 step, Approve and Decline. Once sent it folds into a one-line receipt, "You chose: Keep the 2024 file", with Undo for a
 few seconds, and the agent carries on.
 
+When the choice is between things you can see – three drafts of a chart, two layouts, a set of logos – `kind="variant"`
+shows the options as preview tiles: each option's `image` above its label and detail, or its number on a quiet tile
+when it has none. They're picked the same way as numbered options.
+
 It sits between its neighbours. Clarifying Questions asks two or three things before a run starts and sends them as
 one reply; Approval Card reviews one proposed action with its details and policy; Decision Inbox lists many decisions
 to work through. Decision Card is the single question that blocks a run right now, where the person is already
@@ -43,6 +47,7 @@ typing.
 - An agent is stopped mid-run on a choice it shouldn't make alone – which record to keep, which source to trust.
 - The likely answers can be named, and the agent has a view on which is best.
 - Several agents are waiting at once: pass `queue` and `position` to step through them one at a time.
+- The agent made a few versions of something and needs one picked – `kind="variant"` with a preview of each.
 
 ### When not to use
 
@@ -56,9 +61,10 @@ typing.
 
 2. **Question** `.ui-dcd__question` – what the agent needs to know, with the context `.ui-dcd__context` under it
 3. **Options** `.ui-dcd__choices` – numbered rows `.ui-dcd__choice`, the recommended one with a chip `.ui-dcd__chip`, each with an optional detail line
-4. **Something else** `.ui-dcd__input` – a short field that opens when its option is picked (`allow-other`)
-5. **Buttons** `.ui-dcd__foot` – Later and Send, or Later, Decline and Approve; Decline swaps in a reason field and Back
-6. **Receipt** `.ui-dcd__receipt` – after sending: a check, what was decided, the agent, and Undo for `undo-ms`
+4. **Preview** `.ui-dcd__tile` – with `kind="variant"`, each option's image (or its number on a blank tile) above its label
+5. **Something else** `.ui-dcd__input` – a short field that opens when its option is picked (`allow-other`)
+6. **Buttons** `.ui-dcd__foot` – Later and Send, or Later, Decline and Approve; Decline swaps in a reason field and Back
+7. **Receipt** `.ui-dcd__receipt` – after sending: a check, what was decided, the agent, and Undo for `undo-ms`
 
 ## Looks
 
@@ -66,6 +72,9 @@ Standard puts the header on the gray tray and the question and options on a whit
 the tray. Options are outlined rows. Clean is one white card with the header as its first row: options are flat gray
 rows and the buttons sit in the card's last row. In both, the picked option is tinted with the accent and ringed, and
 its number fills.
+
+Variants lay out as a grid of tiles at least `--tc-dcd-tile` wide (132px by default); the picked tile's preview gets
+the selected ring as well.
 
 The page can set `--tc-dcd-num`, the size of the option numbers.
 
@@ -88,6 +97,17 @@ The page can set `--tc-dcd-num`, the size of the option numbers.
     { id: "older", label: "Keep V-2210, archive V-3184" },
   ];
   ask.addEventListener("tc-decision", (e) => agent.answer(e.detail));
+</script>
+
+<tc-decision-card id="pick" kind="variant" agent="Report agent" question="Which chart should show spend by vendor?"></tc-decision-card>
+
+<script type="module">
+  const pick = document.querySelector("#pick");
+  pick.options = [
+    { id: "bars", label: "Bars", detail: "Easiest to compare", image: "/drafts/bars.png", imageAlt: "Bar chart draft", recommended: true },
+    { id: "treemap", label: "Treemap", image: "/drafts/treemap.png", imageAlt: "Treemap draft" },
+  ];
+  pick.addEventListener("tc-decision", (e) => console.log(e.detail.choice));
 </script>
 ```
 
@@ -186,8 +206,8 @@ export class DecisionCardExample {
 | `avatar` | `avatar` | `string \| undefined` | `undefined` | The agent's picture (an image URL); unset shows its initials |
 | `question` | `question` | `string` | `""` | The question, as the agent asks it |
 | `context` | `context` | `string \| undefined` | `undefined` | A line or two of context: what the agent found, why it can't go on alone |
-| `kind` | `kind` | `DecisionCardKind` | `"choose"` | "choose" (default): numbered options; "approve": Approve and Decline |
-| `options` | – | `DecisionCardOption[]` | `[]` | The options for kind="choose", in the agent's order |
+| `kind` | `kind` | `DecisionCardKind` | `"choose"` | "choose" (default): numbered options; "approve": Approve and Decline; "variant": options as preview tiles |
+| `options` | – | `DecisionCardOption[]` | `[]` | The options for kind="choose" or "variant", in the agent's order |
 | `allowOther` | `allow-other` | `boolean` | `false` | Offers "Something else…" with a short field |
 | `value` | `value` | `string \| null` | `null` | The picked option's id ("other" for Something else), or null |
 | `otherText` | `other-text` | `string` | `""` | The text of Something else |
@@ -218,10 +238,11 @@ export class DecisionCardExample {
 | Custom property | Value | Look |
 | --- | --- | --- |
 | `--tc-dcd-num` | `20px` | standard, clean |
+| `--tc-dcd-tile` | `132px` | both |
 
-#### Design tokens it reads (99)
+#### Design tokens it reads (101)
 
-`--tc-accent`, `--tc-accent-solid`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-danger-bg`, `--tc-action-danger-bg-hover`, `--tc-action-danger-fg`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-control`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-ease-move`, `--tc-ease-spring`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-field-shadow-invalid`, `--tc-fill-default`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-kbd-font-size`, `--tc-kbd-font-weight`, `--tc-kbd-h`, `--tc-kbd-on-inverse-bg`, `--tc-kbd-px`, `--tc-kbd-radius`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-accent-solid`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-danger-bg`, `--tc-action-danger-bg-hover`, `--tc-action-danger-fg`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-control`, `--tc-border-default`, `--tc-border-selected`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-ease-move`, `--tc-ease-spring`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-font-size`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-field-shadow-invalid`, `--tc-fill-default`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xl`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-semibold`, `--tc-hairline`, `--tc-kbd-font-size`, `--tc-kbd-font-weight`, `--tc-kbd-h`, `--tc-kbd-on-inverse-bg`, `--tc-kbd-px`, `--tc-kbd-radius`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-pill-font-size`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-px`, `--tc-pill-radius`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-surface-tray`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-on-accent`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tray-inset`, `--tc-tray-radius`
 
 #### Functions
 
@@ -481,7 +502,8 @@ Follows the WAI-ARIA [Radio group pattern](https://www.w3.org/WAI/ARIA/apg/patte
 
 The card is a `section` named by the agent and the question. The options are a `radiogroup` of `radio` buttons named
 by the question and described by the keys; an option reads as "Keep the 2024 file, Recommended, It has the signed
-bank letter". Sending with nothing picked says "Pick an option first" in a status region and moves focus to the
+bank letter". A variant's image is named by its `imageAlt`; without one it's decorative and the label names the
+option. Sending with nothing picked says "Pick an option first" in a status region and moves focus to the
 options. After sending, the status region reads the receipt ("You chose: Keep the 2024 file"), and focus moves to the
 receipt, a `group` named by it. Previous and next in the queue are named "Previous decision" and "Next decision", and
 "1 of 3" is announced politely as it changes.
@@ -513,6 +535,7 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 | Container size queries | 105 | 110 | 16 | 16 | itself | Components adapt to the width they're given, not the window's. |
 | inert | 102 | 112 | 15.5 | 15.5 | internal/controllers | Closed and leaving parts are out of the tab order and hidden from screen readers. |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit | Focus rings for keyboard users. |
+| aspect-ratio | 88 | 89 | 15 | 15 | itself | – |
 | inset | 87 | 66 | 14.1 | 14.1 | itself | – |
 | :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
 
@@ -528,13 +551,13 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 28.3 KB | 8.1 KB |
+| **This component alone** | 29.9 KB | 8.5 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -544,8 +567,8 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **37.1 KB** | **10.7 KB** |
-| With Lit – the first component on a page | 59.4 KB | 18.1 KB |
+| **Added to a page that already has Lit** | **38.6 KB** | **11.1 KB** |
+| With Lit – the first component on a page | 61.0 KB | 18.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -553,13 +576,13 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.2 ms** | the gallery demo's data, 61 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of options replaced |
-| First on the page | 30 ms | default properties; includes adding its CSS to the document |
-| 100 items | 12 ms | options: first render, 806 nodes; update 0.7 ms |
-| 1,000 items | 42 ms | options: first render, 7,706 nodes; update 3.4 ms |
+| First render | **2.9 ms** | the gallery demo's data, 61 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of options replaced |
+| First on the page | 37 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.9 ms | options: first render, 806 nodes; update 0.4 ms |
+| 1,000 items | 31 ms | options: first render, 7,706 nodes; update 3.1 ms |
 
-1,000 items of options: 42 ms, 7,706 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of options: 31 ms, 7,706 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -581,6 +604,7 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 - Write options as actions: "Keep V-3184, archive V-2210". Put the cost or consequence in `detail`.
 - Recommend at most one option, and only when the agent has a reason – say the reason in its `detail`.
 - Keep to two to five options; offer `allow-other` when none may fit.
+- For variants, give each preview an `imageAlt` that says what differs – "Bar chart draft" – and keep the labels short.
 
 ## Do and don't
 
@@ -594,6 +618,7 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 
 - Don't pre-pick the recommended option – people should choose it on purpose.
 - Don't ask what the agent could look up itself.
+- Don't use variant tiles for options that only differ in words – numbered rows read faster.
 - Don't use Decision Card for questions before a run – ask them together with `clarifying-questions`.
 
 ## Related

@@ -453,7 +453,7 @@ the label's word, so colour is never the only cue. The reason is `aria-required`
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -461,15 +461,15 @@ the label's word, so colour is never the only cue. The reason is `aria-required`
 | --- | --- | --- |
 | **This component alone** | 13.2 KB | 4.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.3 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **28.4 KB** | **9.7 KB** |
-| With Lit – the first component on a page | 49.9 KB | 16.6 KB |
+| **Added to a page that already has Lit** | **28.9 KB** | **9.8 KB** |
+| With Lit – the first component on a page | 50.4 KB | 16.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -477,13 +477,13 @@ the label's word, so colour is never the only cue. The reason is `aria-required`
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of options replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.6 ms | options: first render, 105 nodes; update 0.4 ms |
-| 1,000 items | 14 ms | options: first render, 1,005 nodes; update 1.8 ms |
+| First render | **0.3 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | one item of options replaced |
+| First on the page | 8.0 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.9 ms | options: first render, 105 nodes; update 0.2 ms |
+| 1,000 items | 4.7 ms | options: first render, 1,005 nodes; update 0.8 ms |
 
-1,000 items of options: 14 ms, 1,005 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of options: 4.7 ms, 1,005 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

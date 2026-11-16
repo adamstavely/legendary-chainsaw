@@ -498,7 +498,7 @@ A polite status region says what happened:
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -507,7 +507,7 @@ A polite status region says what happened:
 | **This component alone** | 40.9 KB | 11.9 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
 | `internal/selection` · Shared Trenchcoat code | 10.2 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/selection-toolbar` · Shared Trenchcoat code | 1.3 KB | – |
@@ -516,8 +516,8 @@ A polite status region says what happened:
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **69.6 KB** | **21.0 KB** |
-| With Lit – the first component on a page | 91.9 KB | 28.3 KB |
+| **Added to a page that already has Lit** | **70.1 KB** | **21.2 KB** |
+| With Lit – the first component on a page | 92.4 KB | 28.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -525,13 +525,13 @@ A polite status region says what happened:
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 131 DOM nodes – to layout, median of 7 |
+| First render | **3.7 ms** | the gallery demo's data, 131 DOM nodes – to layout, median of 7 |
 | Typical update | **0.5 ms** | one item of colors replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.2 ms | colors: first render, 359 nodes; update 0.3 ms |
-| 1,000 items | 13 ms | colors: first render, 2,519 nodes; update 1.7 ms |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.6 ms | colors: first render, 359 nodes; update 0.2 ms |
+| 1,000 items | 9.7 ms | colors: first render, 2,519 nodes; update 1.2 ms |
 
-1,000 items of colors: 13 ms, 2,519 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of colors: 9.7 ms, 2,519 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

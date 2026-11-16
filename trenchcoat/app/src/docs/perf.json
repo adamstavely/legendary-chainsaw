@@ -804,6 +804,104 @@
     "errors": []
    }
   },
+  "agent-crew": {
+   "measuredAt": "2026-11-16",
+   "hash": "79e696bc230563e3",
+   "bundle": {
+    "own": {
+     "min": 29464,
+     "gzip": 9005
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21925
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 37102,
+     "gzip": 11112
+    },
+    "withLit": {
+     "min": 60266,
+     "gzip": 18797
+    }
+   },
+   "render": {
+    "tag": "tc-agent-crew",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.5,
+    "first": 1.8,
+    "update": 0.3,
+    "updateKind": "one item of projects replaced",
+    "nodes": 156,
+    "scale": {
+     "property": "projects",
+     "demoItems": 2,
+     "points": [
+      {
+       "items": 100,
+       "first": 6.9,
+       "update": 0.2,
+       "nodes": 254
+      },
+      {
+       "items": 1000,
+       "first": 11.5,
+       "update": 1.2,
+       "nodes": 1154
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "agent-cursors": {
    "measuredAt": "2026-11-11",
    "hash": "1532715ad91b8ffc",
@@ -1270,8 +1368,8 @@
    }
   },
   "agent-gallery": {
-   "measuredAt": "2026-11-11",
-   "hash": "5a81ddfab508142e",
+   "measuredAt": "2026-11-16",
+   "hash": "b1eaa6282c46f7e1",
    "bundle": {
     "own": {
      "min": 31387,
@@ -1316,7 +1414,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -1325,20 +1423,20 @@
      }
     ],
     "withoutLit": {
-     "min": 52500,
-     "gzip": 15459
+     "min": 52799,
+     "gzip": 15548
     },
     "withLit": {
-     "min": 74810,
-     "gzip": 22845
+     "min": 75109,
+     "gzip": 22932
     }
    },
    "render": {
     "tag": "tc-agent-gallery",
     "source": "defaults",
     "runs": 7,
-    "cold": 38.8,
-    "first": 4.9,
+    "cold": 21.7,
+    "first": 4.4,
     "update": 0.4,
     "updateKind": "re-render with the same data",
     "nodes": 865,
@@ -2511,6 +2609,114 @@
     "errors": []
    }
   },
+  "agent-sequence": {
+   "measuredAt": "2026-11-16",
+   "hash": "341d6b1a255e385c",
+   "bundle": {
+    "own": {
+     "min": 27864,
+     "gzip": 8118
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 20099
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/format",
+      "kind": "internal",
+      "min": 206
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "src/internal/reduced-motion.ts",
+      "kind": "other",
+      "min": 96
+     }
+    ],
+    "withoutLit": {
+     "min": 35699,
+     "gzip": 10487
+    },
+    "withLit": {
+     "min": 56924,
+     "gzip": 17448
+    }
+   },
+   "render": {
+    "tag": "tc-agent-sequence",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.8,
+    "first": 1.6,
+    "update": 0.3,
+    "updateKind": "one item of messages replaced",
+    "nodes": 213,
+    "scale": {
+     "property": "messages",
+     "demoItems": 15,
+     "points": [
+      {
+       "items": 100,
+       "first": 5,
+       "update": 0.6,
+       "nodes": 782
+      },
+      {
+       "items": 1000,
+       "first": 37.3,
+       "update": 6.4,
+       "nodes": 6782
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "agent-steering": {
    "measuredAt": "2026-11-11",
    "hash": "18182718264fdd53",
@@ -2807,6 +3013,109 @@
      "visible": {
       "frames": 0,
       "timers": 31.33
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "agent-trail": {
+   "measuredAt": "2026-11-16",
+   "hash": "5740534c49dbfea3",
+   "bundle": {
+    "own": {
+     "min": 15616,
+     "gzip": 5171
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18952
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/format",
+      "kind": "internal",
+      "min": 206
+     }
+    ],
+    "withoutLit": {
+     "min": 23905,
+     "gzip": 7716
+    },
+    "withLit": {
+     "min": 43990,
+     "gzip": 14143
+    }
+   },
+   "render": {
+    "tag": "tc-agent-trail",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.3,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "one item of steps replaced",
+    "nodes": 87,
+    "scale": {
+     "property": "steps",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 6.1,
+       "update": 0.5,
+       "nodes": 1398
+      },
+      {
+       "items": 1000,
+       "first": 53,
+       "update": 4.9,
+       "nodes": 13818
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
      },
      "away": {
       "frames": 0,
@@ -3304,8 +3613,8 @@
    }
   },
   "ai-side-pane": {
-   "measuredAt": "2026-11-13",
-   "hash": "ede03b0a55a6ff29",
+   "measuredAt": "2026-11-16",
+   "hash": "aac0e28ce9051e17",
    "bundle": {
     "own": {
      "min": 37023,
@@ -3320,7 +3629,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8770
+      "min": 9307
      },
      {
       "name": "internal/controllers",
@@ -3450,7 +3759,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12717
+      "min": 13016
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -3464,20 +3773,20 @@
      }
     ],
     "withoutLit": {
-     "min": 703638,
-     "gzip": 167011
+     "min": 704477,
+     "gzip": 167269
     },
     "withLit": {
-     "min": 722814,
-     "gzip": 173131
+     "min": 723650,
+     "gzip": 173420
     }
    },
    "render": {
     "tag": "tc-ai-side-pane",
     "source": "defaults",
     "runs": 7,
-    "cold": 48,
-    "first": 3.4,
+    "cold": 35.8,
+    "first": 2.8,
     "update": 0.3,
     "updateKind": "re-render with the same data",
     "nodes": 198,
@@ -3608,8 +3917,8 @@
    }
   },
   "ai-workspace": {
-   "measuredAt": "2026-11-13",
-   "hash": "677d28b3cbfb4cf5",
+   "measuredAt": "2026-11-16",
+   "hash": "7cf26554a0a648cc",
    "bundle": {
     "own": {
      "min": 51402,
@@ -3624,7 +3933,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8770
+      "min": 9307
      },
      {
       "name": "internal/controllers",
@@ -3679,7 +3988,7 @@
      {
       "name": "chat-composer",
       "kind": "element",
-      "min": 140702
+      "min": 140719
      },
      {
       "name": "prompt-library",
@@ -3689,7 +3998,7 @@
      {
       "name": "mention-picker",
       "kind": "element",
-      "min": 40724
+      "min": 40712
      },
      {
       "name": "model-picker",
@@ -3714,7 +4023,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12687
+      "min": 12986
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -3728,21 +4037,21 @@
      }
     ],
     "withoutLit": {
-     "min": 444570,
-     "gzip": 104385
+     "min": 445405,
+     "gzip": 104661
     },
     "withLit": {
-     "min": 465858,
-     "gzip": 111384
+     "min": 466695,
+     "gzip": 111685
     }
    },
    "render": {
     "tag": "tc-ai-workspace",
     "source": "defaults",
     "runs": 7,
-    "cold": 36.2,
-    "first": 4,
-    "update": 0.3,
+    "cold": 22.3,
+    "first": 3.3,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 265,
     "scale": null,
@@ -4149,8 +4458,8 @@
    }
   },
   "app-directory": {
-   "measuredAt": "2026-11-11",
-   "hash": "01301f3acc3b4767",
+   "measuredAt": "2026-11-16",
+   "hash": "99ceb8c0e61423ad",
    "bundle": {
     "own": {
      "min": 56352,
@@ -4205,7 +4514,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -4214,21 +4523,21 @@
      }
     ],
     "withoutLit": {
-     "min": 77818,
-     "gzip": 25644
+     "min": 78117,
+     "gzip": 25731
     },
     "withLit": {
-     "min": 100140,
-     "gzip": 32724
+     "min": 100439,
+     "gzip": 32806
     }
    },
    "render": {
     "tag": "tc-app-directory",
     "source": "defaults",
     "runs": 7,
-    "cold": 32.1,
-    "first": 3.1,
-    "update": 0.4,
+    "cold": 14.1,
+    "first": 2,
+    "update": 0.3,
     "updateKind": "re-render with the same data",
     "nodes": 256,
     "scale": null,
@@ -4250,8 +4559,8 @@
    }
   },
   "app-picker": {
-   "measuredAt": "2026-11-11",
-   "hash": "b2ec77b01a2b9d08",
+   "measuredAt": "2026-11-16",
+   "hash": "9b5ee72bf6e470d2",
    "bundle": {
     "own": {
      "min": 37040,
@@ -4261,12 +4570,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21928
+      "min": 21944
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -4276,7 +4585,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1865
      },
      {
       "name": "internal/kit",
@@ -4291,7 +4600,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 444
+      "min": 445
      },
      {
       "name": "internal/styles",
@@ -4320,21 +4629,21 @@
      }
     ],
     "withoutLit": {
-     "min": 54873,
-     "gzip": 16651
+     "min": 55395,
+     "gzip": 16847
     },
     "withLit": {
-     "min": 77966,
-     "gzip": 24253
+     "min": 78495,
+     "gzip": 24451
     }
    },
    "render": {
     "tag": "tc-app-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 20.1,
-    "first": 1.3,
-    "update": 0.2,
+    "cold": 8,
+    "first": 0.4,
+    "update": 0.1,
     "updateKind": "one item of pinned replaced",
     "nodes": 13,
     "scale": {
@@ -4343,14 +4652,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.7,
-       "update": 0.1,
+       "first": 0.4,
+       "update": 0,
        "nodes": 13
       },
       {
        "items": 1000,
-       "first": 1.5,
-       "update": 0.2,
+       "first": 0.2,
+       "update": 0,
        "nodes": 13
       }
      ]
@@ -4373,11 +4682,11 @@
    }
   },
   "approval-card": {
-   "measuredAt": "2026-11-13",
-   "hash": "a7d0f4ede1be6772",
+   "measuredAt": "2026-11-16",
+   "hash": "0653b1a2ee408175",
    "bundle": {
     "own": {
-     "min": 60787,
+     "min": 60788,
      "gzip": 16207
     },
     "shared": [
@@ -4423,11 +4732,11 @@
      }
     ],
     "withoutLit": {
-     "min": 69812,
-     "gzip": 19204
+     "min": 69813,
+     "gzip": 19203
     },
     "withLit": {
-     "min": 91007,
+     "min": 91008,
      "gzip": 26078
     }
    },
@@ -4435,9 +4744,9 @@
     "tag": "tc-approval-card",
     "source": "demo",
     "runs": 7,
-    "cold": 30.7,
-    "first": 2.1,
-    "update": 0.6,
+    "cold": 13.7,
+    "first": 0.6,
+    "update": 0.2,
     "updateKind": "one item of details replaced",
     "nodes": 59,
     "scale": {
@@ -4446,14 +4755,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.8,
-       "update": 0.4,
+       "first": 2.1,
+       "update": 0.2,
        "nodes": 350
       },
       {
        "items": 1000,
-       "first": 15.7,
-       "update": 1.5,
+       "first": 11.7,
+       "update": 1,
        "nodes": 3050
       }
      ]
@@ -4579,12 +4888,12 @@
    }
   },
   "approval-gates": {
-   "measuredAt": "2026-11-13",
-   "hash": "d01cfd421d99dd9a",
+   "measuredAt": "2026-11-16",
+   "hash": "b7f251e45a81763b",
    "bundle": {
     "own": {
-     "min": 34033,
-     "gzip": 9793
+     "min": 40713,
+     "gzip": 11467
     },
     "shared": [
      {
@@ -4630,25 +4939,25 @@
      {
       "name": "approval-card",
       "kind": "element",
-      "min": 58296
+      "min": 58297
      }
     ],
     "withoutLit": {
-     "min": 101513,
-     "gzip": 26708
+     "min": 108194,
+     "gzip": 28693
     },
     "withLit": {
-     "min": 124299,
-     "gzip": 34189
+     "min": 130980,
+     "gzip": 36177
     }
    },
    "render": {
     "tag": "tc-approval-gates",
     "source": "demo",
     "runs": 7,
-    "cold": 9.4,
-    "first": 1.2,
-    "update": 0.3,
+    "cold": 22.1,
+    "first": 2.7,
+    "update": 0.4,
     "updateKind": "one item of gates replaced",
     "nodes": 126,
     "scale": {
@@ -4657,14 +4966,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.5,
+       "first": 8.3,
        "update": 0.3,
        "nodes": 510
       },
       {
        "items": 1000,
-       "first": 13.7,
-       "update": 2.2,
+       "first": 24.2,
+       "update": 2.8,
        "nodes": 4110
       }
      ]
@@ -5831,8 +6140,8 @@
    }
   },
   "background-tasks": {
-   "measuredAt": "2026-11-13",
-   "hash": "5f7b3d5d7ce06bcb",
+   "measuredAt": "2026-11-16",
+   "hash": "ad5e3faa73ea0b24",
    "bundle": {
     "own": {
      "min": 34710,
@@ -5842,12 +6151,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22514
+      "min": 22529
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/controllers",
@@ -5862,7 +6171,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1865
      },
      {
       "name": "internal/kit",
@@ -5872,7 +6181,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 444
+      "min": 445
      },
      {
       "name": "internal/styles",
@@ -5886,21 +6195,21 @@
      }
     ],
     "withoutLit": {
-     "min": 54507,
-     "gzip": 16782
+     "min": 55030,
+     "gzip": 16964
     },
     "withLit": {
-     "min": 78174,
-     "gzip": 24520
+     "min": 78702,
+     "gzip": 24702
     }
    },
    "render": {
     "tag": "tc-background-tasks",
     "source": "demo",
     "runs": 7,
-    "cold": 14.3,
-    "first": 1,
-    "update": 0.2,
+    "cold": 4.7,
+    "first": 0.2,
+    "update": 0.1,
     "updateKind": "one item of tasks replaced",
     "nodes": 10,
     "scale": {
@@ -5909,8 +6218,8 @@
      "points": [
       {
        "items": 10000,
-       "first": 8.2,
-       "update": 6.3,
+       "first": 3.4,
+       "update": 1.7,
        "nodes": 10
       }
      ]
@@ -7103,8 +7412,8 @@
    }
   },
   "branch-switcher": {
-   "measuredAt": "2026-11-11",
-   "hash": "eafdcd45597a40a6",
+   "measuredAt": "2026-11-16",
+   "hash": "bdd38577f18befb2",
    "bundle": {
     "own": {
      "min": 20883,
@@ -7114,12 +7423,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19995
+      "min": 19998
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9283
      },
      {
       "name": "internal/card-head",
@@ -7158,21 +7467,21 @@
      }
     ],
     "withoutLit": {
-     "min": 37421,
-     "gzip": 12269
+     "min": 37943,
+     "gzip": 12455
     },
     "withLit": {
-     "min": 58609,
-     "gzip": 19043
+     "min": 59139,
+     "gzip": 19243
     }
    },
    "render": {
     "tag": "tc-branch-switcher",
     "source": "demo",
     "runs": 7,
-    "cold": 25.2,
-    "first": 1.7,
-    "update": 0.4,
+    "cold": 12.3,
+    "first": 1.3,
+    "update": 0.3,
     "updateKind": "one item of branches replaced",
     "nodes": 22,
     "scale": {
@@ -7181,14 +7490,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.6,
-       "update": 0.2,
+       "first": 1.2,
+       "update": 0.3,
        "nodes": 22
       },
       {
        "items": 1000,
-       "first": 2.5,
-       "update": 1,
+       "first": 1.7,
+       "update": 0.5,
        "nodes": 22
       }
      ]
@@ -8454,12 +8763,12 @@
    }
   },
   "button": {
-   "measuredAt": "2026-11-11",
-   "hash": "05bd7bc1f695acb7",
+   "measuredAt": "2026-11-16",
+   "hash": "51a6fa17ea643c34",
    "bundle": {
     "own": {
-     "min": 15074,
-     "gzip": 5029
+     "min": 15373,
+     "gzip": 5122
     },
     "shared": [
      {
@@ -8504,21 +8813,21 @@
      }
     ],
     "withoutLit": {
-     "min": 23150,
-     "gzip": 7402
+     "min": 23449,
+     "gzip": 7495
     },
     "withLit": {
-     "min": 43789,
-     "gzip": 14036
+     "min": 44088,
+     "gzip": 14127
     }
    },
    "render": {
     "tag": "tc-button",
     "source": "demo",
     "runs": 7,
-    "cold": 16.6,
-    "first": 1,
-    "update": 0.2,
+    "cold": 7.9,
+    "first": 0.5,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 2,
     "scale": null,
@@ -9435,8 +9744,8 @@
    }
   },
   "change-list": {
-   "measuredAt": "2026-11-11",
-   "hash": "6cd41a57de10e300",
+   "measuredAt": "2026-11-16",
+   "hash": "eb2d9491e5807588",
    "bundle": {
     "own": {
      "min": 15213,
@@ -9446,12 +9755,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21098
+      "min": 21115
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -9486,24 +9795,24 @@
      {
       "name": "check-status",
       "kind": "element",
-      "min": 10631
+      "min": 10633
      }
     ],
     "withoutLit": {
-     "min": 43381,
-     "gzip": 12757
+     "min": 43902,
+     "gzip": 12943
     },
     "withLit": {
-     "min": 65554,
-     "gzip": 19989
+     "min": 66084,
+     "gzip": 20178
     }
    },
    "render": {
     "tag": "tc-change-list",
     "source": "demo",
     "runs": 7,
-    "cold": 19.7,
-    "first": 4,
+    "cold": 14.8,
+    "first": 3.8,
     "update": 0.7,
     "updateKind": "one item of items replaced",
     "nodes": 157,
@@ -9513,13 +9822,13 @@
      "points": [
       {
        "items": 100,
-       "first": 4.6,
-       "update": 0.8,
+       "first": 3.6,
+       "update": 0.5,
        "nodes": 157
       },
       {
        "items": 1000,
-       "first": 2.6,
+       "first": 2.8,
        "update": 0.4,
        "nodes": 157
       }
@@ -10168,8 +10477,8 @@
    }
   },
   "chat-composer": {
-   "measuredAt": "2026-11-13",
-   "hash": "3edd6aeb407d8d79",
+   "measuredAt": "2026-11-16",
+   "hash": "4bb12e60ab0c7429",
    "bundle": {
     "own": {
      "min": 143458,
@@ -10179,12 +10488,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22774
+      "min": 22775
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8770
+      "min": 9295
      },
      {
       "name": "internal/controllers",
@@ -10239,12 +10548,12 @@
      {
       "name": "prompt-library",
       "kind": "element",
-      "min": 48822
+      "min": 48823
      },
      {
       "name": "mention-picker",
       "kind": "element",
-      "min": 40709
+      "min": 40712
      },
      {
       "name": "model-picker",
@@ -10254,17 +10563,17 @@
      {
       "name": "model-settings",
       "kind": "element",
-      "min": 31459
+      "min": 31460
      },
      {
       "name": "segmented-control",
       "kind": "element",
-      "min": 30545
+      "min": 30546
      },
      {
       "name": "context-tray",
       "kind": "element",
-      "min": 25765
+      "min": 25767
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -10278,20 +10587,20 @@
      }
     ],
     "withoutLit": {
-     "min": 381642,
-     "gzip": 88878
+     "min": 382179,
+     "gzip": 89065
     },
     "withLit": {
-     "min": 403552,
-     "gzip": 95952
+     "min": 404084,
+     "gzip": 96150
     }
    },
    "render": {
     "tag": "tc-chat-composer",
     "source": "demo",
     "runs": 7,
-    "cold": 31,
-    "first": 5.7,
+    "cold": 21.9,
+    "first": 5.4,
     "update": 0.5,
     "updateKind": "one item of skills replaced",
     "nodes": 304,
@@ -10301,14 +10610,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5.3,
-       "update": 0.2,
+       "first": 3.3,
+       "update": 0.1,
        "nodes": 304
       },
       {
        "items": 1000,
-       "first": 5.1,
-       "update": 0.2,
+       "first": 4.3,
+       "update": 0.6,
        "nodes": 304
       }
      ]
@@ -10619,18 +10928,18 @@
    }
   },
   "checkbox": {
-   "measuredAt": "2026-11-11",
-   "hash": "7726886c507e9533",
+   "measuredAt": "2026-11-16",
+   "hash": "77c70ee6af39ef19",
    "bundle": {
     "own": {
-     "min": 911,
-     "gzip": 446
+     "min": 8013,
+     "gzip": 2967
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19947
+      "min": 19949
      },
      {
       "name": "internal/settings",
@@ -10645,7 +10954,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1868
      },
      {
       "name": "internal/kit",
@@ -10655,12 +10964,12 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      },
      {
       "name": "internal/controllers",
@@ -10669,23 +10978,23 @@
      }
     ],
     "withoutLit": {
-     "min": 24466,
-     "gzip": 6854
+     "min": 29577,
+     "gzip": 7773
     },
     "withLit": {
-     "min": 45717,
-     "gzip": 13763
+     "min": 50767,
+     "gzip": 14669
     }
    },
    "render": {
     "tag": "tc-checkbox",
     "source": "demo",
     "runs": 7,
-    "cold": 17.6,
+    "cold": 14,
     "first": 0.8,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
-    "nodes": 5,
+    "nodes": 9,
     "scale": null,
     "idle": {
      "visible": {
@@ -11402,8 +11711,8 @@
    }
   },
   "client-context": {
-   "measuredAt": "2026-11-11",
-   "hash": "2d4fc5a04b62f5d6",
+   "measuredAt": "2026-11-16",
+   "hash": "4286bae5db56254f",
    "bundle": {
     "own": {
      "min": 63713,
@@ -11463,7 +11772,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12673
+      "min": 12972
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -11472,21 +11781,21 @@
      }
     ],
     "withoutLit": {
-     "min": 116004,
-     "gzip": 29096
+     "min": 116303,
+     "gzip": 29182
     },
     "withLit": {
-     "min": 139383,
-     "gzip": 36853
+     "min": 139682,
+     "gzip": 36943
     }
    },
    "render": {
     "tag": "tc-client-context",
     "source": "defaults",
     "runs": 7,
-    "cold": 34.8,
-    "first": 3,
-    "update": 0.4,
+    "cold": 23.1,
+    "first": 3.5,
+    "update": 0.5,
     "updateKind": "re-render with the same data",
     "nodes": 183,
     "scale": null,
@@ -12495,23 +12804,23 @@
    }
   },
   "command-menu": {
-   "measuredAt": "2026-11-11",
-   "hash": "5e98416d9f8d85ee",
+   "measuredAt": "2026-11-16",
+   "hash": "3dd239f13e32f121",
    "bundle": {
     "own": {
-     "min": 45602,
-     "gzip": 14412
+     "min": 45621,
+     "gzip": 14421
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21864
+      "min": 21865
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9278
      },
      {
       "name": "internal/card-head",
@@ -12521,7 +12830,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1865
+      "min": 1878
      },
      {
       "name": "internal/controllers",
@@ -12541,25 +12850,25 @@
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      }
     ],
     "withoutLit": {
-     "min": 62546,
-     "gzip": 19946
+     "min": 63088,
+     "gzip": 20126
     },
     "withLit": {
-     "min": 85565,
-     "gzip": 27437
+     "min": 86122,
+     "gzip": 27631
     }
    },
    "render": {
     "tag": "tc-command-menu",
     "source": "demo",
     "runs": 7,
-    "cold": 33.1,
-    "first": 3.4,
-    "update": 0.4,
+    "cold": 27,
+    "first": 4.3,
+    "update": 0.6,
     "updateKind": "one item of groups replaced",
     "nodes": 214,
     "scale": {
@@ -12568,14 +12877,14 @@
      "points": [
       {
        "items": 100,
-       "first": 14.9,
-       "update": 1.6,
+       "first": 11.7,
+       "update": 1,
        "nodes": 1384
       },
       {
        "items": 1000,
-       "first": 9.6,
-       "update": 1.5,
+       "first": 6.5,
+       "update": 1.1,
        "nodes": 1384
       }
      ]
@@ -14207,8 +14516,8 @@
    }
   },
   "coordinate-details": {
-   "measuredAt": "2026-11-11",
-   "hash": "776e1d8c718ad020",
+   "measuredAt": "2026-11-16",
+   "hash": "28362096da21c141",
    "bundle": {
     "own": {
      "min": 26967,
@@ -14218,12 +14527,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21108
+      "min": 21113
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -14233,7 +14542,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1873
      },
      {
       "name": "internal/kit",
@@ -14282,21 +14591,21 @@
      }
     ],
     "withoutLit": {
-     "min": 64240,
-     "gzip": 19456
+     "min": 64771,
+     "gzip": 19645
     },
     "withLit": {
-     "min": 86326,
-     "gzip": 26674
+     "min": 86864,
+     "gzip": 26860
     }
    },
    "render": {
     "tag": "tc-coordinate-details",
     "source": "demo",
     "runs": 7,
-    "cold": 17.3,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 13.6,
+    "first": 1.4,
+    "update": 0.3,
     "updateKind": "one item of providers replaced",
     "nodes": 6,
     "scale": {
@@ -14305,14 +14614,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.6,
-       "update": 0.2,
+       "first": 0.9,
+       "update": 0.1,
        "nodes": 6
       },
       {
        "items": 1000,
-       "first": 1.1,
-       "update": 0.2,
+       "first": 0.8,
+       "update": 0.1,
        "nodes": 6
       }
      ]
@@ -14623,6 +14932,114 @@
        "first": 11.2,
        "update": 2.3,
        "nodes": 1083
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "cost-waterfall": {
+   "measuredAt": "2026-11-16",
+   "hash": "ea32f0baa9e1e1bd",
+   "bundle": {
+    "own": {
+     "min": 20451,
+     "gzip": 6747
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 20097
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/format",
+      "kind": "internal",
+      "min": 206
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "src/internal/reduced-motion.ts",
+      "kind": "other",
+      "min": 96
+     }
+    ],
+    "withoutLit": {
+     "min": 28279,
+     "gzip": 9100
+    },
+    "withLit": {
+     "min": 49503,
+     "gzip": 16037
+    }
+   },
+   "render": {
+    "tag": "tc-cost-waterfall",
+    "source": "demo",
+    "runs": 7,
+    "cold": 15.9,
+    "first": 4,
+    "update": 0.8,
+    "updateKind": "one item of steps replaced",
+    "nodes": 161,
+    "scale": {
+     "property": "steps",
+     "demoItems": 7,
+     "points": [
+      {
+       "items": 100,
+       "first": 14.1,
+       "update": 1.9,
+       "nodes": 1556
+      },
+      {
+       "items": 1000,
+       "first": 76.2,
+       "update": 17.3,
+       "nodes": 15056
       }
      ]
     },
@@ -15548,12 +15965,12 @@
    }
   },
   "decision-card": {
-   "measuredAt": "2026-11-11",
-   "hash": "1aa551c786857d03",
+   "measuredAt": "2026-11-16",
+   "hash": "f6b763fe30450a2a",
    "bundle": {
     "own": {
-     "min": 28966,
-     "gzip": 8326
+     "min": 30569,
+     "gzip": 8709
     },
     "shared": [
      {
@@ -15603,21 +16020,21 @@
      }
     ],
     "withoutLit": {
-     "min": 37946,
-     "gzip": 11000
+     "min": 39548,
+     "gzip": 11383
     },
     "withLit": {
-     "min": 60873,
-     "gzip": 18504
+     "min": 62476,
+     "gzip": 18897
     }
    },
    "render": {
     "tag": "tc-decision-card",
     "source": "demo",
     "runs": 7,
-    "cold": 30.2,
-    "first": 4.2,
-    "update": 0.3,
+    "cold": 37.2,
+    "first": 2.9,
+    "update": 0.4,
     "updateKind": "one item of options replaced",
     "nodes": 61,
     "scale": {
@@ -15626,14 +16043,14 @@
      "points": [
       {
        "items": 100,
-       "first": 11.5,
-       "update": 0.7,
+       "first": 4.9,
+       "update": 0.4,
        "nodes": 806
       },
       {
        "items": 1000,
-       "first": 42.3,
-       "update": 3.4,
+       "first": 30.5,
+       "update": 3.1,
        "nodes": 7706
       }
      ]
@@ -16149,8 +16566,8 @@
    }
   },
   "diff-table": {
-   "measuredAt": "2026-11-11",
-   "hash": "8e9f496fa63c6be5",
+   "measuredAt": "2026-11-16",
+   "hash": "5ccca18719fc097a",
    "bundle": {
     "own": {
      "min": 23968,
@@ -16160,12 +16577,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18976
+      "min": 18993
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9274
      },
      {
       "name": "internal/card-head",
@@ -16199,21 +16616,21 @@
      }
     ],
     "withoutLit": {
-     "min": 40317,
-     "gzip": 12536
+     "min": 40839,
+     "gzip": 12719
     },
     "withLit": {
-     "min": 60411,
-     "gzip": 18912
+     "min": 60942,
+     "gzip": 19106
     }
    },
    "render": {
     "tag": "tc-diff-table",
     "source": "demo",
     "runs": 7,
-    "cold": 19.8,
+    "cold": 9,
     "first": 4.2,
-    "update": 0.4,
+    "update": 0.5,
     "updateKind": "one item of rows replaced",
     "nodes": 241,
     "scale": {
@@ -16222,15 +16639,113 @@
      "points": [
       {
        "items": 100,
-       "first": 15.8,
-       "update": 2.2,
+       "first": 12.4,
+       "update": 1.2,
        "nodes": 1724
       },
       {
        "items": 1000,
-       "first": 71.5,
-       "update": 6.9,
+       "first": 53.8,
+       "update": 7.4,
        "nodes": 16237
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "diff-timeline": {
+   "measuredAt": "2026-11-16",
+   "hash": "f780c974ae95c0d3",
+   "bundle": {
+    "own": {
+     "min": 22280,
+     "gzip": 7198
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 20098
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     }
+    ],
+    "withoutLit": {
+     "min": 30420,
+     "gzip": 9631
+    },
+    "withLit": {
+     "min": 51643,
+     "gzip": 16542
+    }
+   },
+   "render": {
+    "tag": "tc-diff-timeline",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.4,
+    "first": 4.3,
+    "update": 0.4,
+    "updateKind": "one item of files replaced",
+    "nodes": 143,
+    "scale": {
+     "property": "files",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 13.8,
+       "update": 5.9,
+       "nodes": 1739
+      },
+      {
+       "items": 1000,
+       "first": 401.4,
+       "update": 326.4,
+       "nodes": 16859
       }
      ]
     },
@@ -17618,8 +18133,8 @@
    }
   },
   "embed-configurator": {
-   "measuredAt": "2026-11-13",
-   "hash": "634225bf16269112",
+   "measuredAt": "2026-11-16",
+   "hash": "cc438496cc33f858",
    "bundle": {
     "own": {
      "min": 23333,
@@ -17699,7 +18214,7 @@
      {
       "name": "embed-widget",
       "kind": "element",
-      "min": 19265
+      "min": 19375
      },
      {
       "name": "tag-input",
@@ -17708,21 +18223,21 @@
      }
     ],
     "withoutLit": {
-     "min": 204767,
-     "gzip": 52203
+     "min": 204877,
+     "gzip": 52261
     },
     "withLit": {
-     "min": 227686,
-     "gzip": 59825
+     "min": 227796,
+     "gzip": 59878
     }
    },
    "render": {
     "tag": "tc-embed-configurator",
     "source": "demo",
     "runs": 7,
-    "cold": 22.6,
+    "cold": 25.4,
     "first": 3.2,
-    "update": 0.6,
+    "update": 0.5,
     "updateKind": "one item of swatches replaced",
     "nodes": 274,
     "scale": {
@@ -17731,14 +18246,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.1,
+       "first": 2.8,
        "update": 0.2,
        "nodes": 274
       },
       {
        "items": 1000,
-       "first": 3.1,
-       "update": 0.1,
+       "first": 2.6,
+       "update": 0.4,
        "nodes": 274
       }
      ]
@@ -17761,12 +18276,12 @@
    }
   },
   "embed-widget": {
-   "measuredAt": "2026-11-13",
-   "hash": "98ea95fed049a152",
+   "measuredAt": "2026-11-16",
+   "hash": "c0c41d28a73b6dc5",
    "bundle": {
     "own": {
-     "min": 21755,
-     "gzip": 7065
+     "min": 21865,
+     "gzip": 7120
     },
     "shared": [
      {
@@ -17821,21 +18336,21 @@
      }
     ],
     "withoutLit": {
-     "min": 29120,
-     "gzip": 9190
+     "min": 29230,
+     "gzip": 9243
     },
     "withLit": {
-     "min": 50348,
-     "gzip": 16121
+     "min": 50458,
+     "gzip": 16172
     }
    },
    "render": {
     "tag": "tc-embed-widget",
     "source": "demo",
     "runs": 7,
-    "cold": 9.6,
-    "first": 0.9,
-    "update": 0.3,
+    "cold": 12.2,
+    "first": 3.1,
+    "update": 0.4,
     "updateKind": "one item of messages replaced",
     "nodes": 51,
     "scale": {
@@ -17844,13 +18359,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2.5,
-       "update": 0.2,
+       "first": 7.8,
+       "update": 0.5,
        "nodes": 393
       },
       {
        "items": 1000,
-       "first": 16.1,
+       "first": 15.9,
        "update": 1.6,
        "nodes": 3633
       }
@@ -18345,8 +18860,8 @@
    }
   },
   "entity-details": {
-   "measuredAt": "2026-11-11",
-   "hash": "39e462ee29d38d97",
+   "measuredAt": "2026-11-16",
+   "hash": "f798a6ae02f0f53e",
    "bundle": {
     "own": {
      "min": 26424,
@@ -18356,12 +18871,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18992
+      "min": 18995
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9283
      },
      {
       "name": "internal/card-head",
@@ -18420,21 +18935,21 @@
      }
     ],
     "withoutLit": {
-     "min": 44730,
-     "gzip": 15455
+     "min": 45254,
+     "gzip": 15648
     },
     "withLit": {
-     "min": 64745,
-     "gzip": 21813
+     "min": 65274,
+     "gzip": 22004
     }
    },
    "render": {
     "tag": "tc-entity-details",
     "source": "demo",
     "runs": 7,
-    "cold": 7.2,
-    "first": 2.4,
-    "update": 0.5,
+    "cold": 6.4,
+    "first": 2,
+    "update": 0.3,
     "updateKind": "one item of kinds replaced",
     "nodes": 14,
     "scale": {
@@ -18443,14 +18958,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.2,
+       "first": 1.8,
        "update": 0.2,
        "nodes": 14
       },
       {
        "items": 1000,
-       "first": 2,
-       "update": 0.3,
+       "first": 1.7,
+       "update": 0.2,
        "nodes": 14
       }
      ]
@@ -18586,8 +19101,8 @@
    }
   },
   "environment-list": {
-   "measuredAt": "2026-11-11",
-   "hash": "7c9c19bf6dde8b65",
+   "measuredAt": "2026-11-16",
+   "hash": "66e9d0e3f0827c74",
    "bundle": {
     "own": {
      "min": 8788,
@@ -18637,25 +19152,25 @@
      {
       "name": "switch",
       "kind": "element",
-      "min": 734
+      "min": 2818
      }
     ],
     "withoutLit": {
-     "min": 31892,
-     "gzip": 8928
+     "min": 34042,
+     "gzip": 9268
     },
     "withLit": {
-     "min": 54744,
-     "gzip": 16461
+     "min": 56834,
+     "gzip": 16798
     }
    },
    "render": {
     "tag": "tc-environment-list",
     "source": "demo",
     "runs": 7,
-    "cold": 18.5,
-    "first": 2.6,
-    "update": 0.4,
+    "cold": 12.1,
+    "first": 2.1,
+    "update": 0.3,
     "updateKind": "one item of items replaced",
     "nodes": 52,
     "scale": {
@@ -18664,14 +19179,14 @@
      "points": [
       {
        "items": 100,
-       "first": 9.3,
-       "update": 0.7,
+       "first": 6.2,
+       "update": 0.3,
        "nodes": 705
       },
       {
        "items": 1000,
-       "first": 34.9,
-       "update": 3.2,
+       "first": 26.2,
+       "update": 2.9,
        "nodes": 7005
       }
      ]
@@ -20203,8 +20718,8 @@
    }
   },
   "file-details": {
-   "measuredAt": "2026-11-11",
-   "hash": "ec291b07820e1bdb",
+   "measuredAt": "2026-11-16",
+   "hash": "b0629971d5e8add9",
    "bundle": {
     "own": {
      "min": 9054,
@@ -20214,12 +20729,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22565
+      "min": 22568
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8761
+      "min": 9302
      },
      {
       "name": "internal/controllers",
@@ -20288,21 +20803,21 @@
      }
     ],
     "withoutLit": {
-     "min": 126653,
-     "gzip": 34248
+     "min": 127191,
+     "gzip": 34464
     },
     "withLit": {
-     "min": 149493,
-     "gzip": 41901
+     "min": 150035,
+     "gzip": 42118
     }
    },
    "render": {
     "tag": "tc-file-details",
     "source": "defaults",
     "runs": 7,
-    "cold": 24.6,
-    "first": 1,
-    "update": 0.1,
+    "cold": 16.2,
+    "first": 1.6,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 43,
     "scale": null,
@@ -21635,8 +22150,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-11-13",
-   "hash": "7b2ecfb6f7bafc90",
+   "measuredAt": "2026-11-16",
+   "hash": "6287428874c89fce",
    "bundle": {
     "own": {
      "min": 34126,
@@ -21674,14 +22189,14 @@
       "min": 10665
      },
      {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 9323
+     },
+     {
       "name": "internal/controllers",
       "kind": "internal",
       "min": 9022
-     },
-     {
-      "name": "internal/popover",
-      "kind": "internal",
-      "min": 8818
      },
      {
       "name": "internal/chart/pie",
@@ -21751,7 +22266,7 @@
      {
       "name": "internal/chart/loaders",
       "kind": "internal",
-      "min": 2461
+      "min": 2463
      },
      {
       "name": "internal/chart/format",
@@ -21961,7 +22476,7 @@
      {
       "name": "memory-panel",
       "kind": "element",
-      "min": 64963
+      "min": 68035
      },
      {
       "name": "ai-answer",
@@ -21991,7 +22506,7 @@
      {
       "name": "approval-card",
       "kind": "element",
-      "min": 58974
+      "min": 58975
      },
      {
       "name": "configuration-release-control",
@@ -22236,12 +22751,17 @@
      {
       "name": "breakdown-chart",
       "kind": "element",
-      "min": 38760
+      "min": 38814
      },
      {
       "name": "agent-steering",
       "kind": "element",
       "min": 38476
+     },
+     {
+      "name": "approval-gates",
+      "kind": "element",
+      "min": 38428
      },
      {
       "name": "model-picker",
@@ -22252,6 +22772,11 @@
       "name": "plan-vs-actual",
       "kind": "element",
       "min": 37328
+     },
+     {
+      "name": "memory-graph",
+      "kind": "element",
+      "min": 36288
      },
      {
       "name": "version-history",
@@ -22384,11 +22909,6 @@
       "min": 31769
      },
      {
-      "name": "approval-gates",
-      "kind": "element",
-      "min": 31705
-     },
-     {
       "name": "roadmap-timeline",
       "kind": "element",
       "min": 31233
@@ -22499,6 +23019,11 @@
       "min": 28737
      },
      {
+      "name": "decision-card",
+      "kind": "element",
+      "min": 28526
+     },
+     {
       "name": "answer-arena",
       "kind": "element",
       "min": 28250
@@ -22522,6 +23047,11 @@
       "name": "budget-guard",
       "kind": "element",
       "min": 27806
+     },
+     {
+      "name": "agent-crew",
+      "kind": "element",
+      "min": 27381
      },
      {
       "name": "color-picker",
@@ -22552,11 +23082,6 @@
       "name": "selection-toolbar",
       "kind": "element",
       "min": 27020
-     },
-     {
-      "name": "decision-card",
-      "kind": "element",
-      "min": 26922
      },
      {
       "name": "map-itinerary",
@@ -22629,6 +23154,11 @@
       "min": 25831
      },
      {
+      "name": "agent-sequence",
+      "kind": "element",
+      "min": 25694
+     },
+     {
       "name": "relationship-graph",
       "kind": "element",
       "min": 25678
@@ -22652,6 +23182,11 @@
       "name": "edit-region",
       "kind": "element",
       "min": 25166
+     },
+     {
+      "name": "running-now",
+      "kind": "element",
+      "min": 25106
      },
      {
       "name": "file-summary",
@@ -22809,11 +23344,6 @@
       "min": 23112
      },
      {
-      "name": "running-now",
-      "kind": "element",
-      "min": 23044
-     },
-     {
       "name": "data-region",
       "kind": "element",
       "min": 22897
@@ -22904,6 +23434,11 @@
       "min": 21705
      },
      {
+      "name": "run-controls",
+      "kind": "element",
+      "min": 21698
+     },
+     {
       "name": "progress-tracker",
       "kind": "element",
       "min": 21630
@@ -22989,6 +23524,11 @@
       "min": 20437
      },
      {
+      "name": "diff-timeline",
+      "kind": "element",
+      "min": 20250
+     },
+     {
       "name": "profile-menu",
       "kind": "element",
       "min": 20231
@@ -23029,6 +23569,11 @@
       "min": 19883
      },
      {
+      "name": "embed-widget",
+      "kind": "element",
+      "min": 19847
+     },
+     {
       "name": "geo-location",
       "kind": "element",
       "min": 19764
@@ -23042,11 +23587,6 @@
       "name": "session-tabs",
       "kind": "element",
       "min": 19739
-     },
-     {
-      "name": "embed-widget",
-      "kind": "element",
-      "min": 19737
      },
      {
       "name": "panel-dock",
@@ -23144,14 +23684,14 @@
       "min": 18799
      },
      {
+      "name": "branch-switcher",
+      "kind": "element",
+      "min": 18791
+     },
+     {
       "name": "change-impact",
       "kind": "element",
       "min": 18778
-     },
-     {
-      "name": "branch-switcher",
-      "kind": "element",
-      "min": 18771
      },
      {
       "name": "week-bars",
@@ -23186,7 +23726,7 @@
      {
       "name": "budget-alerts",
       "kind": "element",
-      "min": 18528
+      "min": 18568
      },
      {
       "name": "entity-timeline",
@@ -23204,6 +23744,11 @@
       "min": 18374
      },
      {
+      "name": "cost-waterfall",
+      "kind": "element",
+      "min": 18334
+     },
+     {
       "name": "api-reference-nav",
       "kind": "element",
       "min": 18285
@@ -23211,7 +23756,12 @@
      {
       "name": "breakpoint-overlay",
       "kind": "element",
-      "min": 18203
+      "min": 18243
+     },
+     {
+      "name": "select",
+      "kind": "element",
+      "min": 18087
      },
      {
       "name": "console-panel",
@@ -23264,14 +23814,14 @@
       "min": 17432
      },
      {
+      "name": "bubble-chart",
+      "kind": "element",
+      "min": 17429
+     },
+     {
       "name": "activity-calendar",
       "kind": "element",
       "min": 17375
-     },
-     {
-      "name": "bubble-chart",
-      "kind": "element",
-      "min": 17354
      },
      {
       "name": "agent-summary",
@@ -23367,11 +23917,6 @@
       "name": "candlestick-chart",
       "kind": "element",
       "min": 16087
-     },
-     {
-      "name": "select",
-      "kind": "element",
-      "min": 16084
      },
      {
       "name": "prompt-starters",
@@ -23569,6 +24114,11 @@
       "min": 13507
      },
      {
+      "name": "agent-trail",
+      "kind": "element",
+      "min": 13478
+     },
+     {
       "name": "network-graph",
       "kind": "element",
       "min": 13430
@@ -23584,6 +24134,11 @@
       "min": 13200
      },
      {
+      "name": "button",
+      "kind": "element",
+      "min": 13133
+     },
+     {
       "name": "change-list",
       "kind": "element",
       "min": 13125
@@ -23596,7 +24151,7 @@
      {
       "name": "breadcrumbs",
       "kind": "element",
-      "min": 12999
+      "min": 13039
      },
      {
       "name": "small-multiples",
@@ -23612,11 +24167,6 @@
       "name": "watchlist",
       "kind": "element",
       "min": 12913
-     },
-     {
-      "name": "button",
-      "kind": "element",
-      "min": 12834
      },
      {
       "name": "team-invite",
@@ -23746,7 +24296,7 @@
      {
       "name": "menu-morph",
       "kind": "element",
-      "min": 10168
+      "min": 10335
      },
      {
       "name": "pixel-loader",
@@ -23771,7 +24321,7 @@
      {
       "name": "uncertainty-mix",
       "kind": "element",
-      "min": 9633
+      "min": 9634
      },
      {
       "name": "grade-distribution",
@@ -23984,6 +24534,11 @@
       "min": 5953
      },
      {
+      "name": "checkbox",
+      "kind": "element",
+      "min": 5902
+     },
+     {
       "name": "page-slide",
       "kind": "element",
       "min": 5662
@@ -24179,6 +24734,11 @@
       "min": 3063
      },
      {
+      "name": "switch",
+      "kind": "element",
+      "min": 2905
+     },
+     {
       "name": "progress-bar",
       "kind": "element",
       "min": 2896
@@ -24259,16 +24819,6 @@
       "min": 815
      },
      {
-      "name": "checkbox",
-      "kind": "element",
-      "min": 813
-     },
-     {
-      "name": "switch",
-      "kind": "element",
-      "min": 800
-     },
-     {
       "name": "pie-chart",
       "kind": "element",
       "min": 720
@@ -24276,7 +24826,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 78796
+      "min": 80130
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -24529,6 +25079,11 @@
       "min": 4267
      },
      {
+      "name": "src/generative/schemas/tc-approval-gates.json",
+      "kind": "other",
+      "min": 4217
+     },
+     {
       "name": "src/generative/schemas/tc-step-picker.json",
       "kind": "other",
       "min": 4197
@@ -24674,11 +25229,6 @@
       "min": 3830
      },
      {
-      "name": "src/generative/schemas/tc-approval-gates.json",
-      "kind": "other",
-      "min": 3787
-     },
-     {
       "name": "src/generative/schemas/tc-funnel-chart.json",
       "kind": "other",
       "min": 3785
@@ -24769,6 +25319,11 @@
       "min": 3541
      },
      {
+      "name": "src/generative/schemas/tc-memory-graph.json",
+      "kind": "other",
+      "min": 3531
+     },
+     {
       "name": "src/generative/schemas/tc-quality-alerts.json",
       "kind": "other",
       "min": 3497
@@ -24794,6 +25349,11 @@
       "min": 3476
      },
      {
+      "name": "src/generative/schemas/tc-agent-sequence.json",
+      "kind": "other",
+      "min": 3462
+     },
+     {
       "name": "src/generative/schemas/tc-knowledge-source-manager.json",
       "kind": "other",
       "min": 3458
@@ -24802,6 +25362,11 @@
       "name": "src/generative/schemas/tc-quality-trend.json",
       "kind": "other",
       "min": 3457
+     },
+     {
+      "name": "src/generative/schemas/tc-decision-card.json",
+      "kind": "other",
+      "min": 3451
      },
      {
       "name": "src/generative/schemas/tc-permission-request.json",
@@ -24827,6 +25392,11 @@
       "name": "src/generative/schemas/tc-embed-widget.json",
       "kind": "other",
       "min": 3368
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-crew.json",
+      "kind": "other",
+      "min": 3321
      },
      {
       "name": "src/generative/schemas/tc-app-directory.json",
@@ -24897,11 +25467,6 @@
       "name": "src/generative/schemas/tc-rate-limit-status.json",
       "kind": "other",
       "min": 3166
-     },
-     {
-      "name": "src/generative/schemas/tc-decision-card.json",
-      "kind": "other",
-      "min": 3155
      },
      {
       "name": "src/generative/schemas/tc-agent-list.json",
@@ -25234,6 +25799,11 @@
       "min": 2746
      },
      {
+      "name": "src/generative/schemas/tc-running-now.json",
+      "kind": "other",
+      "min": 2727
+     },
+     {
       "name": "src/generative/schemas/tc-coverage-matrix.json",
       "kind": "other",
       "min": 2725
@@ -25399,11 +25969,6 @@
       "min": 2555
      },
      {
-      "name": "src/generative/schemas/tc-running-now.json",
-      "kind": "other",
-      "min": 2555
-     },
-     {
       "name": "src/generative/schemas/tc-trigger-list.json",
       "kind": "other",
       "min": 2537
@@ -25454,6 +26019,11 @@
       "min": 2468
      },
      {
+      "name": "src/generative/schemas/tc-diff-timeline.json",
+      "kind": "other",
+      "min": 2454
+     },
+     {
       "name": "src/generative/schemas/tc-logo-marquee.json",
       "kind": "other",
       "min": 2442
@@ -25472,6 +26042,11 @@
       "name": "src/generative/schemas/tc-change-list.json",
       "kind": "other",
       "min": 2437
+     },
+     {
+      "name": "src/generative/schemas/tc-cost-waterfall.json",
+      "kind": "other",
+      "min": 2432
      },
      {
       "name": "src/generative/schemas/tc-spend-limits.json",
@@ -25654,6 +26229,11 @@
       "min": 2207
      },
      {
+      "name": "src/generative/schemas/tc-agent-trail.json",
+      "kind": "other",
+      "min": 2206
+     },
+     {
       "name": "src/generative/schemas/tc-radar-chart.json",
       "kind": "other",
       "min": 2205
@@ -25694,9 +26274,19 @@
       "min": 2166
      },
      {
+      "name": "src/generative/schemas/tc-select.json",
+      "kind": "other",
+      "min": 2159
+     },
+     {
       "name": "src/generative/schemas/tc-message-status.json",
       "kind": "other",
       "min": 2156
+     },
+     {
+      "name": "src/generative/schemas/tc-run-controls.json",
+      "kind": "other",
+      "min": 2154
      },
      {
       "name": "src/generative/schemas/tc-console-panel.json",
@@ -25844,6 +26434,11 @@
       "min": 2012
      },
      {
+      "name": "src/generative/schemas/tc-memory-panel.json",
+      "kind": "other",
+      "min": 2007
+     },
+     {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
       "min": 1998
@@ -25894,11 +26489,6 @@
       "min": 1940
      },
      {
-      "name": "src/generative/schemas/tc-select.json",
-      "kind": "other",
-      "min": 1930
-     },
-     {
       "name": "src/generative/schemas/tc-parallel-attempts.json",
       "kind": "other",
       "min": 1914
@@ -25922,11 +26512,6 @@
       "name": "src/generative/schemas/tc-invoice-credit.json",
       "kind": "other",
       "min": 1879
-     },
-     {
-      "name": "src/generative/schemas/tc-memory-panel.json",
-      "kind": "other",
-      "min": 1877
      },
      {
       "name": "src/generative/schemas/tc-reasoning-flags.json",
@@ -26239,6 +26824,11 @@
       "min": 1310
      },
      {
+      "name": "src/generative/schemas/tc-checkbox.json",
+      "kind": "other",
+      "min": 1297
+     },
+     {
       "name": "src/generative/schemas/tc-meter-row.json",
       "kind": "other",
       "min": 1292
@@ -26324,6 +26914,11 @@
       "min": 1064
      },
      {
+      "name": "src/generative/schemas/tc-switch.json",
+      "kind": "other",
+      "min": 1043
+     },
+     {
       "name": "src/generative/schemas/tc-model-wheel.json",
       "kind": "other",
       "min": 1039
@@ -26332,6 +26927,11 @@
       "name": "src/generative/schemas/tc-content-shield.json",
       "kind": "other",
       "min": 1022
+     },
+     {
+      "name": "src/generative/schemas/tc-menu-morph.json",
+      "kind": "other",
+      "min": 1017
      },
      {
       "name": "src/generative/schemas/tc-page-slide.json",
@@ -26374,11 +26974,6 @@
       "min": 890
      },
      {
-      "name": "src/generative/schemas/tc-menu-morph.json",
-      "kind": "other",
-      "min": 852
-     },
-     {
       "name": "src/generative/schemas/tc-icon-swap.json",
       "kind": "other",
       "min": 847
@@ -26397,16 +26992,6 @@
       "name": "src/generative/schemas/tc-panel-card.json",
       "kind": "other",
       "min": 803
-     },
-     {
-      "name": "src/generative/schemas/tc-checkbox.json",
-      "kind": "other",
-      "min": 795
-     },
-     {
-      "name": "src/generative/schemas/tc-switch.json",
-      "kind": "other",
-      "min": 789
      },
      {
       "name": "src/generative/schemas/tc-like-burst.json",
@@ -26690,20 +27275,20 @@
      }
     ],
     "withoutLit": {
-     "min": 12184038,
-     "gzip": 3017891
+     "min": 12396190,
+     "gzip": 3068362
     },
     "withLit": {
-     "min": 12100907,
-     "gzip": 2989934
+     "min": 12311114,
+     "gzip": 3038988
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 7.9,
-    "first": 1.6,
+    "cold": 5.5,
+    "first": 1.1,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -28034,8 +28619,8 @@
    }
   },
   "header-nav": {
-   "measuredAt": "2026-11-11",
-   "hash": "487ed81323895134",
+   "measuredAt": "2026-11-16",
+   "hash": "e2473628e21c97d5",
    "bundle": {
     "own": {
      "min": 16606,
@@ -28045,12 +28630,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21933
+      "min": 21946
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -28104,20 +28689,20 @@
      }
     ],
     "withoutLit": {
-     "min": 53024,
-     "gzip": 15480
+     "min": 53546,
+     "gzip": 15665
     },
     "withLit": {
-     "min": 75962,
-     "gzip": 23054
+     "min": 76491,
+     "gzip": 23237
     }
    },
    "render": {
     "tag": "tc-header-nav",
     "source": "defaults",
     "runs": 7,
-    "cold": 18.9,
-    "first": 0.8,
+    "cold": 8,
+    "first": 0.6,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 3,
@@ -28768,8 +29353,8 @@
    }
   },
   "identifier-details": {
-   "measuredAt": "2026-11-11",
-   "hash": "2d2519d2d056b859",
+   "measuredAt": "2026-11-16",
+   "hash": "2de5751f97f6f818",
    "bundle": {
     "own": {
      "min": 29389,
@@ -28779,12 +29364,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18987
+      "min": 18993
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9283
      },
      {
       "name": "internal/card-head",
@@ -28838,21 +29423,21 @@
      }
     ],
     "withoutLit": {
-     "min": 47629,
-     "gzip": 16266
+     "min": 48152,
+     "gzip": 16440
     },
     "withLit": {
-     "min": 67643,
-     "gzip": 22657
+     "min": 68175,
+     "gzip": 22835
     }
    },
    "render": {
     "tag": "tc-identifier-details",
     "source": "demo",
     "runs": 7,
-    "cold": 5.8,
-    "first": 2.1,
-    "update": 0.4,
+    "cold": 6.1,
+    "first": 1.6,
+    "update": 0.2,
     "updateKind": "one item of kinds replaced",
     "nodes": 14,
     "scale": {
@@ -28861,14 +29446,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
+       "first": 1.3,
        "update": 0.1,
        "nodes": 14
       },
       {
        "items": 1000,
-       "first": 2.1,
-       "update": 0.4,
+       "first": 1.5,
+       "update": 0.2,
        "nodes": 14
       }
      ]
@@ -30265,8 +30850,8 @@
    }
   },
   "invoice-credit": {
-   "measuredAt": "2026-11-11",
-   "hash": "137b7b9d06ccc8b3",
+   "measuredAt": "2026-11-16",
+   "hash": "e796bb75b3d56b60",
    "bundle": {
     "own": {
      "min": 27884,
@@ -30321,7 +30906,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -30330,21 +30915,21 @@
      }
     ],
     "withoutLit": {
-     "min": 80072,
-     "gzip": 19794
+     "min": 80371,
+     "gzip": 19882
     },
     "withLit": {
-     "min": 102698,
-     "gzip": 27299
+     "min": 102997,
+     "gzip": 27381
     }
    },
    "render": {
     "tag": "tc-invoice-credit",
     "source": "defaults",
     "runs": 7,
-    "cold": 29.4,
-    "first": 3.4,
-    "update": 0.7,
+    "cold": 23.2,
+    "first": 2.5,
+    "update": 0.6,
     "updateKind": "re-render with the same data",
     "nodes": 185,
     "scale": null,
@@ -30366,8 +30951,8 @@
    }
   },
   "isbn-details": {
-   "measuredAt": "2026-11-11",
-   "hash": "5ef67bf1b5c7e3b3",
+   "measuredAt": "2026-11-16",
+   "hash": "c3f530785ce9827d",
    "bundle": {
     "own": {
      "min": 21309,
@@ -30377,12 +30962,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18965
+      "min": 18994
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9271
      },
      {
       "name": "internal/card-head",
@@ -30436,21 +31021,21 @@
      }
     ],
     "withoutLit": {
-     "min": 38447,
-     "gzip": 12967
+     "min": 38969,
+     "gzip": 13158
     },
     "withLit": {
-     "min": 58458,
-     "gzip": 19318
+     "min": 58990,
+     "gzip": 19506
     }
    },
    "render": {
     "tag": "tc-isbn-details",
     "source": "demo",
     "runs": 7,
-    "cold": 16.9,
-    "first": 1.3,
-    "update": 0.3,
+    "cold": 11.7,
+    "first": 1.2,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 6,
     "scale": null,
@@ -31074,8 +31659,8 @@
    }
   },
   "kpi-board": {
-   "measuredAt": "2026-11-11",
-   "hash": "4283bdaf5780737b",
+   "measuredAt": "2026-11-16",
+   "hash": "222184ef920ff479",
    "bundle": {
     "own": {
      "min": 34719,
@@ -31120,7 +31705,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12678
+      "min": 12977
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -31129,19 +31714,19 @@
      }
     ],
     "withoutLit": {
-     "min": 55783,
-     "gzip": 15964
+     "min": 56082,
+     "gzip": 16069
     },
     "withLit": {
-     "min": 78105,
-     "gzip": 23304
+     "min": 78404,
+     "gzip": 23410
     }
    },
    "render": {
     "tag": "tc-kpi-board",
     "source": "defaults",
     "runs": 7,
-    "cold": 4.3,
+    "cold": 6.6,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -32461,8 +33046,8 @@
    }
   },
   "logo-marquee": {
-   "measuredAt": "2026-11-11",
-   "hash": "dba66e179dd4044c",
+   "measuredAt": "2026-11-16",
+   "hash": "eb7f3138c0631911",
    "bundle": {
     "own": {
      "min": 17174,
@@ -32517,7 +33102,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -32526,21 +33111,21 @@
      }
     ],
     "withoutLit": {
-     "min": 38625,
-     "gzip": 12094
+     "min": 38924,
+     "gzip": 12188
     },
     "withLit": {
-     "min": 60023,
-     "gzip": 19093
+     "min": 60322,
+     "gzip": 19194
     }
    },
    "render": {
     "tag": "tc-logo-marquee",
     "source": "defaults",
     "runs": 7,
-    "cold": 22,
-    "first": 1.5,
-    "update": 0.1,
+    "cold": 14.5,
+    "first": 0.7,
+    "update": 0,
     "updateKind": "re-render with the same data",
     "nodes": 10,
     "scale": null,
@@ -33338,13 +33923,116 @@
     "errors": []
    }
   },
-  "memory-panel": {
-   "measuredAt": "2026-11-11",
-   "hash": "bd28b7c588c8a12a",
+  "memory-graph": {
+   "measuredAt": "2026-11-16",
+   "hash": "48849e3ae4b50de7",
    "bundle": {
     "own": {
-     "min": 66876,
-     "gzip": 14538
+     "min": 38298,
+     "gzip": 11047
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21115
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1869
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 445
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 130
+     }
+    ],
+    "withoutLit": {
+     "min": 46031,
+     "gzip": 13344
+    },
+    "withLit": {
+     "min": 68348,
+     "gzip": 20708
+    }
+   },
+   "render": {
+    "tag": "tc-memory-graph",
+    "source": "demo",
+    "runs": 7,
+    "cold": 13.8,
+    "first": 2.5,
+    "update": 0.8,
+    "updateKind": "one item of memories replaced",
+    "nodes": 128,
+    "scale": {
+     "property": "memories",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 3.1,
+       "update": 0.7,
+       "nodes": 142
+      },
+      {
+       "items": 1000,
+       "first": 3.4,
+       "update": 0.8,
+       "nodes": 142
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "memory-panel": {
+   "measuredAt": "2026-11-16",
+   "hash": "d8b3529cb9c02252",
+   "bundle": {
+    "own": {
+     "min": 69927,
+     "gzip": 15242
     },
     "shared": [
      {
@@ -33384,38 +34072,38 @@
      }
     ],
     "withoutLit": {
-     "min": 75619,
-     "gzip": 17093
+     "min": 78670,
+     "gzip": 17986
     },
     "withLit": {
-     "min": 98060,
-     "gzip": 24454
+     "min": 101111,
+     "gzip": 25356
     }
    },
    "render": {
     "tag": "tc-memory-panel",
     "source": "demo",
     "runs": 7,
-    "cold": 25.3,
-    "first": 4.8,
-    "update": 0.8,
+    "cold": 21.7,
+    "first": 6.1,
+    "update": 1,
     "updateKind": "one item of memories replaced",
-    "nodes": 248,
+    "nodes": 274,
     "scale": {
      "property": "memories",
-     "demoItems": 8,
+     "demoItems": 10,
      "points": [
       {
        "items": 100,
-       "first": 21.4,
-       "update": 2,
-       "nodes": 1996
+       "first": 10.2,
+       "update": 1.2,
+       "nodes": 1840
       },
       {
        "items": 1000,
-       "first": 127.2,
-       "update": 10.6,
-       "nodes": 19096
+       "first": 126,
+       "update": 10,
+       "nodes": 17500
       }
      ]
     },
@@ -33550,18 +34238,18 @@
    }
   },
   "menu-morph": {
-   "measuredAt": "2026-11-11",
-   "hash": "6bc817a8d6bc4a86",
+   "measuredAt": "2026-11-16",
+   "hash": "c804fba05815c791",
    "bundle": {
     "own": {
-     "min": 12199,
-     "gzip": 4845
+     "min": 12368,
+     "gzip": 4899
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18897
+      "min": 18926
      },
      {
       "name": "internal/card-head",
@@ -33581,7 +34269,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 595
+      "min": 916
      },
      {
       "name": "internal/look",
@@ -33600,20 +34288,20 @@
      }
     ],
     "withoutLit": {
-     "min": 19660,
-     "gzip": 7168
+     "min": 20153,
+     "gzip": 7370
     },
     "withLit": {
-     "min": 39722,
-     "gzip": 13616
+     "min": 40224,
+     "gzip": 13810
     }
    },
    "render": {
     "tag": "tc-menu-morph",
     "source": "demo",
     "runs": 7,
-    "cold": 8.7,
-    "first": 0.4,
+    "cold": 7.7,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
@@ -34016,8 +34704,8 @@
    }
   },
   "metrics-dashboard": {
-   "measuredAt": "2026-11-11",
-   "hash": "be6cca396163a3bb",
+   "measuredAt": "2026-11-16",
+   "hash": "8ebd320304ba18e2",
    "bundle": {
     "own": {
      "min": 36001,
@@ -34067,7 +34755,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12673
+      "min": 12972
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -34076,21 +34764,21 @@
      }
     ],
     "withoutLit": {
-     "min": 87847,
-     "gzip": 22411
+     "min": 88146,
+     "gzip": 22500
     },
     "withLit": {
-     "min": 110656,
-     "gzip": 30019
+     "min": 110955,
+     "gzip": 30100
     }
    },
    "render": {
     "tag": "tc-metrics-dashboard",
     "source": "defaults",
     "runs": 7,
-    "cold": 33.6,
-    "first": 4.5,
-    "update": 1.7,
+    "cold": 24.5,
+    "first": 3.9,
+    "update": 1.4,
     "updateKind": "re-render with the same data",
     "nodes": 197,
     "scale": null,
@@ -34818,8 +35506,8 @@
    }
   },
   "multi-calendar": {
-   "measuredAt": "2026-11-11",
-   "hash": "c7317b67103673af",
+   "measuredAt": "2026-11-16",
+   "hash": "243dfb61dac2818c",
    "bundle": {
     "own": {
      "min": 84503,
@@ -34829,12 +35517,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21119
+      "min": 21151
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -34888,20 +35576,20 @@
      }
     ],
     "withoutLit": {
-     "min": 103784,
-     "gzip": 27854
+     "min": 104312,
+     "gzip": 28031
     },
     "withLit": {
-     "min": 126095,
-     "gzip": 35038
+     "min": 126633,
+     "gzip": 35232
     }
    },
    "render": {
     "tag": "tc-multi-calendar",
     "source": "demo",
     "runs": 7,
-    "cold": 25.9,
-    "first": 9.1,
+    "cold": 25.8,
+    "first": 9,
     "update": 1.5,
     "updateKind": "one item of events replaced",
     "nodes": 1368,
@@ -34911,14 +35599,14 @@
      "points": [
       {
        "items": 100,
-       "first": 16.1,
+       "first": 15.2,
        "update": 2,
        "nodes": 2008
       },
       {
        "items": 1000,
-       "first": 81.7,
-       "update": 9,
+       "first": 81.9,
+       "update": 8.6,
        "nodes": 9208
       }
      ]
@@ -35727,23 +36415,23 @@
    }
   },
   "notifications": {
-   "measuredAt": "2026-11-11",
-   "hash": "e27c15f101a9071c",
+   "measuredAt": "2026-11-16",
+   "hash": "6de56271dbdc91ad",
    "bundle": {
     "own": {
-     "min": 44494,
-     "gzip": 12703
+     "min": 44644,
+     "gzip": 12794
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21265
+      "min": 21279
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -35753,7 +36441,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1865
      },
      {
       "name": "internal/controllers",
@@ -35768,7 +36456,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 444
+      "min": 445
      },
      {
       "name": "internal/styles",
@@ -35797,38 +36485,38 @@
      }
     ],
     "withoutLit": {
-     "min": 62746,
-     "gzip": 18462
+     "min": 63421,
+     "gzip": 18753
     },
     "withLit": {
-     "min": 85182,
-     "gzip": 25847
+     "min": 85859,
+     "gzip": 26155
     }
    },
    "render": {
     "tag": "tc-notifications",
     "source": "demo",
     "runs": 7,
-    "cold": 17.9,
-    "first": 1,
+    "cold": 14,
+    "first": 0.9,
     "update": 0.2,
     "updateKind": "one item of items replaced",
-    "nodes": 8,
+    "nodes": 9,
     "scale": {
      "property": "items",
      "demoItems": 7,
      "points": [
       {
        "items": 100,
-       "first": 1.3,
+       "first": 1.5,
        "update": 0.3,
-       "nodes": 8
+       "nodes": 9
       },
       {
        "items": 1000,
-       "first": 2.6,
+       "first": 3.4,
        "update": 0.8,
-       "nodes": 8
+       "nodes": 9
       }
      ]
     },
@@ -36788,8 +37476,8 @@
    }
   },
   "oversight-home": {
-   "measuredAt": "2026-11-11",
-   "hash": "8b00609775a5f00b",
+   "measuredAt": "2026-11-16",
+   "hash": "ed7c66176c31842e",
    "bundle": {
     "own": {
      "min": 12556,
@@ -36859,7 +37547,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -36868,20 +37556,20 @@
      }
     ],
     "withoutLit": {
-     "min": 146242,
-     "gzip": 34684
+     "min": 146541,
+     "gzip": 34781
     },
     "withLit": {
-     "min": 168556,
-     "gzip": 42091
+     "min": 168855,
+     "gzip": 42179
     }
    },
    "render": {
     "tag": "tc-oversight-home",
     "source": "defaults",
     "runs": 7,
-    "cold": 2.8,
-    "first": 0.3,
+    "cold": 3.7,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
@@ -37803,8 +38491,8 @@
    }
   },
   "person-hovercard": {
-   "measuredAt": "2026-11-11",
-   "hash": "4fff63ceef43a976",
+   "measuredAt": "2026-11-16",
+   "hash": "bf7860c5cad1005d",
    "bundle": {
     "own": {
      "min": 21004,
@@ -37814,12 +38502,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18976
+      "min": 18993
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9274
      },
      {
       "name": "internal/card-head",
@@ -37868,21 +38556,21 @@
      }
     ],
     "withoutLit": {
-     "min": 37076,
-     "gzip": 12252
+     "min": 37599,
+     "gzip": 12436
     },
     "withLit": {
-     "min": 57115,
-     "gzip": 18650
+     "min": 57646,
+     "gzip": 18834
     }
    },
    "render": {
     "tag": "tc-person-hovercard",
     "source": "demo",
     "runs": 7,
-    "cold": 12.9,
-    "first": 0.7,
-    "update": 0.2,
+    "cold": 9.2,
+    "first": 0.2,
+    "update": 0,
     "updateKind": "one item of actions replaced",
     "nodes": 2,
     "scale": {
@@ -37891,14 +38579,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.5,
-       "update": 0.1,
+       "first": 0.4,
+       "update": 0,
        "nodes": 2
       },
       {
        "items": 1000,
-       "first": 0.5,
-       "update": 0.2,
+       "first": 0.3,
+       "update": 0.1,
        "nodes": 2
       }
      ]
@@ -38793,8 +39481,8 @@
    }
   },
   "pr-link": {
-   "measuredAt": "2026-11-11",
-   "hash": "de80f41dba532823",
+   "measuredAt": "2026-11-16",
+   "hash": "cbd9222357098c85",
    "bundle": {
     "own": {
      "min": 14443,
@@ -38804,12 +39492,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18976
+      "min": 18993
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9274
      },
      {
       "name": "internal/card-head",
@@ -38858,21 +39546,21 @@
      }
     ],
     "withoutLit": {
-     "min": 30735,
-     "gzip": 10373
+     "min": 31258,
+     "gzip": 10550
     },
     "withLit": {
-     "min": 50773,
-     "gzip": 16779
+     "min": 51304,
+     "gzip": 16965
     }
    },
    "render": {
     "tag": "tc-pr-link",
     "source": "demo",
     "runs": 7,
-    "cold": 11.9,
-    "first": 1,
-    "update": 0.1,
+    "cold": 8.4,
+    "first": 1.1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 7,
     "scale": null,
@@ -39154,8 +39842,8 @@
    }
   },
   "pricing-plans": {
-   "measuredAt": "2026-11-11",
-   "hash": "f2ad99f1ac68585b",
+   "measuredAt": "2026-11-16",
+   "hash": "76a1bcd6e76b78e5",
    "bundle": {
     "own": {
      "min": 25674,
@@ -39205,7 +39893,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -39214,21 +39902,21 @@
      }
     ],
     "withoutLit": {
-     "min": 77557,
-     "gzip": 20837
+     "min": 77856,
+     "gzip": 20924
     },
     "withLit": {
-     "min": 100287,
-     "gzip": 28418
+     "min": 100586,
+     "gzip": 28500
     }
    },
    "render": {
     "tag": "tc-pricing-plans",
     "source": "defaults",
     "runs": 7,
-    "cold": 33.7,
-    "first": 4.3,
-    "update": 0.4,
+    "cold": 23.6,
+    "first": 3.3,
+    "update": 0.3,
     "updateKind": "re-render with the same data",
     "nodes": 434,
     "scale": null,
@@ -40842,8 +41530,8 @@
    }
   },
   "publish-readiness": {
-   "measuredAt": "2026-11-11",
-   "hash": "4835898e00fe5c75",
+   "measuredAt": "2026-11-16",
+   "hash": "45ece2c941ac75b9",
    "bundle": {
     "own": {
      "min": 17917,
@@ -40903,7 +41591,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "dialog",
@@ -40917,20 +41605,20 @@
      }
     ],
     "withoutLit": {
-     "min": 83501,
-     "gzip": 21552
+     "min": 83800,
+     "gzip": 21639
     },
     "withLit": {
-     "min": 106273,
-     "gzip": 29169
+     "min": 106572,
+     "gzip": 29263
     }
    },
    "render": {
     "tag": "tc-publish-readiness",
     "source": "defaults",
     "runs": 7,
-    "cold": 27.5,
-    "first": 1.3,
+    "cold": 12.3,
+    "first": 0.9,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 57,
@@ -40953,8 +41641,8 @@
    }
   },
   "pull-request": {
-   "measuredAt": "2026-11-11",
-   "hash": "2a474efe098cca25",
+   "measuredAt": "2026-11-16",
+   "hash": "978959cdff86db27",
    "bundle": {
     "own": {
      "min": 25311,
@@ -40964,7 +41652,7 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19983
+      "min": 19988
      },
      {
       "name": "internal/settings",
@@ -41014,25 +41702,25 @@
      {
       "name": "switch",
       "kind": "element",
-      "min": 734
+      "min": 2818
      }
     ],
     "withoutLit": {
-     "min": 48899,
-     "gzip": 13237
+     "min": 51049,
+     "gzip": 13576
     },
     "withLit": {
-     "min": 69949,
-     "gzip": 20073
+     "min": 72038,
+     "gzip": 20428
     }
    },
    "render": {
     "tag": "tc-pull-request",
     "source": "demo",
     "runs": 7,
-    "cold": 20.6,
-    "first": 3,
-    "update": 0.5,
+    "cold": 15.1,
+    "first": 2.4,
+    "update": 0.6,
     "updateKind": "one item of mergeMethods replaced",
     "nodes": 68,
     "scale": {
@@ -41041,14 +41729,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.1,
-       "update": 1.5,
+       "first": 4.9,
+       "update": 0.8,
        "nodes": 165
       },
       {
        "items": 1000,
-       "first": 33.5,
-       "update": 15.1,
+       "first": 20.8,
+       "update": 10.5,
        "nodes": 1065
       }
      ]
@@ -42151,8 +42839,8 @@
    }
   },
   "reasoning-flags": {
-   "measuredAt": "2026-11-11",
-   "hash": "8fa53f00b2285d4e",
+   "measuredAt": "2026-11-16",
+   "hash": "ac3c958c01bbd5f2",
    "bundle": {
     "own": {
      "min": 17505,
@@ -42162,12 +42850,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18965
+      "min": 18988
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9274
      },
      {
       "name": "internal/card-head",
@@ -42206,21 +42894,21 @@
      }
     ],
     "withoutLit": {
-     "min": 33914,
-     "gzip": 11212
+     "min": 34437,
+     "gzip": 11393
     },
     "withLit": {
-     "min": 53923,
-     "gzip": 17612
+     "min": 54454,
+     "gzip": 17803
     }
    },
    "render": {
     "tag": "tc-reasoning-flags",
     "source": "demo",
     "runs": 7,
-    "cold": 5.8,
-    "first": 0.8,
-    "update": 0.3,
+    "cold": 4.1,
+    "first": 0.6,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 2,
     "scale": null,
@@ -42340,8 +43028,8 @@
    }
   },
   "red-team-finding": {
-   "measuredAt": "2026-11-11",
-   "hash": "c11c03c50fa22ea3",
+   "measuredAt": "2026-11-16",
+   "hash": "51270fa8918638e4",
    "bundle": {
     "own": {
      "min": 20075,
@@ -42391,7 +43079,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -42400,20 +43088,20 @@
      }
     ],
     "withoutLit": {
-     "min": 73847,
-     "gzip": 18793
+     "min": 74146,
+     "gzip": 18877
     },
     "withLit": {
-     "min": 96724,
-     "gzip": 26394
+     "min": 97023,
+     "gzip": 26483
     }
    },
    "render": {
     "tag": "tc-red-team-finding",
     "source": "defaults",
     "runs": 7,
-    "cold": 17.9,
-    "first": 1,
+    "cold": 14.6,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 13,
@@ -43329,8 +44017,8 @@
    }
   },
   "response-selection": {
-   "measuredAt": "2026-11-11",
-   "hash": "96f2ffb1c189f583",
+   "measuredAt": "2026-11-16",
+   "hash": "8fa8f2cf1d7c9e3f",
    "bundle": {
     "own": {
      "min": 31971,
@@ -43340,7 +44028,7 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21708
+      "min": 21716
      },
      {
       "name": "internal/selection",
@@ -43350,7 +44038,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8761
+      "min": 9272
      },
      {
       "name": "internal/card-head",
@@ -43390,24 +44078,24 @@
      {
       "name": "inline-diff",
       "kind": "element",
-      "min": 43325
+      "min": 43322
      }
     ],
     "withoutLit": {
-     "min": 103714,
-     "gzip": 27590
+     "min": 104229,
+     "gzip": 27785
     },
     "withLit": {
-     "min": 126447,
-     "gzip": 34979
+     "min": 126963,
+     "gzip": 35159
     }
    },
    "render": {
     "tag": "tc-response-selection",
     "source": "demo",
     "runs": 7,
-    "cold": 7.8,
-    "first": 1.4,
+    "cold": 8.7,
+    "first": 1.1,
     "update": 0.3,
     "updateKind": "one item of actions replaced",
     "nodes": 5,
@@ -43417,14 +44105,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1,
-       "update": 0.3,
+       "first": 1.3,
+       "update": 0.1,
        "nodes": 5
       },
       {
        "items": 1000,
        "first": 1.3,
-       "update": 0.4,
+       "update": 0.3,
        "nodes": 5
       }
      ]
@@ -45178,6 +45866,104 @@
     "errors": []
    }
   },
+  "run-controls": {
+   "measuredAt": "2026-11-16",
+   "hash": "cd286b6f9c01b329",
+   "bundle": {
+    "own": {
+     "min": 23734,
+     "gzip": 6973
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21927
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 31370,
+     "gzip": 9079
+    },
+    "withLit": {
+     "min": 54534,
+     "gzip": 16792
+    }
+   },
+   "render": {
+    "tag": "tc-run-controls",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.5,
+    "first": 2.7,
+    "update": 0.5,
+    "updateKind": "one item of queue replaced",
+    "nodes": 37,
+    "scale": {
+     "property": "queue",
+     "demoItems": 1,
+     "points": [
+      {
+       "items": 100,
+       "first": 10.3,
+       "update": 0.4,
+       "nodes": 730
+      },
+      {
+       "items": 1000,
+       "first": 27,
+       "update": 2.5,
+       "nodes": 7030
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "run-estimate": {
    "measuredAt": "2026-11-13",
    "hash": "e593f7a41a654367",
@@ -45581,23 +46367,23 @@
    }
   },
   "running-now": {
-   "measuredAt": "2026-11-13",
-   "hash": "077d3317d9c70fdf",
+   "measuredAt": "2026-11-16",
+   "hash": "6820ac2426c73e05",
    "bundle": {
     "own": {
-     "min": 25216,
-     "gzip": 8199
+     "min": 27266,
+     "gzip": 8604
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22514
+      "min": 22526
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -45631,21 +46417,21 @@
      }
     ],
     "withoutLit": {
-     "min": 42253,
-     "gzip": 13338
+     "min": 44823,
+     "gzip": 13946
     },
     "withLit": {
-     "min": 65933,
-     "gzip": 21089
+     "min": 68510,
+     "gzip": 21705
     }
    },
    "render": {
     "tag": "tc-running-now",
     "source": "demo",
     "runs": 7,
-    "cold": 8.6,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 14,
+    "first": 1.3,
+    "update": 0.3,
     "updateKind": "one item of tasks replaced",
     "nodes": 11,
     "scale": {
@@ -45654,14 +46440,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.4,
-       "update": 0.1,
+       "first": 1.6,
+       "update": 0.3,
        "nodes": 11
       },
       {
        "items": 1000,
-       "first": 0.9,
-       "update": 0.1,
+       "first": 3.1,
+       "update": 0.5,
        "nodes": 11
       }
      ]
@@ -47526,18 +48312,18 @@
    }
   },
   "select": {
-   "measuredAt": "2026-11-11",
-   "hash": "411acb260a8ace5f",
+   "measuredAt": "2026-11-16",
+   "hash": "6c0cba5e668721cb",
    "bundle": {
     "own": {
-     "min": 18109,
-     "gzip": 6062
+     "min": 20077,
+     "gzip": 6753
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 20089
+      "min": 20088
      },
      {
       "name": "internal/card-head",
@@ -47547,7 +48333,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1868
      },
      {
       "name": "internal/kit",
@@ -47562,7 +48348,7 @@
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      },
      {
       "name": "internal/controllers",
@@ -47571,21 +48357,21 @@
      }
     ],
     "withoutLit": {
-     "min": 25032,
-     "gzip": 7952
+     "min": 27003,
+     "gzip": 8627
     },
     "withLit": {
-     "min": 46202,
-     "gzip": 14904
+     "min": 48174,
+     "gzip": 15597
     }
    },
    "render": {
     "tag": "tc-select",
     "source": "demo",
     "runs": 7,
-    "cold": 19.2,
-    "first": 2,
-    "update": 0.4,
+    "cold": 11.8,
+    "first": 2.2,
+    "update": 0.3,
     "updateKind": "one item of options replaced",
     "nodes": 35,
     "scale": {
@@ -47594,14 +48380,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.4,
-       "update": 0.6,
+       "first": 10.7,
+       "update": 0.3,
        "nodes": 441
       },
       {
        "items": 1000,
-       "first": 25.8,
-       "update": 2.5,
+       "first": 25.6,
+       "update": 2.6,
        "nodes": 4341
       }
      ]
@@ -47624,8 +48410,8 @@
    }
   },
   "selection-toolbar": {
-   "measuredAt": "2026-11-13",
-   "hash": "0272cd68517289c2",
+   "measuredAt": "2026-11-16",
+   "hash": "f620e93f89fd9962",
    "bundle": {
     "own": {
      "min": 29050,
@@ -47635,12 +48421,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 20115
+      "min": 20126
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9280
      },
      {
       "name": "internal/card-head",
@@ -47674,21 +48460,21 @@
      }
     ],
     "withoutLit": {
-     "min": 45604,
-     "gzip": 14358
+     "min": 46127,
+     "gzip": 14604
     },
     "withLit": {
-     "min": 66776,
-     "gzip": 21218
+     "min": 67307,
+     "gzip": 21464
     }
    },
    "render": {
     "tag": "tc-selection-toolbar",
     "source": "demo",
     "runs": 7,
-    "cold": 17.1,
-    "first": 2.4,
-    "update": 0.1,
+    "cold": 9.5,
+    "first": 0.6,
+    "update": 0,
     "updateKind": "one item of items replaced",
     "nodes": 0,
     "scale": {
@@ -47697,13 +48483,13 @@
      "points": [
       {
        "items": 100,
-       "first": 7.2,
+       "first": 1.4,
        "update": 0,
        "nodes": 0
       },
       {
        "items": 1000,
-       "first": 26.9,
+       "first": 10.6,
        "update": 0,
        "nodes": 0
       }
@@ -47727,8 +48513,8 @@
    }
   },
   "selection-translate": {
-   "measuredAt": "2026-11-11",
-   "hash": "e8fb9c388b519c2e",
+   "measuredAt": "2026-11-16",
+   "hash": "c711e0f860ee8a60",
    "bundle": {
     "own": {
      "min": 23765,
@@ -47738,7 +48524,7 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19996
+      "min": 19994
      },
      {
       "name": "internal/selection",
@@ -47748,7 +48534,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8759
+      "min": 9280
      },
      {
       "name": "internal/card-head",
@@ -47763,7 +48549,7 @@
      {
       "name": "internal/selection-toolbar",
       "kind": "internal",
-      "min": 1349
+      "min": 1350
      },
      {
       "name": "internal/kit",
@@ -47792,21 +48578,21 @@
      }
     ],
     "withoutLit": {
-     "min": 52283,
-     "gzip": 16587
+     "min": 52804,
+     "gzip": 16784
     },
     "withLit": {
-     "min": 73450,
-     "gzip": 23372
+     "min": 73978,
+     "gzip": 23571
     }
    },
    "render": {
     "tag": "tc-selection-translate",
     "source": "demo",
     "runs": 7,
-    "cold": 4.1,
-    "first": 0.9,
-    "update": 0.3,
+    "cold": 2.5,
+    "first": 0.4,
+    "update": 0.2,
     "updateKind": "one item of languages replaced",
     "nodes": 5,
     "scale": {
@@ -47815,14 +48601,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.3,
-       "update": 0.2,
+       "first": 0.4,
+       "update": 0,
        "nodes": 5
       },
       {
        "items": 1000,
-       "first": 0.7,
-       "update": 0.2,
+       "first": 0.3,
+       "update": 0,
        "nodes": 5
       }
      ]
@@ -47845,8 +48631,8 @@
    }
   },
   "sensitivity-label-picker": {
-   "measuredAt": "2026-11-11",
-   "hash": "35fb8f092146edc1",
+   "measuredAt": "2026-11-16",
+   "hash": "8f1a4ea823376ef7",
    "bundle": {
     "own": {
      "min": 13484,
@@ -47856,12 +48642,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 20814
+      "min": 20823
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9283
      },
      {
       "name": "internal/card-head",
@@ -47895,21 +48681,21 @@
      }
     ],
     "withoutLit": {
-     "min": 29116,
-     "gzip": 9886
+     "min": 29639,
+     "gzip": 10060
     },
     "withLit": {
-     "min": 51111,
-     "gzip": 17006
+     "min": 51646,
+     "gzip": 17204
     }
    },
    "render": {
     "tag": "tc-sensitivity-label-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 20,
-    "first": 1.1,
-    "update": 0.3,
+    "cold": 8,
+    "first": 0.3,
+    "update": 0.1,
     "updateKind": "one item of options replaced",
     "nodes": 9,
     "scale": {
@@ -47918,14 +48704,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.6,
-       "update": 0.4,
+       "first": 0.9,
+       "update": 0.2,
        "nodes": 105
       },
       {
        "items": 1000,
-       "first": 13.6,
-       "update": 1.8,
+       "first": 4.7,
+       "update": 0.8,
        "nodes": 1005
       }
      ]
@@ -47948,8 +48734,8 @@
    }
   },
   "session-context-bar": {
-   "measuredAt": "2026-11-11",
-   "hash": "57f48b669019d5ec",
+   "measuredAt": "2026-11-16",
+   "hash": "e66338fa52951840",
    "bundle": {
     "own": {
      "min": 21152,
@@ -47959,12 +48745,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21924
+      "min": 21938
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -48003,21 +48789,21 @@
      }
     ],
     "withoutLit": {
-     "min": 37797,
-     "gzip": 11980
+     "min": 38320,
+     "gzip": 12159
     },
     "withLit": {
-     "min": 60898,
-     "gzip": 19532
+     "min": 61427,
+     "gzip": 19708
     }
    },
    "render": {
     "tag": "tc-session-context-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 17.3,
-    "first": 2.1,
-    "update": 0.8,
+    "cold": 14.1,
+    "first": 1,
+    "update": 0.4,
     "updateKind": "one item of terms replaced",
     "nodes": 66,
     "scale": {
@@ -48026,14 +48812,14 @@
      "points": [
       {
        "items": 100,
-       "first": 15.7,
-       "update": 2.8,
+       "first": 6.7,
+       "update": 1.5,
        "nodes": 1238
       },
       {
        "items": 1000,
-       "first": 83.2,
-       "update": 14,
+       "first": 64.4,
+       "update": 16.7,
        "nodes": 12590
       }
      ]
@@ -48159,8 +48945,8 @@
    }
   },
   "session-panel": {
-   "measuredAt": "2026-11-11",
-   "hash": "f9b835a77a449a67",
+   "measuredAt": "2026-11-16",
+   "hash": "3807b87e4e992136",
    "bundle": {
     "own": {
      "min": 8430,
@@ -48170,7 +48956,7 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22585
+      "min": 22602
      },
      {
       "name": "internal/settings",
@@ -48180,7 +48966,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8774
+      "min": 9302
      },
      {
       "name": "internal/card-head",
@@ -48255,23 +49041,23 @@
      {
       "name": "switch",
       "kind": "element",
-      "min": 734
+      "min": 2824
      }
     ],
     "withoutLit": {
-     "min": 107727,
-     "gzip": 27419
+     "min": 110423,
+     "gzip": 27972
     },
     "withLit": {
-     "min": 130344,
-     "gzip": 34952
+     "min": 132975,
+     "gzip": 35526
     }
    },
    "render": {
     "tag": "tc-session-panel",
     "source": "defaults",
     "runs": 7,
-    "cold": 5.4,
+    "cold": 5.3,
     "first": 0.4,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -48697,8 +49483,8 @@
    }
   },
   "share-panel": {
-   "measuredAt": "2026-11-11",
-   "hash": "bea18aad5ce01e5c",
+   "measuredAt": "2026-11-16",
+   "hash": "85ec662f562096d9",
    "bundle": {
     "own": {
      "min": 28437,
@@ -48708,17 +49494,17 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21686
+      "min": 21699
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
       "kind": "internal",
-      "min": 3110
+      "min": 3113
      },
      {
       "name": "internal/base",
@@ -48752,21 +49538,21 @@
      }
     ],
     "withoutLit": {
-     "min": 44875,
-     "gzip": 13729
+     "min": 45398,
+     "gzip": 13941
     },
     "withLit": {
-     "min": 67745,
-     "gzip": 21168
+     "min": 68271,
+     "gzip": 21385
     }
    },
    "render": {
     "tag": "tc-share-panel",
     "source": "demo",
     "runs": 7,
-    "cold": 18.7,
-    "first": 2.3,
-    "update": 0.3,
+    "cold": 14.7,
+    "first": 2.1,
+    "update": 0.2,
     "updateKind": "one item of directory replaced",
     "nodes": 53,
     "scale": {
@@ -48775,13 +49561,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2.1,
+       "first": 3.6,
        "update": 0.2,
        "nodes": 53
       },
       {
        "items": 1000,
-       "first": 2.2,
+       "first": 3,
        "update": 0.2,
        "nodes": 53
       }
@@ -51511,8 +52297,8 @@
    }
   },
   "step-picker": {
-   "measuredAt": "2026-11-13",
-   "hash": "3f0abc195d3773a7",
+   "measuredAt": "2026-11-16",
+   "hash": "2a8fbdd78e90e7d5",
    "bundle": {
     "own": {
      "min": 18116,
@@ -51522,12 +52308,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21702
+      "min": 21716
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9278
      },
      {
       "name": "internal/card-head",
@@ -51537,7 +52323,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1877
      },
      {
       "name": "internal/kit",
@@ -51552,7 +52338,7 @@
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      },
      {
       "name": "internal/controllers",
@@ -51566,20 +52352,20 @@
      }
     ],
     "withoutLit": {
-     "min": 74594,
-     "gzip": 21737
+     "min": 75122,
+     "gzip": 21920
     },
     "withLit": {
-     "min": 97290,
-     "gzip": 29186
+     "min": 97828,
+     "gzip": 29363
     }
    },
    "render": {
     "tag": "tc-step-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 13.2,
-    "first": 1.3,
+    "cold": 10.2,
+    "first": 1.2,
     "update": 0.3,
     "updateKind": "one item of items replaced",
     "nodes": 187,
@@ -51589,14 +52375,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.7,
-       "update": 0.5,
+       "first": 3.4,
+       "update": 0.4,
        "nodes": 857
       },
       {
        "items": 1000,
-       "first": 27.7,
-       "update": 3.8,
+       "first": 27.1,
+       "update": 3.6,
        "nodes": 7997
       }
      ]
@@ -51722,12 +52508,12 @@
    }
   },
   "stories": {
-   "measuredAt": "2026-11-11",
-   "hash": "394fcb35081a1b11",
+   "measuredAt": "2026-11-16",
+   "hash": "9952059b3f765c79",
    "bundle": {
     "own": {
-     "min": 40092,
-     "gzip": 11375
+     "min": 40219,
+     "gzip": 11450
     },
     "shared": [
      {
@@ -51787,38 +52573,38 @@
      }
     ],
     "withoutLit": {
-     "min": 50596,
-     "gzip": 14621
+     "min": 50723,
+     "gzip": 14694
     },
     "withLit": {
-     "min": 72884,
-     "gzip": 21926
+     "min": 73011,
+     "gzip": 21998
     }
    },
    "render": {
     "tag": "tc-stories",
     "source": "demo",
     "runs": 7,
-    "cold": 18.7,
-    "first": 2.4,
-    "update": 0.5,
+    "cold": 7.3,
+    "first": 0.7,
+    "update": 0.2,
     "updateKind": "one item of entries replaced",
-    "nodes": 39,
+    "nodes": 44,
     "scale": {
      "property": "entries",
      "demoItems": 5,
      "points": [
       {
        "items": 100,
-       "first": 2.2,
-       "update": 0.3,
-       "nodes": 39
+       "first": 0.6,
+       "update": 0,
+       "nodes": 44
       },
       {
        "items": 1000,
-       "first": 2.1,
-       "update": 0.3,
-       "nodes": 39
+       "first": 0.5,
+       "update": 0.1,
+       "nodes": 44
       }
      ]
     },
@@ -52548,18 +53334,18 @@
    }
   },
   "switch": {
-   "measuredAt": "2026-11-11",
-   "hash": "07c14f9f7ae90937",
+   "measuredAt": "2026-11-16",
+   "hash": "568d794d9a5707c0",
    "bundle": {
     "own": {
-     "min": 899,
-     "gzip": 453
+     "min": 5046,
+     "gzip": 2199
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19947
+      "min": 19949
      },
      {
       "name": "internal/settings",
@@ -52574,7 +53360,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1868
      },
      {
       "name": "internal/kit",
@@ -52589,7 +53375,7 @@
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      },
      {
       "name": "internal/controllers",
@@ -52598,20 +53384,20 @@
      }
     ],
     "withoutLit": {
-     "min": 24454,
-     "gzip": 6853
+     "min": 26600,
+     "gzip": 7198
     },
     "withLit": {
-     "min": 45705,
-     "gzip": 13763
+     "min": 47795,
+     "gzip": 14102
     }
    },
    "render": {
     "tag": "tc-switch",
     "source": "demo",
     "runs": 7,
-    "cold": 22.7,
-    "first": 0.4,
+    "cold": 16.8,
+    "first": 0.9,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 5,
@@ -52911,8 +53697,8 @@
    }
   },
   "task-board": {
-   "measuredAt": "2026-11-11",
-   "hash": "6347ce79b3879235",
+   "measuredAt": "2026-11-16",
+   "hash": "14cbe85e225a584e",
    "bundle": {
     "own": {
      "min": 37721,
@@ -52967,7 +53753,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -52976,20 +53762,20 @@
      }
     ],
     "withoutLit": {
-     "min": 59226,
-     "gzip": 16232
+     "min": 59525,
+     "gzip": 16320
     },
     "withLit": {
-     "min": 82332,
-     "gzip": 23877
+     "min": 82631,
+     "gzip": 23964
     }
    },
    "render": {
     "tag": "tc-task-board",
     "source": "defaults",
     "runs": 7,
-    "cold": 25.2,
-    "first": 1.2,
+    "cold": 16.6,
+    "first": 1,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 40,
@@ -53120,8 +53906,8 @@
    }
   },
   "team-flag-picker": {
-   "measuredAt": "2026-11-11",
-   "hash": "bdaebd3bffc0f669",
+   "measuredAt": "2026-11-16",
+   "hash": "2b5aafd47982c147",
    "bundle": {
     "own": {
      "min": 10442,
@@ -53131,12 +53917,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 20098
+      "min": 20121
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9274
      },
      {
       "name": "internal/card-head",
@@ -53175,21 +53961,21 @@
      }
     ],
     "withoutLit": {
-     "min": 26878,
-     "gzip": 9201
+     "min": 27401,
+     "gzip": 9377
     },
     "withLit": {
-     "min": 48016,
-     "gzip": 16066
+     "min": 48547,
+     "gzip": 16244
     }
    },
    "render": {
     "tag": "tc-team-flag-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 8.9,
-    "first": 0.5,
-    "update": 0.2,
+    "cold": 13.5,
+    "first": 0.4,
+    "update": 0.1,
     "updateKind": "one item of flags replaced",
     "nodes": 7,
     "scale": {
@@ -53198,14 +53984,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.7,
-       "update": 0.2,
+       "first": 0.3,
+       "update": 0.1,
        "nodes": 7
       },
       {
        "items": 1000,
-       "first": 0.5,
-       "update": 0.2,
+       "first": 0.3,
+       "update": 0,
        "nodes": 7
       }
      ]
@@ -53860,8 +54646,8 @@
    }
   },
   "testimonial-wall": {
-   "measuredAt": "2026-11-11",
-   "hash": "c8396ca39d484409",
+   "measuredAt": "2026-11-16",
+   "hash": "3a95356a39b76e10",
    "bundle": {
     "own": {
      "min": 18209,
@@ -53916,7 +54702,7 @@
      {
       "name": "button",
       "kind": "element",
-      "min": 12674
+      "min": 12973
      },
      {
       "name": "src/internal/reduced-motion.ts",
@@ -53925,20 +54711,20 @@
      }
     ],
     "withoutLit": {
-     "min": 39708,
-     "gzip": 12719
+     "min": 40007,
+     "gzip": 12807
     },
     "withLit": {
-     "min": 60220,
-     "gzip": 19329
+     "min": 60519,
+     "gzip": 19418
     }
    },
    "render": {
     "tag": "tc-testimonial-wall",
     "source": "defaults",
     "runs": 7,
-    "cold": 10.5,
-    "first": 0.9,
+    "cold": 13.2,
+    "first": 0.8,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 21,
@@ -53961,8 +54747,8 @@
    }
   },
   "text-annotator": {
-   "measuredAt": "2026-11-11",
-   "hash": "8f17555c0fcdb19d",
+   "measuredAt": "2026-11-16",
+   "hash": "fcbb3d6724c78e5a",
    "bundle": {
     "own": {
      "min": 41891,
@@ -53972,7 +54758,7 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21686
+      "min": 21702
      },
      {
       "name": "internal/selection",
@@ -53982,7 +54768,7 @@
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9277
      },
      {
       "name": "internal/card-head",
@@ -53992,7 +54778,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1865
      },
      {
       "name": "internal/selection-toolbar",
@@ -54012,7 +54798,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 444
+      "min": 445
      },
      {
       "name": "internal/styles",
@@ -54026,20 +54812,20 @@
      }
     ],
     "withoutLit": {
-     "min": 71239,
-     "gzip": 21549
+     "min": 71761,
+     "gzip": 21744
     },
     "withLit": {
-     "min": 94083,
-     "gzip": 28962
+     "min": 94612,
+     "gzip": 29177
     }
    },
    "render": {
     "tag": "tc-text-annotator",
     "source": "demo",
     "runs": 7,
-    "cold": 21.8,
-    "first": 1.7,
+    "cold": 13.2,
+    "first": 3.7,
     "update": 0.5,
     "updateKind": "one item of colors replaced",
     "nodes": 131,
@@ -54049,14 +54835,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.2,
-       "update": 0.3,
+       "first": 2.6,
+       "update": 0.2,
        "nodes": 359
       },
       {
        "items": 1000,
-       "first": 13.2,
-       "update": 1.7,
+       "first": 9.7,
+       "update": 1.2,
        "nodes": 2519
       }
      ]
@@ -54621,8 +55407,8 @@
    }
   },
   "time-details": {
-   "measuredAt": "2026-11-11",
-   "hash": "cba693a21bb04051",
+   "measuredAt": "2026-11-16",
+   "hash": "294ced0d3d236534",
    "bundle": {
     "own": {
      "min": 13624,
@@ -54632,12 +55418,12 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18979
+      "min": 18982
      },
      {
       "name": "internal/popover",
       "kind": "internal",
-      "min": 8760
+      "min": 9268
      },
      {
       "name": "internal/card-head",
@@ -54672,7 +55458,7 @@
      {
       "name": "internal/inline-details",
       "kind": "internal",
-      "min": 201
+      "min": 202
      },
      {
       "name": "internal/controllers",
@@ -54681,21 +55467,21 @@
      }
     ],
     "withoutLit": {
-     "min": 30267,
-     "gzip": 11252
+     "min": 30775,
+     "gzip": 11415
     },
     "withLit": {
-     "min": 50346,
-     "gzip": 17646
+     "min": 50855,
+     "gzip": 17818
     }
    },
    "render": {
     "tag": "tc-time-details",
     "source": "demo",
     "runs": 7,
-    "cold": 4.6,
-    "first": 1.7,
-    "update": 1,
+    "cold": 6.5,
+    "first": 3.1,
+    "update": 1.4,
     "updateKind": "re-render with the same data",
     "nodes": 15,
     "scale": null,

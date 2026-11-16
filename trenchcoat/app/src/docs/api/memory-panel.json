@@ -110,6 +110,14 @@
      "readonly": false
     },
     {
+     "name": "onConsent",
+     "attribute": null,
+     "type": "((id: string, keep: boolean) => MemoryCallbackResult) | undefined",
+     "default": "undefined",
+     "description": "Called when a memory waiting for the person's OK is kept (true) or not (false)",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -129,6 +137,12 @@
      "name": "tc-enabled-change",
      "detail": "",
      "description": "The master switch was flipped; detail `{ enabled: boolean }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-consent",
+     "detail": "",
+     "description": "Keep or Don't keep on a memory waiting for the person's OK ({ memory, keep }: MemoryConsent); cancelable – prevented, it keeps waiting",
      "cancelable": true
     },
     {
@@ -179,6 +193,7 @@
     "--tc-control-px-sm",
     "--tc-control-radius-md",
     "--tc-control-radius-sm",
+    "--tc-divider",
     "--tc-duration-base",
     "--tc-duration-fast",
     "--tc-duration-instant",
@@ -205,6 +220,7 @@
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
+    "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
@@ -317,7 +333,8 @@
    "events": {
     "tc-memories-change": "onChange",
     "tc-enabled-change": "onEnabledChange",
-    "tc-action": "onClick"
+    "tc-action": "onClick",
+    "tc-consent": "onTcConsent"
    }
   }
  ],
@@ -334,7 +351,8 @@
     "onEdit",
     "onPause",
     "onForget",
-    "onRestore"
+    "onRestore",
+    "onConsent"
    ],
    "attributes": [
     {
@@ -369,6 +387,10 @@
     },
     {
      "name": "tc-enabled-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-consent",
      "cancelable": true
     },
     {
@@ -694,7 +716,7 @@
   "windowed": false
  },
  "size": {
-  "min": 75619,
-  "gzip": 17093
+  "min": 78670,
+  "gzip": 17986
  }
 }

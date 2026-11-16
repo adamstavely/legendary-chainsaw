@@ -1,0 +1,571 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-crew",
+   "className": "TcAgentCrew",
+   "description": "A lead agent and its sub-agents as one live tree of cards – what each does now, its context, tools and last handoff.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Crew\"",
+     "description": "The heading; empty leaves the header out",
+     "readonly": false
+    },
+    {
+     "name": "projects",
+     "attribute": null,
+     "type": "CrewProject[]",
+     "default": "[]",
+     "description": "One crew per project; with more than one, tabs switch between them",
+     "readonly": false
+    },
+    {
+     "name": "project",
+     "attribute": "project",
+     "type": "string | null",
+     "default": "null",
+     "description": "The shown project's id – the first when unset. Changed by the tabs unless tc-project-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "opened",
+     "attribute": "opened",
+     "type": "string | null",
+     "default": "null",
+     "description": "The agent whose detail is open, or null. Changed by the cards unless tc-opened-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats costs in the detail – defaults to dollars, \"$0.42\"",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<AgentCrewLabels>",
+     "default": "{}",
+     "description": "The words it uses, merged over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": null,
+     "type": "CrewProject | undefined",
+     "default": null,
+     "description": "The project shown",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-project-change",
+     "detail": "",
+     "description": "A project tab was chosen ({ project, item }: AgentCrewProjectChange); cancelable – prevented, `project` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-opened-change",
+     "detail": "",
+     "description": "An agent's detail was opened or closed ({ opened, agent }: AgentCrewOpenedChange); cancelable – prevented, `opened` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-steer",
+     "detail": "",
+     "description": "A note to steer an agent was sent ({ agent, note }: AgentCrewSteer); cancelable – prevented, the note stays in the field",
+     "cancelable": true
+    },
+    {
+     "name": "tc-pause",
+     "detail": "",
+     "description": "Pause was pressed for an agent ({ agent }: AgentCrewAgentEvent)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-resume",
+     "detail": "",
+     "description": "Resume was pressed for an agent ({ agent }: AgentCrewAgentEvent)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "crew",
+   "cssProperties": [
+    {
+     "name": "--tc-crew-card-w",
+     "value": "214px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-crew-indent",
+     "value": "var(--tc-space-7)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-crew-link",
+     "value": "var(--tc-accent-solid)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-crew-fill",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-shadow-raised-hover",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AgentCrew",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"\" leaves the header out (default \"Crew\")"
+    },
+    {
+     "name": "project",
+     "type": "string | null",
+     "optional": true,
+     "description": "The shown project's id – controlled when given"
+    },
+    {
+     "name": "defaultProject",
+     "type": "string | null",
+     "optional": true,
+     "description": "The project shown at first, when `project` isn't controlled"
+    },
+    {
+     "name": "onProjectChange",
+     "type": "(project: string | null, item?: CrewProject) => void",
+     "optional": true,
+     "description": "A project tab was chosen"
+    },
+    {
+     "name": "opened",
+     "type": "string | null",
+     "optional": true,
+     "description": "The agent whose detail is open – controlled when given"
+    },
+    {
+     "name": "defaultOpened",
+     "type": "string | null",
+     "optional": true,
+     "description": "The agent open at first, when `opened` isn't controlled"
+    },
+    {
+     "name": "onOpenedChange",
+     "type": "(opened: string | null, agent: CrewAgent | null) => void",
+     "optional": true,
+     "description": "An agent's detail was opened or closed"
+    },
+    {
+     "name": "onSteer",
+     "type": "(agent: CrewAgent, note: string) => void | boolean",
+     "optional": true,
+     "description": "A note to steer an agent; return false to keep the note in the field"
+    },
+    {
+     "name": "onPauseAgent",
+     "type": "(agent: CrewAgent) => void",
+     "optional": true,
+     "description": "Pause was pressed for an agent"
+    },
+    {
+     "name": "onResumeAgent",
+     "type": "(agent: CrewAgent) => void",
+     "optional": true,
+     "description": "Resume was pressed for an agent"
+    }
+   ],
+   "hides": [
+    "heading",
+    "project",
+    "opened",
+    "children"
+   ],
+   "events": {
+    "tc-project-change": null,
+    "tc-opened-change": null,
+    "tc-steer": "onSteer",
+    "tc-pause": "onPauseAgent",
+    "tc-resume": "onResumeAgent"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-agent-crew",
+   "className": "TcAgentCrew",
+   "module": "@adamstavely/trenchcoat/agent-crew",
+   "data": [
+    "projects",
+    "formatCost",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "project",
+     "attribute": "project"
+    },
+    {
+     "name": "opened",
+     "attribute": "opened"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-project-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-opened-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-steer",
+     "cancelable": true
+    },
+    {
+     "name": "tc-pause",
+     "cancelable": false
+    },
+    {
+     "name": "tc-resume",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "project",
+     "event": "tc-project-change"
+    },
+    {
+     "property": "opened",
+     "event": "tc-opened-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 1,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 37102,
+  "gzip": 11112
+ }
+}

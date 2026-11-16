@@ -112,6 +112,30 @@
         },
         "changes-requested": {
           "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "approveEdited": {
+          "type": "string"
+        },
+        "approvedEdited": {
+          "type": "string"
+        },
+        "editing": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string"
+        },
+        "asked": {
+          "type": "string"
+        },
+        "invalidNumber": {
+          "type": "string"
+        },
+        "invalidJson": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -194,6 +218,14 @@
         "blocking": {
           "type": "boolean",
           "description": "Marks a request that holds up the whole run"
+        },
+        "edited": {
+          "type": "boolean",
+          "description": "Approved with changes: `args` holds the arguments as approved"
+        },
+        "originalArgs": {
+          "$ref": "#/definitions/ApprovalArgs",
+          "description": "With `edited`: the arguments as the agent asked for them"
         }
       },
       "required": [

@@ -28,10 +28,10 @@
     "value": {
       "type": "object",
       "properties": {
-        "match": {
+        "task": {
           "type": "string"
         },
-        "task": {
+        "match": {
           "type": "string"
         },
         "decision": {

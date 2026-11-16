@@ -13,7 +13,9 @@ import { initials } from "./internal/util";
  * the chat composer. The header names the agent and says how long it has waited; then the question, a line of
  * context, and numbered options – one of them may be Recommended, which takes the first focus but is never picked for
  * you. "Something else…" (`allow-other`) opens a short field. For a yes / no step, `kind="approve"` shows Approve and
- * Decline instead, Decline asking for an optional reason. When several decisions wait, "1 of 3" with previous / next
+ * Decline instead, Decline asking for an optional reason. For picking between variants – a draft layout, a logo, a
+ * chart style – `kind="variant"` shows the options as preview tiles (each option's `image`, or its number on a quiet
+ * tile when it has none), picked the same way. When several decisions wait, "1 of 3" with previous / next
  * steps through them (the page swaps the content).
  * Sending folds the card into a one-line receipt – "You chose: Archive the duplicates" – with Undo for a few seconds.
  * Standard: the header on a gray tray above a white card, Send on the tray below. Clean: one white card.
@@ -21,12 +23,12 @@ import { initials } from "./internal/util";
  *   <tc-decision-card agent="Records agent" question="Which copy should I keep?" .options=${options}
  *     @tc-decision=${(e) => agent.answer(e.detail)}></tc-decision-card>
  *
- * Keyboard. The options are a radio group with one tab stop – the picked option, else the recommended one; the arrow
+ * Keyboard. The options (rows or tiles) are a radio group with one tab stop – the picked option, else the recommended one; the arrow
  * keys move and pick. 1–9 pick an option from anywhere in the card (outside a text field). ⌘ / Ctrl + Enter sends,
  * Escape defers ("Later").
  */
 
-export type DecisionCardKind = "choose" | "approve";
+export type DecisionCardKind = "choose" | "approve" | "variant";
 
 export type DecisionCardOption = {
   id: string;
@@ -35,6 +37,10 @@ export type DecisionCardOption = {
   detail?: string;
   /** The agent's suggestion – at most one; shows a Recommended chip and takes the first focus */
   recommended?: boolean;
+  /** kind="variant": a preview image URL for the option's tile */
+  image?: string;
+  /** kind="variant": what the preview shows, for screen readers – the label is used when it's left out */
+  imageAlt?: string;
 };
 
 /** What was decided: an option's id, "other" with the text, or "approve" / "decline" with an optional reason */
@@ -135,9 +141,9 @@ export class TcDecisionCard extends TcElement {
   @property() accessor question = "";
   /** A line or two of context: what the agent found, why it can't go on alone */
   @property() accessor context: string | undefined = undefined;
-  /** "choose" (default): numbered options; "approve": Approve and Decline */
+  /** "choose" (default): numbered options; "approve": Approve and Decline; "variant": options as preview tiles */
   @property({ reflect: true }) accessor kind: DecisionCardKind = "choose";
-  /** The options for kind="choose", in the agent's order */
+  /** The options for kind="choose" or "variant", in the agent's order */
   @property({ attribute: false }) accessor options: DecisionCardOption[] = [];
   /** Offers "Something else…" with a short field */
   @property({ type: Boolean, attribute: "allow-other" }) accessor allowOther = false;
@@ -302,7 +308,7 @@ export class TcDecisionCard extends TcElement {
       } else this.defer();
       return;
     }
-    if (!inField && this.kind === "choose" && /^[1-9]$/.test(e.key) && !e.altKey && !e.ctrlKey && !e.metaKey) {
+    if (!inField && this.kind !== "approve" && /^[1-9]$/.test(e.key) && !e.altKey && !e.ctrlKey && !e.metaKey) {
       const c = this.choices[Number(e.key) - 1];
       if (!c) return;
       e.preventDefault();
@@ -359,8 +365,10 @@ export class TcDecisionCard extends TcElement {
     const rec = list.findIndex((c) => c.recommended);
     const stop = picked >= 0 ? picked : Math.max(0, rec);
     const other = this.value === DECISION_CARD_OTHER;
+    const tiles = this.kind === "variant";
     return html`<div
         class="ui-dcd__choices"
+        ?data-tiles=${tiles}
         role="radiogroup"
         aria-labelledby=${`${this.uid}-q`}
         aria-required="true"
@@ -381,6 +389,7 @@ export class TcDecisionCard extends TcElement {
             ?data-other=${c.id === DECISION_CARD_OTHER}
             @click=${() => this.pick(c.id)}
           >
+            ${tiles && c.id !== DECISION_CARD_OTHER ? this.renderTile(c, i) : nothing}
             <span class="ui-dcd__num" aria-hidden="true">${i < 9 ? i + 1 : ""}</span>
             <span class="ui-dcd__choice-text"
               ><span class="ui-dcd__choice-label">${c.label}</span>${c.recommended ? html`<span class="ui-dcd__sr">, </span><span class="ui-dcd__chip">${l.recommended}</span>` : nothing}${c.detail
@@ -407,6 +416,15 @@ export class TcDecisionCard extends TcElement {
           />`
         : nothing}
       ${this.missing ? html`<p class="ui-dcd__error" id=${`${this.uid}-err`}>${other ? l.otherPlaceholder : l.pick}</p>` : nothing}`;
+  }
+
+  /** A variant's preview: its image, or its number on a quiet tile */
+  private renderTile(c: DecisionCardOption, i: number) {
+    // An <img> runs no script, so an inline raster or SVG image is as safe as a link
+    const src = c.image && /^data:image\/[a-z+.-]+[;,]/i.test(c.image) ? c.image : safeUrl(c.image);
+    return html`<span class="ui-dcd__tile">${src
+      ? html`<img class="ui-dcd__tile-img" src=${src} alt=${c.imageAlt ?? ""} loading="lazy" />`
+      : html`<span class="ui-dcd__tile-blank" aria-hidden="true">${i + 1}</span>`}</span>`;
   }
 
   private renderReason() {
@@ -460,7 +478,7 @@ export class TcDecisionCard extends TcElement {
       ${this.kind === "approve" ? (this.declining ? this.renderReason() : nothing) : this.renderChoices()}
     </div>`;
     const keys =
-      this.kind === "choose"
+      this.kind !== "approve"
         ? html`<span class="ui-dcd__sr" id=${`${this.uid}-keys`}>Arrow keys or 1 to ${Math.min(9, this.choices.length)} pick; Control or Command Enter sends; Escape decides later</span>`
         : nothing;
     return html`<section class="ui-dcd__form" aria-labelledby=${`${this.uid}-agent ${this.uid}-q`} @keydown=${this.onKey}>
@@ -544,6 +562,16 @@ export class TcDecisionCard extends TcElement {
 .ui-dcd__choice[data-other] .ui-dcd__choice-label { color: var(--tc-text-muted); }
 .ui-dcd__choice-detail { flex-basis: 100%; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); }
 .ui-dcd__chip { flex: none; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-success-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-pill-h); color: var(--tc-status-success-fg); }
+/* ----- Variants: preview tiles in a grid ----- */
+.ui-dcd__choices[data-tiles] { grid-template-columns: repeat(auto-fill, minmax(var(--tc-dcd-tile), 1fr)); gap: var(--tc-space-2); }
+[data-ui="dcd"] { --tc-dcd-tile: 132px; }
+.ui-dcd__choices[data-tiles] > .ui-dcd__choice:not([data-other]) { position: relative; flex-wrap: wrap; align-items: flex-start; padding: var(--tc-space-1-5); }
+.ui-dcd__choices[data-tiles] > .ui-dcd__choice[data-other] { grid-column: 1 / -1; }
+.ui-dcd__tile { display: block; flex: 1 1 100%; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--tc-radius-md); background: var(--tc-surface-sunken); }
+.ui-dcd__tile-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ui-dcd__tile-blank { display: grid; place-items: center; width: 100%; height: 100%; font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); }
+.ui-dcd__choices[data-tiles] > .ui-dcd__choice:not([data-other]) > .ui-dcd__radio { position: absolute; top: var(--tc-space-2-5); right: var(--tc-space-2-5); background: var(--tc-surface-raised); }
+[aria-checked="true"] > .ui-dcd__tile { box-shadow: inset 0 0 0 2px var(--tc-border-selected); }
 .ui-dcd__radio { position: relative; flex: none; width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--tc-border-control); transition: box-shadow var(--tc-duration-base) var(--tc-ease-standard); }
 .ui-dcd__radio::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--tc-accent); transform: scale(0); transition: transform var(--tc-duration-moderate) var(--tc-ease-spring); }
 [aria-checked="true"] > .ui-dcd__radio { box-shadow: inset 0 0 0 1.5px var(--tc-accent); }

@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-crew.json",
+  "title": "tc-agent-crew",
+  "description": "A lead agent and its sub-agents as one live tree of cards – what each does now, its context, tools and last handoff.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CrewProject"
+      },
+      "description": "One crew per project; with more than one, tabs switch between them"
+    },
+    "project": {
+      "type": "string",
+      "description": "The shown project's id – the first when unset. Changed by the tabs unless tc-project-change is prevented"
+    },
+    "opened": {
+      "type": "string",
+      "description": "The agent whose detail is open, or null. Changed by the cards unless tc-opened-change is prevented"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "working": {
+          "type": "string"
+        },
+        "resting": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "handed": {
+          "type": "string"
+        },
+        "noTools": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "usage": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "string"
+        },
+        "steer": {
+          "type": "string"
+        },
+        "steerPlaceholder": {
+          "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "handoff": {
+          "type": "string"
+        },
+        "workingCount": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it uses, merged over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CrewProject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "lead": {
+          "$ref": "#/definitions/CrewAgent"
+        },
+        "handoffs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrewHandoff"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "lead"
+      ],
+      "additionalProperties": false,
+      "description": "One project's crew"
+    },
+    "CrewAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "Its job in the crew – \"Researcher\""
+        },
+        "status": {
+          "$ref": "#/definitions/CrewAgentStatus"
+        },
+        "doing": {
+          "type": "string",
+          "description": "What it does right now – \"Reading the 2025 census tables\"; resting agents can leave it out"
+        },
+        "context": {
+          "type": "number",
+          "description": "How full its context window is, 0–1"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The tools it works with – \"Web search\", \"Sheets\""
+        },
+        "handed": {
+          "type": "string",
+          "description": "The last thing it was handed, when no handoff in `handoffs` says so"
+        },
+        "task": {
+          "type": "string",
+          "description": "What it was asked to do, in the detail"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model it runs on, in the detail"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens used so far, in the detail"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What it has cost so far, in the detail"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrewAgent"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "One agent of the crew; sub-agents nest in `children`"
+    },
+    "CrewAgentStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "paused",
+        "resting",
+        "waiting",
+        "working"
+      ],
+      "description": "What an agent is doing"
+    },
+    "CrewHandoff": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "what": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "to",
+        "what"
+      ],
+      "additionalProperties": false,
+      "description": "Work passed from one agent to another, oldest first; a new one runs a light along the connector"
+    }
+  }
+}
