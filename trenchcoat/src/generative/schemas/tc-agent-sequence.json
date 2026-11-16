@@ -72,7 +72,13 @@
         "empty": {
           "type": "string"
         },
+        "working": {
+          "type": "string"
+        },
         "failed": {
+          "type": "string"
+        },
+        "close": {
           "type": "string"
         },
         "count": {
@@ -84,13 +90,7 @@
         "keys": {
           "type": "string"
         },
-        "close": {
-          "type": "string"
-        },
         "took": {
-          "type": "string"
-        },
-        "working": {
           "type": "string"
         },
         "participants": {

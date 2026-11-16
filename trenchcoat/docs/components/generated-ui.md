@@ -9,7 +9,7 @@
 A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
 
 - **Element:** `<tc-generated-ui>`
-- **Size:** 2972.9 KB gzip · 12010.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 2996.4 KB gzip · 12105.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -461,6 +461,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [approval-gates](approval-gates.md) · Element it renders | 37.5 KB | – |
 | [model-picker](model-picker.md) · Element it renders | 36.5 KB | – |
 | [plan-vs-actual](plan-vs-actual.md) · Element it renders | 36.5 KB | – |
+| [memory-graph](memory-graph.md) · Element it renders | 35.4 KB | – |
 | [version-history](version-history.md) · Element it renders | 35.3 KB | – |
 | [agent-lanes](agent-lanes.md) · Element it renders | 34.8 KB | – |
 | [retrieval-settings](retrieval-settings.md) · Element it renders | 34.8 KB | – |
@@ -515,6 +516,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [import-review](import-review.md) · Element it renders | 27.3 KB | – |
 | [parallel-attempts](parallel-attempts.md) · Element it renders | 27.2 KB | – |
 | [budget-guard](budget-guard.md) · Element it renders | 27.2 KB | – |
+| [agent-crew](agent-crew.md) · Element it renders | 26.7 KB | – |
 | [color-picker](color-picker.md) · Element it renders | 26.7 KB | – |
 | [identifier-details](identifier-details.md) · Element it renders | 26.6 KB | – |
 | [compact-breakdown](compact-breakdown.md) · Element it renders | 26.6 KB | – |
@@ -591,6 +593,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [speed-reader](speed-reader.md) · Element it renders | 21.4 KB | – |
 | [stage-bars](stage-bars.md) · Element it renders | 21.3 KB | – |
 | [ai-column-create](ai-column-create.md) · Element it renders | 21.2 KB | – |
+| [run-controls](run-controls.md) · Element it renders | 21.2 KB | – |
 | [progress-tracker](progress-tracker.md) · Element it renders | 21.1 KB | – |
 | [todo-list](todo-list.md) · Element it renders | 21.0 KB | – |
 | [agent-handoff](agent-handoff.md) · Element it renders | 20.8 KB | – |
@@ -640,8 +643,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [test-run-result](test-run-result.md) · Element it renders | 18.4 KB | – |
 | [score-survey](score-survey.md) · Element it renders | 18.4 KB | – |
 | [spend-limits](spend-limits.md) · Element it renders | 18.4 KB | – |
+| [branch-switcher](branch-switcher.md) · Element it renders | 18.4 KB | – |
 | [change-impact](change-impact.md) · Element it renders | 18.3 KB | – |
-| [branch-switcher](branch-switcher.md) · Element it renders | 18.3 KB | – |
 | [week-bars](week-bars.md) · Element it renders | 18.3 KB | – |
 | [disagreement-banner](disagreement-banner.md) · Element it renders | 18.3 KB | – |
 | [cost-anomaly](cost-anomaly.md) · Element it renders | 18.3 KB | – |
@@ -868,7 +871,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [area-chart](area-chart.md) · Element it renders | 0.8 KB | – |
 | [line-chart](line-chart.md) · Element it renders | 0.8 KB | – |
 | [pie-chart](pie-chart.md) · Element it renders | 0.7 KB | – |
-| `src/generative/registry.ts` · Dependency | 77.6 KB | – |
+| `src/generative/registry.ts` · Dependency | 78.3 KB | – |
 | `src/generative/schemas/tc-ai-side-pane.json` · Dependency | 14.2 KB | – |
 | `src/generative/schemas/tc-verification-queue.json` · Dependency | 9.2 KB | – |
 | `src/generative/schemas/tc-claim-answer.json` · Dependency | 8.8 KB | – |
@@ -967,6 +970,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-run-log.json` · Dependency | 3.5 KB | – |
 | `src/generative/schemas/tc-search-results.json` · Dependency | 3.5 KB | – |
 | `src/generative/schemas/tc-agent-findings.json` · Dependency | 3.5 KB | – |
+| `src/generative/schemas/tc-memory-graph.json` · Dependency | 3.4 KB | – |
 | `src/generative/schemas/tc-quality-alerts.json` · Dependency | 3.4 KB | – |
 | `src/generative/schemas/tc-evidence-list.json` · Dependency | 3.4 KB | – |
 | `src/generative/schemas/tc-lineage-graph.json` · Dependency | 3.4 KB | – |
@@ -981,6 +985,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-small-multiples.json` · Dependency | 3.3 KB | – |
 | `src/generative/schemas/tc-change-impact.json` · Dependency | 3.3 KB | – |
 | `src/generative/schemas/tc-embed-widget.json` · Dependency | 3.3 KB | – |
+| `src/generative/schemas/tc-agent-crew.json` · Dependency | 3.2 KB | – |
 | `src/generative/schemas/tc-app-directory.json` · Dependency | 3.2 KB | – |
 | `src/generative/schemas/tc-prompt-starters.json` · Dependency | 3.2 KB | – |
 | `src/generative/schemas/tc-subprocessor-list.json` · Dependency | 3.2 KB | – |
@@ -1158,6 +1163,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-route-map.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-select.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-message-status.json` · Dependency | 2.1 KB | – |
+| `src/generative/schemas/tc-run-controls.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-console-panel.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-progress-tracker.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-billing-schedule.json` · Dependency | 2.1 KB | – |
@@ -1265,7 +1271,6 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-chart.json` · Dependency | 1.3 KB | – |
 | `src/generative/schemas/tc-scan-status.json` · Dependency | 1.3 KB | – |
 | `src/generative/schemas/tc-confetti.json` · Dependency | 1.3 KB | – |
-| `src/generative/schemas/tc-stepper-form.json` · Dependency | 1.3 KB | – |
 | `src/generative/schemas/tc-checkbox.json` · Dependency | 1.3 KB | – |
 | `src/generative/schemas/tc-meter-row.json` · Dependency | 1.3 KB | – |
 | `src/generative/schemas/tc-ghost-completion.json` · Dependency | 1.3 KB | – |
@@ -1275,6 +1280,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-autonomy-dial.json` · Dependency | 1.2 KB | – |
 | `src/generative/schemas/tc-integration-settings.json` · Dependency | 1.2 KB | – |
 | `src/generative/schemas/tc-grade-distribution.json` · Dependency | 1.2 KB | – |
+| `src/generative/schemas/tc-stepper-form.json` · Dependency | 1.2 KB | – |
 | `src/generative/schemas/tc-agent-team.json` · Dependency | 1.1 KB | – |
 | `src/generative/schemas/tc-integration-flow.json` · Dependency | 1.1 KB | – |
 | `src/generative/schemas/tc-radio-group.json` · Dependency | 1.1 KB | – |
@@ -1355,8 +1361,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/vendor/agent-face/element/no-dom.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
 | `src/vendor/agent-face/engine/index.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **12012.0 KB** | **2973.6 KB** |
-| With Lit – the first component on a page | 11929.8 KB | 2945.8 KB |
+| **Added to a page that already has Lit** | **12105.7 KB** | **2996.4 KB** |
+| With Lit – the first component on a page | 12022.6 KB | 2967.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -1364,9 +1370,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| First render | **1.1 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 4.5 ms | default properties; includes adding its CSS to the document |
+| First on the page | 5.5 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -95,13 +95,13 @@
     "labels": {
       "type": "object",
       "properties": {
+        "failed": {
+          "type": "string"
+        },
         "queued": {
           "type": "string"
         },
         "running": {
-          "type": "string"
-        },
-        "failed": {
           "type": "string"
         },
         "succeeded": {

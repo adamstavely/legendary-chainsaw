@@ -73,6 +73,18 @@
     ]
   },
   {
+    "tag": "tc-agent-crew",
+    "name": "AgentCrew",
+    "description": "A lead agent and its sub-agents as one live tree of cards – what each does now, its context, tools and last handoff.",
+    "events": [
+      "tc-project-change",
+      "tc-opened-change",
+      "tc-steer",
+      "tc-pause",
+      "tc-resume"
+    ]
+  },
+  {
     "tag": "tc-agent-face",
     "name": "AgentFace",
     "description": "Donovan's animated face, which shows what the agent is doing.",
@@ -2332,6 +2344,17 @@
     ]
   },
   {
+    "tag": "tc-memory-graph",
+    "name": "MemoryGraph",
+    "description": "What an agent remembers and the tools it can reach, around it – each memory with where it came from, each tool with",
+    "events": [
+      "tc-memories-change",
+      "tc-tools-change",
+      "tc-selected-change",
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-memory-panel",
     "name": "MemoryPanel",
     "description": "What an assistant remembers – grouped memories with filters, search, in-place editing, pause, forget with Undo, and",
@@ -3347,6 +3370,23 @@
     "events": [
       "tc-view-change",
       "tc-pick"
+    ]
+  },
+  {
+    "tag": "tc-run-controls",
+    "name": "RunControls",
+    "description": "One composer with every control a running agent needs – stop, resume, retry, steer, queue, mode, permissions, context.",
+    "events": [
+      "tc-send",
+      "tc-steer",
+      "tc-stop",
+      "tc-resume",
+      "tc-retry",
+      "tc-dismiss",
+      "tc-state-change",
+      "tc-mode-change",
+      "tc-permission-change",
+      "tc-queue-change"
     ]
   },
   {

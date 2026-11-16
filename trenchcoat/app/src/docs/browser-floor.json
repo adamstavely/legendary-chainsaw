@@ -11,31 +11,31 @@
    "features": [
     "light-dark"
    ],
-   "elements": 512
+   "elements": 515
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 512
+   "elements": 515
   },
   "firefox": {
    "features": [
     "has"
    ],
-   "elements": 112
+   "elements": 114
   },
   "safari": {
    "features": [
     "light-dark"
    ],
-   "elements": 512
+   "elements": 515
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 512
+   "elements": 515
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 512
+   "elements": 515
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 512
+   "elements": 515
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 512
+   "elements": 515
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 511
+   "elements": 514
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 379
+   "elements": 380
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 232
+   "elements": 234
   },
   {
    "id": "resize-observer",
@@ -140,7 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 199
+   "elements": 202
   },
   {
    "id": "intersection-observer",
@@ -184,7 +184,7 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 112
+   "elements": 114
   },
   {
    "id": "individual-transforms",
@@ -314,7 +314,7 @@
     "safari_ios": "15.4"
    },
    "progressive": false,
-   "elements": 18
+   "elements": 19
   },
   {
    "id": "dialog",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 512
+   "elements": 515
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 511
+   "elements": 514
   },
   {
    "id": "scrollbar-width",
@@ -477,7 +477,7 @@
    },
    "progressive": true,
    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
-   "elements": 24
+   "elements": 25
   },
   {
    "id": "text-wrap-pretty",
