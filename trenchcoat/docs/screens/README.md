@@ -8,10 +8,13 @@
 
 Full screens – analytics, CRM, files, onboarding, settings – plus the App Shell frames (sidebar, workspace panel) they sit in. Use them as starting points for an entire page.
 
-22 items · 22 files
+25 items · 25 files
 
 - [Agent Chat](agent-chat.md) – Chat with an orchestrating agent, the agents at work, and a brief to fill in beside it
+- [Agent Orchestration](agent-orchestration.md) – A live multi-agent run: who started whom as a tree, every agent's trace on one time axis below it, and an agent's tasks, context and cost in the side panel, with its answer when it waits for you; status, cost so far and Stop in the header; `selected`/`defaultSelected`/`onSelectedChange`
 - [Agent Run](agent-run.md) – One autonomous agent run: the plan ticking through its steps, the tool calls, an approval it waits on and the draft it wrote; `onApprove` may return a promise
+- [Agents](agents.md) – Your team of agents as calm cards – mark, role, status in words, the apps each may use, model, runs and spend, with the ones that need attention first and why; picking one opens its profile, instructions, skills and recent tasks on the right, and New agent opens Agent Create; `selected`/`defaultSelected`/`onSelectedChange`
+- [AI Chat / Double Sidebar](agent-chat-rail.md) – An assistant chat with search in a double sidebar: a column of icons on the page's edge, the chats in a light column with a project switcher, and what it found in the work area on the right; `section`, `project` and `chat` each controllable
 - [Analytics](analytics.md) – Revenue dashboard: key figures, revenue by channel, breakdown, top products and weekly trends; `period`/`defaultPeriod`/`onPeriodChange`
 - [App Shell Flat](app-shell-flat.md) – The App Shell laid flat – gray sidebar and an edge-to-edge page, split by a single hairline
 - [App Shell Inset](app-shell.md) – Collapsible sidebar with workspace, menu, projects and account – the frame every screen sits in. Its parts – Tabs (a tablist with arrow keys; optional `label`), ViewToggle (the library Segmented Control), SearchField, the toolbar tools, Dropdown / MenuButton menus (focus moves in, arrow keys, Escape and picks return focus to the trigger) and Popover (a named dialog, or `role="none"` around a menu) – use the pattern tokens; focus follows the sidebar and work area when they fold away; `collapsed`/`defaultCollapsed`/`onCollapsedChange` and `panelOpen`/`defaultPanelOpen`/`onPanelOpenChange`

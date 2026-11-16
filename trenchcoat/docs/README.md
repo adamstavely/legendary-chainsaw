@@ -6,7 +6,7 @@ A UI kit for AI-native products. Components, illustrations and motion are moving
 
 - [Components](components/README.md): 417
 - [Blocks](blocks/README.md): 27
-- [Screens](screens/README.md): 22
+- [Screens](screens/README.md): 25
 - [Illustrations](illustrations/README.md): 48
 - [Motion](motion/README.md): 29
 
@@ -38,13 +38,13 @@ Access Review · Agent Gallery · AI Side Pane · AI Workspace · App Directory 
 
 ### [Screens](screens/README.md)
 
-22 items · 22 files
+25 items · 25 files
 
 **Complete app pages inside an app shell**
 
 Full screens – analytics, CRM, files, onboarding, settings – plus the App Shell frames (sidebar, workspace panel) they sit in. Use them as starting points for an entire page.
 
-Agent Chat · Agent Run · Analytics · App Shell Flat · App Shell Inset …
+Agent Chat · Agent Orchestration · Agent Run · Agents · AI Chat / Double Sidebar …
 
 ### [Illustrations](illustrations/README.md)
 
