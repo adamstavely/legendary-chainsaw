@@ -800,6 +800,7 @@
    "offscreen": [],
    "hidden": [],
    "reducedMotion": [
+    "CSS (switch)",
     "CSS (internal/kit › kitCss)",
     "CSS (internal/settings › rawSettingsCss)"
    ]
@@ -807,7 +808,7 @@
   "windowed": false
  },
  "size": {
-  "min": 48899,
-  "gzip": 13237
+  "min": 51049,
+  "gzip": 13576
  }
 }

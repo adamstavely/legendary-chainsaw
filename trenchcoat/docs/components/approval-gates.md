@@ -9,7 +9,7 @@
 The approval requests of one agent run as a stack of cards – the one to decide now on top with who asks, the diff or arguments and the steps it holds; approve, reject or ask for changes with a note, and it drops into the decided list while the next rises
 
 - **Element:** `<tc-approval-gates>`
-- **Size:** 26.1 KB gzip · 99.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 28.0 KB gzip · 105.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -35,11 +35,17 @@ Approve, Reject or Ask for changes – with a note – and the card drops into t
 rises. A strip above it says where things stand in words: “Waiting on you 2 · Decided 1/3 · Paused – 3 steps wait on
 2 gates”. Decided rows fold open to show what was decided, the note, and the diff or arguments.
 
+A request with arguments can be changed before it's approved: **Change it first** turns them into fields – text, a
+number, a checkbox, or JSON for anything nested – and **Approve with changes** sends the edited arguments with the
+decision (`args`, and `edited` when any of them differ). The decided row says “Approved with changes”, which arguments
+changed, and shows both the arguments as approved and as the agent asked for them.
+
 ### When to use
 
 - An agent run pauses at several points that need a person, and some of them hold up the steps after them.
 - People should decide one request at a time, in order, with the next one waiting in view.
 - Requests whose exact change matters – a file edit, a command's arguments, a message's recipients.
+- Requests that are nearly right – a send time, a row limit, a recipient list – where fixing them beats sending them back.
 
 ### When not to use
 
@@ -56,8 +62,9 @@ rises. A strip above it says where things stand in words: “Waiting on you 2 ·
 3. **Stack** `.ui-apg__stack` – the top request, with the open ones behind it `.ui-apg__peek`
 4. **Request** `.ui-apg__gate` – who asks and when, the title, the reason, the diff or arguments, “Full context”, and
 5. **Note** `.ui-apg__note` – what should change, before Ask for changes is sent
-6. **Buttons** `.ui-apg__actions` – Ask for changes, Reject and Approve
-7. **Decided** `.ui-apg__decided` – a row per decision `.ui-apg__row`, folding open to `.ui-apg__detail`
+6. **Editor** `.ui-apg__editor` – Change it first: a field per argument `.ui-apg__edit-field`, marked when changed
+7. **Buttons** `.ui-apg__actions` – Ask for changes, Change it first, Reject and Approve; Cancel and Approve with changes while editing
+8. **Decided** `.ui-apg__decided` – a row per decision `.ui-apg__row`, folding open to `.ui-apg__detail`
 
 ## Looks
 
@@ -100,7 +107,8 @@ turn. The diff and the arguments use tc-approval-card's styles and its `--tc-app
     },
     { id: "migration", title: "Run the station ID migration", agent: "Analyst", kind: "Command", status: "open", args: { rows: 48210, dry_run: false } },
   ];
-  gates.onDecide = ({ gate, decision, note }) => fetch(`/api/gates/${gate.id}`, { method: "POST", body: JSON.stringify({ decision, note }) });
+  // args holds the arguments as approved when they were changed first
+  gates.onDecide = ({ gate, decision, note, args }) => fetch(`/api/gates/${gate.id}`, { method: "POST", body: JSON.stringify({ decision, note, args }) });
   gates.addEventListener("tc-gates-change", (e) => console.log(e.detail.decision, e.detail.gate.title));
 </script>
 ```
@@ -112,14 +120,14 @@ import { ApprovalGates, type ApprovalGate } from "@adamstavely/trenchcoat/react"
 import "@adamstavely/trenchcoat/tokens.css";
 import { useState } from "react";
 
-export function RunApprovals({ initial, send }: { initial: ApprovalGate[]; send: (id: string, decision: string, note: string) => Promise<void> }) {
+export function RunApprovals({ initial, send }: { initial: ApprovalGate[]; send: (id: string, decision: string, note: string, args?: Record<string, unknown>) => Promise<void> }) {
   const [gates, setGates] = useState(initial);
   return (
     <ApprovalGates
       run="Publish the 2026 field-survey report"
       gates={gates}
       onGatesChange={(next) => setGates(next)}
-      onDecide={({ gate, decision, note }) => send(gate.id, decision, note)}
+      onDecide={({ gate, decision, note, args }) => send(gate.id, decision, note, args)}
     />
   );
 }
@@ -210,8 +218,8 @@ export class ApprovalGatesExample {
 
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
-| `tc-decide` | – | Yes | Approve, Reject or Send (Ask for changes) was pressed ({ gate, decision, note }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called |
-| `tc-gates-change` | – | Yes | A decision went through ({ gates, gate, decision, note }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use) |
+| `tc-decide` | – | Yes | Approve, Approve with changes, Reject or Send (Ask for changes) was pressed ({ gate, decision, note, args?, edited? }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called |
+| `tc-gates-change` | – | Yes | A decision went through ({ gates, gate, decision, note, args?, edited? }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use) |
 | `tc-expanded-change` | – | Yes | A decided row was folded open or shut ({ expanded }: GatesExpandedChange); cancelable – prevented, `expanded` stays as it was |
 
 #### Component tokens
@@ -225,9 +233,9 @@ export class ApprovalGatesExample {
 | `--tc-approval-gates-mark` | `22px` | both |
 | `--tc-apg-peeks` | `0` | not set – this fallback applies |
 
-#### Design tokens it reads (93)
+#### Design tokens it reads (98)
 
-`--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-lg`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-shimmer`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-eyebrow-color`, `--tc-eyebrow-font-size`, `--tc-eyebrow-font-weight`, `--tc-eyebrow-line-height`, `--tc-eyebrow-tracking`, `--tc-eyebrow-transform`, `--tc-field-bg`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-hover`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-mono`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-none`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-size-lg`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-xl`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-5`, `--tc-space-6`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-title-font-size`, `--tc-title-font-weight`, `--tc-title-line-height`, `--tc-tracking-normal`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent-solid`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-lg`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-shimmer`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-eyebrow-color`, `--tc-eyebrow-font-size`, `--tc-eyebrow-font-weight`, `--tc-eyebrow-line-height`, `--tc-eyebrow-tracking`, `--tc-eyebrow-transform`, `--tc-field-bg`, `--tc-field-h`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-field-shadow-invalid`, `--tc-fill-hover`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-mono`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-none`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-pill-font-size`, `--tc-pill-font-size-lg`, `--tc-pill-font-weight`, `--tc-pill-h`, `--tc-pill-h-lg`, `--tc-pill-px`, `--tc-pill-px-lg`, `--tc-pill-radius`, `--tc-radius-xl`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-5`, `--tc-space-6`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-success-bg`, `--tc-status-success-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-title-font-size`, `--tc-title-font-weight`, `--tc-title-line-height`, `--tc-tracking-normal`, `--tc-tray-inset`, `--tc-tray-radius`
 
 ## Frameworks
 
@@ -258,7 +266,7 @@ export class ApprovalGatesExample {
 | Event | Cancelable | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
 | --- | --- | --- | --- | --- | --- | --- |
 | `tc-decide` | Yes | `el.addEventListener("tc-decide", (e) => …)` | `ref.current.addEventListener("tc-decide", …)` | `@tc-decide="…"` | `(tc-decide)="…($event)"` | `el.addEventListener("tc-decide", …)` |
-| `tc-gates-change` | Yes | `el.addEventListener("tc-gates-change", (e) => …)` | `onGatesChange={…}` | `@tc-gates-change="…"` | `(tc-gates-change)="…($event)"` | `el.addEventListener("tc-gates-change", …)` |
+| `tc-gates-change` | Yes | `el.addEventListener("tc-gates-change", (e) => …)` | `ref.current.addEventListener("tc-gates-change", …)` | `@tc-gates-change="…"` | `(tc-gates-change)="…($event)"` | `el.addEventListener("tc-gates-change", …)` |
 | `tc-expanded-change` | Yes | `el.addEventListener("tc-expanded-change", (e) => …)` | `onExpandedChange={…}` | `@tc-expanded-change="…"` | `(tc-expanded-change)="…($event)"` | `el.addEventListener("tc-expanded-change", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
@@ -286,19 +294,7 @@ The element changes `gates` and `expanded` itself unless a listener calls `preve
 
 #### React / Next.js
 
-```tsx
-import { useState, type ComponentProps } from "react";
-import { ApprovalGates } from "@adamstavely/trenchcoat/react";
-
-type Own = ComponentProps<typeof ApprovalGates>;
-type Props = Omit<Own, "gates" | "onGatesChange"> & { initial: NonNullable<Own["gates"]> };
-
-// Controlled: passing gates makes the wrapper prevent the element's own change; the app sets it
-export function ControlledApprovalGates({ initial, ...props }: Props) {
-  const [gates, setGates] = useState<Own["gates"]>(initial);
-  return <ApprovalGates {...props} gates={gates} onGatesChange={(next) => setGates(next)} />;
-}
-```
+*The wrapper doesn't take this value with a callback of its own – see the props below, or use the element through a ref.*
 
 #### Vue / Nuxt
 
@@ -399,7 +395,7 @@ No slots: everything it shows comes from its properties.
 | `title` | `string` | The heading – "Approvals" by default |
 | `gates` | `ApprovalGate[]` | The requests, in the order they should be decided. Controlled when defined; decisions come back through `onGatesChange` |
 | `defaultGates` | `ApprovalGate[]` | The requests at first, when `gates` isn't controlled |
-| `onGatesChange` | `(gates: ApprovalGate[], change: { gate: ApprovalGate; decision: GatesChange["decision"]; note: string }) => void` | Called with every request after a decision went through, and the decision itself |
+| `onGatesChange` | `(gates: ApprovalGate[], change: Omit<GatesChange, "gates">) => void` | Called with every request after a decision went through, and the decision itself |
 | `expanded` | `string \| null` | The decided row folded open, by gate id. Controlled when defined |
 | `defaultExpanded` | `string \| null` | The row folded open at first, when `expanded` isn't controlled |
 | `onExpandedChange` | `(expanded: string \| null) => void` | Called when a decided row is folded open (its id) or shut (null) |
@@ -416,6 +412,8 @@ No slots: everything it shows comes from its properties.
 | Enter / Space | On a button, presses it; on a decided row, folds it open or shut |
 | ⌘ Enter / Ctrl Enter | In the note, sends Ask for changes |
 | Escape | In the note, closes it and returns focus to Ask for changes |
+| ⌘ Enter / Ctrl Enter | In an argument's field, approves with changes |
+| Escape | In an argument's field, closes the editor with nothing changed and returns focus to Change it first |
 | ↓ / ↑ | In the Decided list, moves to the next or previous row |
 | Home / End | In the Decided list, moves to the first or last row |
 
@@ -430,6 +428,10 @@ reason; its diff and arguments are regions named “Changes: <path>” and “Ar
 The Decided list is a list named “Decided”. A status region says each decision and what comes next: “Approved: Move
 the embargo forward a week. Next: Run the station ID migration.” While a decision is on its way the request is
 `aria-busy`; if it fails, an alert says so and the request stays open.
+
+Change it first is a `fieldset` named “Change the arguments, then approve”; each field is labelled by its argument's
+name. A value that doesn't read back – not a number, not valid JSON – is `aria-invalid` and described by what's wrong,
+and focus goes to it. A decision with changes is announced as “Approved with changes: …”.
 
 ### Every component
 
@@ -481,7 +483,7 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 33.2 KB | 9.6 KB |
+| **This component alone** | 39.8 KB | 11.2 KB |
 | Lit · the library every element is built on, the parts it uses | 21.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -491,8 +493,8 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | [approval-card](approval-card.md) · Element it renders | 56.9 KB | – |
-| **Added to a page that already has Lit** | **99.1 KB** | **26.1 KB** |
-| With Lit – the first component on a page | 121.4 KB | 33.4 KB |
+| **Added to a page that already has Lit** | **105.7 KB** | **28.0 KB** |
+| With Lit – the first component on a page | 127.9 KB | 35.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -500,13 +502,13 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of gates replaced |
-| First on the page | 8.7 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.1 ms | gates: first render, 510 nodes; update 0.2 ms |
-| 1,000 items | 13 ms | gates: first render, 4,110 nodes; update 1.7 ms |
+| First render | **2.7 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of gates replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 8.3 ms | gates: first render, 510 nodes; update 0.3 ms |
+| 1,000 items | 24 ms | gates: first render, 4,110 nodes; update 2.8 ms |
 
-1,000 items of gates: 13 ms, 4,110 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of gates: 24 ms, 4,110 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -531,6 +533,7 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 - Put what led up to it in `context.before` and the files or systems it changes in `context.touches`.
 - Mark `blocking` only on requests that stop the whole run, so the word keeps its weight.
 - Order `gates` the way they should be decided; the first open one is on top.
+- Give arguments names people can read in a field label – `send_at`, `recipients` – since Change it first shows them.
 
 ## Do and don't
 
@@ -539,6 +542,7 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 - Return a promise from `onDecide` – the button shows a spinner, and on failure the request stays open with an error.
 - Pass `now` when the page has a clock, so times read “6m ago”; without it they show the time of day.
 - Keep the decided gates in `gates`, so people can see what they already let through.
+- Run the call with `args` from the decision, not the agent's original – that's what was approved.
 
 ### Don't
 

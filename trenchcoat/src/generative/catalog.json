@@ -852,7 +852,7 @@
   {
     "tag": "tc-checkbox",
     "name": "Checkbox",
-    "description": "Checkbox for AI product settings.",
+    "description": "A yes / no choice saved with a form – label and second line, a partly-checked state, a card row and an error line.",
     "events": [
       "tc-value-change"
     ]
@@ -2338,6 +2338,7 @@
     "events": [
       "tc-memories-change",
       "tc-enabled-change",
+      "tc-consent",
       "tc-action"
     ]
   },
@@ -3952,7 +3953,7 @@
   {
     "tag": "tc-switch",
     "name": "Switch",
-    "description": "Switch for AI product settings.",
+    "description": "On or off for things that apply right away – label and second line, at the start or across a settings row.",
     "events": [
       "tc-value-change"
     ]

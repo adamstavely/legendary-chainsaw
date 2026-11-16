@@ -82,13 +82,13 @@
     {
      "name": "tc-decide",
      "detail": "",
-     "description": "Approve, Reject or Send (Ask for changes) was pressed ({ gate, decision, note }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called",
+     "description": "Approve, Approve with changes, Reject or Send (Ask for changes) was pressed ({ gate, decision, note, args?, edited? }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called",
      "cancelable": true
     },
     {
      "name": "tc-gates-change",
      "detail": "",
-     "description": "A decision went through ({ gates, gate, decision, note }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use)",
+     "description": "A decision went through ({ gates, gate, decision, note, args?, edited? }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use)",
      "cancelable": true
     },
     {
@@ -133,6 +133,9 @@
     }
    ],
    "tokens": [
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
@@ -168,10 +171,12 @@
     "--tc-eyebrow-tracking",
     "--tc-eyebrow-transform",
     "--tc-field-bg",
+    "--tc-field-h",
     "--tc-field-radius",
     "--tc-field-shadow",
     "--tc-field-shadow-focus",
     "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
     "--tc-fill-hover",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
@@ -255,7 +260,7 @@
     },
     {
      "name": "onGatesChange",
-     "type": "(gates: ApprovalGate[], change: { gate: ApprovalGate; decision: GatesChange[\"decision\"]; note: string }) => void",
+     "type": "(gates: ApprovalGate[], change: Omit<GatesChange, \"gates\">) => void",
      "optional": true,
      "description": "Called with every request after a decision went through, and the decision itself"
     },
@@ -286,7 +291,7 @@
    ],
    "events": {
     "tc-decide": null,
-    "tc-gates-change": "onGatesChange",
+    "tc-gates-change": null,
     "tc-expanded-change": "onExpandedChange"
    }
   }
@@ -630,7 +635,7 @@
   "windowed": false
  },
  "size": {
-  "min": 101514,
-  "gzip": 26708
+  "min": 108194,
+  "gzip": 28693
  }
 }
