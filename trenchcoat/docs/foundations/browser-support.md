@@ -10,11 +10,11 @@ features that set those versions, and the features it uses only where they exist
 
 | Browser | Works fully from | Set by | At that version |
 | --- | --- | --- | --- |
-| Chrome | **123** | light-dark() | 515 components |
-| Edge | **123** | light-dark() | 515 components |
+| Chrome | **123** | light-dark() | 517 components |
+| Edge | **123** | light-dark() | 517 components |
 | Firefox | **121** | :has() | 114 components |
-| Safari (macOS) | **17.5** | light-dark() | 515 components |
-| Safari (iOS, iPadOS) | **17.5** | light-dark() | 515 components |
+| Safari (macOS) | **17.5** | light-dark() | 517 components |
+| Safari (iOS, iPadOS) | **17.5** | light-dark() | 517 components |
 
 *Tested in Chromium 156, Firefox 157 and WebKit 27.2 (Playwright 1.64.0).*
 
@@ -22,31 +22,31 @@ features that set those versions, and the features it uses only where they exist
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Components | Kind |
 | --- | --- | --- | --- | --- | --- | --- |
-| light-dark() | 123 | 120 | 17.5 | 17.5 | 515 | Needed |
-| color-mix() | 111 | 113 | 16.2 | 16.2 | 515 | Needed |
-| :is() and :where() | 88 | 78 | 14 | 14 | 515 | Needed |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | 514 | Needed |
-| Container size queries | 105 | 110 | 16 | 16 | 380 | Needed |
-| inset | 87 | 66 | 14.1 | 14.1 | 234 | Needed |
-| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 202 | Needed |
+| light-dark() | 123 | 120 | 17.5 | 17.5 | 517 | Needed |
+| color-mix() | 111 | 113 | 16.2 | 16.2 | 517 | Needed |
+| :is() and :where() | 88 | 78 | 14 | 14 | 517 | Needed |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | 516 | Needed |
+| Container size queries | 105 | 110 | 16 | 16 | 382 | Needed |
+| inset | 87 | 66 | 14.1 | 14.1 | 236 | Needed |
+| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 203 | Needed |
 | IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 174 | Needed |
 | inert | 102 | 112 | 15.5 | 15.5 | 173 | Needed |
 | :has() | 105 | 121 | 15.4 | 15.4 | 114 | Needed |
-| translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 74 | Needed |
+| translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 76 | Needed |
 | aspect-ratio | 88 | 89 | 15 | 15 | 73 | Needed |
 | CSS masks | 1 | 53 | 4 | 3.2 | 61 | Needed |
 | Async Clipboard (writeText) | 66 | 63 | 13.1 | 13.4 | 61 | Needed |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | 57 | Needed |
 | Form association (ElementInternals) | 77 | 98 | 16.4 | 16.4 | 36 | Needed |
-| Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | 22 | Needed |
+| Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | 23 | Needed |
+| Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 20 | Needed |
 | Intl.RelativeTimeFormat | 71 | 65 | 14 | 14 | 19 | Needed |
-| Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 19 | Needed |
 | <dialog> and showModal() | 37 | 98 | 15.4 | 15.4 | 17 | Needed |
 | structuredClone() | 98 | 94 | 15.4 | 15.4 | 11 | Needed |
 | conic-gradient() | 69 | 83 | 12.1 | 12.1 | 6 | Needed |
 | ARIA reflection (element.ariaBusy…) | 81 | 119 | 12.1 | 12.1 | 2 | Needed |
-| forced-colors media query | 89 | 89 | 16 | 16 | 515 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
-| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 514 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
+| forced-colors media query | 89 | 89 | 16 | 16 | 517 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 516 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | 131 | Progressive – Scrollbars keep the browser's default width. |
 | overscroll-behavior: contain | 63 | 59 | 16 | 16 | 92 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
 | Popover API | 114 | 125 | 17 | 18.3 | 39 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |

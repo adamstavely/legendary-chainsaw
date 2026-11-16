@@ -1797,6 +1797,15 @@
     "events": []
   },
   {
+    "tag": "tc-flow-builder",
+    "name": "FlowBuilder",
+    "description": "An automation built in place as a top-down flow – + on every line, If / else paths, undo, and a test run that lights",
+    "events": [
+      "tc-flow-change",
+      "tc-test-run"
+    ]
+  },
+  {
     "tag": "tc-footnotes",
     "name": "Footnotes",
     "description": "A quiet card of caveats and notes under a page's charts, numbered or bulleted, each with an optional link.",
@@ -3066,6 +3075,14 @@
     "description": "Radio group for AI product settings.",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-rate-limit-planner",
+    "name": "RateLimitPlanner",
+    "description": "Plan agent runs under one API rate limit – the day's load against the limit, overflow hatched, a draggable bar per",
+    "events": [
+      "tc-runs-change"
     ]
   },
   {

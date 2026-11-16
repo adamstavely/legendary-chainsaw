@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-415 items · 415 files
+417 items · 417 files
 
 ## Agents (67)
 
@@ -80,7 +80,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trace Waterfall](trace-waterfall.md) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
 - [Trigger Builder](trigger-builder.md) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
-## AI configuration (35)
+## AI configuration (37)
 
 - [AI Column Create](ai-column-create.md) – One prompt filled in for every row of a table – the column's name and what it holds (text, number, yes or no, choices, link or JSON), the prompt with the table's columns as {{variables}} inserted from chips and unknown ones called out, the model and web search, Try on 3 rows with the answers shown, and Create column beside the run's estimate
 - [Budget Alerts](budget-alerts.md) – Spend alerts set by dragging markers along the month's budget – spent so far and the forecast hatched beyond it, a line at the budget, each alert a slider ("Alert at $4,000, 80% of budget") moved by pointer or keys, added by clicking the bar, with its channel, recipients and when the forecast crosses it
@@ -94,6 +94,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Embed Configurator](embed-configurator.md) – Style a site's chat widget beside a live preview – title, greeting, up to four starter prompts to add, move and remove, an accent with its contrast in words, the corner, the radius, the launcher's words and the domains it may load on, with the install snippet to copy
 - [Embed Widget](embed-widget.md) – The chat a visitor opens on a website – a corner launcher with an unread count, and a panel with the agent's name and reply time, a greeting, starter questions, the conversation with a person taking over, a message field and a privacy line, styled by the site's accent, radius and side
 - [Evaluation Dataset Editor](evaluation-dataset-editor.md) – Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
+- [Flow Builder](flow-builder.md) – An automation built in place as a top-down flow – a + on every line opens a short step menu, If / else forks into named paths that join below, steps renamed, moved and removed with Undo and Redo, and a test run that sends a light down the line into the working step
 - [Instruction Editor](instruction-editor.md) – System and developer instructions with variable chips, missing and unused warnings, an app-supplied token count, versions and a word diff
 - [Judge Sampling](judge-sampling.md) – How much of an agent's traffic an LLM judge reads, and what it costs – a stepped rate per segment, rules that always include a chat, the judge model, and live estimates of chats judged a day, the monthly cost and what the sample can see, with a budget cap that warns
 - [Knowledge Source Manager](knowledge-source-manager.md) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
@@ -106,6 +107,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Provider connection](provider-connection.md) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
 - [Quality Alerts](quality-alerts.md) – Alert rules that read as sentences – "Alert #ops-quality when Correctness drops below 3.5 over 24 hours on at least 50 chats", each slot a labelled field, with an on/off switch, when it last fired, how often it would have fired in the last 30 days, and problems in words
 - [Quickstart](quickstart.md) – A first API request with the key filled in – cURL, Python, TypeScript and Go tabs over four numbered steps (Install, Set your key, Send a request, See the response), the key in an environment variable shown masked until revealed, Copy that warns when it copies the key, and Run it with the response the page passes back
+- [Rate Limit Planner](rate-limit-planner.md) – Plan when agent runs happen under one API rate limit – the day's load as a stepped area against the limit with the overflow hatched, the peak and time over in words, a bar per run to drag or move with the arrow keys, fixed runs, and Spread out to lower the peak
 - [Rate Limit Status](rate-limit-status.md) – How close each model is to its provider's rate limits – requests, input and output tokens a minute as meters, the headroom in words (Plenty, Near limit, Limited with a reset countdown), 429s in the last hour, the tier and a sparkline of the last hour's peak, tightest first
 - [Retrieval Settings](retrieval-settings.md) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
 - [Secrets Manager](secrets-manager.md) – The secrets agents run on, write-only – missing ones first with the agents that need them, expired and expiring next, Set value or Replace in a password field that's handed to the page and forgotten, Delete that names what will stop working, and new secrets by UPPER_SNAKE name
