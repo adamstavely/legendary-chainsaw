@@ -474,13 +474,13 @@ switcher is a tablist.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.7 ms** | the gallery demo's data, 156 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of projects replaced |
-| First on the page | 18 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.3 ms | projects: first render, 254 nodes; update 0.7 ms |
-| 1,000 items | 9.7 ms | projects: first render, 1,154 nodes; update 1.2 ms |
+| First render | **1.8 ms** | the gallery demo's data, 156 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of projects replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.9 ms | projects: first render, 254 nodes; update 0.2 ms |
+| 1,000 items | 12 ms | projects: first render, 1,154 nodes; update 1.2 ms |
 
-1,000 items of projects: 9.7 ms, 1,154 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of projects: 12 ms, 1,154 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

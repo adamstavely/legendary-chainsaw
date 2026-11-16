@@ -523,13 +523,13 @@ say what it's doing.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.0 ms** | the gallery demo's data, 128 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of memories replaced |
-| First on the page | 18 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.5 ms | memories: first render, 142 nodes; update 0.6 ms |
-| 1,000 items | 1.5 ms | memories: first render, 142 nodes; update 0.3 ms |
+| First render | **2.5 ms** | the gallery demo's data, 128 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of memories replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.1 ms | memories: first render, 142 nodes; update 0.7 ms |
+| 1,000 items | 3.4 ms | memories: first render, 142 nodes; update 0.8 ms |
 
-1,000 items of memories: 1.5 ms, 142 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of memories: 3.4 ms, 142 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
