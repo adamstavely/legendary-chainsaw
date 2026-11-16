@@ -31,12 +31,17 @@ import { PopoverController } from "./internal/popover";
  * "In app", "Email", "Push" – the bell opens a short list of checkboxes under the task instead, and `notifyVia` keeps
  * the channels chosen for each.
  *
+ * Pause and Resume. With `pausable`, a running task gets Pause beside Stop, and a paused one Resume: each is a
+ * cancelable tc-task-action ("pause" / "resume"). Unless prevented, the element moves the task to "paused" or back to
+ * "running" in its own `tasks` – a page that owns the tasks prevents it and passes the new status back. Paused tasks
+ * sit with the running ones, their ring still, "Paused" in words; the pill adds "1 paused".
+ *
  * Keyboard. The pill is a button; Enter or Space opens the panel and focus goes to the first task. ↑ ↓ Home End move
  * between tasks (one tab stop); Tab reaches the focused task's action. Escape closes the panel back to the pill.
  * Standard: a filled pill and filled rings; Clean: a hairline pill, thinner rings. The panel uses the menu surface.
  */
 
-export type RunningTaskStatus = "running" | "needs-you" | "done" | "failed";
+export type RunningTaskStatus = "running" | "paused" | "needs-you" | "done" | "failed";
 
 export type RunningTask = {
   id: string;
@@ -53,12 +58,12 @@ export type RunningTask = {
   ended?: number;
 };
 
-export type RunningNowAction = "open" | "review" | "stop";
+export type RunningNowAction = "open" | "review" | "stop" | "pause" | "resume";
 /** tc-notify-change: the watched tasks as they'll be, the task that changed, and its channels when there are any */
 export type RunningNowNotifyChange = { notify: string[]; id: string; on: boolean; channels?: string[]; notifyVia: Record<string, string[]> };
 /** tc-notify: a watched task finished */
 export type RunningNowNotify = { id: string; status: "done" | "failed"; task: RunningTask; channels?: string[] };
-/** tc-task-action: an action on a task. Prevented, the panel stays open */
+/** tc-task-action: an action on a task. Prevented, the panel stays open – and a paused or resumed task keeps its status */
 export type RunningTaskAction = { id: string; action: RunningNowAction; task: RunningTask };
 /** tc-open-change: the panel is opening or closing */
 export type RunningNowOpenChange = { open: boolean };
@@ -79,6 +84,9 @@ export type RunningNowLabels = {
   notify: string;
   /** Above a watched task's channels – {task} is the task's title */
   notifyBy: string;
+  pause: string;
+  resume: string;
+  paused: string;
 };
 
 export const defaultRunningNowLabels: RunningNowLabels = {
@@ -95,15 +103,18 @@ export const defaultRunningNowLabels: RunningNowLabels = {
   working: "Working",
   notify: "Notify me when {task} finishes",
   notifyBy: "Tell me about {task} by",
+  pause: "Pause",
+  resume: "Resume",
+  paused: "Paused",
 };
 
 type Group = { key: "needs-you" | "running" | "done"; statuses: RunningTaskStatus[] };
 const GROUPS: Group[] = [
   { key: "needs-you", statuses: ["needs-you"] },
-  { key: "running", statuses: ["running"] },
+  { key: "running", statuses: ["running", "paused"] },
   { key: "done", statuses: ["done", "failed"] },
 ];
-const ACTION: Record<RunningTaskStatus, RunningNowAction> = { "needs-you": "review", running: "stop", done: "open", failed: "open" };
+const ACTION: Record<RunningTaskStatus, RunningNowAction> = { "needs-you": "review", running: "stop", paused: "resume", done: "open", failed: "open" };
 /** How long "All done" shows once the last task finishes, ms */
 const ALL_DONE_MS = 4000;
 /** How long a change must hold before it's announced, ms */
@@ -119,11 +130,12 @@ export function runningTime(ms: number): string {
   return `${Math.floor(s / 3600)}h ${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}m`;
 }
 
-/* check, x, bell, bell-ring: Lucide (ISC, lucide.dev) */
+/* check, x, bell, bell-ring, pause: Lucide (ISC, lucide.dev) */
 const CHECK = svg`<path d="M20 6 9 17l-5-5"/>`;
 const BELL = svg`<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>`;
 const BELL_ON = svg`${BELL}<path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/>`;
 const CROSS = svg`<path d="M18 6 6 18"/><path d="m6 6 12 12"/>`;
+const PAUSE = svg`<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>`;
 const bell = (on: boolean) =>
   html`<svg class="ui-rnw__bell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${on ? BELL_ON : BELL}</svg>`;
 const glyph = (paths: TemplateResult) =>
@@ -142,7 +154,7 @@ let instances = 0;
  * A live status of agents' background tasks for a header or sidebar – a quiet pill with how many are running and how
  * many need you, opening a panel of the tasks grouped by Needs you, Running and Recently done.
  * @tag tc-running-now
- * @fires tc-task-action - Review, Stop or Open was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open
+ * @fires tc-task-action - Review, Stop, Open, Pause or Resume was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open and a paused or resumed task keeps its status
  * @fires tc-open-change - The panel is opening or closing ({ open }: RunningNowOpenChange); cancelable – prevented, it stays as it is
  * @fires tc-notify-change - The bell or a channel was switched on a task ({ notify, id, on, channels, notifyVia }: RunningNowNotifyChange); cancelable – prevented, nothing changes
  * @fires tc-notify - A watched task finished ({ id, status, task, channels }: RunningNowNotify)
@@ -168,6 +180,8 @@ export class TcRunningNow extends TcElement {
   @property({ attribute: false }) accessor notifyChannels: string[] = [];
   /** The channels chosen for each watched task, with `notifyChannels` */
   @property({ attribute: false }) accessor notifyVia: Record<string, string[]> = {};
+  /** Offer Pause on running tasks and Resume on paused ones */
+  @property({ type: Boolean }) accessor pausable = false;
 
   /** @internal The task row that holds the list's tab stop */
   @state() accessor activeId = "";
@@ -233,9 +247,10 @@ export class TcRunningNow extends TcElement {
     return GROUPS.flatMap((g) => this.tasks.filter((t) => g.statuses.includes(t.status)));
   }
   private get counts() {
-    const c = { running: 0, needsYou: 0, done: 0, failed: 0 };
+    const c = { running: 0, paused: 0, needsYou: 0, done: 0, failed: 0 };
     for (const t of this.tasks) {
       if (t.status === "running") c.running++;
+      else if (t.status === "paused") c.paused++;
       else if (t.status === "needs-you") c.needsYou++;
       else if (t.status === "done") c.done++;
       else if (t.status === "failed") c.failed++;
@@ -268,6 +283,8 @@ export class TcRunningNow extends TcElement {
           const was = before.get(t.id);
           if (!was || was === t.status) continue;
           if (t.status === "needs-you") this.pending.push(`${t.title} needs you`);
+          else if (t.status === "paused") this.pending.push(`${t.title} paused`);
+          else if (t.status === "running" && was === "paused") this.pending.push(`${t.title} resumed`);
           else if (t.status === "done") this.pending.push(`${t.title} done`);
           else if (t.status === "failed") this.pending.push(`${t.title} failed`);
           if ((t.status === "done" || t.status === "failed") && this.notifiable && this.notify.includes(t.id)) {
@@ -275,12 +292,12 @@ export class TcRunningNow extends TcElement {
             this.finishedWatched.push({ id: t.id, status: t.status, task: t, channels });
           }
         }
-        const wasActive = [...before.values()].some((s) => s === "running" || s === "needs-you");
-        if (wasActive && !c.running && !c.needsYou && this.tasks.length) {
+        const wasActive = [...before.values()].some((s) => s === "running" || s === "paused" || s === "needs-you");
+        if (wasActive && !c.running && !c.paused && !c.needsYou && this.tasks.length) {
           this.allDone = true;
           clearTimeout(this.doneTimer);
           this.doneTimer = window.setTimeout(() => (this.allDone = false), ALL_DONE_MS);
-        } else if (c.running || c.needsYou) this.allDone = false;
+        } else if (c.running || c.paused || c.needsYou) this.allDone = false;
         if (this.pending.length) {
           clearTimeout(this.announceTimer);
           this.announceTimer = window.setTimeout(() => {
@@ -328,9 +345,19 @@ export class TcRunningNow extends TcElement {
 
   private act(task: RunningTask) {
     const action = ACTION[task.status];
+    if (action === "resume") return this.pauseOrResume(task, "resume");
     if (!this.emit<RunningTaskAction>("tc-task-action", { id: task.id, action, task }, { cancelable: true })) return;
     // Review and Open take the person somewhere: the panel gets out of the way
     if (action !== "stop") this.setOpen(false);
+  }
+
+  /** Pause a running task or resume a paused one – unless prevented, in the element's own `tasks` */
+  private pauseOrResume(task: RunningTask, action: "pause" | "resume") {
+    if (!this.emit<RunningTaskAction>("tc-task-action", { id: task.id, action, task }, { cancelable: true })) return;
+    const status: RunningTaskStatus = action === "pause" ? "paused" : "running";
+    this.tasks = this.tasks.map((t) => (t.id === task.id ? { ...t, status } : t));
+    // The button pressed goes away: focus moves to the one that takes it back
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-rnw__row[data-id="${CSS.escape(task.id)}"] ${action === "pause" ? ".ui-rnw__act" : ".ui-rnw__pause"}`)?.focus());
   }
 
   /** Tasks still going can be watched */
@@ -411,12 +438,14 @@ export class TcRunningNow extends TcElement {
   private renderPill() {
     const w = this.words;
     const c = this.counts;
-    const active = c.running + c.needsYou > 0;
-    const state = c.needsYou ? "attention" : c.running ? "busy" : this.allDone ? "done" : "idle";
+    const active = c.running + c.paused + c.needsYou > 0;
+    const state = c.needsYou ? "attention" : c.running || c.paused ? "busy" : this.allDone ? "done" : "idle";
+    const sep = html` <span class="ui-rnw__dot" aria-hidden="true">·</span><span class="ui-rnw__sr">,</span> `;
     const running = c.running ? html`<span class="ui-rnw__part">${c.running} running</span>` : nothing;
+    const paused = c.paused ? html`${c.running ? sep : nothing}<span class="ui-rnw__part">${c.paused} paused</span>` : nothing;
     const needs = c.needsYou ? html`<span class="ui-rnw__part ui-rnw__need">${c.needsYou} ${c.needsYou === 1 ? "needs" : "need"} you</span>` : nothing;
     const text = active
-      ? html`${running}${c.running && c.needsYou ? html` <span class="ui-rnw__dot" aria-hidden="true">·</span><span class="ui-rnw__sr">,</span> ` : nothing}${needs}`
+      ? html`${running}${paused}${(c.running || c.paused) && c.needsYou ? sep : nothing}${needs}`
       : html`<span class="ui-rnw__part">${this.allDone ? w.allDone : w.idle}</span>`;
     return html`<button
       type="button"
@@ -428,7 +457,7 @@ export class TcRunningNow extends TcElement {
       aria-describedby=${`${this.uid}-what`}
       @click=${() => this.setOpen(!this.open)}
     >
-      ${state === "done" ? html`<span class="ui-rnw__ring ui-rnw__ring--done">${glyph(CHECK)}</span>` : ring(c.running ? this.overall : active ? 1 : 0, "ui-rnw__ring")}
+      ${state === "done" ? html`<span class="ui-rnw__ring ui-rnw__ring--done">${glyph(CHECK)}</span>` : ring(c.running ? this.overall : c.paused && !c.needsYou ? 0 : active ? 1 : 0, "ui-rnw__ring")}
       <span class="ui-rnw__text">${text}</span>
     </button><span class="ui-rnw__sr" id=${`${this.uid}-what`}>${this.heading}</span>`;
   }
@@ -462,15 +491,21 @@ export class TcRunningNow extends TcElement {
     const now = this.now ?? this.clock;
     const elapsed = t.started != null && (t.ended != null || now) ? runningTime((t.ended ?? now) - t.started) : "";
     const pct = t.status === "running" && t.progress != null ? Math.round(clamp01(t.progress) * 100) : null;
-    const meta = [t.agent, t.status === "failed" ? w.failed : t.status === "running" ? (pct == null ? w.working : `${pct}%`) : "", elapsed].filter(Boolean).join(" · ");
+    const meta = [t.agent, t.status === "failed" ? w.failed : t.status === "paused" ? w.paused : t.status === "running" ? (pct == null ? w.working : `${pct}%`) : "", elapsed].filter(Boolean).join(" · ");
     const action = ACTION[t.status];
-    const actionText = action === "review" ? w.review : action === "stop" ? w.stop : w.open;
+    const actionText = action === "review" ? w.review : action === "stop" ? w.stop : action === "resume" ? w.resume : w.open;
+    const pauseBtn =
+      this.pausable && t.status === "running"
+        ? html`<button type="button" class="ui-rnw__pause" tabindex=${tab} data-focus-key=${t.id} @click=${() => this.pauseOrResume(t, "pause")}>
+            ${glyph(PAUSE)}<span class="ui-rnw__sr">${w.pause} ${t.title}</span>
+          </button>`
+        : nothing;
     const mark =
       t.status === "done"
         ? html`<span class="ui-rnw__ring ui-rnw__ring--done">${glyph(CHECK)}</span>`
         : t.status === "failed"
           ? html`<span class="ui-rnw__ring ui-rnw__ring--failed">${glyph(CROSS)}</span>`
-          : ring(t.status === "running" ? (t.progress == null ? null : t.progress) : clamp01(t.progress ?? 1), "ui-rnw__ring");
+          : ring(t.status === "running" ? (t.progress == null ? null : t.progress) : t.status === "paused" ? clamp01(t.progress ?? 0) : clamp01(t.progress ?? 1), "ui-rnw__ring");
     const watchable = this.canNotify(t);
     const watched = watchable && this.notify.includes(t.id);
     const menu = watchable && this.notifyChannels.length > 0;
@@ -500,9 +535,9 @@ export class TcRunningNow extends TcElement {
         <span class="ui-rnw__meta" id=${`${rid}-m`}>${meta}</span>
       </span>
       ${bellBtn}
-      <button type="button" class="ui-rnw__act" data-act=${action} ?data-primary=${action === "review"} tabindex=${tab} data-focus-key=${t.id} @click=${() => this.act(t)}>
+      <span class="ui-rnw__acts">${pauseBtn}<button type="button" class="ui-rnw__act" data-act=${action} ?data-primary=${action === "review"} tabindex=${tab} data-focus-key=${t.id} @click=${() => this.act(t)}>
         ${actionText}<span class="ui-rnw__sr"> ${t.title}</span>
-      </button>
+      </button></span>
       ${open
         ? html`<fieldset class="ui-rnw__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.onChannelsKey(e, t)}>
             <legend class="ui-rnw__channels-title">${w.notifyBy.replace("{task}", t.title)}</legend>
@@ -623,6 +658,12 @@ export class TcRunningNow extends TcElement {
   white-space: nowrap;
 }
 .ui-rnw__act:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-rnw__acts { display: inline-flex; align-items: center; gap: var(--tc-space-0-5); }
+.ui-rnw__pause { display: inline-grid; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); }
+.ui-rnw__pause:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-rnw__pause .ui-rnw__mark { width: 14px; height: 14px; }
+.ui-rnw__row[data-status="paused"] .ui-rnw__arc { stroke: var(--tc-text-muted); }
+.ui-rnw__row[data-status="paused"] .ui-rnw__meta { color: var(--tc-text-secondary); }
 .ui-rnw__act[data-primary] { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
 .ui-rnw__act[data-primary]:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-rnw__row[data-bell] { grid-template-columns: auto minmax(0, 1fr) auto auto; column-gap: var(--tc-space-2); }

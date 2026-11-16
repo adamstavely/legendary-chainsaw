@@ -11,6 +11,8 @@ const initial: Memory[] = [
   { id: "j1", category: "Projects", text: "Redesigning the onboarding flow for the mobile app", source: "From chat", date: "Oct 12" },
   { id: "j2", category: "Projects", text: "Building a design system in React and TypeScript", source: "From a file", date: "Oct 18" },
   { id: "l1", category: "Personal", text: "Training for a half marathon in spring", source: "From chat", date: "Oct 20" },
+  { id: "n1", category: "Work", text: "Presents to the board on the first Monday of the month", source: "Picked up from a chat", date: "Today", pending: true },
+  { id: "n2", category: "Preferences", text: "Likes tables more than bullet lists", source: "Picked up from a chat", date: "Today", pending: true },
 ];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
