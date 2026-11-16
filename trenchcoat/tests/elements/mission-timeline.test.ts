@@ -57,6 +57,14 @@ describe("tc-mission-timeline", () => {
     expect(laneAgentStatuses([{ id: "x", name: "X" }], []).size).toBe(0);
   });
 
+  test("span set to undefined (as a wrapper passes it) keeps the 30-minute window", async () => {
+    const el = await make();
+    el.span = undefined;
+    await settle(el);
+    await expect.poll(() => lanes(el).span).toBe(30 * MIN);
+    await expect.poll(() => lanes(el).querySelector(".ui-al__window")?.textContent).toBe("Last 30m");
+  });
+
   for (const look of ["standard", "clean"] as const) {
     test(`${look}: heading, filter counts, lanes and inbox`, async () => {
       const el = await make(look);

@@ -53,7 +53,7 @@ export function RunInspector({ root, elapsed, selected, defaultSelected, onSelec
       selected={selected}
       defaultSelected={defaultSelected}
       onSelectedChange={onSelectedChange}
-      callLimit={callLimit}
+      callLimit={callLimit ?? 6}
       {...(formatCost ? { formatCost } : {})}
       title={title}
       labels={labels ?? {}}

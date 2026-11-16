@@ -4,6 +4,9 @@ import type { LaneAgent, LaneTask, LaneTaskHandler } from "./agent-lanes";
 import { TcMissionBase, missionCss, type MissionFilter } from "./internal/mission";
 import "./agent-lanes";
 
+/** How much time the timeline shows when `span` isn't set, in ms */
+const SPAN = 30 * 60_000;
+
 /*
  * <tc-mission-timeline> – the home of an agent product on one clock. The same frame as Mission Control – "Since you
  * looked" on top, what needs you on the side, one status filter for all three – but the middle is every agent on its
@@ -55,8 +58,8 @@ export class TcMissionTimeline extends TcMissionBase {
   @property({ attribute: false }) accessor agents: LaneAgent[] = [];
   /** The agents' tasks – Agent Lanes' `tasks` */
   @property({ attribute: false }) accessor tasks: LaneTask[] = [];
-  /** How much time the timeline shows, in ms – 30 minutes by default */
-  @property({ type: Number }) accessor span = 30 * 60_000;
+  /** How much time the timeline shows, in ms – 30 minutes by default, also when set to undefined */
+  @property({ type: Number }) accessor span: number | undefined = SPAN;
   /** How fast the timeline's clock runs against real time, for demos – Agent Lanes' `rate` */
   @property({ type: Number }) accessor rate: number | undefined = undefined;
   /** Approve on a waiting task; it may return a promise */
@@ -85,7 +88,7 @@ export class TcMissionTimeline extends TcMissionBase {
       heading=${this.l.agents}
       .agents=${agents}
       .tasks=${tasks}
-      .span=${this.span}
+      .span=${this.span ?? SPAN}
       .now=${this.now}
       .rate=${this.rate}
       .onApprove=${this.onApprove}

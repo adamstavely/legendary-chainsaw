@@ -63,7 +63,7 @@ type OwnProps = {
 
 export type MissionTimelineProps = Omit<ComponentPropsWithoutRef<"div">, keyof OwnProps> & OwnProps;
 
-export function MissionTimeline({ agents, tasks, events = [], decisions = [], since, now, span, filter, defaultFilter, onFilterChange, onApprove, onReject, onOpenTask, onDecide, title, labels, look, className, ref, ...rest }: MissionTimelineProps) {
+export function MissionTimeline({ agents, tasks, events = [], decisions = [], since, now, span = 30 * 60_000, filter, defaultFilter, onFilterChange, onApprove, onReject, onOpenTask, onDecide, title, labels, look, className, ref, ...rest }: MissionTimelineProps) {
   return (
     <TcMissionTimeline
       {...(rest as object)}

@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-inspector.json",
+  "title": "tc-run-inspector",
+  "description": "One multi-agent run on one screen – its numbers, who started whom as agent cards, each agent's calls as small bars,\nand any call opened right under its row.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "root": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/TraceSpanKind"
+        },
+        "status": {
+          "$ref": "#/definitions/TraceSpanStatus"
+        },
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tokensIn": {
+          "type": "number"
+        },
+        "tokensOut": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TraceSpan"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "status",
+        "start"
+      ],
+      "additionalProperties": false,
+      "description": "The run as a span tree: agents and sub-agents are cards, their llm and tool children are calls"
+    },
+    "elapsed": {
+      "type": "number",
+      "description": "For a live run, ms since it started – running spans reach it. The block reads no clock of its own"
+    },
+    "selected": {
+      "type": "string",
+      "description": "Id of the open call. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "callLimit": {
+      "type": "number",
+      "description": "How many calls each card shows before \"Show N more\""
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "string"
+        },
+        "calls": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "less": {
+          "type": "string"
+        },
+        "noCalls": {
+          "type": "string"
+        },
+        "llm": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "subagent": {
+          "type": "string"
+        },
+        "lead": {
+          "type": "string"
+        },
+        "numbers": {
+          "type": "string"
+        },
+        "agents": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TraceSpanKind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "llm",
+        "subagent",
+        "tool"
+      ]
+    },
+    "TraceSpanStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "running"
+      ]
+    },
+    "TraceSpan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/TraceSpanKind"
+        },
+        "status": {
+          "$ref": "#/definitions/TraceSpanStatus"
+        },
+        "start": {
+          "type": "number",
+          "description": "When it started, in ms from the start of the run"
+        },
+        "end": {
+          "type": "number",
+          "description": "When it ended, in ms from the start of the run – leave it out while it runs"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A few muted words after the name – the model, the query, the target"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model of an LLM call or an agent – shown in the details"
+        },
+        "tokensIn": {
+          "type": "number"
+        },
+        "tokensOut": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Its own cost – an agent's children are added on top"
+        },
+        "input": {
+          "type": "string",
+          "description": "What went in and what came out – a short preview, shown in the details"
+        },
+        "output": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong – shown in the details of a failed span"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TraceSpan"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "status",
+        "start"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
