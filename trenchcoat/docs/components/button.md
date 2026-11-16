@@ -329,13 +329,13 @@ Icons in the React wrapper are `aria-hidden`.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 14.7 KB | 4.9 KB |
+| **This component alone** | 15.0 KB | 5.0 KB |
 | Lit · the library every element is built on, the parts it uses | 18.9 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -344,8 +344,8 @@ Icons in the React wrapper are `aria-hidden`.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **22.6 KB** | **7.2 KB** |
-| With Lit – the first component on a page | 42.8 KB | 13.7 KB |
+| **Added to a page that already has Lit** | **22.9 KB** | **7.3 KB** |
+| With Lit – the first component on a page | 43.1 KB | 13.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -353,9 +353,9 @@ Icons in the React wrapper are `aria-hidden`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 2 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| First render | **0.5 ms** | the gallery demo's data, 2 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 7.9 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -489,7 +489,7 @@ number, and reads the final one afterwards.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -503,10 +503,10 @@ number, and reads the final one afterwards.
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **54.5 KB** | **15.6 KB** |
-| With Lit – the first component on a page | 76.3 KB | 22.8 KB |
+| **Added to a page that already has Lit** | **54.8 KB** | **15.7 KB** |
+| With Lit – the first component on a page | 76.6 KB | 22.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -516,7 +516,7 @@ number, and reads the final one afterwards.
 | --- | --- | --- |
 | First render | **0.4 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 4.3 ms | default properties; includes adding its CSS to the document |
+| First on the page | 6.6 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -456,7 +456,7 @@ target's `lang`, and the detected language reads “Detected: French”. Show or
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -465,7 +465,7 @@ target's `lang`, and the detected language reads “Detected: French”. Show or
 | **This component alone** | 23.2 KB | 7.2 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/selection` · Shared Trenchcoat code | 10.2 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/selection-toolbar` · Shared Trenchcoat code | 1.3 KB | – |
@@ -474,8 +474,8 @@ target's `lang`, and the detected language reads “Detected: French”. Show or
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **51.1 KB** | **16.2 KB** |
-| With Lit – the first component on a page | 71.7 KB | 22.8 KB |
+| **Added to a page that already has Lit** | **51.6 KB** | **16.4 KB** |
+| With Lit – the first component on a page | 72.2 KB | 23.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -483,11 +483,11 @@ target's `lang`, and the detected language reads “Detected: French”. Show or
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of languages replaced |
-| First on the page | 4.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.3 ms | languages: first render, 5 nodes; update 0.2 ms |
-| 1,000 items | 0.7 ms | languages: first render, 5 nodes; update 0.2 ms |
+| First render | **0.4 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of languages replaced |
+| First on the page | 2.5 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.4 ms | languages: first render, 5 nodes; update 0.0 ms |
+| 1,000 items | 0.3 ms | languages: first render, 5 nodes; update 0.0 ms |
 
 What it renders doesn't grow with languages (tested to 1,000 items).
 

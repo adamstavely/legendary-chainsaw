@@ -65,6 +65,15 @@
         },
         "notifyBy": {
           "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -97,6 +106,10 @@
         }
       },
       "description": "The channels chosen for each watched task, with `notifyChannels`"
+    },
+    "pausable": {
+      "type": "boolean",
+      "description": "Offer Pause on running tasks and Resume on paused ones"
     }
   },
   "additionalProperties": false,
@@ -144,6 +157,7 @@
         "done",
         "failed",
         "needs-you",
+        "paused",
         "running"
       ]
     }

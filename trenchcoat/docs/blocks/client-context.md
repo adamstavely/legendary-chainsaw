@@ -457,7 +457,7 @@ P&L”. A collapsed report's body is `inert`, so its buttons aren't reached. Swi
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -474,10 +474,10 @@ P&L”. A collapsed report's body is `inert`, so its buttons aren't reached. Swi
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [segmented-control](../components/segmented-control.md) · Element it renders | 29.8 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **113.3 KB** | **28.4 KB** |
-| With Lit – the first component on a page | 136.1 KB | 36.0 KB |
+| **Added to a page that already has Lit** | **113.6 KB** | **28.5 KB** |
+| With Lit – the first component on a page | 136.4 KB | 36.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -485,9 +485,9 @@ P&L”. A collapsed report's body is `inert`, so its buttons aren't reached. Swi
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.0 ms** | default properties, 183 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | re-render with the same data |
-| First on the page | 35 ms | default properties; includes adding its CSS to the document |
+| First render | **3.5 ms** | default properties, 183 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | re-render with the same data |
+| First on the page | 23 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

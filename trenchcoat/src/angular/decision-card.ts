@@ -31,11 +31,11 @@ export class DecisionCard {
   @Input() set context(v: TcDecisionCard["context"]) {
     this.#el.context = v;
   }
-  /** "choose" (default): numbered options; "approve": Approve and Decline */
+  /** "choose" (default): numbered options; "approve": Approve and Decline; "variant": options as preview tiles */
   @Input() set kind(v: TcDecisionCard["kind"]) {
     this.#el.kind = v;
   }
-  /** The options for kind="choose", in the agent's order */
+  /** The options for kind="choose" or "variant", in the agent's order */
   @Input() set options(v: TcDecisionCard["options"]) {
     this.#el.options = v;
   }

@@ -507,7 +507,7 @@ reads its value in px. The preview is the widget, with its own dialog and log, u
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -528,10 +528,10 @@ reads its value in px. The preview is the widget, with its own dialog and log, u
 | [code-block](code-block.md) · Element it renders | 32.3 KB | – |
 | [segmented-control](segmented-control.md) · Element it renders | 29.8 KB | – |
 | [color-picker](color-picker.md) · Element it renders | 26.3 KB | – |
-| [embed-widget](embed-widget.md) · Element it renders | 18.8 KB | – |
+| [embed-widget](embed-widget.md) · Element it renders | 18.9 KB | – |
 | [tag-input](tag-input.md) · Element it renders | 17.1 KB | – |
-| **Added to a page that already has Lit** | **200.0 KB** | **51.0 KB** |
-| With Lit – the first component on a page | 222.3 KB | 58.4 KB |
+| **Added to a page that already has Lit** | **200.1 KB** | **51.0 KB** |
+| With Lit – the first component on a page | 222.5 KB | 58.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -540,10 +540,10 @@ reads its value in px. The preview is the widget, with its own dialog and log, u
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **3.2 ms** | the gallery demo's data, 274 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of swatches replaced |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.1 ms | swatches: first render, 274 nodes; update 0.2 ms |
-| 1,000 items | 3.1 ms | swatches: first render, 274 nodes; update 0.1 ms |
+| Typical update | **0.5 ms** | one item of swatches replaced |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.8 ms | swatches: first render, 274 nodes; update 0.2 ms |
+| 1,000 items | 2.6 ms | swatches: first render, 274 nodes; update 0.4 ms |
 
 What it renders doesn't grow with swatches (tested to 1,000 items).
 

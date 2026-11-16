@@ -21,12 +21,18 @@ element fires `tc-notify` once the page moves that task to done or failed, so th
 usual announcement says it finished. `notify` holds the watched tasks. Give `notifyChannels` – “In app”, “Email”,
 “Push” – and the bell opens a short list of checkboxes under the task instead; `notifyVia` keeps each task's channels.
 
+With `pausable`, a running task gets Pause beside Stop, and a paused one Resume in its place. Both are a cancelable
+`tc-task-action` ("pause" or "resume"): unless it's prevented the element moves the task to `paused` or back to
+`running` itself; a page that owns the tasks prevents it and passes the new status back. A paused task stays with the
+running ones, its ring still and "Paused" in its line, and the pill counts it – "2 running · 1 paused".
+
 ## When to use
 
 - An app where agents work in the background and sometimes stop to ask for a decision or an approval.
 - A header or sidebar slot that should say, at a glance, whether anything needs the person.
 - Getting from "2 need you" to the task that needs them in two clicks.
 - People who start long work and want to step away until it's done (`notifiable`).
+- Agents whose work can be held where it is and picked up later (`pausable`).
 
 ## When not to use
 
@@ -42,9 +48,10 @@ usual announcement says it finished. `notify` holds the watched tasks. Give `not
 3. **Needs you** `.ui-rnw__need` – the count of tasks waiting on the person, in the attention tone
 4. **Group** `.ui-rnw__label` – Needs you, Running or Recently done, with its count
 5. **Task** `.ui-rnw__row` – the ring, the task's title, and the agent, progress and elapsed time
-6. **Action** `.ui-rnw__act` – Review, Stop or Open
-7. **Bell** `.ui-rnw__bell` – notify me when this task finishes (`notifiable`); highlighted while it's on
-8. **Channels** `.ui-rnw__channels` – how to be told, with `notifyChannels`
+6. **Action** `.ui-rnw__act` – Review, Stop, Resume or Open
+7. **Pause** `.ui-rnw__pause` – holds a running task where it is (`pausable`)
+8. **Bell** `.ui-rnw__bell` – notify me when this task finishes (`notifiable`); highlighted while it's on
+9. **Channels** `.ui-rnw__channels` – how to be told, with `notifyChannels`
 
 ## Looks
 
@@ -59,7 +66,8 @@ ring size.
 | Enter / Space | On the pill: opens or closes the panel; focus goes to the first task |
 | ↓ / ↑ | In the list: the next or previous task |
 | Home / End | In the list: the first or last task |
-| Tab | From a task to its action (the list is one tab stop) |
+| Tab | From a task to its bell, Pause and action (the list is one tab stop) |
+| Enter / Space | On Pause or Resume: pauses or resumes the task; focus moves to the button that undoes it |
 | Enter / Space | On a bell: watches the task or stops watching it – or, with channels, opens or closes its list |
 | Escape | In a channel list: closes it and returns focus to its bell (the panel stays open) |
 | Escape | Closes the panel and returns focus to the pill |
@@ -69,7 +77,8 @@ ring size.
 The pill is a button with `aria-haspopup="dialog"` and `aria-expanded`, named by its words ("2 running, 1 needs you")
 and described by the panel's title. The panel is a non-modal `dialog` named by its title; each group is a `group` named
 by its label, such as "Needs you 1". A task is named by its title and described by its line – "Records agent · 42% ·
-6m 00s". Actions are named with the task: "Review Draft the audit report". A polite status line says a task that
+6m 00s". Actions are named with the task: "Review Draft the audit report", "Pause Check vendor records". Pausing or resuming is
+announced with the other changes – "Check vendor records paused". A polite status line says a task that
 needs the person or finished – "Check vendor records needs you. Classify contracts done" – once the changes have held
 for a moment; progress ticks are never announced.
 
@@ -91,6 +100,7 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 - Put it where people look for status – at the end of the app's header, or at the top of a sidebar.
 - Take Review straight to the decision the agent needs; prevent the event to keep the panel open instead.
 - Drop finished tasks from the list after a while; "Recently done" is for the last few.
+- With `pausable`, really hold the agent's work on Pause – and keep the task's progress where it stopped.
 - Send the notice when `tc-notify` fires, on the channels in its detail; the element doesn't send anything.
 
 ## Don't
@@ -109,6 +119,7 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
   import "@adamstavely/trenchcoat/tokens.css";
 
   const agents = document.querySelector("#agents");
+  agents.pausable = true;
   agents.tasks = [
     { id: "v1", title: "Check vendor records", agent: "Records agent", status: "running", progress: 0.4, started: Date.now() - 360000 },
     { id: "d1", title: "Draft the audit report", agent: "Report agent", status: "needs-you", started: Date.now() - 840000 },
@@ -121,11 +132,17 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 import { RunningNow, type RunningTask } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
-export function HeaderStatus({ tasks }: { tasks: RunningTask[] }) {
+export function HeaderStatus({ tasks, setStatus }: { tasks: RunningTask[]; setStatus: (id: string, status: RunningTask["status"]) => void }) {
   return (
     <RunningNow
       tasks={tasks}
+      pausable
       onTaskAction={(action, task) => {
+        // The page owns the tasks: it pauses the agent, then passes the new status back
+        if (action === "pause" || action === "resume") {
+          setStatus(task.id, action === "pause" ? "paused" : "running");
+          return false;
+        }
         console.log(action, task.id);
       }}
     />

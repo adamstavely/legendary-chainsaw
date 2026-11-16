@@ -699,6 +699,7 @@
    "reducedMotion": [
     "CSS (internal/kit › kitCss)",
     "CSS (internal/popover › popoverCss)",
+    "CSS (switch)",
     "CSS (internal/settings › rawSettingsCss)",
     "CSS (meter-row)",
     "script (panel-card)",
@@ -709,7 +710,7 @@
   "windowed": false
  },
  "size": {
-  "min": 108269,
-  "gzip": 27606
+  "min": 110423,
+  "gzip": 27972
  }
 }

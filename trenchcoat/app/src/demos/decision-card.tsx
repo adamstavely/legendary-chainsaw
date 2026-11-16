@@ -2,6 +2,9 @@ import { useState } from "react";
 import type * as UI from "../../../src/elements/react";
 import type { DecisionCardKind, DecisionCardMade, DecisionCardOption } from "../../../src/elements/react";
 import { bubble, caption, textButton } from "../demo-kit";
+import barChart from "../thumbs/components/bar-chart.light.webp?url";
+import donutChart from "../thumbs/components/donut-chart.light.webp?url";
+import treemap from "../thumbs/components/treemap.light.webp?url";
 
 /** A fixed clock, so the waited-for times and the thumbnail stay the same */
 const NOW = Date.UTC(2026, 10, 10, 9, 30);
@@ -39,6 +42,18 @@ const QUEUE: Waiting[] = [
       { id: "undated", label: "Mark them Undated" },
       { id: "scan", label: "Use the scan date", recommended: true },
       { id: "skip", label: "Leave them unlabelled" },
+    ],
+  },
+  {
+    agent: "Report agent",
+    question: "Which chart should show spend by vendor in the summary?",
+    context: "Three drafts of the same figures.",
+    kind: "variant",
+    since: NOW - 61 * MIN,
+    options: [
+      { id: "bars", label: "Bars", detail: "Easiest to compare", image: barChart, imageAlt: "Bar chart draft", recommended: true },
+      { id: "treemap", label: "Treemap", detail: "Shows the long tail", image: treemap, imageAlt: "Treemap draft" },
+      { id: "donut", label: "Donut", detail: "Shares at a glance", image: donutChart, imageAlt: "Donut chart draft" },
     ],
   },
 ];

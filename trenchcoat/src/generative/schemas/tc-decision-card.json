@@ -27,16 +27,17 @@
       "type": "string",
       "enum": [
         "approve",
-        "choose"
+        "choose",
+        "variant"
       ],
-      "description": "\"choose\" (default): numbered options; \"approve\": Approve and Decline"
+      "description": "\"choose\" (default): numbered options; \"approve\": Approve and Decline; \"variant\": options as preview tiles"
     },
     "options": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/DecisionCardOption"
       },
-      "description": "The options for kind=\"choose\", in the agent's order"
+      "description": "The options for kind=\"choose\" or \"variant\", in the agent's order"
     },
     "allowOther": {
       "type": "boolean",
@@ -176,6 +177,14 @@
         "recommended": {
           "type": "boolean",
           "description": "The agent's suggestion – at most one; shows a Recommended chip and takes the first focus"
+        },
+        "image": {
+          "type": "string",
+          "description": "kind=\"variant\": a preview image URL for the option's tile"
+        },
+        "imageAlt": {
+          "type": "string",
+          "description": "kind=\"variant\": what the preview shows, for screen readers – the label is used when it's left out"
         }
       },
       "required": [

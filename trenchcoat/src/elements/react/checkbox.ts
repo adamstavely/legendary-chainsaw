@@ -1,6 +1,7 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
 import { TcCheckbox } from "../checkbox";
+export type { CheckboxVariant } from "../checkbox";
 import { h, useControlled } from "./internal";
 
 const Raw = createComponent({

@@ -215,6 +215,14 @@
     "events": []
   },
   {
+    "tag": "tc-agent-sequence",
+    "name": "AgentSequence",
+    "description": "One agent run as a sequence diagram: a lifeline per participant and each message an arrow between them.",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-agent-steering",
     "name": "AgentSteering",
     "description": "Steer an agent while it works: the run, its plan, the queued notes and a field to add one.",
@@ -238,6 +246,15 @@
     "name": "AgentTeam",
     "description": "A prompt builds a team of three agents, who pop in with their roles and tools.",
     "events": []
+  },
+  {
+    "tag": "tc-agent-trail",
+    "name": "AgentTrail",
+    "description": "The steps an agent works through as one quiet trail: done, the one it's on with its sub-steps, one waiting for a person, and what's next.",
+    "events": [
+      "tc-decision",
+      "tc-collapsed-change"
+    ]
   },
   {
     "tag": "tc-agent-tree",
@@ -835,7 +852,7 @@
   {
     "tag": "tc-checkbox",
     "name": "Checkbox",
-    "description": "Checkbox for AI product settings.",
+    "description": "A yes / no choice saved with a form – label and second line, a partly-checked state, a card row and an error line.",
     "events": [
       "tc-value-change"
     ]
@@ -1184,6 +1201,16 @@
     ]
   },
   {
+    "tag": "tc-cost-waterfall",
+    "name": "CostWaterfall",
+    "description": "Where the money and tokens of one agent run went, as a waterfall of its steps stepping up to the total.",
+    "events": [
+      "tc-measure-change",
+      "tc-order-change",
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-cover-flow",
     "name": "CoverFlow",
     "description": "Browse covers in 3D: the front one faces you, the others stack up on both sides.",
@@ -1321,6 +1348,15 @@
     "events": [
       "tc-edit-change",
       "tc-decisions-change"
+    ]
+  },
+  {
+    "tag": "tc-diff-timeline",
+    "name": "DiffTimeline",
+    "description": "What a coding agent changed in a pull request, edit by edit over time, with a replay scrubber.",
+    "events": [
+      "tc-selected-change",
+      "tc-time-change"
     ]
   },
   {
@@ -2302,6 +2338,7 @@
     "events": [
       "tc-memories-change",
       "tc-enabled-change",
+      "tc-consent",
       "tc-action"
     ]
   },
@@ -3916,7 +3953,7 @@
   {
     "tag": "tc-switch",
     "name": "Switch",
-    "description": "Switch for AI product settings.",
+    "description": "On or off for things that apply right away – label and second line, at the start or across a settings row.",
     "events": [
       "tc-value-change"
     ]

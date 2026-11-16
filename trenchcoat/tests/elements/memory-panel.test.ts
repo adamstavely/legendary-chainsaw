@@ -3,10 +3,14 @@
  */
 import { html } from "lit";
 import axe from "axe-core";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/memory-panel";
-import { TcMemoryPanel, type Memory } from "../../src/elements/memory-panel";
-import { cleanup, fixture, settle } from "./helpers";
+import { TcMemoryPanel, type Memory, type MemoryConsent } from "../../src/elements/memory-panel";
+import { MemoryPanel } from "../../src/elements/react/memory-panel";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   cleanup();
@@ -264,4 +268,91 @@ test("axe: no violations in either look", async () => {
   for (const a of document.getAnimations()) a.finish();
   const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
   expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+});
+
+describe("waiting for your OK", () => {
+  const picked: Memory = { id: "n", text: "Presents to the board monthly", category: "Work", source: "Picked up from a chat", date: "Today", pending: true };
+  const picked2: Memory = { id: "m", text: "Likes tables", category: "Preferences", pending: true };
+  const waitingRow = (el: Element, id: string) => el.querySelector<HTMLElement>(`[data-waiting="${id}"]`)!;
+  const act2 = (el: Element, id: string, which: "keep" | "drop") => waitingRow(el, id).querySelector<HTMLButtonElement>(`[data-act="${which}"]`)!;
+
+  for (const look of ["standard", "clean"] as const)
+    test(`${look}: waiting memories sit apart, uncounted; Keep moves one into its category, Don't keep drops it`, async () => {
+      const el = await fixture<TcMemoryPanel>(html`<tc-memory-panel look=${look} .memories=${[tea, berlin, picked, picked2]}></tc-memory-panel>`);
+      const section = el.querySelector<HTMLElement>(".ui-mp__waiting")!;
+      expect(document.getElementById(section.getAttribute("aria-labelledby")!)!.textContent!.replace(/\s+/g, " ").trim()).toBe("Waiting for your OK 2");
+      // Not in their categories, the chips or the count
+      expect(row(el, "n")).toBeNull();
+      expect(el.querySelector(".ui-mp__count")!.textContent).toBe("2");
+      expect(el.querySelector(".ui-mp__caption")!.textContent!.replace(/\s+/g, " ").trim()).toBe("2 memories · 2 waiting");
+      expect(waitingRow(el, "n").querySelector(".ui-mp__source")!.textContent!.replace(/\s+/g, " ").trim()).toBe("Work · Picked up from a chat · Today");
+      expect(act2(el, "n", "keep").textContent!.replace(/\s+/g, " ").trim()).toBe("Keep “Presents to the board monthly”");
+      const consents: MemoryConsent[] = [];
+      const lists: Memory[][] = [];
+      el.addEventListener("tc-consent", (e) => consents.push((e as CustomEvent<MemoryConsent>).detail));
+      el.addEventListener("tc-memories-change", (e) => lists.push((e as CustomEvent<{ memories: Memory[] }>).detail.memories));
+      act2(el, "n", "keep").click();
+      await settle();
+      expect(consents).toEqual([{ memory: picked, keep: true }]);
+      expect(lists[0].find((m) => m.id === "n")!.pending).toBe(false);
+      await expect.poll(() => row(el, "n")?.closest("section")?.getAttribute("aria-label")).toBe("Work");
+      await expect.poll(() => document.activeElement).toBe(act2(el, "m", "keep"));
+      expect(el.querySelector('[role="status"]')!.textContent).toBe("Kept: “Presents to the board monthly”");
+      act2(el, "m", "drop").click();
+      await settle();
+      expect(consents[1]).toEqual({ memory: picked2, keep: false });
+      expect(el.memories.some((m) => m.id === "m")).toBe(false);
+      expect(el.querySelector(".ui-mp__waiting")).toBeNull();
+      await expect.poll(() => document.activeElement).toBe(el.querySelector(".ui-mp__add"));
+    });
+
+  test("prevented tc-consent keeps it waiting; memory off hides the group", async () => {
+    const el = await fixture<TcMemoryPanel>(html`<tc-memory-panel .memories=${[tea, picked]}></tc-memory-panel>`);
+    el.addEventListener("tc-consent", (e) => e.preventDefault());
+    act2(el, "n", "keep").click();
+    await settle();
+    expect(el.memories.find((m) => m.id === "n")!.pending).toBe(true);
+    el.enabled = false;
+    await settle();
+    expect(el.querySelector(".ui-mp__waiting")).toBeNull();
+  });
+
+  test("onConsent: a rejected promise puts it back to waiting and says so", async () => {
+    const el = await fixture<TcMemoryPanel>(html`<tc-memory-panel .memories=${[tea, picked]}></tc-memory-panel>`);
+    let fail!: () => void;
+    el.onConsent = () => new Promise<void>((_, reject) => (fail = () => reject(new Error("no"))));
+    act2(el, "n", "keep").click();
+    await settle();
+    expect(el.memories.find((m) => m.id === "n")!.pending).toBe(false);
+    fail();
+    await flush();
+    expect(el.memories.find((m) => m.id === "n")!.pending).toBe(true);
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Couldn't keep it. Try again.");
+  });
+
+  test("React: the list comes back through onChange with the memory kept", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: Memory[][] = [];
+    await act(async () => root.render(React.createElement(MemoryPanel, { defaultMemories: [tea, picked], onChange: (m) => seen.push(m) })));
+    await settle();
+    const el = host.querySelector<TcMemoryPanel>("tc-memory-panel")!;
+    act2(el, "n", "keep").click();
+    await act(async () => settle());
+    expect(seen.at(-1)!.find((m) => m.id === "n")!.pending).toBe(false);
+    await expect.poll(() => !!row(el, "n")).toBe(true);
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const)
+    test(`axe: the waiting group in both looks (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: ${theme === "dark" ? "#0e0e10" : "#fff"}">
+        <tc-memory-panel .memories=${[tea, picked, picked2]}></tc-memory-panel>
+        <tc-memory-panel look="clean" heading="Clean" .memories=${[tea, picked, picked2]}></tc-memory-panel>
+      </div>`);
+      await finish(wrap);
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
 });

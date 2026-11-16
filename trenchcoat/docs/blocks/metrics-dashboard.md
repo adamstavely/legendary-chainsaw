@@ -454,7 +454,7 @@ previous period". Export says "Exported" or "Export failed" in a status message.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -469,10 +469,10 @@ previous period". Export says "Exported" or "Export failed" in a status message.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [segmented-control](../components/segmented-control.md) · Element it renders | 29.8 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **85.8 KB** | **21.9 KB** |
-| With Lit – the first component on a page | 108.1 KB | 29.3 KB |
+| **Added to a page that already has Lit** | **86.1 KB** | **22.0 KB** |
+| With Lit – the first component on a page | 108.4 KB | 29.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -480,9 +480,9 @@ previous period". Export says "Exported" or "Export failed" in a status message.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.5 ms** | default properties, 197 DOM nodes – to layout, median of 7 |
-| Typical update | **1.7 ms** | re-render with the same data |
-| First on the page | 34 ms | default properties; includes adding its CSS to the document |
+| First render | **3.9 ms** | default properties, 197 DOM nodes – to layout, median of 7 |
+| Typical update | **1.4 ms** | re-render with the same data |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

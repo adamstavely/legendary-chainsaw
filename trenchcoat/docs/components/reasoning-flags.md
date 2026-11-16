@@ -330,7 +330,7 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -338,7 +338,7 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 | --- | --- | --- |
 | **This component alone** | 17.1 KB | 5.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -346,8 +346,8 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **33.1 KB** | **10.9 KB** |
-| With Lit – the first component on a page | 52.7 KB | 17.2 KB |
+| **Added to a page that already has Lit** | **33.6 KB** | **11.1 KB** |
+| With Lit – the first component on a page | 53.2 KB | 17.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -355,9 +355,9 @@ the model to reconsider: hedged, then certain" – and the button then reads "As
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 2 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 5.8 ms | default properties; includes adding its CSS to the document |
+| First render | **0.6 ms** | the gallery demo's data, 2 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 4.1 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

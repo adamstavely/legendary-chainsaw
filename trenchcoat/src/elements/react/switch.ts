@@ -1,6 +1,7 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
 import { TcSwitch } from "../switch";
+export type { SwitchPlacement } from "../switch";
 import { h, useControlled } from "./internal";
 
 const Raw = createComponent({

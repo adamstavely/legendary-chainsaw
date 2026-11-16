@@ -4,7 +4,7 @@ import type { TcSwitch } from "@adamstavely/trenchcoat/switch";
 import "@adamstavely/trenchcoat/switch";
 
 /**
- * <tc-switch> for Angular: Switch for AI product settings.
+ * <tc-switch> for Angular: On or off for things that apply right away – label and second line, at the start or across a settings row.
  * 
  * imports: [Switch] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */
@@ -14,6 +14,10 @@ export class Switch {
   /** The element itself, for its methods */
   get element(): TcSwitch {
     return this.#el;
+  }
+  /** "start" (default): the switch before its label; "end": the label on the left and the switch at the row's far end */
+  @Input() set placement(v: TcSwitch["placement"]) {
+    this.#el.placement = v;
   }
   /** Visible heading or field label. */
   @Input() set label(v: TcSwitch["label"]) {

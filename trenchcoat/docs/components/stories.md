@@ -518,13 +518,13 @@ stays, marked unavailable. Pictures take their `alt`; sparklines are hidden.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 39.2 KB | 11.1 KB |
+| **This component alone** | 39.3 KB | 11.2 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -536,8 +536,8 @@ stays, marked unavailable. Pictures take their `alt`; sparklines are hidden.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **49.4 KB** | **14.3 KB** |
-| With Lit – the first component on a page | 71.2 KB | 21.4 KB |
+| **Added to a page that already has Lit** | **49.5 KB** | **14.3 KB** |
+| With Lit – the first component on a page | 71.3 KB | 21.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -545,11 +545,11 @@ stays, marked unavailable. Pictures take their `alt`; sparklines are hidden.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.4 ms** | the gallery demo's data, 39 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of entries replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.2 ms | entries: first render, 39 nodes; update 0.3 ms |
-| 1,000 items | 2.1 ms | entries: first render, 39 nodes; update 0.3 ms |
+| First render | **0.7 ms** | the gallery demo's data, 44 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of entries replaced |
+| First on the page | 7.3 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.6 ms | entries: first render, 44 nodes; update 0.0 ms |
+| 1,000 items | 0.5 ms | entries: first render, 44 nodes; update 0.1 ms |
 
 What it renders doesn't grow with entries (tested to 1,000 items).
 

@@ -39,7 +39,7 @@ export type RunningNowOwnProps = {
   onNotifyChange?: (notify: string[], change: RunningNowNotifyChange) => void;
   /** A watched task finished */
   onNotify?: (task: RunningTask, status: "done" | "failed", channels?: string[]) => void;
-  /** Review, Stop or Open was chosen on a task; return false to keep the panel open */
+  /** Review, Stop, Open, Pause or Resume was chosen on a task; return false to keep the panel open (and a paused or resumed task its status) */
   onTaskAction?: (action: RunningNowAction, task: RunningTask) => boolean | void;
 };
 type Wrapped = keyof RunningNowOwnProps | "heading" | "onTcTaskAction" | "onTcOpenChange" | "onTcNotifyChange" | "onTcNotify" | "children";

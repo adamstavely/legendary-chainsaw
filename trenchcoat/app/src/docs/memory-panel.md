@@ -11,11 +11,17 @@ category, each with where it came from and when. People can filter by category o
 pause it so it isn't used in answers, or forget it – with Undo on the tray for a few seconds. A master switch turns
 memory off without deleting anything, and “New memory” adds one by hand.
 
+What the assistant picks up on its own can wait for the person's OK. Give a memory `pending: true` and it isn't kept
+yet: it sits at the top under “Waiting for your OK”, outside its category and the counts, with Keep and Don't keep.
+Either fires a cancelable `tc-consent` ({ memory, keep }); unless prevented, Keep moves it into its category and Don't
+keep drops it – through `tc-memories-change` like every other change, and `onConsent` when it's given.
+
 ## When to use
 
 - A settings page or side panel where people review and correct what the assistant has learned about them.
 - Giving people control over personal data the product keeps – pause, forget and an off switch in one place.
 - Up to a few dozen short facts; the list scrolls past `maxHeight`.
+- Asking before the assistant keeps something it noticed on its own, with `pending` memories.
 
 ## When not to use
 
@@ -29,8 +35,9 @@ memory off without deleting anything, and “New memory” adds one by hand.
 2. **Filters** `.ui-mp__chips` – All and one chip per category, with counts; search sits beside them
 3. **Memory** `.ui-mp__item` – the fact, where it came from and when, and Paused
 4. **Actions** `.ui-mp__acts` – Edit, Pause or Resume, and Forget
-5. **New memory** `.ui-mp__add` – unfolds into an editor with a category picker
-6. **Tray** `.ui-mp__foot` – the counts or what you point at, then Undo after a forget
+5. **Waiting for your OK** `.ui-mp__waiting` – memories the assistant picked up itself, each with Keep and Don't keep
+6. **New memory** `.ui-mp__add` – unfolds into an editor with a category picker
+7. **Tray** `.ui-mp__foot` – the counts (and how many wait) or what you point at, then Undo after a forget
 
 ## Looks
 
@@ -63,6 +70,10 @@ named with the memory's text – “Edit “Writes in British English””, “
 callback is still running is `aria-busy`. A status region says “Forgot “…”. Undo is on the tray.” after a forget, and
 a failure such as “Couldn't pause it. Try again.” The rolling counts are not read out.
 
+“Waiting for your OK” is a section named by its heading and count. Keep and Don't keep are named with the memory –
+“Keep “Likes tables””. After either, the status region says “Kept: “…”” or “Not kept: “…”” and focus moves to the next
+waiting memory's Keep, or to New memory.
+
 ## Content
 
 - Write each memory as one short sentence about the person, without “User” or “You”: “Writes in British English”.
@@ -70,6 +81,7 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 - Use a handful of plain categories – “Work”, “Preferences”, “Projects”, “Personal” – and pass them in `categories`
   in the order people expect.
 - Set `addedSource` to how a hand-added memory should read, e.g. “Added by you”.
+- For a waiting memory, say where it was picked up in `source` – “Picked up from a chat” – so people can judge it.
 
 ## Do
 
@@ -77,6 +89,7 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
   the row waits, and a rejection rolls it back and says so.
 - Keep Undo long enough to read: raise `undoFor`, or set it to `Infinity`, for people who need more time.
 - Treat the switch as a real setting: when it's off, stop using and saving memories, as its note promises.
+- Don't use a waiting memory in answers until it's kept; return a promise from `onConsent` to save the answer.
 
 ## Don't
 
@@ -99,7 +112,9 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
     { id: "w1", category: "Work", text: "Product designer at a fintech startup in Berlin", source: "From chat", date: "Sep 28" },
     { id: "p1", category: "Preferences", text: "Writes in British English", source: "From chat", date: "Sep 2" },
   ];
+  panel.memories = [...panel.memories, { id: "n1", category: "Work", text: "Presents to the board monthly", source: "Picked up from a chat", pending: true }];
   panel.onForget = (id) => fetch(`/api/memories/${id}`, { method: "DELETE" });
+  panel.addEventListener("tc-consent", (e) => console.log(e.detail.keep ? "kept" : "not kept", e.detail.memory.text));
   panel.addEventListener("tc-memories-change", (e) => console.log(e.detail.memories));
 </script>
 ```

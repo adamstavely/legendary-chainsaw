@@ -144,6 +144,12 @@
         "tool": {
           "type": "string"
         },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
         "run": {
           "type": "string"
         },
@@ -168,16 +174,13 @@
         "copyFailed": {
           "type": "string"
         },
-        "output": {
+        "costliest": {
           "type": "string"
         },
         "lookups": {
           "type": "string"
         },
         "retries": {
-          "type": "string"
-        },
-        "input": {
           "type": "string"
         },
         "cached": {
@@ -187,9 +190,6 @@
           "type": "string"
         },
         "savings": {
-          "type": "string"
-        },
-        "costliest": {
           "type": "string"
         },
         "ofTotal": {

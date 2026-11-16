@@ -91,6 +91,9 @@
         "close": {
           "type": "string"
         },
+        "tokens": {
+          "type": "string"
+        },
         "median": {
           "type": "string"
         },
@@ -131,9 +134,6 @@
           "type": "string"
         },
         "endpoint": {
-          "type": "string"
-        },
-        "tokens": {
           "type": "string"
         },
         "cache": {
