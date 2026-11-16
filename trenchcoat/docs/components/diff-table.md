@@ -467,7 +467,7 @@ named after the row and column.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -475,15 +475,15 @@ named after the row and column.
 | --- | --- | --- |
 | **This component alone** | 23.4 KB | 7.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **39.4 KB** | **12.2 KB** |
-| With Lit – the first component on a page | 59.0 KB | 18.5 KB |
+| **Added to a page that already has Lit** | **39.9 KB** | **12.4 KB** |
+| With Lit – the first component on a page | 59.5 KB | 18.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -492,12 +492,12 @@ named after the row and column.
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **4.2 ms** | the gallery demo's data, 241 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of rows replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 16 ms | rows: first render, 1,724 nodes; update 2.2 ms |
-| 1,000 items | 72 ms | rows: first render, 16,237 nodes; update 6.9 ms |
+| Typical update | **0.5 ms** | one item of rows replaced |
+| First on the page | 9.0 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | rows: first render, 1,724 nodes; update 1.2 ms |
+| 1,000 items | 54 ms | rows: first render, 16,237 nodes; update 7.4 ms |
 
-1,000 items of rows: 72 ms. It renders every item, so a first render passes 50 ms (a long task) at about 700 items – page or filter longer lists.
+1,000 items of rows: 54 ms. It renders every item, so a first render passes 50 ms (a long task) at about 930 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

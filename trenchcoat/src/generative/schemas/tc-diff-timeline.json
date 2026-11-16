@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-diff-timeline.json",
+  "title": "tc-diff-timeline",
+  "description": "What a coding agent changed in a pull request, edit by edit over time, with a replay scrubber.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DiffTimelineFile"
+      },
+      "description": "The files and their edits"
+    },
+    "start": {
+      "type": "number",
+      "description": "When the run started, epoch ms; by default the first edit"
+    },
+    "end": {
+      "type": "number",
+      "description": "When it ended, epoch ms; by default the last edit, or now while live"
+    },
+    "live": {
+      "type": "boolean",
+      "description": "The run is still going: the axis runs to now and new edits land as they come"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\", epoch ms, while live; unset, the element keeps its own clock"
+    },
+    "time": {
+      "type": "number",
+      "description": "The replay position, epoch ms, or null for everything. Changed by the user unless a tc-time-change listener calls preventDefault()"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The picked edit's id, or null. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "files": {
+          "type": "string"
+        },
+        "edits": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "live": {
+          "type": "string"
+        },
+        "replay": {
+          "type": "string"
+        },
+        "play": {
+          "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "showAll": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "addedLine": {
+          "type": "string"
+        },
+        "removedLine": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "notYet": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DiffTimelineFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The file's path, which also identifies it"
+        },
+        "edits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiffTimelineEdit"
+          }
+        }
+      },
+      "required": [
+        "path",
+        "edits"
+      ],
+      "additionalProperties": false
+    },
+    "DiffTimelineEdit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When the agent made it, epoch ms"
+        },
+        "added": {
+          "type": "number",
+          "description": "Lines added"
+        },
+        "removed": {
+          "type": "number",
+          "description": "Lines removed"
+        },
+        "summary": {
+          "type": "string",
+          "description": "What the edit did, in a few words"
+        },
+        "diff": {
+          "type": "string",
+          "description": "A few lines of its diff – each starting \"+\", \"-\" or \" \""
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "added",
+        "removed"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

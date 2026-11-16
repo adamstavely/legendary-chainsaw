@@ -2,6 +2,13 @@
 
 # Changelog
 
+## 0.30.0 – Agent runs: Agent Sequence, Cost Waterfall, Diff Timeline and Agent Trail
+
+- **Agent Sequence:** one agent run as a sequence diagram – a lifeline for you, every agent and every tool; calls solid, replies dashed, failures in words, work bars, and frames round parallel and retried messages. Live runs draw new messages across; a click opens details.
+- **Cost Waterfall:** where a run's money and tokens went, each step stepping up to the total – by cost or in run order, cost or tokens, with details per step.
+- **Diff Timeline:** what a coding agent changed in a pull request, edit by edit – lines added and removed over the run, a row per file with its edits on a shared time axis, each edit's diff on hover, and a replay scrubber.
+- **Agent Trail:** the steps an agent works through as one quiet trail for a chat answer or side panel – done, current with live sub-steps, a step waiting for your OK with Approve and Decline, and what comes next.
+
 ## 0.29.3 – Form controls run live on the canvas
 
 - **Checkbox, Number Field, Radio Group, Secret Field, Slider Field, Switch and Tooltip:** each docs page now has an

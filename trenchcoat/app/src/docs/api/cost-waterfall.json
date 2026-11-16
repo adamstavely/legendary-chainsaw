@@ -1,0 +1,569 @@
+{
+ "elements": [
+  {
+   "tag": "tc-cost-waterfall",
+   "className": "TcCostWaterfall",
+   "description": "Where the money and tokens of one agent run went, as a waterfall of its steps stepping up to the total.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Cost waterfall\"",
+     "description": "The heading; empty leaves the header out",
+     "readonly": false
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A line under the heading – the run or the agent",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "CostStep[]",
+     "default": "[]",
+     "description": "The run's steps, in the order they ran",
+     "readonly": false
+    },
+    {
+     "name": "measure",
+     "attribute": "measure",
+     "type": "CostWaterfallMeasure",
+     "default": "\"cost\"",
+     "description": "What the bars measure: \"cost\" or \"tokens\"",
+     "readonly": false
+    },
+    {
+     "name": "order",
+     "attribute": "order",
+     "type": "CostWaterfallOrder",
+     "default": "\"cost\"",
+     "description": "\"cost\" puts the most expensive step on top; \"run\" keeps the run's order",
+     "readonly": false
+    },
+    {
+     "name": "openId",
+     "attribute": "open-id",
+     "type": "string | null",
+     "default": "null",
+     "description": "Id of the step whose details are open",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "ISO 4217 currency code for every amount",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Locale for numbers and amounts",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<CostWaterfallLabels>",
+     "default": "{}",
+     "description": "Renames the words it uses",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-measure-change",
+     "detail": "",
+     "description": "Cost or Tokens was picked ({ measure }: CostWaterfallMeasureChange); cancelable – prevented, `measure` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-order-change",
+     "detail": "",
+     "description": "By cost or In order was picked ({ order }: CostWaterfallOrderChange); cancelable – prevented, `order` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A step's details opened or closed ({ openId, step }: CostWaterfallOpenChange); cancelable – prevented, `openId` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cwf",
+   "cssProperties": [
+    {
+     "name": "--tc-cwf-bar-h",
+     "value": "10px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cwf-mark",
+     "value": "10px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cwf-llm",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cwf-tool",
+     "value": "var(--tc-chart-2)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cwf-subagent",
+     "value": "var(--tc-chart-3)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cwf-quiet",
+     "value": "light-dark(color-mix(in oklab, var(--tc-text-muted) 38%, transparent), color-mix(in oklab, var(--tc-text-muted) 55%, transparent))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cwf-columns",
+     "value": "minmax(0, 1.4fr) minmax(0, 1.4fr) 5rem 1rem",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-2",
+    "--tc-chart-3",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-cwf-from",
+    "--tc-cwf-ink",
+    "--tc-cwf-to",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-slow",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-info-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "stepTokens",
+   "signature": "stepTokens(s: CostStep): void",
+   "description": "A step's tokens, in and out together"
+  },
+  {
+   "name": "stepValue",
+   "signature": "stepValue(s: CostStep, measure: CostWaterfallMeasure): void",
+   "description": "What a step measures: its cost or its tokens"
+  },
+  {
+   "name": "costWaterfall",
+   "signature": "costWaterfall(steps: CostStep[], measure: CostWaterfallMeasure, order: CostWaterfallOrder): void",
+   "description": "The rows of the waterfall: the steps in the order shown, each with where its bar starts and ends"
+  }
+ ],
+ "react": [
+  {
+   "component": "CostWaterfall",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"\" leaves the header out"
+    },
+    {
+     "name": "measure",
+     "type": "CostWaterfallMeasure",
+     "optional": true,
+     "description": "Controlled measure: \"cost\" or \"tokens\""
+    },
+    {
+     "name": "defaultMeasure",
+     "type": "CostWaterfallMeasure",
+     "optional": true,
+     "description": "The measure on mount when `measure` isn't controlled"
+    },
+    {
+     "name": "onMeasureChange",
+     "type": "(measure: CostWaterfallMeasure) => void",
+     "optional": true,
+     "description": "Called when Cost or Tokens is picked"
+    },
+    {
+     "name": "order",
+     "type": "CostWaterfallOrder",
+     "optional": true,
+     "description": "Controlled order: \"cost\" (most expensive first) or \"run\""
+    },
+    {
+     "name": "defaultOrder",
+     "type": "CostWaterfallOrder",
+     "optional": true,
+     "description": "The order on mount when `order` isn't controlled"
+    },
+    {
+     "name": "onOrderChange",
+     "type": "(order: CostWaterfallOrder) => void",
+     "optional": true,
+     "description": "Called when By cost or In order is picked"
+    },
+    {
+     "name": "openId",
+     "type": "string | null",
+     "optional": true,
+     "description": "Controlled id of the step whose details are open"
+    },
+    {
+     "name": "defaultOpenId",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open step on mount when `openId` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(openId: string | null, step?: CostStep) => void",
+     "optional": true,
+     "description": "Called when a step's details open (with the step) or close (null)"
+    }
+   ],
+   "hides": [
+    "heading",
+    "measure",
+    "order",
+    "openId",
+    "children"
+   ],
+   "events": {
+    "tc-measure-change": "onMeasureChange",
+    "tc-order-change": "onOrderChange",
+    "tc-open-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-cost-waterfall",
+   "className": "TcCostWaterfall",
+   "module": "@adamstavely/trenchcoat/cost-waterfall",
+   "data": [
+    "steps",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle"
+    },
+    {
+     "name": "measure",
+     "attribute": "measure"
+    },
+    {
+     "name": "order",
+     "attribute": "order"
+    },
+    {
+     "name": "openId",
+     "attribute": "open-id"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-measure-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-order-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "measure",
+     "event": "tc-measure-change"
+    },
+    {
+     "property": "order",
+     "event": "tc-order-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28279,
+  "gzip": 9100
+ }
+}

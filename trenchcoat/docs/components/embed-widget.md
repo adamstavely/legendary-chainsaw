@@ -478,13 +478,13 @@ starters are a group of buttons, and Send is `aria-disabled` while the field is 
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 21.2 KB | 6.9 KB |
+| **This component alone** | 21.4 KB | 7.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -495,8 +495,8 @@ starters are a group of buttons, and Send is `aria-disabled` while the field is 
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **28.4 KB** | **9.0 KB** |
-| With Lit – the first component on a page | 49.2 KB | 15.7 KB |
+| **Added to a page that already has Lit** | **28.5 KB** | **9.0 KB** |
+| With Lit – the first component on a page | 49.3 KB | 15.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -504,10 +504,10 @@ starters are a group of buttons, and Send is `aria-disabled` while the field is 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of messages replaced |
-| First on the page | 9.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.5 ms | messages: first render, 393 nodes; update 0.2 ms |
+| First render | **3.1 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of messages replaced |
+| First on the page | 12 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.8 ms | messages: first render, 393 nodes; update 0.5 ms |
 | 1,000 items | 16 ms | messages: first render, 3,633 nodes; update 1.6 ms |
 
 1,000 items of messages: 16 ms, 3,633 nodes. It renders every item – past a few thousand, page through them or use a windowed list.

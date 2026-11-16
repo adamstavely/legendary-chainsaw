@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-trail.json",
+  "title": "tc-agent-trail",
+  "description": "The steps an agent works through as one quiet trail: done, the one it's on with its sub-steps, one waiting for a person, and what's next.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The task, as the header's title"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the task"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentTrailStep"
+      },
+      "description": "The steps, in order"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\", epoch ms; unset, the element keeps its own clock"
+    },
+    "collapsed": {
+      "type": "boolean",
+      "description": "Folded to the header. Changed by the user unless a tc-collapsed-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "progress": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "pending": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "approve": {
+          "type": "string"
+        },
+        "decline": {
+          "type": "string"
+        },
+        "declined": {
+          "type": "string"
+        },
+        "hide": {
+          "type": "string"
+        },
+        "show": {
+          "type": "string"
+        },
+        "now": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentTrailStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentTrailStatus"
+        },
+        "started": {
+          "type": "number",
+          "description": "When it started, epoch ms"
+        },
+        "ended": {
+          "type": "number",
+          "description": "When it ended, epoch ms"
+        },
+        "detail": {
+          "type": "string",
+          "description": "What it's doing now, or why it waits or failed"
+        },
+        "substeps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentTrailSubstep"
+          },
+          "description": "The smaller steps it branches into while it's the current one"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentTrailStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "pending",
+        "running",
+        "waiting"
+      ]
+    },
+    "AgentTrailSubstep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentTrailStatus"
+        },
+        "started": {
+          "type": "number",
+          "description": "When it started, epoch ms"
+        },
+        "ended": {
+          "type": "number",
+          "description": "When it ended, epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

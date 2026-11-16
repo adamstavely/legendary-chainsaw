@@ -145,6 +145,9 @@
     "literal border-radius": 1,
     "literal blurred shadow": 1
   },
+  "src/elements/agent-trail.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/agent-tree.ts": {
     "clock/environment read": 4,
     "literal spacing": 13,
@@ -253,6 +256,9 @@
   "src/elements/delegate-board.ts": {
     "clock/environment read": 1,
     "literal border-radius": 1
+  },
+  "src/elements/diff-timeline.ts": {
+    "clock/environment read": 1
   },
   "src/elements/dropzone.ts": {
     "clock/environment read": 1,

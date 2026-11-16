@@ -568,7 +568,7 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -576,7 +576,7 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 | --- | --- | --- |
 | **This piece alone** | 36.2 KB | 11.2 KB |
 | Lit · the library every element is built on, the parts it uses | 22.3 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 6.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -602,11 +602,11 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 | [context-tray](../components/context-tray.md) · Element it renders | 25.2 KB | – |
 | [validity-badge](../components/validity-badge.md) · Element it renders | 17.9 KB | – |
 | [prompt-starters](../components/prompt-starters.md) · Element it renders | 15.5 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **687.1 KB** | **163.1 KB** |
-| With Lit – the first component on a page | 705.9 KB | 169.1 KB |
+| **Added to a page that already has Lit** | **688.0 KB** | **163.3 KB** |
+| With Lit – the first component on a page | 706.7 KB | 169.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -614,9 +614,9 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.4 ms** | default properties, 198 DOM nodes – to layout, median of 7 |
+| First render | **2.8 ms** | default properties, 198 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 48 ms | default properties; includes adding its CSS to the document |
+| First on the page | 36 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
