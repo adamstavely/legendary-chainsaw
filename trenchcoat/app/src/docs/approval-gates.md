@@ -14,11 +14,17 @@ Approve, Reject or Ask for changes – with a note – and the card drops into t
 rises. A strip above it says where things stand in words: “Waiting on you 2 · Decided 1/3 · Paused – 3 steps wait on
 2 gates”. Decided rows fold open to show what was decided, the note, and the diff or arguments.
 
+A request with arguments can be changed before it's approved: **Change it first** turns them into fields – text, a
+number, a checkbox, or JSON for anything nested – and **Approve with changes** sends the edited arguments with the
+decision (`args`, and `edited` when any of them differ). The decided row says “Approved with changes”, which arguments
+changed, and shows both the arguments as approved and as the agent asked for them.
+
 ## When to use
 
 - An agent run pauses at several points that need a person, and some of them hold up the steps after them.
 - People should decide one request at a time, in order, with the next one waiting in view.
 - Requests whose exact change matters – a file edit, a command's arguments, a message's recipients.
+- Requests that are nearly right – a send time, a row limit, a recipient list – where fixing them beats sending them back.
 
 ## When not to use
 
@@ -35,8 +41,9 @@ rises. A strip above it says where things stand in words: “Waiting on you 2 ·
 4. **Request** `.ui-apg__gate` – who asks and when, the title, the reason, the diff or arguments, “Full context”, and
    what it holds `.ui-apg__holds`
 5. **Note** `.ui-apg__note` – what should change, before Ask for changes is sent
-6. **Buttons** `.ui-apg__actions` – Ask for changes, Reject and Approve
-7. **Decided** `.ui-apg__decided` – a row per decision `.ui-apg__row`, folding open to `.ui-apg__detail`
+6. **Editor** `.ui-apg__editor` – Change it first: a field per argument `.ui-apg__edit-field`, marked when changed
+7. **Buttons** `.ui-apg__actions` – Ask for changes, Change it first, Reject and Approve; Cancel and Approve with changes while editing
+8. **Decided** `.ui-apg__decided` – a row per decision `.ui-apg__row`, folding open to `.ui-apg__detail`
 
 ## Looks
 
@@ -56,6 +63,8 @@ turn. The diff and the arguments use tc-approval-card's styles and its `--tc-app
 | Enter / Space | On a button, presses it; on a decided row, folds it open or shut |
 | ⌘ Enter / Ctrl Enter | In the note, sends Ask for changes |
 | Escape | In the note, closes it and returns focus to Ask for changes |
+| ⌘ Enter / Ctrl Enter | In an argument's field, approves with changes |
+| Escape | In an argument's field, closes the editor with nothing changed and returns focus to Change it first |
 | ↓ / ↑ | In the Decided list, moves to the next or previous row |
 | Home / End | In the Decided list, moves to the first or last row |
 
@@ -71,6 +80,10 @@ The Decided list is a list named “Decided”. A status region says each decisi
 the embargo forward a week. Next: Run the station ID migration.” While a decision is on its way the request is
 `aria-busy`; if it fails, an alert says so and the request stays open.
 
+Change it first is a `fieldset` named “Change the arguments, then approve”; each field is labelled by its argument's
+name. A value that doesn't read back – not a number, not valid JSON – is `aria-invalid` and described by what's wrong,
+and focus goes to it. A decision with changes is announced as “Approved with changes: …”.
+
 ## Content
 
 - Write each title as the action in plain words – “Email 1,284 newsletter subscribers”, not the tool's name.
@@ -79,12 +92,14 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 - Put what led up to it in `context.before` and the files or systems it changes in `context.touches`.
 - Mark `blocking` only on requests that stop the whole run, so the word keeps its weight.
 - Order `gates` the way they should be decided; the first open one is on top.
+- Give arguments names people can read in a field label – `send_at`, `recipients` – since Change it first shows them.
 
 ## Do
 
 - Return a promise from `onDecide` – the button shows a spinner, and on failure the request stays open with an error.
 - Pass `now` when the page has a clock, so times read “6m ago”; without it they show the time of day.
 - Keep the decided gates in `gates`, so people can see what they already let through.
+- Run the call with `args` from the decision, not the agent's original – that's what was approved.
 
 ## Don't
 
@@ -121,7 +136,8 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
     },
     { id: "migration", title: "Run the station ID migration", agent: "Analyst", kind: "Command", status: "open", args: { rows: 48210, dry_run: false } },
   ];
-  gates.onDecide = ({ gate, decision, note }) => fetch(`/api/gates/${gate.id}`, { method: "POST", body: JSON.stringify({ decision, note }) });
+  // args holds the arguments as approved when they were changed first
+  gates.onDecide = ({ gate, decision, note, args }) => fetch(`/api/gates/${gate.id}`, { method: "POST", body: JSON.stringify({ decision, note, args }) });
   gates.addEventListener("tc-gates-change", (e) => console.log(e.detail.decision, e.detail.gate.title));
 </script>
 ```
@@ -131,14 +147,14 @@ import { ApprovalGates, type ApprovalGate } from "@adamstavely/trenchcoat/react"
 import "@adamstavely/trenchcoat/tokens.css";
 import { useState } from "react";
 
-export function RunApprovals({ initial, send }: { initial: ApprovalGate[]; send: (id: string, decision: string, note: string) => Promise<void> }) {
+export function RunApprovals({ initial, send }: { initial: ApprovalGate[]; send: (id: string, decision: string, note: string, args?: Record<string, unknown>) => Promise<void> }) {
   const [gates, setGates] = useState(initial);
   return (
     <ApprovalGates
       run="Publish the 2026 field-survey report"
       gates={gates}
       onGatesChange={(next) => setGates(next)}
-      onDecide={({ gate, decision, note }) => send(gate.id, decision, note)}
+      onDecide={({ gate, decision, note, args }) => send(gate.id, decision, note, args)}
     />
   );
 }

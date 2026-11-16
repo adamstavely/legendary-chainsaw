@@ -9,7 +9,7 @@
 An accessible on/off setting
 
 - **Element:** `<tc-switch>`
-- **Size:** 6.7 KB gzip · 23.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.0 KB gzip · 26.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -23,19 +23,39 @@ An accessible on/off setting
 
 ## Example
 
-The live example is in the gallery at `#/switch`, at 320 px, 480 px or full width.
+The live example is in the gallery at `#/switch`, at 320 px, 480 px or full width, with “Show anatomy” to number its parts.
 
 ## Overview
 
-An accessible on/off setting.
+On or off for something that applies right away – a feature, a notification, a mode. A label and an optional second
+line, with the switch before them (the default) or, with `placement="end"`, at the far end of a full-width settings
+row with the words on the left. The thumb stretches a little while it's pressed.
 
 ### When to use
 
-Use this component to an accessible on/off setting in an AI product's settings or setup workflow.
+- Settings that take effect the moment they're flipped: notifications, features, a mode.
+- Settings rows with the label on the left and the switch on the right – `placement="end"`.
 
 ### When not to use
 
-Use existing read-only run and output components when users only need to inspect results. Application callbacks are required for external operations.
+- Choices saved later with a form, or agreeing to something – use the Checkbox.
+- More than two states – use the Segmented Control or the Select.
+- Stopping a running system – use the Kill Switch, which confirms what it halts.
+
+## Anatomy
+
+*Turn on “Show anatomy” on the example to see each part numbered on the live component.*
+
+1. **Row** `.ui-switch__row` – the label element: the switch and the words, clickable as one.
+2. **Words** `.ui-switch__text` – the label and the second line.
+3. **Label** `.ui-switch__label` – names the switch.
+4. **Second line** `.ui-switch__description` – describes it.
+
+## Looks
+
+Standard and Clean draw the same track and thumb from the switch tokens (`--tc-switch-w`, `--tc-switch-h`,
+`--tc-switch-knob`, `--tc-switch-on`, `--tc-switch-off`). `--tc-switch-stretch` sets how far the thumb stretches while
+pressed; under reduced motion it doesn't.
 
 ## Usage
 
@@ -43,6 +63,7 @@ Use existing read-only run and output components when users only need to inspect
 
 ```html
 <tc-switch id="caching" label="Enable caching"></tc-switch>
+<tc-switch id="digest" label="Email digest" description="Once a day, at 8:00" placement="end"></tc-switch>
 
 <script type="module">
   import "@adamstavely/trenchcoat/switch";
@@ -51,6 +72,7 @@ Use existing read-only run and output components when users only need to inspect
   const el = document.querySelector("#caching");
   el.value = true;
   el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+  document.querySelector("#digest").addEventListener("tc-value-change", (e) => console.log(e.detail.value));
 </script>
 ```
 
@@ -59,7 +81,15 @@ Use existing read-only run and output components when users only need to inspect
 ```tsx
 import { Switch } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
-export function Example() { return <Switch label="Enable caching" defaultValue />; }
+
+export function Example() {
+  return (
+    <>
+      <Switch label="Enable caching" defaultValue />
+      <Switch label="Email digest" description="Once a day, at 8:00" placement="end" />
+    </>
+  );
+}
 ```
 
 ### Vue / Nuxt
@@ -132,6 +162,7 @@ export class SwitchExample {
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
+| `placement` | `placement` | `SwitchPlacement` | `"start"` | "start" (default): the switch before its label; "end": the label on the left and the switch at the row's far end |
 | `label` | `label` | `string` | `"Switch"` | Visible heading or field label. |
 | `value` | – | `boolean` | `false` | Current value; prevent tc-value-change to control it from the application. |
 | `description` | `description` | `string` | `""` | Supporting explanation under the label. |
@@ -153,6 +184,18 @@ export class SwitchExample {
 | `checkValidity()` | `void` | Check the current form validity. |
 | `reportValidity()` | `void` | Show the current validation message and focus the first control. |
 
+#### Component tokens
+
+*Custom properties on the element – set them on the element or an ancestor to adjust it.*
+
+| Custom property | Value | Look |
+| --- | --- | --- |
+| `--tc-switch-stretch` | `var(--tc-space-1)` | both |
+
+#### Design tokens it reads (16)
+
+`--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-font-size-sm`, `--tc-line-height-snug`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-2`, `--tc-space-4`, `--tc-space-6`, `--tc-switch-h`, `--tc-switch-knob`, `--tc-switch-w`, `--tc-text-primary`, `--tc-text-secondary`
+
 ## Frameworks
 
 *The site shows these one framework at a time, behind tabs; here they're all written out. [Set-up for each framework](../foundations/frameworks.md)*
@@ -173,7 +216,7 @@ export class SwitchExample {
 | --- | --- | --- | --- | --- | --- |
 | `value` | `el.value = …;` | `<… value={…} />` | `<tc-switch :value="…">` | `<tc-switch [value]="…">` | `<tc-switch {value}>` |
 
-*Also attributes: `label`, `description`, `name`, `disabled`, `required` – see the API table.*
+*Also attributes: `placement`, `label`, `description`, `name`, `disabled`, `required` – see the API table.*
 
 ### Events
 
@@ -373,11 +416,14 @@ No slots: everything it shows comes from its properties.
 
 ### Keyboard
 
-Tab and Shift+Tab move through fields and actions. Native inputs, selects and buttons keep their standard keyboard behavior. Multiline editors preserve Enter for new lines.
+| Key | Does |
+| --- | --- |
+| Tab / Shift+Tab | Moves to and from the switch |
+| Space | Turns it on or off |
 
 ### Screen readers
 
-Visible labels name native controls. Form panels group their controls under a heading and announce action results through a status region. Standard and Clean use the same semantics.
+A native checkbox with `role="switch"`, named by its label and described by its second line, read as "on" or "off".
 
 ### Every component
 
@@ -419,13 +465,13 @@ Visible labels name native controls. Form panels group their controls under a he
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 0.9 KB | 0.4 KB |
+| **This component alone** | 4.9 KB | 2.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
@@ -434,8 +480,8 @@ Visible labels name native controls. Form panels group their controls under a he
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **23.9 KB** | **6.7 KB** |
-| With Lit – the first component on a page | 44.6 KB | 13.4 KB |
+| **Added to a page that already has Lit** | **26.0 KB** | **7.0 KB** |
+| With Lit – the first component on a page | 46.7 KB | 13.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -443,9 +489,9 @@ Visible labels name native controls. Form panels group their controls under a he
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
+| First render | **0.9 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -462,21 +508,28 @@ Visible labels name native controls. Form panels group their controls under a he
 
 ## Content
 
-Give the control a visible label and a short description where the meaning needs explanation. Use name for form submission. A secret field masks display, but its value remains available to the host application.
+- Name the thing being switched, not the action: "Email digest", not "Turn on email digest".
+- Use the second line for what it does or when: "Once a day, at 8:00".
 
 ## Do and don't
 
 ### Do
 
-Keep values application-owned with value/onChange, or use defaultValue for local editing. Use disabled while settings cannot be changed. For long operations, honor the provided AbortSignal and reject failed operations so the component offers a retry.
+- Apply the change at once, and say so if it can fail.
+- Line switches up at the end of their rows in a settings list, so the eye can run down one column.
+- Keep `value` application-owned with `value` and `onChange`, or start it with `defaultValue`.
 
 ### Don't
 
-Don't treat client-side validation or policy previews as backend enforcement. Don't store credentials in exported configuration; reference application-managed credentials instead.
+- Don't ask for a Save after flipping a switch – use a checkbox in a form instead.
+- Don't mix start and end placement in the same list.
 
 ## Related
 
-- [Model Picker](model-picker.md) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
+- [Checkbox](checkbox.md) – A form-associated boolean choice
+- [Segmented Control](segmented-control.md) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
+- [Data Controls](data-controls.md) – A person's own data in an AI product – switches for improving the model with their chats, saving chat history and memory, each saying what it means and when it last changed, Export my data with its status, Delete all chats behind a confirmation that names how many go, and Delete account
+- [Integration Settings](integration-settings.md) – Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
 
 ## Changelog
 

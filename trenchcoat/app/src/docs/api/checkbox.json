@@ -3,8 +3,32 @@
   {
    "tag": "tc-checkbox",
    "className": "TcCheckbox",
-   "description": "Checkbox for AI product settings.",
+   "description": "A yes / no choice saved with a form – label and second line, a partly-checked state, a card row and an error line.",
    "properties": [
+    {
+     "name": "indeterminate",
+     "attribute": "indeterminate",
+     "type": "boolean",
+     "default": "false",
+     "description": "Partly checked: a dash for a Select all over a list that's only partly picked; clicking it checks it",
+     "readonly": false
+    },
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "CheckboxVariant",
+     "default": "\"default\"",
+     "description": "\"default\" (a box and its label) or \"card\" (a bordered row, clickable anywhere)",
+     "readonly": false
+    },
+    {
+     "name": "errorMessage",
+     "attribute": "error-message",
+     "type": "string",
+     "default": "\"\"",
+     "description": "An error shown under the checkbox, e.g. \"Accept the terms to go on\"; empty shows none",
+     "readonly": false
+    },
     {
      "name": "label",
      "attribute": "label",
@@ -86,8 +110,45 @@
     }
    ],
    "ui": "checkbox",
-   "cssProperties": [],
-   "tokens": []
+   "cssProperties": [
+    {
+     "name": "--tc-checkbox-tick",
+     "value": "12px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-size-sm",
+    "--tc-hairline",
+    "--tc-line-height-snug",
+    "--tc-radius-lg",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-raised",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
   }
  ],
  "functions": [],
@@ -136,6 +197,18 @@
    ],
    "attributes": [
     {
+     "name": "indeterminate",
+     "attribute": "indeterminate"
+    },
+    {
+     "name": "variant",
+     "attribute": "variant"
+    },
+    {
+     "name": "errorMessage",
+     "attribute": "error-message"
+    },
+    {
      "name": "label",
      "attribute": "label"
     },
@@ -180,7 +253,7 @@
   "floor": {
    "chrome": "123",
    "edge": "123",
-   "firefox": "120",
+   "firefox": "121",
    "safari": "17.5",
    "safari_ios": "17.5"
   },
@@ -192,7 +265,7 @@
     "light-dark"
    ],
    "firefox": [
-    "light-dark"
+    "has"
    ],
    "safari": [
     "light-dark"
@@ -268,8 +341,26 @@
     "progressive": false,
     "why": "Focus rings for keyboard users.",
     "via": [
+     "itself",
      "internal/kit",
      "internal/settings"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
     ]
    },
    {
@@ -286,6 +377,22 @@
     "progressive": false,
     "via": [
      "internal/settings"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
     ]
    },
    {
@@ -338,6 +445,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -359,6 +467,7 @@
    "offscreen": [],
    "hidden": [],
    "reducedMotion": [
+    "CSS",
     "CSS (internal/kit › kitCss)",
     "CSS (internal/settings › rawSettingsCss)"
    ]
@@ -366,7 +475,7 @@
   "windowed": false
  },
  "size": {
-  "min": 24466,
-  "gzip": 6854
+  "min": 29577,
+  "gzip": 7773
  }
 }

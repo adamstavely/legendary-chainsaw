@@ -2,6 +2,15 @@
 
 # Changelog
 
+## 0.31.0 – Checkbox, Switch, Running Now, Decision Card, Approval Gates and Memory Panel grow
+
+- **Checkbox:** `indeterminate` shows a partly checked state for Select all (clicking checks it); `variant="card"` is a bordered row clickable anywhere; `error-message` (or a failed required check) shows an error under it; the check draws itself, except under reduced motion. The input is named by its label alone and described by its second line.
+- **Switch:** `placement="end"` puts the switch at the far end of a full-width settings row, with the label and second line on the left; the thumb stretches a little while pressed.
+- **Running Now:** with `pausable`, running tasks get Pause and paused ones Resume, both a cancelable `tc-task-action`; unless prevented the element sets the status itself. Paused tasks stay with the running ones and the pill counts them ("1 paused").
+- **Decision Card:** `kind="variant"` shows the options as preview tiles (`image`, `imageAlt`), picked like numbered options.
+- **Approval Gates:** "Change it first" edits a request's arguments as fields, and "Approve with changes" sends them (`args` and `edited` on `tc-decide` and `tc-gates-change`); the decided row says "Approved with changes", which arguments changed, and both versions. The React `onGatesChange` second argument now includes `args` and `edited`.
+- **Memory Panel:** memories the assistant picked up on its own (`pending: true`) wait under "Waiting for your OK" with Keep and Don't keep, which fire a cancelable `tc-consent` and call `onConsent`; they join their category only once kept.
+
 ## 0.30.0 – Agent runs: Agent Sequence, Cost Waterfall, Diff Timeline and Agent Trail
 
 - **Agent Sequence:** one agent run as a sequence diagram – a lifeline for you, every agent and every tool; calls solid, replies dashed, failures in words, work bars, and frames round parallel and retried messages. Live runs draw new messages across; a click opens details.

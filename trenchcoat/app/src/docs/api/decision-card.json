@@ -42,7 +42,7 @@
      "attribute": "kind",
      "type": "DecisionCardKind",
      "default": "\"choose\"",
-     "description": "\"choose\" (default): numbered options; \"approve\": Approve and Decline",
+     "description": "\"choose\" (default): numbered options; \"approve\": Approve and Decline; \"variant\": options as preview tiles",
      "readonly": false
     },
     {
@@ -50,7 +50,7 @@
      "attribute": null,
      "type": "DecisionCardOption[]",
      "default": "[]",
-     "description": "The options for kind=\"choose\", in the agent's order",
+     "description": "The options for kind=\"choose\" or \"variant\", in the agent's order",
      "readonly": false
     },
     {
@@ -193,6 +193,13 @@
       "standard",
       "clean"
      ]
+    },
+    {
+     "name": "--tc-dcd-tile",
+     "value": "132px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
@@ -250,6 +257,7 @@
     "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xl",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-semibold",
@@ -286,6 +294,7 @@
     "--tc-status-warning-fg",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
+    "--tc-surface-sunken",
     "--tc-surface-tray",
     "--tc-text-disabled",
     "--tc-text-muted",
@@ -696,6 +705,22 @@
     ]
    },
    {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "inset",
     "name": "inset",
     "bcd": "css.properties.inset",
@@ -813,7 +838,7 @@
   "windowed": false
  },
  "size": {
-  "min": 37946,
-  "gzip": 11000
+  "min": 39548,
+  "gzip": 11383
  }
 }

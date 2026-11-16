@@ -2,9 +2,25 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "@adamstavely/trenchcoat/generative/schemas/tc-checkbox.json",
   "title": "tc-checkbox",
-  "description": "Checkbox for AI product settings.",
+  "description": "A yes / no choice saved with a form – label and second line, a partly-checked state, a card row and an error line.",
   "type": "object",
   "properties": {
+    "indeterminate": {
+      "type": "boolean",
+      "description": "Partly checked: a dash for a Select all over a list that's only partly picked; clicking it checks it"
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "card",
+        "default"
+      ],
+      "description": "\"default\" (a box and its label) or \"card\" (a bordered row, clickable anywhere)"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "An error shown under the checkbox, e.g. \"Accept the terms to go on\"; empty shows none"
+    },
     "label": {
       "type": "string",
       "description": "Visible heading or field label."

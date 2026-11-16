@@ -249,7 +249,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-map-itinerary": { events: ["tc-day-change","tc-stop-select"], load: () => import("../elements/map-itinerary"), schema: () => import("./schemas/tc-map-itinerary.json") },
   "tc-marimekko-chart": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/marimekko-chart"), schema: () => import("./schemas/tc-marimekko-chart.json") },
   "tc-mcp-connection-manager": { events: ["tc-value-change","tc-connect","tc-disconnect","tc-test"], load: () => import("../elements/mcp-connection-manager"), schema: () => import("./schemas/tc-mcp-connection-manager.json") },
-  "tc-memory-panel": { events: ["tc-memories-change","tc-enabled-change","tc-action"], load: () => import("../elements/memory-panel"), schema: () => import("./schemas/tc-memory-panel.json") },
+  "tc-memory-panel": { events: ["tc-memories-change","tc-enabled-change","tc-consent","tc-action"], load: () => import("../elements/memory-panel"), schema: () => import("./schemas/tc-memory-panel.json") },
   "tc-menu-morph": { events: ["tc-open-change"], load: () => import("../elements/menu-morph"), schema: () => import("./schemas/tc-menu-morph.json") },
   "tc-message-actions": { events: ["tc-version-change","tc-copy","tc-feedback","tc-speak","tc-report","tc-report-undo"], load: () => import("../elements/message-actions"), schema: () => import("./schemas/tc-message-actions.json") },
   "tc-message-drafts": { events: ["tc-selected-change","tc-variants-change","tc-send","tc-copy-text"], load: () => import("../elements/message-drafts"), schema: () => import("./schemas/tc-message-drafts.json") },

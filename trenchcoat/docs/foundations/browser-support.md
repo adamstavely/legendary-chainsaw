@@ -12,7 +12,7 @@ features that set those versions, and the features it uses only where they exist
 | --- | --- | --- | --- |
 | Chrome | **123** | light-dark() | 512 components |
 | Edge | **123** | light-dark() | 512 components |
-| Firefox | **121** | :has() | 111 components |
+| Firefox | **121** | :has() | 112 components |
 | Safari (macOS) | **17.5** | light-dark() | 512 components |
 | Safari (iOS, iPadOS) | **17.5** | light-dark() | 512 components |
 
@@ -27,13 +27,13 @@ features that set those versions, and the features it uses only where they exist
 | :is() and :where() | 88 | 78 | 14 | 14 | 512 | Needed |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | 511 | Needed |
 | Container size queries | 105 | 110 | 16 | 16 | 379 | Needed |
-| inset | 87 | 66 | 14.1 | 14.1 | 231 | Needed |
+| inset | 87 | 66 | 14.1 | 14.1 | 232 | Needed |
 | ResizeObserver | 64 | 69 | 13.1 | 13.4 | 199 | Needed |
 | IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 174 | Needed |
 | inert | 102 | 112 | 15.5 | 15.5 | 173 | Needed |
-| :has() | 105 | 121 | 15.4 | 15.4 | 111 | Needed |
+| :has() | 105 | 121 | 15.4 | 15.4 | 112 | Needed |
 | translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 74 | Needed |
-| aspect-ratio | 88 | 89 | 15 | 15 | 72 | Needed |
+| aspect-ratio | 88 | 89 | 15 | 15 | 73 | Needed |
 | CSS masks | 1 | 53 | 4 | 3.2 | 61 | Needed |
 | Async Clipboard (writeText) | 66 | 63 | 13.1 | 13.4 | 61 | Needed |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | 57 | Needed |

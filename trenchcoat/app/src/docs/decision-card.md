@@ -12,6 +12,10 @@ options – one of them may be Recommended, which takes the first focus but is n
 step, Approve and Decline. Once sent it folds into a one-line receipt, "You chose: Keep the 2024 file", with Undo for a
 few seconds, and the agent carries on.
 
+When the choice is between things you can see – three drafts of a chart, two layouts, a set of logos – `kind="variant"`
+shows the options as preview tiles: each option's `image` above its label and detail, or its number on a quiet tile
+when it has none. They're picked the same way as numbered options.
+
 It sits between its neighbours. Clarifying Questions asks two or three things before a run starts and sends them as
 one reply; Approval Card reviews one proposed action with its details and policy; Decision Inbox lists many decisions
 to work through. Decision Card is the single question that blocks a run right now, where the person is already
@@ -22,6 +26,7 @@ typing.
 - An agent is stopped mid-run on a choice it shouldn't make alone – which record to keep, which source to trust.
 - The likely answers can be named, and the agent has a view on which is best.
 - Several agents are waiting at once: pass `queue` and `position` to step through them one at a time.
+- The agent made a few versions of something and needs one picked – `kind="variant"` with a preview of each.
 
 ## When not to use
 
@@ -34,9 +39,10 @@ typing.
 1. **Header** – the shared card header: the agent's picture or initials, its name, "Needs your decision" and how long it has waited; "1 of 3" with previous / next when several wait
 2. **Question** `.ui-dcd__question` – what the agent needs to know, with the context `.ui-dcd__context` under it
 3. **Options** `.ui-dcd__choices` – numbered rows `.ui-dcd__choice`, the recommended one with a chip `.ui-dcd__chip`, each with an optional detail line
-4. **Something else** `.ui-dcd__input` – a short field that opens when its option is picked (`allow-other`)
-5. **Buttons** `.ui-dcd__foot` – Later and Send, or Later, Decline and Approve; Decline swaps in a reason field and Back
-6. **Receipt** `.ui-dcd__receipt` – after sending: a check, what was decided, the agent, and Undo for `undo-ms`
+4. **Preview** `.ui-dcd__tile` – with `kind="variant"`, each option's image (or its number on a blank tile) above its label
+5. **Something else** `.ui-dcd__input` – a short field that opens when its option is picked (`allow-other`)
+6. **Buttons** `.ui-dcd__foot` – Later and Send, or Later, Decline and Approve; Decline swaps in a reason field and Back
+7. **Receipt** `.ui-dcd__receipt` – after sending: a check, what was decided, the agent, and Undo for `undo-ms`
 
 ## Looks
 
@@ -44,6 +50,9 @@ Standard puts the header on the gray tray and the question and options on a whit
 the tray. Options are outlined rows. Clean is one white card with the header as its first row: options are flat gray
 rows and the buttons sit in the card's last row. In both, the picked option is tinted with the accent and ringed, and
 its number fills.
+
+Variants lay out as a grid of tiles at least `--tc-dcd-tile` wide (132px by default); the picked tile's preview gets
+the selected ring as well.
 
 The page can set `--tc-dcd-num`, the size of the option numbers.
 
@@ -62,7 +71,8 @@ The page can set `--tc-dcd-num`, the size of the option numbers.
 
 The card is a `section` named by the agent and the question. The options are a `radiogroup` of `radio` buttons named
 by the question and described by the keys; an option reads as "Keep the 2024 file, Recommended, It has the signed
-bank letter". Sending with nothing picked says "Pick an option first" in a status region and moves focus to the
+bank letter". A variant's image is named by its `imageAlt`; without one it's decorative and the label names the
+option. Sending with nothing picked says "Pick an option first" in a status region and moves focus to the
 options. After sending, the status region reads the receipt ("You chose: Keep the 2024 file"), and focus moves to the
 receipt, a `group` named by it. Previous and next in the queue are named "Previous decision" and "Next decision", and
 "1 of 3" is announced politely as it changes.
@@ -74,6 +84,7 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 - Write options as actions: "Keep V-3184, archive V-2210". Put the cost or consequence in `detail`.
 - Recommend at most one option, and only when the agent has a reason – say the reason in its `detail`.
 - Keep to two to five options; offer `allow-other` when none may fit.
+- For variants, give each preview an `imageAlt` that says what differs – "Bar chart draft" – and keep the labels short.
 
 ## Do
 
@@ -85,6 +96,7 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
 
 - Don't pre-pick the recommended option – people should choose it on purpose.
 - Don't ask what the agent could look up itself.
+- Don't use variant tiles for options that only differ in words – numbered rows read faster.
 - Don't use Decision Card for questions before a run – ask them together with `clarifying-questions`.
 
 ## Example
@@ -104,6 +116,17 @@ receipt, a `group` named by it. Previous and next in the queue are named "Previo
     { id: "older", label: "Keep V-2210, archive V-3184" },
   ];
   ask.addEventListener("tc-decision", (e) => agent.answer(e.detail));
+</script>
+
+<tc-decision-card id="pick" kind="variant" agent="Report agent" question="Which chart should show spend by vendor?"></tc-decision-card>
+
+<script type="module">
+  const pick = document.querySelector("#pick");
+  pick.options = [
+    { id: "bars", label: "Bars", detail: "Easiest to compare", image: "/drafts/bars.png", imageAlt: "Bar chart draft", recommended: true },
+    { id: "treemap", label: "Treemap", image: "/drafts/treemap.png", imageAlt: "Treemap draft" },
+  ];
+  pick.addEventListener("tc-decision", (e) => console.log(e.detail.choice));
 </script>
 ```
 

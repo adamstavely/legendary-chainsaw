@@ -52,12 +52,12 @@ export class ApprovalGates {
     this.#el.look = v;
   }
   /**
-   * Approve, Reject or Send (Ask for changes) was pressed ({ gate, decision, note }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called
+   * Approve, Approve with changes, Reject or Send (Ask for changes) was pressed ({ gate, decision, note, args?, edited? }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-decide") readonly tcDecide = new EventEmitter<CustomEvent<GateDecide>>();
   /**
-   * A decision went through ({ gates, gate, decision, note }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use)
+   * A decision went through ({ gates, gate, decision, note, args?, edited? }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use)
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-gates-change") readonly tcGatesChange = new EventEmitter<CustomEvent<GatesChange>>();

@@ -362,6 +362,99 @@ describe("tc-running-now", () => {
     });
   });
 
+  describe("pause and resume", () => {
+    const pausable = (look = "standard", tasks: RunningTask[] = TASKS) =>
+      fixture<TcRunningNow>(html`<tc-running-now look=${look} pausable .tasks=${tasks} .now=${NOW}></tc-running-now>`);
+
+    test("off by default: no Pause button", async () => {
+      const el = await make();
+      await openPanel(el);
+      expect(el.querySelector(".ui-rnw__pause")).toBeNull();
+    });
+
+    for (const look of looks)
+      test(`${look}: Pause moves a running task to paused, Resume moves it back; focus follows; the pill counts it`, async () => {
+        const el = await pausable(look);
+        await openPanel(el);
+        const actions: string[] = [];
+        el.addEventListener("tc-task-action", (e) => actions.push(`${(e as CustomEvent).detail.action}:${(e as CustomEvent).detail.id}`));
+        const pause = row(el, "vendors").querySelector<HTMLButtonElement>(".ui-rnw__pause")!;
+        expect(plain(pause.textContent)).toBe("Pause Check vendor records");
+        pause.click();
+        await settle();
+        expect(el.tasks.find((t) => t.id === "vendors")!.status).toBe("paused");
+        expect(row(el, "vendors").dataset.status).toBe("paused");
+        expect(plain(row(el, "vendors").querySelector(".ui-rnw__meta")!.textContent)).toBe("Records agent · Paused · 6m 00s");
+        const resume = row(el, "vendors").querySelector<HTMLButtonElement>(".ui-rnw__act")!;
+        expect(plain(resume.textContent)).toBe("Resume Check vendor records");
+        await expect.poll(() => document.activeElement).toBe(resume);
+        // Paused sits with the running ones
+        expect(row(el, "vendors").closest<HTMLElement>(".ui-rnw__group")!.dataset.group).toBe("running");
+        expect(seen(el)).toBe("1 running · 1 paused · 1 needs you");
+        resume.click();
+        await settle();
+        expect(el.tasks.find((t) => t.id === "vendors")!.status).toBe("running");
+        await expect.poll(() => document.activeElement).toBe(row(el, "vendors").querySelector(".ui-rnw__pause"));
+        expect(actions).toEqual(["pause:vendors", "resume:vendors"]);
+        await expect.poll(() => status(el), { timeout: 4000 }).toContain("Check vendor records resumed");
+      });
+
+    test("prevented, the task keeps its status – the page owns it", async () => {
+      const el = await pausable();
+      await openPanel(el);
+      el.addEventListener("tc-task-action", (e) => e.preventDefault());
+      row(el, "vendors").querySelector<HTMLButtonElement>(".ui-rnw__pause")!.click();
+      await settle();
+      expect(el.tasks.find((t) => t.id === "vendors")!.status).toBe("running");
+      expect(el.open).toBe(true);
+    });
+
+    test("only paused tasks left: the pill says how many are paused, not Nothing running", async () => {
+      const el = await pausable("standard", [{ id: "a", title: "Index the archive", status: "paused", progress: 0.3 }]);
+      expect(seen(el)).toBe("1 paused");
+      expect(pill(el).dataset.state).toBe("busy");
+    });
+
+    test("the wrapper: onTaskAction gets pause and resume; returning false keeps the status", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const calls: string[] = [];
+      let allow = false;
+      await act(async () =>
+        root.render(React.createElement(RunningNow, { tasks: TASKS, now: NOW, pausable: true, defaultOpen: true, onTaskAction: (a, t) => (calls.push(`${a}:${t.id}`), allow) })),
+      );
+      await settle();
+      const el = host.querySelector<TcRunningNow>("tc-running-now")!;
+      row(el, "vendors").querySelector<HTMLButtonElement>(".ui-rnw__pause")!.click();
+      await act(async () => settle());
+      expect(row(el, "vendors").dataset.status).toBe("running");
+      allow = true;
+      row(el, "vendors").querySelector<HTMLButtonElement>(".ui-rnw__pause")!.click();
+      await act(async () => settle());
+      expect(row(el, "vendors").dataset.status).toBe("paused");
+      expect(calls).toEqual(["pause:vendors", "pause:vendors"]);
+      await act(async () => root.unmount());
+    });
+
+    for (const theme of ["light", "dark"] as const)
+      test(`axe: a paused task and Pause buttons, both looks (${theme})`, async () => {
+        const tasks: RunningTask[] = [...TASKS, { id: "paused", title: "Index the archive", agent: "Records agent", status: "paused", progress: 0.3, started: NOW - 120_000 }];
+        const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10; color-scheme: dark; padding: 8px" : "padding: 8px"}>
+          <tc-running-now pausable .tasks=${tasks} .now=${NOW}></tc-running-now>
+          <tc-running-now look="clean" pausable .tasks=${tasks} .now=${NOW}></tc-running-now>
+        </div>`);
+        for (const el of wrap.querySelectorAll<TcRunningNow>("tc-running-now")) {
+          for (const other of wrap.querySelectorAll<TcRunningNow>("tc-running-now")) other.open = false;
+          await settle();
+          await openPanel(el);
+          await finish(wrap);
+          const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+          expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+        }
+      });
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe: no violations in either look, with the panel open (${theme})`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10; color-scheme: dark; padding: 8px" : "padding: 8px"}>

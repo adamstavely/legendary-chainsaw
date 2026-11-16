@@ -71,6 +71,10 @@
         "paused": {
           "type": "boolean",
           "description": "Kept, but not used in answers"
+        },
+        "pending": {
+          "type": "boolean",
+          "description": "Picked up by the assistant on its own – it waits for the person's OK before it's kept"
         }
       },
       "required": [

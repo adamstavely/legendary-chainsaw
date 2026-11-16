@@ -2,9 +2,17 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "@adamstavely/trenchcoat/generative/schemas/tc-switch.json",
   "title": "tc-switch",
-  "description": "Switch for AI product settings.",
+  "description": "On or off for things that apply right away – label and second line, at the start or across a settings row.",
   "type": "object",
   "properties": {
+    "placement": {
+      "type": "string",
+      "enum": [
+        "end",
+        "start"
+      ],
+      "description": "\"start\" (default): the switch before its label; \"end\": the label on the left and the switch at the row's far end"
+    },
     "label": {
       "type": "string",
       "description": "Visible heading or field label."

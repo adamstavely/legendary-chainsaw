@@ -9,7 +9,7 @@
 The side panel of a working session – tools, where it runs, how full its context is, its connectors, outputs, subagents and background tasks, and the changes it has made (uses `tc-panel-card`, `tc-subagent-list`).
 
 - **Element:** `<tc-session-panel>`
-- **Size:** 27.0 KB gzip · 105.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 27.3 KB gzip · 107.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -462,9 +462,9 @@ announced.
 | [environment-list](../components/environment-list.md) · Element it renders | 6.4 KB | – |
 | [meter-row](../components/meter-row.md) · Element it renders | 6.3 KB | – |
 | [panel-card](../components/panel-card.md) · Element it renders | 6.1 KB | – |
-| [switch](../components/switch.md) · Element it renders | 0.7 KB | – |
-| **Added to a page that already has Lit** | **105.7 KB** | **27.0 KB** |
-| With Lit – the first component on a page | 127.8 KB | 34.3 KB |
+| [switch](../components/switch.md) · Element it renders | 2.8 KB | – |
+| **Added to a page that already has Lit** | **107.8 KB** | **27.3 KB** |
+| With Lit – the first component on a page | 129.9 KB | 34.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -472,9 +472,9 @@ announced.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.2 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 5.5 ms | default properties; includes adding its CSS to the document |
+| First render | **0.4 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | re-render with the same data |
+| First on the page | 5.3 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

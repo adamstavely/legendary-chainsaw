@@ -297,6 +297,149 @@ describe("tc-approval-gates", () => {
     await act(async () => root.unmount());
   });
 
+  describe("change it first", () => {
+    const editable = (look = "standard", list: ApprovalGate[] = gates().slice(1)) =>
+      fixture<TcApprovalGates>(html`<tc-approval-gates look=${look} .gates=${list} .now=${NOW}></tc-approval-gates>`);
+    const field = (el: Element, k: string) => el.querySelector<HTMLInputElement & HTMLTextAreaElement>(`.ui-apg__edit-field[data-key="${k}"]`)!;
+    const type = async (input: HTMLInputElement | HTMLTextAreaElement, value: string) => {
+      input.value = value;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      await settle();
+    };
+
+    test("only a request with arguments offers it", async () => {
+      const el = await fixture<TcApprovalGates>(html`<tc-approval-gates .gates=${gates()} .now=${NOW}></tc-approval-gates>`);
+      expect(el.querySelector(".ui-apg__edit")).toBeNull();
+      const ed = await editable();
+      expect(text(btn(ed, "edit"))).toBe("Change it first");
+    });
+
+    for (const look of ["standard", "clean"] as const)
+      test(`${look}: a field per argument; a bad number is caught; Approve with changes sends the edited arguments`, async () => {
+        const el = await editable(look);
+        const decided: GateDecide[] = [];
+        const changes: GatesChange[] = [];
+        el.addEventListener("tc-decide", (e) => decided.push((e as CustomEvent<GateDecide>).detail));
+        el.addEventListener("tc-gates-change", (e) => changes.push((e as CustomEvent<GatesChange>).detail));
+        btn(el, "edit").click();
+        await settle();
+        // The arguments' code block gives way to the fields; focus goes to the first
+        expect(el.querySelector(".ui-apg__gate .ui-ap__code[data-kind='args']")).toBeNull();
+        expect(text(el.querySelector(".ui-apg__editor legend"))).toBe("Change the arguments, then approve");
+        await expect.poll(() => document.activeElement).toBe(field(el, "rows"));
+        expect(field(el, "rows").value).toBe("48210");
+        expect(field(el, "dry_run").type).toBe("checkbox");
+        expect(field(el, "dry_run").checked).toBe(false);
+        await type(field(el, "rows"), "lots");
+        expect(text(el.querySelector('.ui-apg__edit-row[data-changed] .ui-apg__edit-tag'))).toBe("Changed");
+        btn(el, "approve-edited").click();
+        await settle();
+        expect(decided).toEqual([]);
+        expect(field(el, "rows").getAttribute("aria-invalid")).toBe("true");
+        expect(document.getElementById(field(el, "rows").getAttribute("aria-describedby")!)!.textContent).toBe("Enter a number");
+        await expect.poll(() => document.activeElement).toBe(field(el, "rows"));
+        await type(field(el, "rows"), "1000");
+        expect(field(el, "rows").getAttribute("aria-invalid")).toBe("false");
+        field(el, "dry_run").click();
+        await settle();
+        key(field(el, "rows"), "Enter", { ctrlKey: true, metaKey: true });
+        await settle();
+        expect(decided).toHaveLength(1);
+        expect(decided[0]).toMatchObject({ decision: "approved", args: { rows: 1000, dry_run: true }, edited: true });
+        expect(changes[0].gate).toMatchObject({ id: "migration", status: "approved", edited: true, args: { rows: 1000, dry_run: true }, originalArgs: { rows: 48210, dry_run: false } });
+        expect(changes[0]).toMatchObject({ edited: true, args: { rows: 1000, dry_run: true } });
+        const row = el.querySelector<HTMLButtonElement>('.ui-apg__row[data-id="migration"]')!;
+        expect(text(row.querySelector(".ui-apg__row-status"))).toBe("Approved with changes");
+        expect(text(el.querySelector('[role="status"]'))).toContain("Approved with changes: Run the migration.");
+        row.click();
+        await settle();
+        const detail = document.getElementById(row.getAttribute("aria-controls")!)!;
+        expect(text(detail.querySelector(".ui-apg__said"))).toBe("Changed: rows, dry_run");
+        expect([...detail.querySelectorAll(".ui-ap__code-label")].map(text)).toEqual(["Arguments", "As asked"]);
+      });
+
+    test("Escape or Cancel goes back with nothing changed; approving unchanged fields isn't 'with changes'", async () => {
+      const el = await editable();
+      btn(el, "edit").click();
+      await settle();
+      await type(field(el, "rows"), "7");
+      key(field(el, "rows"), "Escape");
+      await settle();
+      expect(el.querySelector(".ui-apg__editor")).toBeNull();
+      await expect.poll(() => document.activeElement).toBe(btn(el, "edit"));
+      btn(el, "edit").click();
+      await settle();
+      expect(field(el, "rows").value).toBe("48210");
+      const decided: GateDecide[] = [];
+      el.addEventListener("tc-decide", (e) => decided.push((e as CustomEvent<GateDecide>).detail));
+      btn(el, "approve-edited").click();
+      await settle();
+      expect(decided[0]).toMatchObject({ decision: "approved", edited: false });
+      const gate = el.gates.find((g) => g.id === "migration")!;
+      expect(gate.edited).toBeUndefined();
+      expect(text(el.querySelector('.ui-apg__row[data-id="migration"] .ui-apg__row-status'))).toBe("Approved");
+    });
+
+    test("nested arguments are JSON; invalid JSON is caught", async () => {
+      const el = await editable("standard", [{ id: "q", title: "Run the query", args: { filter: { region: "north" }, limit: 5 }, status: "open" }]);
+      btn(el, "edit").click();
+      await settle();
+      const json = field(el, "filter");
+      expect(json.tagName).toBe("TEXTAREA");
+      expect(JSON.parse(json.value)).toEqual({ region: "north" });
+      await type(json, "{ region: ");
+      btn(el, "approve-edited").click();
+      await settle();
+      expect(document.getElementById(json.getAttribute("aria-describedby")!)!.textContent).toBe("Enter valid JSON");
+      await type(json, '{ "region": "south" }');
+      btn(el, "approve-edited").click();
+      await settle();
+      expect(el.gates[0]).toMatchObject({ status: "approved", edited: true, args: { filter: { region: "south" }, limit: 5 } });
+    });
+
+    test("React: onGatesChange hears the edited arguments", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const seen: unknown[] = [];
+      await act(async () => root.render(React.createElement(ApprovalGates, { defaultGates: gates().slice(1), now: NOW, onGatesChange: (_g, change) => seen.push({ edited: change.edited, args: change.args, decision: change.decision }) })));
+      await settle(host);
+      const el = host.querySelector<TcApprovalGates>("tc-approval-gates")!;
+      btn(el, "edit").click();
+      await act(async () => settle(host));
+      await type(field(el, "rows"), "12");
+      btn(el, "approve-edited").click();
+      await act(async () => settle(host));
+      expect(seen).toEqual([{ edited: true, args: { rows: 12, dry_run: false }, decision: "approved" }]);
+      await act(async () => root.unmount());
+    });
+
+    test("axe: the editor open and an edited decision, both looks and themes", async () => {
+      const wrap = await fixture(html`<div></div>`);
+      const decidedEdited: ApprovalGate = { id: "d", title: "Send the digest", args: { send_at: "09:30" }, originalArgs: { send_at: "09:05" }, edited: true, status: "approved", decidedAt: min(2) };
+      for (const theme of ["light", "dark"]) {
+        const box = document.createElement("div");
+        box.dataset.tcTheme = theme;
+        box.style.cssText = "padding: 16px; background: var(--tc-surface-base)";
+        for (const look of ["standard", "clean"]) {
+          const el = document.createElement("tc-approval-gates");
+          Object.assign(el, { look, gates: [...gates().slice(1, 2), { id: "q", title: "Run the query", args: { filter: { region: "north" } }, status: "open" }, decidedEdited], now: NOW, expanded: "d" });
+          box.append(el);
+        }
+        wrap.append(box);
+      }
+      await settle(wrap);
+      for (const el of wrap.querySelectorAll<TcApprovalGates>("tc-approval-gates")) btn(el, "edit").click();
+      await settle(wrap);
+      await type(field(wrap, "rows"), "x");
+      btn(wrap.querySelector("tc-approval-gates")!, "approve-edited").click();
+      await settle(wrap);
+      await finish(wrap);
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+  });
+
   test("axe: no violations in either look and theme, with a fold, a note and a decided row open", async () => {
     const wrap = await fixture(html`<div></div>`);
     for (const theme of ["light", "dark"]) {
