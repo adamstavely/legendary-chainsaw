@@ -720,7 +720,7 @@ the token's tint is hidden from screen readers.
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -728,7 +728,7 @@ the token's tint is hidden from screen readers.
 | --- | --- | --- |
 | **This component alone** | 140.1 KB | 32.1 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.8 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -747,8 +747,8 @@ the token's tint is hidden from screen readers.
 | [context-tray](context-tray.md) · Element it renders | 25.2 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **372.7 KB** | **86.8 KB** |
-| With Lit – the first component on a page | 394.1 KB | 93.7 KB |
+| **Added to a page that already has Lit** | **373.2 KB** | **87.0 KB** |
+| With Lit – the first component on a page | 394.6 KB | 93.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -756,11 +756,11 @@ the token's tint is hidden from screen readers.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **5.7 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
+| First render | **5.4 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
 | Typical update | **0.5 ms** | one item of skills replaced |
-| First on the page | 31 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.3 ms | skills: first render, 304 nodes; update 0.2 ms |
-| 1,000 items | 5.1 ms | skills: first render, 304 nodes; update 0.2 ms |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.3 ms | skills: first render, 304 nodes; update 0.1 ms |
+| 1,000 items | 4.3 ms | skills: first render, 304 nodes; update 0.6 ms |
 
 What it renders doesn't grow with skills (tested to 1,000 items).
 

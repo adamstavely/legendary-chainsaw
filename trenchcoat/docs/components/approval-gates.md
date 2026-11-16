@@ -475,7 +475,7 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -500,13 +500,13 @@ the embargo forward a week. Next: Run the station ID migration.” While a decis
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of gates replaced |
-| First on the page | 9.4 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.5 ms | gates: first render, 510 nodes; update 0.3 ms |
-| 1,000 items | 14 ms | gates: first render, 4,110 nodes; update 2.2 ms |
+| First render | **1.0 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of gates replaced |
+| First on the page | 8.7 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.1 ms | gates: first render, 510 nodes; update 0.2 ms |
+| 1,000 items | 13 ms | gates: first render, 4,110 nodes; update 1.7 ms |
 
-1,000 items of gates: 14 ms, 4,110 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of gates: 13 ms, 4,110 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

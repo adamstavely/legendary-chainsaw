@@ -1,0 +1,254 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-agent-sequence.json",
+  "title": "tc-agent-sequence",
+  "description": "One agent run as a sequence diagram: a lifeline per participant and each message an arrow between them.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "A line under the heading – the run or the task"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SequenceParticipant"
+      },
+      "description": "The lifelines, left to right: you, the agents and the tools"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SequenceMessage"
+      },
+      "description": "The messages, in the order they were sent"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SequenceGroup"
+      },
+      "description": "Frames around messages that ran in parallel or were retried"
+    },
+    "openId": {
+      "type": "string",
+      "description": "Id of the message or participant whose details are open"
+    },
+    "live": {
+      "type": "boolean",
+      "description": "A live run: new messages draw themselves across and the diagram follows the newest"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "call": {
+          "type": "string"
+        },
+        "reply": {
+          "type": "string"
+        },
+        "parallel": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "failures": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "took": {
+          "type": "string"
+        },
+        "working": {
+          "type": "string"
+        },
+        "participants": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "sent": {
+          "type": "string"
+        },
+        "received": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "newest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SequenceParticipant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/SequenceParticipantKind"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A few muted words under the name – the model, the role, the service"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "SequenceParticipantKind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "tool",
+        "user"
+      ]
+    },
+    "SequenceMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "Id of the participant that sent it"
+        },
+        "to": {
+          "type": "string",
+          "description": "Id of the participant it went to – the same as `from` for a note to itself"
+        },
+        "kind": {
+          "$ref": "#/definitions/SequenceMessageKind"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it said, in a few words – the tag on its line"
+        },
+        "start": {
+          "type": "number",
+          "description": "When it was sent, in ms from the start of the run"
+        },
+        "end": {
+          "type": "number",
+          "description": "When the answer to it came, in ms from the start of the run"
+        },
+        "group": {
+          "type": "string",
+          "description": "Id of the frame it belongs to (a parallel or retried group)"
+        },
+        "input": {
+          "type": "string",
+          "description": "What went in and what came out – short previews for the details"
+        },
+        "output": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens it used, if it was a model call"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "to",
+        "kind",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "SequenceMessageKind": {
+      "type": "string",
+      "enum": [
+        "call",
+        "error",
+        "reply"
+      ]
+    },
+    "SequenceGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/SequenceGroupKind"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "SequenceGroupKind": {
+      "type": "string",
+      "enum": [
+        "parallel",
+        "retry"
+      ]
+    }
+  }
+}

@@ -532,23 +532,23 @@ changes. Accept or reject it” (focus moves to Accept) or “Couldn't rewrite t
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
 | **This component alone** | 28.4 KB | 9.0 KB |
-| Lit · the library every element is built on, the parts it uses | 19.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| Lit · the library every element is built on, the parts it uses | 19.7 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.1 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **44.5 KB** | **14.0 KB** |
-| With Lit – the first component on a page | 65.2 KB | 20.7 KB |
+| **Added to a page that already has Lit** | **45.0 KB** | **14.3 KB** |
+| With Lit – the first component on a page | 65.7 KB | 21.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -556,11 +556,11 @@ changes. Accept or reject it” (focus moves to Accept) or “Couldn't rewrite t
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.4 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of items replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.2 ms | items: first render, 0 nodes; update 0.0 ms |
-| 1,000 items | 27 ms | items: first render, 0 nodes; update 0.0 ms |
+| First render | **0.6 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **0.0 ms** | one item of items replaced |
+| First on the page | 9.5 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.4 ms | items: first render, 0 nodes; update 0.0 ms |
+| 1,000 items | 11 ms | items: first render, 0 nodes; update 0.0 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 

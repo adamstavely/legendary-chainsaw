@@ -495,7 +495,7 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -503,7 +503,7 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 | --- | --- | --- |
 | **This component alone** | 33.9 KB | 10.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -511,8 +511,8 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **53.2 KB** | **16.4 KB** |
-| With Lit – the first component on a page | 76.3 KB | 23.9 KB |
+| **Added to a page that already has Lit** | **53.7 KB** | **16.6 KB** |
+| With Lit – the first component on a page | 76.9 KB | 24.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -520,12 +520,12 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of tasks replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 8.2 ms | tasks: first render, 10 nodes; update 6.3 ms |
+| First render | **0.2 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | one item of tasks replaced |
+| First on the page | 4.7 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 3.4 ms | tasks: first render, 10 nodes; update 1.7 ms |
 
-Windowed: 10,000 items of tasks render 10 nodes in 8.2 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of tasks render 10 nodes in 3.4 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

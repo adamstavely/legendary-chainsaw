@@ -374,7 +374,7 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -382,7 +382,7 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 | --- | --- | --- |
 | **This component alone** | 26.3 KB | 9.3 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -394,8 +394,8 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | [geo-location](geo-location.md) · Element it renders | 18.8 KB | – |
-| **Added to a page that already has Lit** | **62.7 KB** | **19.0 KB** |
-| With Lit – the first component on a page | 84.3 KB | 26.0 KB |
+| **Added to a page that already has Lit** | **63.3 KB** | **19.2 KB** |
+| With Lit – the first component on a page | 84.8 KB | 26.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -403,11 +403,11 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.5 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of providers replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.6 ms | providers: first render, 6 nodes; update 0.2 ms |
-| 1,000 items | 1.1 ms | providers: first render, 6 nodes; update 0.2 ms |
+| First render | **1.4 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of providers replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.9 ms | providers: first render, 6 nodes; update 0.1 ms |
+| 1,000 items | 0.8 ms | providers: first render, 6 nodes; update 0.1 ms |
 
 What it renders doesn't grow with providers (tested to 1,000 items).
 

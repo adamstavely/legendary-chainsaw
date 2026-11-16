@@ -358,7 +358,7 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -366,7 +366,7 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 | --- | --- | --- |
 | **This component alone** | 20.7 KB | 6.8 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -374,8 +374,8 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **36.9 KB** | **11.7 KB** |
-| With Lit – the first component on a page | 59.5 KB | 19.1 KB |
+| **Added to a page that already has Lit** | **37.4 KB** | **11.9 KB** |
+| With Lit – the first component on a page | 60.0 KB | 19.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -383,13 +383,13 @@ this session”. Changes are announced politely: “Posture: Elevated.”, sever
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.1 ms** | the gallery demo's data, 66 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of terms replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 16 ms | terms: first render, 1,238 nodes; update 2.8 ms |
-| 1,000 items | 83 ms | terms: first render, 12,590 nodes; update 14 ms |
+| First render | **1.0 ms** | the gallery demo's data, 66 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of terms replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.7 ms | terms: first render, 1,238 nodes; update 1.5 ms |
+| 1,000 items | 64 ms | terms: first render, 12,590 nodes; update 17 ms |
 
-1,000 items of terms: 83 ms. It renders every item, so a first render passes 50 ms (a long task) at about 600 items – page or filter longer lists.
+1,000 items of terms: 64 ms. It renders every item, so a first render passes 50 ms (a long task) at about 780 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
