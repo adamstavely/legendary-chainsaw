@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-rate-limit-planner.json",
+  "title": "tc-rate-limit-planner",
+  "description": "Plan agent runs under one API rate limit – the day's load against the limit, overflow hatched, a draggable bar per\nrun and Spread out to lower the peak.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PlannedRun"
+      },
+      "description": "The runs. Changed by dragging, the keys and Spread out unless a tc-runs-change listener calls preventDefault()"
+    },
+    "limit": {
+      "type": "number",
+      "description": "The limit, in tokens per minute"
+    },
+    "day": {
+      "type": "number",
+      "description": "Where the time axis starts, as epoch ms; by default the UTC midnight before the first run"
+    },
+    "hours": {
+      "type": "number",
+      "description": "How many hours the axis covers"
+    },
+    "step": {
+      "type": "number",
+      "description": "The minutes a run moves by, and the chart's resolution"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone times are shown in, e.g. \"Europe/London\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PlannedRun": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string",
+          "description": "The agent that runs it"
+        },
+        "start": {
+          "type": "number",
+          "description": "When it starts, as epoch ms"
+        },
+        "minutes": {
+          "type": "number",
+          "description": "How long it runs, in minutes"
+        },
+        "tokensPerMinute": {
+          "type": "number",
+          "description": "Its load on the limit while it runs"
+        },
+        "fixed": {
+          "type": "boolean",
+          "description": "Must run when it does: drawn, but not dragged or spread"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "start",
+        "minutes",
+        "tokensPerMinute"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

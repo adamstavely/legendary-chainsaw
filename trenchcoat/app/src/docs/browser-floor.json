@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 515
+   "elements": 517
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 515
+   "elements": 517
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 515
+   "elements": 517
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 515
+   "elements": 517
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 515
+   "elements": 517
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 515
+   "elements": 517
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 515
+   "elements": 517
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 514
+   "elements": 516
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 380
+   "elements": 382
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 234
+   "elements": 236
   },
   {
    "id": "resize-observer",
@@ -140,7 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 202
+   "elements": 203
   },
   {
    "id": "intersection-observer",
@@ -198,7 +198,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 74
+   "elements": 76
   },
   {
    "id": "aspect-ratio",
@@ -286,21 +286,7 @@
    },
    "progressive": false,
    "why": "Sizes relative to the component's own width.",
-   "elements": 22
-  },
-  {
-   "id": "relative-time-format",
-   "name": "Intl.RelativeTimeFormat",
-   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
-   "versions": {
-    "chrome": "71",
-    "edge": "79",
-    "firefox": "65",
-    "safari": "14",
-    "safari_ios": "14"
-   },
-   "progressive": false,
-   "elements": 19
+   "elements": 23
   },
   {
    "id": "array-at",
@@ -312,6 +298,20 @@
     "firefox": "90",
     "safari": "15.4",
     "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 20
+  },
+  {
+   "id": "relative-time-format",
+   "name": "Intl.RelativeTimeFormat",
+   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+   "versions": {
+    "chrome": "71",
+    "edge": "79",
+    "firefox": "65",
+    "safari": "14",
+    "safari_ios": "14"
    },
    "progressive": false,
    "elements": 19
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 515
+   "elements": 517
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 514
+   "elements": 516
   },
   {
    "id": "scrollbar-width",

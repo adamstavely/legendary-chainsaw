@@ -21486,6 +21486,109 @@
     "errors": []
    }
   },
+  "flow-builder": {
+   "measuredAt": "2026-11-16",
+   "hash": "ba3fc4ad41913c20",
+   "bundle": {
+    "own": {
+     "min": 33350,
+     "gzip": 9664
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21705
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3110
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "workflow-canvas",
+      "kind": "element",
+      "min": 39943
+     }
+    ],
+    "withoutLit": {
+     "min": 81074,
+     "gzip": 21442
+    },
+    "withLit": {
+     "min": 103781,
+     "gzip": 28892
+    }
+   },
+   "render": {
+    "tag": "tc-flow-builder",
+    "source": "demo",
+    "runs": 7,
+    "cold": 26.3,
+    "first": 3.9,
+    "update": 0.4,
+    "updateKind": "one item of options replaced",
+    "nodes": 257,
+    "scale": {
+     "property": "options",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 4.2,
+       "update": 0.3,
+       "nodes": 257
+      },
+      {
+       "items": 1000,
+       "first": 3.7,
+       "update": 0.4,
+       "nodes": 257
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "footnotes": {
    "measuredAt": "2026-11-11",
    "hash": "e13adf2cf9d2f6f0",
@@ -22151,7 +22254,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-16",
-   "hash": "6287428874c89fce",
+   "hash": "61483d30f33399ee",
    "bundle": {
     "own": {
      "min": 34126,
@@ -22726,7 +22829,7 @@
      {
       "name": "workflow-canvas",
       "kind": "element",
-      "min": 40518
+      "min": 40514
      },
      {
       "name": "text-annotator",
@@ -22907,6 +23010,11 @@
       "name": "handoff-brief",
       "kind": "element",
       "min": 31769
+     },
+     {
+      "name": "flow-builder",
+      "kind": "element",
+      "min": 31264
      },
      {
       "name": "roadmap-timeline",
@@ -23449,6 +23557,11 @@
       "min": 21466
      },
      {
+      "name": "rate-limit-planner",
+      "kind": "element",
+      "min": 21419
+     },
+     {
       "name": "agent-handoff",
       "kind": "element",
       "min": 21331
@@ -23674,6 +23787,11 @@
       "min": 18844
      },
      {
+      "name": "branch-switcher",
+      "kind": "element",
+      "min": 18839
+     },
+     {
       "name": "score-survey",
       "kind": "element",
       "min": 18827
@@ -23682,11 +23800,6 @@
       "name": "spend-limits",
       "kind": "element",
       "min": 18799
-     },
-     {
-      "name": "branch-switcher",
-      "kind": "element",
-      "min": 18791
      },
      {
       "name": "change-impact",
@@ -24826,7 +24939,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 80130
+      "min": 80436
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -25012,6 +25125,11 @@
       "name": "src/generative/schemas/tc-selection-toolbar.json",
       "kind": "other",
       "min": 4495
+     },
+     {
+      "name": "src/generative/schemas/tc-flow-builder.json",
+      "kind": "other",
+      "min": 4490
      },
      {
       "name": "src/generative/schemas/tc-histogram.json",
@@ -26529,6 +26647,11 @@
       "min": 1844
      },
      {
+      "name": "src/generative/schemas/tc-rate-limit-planner.json",
+      "kind": "other",
+      "min": 1844
+     },
+     {
       "name": "src/generative/schemas/tc-side-nav.json",
       "kind": "other",
       "min": 1842
@@ -27275,19 +27398,19 @@
      }
     ],
     "withoutLit": {
-     "min": 12396190,
-     "gzip": 3068362
+     "min": 12456066,
+     "gzip": 3083787
     },
     "withLit": {
-     "min": 12311114,
-     "gzip": 3038988
+     "min": 12370481,
+     "gzip": 3053433
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 5.5,
+    "cold": 6,
     "first": 1.1,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -42612,6 +42735,104 @@
        "first": 55.4,
        "update": 2.2,
        "nodes": 2004
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "rate-limit-planner": {
+   "measuredAt": "2026-11-16",
+   "hash": "9cbc35c9d2564d8b",
+   "bundle": {
+    "own": {
+     "min": 23422,
+     "gzip": 7801
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21080
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 31058,
+     "gzip": 10034
+    },
+    "withLit": {
+     "min": 53403,
+     "gzip": 17419
+    }
+   },
+   "render": {
+    "tag": "tc-rate-limit-planner",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.8,
+    "first": 4.6,
+    "update": 1.5,
+    "updateKind": "one item of runs replaced",
+    "nodes": 90,
+    "scale": {
+     "property": "runs",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 20.2,
+       "update": 11,
+       "nodes": 736
+      },
+      {
+       "items": 1000,
+       "first": 179,
+       "update": 140.7,
+       "nodes": 6856
       }
      ]
     },

@@ -1,0 +1,556 @@
+{
+ "elements": [
+  {
+   "tag": "tc-rate-limit-planner",
+   "className": "TcRateLimitPlanner",
+   "description": "Plan agent runs under one API rate limit – the day's load against the limit, overflow hatched, a draggable bar per\nrun and Spread out to lower the peak.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Rate limit plan\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "runs",
+     "attribute": null,
+     "type": "PlannedRun[]",
+     "default": "[]",
+     "description": "The runs. Changed by dragging, the keys and Spread out unless a tc-runs-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "limit",
+     "attribute": "limit",
+     "type": "number",
+     "default": "0",
+     "description": "The limit, in tokens per minute",
+     "readonly": false
+    },
+    {
+     "name": "day",
+     "attribute": "day",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Where the time axis starts, as epoch ms; by default the UTC midnight before the first run",
+     "readonly": false
+    },
+    {
+     "name": "hours",
+     "attribute": "hours",
+     "type": "number",
+     "default": "24",
+     "description": "How many hours the axis covers",
+     "readonly": false
+    },
+    {
+     "name": "step",
+     "attribute": "step",
+     "type": "number",
+     "default": "15",
+     "description": "The minutes a run moves by, and the chart's resolution",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and times, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The time zone times are shown in, e.g. \"Europe/London\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The peak, when it is, and the stretches over the limit",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-runs-change",
+     "detail": "",
+     "description": "A run was moved, or Spread out proposed new start times ({ runs, change, id }: RateLimitRunsChange); cancelable – prevented, `runs` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "peakWords",
+     "params": "",
+     "returns": "void",
+     "description": "\"Peak 520K a minute at 01:15 – 30% over the limit\" or \"Peak 310K a minute at 04:00 – 78% of the limit\""
+    },
+    {
+     "name": "overWords",
+     "params": "",
+     "returns": "void",
+     "description": "\"Over the limit for 1 h 15 min: 01:00–02:15\" or \"Under the limit all day\""
+    },
+    {
+     "name": "valueText",
+     "params": "r: PlannedRun",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "moveTo",
+     "params": "id: string, start: number, announce: unknown",
+     "returns": "void",
+     "description": "Moves a run to start at `start`, snapped to `step` and kept inside the day"
+    },
+    {
+     "name": "spread",
+     "params": "",
+     "returns": "void",
+     "description": "Proposes start times that lower the peak, and applies them unless the page prevents it"
+    }
+   ],
+   "ui": "rlp",
+   "cssProperties": [
+    {
+     "name": "--tc-rlp-names",
+     "value": "148px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rlp-chart-h",
+     "value": "140px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rlp-bar-h",
+     "value": "18px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rlp-min",
+     "value": "640px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-rlp-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "rateLoad",
+   "signature": "rateLoad(runs: readonly PlannedRun[], from: number, minutes: number, step: unknown): number[]",
+   "description": "The total load in each `step`-minute slot from `from` for `minutes`"
+  },
+  {
+   "name": "spreadRuns",
+   "signature": "spreadRuns(runs: readonly PlannedRun[], { day, hours = 24, step = 15 }: { day: number; hours?: number; step?: number }): PlannedRun[]",
+   "description": "Start times that lower the day's peak: fixed runs stay; the others, biggest first, each go where the load they'd add\nto is lowest, nearest their own start on a tie. Runs come back in the order given"
+  }
+ ],
+ "react": [
+  {
+   "component": "RateLimitPlanner",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "runs",
+     "type": "PlannedRun[]",
+     "optional": true,
+     "description": "The runs – controlled when given"
+    },
+    {
+     "name": "defaultRuns",
+     "type": "PlannedRun[]",
+     "optional": true,
+     "description": "The runs on mount when `runs` isn't controlled"
+    },
+    {
+     "name": "onRunsChange",
+     "type": "(runs: PlannedRun[], change: RateLimitRunsChange[\"change\"], id: string | null) => void",
+     "optional": true,
+     "description": "A run was moved, or Spread out proposed new start times"
+    }
+   ],
+   "hides": [
+    "heading",
+    "runs",
+    "children"
+   ],
+   "events": {
+    "tc-runs-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-rate-limit-planner",
+   "className": "TcRateLimitPlanner",
+   "module": "@adamstavely/trenchcoat/rate-limit-planner",
+   "data": [
+    "runs"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "limit",
+     "attribute": "limit"
+    },
+    {
+     "name": "day",
+     "attribute": "day"
+    },
+    {
+     "name": "hours",
+     "attribute": "hours"
+    },
+    {
+     "name": "step",
+     "attribute": "step"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-runs-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "runs",
+     "event": "tc-runs-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 31058,
+  "gzip": 10034
+ }
+}

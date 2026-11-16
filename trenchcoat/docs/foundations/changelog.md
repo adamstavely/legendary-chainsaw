@@ -2,6 +2,11 @@
 
 # Changelog
 
+## 0.33.0 – Flow Builder and Rate Limit Planner
+
+- **Flow Builder:** an automation built in place as a top-down flow – a + on every line opens a short step menu, If / else forks into named paths that join below, steps renamed, moved and removed with Undo and Redo, and a test run that sends a light down the line into the working step.
+- **Rate Limit Planner:** plan when agent runs happen under one API rate limit – the day's load as a stepped area against the limit with the overflow hatched, the peak and time over in words, a bar per run to drag or move with the arrow keys, fixed runs, and Spread out to lower the peak.
+
 ## 0.32.0 – Memory Graph, Agent Crew and Run Controls
 
 - **Memory Graph:** what an agent remembers and the tools it can reach, on a ring round it – each memory with the file, chat or email it came from, each tool with what it may do where, joined by curved connectors; a light runs out to the tool in use and in from what it recalls or learns. Switch any card off, forget a memory with Undo, or add a file or connect a tool from the agent. Narrow, it becomes the agent over two lists.
