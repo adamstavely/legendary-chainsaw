@@ -453,7 +453,7 @@ confirms it ("Added Condition"). As a popover, the panel is a dialog named by th
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -461,7 +461,7 @@ confirms it ("Added Condition"). As a popover, the panel is a dialog named by th
 | --- | --- | --- |
 | **This component alone** | 17.7 KB | 6.3 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -469,8 +469,8 @@ confirms it ("Added Condition"). As a popover, the panel is a dialog named by th
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | [workflow-canvas](workflow-canvas.md) · Element it renders | 39.0 KB | – |
-| **Added to a page that already has Lit** | **72.8 KB** | **21.2 KB** |
-| With Lit – the first component on a page | 95.0 KB | 28.5 KB |
+| **Added to a page that already has Lit** | **73.4 KB** | **21.4 KB** |
+| With Lit – the first component on a page | 95.5 KB | 28.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -478,13 +478,13 @@ confirms it ("Added Condition"). As a popover, the panel is a dialog named by th
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 187 DOM nodes – to layout, median of 7 |
+| First render | **1.2 ms** | the gallery demo's data, 187 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | one item of items replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.7 ms | items: first render, 857 nodes; update 0.5 ms |
-| 1,000 items | 28 ms | items: first render, 7,997 nodes; update 3.8 ms |
+| First on the page | 10 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.4 ms | items: first render, 857 nodes; update 0.4 ms |
+| 1,000 items | 27 ms | items: first render, 7,997 nodes; update 3.6 ms |
 
-1,000 items of items: 28 ms, 7,997 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of items: 27 ms, 7,997 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

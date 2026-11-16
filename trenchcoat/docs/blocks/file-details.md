@@ -431,7 +431,7 @@ itself, including who isn't authorized in the share panel.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -439,7 +439,7 @@ itself, including who isn't authorized in the share panel.
 | --- | --- | --- |
 | **This piece alone** | 8.8 KB | 3.7 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 4.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -453,8 +453,8 @@ itself, including who isn't authorized in the share panel.
 | [share-panel](../components/share-panel.md) · Element it renders | 25.3 KB | – |
 | [file-summary](../components/file-summary.md) · Element it renders | 24.0 KB | – |
 | [team-flag-picker](../components/team-flag-picker.md) · Element it renders | 7.9 KB | – |
-| **Added to a page that already has Lit** | **123.7 KB** | **33.4 KB** |
-| With Lit – the first component on a page | 146.0 KB | 40.9 KB |
+| **Added to a page that already has Lit** | **124.2 KB** | **33.7 KB** |
+| With Lit – the first component on a page | 146.5 KB | 41.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -462,9 +462,9 @@ itself, including who isn't authorized in the share panel.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | default properties, 43 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| First render | **1.6 ms** | default properties, 43 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | re-render with the same data |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

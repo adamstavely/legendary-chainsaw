@@ -533,15 +533,15 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
 | **This component alone** | 82.5 KB | 20.9 KB |
-| Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| Lit · the library every element is built on, the parts it uses | 20.7 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/calendar-layout` · Shared Trenchcoat code | 2.6 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -552,8 +552,8 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **101.4 KB** | **27.2 KB** |
-| With Lit – the first component on a page | 123.1 KB | 34.2 KB |
+| **Added to a page that already has Lit** | **101.9 KB** | **27.4 KB** |
+| With Lit – the first component on a page | 123.7 KB | 34.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -561,11 +561,11 @@ reason, such as "This calendar is read-only: Audit Summit (iCal feed)".
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **9.1 ms** | the gallery demo's data, 1,368 DOM nodes – to layout, median of 7 |
+| First render | **9.0 ms** | the gallery demo's data, 1,368 DOM nodes – to layout, median of 7 |
 | Typical update | **1.5 ms** | one item of events replaced |
 | First on the page | 26 ms | default properties; includes adding its CSS to the document |
-| 100 items | 16 ms | events: first render, 2,008 nodes; update 2.0 ms |
-| 1,000 items | 82 ms | events: first render, 9,208 nodes; update 9.0 ms |
+| 100 items | 15 ms | events: first render, 2,008 nodes; update 2.0 ms |
+| 1,000 items | 82 ms | events: first render, 9,208 nodes; update 8.6 ms |
 
 1,000 items of events: 82 ms. It renders every item, so a first render passes 50 ms (a long task) at about 610 items – page or filter longer lists.
 

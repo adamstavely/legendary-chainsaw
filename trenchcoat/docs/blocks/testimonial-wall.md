@@ -442,7 +442,7 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -458,10 +458,10 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **38.8 KB** | **12.4 KB** |
-| With Lit – the first component on a page | 58.8 KB | 18.9 KB |
+| **Added to a page that already has Lit** | **39.1 KB** | **12.5 KB** |
+| With Lit – the first component on a page | 59.1 KB | 19.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -469,9 +469,9 @@ reads “Rated 4 out of 5”, the verified mark “Verified customer”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | default properties, 21 DOM nodes – to layout, median of 7 |
+| First render | **0.8 ms** | default properties, 21 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 3 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

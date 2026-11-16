@@ -481,7 +481,7 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -489,15 +489,15 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 | --- | --- | --- |
 | **This component alone** | 24.6 KB | 8.0 KB |
 | Lit · the library every element is built on, the parts it uses | 22.0 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **41.3 KB** | **13.0 KB** |
-| With Lit – the first component on a page | 64.4 KB | 20.6 KB |
+| **Added to a page that already has Lit** | **41.8 KB** | **13.2 KB** |
+| With Lit – the first component on a page | 64.9 KB | 20.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -505,11 +505,11 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.5 ms** | the gallery demo's data, 11 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of tasks replaced |
-| First on the page | 8.6 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.4 ms | tasks: first render, 11 nodes; update 0.1 ms |
-| 1,000 items | 0.9 ms | tasks: first render, 11 nodes; update 0.1 ms |
+| First render | **1.4 ms** | the gallery demo's data, 11 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of tasks replaced |
+| First on the page | 11 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.5 ms | tasks: first render, 11 nodes; update 0.2 ms |
+| 1,000 items | 3.1 ms | tasks: first render, 11 nodes; update 0.5 ms |
 
 What it renders doesn't grow with tasks (tested to 1,000 items).
 

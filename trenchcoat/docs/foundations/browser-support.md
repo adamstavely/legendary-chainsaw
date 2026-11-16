@@ -10,11 +10,11 @@ features that set those versions, and the features it uses only where they exist
 
 | Browser | Works fully from | Set by | At that version |
 | --- | --- | --- | --- |
-| Chrome | **123** | light-dark() | 508 components |
-| Edge | **123** | light-dark() | 508 components |
+| Chrome | **123** | light-dark() | 512 components |
+| Edge | **123** | light-dark() | 512 components |
 | Firefox | **121** | :has() | 111 components |
-| Safari (macOS) | **17.5** | light-dark() | 508 components |
-| Safari (iOS, iPadOS) | **17.5** | light-dark() | 508 components |
+| Safari (macOS) | **17.5** | light-dark() | 512 components |
+| Safari (iOS, iPadOS) | **17.5** | light-dark() | 512 components |
 
 *Tested in Chromium 156, Firefox 157 and WebKit 27.2 (Playwright 1.64.0).*
 
@@ -22,15 +22,15 @@ features that set those versions, and the features it uses only where they exist
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Components | Kind |
 | --- | --- | --- | --- | --- | --- | --- |
-| light-dark() | 123 | 120 | 17.5 | 17.5 | 508 | Needed |
-| color-mix() | 111 | 113 | 16.2 | 16.2 | 508 | Needed |
-| :is() and :where() | 88 | 78 | 14 | 14 | 508 | Needed |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | 507 | Needed |
-| Container size queries | 105 | 110 | 16 | 16 | 375 | Needed |
-| inset | 87 | 66 | 14.1 | 14.1 | 229 | Needed |
+| light-dark() | 123 | 120 | 17.5 | 17.5 | 512 | Needed |
+| color-mix() | 111 | 113 | 16.2 | 16.2 | 512 | Needed |
+| :is() and :where() | 88 | 78 | 14 | 14 | 512 | Needed |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | 511 | Needed |
+| Container size queries | 105 | 110 | 16 | 16 | 379 | Needed |
+| inset | 87 | 66 | 14.1 | 14.1 | 231 | Needed |
 | ResizeObserver | 64 | 69 | 13.1 | 13.4 | 199 | Needed |
+| IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 174 | Needed |
 | inert | 102 | 112 | 15.5 | 15.5 | 173 | Needed |
-| IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 172 | Needed |
 | :has() | 105 | 121 | 15.4 | 15.4 | 111 | Needed |
 | translate, scale and rotate properties | 104 | 72 | 14.1 | 14.1 | 74 | Needed |
 | aspect-ratio | 88 | 89 | 15 | 15 | 72 | Needed |
@@ -40,15 +40,15 @@ features that set those versions, and the features it uses only where they exist
 | Form association (ElementInternals) | 77 | 98 | 16.4 | 16.4 | 36 | Needed |
 | Container query units (cqi, cqw…) | 105 | 110 | 16 | 16 | 22 | Needed |
 | Intl.RelativeTimeFormat | 71 | 65 | 14 | 14 | 19 | Needed |
-| Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 17 | Needed |
+| Array.prototype.at() | 92 | 90 | 15.4 | 15.4 | 18 | Needed |
 | <dialog> and showModal() | 37 | 98 | 15.4 | 15.4 | 17 | Needed |
 | structuredClone() | 98 | 94 | 15.4 | 15.4 | 11 | Needed |
 | conic-gradient() | 69 | 83 | 12.1 | 12.1 | 6 | Needed |
 | ARIA reflection (element.ariaBusy…) | 81 | 119 | 12.1 | 12.1 | 2 | Needed |
-| forced-colors media query | 89 | 89 | 16 | 16 | 508 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
-| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 507 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
+| forced-colors media query | 89 | 89 | 16 | 16 | 512 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 511 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | 131 | Progressive – Scrollbars keep the browser's default width. |
-| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 91 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
+| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 92 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
 | Popover API | 114 | 125 | 17 | 18.3 | 39 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
 | @property | 85 | 128 | 16.4 | 16.4 | 28 | Progressive – The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
 | field-sizing | 123 | 152 | 26.2 | 26.2 | 24 | Progressive – Text fields grow with their text. Without it they keep their minimum height and scroll. |
