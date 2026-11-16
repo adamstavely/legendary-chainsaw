@@ -2,6 +2,13 @@
 
 # Changelog
 
+## 0.34.0 – Agent blocks: Mission Control, Mission Timeline, Run Inspector and Live Session
+
+- **Mission Control:** the home of an agent product – what happened since you looked as a small chart and a line in words, who runs under whom (Agent Tree), and what needs you on the side (Decision Inbox), with one status filter for all three; narrow, what needs you comes first.
+- **Mission Timeline:** the same home on one clock – every agent on its own lane of a live timeline (Agent Lanes), under the same shared filter.
+- **Run Inspector:** one multi-agent run on one screen – status, duration, cost, tokens, calls and errors on top, who started whom as agent cards with each agent's calls as small bars, and a call opened right under its row with its error first (Tool Call Card).
+- **Live Session:** work with a team of agents while they work – their conversation with a composer (Collaboration Stream), the team's plan ticking off beside it and the shared context under it; picking an agent points at its steps and messages.
+
 ## 0.33.0 – Flow Builder and Rate Limit Planner
 
 - **Flow Builder:** an automation built in place as a top-down flow – a + on every line opens a short step menu, If / else forks into named paths that join below, steps renamed, moved and removed with Undo and Redo, and a test run that sends a light down the line into the working step.

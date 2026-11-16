@@ -8,7 +8,7 @@
 
 Larger compositions such as a KPI board, a pricing table, an AI workspace or a task board. They combine several components with layout and sample data – drop one in to get a whole section of a page.
 
-23 items · 23 files
+27 items · 27 files
 
 - [Access Review](access-review.md) – A periodic check of who can see what – keep or remove each one, with anyone flagged first and a written reason for keeping them
 - [Agent Gallery](agent-gallery.md) – Slim gradient panels with one open product screen in the middle – pick a panel and it glides open (uses `button`)
@@ -23,12 +23,16 @@ Larger compositions such as a KPI board, a pricing table, an AI workspace or a t
 - [Header Nav](header-nav.md) – The right end of an app header – notifications bell, app picker and the person's avatar, which opens their account card; one popover at a time, the three as one set of round buttons, and it fits a 320 px header (uses `@adamstavely/trenchcoat/react`: `notifications`, `app-picker`, `profile-menu`)
 - [Invoice & Credit Note](invoice-credit.md) – An invoice and its credit note stacked like paper – switch between them, pick lines to credit, adjust amounts and issue (uses `button`, `segmented-control`)
 - [KPI Board](kpi-board.md) – The top of a dashboard – three trend cards, an overview chart that compares this period with the last, and a focus card; hover shows any day's value and every number rolls when the range changes (uses `button`)
+- [Live Session](live-session.md) – Work with a team of agents while they work – their conversation with a composer in the middle, the team's plan ticking off beside it, the shared context under it; picking an agent points at its steps and its messages (uses `collaboration-stream`, `meter-row`, `segmented-control`)
 - [Logo Marquee](logo-marquee.md) – The endless “Trusted by” strip – a seamless loop that eases to a stop on hover, scrubs with inertia and lifts the hovered logo to colour, with a Pause / Play button (uses `button`)
 - [Metrics Dashboard](metrics-dashboard.md) – Sales overview – KPI cards pick the metric, one chart switches between dotted line and bars, with top products and channels (uses `button`, `segmented-control`)
+- [Mission Control](mission-control.md) – The home of an agent product – what happened since you looked as a small chart and a line in words, who runs under whom, and what needs you on the side, with one status filter (All, Running, Waiting, Failed) for all three; narrow, what needs you comes first (uses `agent-tree`, `decision-inbox`, `segmented-control`)
+- [Mission Timeline](mission-timeline.md) – The home of an agent product on one clock – what happened since you looked, every agent on its own lane of a live timeline, and what needs you, under one status filter for all three (uses `agent-lanes`, `decision-inbox`, `segmented-control`)
 - [Oversight Home](oversight-home.md) – A role's home dashboard – the headline that needs doing, the one thing first, KPI charts against last week and the service posture table with a state filter; switch roles at the top (uses `@adamstavely/trenchcoat/react`: `segmented-control`, `kpi-chart`, `data-table`, `button`)
 - [Pricing Plans](pricing-plans.md) – Pricing section with a monthly / yearly switch, three plan cards and collapsible details (uses `segmented-control` and `button`)
 - [Publish Readiness](publish-readiness.md) – What must pass before something is released – a summary card that opens a dialog with the checks as a progress tracker, sign-offs to give, and each blocker linked (uses `@adamstavely/trenchcoat/react`: `dialog`, `progress-tracker`, `button`)
 - [Red-team Finding](red-team-finding.md) – What an adversarial test broke – a findings list, then the picked one's severity, failed invariants, scenario, evidence and a response timeline with undo (uses `@adamstavely/trenchcoat/react`: `agent-ledger`, `button`)
+- [Run Inspector](run-inspector.md) – One multi-agent run on one screen – its status, duration, cost, tokens, calls and errors on top, who started whom as agent cards with each agent's calls as small bars, and a call opened right under its row with its error first (uses `tool-call-card`)
 - [Session Panel](session-panel.md) – The side panel of a working session – tools, where it runs, how full its context is, its connectors, outputs, subagents and background tasks, and the changes it has made (uses `tc-panel-card`, `tc-subagent-list`).
 - [Task Board](task-board.md) – Kanban board with drag and drop, quick add, a detail panel, search, label filters and a compact view (uses `button`)
 - [Testimonial Wall](testimonial-wall.md) – The landing-page wall of quotes – columns that scroll endlessly in opposite directions, ease to a stop on hover and scrub with inertia, with a Pause / Play button (uses `button`)

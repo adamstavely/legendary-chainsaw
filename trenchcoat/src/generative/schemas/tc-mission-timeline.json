@@ -1,0 +1,321 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-mission-timeline.json",
+  "title": "tc-mission-timeline",
+  "description": "The home of an agent product on one clock – what happened since you looked, every agent on its own lane, and what\nneeds you, under one status filter.",
+  "type": "object",
+  "properties": {
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LaneAgent"
+      },
+      "description": "One lane per agent – Agent Lanes' `agents`"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LaneTask"
+      },
+      "description": "The agents' tasks – Agent Lanes' `tasks`"
+    },
+    "span": {
+      "type": "number",
+      "description": "How much time the timeline shows, in ms – 30 minutes by default, also when set to undefined"
+    },
+    "rate": {
+      "type": "number",
+      "description": "How fast the timeline's clock runs against real time, for demos – Agent Lanes' `rate`"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "A task's details show Open, which fires tc-open"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The block's heading – \"Mission control\" or \"Mission timeline\" by default"
+    },
+    "since": {
+      "type": "number",
+      "description": "Since when \"Since you looked\" counts, epoch ms – by default the first event"
+    },
+    "now": {
+      "type": "number",
+      "description": "The end of the period, epoch ms – by default the last event. The block reads no clock of its own"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MissionEvent"
+      },
+      "description": "What happened in the period, for the chart and the line in words"
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MissionDecision"
+      },
+      "description": "The decisions waiting on you, shown on the side"
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/DecisionAnswer"
+      },
+      "description": "The decisions answered so far, by id – the Decision Inbox's own state, passed through"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "all",
+        "failed",
+        "running",
+        "waiting"
+      ],
+      "description": "Which agents show: all, or only running, waiting or failed ones. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "A locale for times, e.g. \"en-GB\""
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "since": {
+          "type": "string"
+        },
+        "sinceTitle": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failedEvents": {
+          "type": "string"
+        },
+        "needsYou": {
+          "type": "string"
+        },
+        "needYou": {
+          "type": "string"
+        },
+        "nothing": {
+          "type": "string"
+        },
+        "needsYouTitle": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "agents": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LaneAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model or role, shown under the name, e.g. \"Opus 5.5\""
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "LaneTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/LaneTaskStatus"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Leave it out while the task runs or waits – it then reaches \"now\""
+        },
+        "handoffTo": {
+          "type": "string",
+          "description": "Id of the task another agent picked up from this one – drawn as a hand-off curve"
+        },
+        "ask": {
+          "type": "string",
+          "description": "What exactly needs a decision, shown above Approve / Reject"
+        },
+        "summary": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What got done so far, a few words each – shown in the details popover"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          },
+          "description": "Small logos of the tools it works in (cloned), shown before the title – up to three"
+        }
+      },
+      "required": [
+        "id",
+        "agentId",
+        "title",
+        "status",
+        "start"
+      ],
+      "additionalProperties": false
+    },
+    "LaneTaskStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "running",
+        "waiting"
+      ]
+    },
+    "MissionEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agentId": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened, in epoch ms"
+        },
+        "kind": {
+          "$ref": "#/definitions/RecapKind"
+        },
+        "label": {
+          "type": "string",
+          "description": "What happened, for its marker: \"Tax ID check timed out\""
+        },
+        "notable": {
+          "type": "boolean",
+          "description": "Gets a marker over the chart – by default failed and needs-you events do, done ones don't"
+        }
+      },
+      "required": [
+        "at",
+        "kind"
+      ],
+      "description": "Something that happened since you looked; `agentId` ties it to an agent, so the filter can keep or drop it"
+    },
+    "RecapKind": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "needs-you"
+      ]
+    },
+    "MissionDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agentId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Short context under the title"
+        },
+        "primary": {
+          "type": "string",
+          "description": "Main answer, shown as the dark button"
+        },
+        "secondary": {
+          "type": "string",
+          "description": "Other answer, shown as the light button"
+        },
+        "collapsed": {
+          "type": "boolean",
+          "description": "Starts folded to one muted line – click to open"
+        }
+      },
+      "required": [
+        "id",
+        "primary",
+        "secondary",
+        "title"
+      ],
+      "description": "A decision waiting on you; `agentId` ties it to the agent that asks"
+    },
+    "DecisionAnswer": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary"
+      ]
+    }
+  }
+}

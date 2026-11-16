@@ -1,0 +1,322 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-live-session.json",
+  "title": "tc-live-session",
+  "description": "Work with a team of agents while they work – their conversation, the team's plan ticking off beside it, and the\nshared context; picking an agent points at its steps.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CollabParticipant"
+      },
+      "description": "You and the agents – the Collaboration Stream's `participants`"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CollabMessage"
+      },
+      "description": "What they said – the Collaboration Stream's `messages`"
+    },
+    "you": {
+      "type": "string",
+      "description": "Your participant id"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LiveSessionStep"
+      },
+      "description": "The team's plan, in order"
+    },
+    "context": {
+      "type": "number",
+      "description": "How full the shared context is, from 0 to 1; without it, the meter is left out"
+    },
+    "contextText": {
+      "type": "string",
+      "description": "The meter's value in words, e.g. \"124k of 200k tokens\" – a percentage by default"
+    },
+    "agent": {
+      "type": "string",
+      "description": "The picked agent's id, or null for the whole team. Changed by the user unless a tc-agent-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "A locale for the stream's times"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "A time zone for the stream's times, e.g. \"Europe/Vienna\""
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "team": {
+          "type": "string"
+        },
+        "pick": {
+          "type": "string"
+        },
+        "plan": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "pending": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "agentSteps": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CollabParticipant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "agent",
+            "person"
+          ],
+          "description": "A person or an agent – people get round avatars, agents square ones"
+        },
+        "model": {
+          "type": "string",
+          "description": "The agent's model, e.g. \"Sonnet 5.5\""
+        },
+        "initials": {
+          "type": "string",
+          "description": "The initials to show when there's no avatar – defaults to the name's"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "CollabMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "A participant's id"
+        },
+        "to": {
+          "type": "string",
+          "description": "A participant's id, or \"everyone\""
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was sent, in epoch ms"
+        },
+        "text": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/CollabMessageKind",
+          "description": "\"handoff\" and \"event\" are slim rows; \"question\" to you is tagged \"Needs you\" and gets an answer box"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CollabFile"
+          }
+        },
+        "details": {
+          "$ref": "#/definitions/CollabDetails"
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "Still being written: a caret after the text"
+        },
+        "answered": {
+          "type": "boolean",
+          "description": "A question that's been answered – the answer box goes"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "to",
+        "at",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "CollabMessageKind": {
+      "type": "string",
+      "enum": [
+        "event",
+        "handoff",
+        "message",
+        "question"
+      ]
+    },
+    "CollabFile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "preview": {
+          "type": "string",
+          "description": "What the preview shows: text (kept as written, in a monospace block) or an element (cloned)"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "CollabDetails": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number",
+          "description": "In the currency `formatCost` writes"
+        },
+        "ms": {
+          "type": "number",
+          "description": "How long the message took, in ms"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CollabTool"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CollabTool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The tool's name, e.g. \"web_search\""
+        },
+        "summary": {
+          "type": "string",
+          "description": "What the call did, e.g. \"6 searches – station records 2016–2025\""
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CollabToolResult"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "CollabToolResult": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "LiveSessionStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": "string",
+          "description": "The agent the step belongs to – a participant's id"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentPlanStepStatus"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quieter line under the title"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentPlanStepStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "done",
+        "failed",
+        "pending",
+        "skipped"
+      ]
+    }
+  }
+}

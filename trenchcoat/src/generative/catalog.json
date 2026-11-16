@@ -2299,6 +2299,14 @@
     "events": []
   },
   {
+    "tag": "tc-live-session",
+    "name": "LiveSession",
+    "description": "Work with a team of agents while they work – their conversation, the team's plan ticking off beside it, and the",
+    "events": [
+      "tc-agent-change"
+    ]
+  },
+  {
     "tag": "tc-logo-marquee",
     "name": "LogoMarquee",
     "description": "The endless \"Trusted by\" strip: rows of logos that loop, ease to a stop on hover, scrub with inertia and pause for good.",
@@ -2435,6 +2443,22 @@
       "tc-chart-change",
       "tc-compare-change",
       "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-mission-control",
+    "name": "MissionControl",
+    "description": "The home of an agent product – what happened since you looked, who runs under whom, and what needs you, under one",
+    "events": [
+      "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-mission-timeline",
+    "name": "MissionTimeline",
+    "description": "The home of an agent product on one clock – what happened since you looked, every agent on its own lane, and what",
+    "events": [
+      "tc-filter-change"
     ]
   },
   {
@@ -3414,6 +3438,14 @@
       "tc-sample-change",
       "tc-cap-change",
       "tc-start"
+    ]
+  },
+  {
+    "tag": "tc-run-inspector",
+    "name": "RunInspector",
+    "description": "One multi-agent run on one screen – its numbers, who started whom as agent cards, each agent's calls as small bars,",
+    "events": [
+      "tc-selected-change"
     ]
   },
   {
