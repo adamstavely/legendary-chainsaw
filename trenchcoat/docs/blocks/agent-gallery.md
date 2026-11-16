@@ -439,7 +439,7 @@ The arrows are named "Previous agent" and "Next agent".
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -453,10 +453,10 @@ The arrows are named "Previous agent" and "Next agent".
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **51.3 KB** | **15.1 KB** |
-| With Lit – the first component on a page | 73.1 KB | 22.3 KB |
+| **Added to a page that already has Lit** | **51.6 KB** | **15.2 KB** |
+| With Lit – the first component on a page | 73.3 KB | 22.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -464,9 +464,9 @@ The arrows are named "Previous agent" and "Next agent".
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.9 ms** | default properties, 865 DOM nodes – to layout, median of 7 |
+| First render | **4.4 ms** | default properties, 865 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | re-render with the same data |
-| First on the page | 39 ms | default properties; includes adding its CSS to the document |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

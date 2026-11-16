@@ -50,13 +50,13 @@
         "model": {
           "type": "string"
         },
+        "user": {
+          "type": "string"
+        },
         "team": {
           "type": "string"
         },
         "feature": {
-          "type": "string"
-        },
-        "user": {
           "type": "string"
         }
       },

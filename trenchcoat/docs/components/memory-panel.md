@@ -9,7 +9,7 @@
 What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 
 - **Element:** `<tc-memory-panel>`
-- **Size:** 16.7 KB gzip · 73.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.6 KB gzip · 76.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -32,11 +32,17 @@ category, each with where it came from and when. People can filter by category o
 pause it so it isn't used in answers, or forget it – with Undo on the tray for a few seconds. A master switch turns
 memory off without deleting anything, and “New memory” adds one by hand.
 
+What the assistant picks up on its own can wait for the person's OK. Give a memory `pending: true` and it isn't kept
+yet: it sits at the top under “Waiting for your OK”, outside its category and the counts, with Keep and Don't keep.
+Either fires a cancelable `tc-consent` ({ memory, keep }); unless prevented, Keep moves it into its category and Don't
+keep drops it – through `tc-memories-change` like every other change, and `onConsent` when it's given.
+
 ### When to use
 
 - A settings page or side panel where people review and correct what the assistant has learned about them.
 - Giving people control over personal data the product keeps – pause, forget and an off switch in one place.
 - Up to a few dozen short facts; the list scrolls past `maxHeight`.
+- Asking before the assistant keeps something it noticed on its own, with `pending` memories.
 
 ### When not to use
 
@@ -52,8 +58,9 @@ memory off without deleting anything, and “New memory” adds one by hand.
 2. **Filters** `.ui-mp__chips` – All and one chip per category, with counts; search sits beside them
 3. **Memory** `.ui-mp__item` – the fact, where it came from and when, and Paused
 4. **Actions** `.ui-mp__acts` – Edit, Pause or Resume, and Forget
-5. **New memory** `.ui-mp__add` – unfolds into an editor with a category picker
-6. **Tray** `.ui-mp__foot` – the counts or what you point at, then Undo after a forget
+5. **Waiting for your OK** `.ui-mp__waiting` – memories the assistant picked up itself, each with Keep and Don't keep
+6. **New memory** `.ui-mp__add` – unfolds into an editor with a category picker
+7. **Tray** `.ui-mp__foot` – the counts (and how many wait) or what you point at, then Undo after a forget
 
 ## Looks
 
@@ -80,7 +87,9 @@ the switch keeps only its track.
     { id: "w1", category: "Work", text: "Product designer at a fintech startup in Berlin", source: "From chat", date: "Sep 28" },
     { id: "p1", category: "Preferences", text: "Writes in British English", source: "From chat", date: "Sep 2" },
   ];
+  panel.memories = [...panel.memories, { id: "n1", category: "Work", text: "Presents to the board monthly", source: "Picked up from a chat", pending: true }];
   panel.onForget = (id) => fetch(`/api/memories/${id}`, { method: "DELETE" });
+  panel.addEventListener("tc-consent", (e) => console.log(e.detail.keep ? "kept" : "not kept", e.detail.memory.text));
   panel.addEventListener("tc-memories-change", (e) => console.log(e.detail.memories));
 </script>
 ```
@@ -192,6 +201,7 @@ export class MemoryPanelExample {
 | `onPause` | – | `((id: string, paused: boolean) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a memory was paused or resumed |
 | `onForget` | – | `((id: string) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a memory was forgotten |
 | `onRestore` | – | `((memory: Memory) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a forgotten memory is brought back with Undo |
+| `onConsent` | – | `((id: string, keep: boolean) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a memory waiting for the person's OK is kept (true) or not (false) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -200,6 +210,7 @@ export class MemoryPanelExample {
 | --- | --- | --- | --- |
 | `tc-memories-change` | – | Yes | The list changed (added, edited, paused, forgotten, restored or rolled back); detail `{ memories: Memory[] }`. Cancelable: preventDefault() keeps the change out until the app passes the list back. |
 | `tc-enabled-change` | – | Yes | The master switch was flipped; detail `{ enabled: boolean }`. Cancelable. |
+| `tc-consent` | – | Yes | Keep or Don't keep on a memory waiting for the person's OK ({ memory, keep }: MemoryConsent); cancelable – prevented, it keeps waiting |
 | `tc-action` | – | No | The action button (`actionLabel`) was pressed; detail: null |
 
 #### Component tokens
@@ -210,9 +221,9 @@ export class MemoryPanelExample {
 | --- | --- | --- |
 | `--tc-memory-panel-well` | `light-dark(#f4f4f5, #222225)` | standard |
 
-#### Design tokens it reads (98)
+#### Design tokens it reads (100)
 
-`--tc-accent`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-decelerate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg-sunken`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-memory-panel-max`, `--tc-radius-badge`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-4-5`, `--tc-space-5`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-switch-h`, `--tc-switch-knob`, `--tc-switch-knob-bg`, `--tc-switch-off`, `--tc-switch-on`, `--tc-switch-radius`, `--tc-switch-w`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-decelerate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg-sunken`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-memory-panel-max`, `--tc-radius-badge`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-4-5`, `--tc-space-5`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-switch-h`, `--tc-switch-knob`, `--tc-switch-knob-bg`, `--tc-switch-off`, `--tc-switch-on`, `--tc-switch-radius`, `--tc-switch-w`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
 
 ## Frameworks
 
@@ -239,6 +250,7 @@ export class MemoryPanelExample {
 | `onPause` | `el.onPause = …;` | `<… onPause={…} />` | `<tc-memory-panel :onPause="…">` | `<tc-memory-panel [onPause]="…">` | `<tc-memory-panel {onPause}>` |
 | `onForget` | `el.onForget = …;` | `<… onForget={…} />` | `<tc-memory-panel :onForget="…">` | `<tc-memory-panel [onForget]="…">` | `<tc-memory-panel {onForget}>` |
 | `onRestore` | `el.onRestore = …;` | `<… onRestore={…} />` | `<tc-memory-panel :onRestore="…">` | `<tc-memory-panel [onRestore]="…">` | `<tc-memory-panel {onRestore}>` |
+| `onConsent` | `el.onConsent = …;` | `<… onConsent={…} />` | `<tc-memory-panel :onConsent="…">` | `<tc-memory-panel [onConsent]="…">` | `<tc-memory-panel {onConsent}>` |
 
 *Also attributes: `enabled`, `heading`, `max-height`, `undo-for`, `added-source`, `action-label` – see the API table.*
 
@@ -248,6 +260,7 @@ export class MemoryPanelExample {
 | --- | --- | --- | --- | --- | --- | --- |
 | `tc-memories-change` | Yes | `el.addEventListener("tc-memories-change", (e) => …)` | `onChange={…}` | `@tc-memories-change="…"` | `(tc-memories-change)="…($event)"` | `el.addEventListener("tc-memories-change", …)` |
 | `tc-enabled-change` | Yes | `el.addEventListener("tc-enabled-change", (e) => …)` | `onEnabledChange={…}` | `@tc-enabled-change="…"` | `(tc-enabled-change)="…($event)"` | `el.addEventListener("tc-enabled-change", …)` |
+| `tc-consent` | Yes | `el.addEventListener("tc-consent", (e) => …)` | `onTcConsent={…}` | `@tc-consent="…"` | `(tc-consent)="…($event)"` | `el.addEventListener("tc-consent", …)` |
 | `tc-action` | No | `el.addEventListener("tc-action", (e) => …)` | `onClick={…}` | `@tc-action="…"` | `(tc-action)="…($event)"` | `el.addEventListener("tc-action", …)` |
 
 ### Controlled
@@ -421,6 +434,10 @@ named with the memory's text – “Edit “Writes in British English””, “
 callback is still running is `aria-busy`. A status region says “Forgot “…”. Undo is on the tray.” after a forget, and
 a failure such as “Couldn't pause it. Try again.” The rolling counts are not read out.
 
+“Waiting for your OK” is a section named by its heading and count. Keep and Don't keep are named with the memory –
+“Keep “Likes tables””. After either, the status region says “Kept: “…”” or “Not kept: “…”” and focus moves to the next
+waiting memory's Keep, or to New memory.
+
 ### Every component
 
 - Passes axe (WCAG 2.2 A and AA) in both looks, light and dark, in Chromium, Firefox and WebKit.
@@ -467,13 +484,13 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 65.3 KB | 14.2 KB |
+| **This component alone** | 68.3 KB | 14.9 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -481,8 +498,8 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **73.8 KB** | **16.7 KB** |
-| With Lit – the first component on a page | 95.8 KB | 23.9 KB |
+| **Added to a page that already has Lit** | **76.8 KB** | **17.6 KB** |
+| With Lit – the first component on a page | 98.7 KB | 24.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -490,13 +507,13 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.8 ms** | the gallery demo's data, 248 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of memories replaced |
-| First on the page | 25 ms | default properties; includes adding its CSS to the document |
-| 100 items | 21 ms | memories: first render, 1,996 nodes; update 2.0 ms |
-| 1,000 items | 127 ms | memories: first render, 19,096 nodes; update 11 ms |
+| First render | **6.1 ms** | the gallery demo's data, 274 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of memories replaced |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 10 ms | memories: first render, 1,840 nodes; update 1.2 ms |
+| 1,000 items | 126 ms | memories: first render, 17,500 nodes; update 10 ms |
 
-1,000 items of memories: 127 ms. It renders every item, so a first render passes 50 ms (a long task) at about 390 items – page or filter longer lists.
+1,000 items of memories: 126 ms. It renders every item, so a first render passes 50 ms (a long task) at about 400 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -518,6 +535,7 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
 - Use a handful of plain categories – “Work”, “Preferences”, “Projects”, “Personal” – and pass them in `categories`
   in the order people expect.
 - Set `addedSource` to how a hand-added memory should read, e.g. “Added by you”.
+- For a waiting memory, say where it was picked up in `source` – “Picked up from a chat” – so people can judge it.
 
 ## Do and don't
 
@@ -527,6 +545,7 @@ a failure such as “Couldn't pause it. Try again.” The rolling counts are not
   the row waits, and a rejection rolls it back and says so.
 - Keep Undo long enough to read: raise `undoFor`, or set it to `Infinity`, for people who need more time.
 - Treat the switch as a real setting: when it's off, stop using and saving memories, as its note promises.
+- Don't use a waiting memory in answers until it's kept; return a promise from `onConsent` to save the answer.
 
 ### Don't
 

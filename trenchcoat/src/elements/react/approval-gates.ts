@@ -25,7 +25,7 @@ export type ApprovalGatesProps = Omit<RawApprovalGatesProps, "heading" | "gates"
   /** The requests at first, when `gates` isn't controlled */
   defaultGates?: ApprovalGate[];
   /** Called with every request after a decision went through, and the decision itself */
-  onGatesChange?: (gates: ApprovalGate[], change: { gate: ApprovalGate; decision: GatesChange["decision"]; note: string }) => void;
+  onGatesChange?: (gates: ApprovalGate[], change: Omit<GatesChange, "gates">) => void;
   /** The decided row folded open, by gate id. Controlled when defined */
   expanded?: string | null;
   /** The row folded open at first, when `expanded` isn't controlled */
@@ -38,7 +38,10 @@ const NONE: ApprovalGate[] = [];
 
 export function ApprovalGates({ title = "Approvals", gates, defaultGates = NONE, onGatesChange, expanded, defaultExpanded = null, onExpandedChange, ...props }: ApprovalGatesProps) {
   const change = React.useRef<GatesChange | null>(null);
-  const g = useControlled(gates, defaultGates, onGatesChange ? (next) => onGatesChange(next, { gate: change.current!.gate, decision: change.current!.decision, note: change.current!.note }) : undefined);
+  const g = useControlled(gates, defaultGates, onGatesChange ? (next) => {
+    const { gates: _all, ...rest } = change.current!;
+    onGatesChange(next, rest);
+  } : undefined);
   const x = useControlled(expanded, defaultExpanded, onExpandedChange);
   return h(RawApprovalGates, {
     ...props,

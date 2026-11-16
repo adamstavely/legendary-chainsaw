@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-memory-graph.json",
+  "title": "tc-memory-graph",
+  "description": "What an agent remembers and the tools it can reach, around it – each memory with where it came from, each tool with\nwhat it may do – with a light along the way it's using, switches and forget with Undo.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "agent": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "activity": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The agent in the middle"
+    },
+    "memories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MemoryGraphMemory"
+      },
+      "description": "What it remembers, on the left of the ring from the top. Ids are unique across memories and tools"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MemoryGraphTool"
+      },
+      "description": "The tools it can reach, on the right of the ring from the top"
+    },
+    "using": {
+      "type": "string",
+      "description": "The id of the tool it's using right now – a light runs out to it"
+    },
+    "learning": {
+      "type": "string",
+      "description": "The id of a memory it's learning right now – a light runs in from its `via` tool, through the agent, out to it"
+    },
+    "recalling": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of memories it's recalling right now – a light runs in from each"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The card whose details are open (a memory's or tool's id, or MEMORY_GRAPH_MORE). Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "undoFor": {
+      "type": "number",
+      "description": "How long Undo stays after a memory is forgotten, in ms"
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "chat": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The source kinds' words, merged over defaultMemoryGraphKindLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "MemoryGraphMemory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "What it remembers: \"Prefers short answers\""
+        },
+        "source": {
+          "type": "string",
+          "description": "A line on where it came from: \"You asked for it twice\""
+        },
+        "tag": {
+          "type": "string",
+          "description": "What kind of memory it is: \"Preference\", \"Fact\""
+        },
+        "artifact": {
+          "$ref": "#/definitions/MemoryGraphArtifact",
+          "description": "What it came from"
+        },
+        "via": {
+          "type": "string",
+          "description": "The id of the tool it was learned through – a memory being learned lights up the way in from that tool"
+        },
+        "off": {
+          "type": "boolean",
+          "description": "Switched off: kept, but not used"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "MemoryGraphArtifact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Its name: \"budget-q4.xlsx\", \"Standup notes\""
+        },
+        "kind": {
+          "$ref": "#/definitions/MemoryGraphSourceKind",
+          "description": "\"file\" by default"
+        },
+        "href": {
+          "type": "string",
+          "description": "Adds Open to the memory's details",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "MemoryGraphSourceKind": {
+      "type": "string",
+      "enum": [
+        "chat",
+        "email",
+        "file"
+      ]
+    },
+    "MemoryGraphTool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "access": {
+          "type": "string",
+          "description": "What it may do: \"Read\", \"Read & write\""
+        },
+        "scope": {
+          "type": "string",
+          "description": "Where: \"Exhibitions wiki\", \"Loans team calendar\""
+        },
+        "note": {
+          "type": "string",
+          "description": "One line in its details: \"Read today's standup notes\""
+        },
+        "off": {
+          "type": "boolean",
+          "description": "Switched off: the agent may not use it"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

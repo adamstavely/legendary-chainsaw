@@ -19,6 +19,11 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  *
  *   <tc-memory-panel .memories=${memories} .categories=${["Work", "Preferences"]}></tc-memory-panel>
  *
+ * Memories the assistant picked up on its own (`pending: true`) don't join their category until the person says so:
+ * they wait at the top under "Waiting for your OK", each with Keep and Don't keep. Either fires a cancelable
+ * `tc-consent` ({ memory, keep }); unless prevented, Keep moves it into its category and Don't keep drops it (both
+ * through `tc-memories-change`, and `onConsent` when given).
+ *
  * Every change to the list fires a cancelable `tc-memories-change` with the whole list, applied unless prevented; the
  * switch fires a cancelable `tc-enabled-change`. The granular callbacks (onAdd, onEdit, onPause, onForget, onRestore)
  * are function properties: each may return a promise – the row waits while it runs and a rejection rolls the change
@@ -37,7 +42,12 @@ export type Memory = {
   date?: string;
   /** Kept, but not used in answers */
   paused?: boolean;
+  /** Picked up by the assistant on its own – it waits for the person's OK before it's kept */
+  pending?: boolean;
 };
+
+/** tc-consent: Keep or Don't keep on a memory that waits for the person's OK */
+export type MemoryConsent = { memory: Memory; keep: boolean };
 
 /** A granular callback's result: a promise makes the row wait, and its rejection rolls the change back */
 export type MemoryCallbackResult = void | Promise<unknown>;
@@ -129,6 +139,8 @@ let uidCount = 0;
  * @fires tc-memories-change - The list changed (added, edited, paused, forgotten, restored or rolled back); detail
  *   `{ memories: Memory[] }`. Cancelable: preventDefault() keeps the change out until the app passes the list back.
  * @fires tc-enabled-change - The master switch was flipped; detail `{ enabled: boolean }`. Cancelable.
+ * @fires tc-consent - Keep or Don't keep on a memory waiting for the person's OK ({ memory, keep }: MemoryConsent);
+ *   cancelable – prevented, it keeps waiting
  * @fires tc-action - The action button (`actionLabel`) was pressed; detail: null
  */
 export class TcMemoryPanel extends TcElement {
@@ -163,6 +175,8 @@ export class TcMemoryPanel extends TcElement {
   @property({ attribute: false }) accessor onForget: ((id: string) => MemoryCallbackResult) | undefined = undefined;
   /** Called when a forgotten memory is brought back with Undo */
   @property({ attribute: false }) accessor onRestore: ((memory: Memory) => MemoryCallbackResult) | undefined = undefined;
+  /** Called when a memory waiting for the person's OK is kept (true) or not (false) */
+  @property({ attribute: false }) accessor onConsent: ((id: string, keep: boolean) => MemoryCallbackResult) | undefined = undefined;
 
   /** @internal Rows whose call is still running, with how many */
   @state() accessor saving: Record<string, number> = {};
@@ -198,6 +212,8 @@ export class TcMemoryPanel extends TcElement {
   @state() accessor shownCounts: Counts | null = null;
   /** @internal The caption line fading out underneath the new one */
   @state() accessor swapOut: Line | null = null;
+  /** @internal What the last Keep or Don't keep did, for screen readers */
+  @state() accessor consentSaid = "";
 
   private uid = `tc-mp-${++uidCount}`;
   /** The list as last committed – the property, or a change not passed back yet */
@@ -246,11 +262,18 @@ export class TcMemoryPanel extends TcElement {
 
   private get groups() {
     const groups = [...(this.categories ?? [])];
-    for (const m of this.memories) if (!groups.includes(m.category)) groups.push(m.category);
+    for (const m of this.kept) if (!groups.includes(m.category)) groups.push(m.category);
     return groups;
   }
+  /** The memories the person has (not the ones waiting for their OK) */
+  private get kept() {
+    return this.memories.filter((m) => !m.pending);
+  }
   private get present() {
-    return this.memories.filter((m) => !this.leaving[m.id]);
+    return this.kept.filter((m) => !this.leaving[m.id]);
+  }
+  private get waiting() {
+    return this.memories.filter((m) => m.pending);
   }
   private shows(m: Memory) {
     const q = this.query.trim().toLowerCase();
@@ -454,6 +477,34 @@ export class TcMemoryPanel extends TcElement {
     this.track(memory.id, restoring, () => this.commit(this.latest.filter((x) => x.id !== memory.id)), "bring it back");
   }
 
+  /** Keep or Don't keep a memory that waits for the person's OK */
+  private consent(m: Memory, keep: boolean) {
+    if (!this.emit<MemoryConsent>("tc-consent", { memory: m, keep }, { cancelable: true })) return;
+    const waiting = this.waiting;
+    const at = waiting.findIndex((x) => x.id === m.id);
+    const nextWaiting = waiting[at + 1] ?? waiting[at - 1];
+    const index = this.latest.findIndex((x) => x.id === m.id);
+    if (keep) {
+      this.born = { [m.id]: true };
+      this.commit(this.latest.map((x) => (x.id === m.id ? { ...x, pending: false } : x)));
+    } else this.commit(this.latest.filter((x) => x.id !== m.id));
+    this.consentSaid = `${keep ? "Kept" : "Not kept"}: “${m.text}”`;
+    this.refocus(nextWaiting ? `[data-waiting="${CSS.escape(nextWaiting.id)}"] [data-act="keep"]` : ".ui-mp__add");
+    this.track(
+      m.id,
+      this.onConsent?.(m.id, keep),
+      () => {
+        if (keep) this.commit(this.latest.map((x) => (x.id === m.id ? { ...x, pending: true } : x)));
+        else if (!this.latest.some((x) => x.id === m.id)) {
+          const next = [...this.latest];
+          next.splice(Math.max(0, Math.min(index, next.length)), 0, m);
+          this.commit(next);
+        }
+      },
+      keep ? "keep it" : "drop it",
+    );
+  }
+
   private togglePause(m: Memory) {
     const paused = !m.paused;
     this.commit(this.latest.map((x) => (x.id === m.id ? { ...x, paused } : x)));
@@ -531,7 +582,7 @@ export class TcMemoryPanel extends TcElement {
   private trayLine(): Line {
     const { failed, forgot } = this;
     const on = this.enabled;
-    const hotMemory = this.memories.find((m) => m.id === this.hot) ?? null;
+    const hotMemory = this.kept.find((m) => m.id === this.hot) ?? null;
     if (failed) return { id: `failed-${failed.key}`, node: failed.text };
     if (forgot)
       return {
@@ -547,9 +598,10 @@ export class TcMemoryPanel extends TcElement {
       };
     if (!on) return { id: "off", node: "Memory is off" };
     const { total, paused } = this.counts();
+    const waiting = this.waiting.length;
     return {
-      id: "rest",
-      node: html`<b data-roll="total">${total}</b> ${total === 1 ? "memory" : "memories"}${paused > 0 ? html` · <span data-roll="paused">${paused}</span> paused` : nothing}`,
+      id: `rest-${waiting}`,
+      node: html`<b data-roll="total">${total}</b> ${total === 1 ? "memory" : "memories"}${paused > 0 ? html` · <span data-roll="paused">${paused}</span> paused` : nothing}${waiting > 0 ? html` · ${waiting} waiting` : nothing}`,
     };
   }
 
@@ -691,7 +743,7 @@ export class TcMemoryPanel extends TcElement {
 
   /** The memories by category: a group folds away when none of its rows are listed, a row when it's filtered out */
   private groupsPart(groups: string[], icons: Record<IconName, TemplateResult>) {
-    const list = this.memories;
+    const list = this.kept;
     const listed = (m: Memory) => this.shows(m) && !this.leaving[m.id];
     const visible = (m: Memory) => listed(m) && !this.born[m.id];
     // repeat(): rows and groups keep their DOM (and focus) when others come and go
@@ -713,6 +765,32 @@ export class TcMemoryPanel extends TcElement {
           </div>
         </section>`;
     });
+  }
+
+  /** Memories the assistant picked up on its own, waiting for the person's OK – Keep or Don't keep each */
+  private waitingPart() {
+    const waiting = this.waiting;
+    if (!waiting.length || !this.enabled) return nothing;
+    const hid = `${this.uid}-waiting`;
+    return html`<section class="ui-mp__waiting" aria-labelledby=${hid}>
+      <h3 class="ui-mp__group ui-mp__group--waiting" id=${hid}>Waiting for your OK <span class="ui-mp__waiting-count">${waiting.length}</span></h3>
+      <ul class="ui-mp__items">
+        ${repeat(
+          waiting,
+          (m) => m.id,
+          (m) => html`<li class="ui-mp__item ui-mp__item--waiting" data-waiting=${m.id} ?data-pending=${!!this.saving[m.id]}>
+            <p class="ui-mp__text">${m.text}</p>
+            <div class="ui-mp__meta">
+              <span class="ui-mp__source">${m.category}${m.source ? html`<span class="ui-mp__dot"> · </span>${m.source}` : nothing}${m.date ? html`<span class="ui-mp__dot"> · </span>${m.date}` : nothing}</span>
+              <span class="ui-mp__acts ui-mp__acts--edit ui-mp__acts--consent">
+                <button type="button" class="ui-mp__text-btn" data-act="drop" @click=${() => this.consent(m, false)}>Don't keep<span class="ui-mp__sr"> “${m.text}”</span></button>
+                <button type="button" class="ui-mp__text-btn ui-mp__text-btn--main" data-act="keep" @click=${() => this.consent(m, true)}>Keep<span class="ui-mp__sr"> “${m.text}”</span></button>
+              </span>
+            </div>
+          </li>`,
+        )}
+      </ul>
+    </section>`;
   }
 
   /** "New memory" at the bottom: a row that unfolds into an inline editor with a category picker */
@@ -779,7 +857,7 @@ export class TcMemoryPanel extends TcElement {
     const look = this.resolvedLook;
     const clean = look === "clean";
     const icons = clean ? cleanIcons : standardIcons;
-    const list = this.memories;
+    const list = this.kept;
     const groups = this.groups;
     const present = this.present;
     const q = this.query.trim();
@@ -802,7 +880,7 @@ export class TcMemoryPanel extends TcElement {
       @focusout=${(e: FocusEvent) => !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null) && setHold({ focus: false })}
     >
       <span class="ui-mp__caption"><span class="ui-mp__swap">${out ? keyed(`out-${out.id}`, html`<span class="ui-mp__swap-item" data-out="" aria-hidden="true">${out.node}</span>`) : nothing}${keyed(line.id, html`<span class="ui-mp__swap-item">${line.node}</span>`)}</span></span>
-      <span class="ui-mp__sr" role="status">${failed ? failed.text : forgot ? `Forgot “${forgot.memory.text}”. Undo is on the tray.` : ""}</span>
+      <span class="ui-mp__sr" role="status">${failed ? failed.text : forgot ? `Forgot “${forgot.memory.text}”. Undo is on the tray.` : this.consentSaid}</span>
       ${forgot
         ? keyed(`undo-${forgot.key}`, html`<button type="button" class="ui-mp__action ui-mp__action--undo" @click=${() => this.undo()}>${icons.undo}Undo</button>`)
         : this.actionLabel
@@ -838,6 +916,7 @@ export class TcMemoryPanel extends TcElement {
           hotMemory?.category ?? null,
         )}
         <div class="ui-mp__list" @pointerleave=${() => (this.hot = null)}>
+          ${this.waitingPart()}
           ${this.groupsPart(groups, icons)}
           <div class="ui-mp__fold" ?data-open=${!anyVisible} .inert=${anyVisible}>
             <div class="ui-mp__clip">
@@ -901,6 +980,12 @@ export class TcMemoryPanel extends TcElement {
 [data-ui="mp"] b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__card { padding-top: var(--tc-space-2-5); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* Everything that opens or goes does it the same quiet way: it unfolds or folds and fades, nothing travels */
+/* Waiting for your OK: always shows its Keep and Don't keep */
+.ui-mp__waiting { margin-bottom: var(--tc-space-1); padding-bottom: var(--tc-space-1); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+[data-ui="mp"] .ui-mp__group--waiting { display: flex; align-items: baseline; gap: var(--tc-space-1-5); color: var(--tc-status-warning-fg); }
+.ui-mp__waiting-count { font-variant-numeric: tabular-nums; color: var(--tc-text-muted); }
+[data-ui="mp"] .ui-mp__item--waiting { list-style: none; }
+[data-ui="mp"] .ui-mp__item--waiting .ui-mp__acts--consent { opacity: 1; pointer-events: auto; visibility: visible; }
 .ui-mp__fold { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--tc-duration-slower) var(--tc-ease-move), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 .ui-mp__fold[data-open] { grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows var(--tc-duration-slower) var(--tc-ease-move), opacity var(--tc-duration-slow) var(--tc-ease-standard) 80ms; }
 .ui-mp__fold--row[data-leaving] { transition: grid-template-rows var(--tc-duration-slow) var(--tc-ease-move), opacity var(--tc-duration-base) var(--tc-ease-standard), filter var(--tc-duration-base) var(--tc-ease-standard); filter: blur(2px); }

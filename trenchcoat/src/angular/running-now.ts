@@ -51,12 +51,16 @@ export class RunningNow {
   @Input() set notifyVia(v: TcRunningNow["notifyVia"]) {
     this.#el.notifyVia = v;
   }
+  /** Offer Pause on running tasks and Resume on paused ones */
+  @Input() set pausable(v: TcRunningNow["pausable"] | "" | "true" | "false") {
+    this.#el.pausable = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcRunningNow["look"]) {
     this.#el.look = v;
   }
   /**
-   * Review, Stop or Open was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open
+   * Review, Stop, Open, Pause or Resume was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open and a paused or resumed task keeps its status
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-task-action") readonly tcTaskAction = new EventEmitter<CustomEvent<RunningTaskAction>>();

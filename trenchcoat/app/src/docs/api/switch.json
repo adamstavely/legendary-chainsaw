@@ -3,8 +3,16 @@
   {
    "tag": "tc-switch",
    "className": "TcSwitch",
-   "description": "Switch for AI product settings.",
+   "description": "On or off for things that apply right away – label and second line, at the start or across a settings row.",
    "properties": [
+    {
+     "name": "placement",
+     "attribute": "placement",
+     "type": "SwitchPlacement",
+     "default": "\"start\"",
+     "description": "\"start\" (default): the switch before its label; \"end\": the label on the left and the switch at the row's far end",
+     "readonly": false
+    },
     {
      "name": "label",
      "attribute": "label",
@@ -86,8 +94,33 @@
     }
    ],
    "ui": "switch",
-   "cssProperties": [],
-   "tokens": []
+   "cssProperties": [
+    {
+     "name": "--tc-switch-stretch",
+     "value": "var(--tc-space-1)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-font-size-sm",
+    "--tc-line-height-snug",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-w",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
   }
  ],
  "functions": [],
@@ -138,6 +171,10 @@
     "value"
    ],
    "attributes": [
+    {
+     "name": "placement",
+     "attribute": "placement"
+    },
     {
      "name": "label",
      "attribute": "label"
@@ -362,6 +399,7 @@
    "offscreen": [],
    "hidden": [],
    "reducedMotion": [
+    "CSS",
     "CSS (internal/kit › kitCss)",
     "CSS (internal/settings › rawSettingsCss)"
    ]
@@ -369,7 +407,7 @@
   "windowed": false
  },
  "size": {
-  "min": 24454,
-  "gzip": 6853
+  "min": 26600,
+  "gzip": 7198
  }
 }
