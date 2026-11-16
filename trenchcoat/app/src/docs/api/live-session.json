@@ -1,0 +1,657 @@
+{
+ "elements": [
+  {
+   "tag": "tc-live-session",
+   "className": "TcLiveSession",
+   "description": "Work with a team of agents while they work – their conversation, the team's plan ticking off beside it, and the\nshared context; picking an agent points at its steps.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Live session\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "participants",
+     "attribute": null,
+     "type": "CollabParticipant[]",
+     "default": "[]",
+     "description": "You and the agents – the Collaboration Stream's `participants`",
+     "readonly": false
+    },
+    {
+     "name": "messages",
+     "attribute": null,
+     "type": "CollabMessage[]",
+     "default": "[]",
+     "description": "What they said – the Collaboration Stream's `messages`",
+     "readonly": false
+    },
+    {
+     "name": "you",
+     "attribute": "you",
+     "type": "string",
+     "default": "\"you\"",
+     "description": "Your participant id",
+     "readonly": false
+    },
+    {
+     "name": "onSend",
+     "attribute": null,
+     "type": "((message: CollabSend) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Runs when you send a message or an answer; it may return a promise – the Collaboration Stream's `onSend`",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "LiveSessionStep[]",
+     "default": "[]",
+     "description": "The team's plan, in order",
+     "readonly": false
+    },
+    {
+     "name": "context",
+     "attribute": "context",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How full the shared context is, from 0 to 1; without it, the meter is left out",
+     "readonly": false
+    },
+    {
+     "name": "contextText",
+     "attribute": "context-text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The meter's value in words, e.g. \"124k of 200k tokens\" – a percentage by default",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string | null",
+     "default": "null",
+     "description": "The picked agent's id, or null for the whole team. Changed by the user unless a tc-agent-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost in the stream – dollars by default",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A locale for the stream's times",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A time zone for the stream's times, e.g. \"Europe/Vienna\"",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<LiveSessionLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-agent-change",
+     "detail": "",
+     "description": "An agent was picked, or the whole team ({ agent, participant }: LiveSessionAgentChange); cancelable – prevented, `agent` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "lses",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-duration-base",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-head-glyph-stroke",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "LiveSession",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading (default \"Live session\")"
+    },
+    {
+     "name": "agent",
+     "type": "string | null",
+     "optional": true,
+     "description": "The picked agent's id, or null for the whole team. Controlled when defined"
+    },
+    {
+     "name": "defaultAgent",
+     "type": "string | null",
+     "optional": true,
+     "description": "The agent at first when uncontrolled – the whole team by default"
+    },
+    {
+     "name": "onAgentChange",
+     "type": "(agent: string | null, participant: CollabParticipant | null) => void",
+     "optional": true,
+     "description": "Called with the picked agent (null for the whole team)"
+    }
+   ],
+   "hides": [
+    "heading",
+    "agent",
+    "children"
+   ],
+   "events": {
+    "tc-agent-change": "onAgentChange"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-live-session",
+   "className": "TcLiveSession",
+   "module": "@adamstavely/trenchcoat/live-session",
+   "data": [
+    "participants",
+    "messages",
+    "onSend",
+    "steps",
+    "formatCost",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "you",
+     "attribute": "you"
+    },
+    {
+     "name": "context",
+     "attribute": "context"
+    },
+    {
+     "name": "contextText",
+     "attribute": "context-text"
+    },
+    {
+     "name": "agent",
+     "attribute": "agent"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-agent-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "agent",
+     "event": "tc-agent-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "collaboration-stream"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "collaboration-stream",
+     "mention-picker",
+     "internal/kit",
+     "meter-row",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "mention-picker"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "mention-picker",
+     "meter-row"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "collaboration-stream",
+     "mention-picker",
+     "internal/base",
+     "meter-row",
+     "segmented-control",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "mention-picker",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "collaboration-stream",
+     "mention-picker",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "mention-picker"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "collaboration-stream",
+     "mention-picker",
+     "internal/card-head",
+     "internal/kit",
+     "meter-row",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "collaboration-stream",
+     "mention-picker",
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (mention-picker)",
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver (mention-picker)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "ResizeObserver (segmented-control)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (collaboration-stream)",
+    "CSS (mention-picker)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (meter-row)",
+    "CSS (segmented-control)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 138246,
+  "gzip": 35784
+ }
+}

@@ -5,7 +5,8 @@ import { caption, surface, textButton } from "../demo-kit";
 
 /* A records audit run by a research institute's agents: vendor checks and document classification are going, a
    report draft waits for a decision, and an export finished. Every couple of seconds the running tasks move on; the
-   classification finishes, then the vendor checks need the person too. Review, Stop and Open just report. The bell
+   classification finishes, then the vendor checks need the person too. Review, Stop and Open just report; Pause holds
+   a running task where it is until Resume. The bell
    on a running task asks to be told when it finishes – the classification is watched from the start. */
 
 const T0 = Date.UTC(2026, 10, 10, 9, 0, 0);
@@ -55,11 +56,13 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           tasks={tasks}
           now={now}
           notifiable
+          pausable
           notify={notify}
           onNotifyChange={(next) => setNotify(next)}
           onNotify={(task, status) => setLast(`You asked to hear about it: ${task.title} ${status === "done" ? "finished" : "failed"}`)}
           onTaskAction={(action, task) => {
-            setLast(`${action === "review" ? "Reviewing" : action === "stop" ? "Stopped" : "Opened"} ${task.title}`);
+            setLast(`${{ review: "Reviewing", stop: "Stopped", open: "Opened", pause: "Paused", resume: "Resumed" }[action]} ${task.title}`);
+            if (action === "pause" || action === "resume") setTasks((ts) => ts.map((t) => (t.id === task.id ? { ...t, status: action === "pause" ? "paused" : "running" } : t)));
             if (action === "stop") setTasks((ts) => ts.map((t) => (t.id === task.id ? { ...t, status: "failed", ended: now } : t)));
           }}
         />

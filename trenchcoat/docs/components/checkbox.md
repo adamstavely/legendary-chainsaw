@@ -9,8 +9,8 @@
 A form-associated boolean choice
 
 - **Element:** `<tc-checkbox>`
-- **Size:** 6.7 KB gzip · 23.9 KB min, on a page that has Lit · [Performance](#performance)
-- **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
+- **Size:** 7.6 KB gzip · 28.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
 | --- | --- |
@@ -23,43 +23,85 @@ A form-associated boolean choice
 
 ## Example
 
-The live example is in the gallery at `#/checkbox`, at 320 px, 480 px or full width.
+The live example is in the gallery at `#/checkbox`, at 320 px, 480 px or full width, with “Show anatomy” to number its parts.
 
 ## Overview
 
-A form-associated boolean choice.
+A yes / no choice that's saved with a form: a box, its label and an optional second line. Three extras cover the cases
+a bare checkbox doesn't:
+
+- **Partly checked.** `indeterminate` shows a dash – a Select all over a list where only some items are picked.
+  Clicking it checks it.
+- **Card.** `variant="card"` draws the choice as a bordered row you can click anywhere on, tinted once it's checked –
+  for a short list of options with a line of explanation each.
+- **Error.** `error-message`, or a required box left empty when the form checks it, shows an error under the choice.
+
+The check draws itself when it's ticked.
 
 ### When to use
 
-Use this component to a form-associated boolean choice in an AI product's settings or setup workflow.
+- Yes or no choices that are saved with a form: agreeing to terms, opting in, picking several items of a list.
+- Select all over a list, with the partly checked state while only some of it is picked.
+- A handful of options with a sentence each, as card rows.
 
 ### When not to use
 
-Use existing read-only run and output components when users only need to inspect results. Application callbacks are required for external operations.
+- A setting that applies the moment it's flipped – use the Switch.
+- One choice out of several – use the Radio Group, the Segmented Control or the Select.
+- A long list to filter and pick from – use the Combobox or the Filter Menu.
+
+## Anatomy
+
+*Turn on “Show anatomy” on the example to see each part numbered on the live component.*
+
+1. **Row** `.ui-checkbox__row` – the label element: the box and the words, clickable as one; a bordered card with
+2. **Box** `.ui-checkbox__box` – the native checkbox, drawn with tokens.
+3. **Tick** `.ui-checkbox__tick` – the check (drawn in when ticked) and the dash for partly checked.
+4. **Label** `.ui-checkbox__label` – names the checkbox.
+5. **Second line** `.ui-checkbox__description` – describes it.
+6. **Error** `.ui-checkbox__error` – what's wrong, under the row.
+
+## Looks
+
+Standard fills a ticked box with the inverse surface; Clean fills it with the accent. Both draw the card row the same
+way: a hairline edge that turns into the selected border and an accent tint once checked. `--tc-checkbox-tick` sets the
+size of the check and the dash.
 
 ## Usage
 
 ### HTML
 
 ```html
-<tc-checkbox id="citations" label="Include citations"></tc-checkbox>
+<tc-checkbox id="all" label="Select all" description="12 of 30 vendors picked" indeterminate></tc-checkbox>
+<tc-checkbox id="digest" variant="card" label="Weekly digest" description="Every Monday at 8:00"></tc-checkbox>
 
 <script type="module">
   import "@adamstavely/trenchcoat/checkbox";
   import "@adamstavely/trenchcoat/tokens.css";
 
-  const el = document.querySelector("#citations");
-  el.value = true;
-  el.addEventListener("tc-value-change", (e) => console.log(e.detail.value));
+  const all = document.querySelector("#all");
+  all.addEventListener("tc-value-change", (e) => console.log("select all", e.detail.value));
+  document.querySelector("#digest").addEventListener("tc-value-change", (e) => console.log(e.detail.value));
 </script>
 ```
 
 ### React / Next.js
 
 ```tsx
+import { useState } from "react";
 import { Checkbox } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
-export function Example() { return <Checkbox label="Include citations" defaultValue />; }
+
+export function Example() {
+  const [picked, setPicked] = useState(12);
+  const all = picked === 30;
+  return (
+    <>
+      <Checkbox label="Select all" description={`${picked} of 30 vendors picked`} value={all} indeterminate={picked > 0 && !all} onChange={(v) => setPicked(v ? 30 : 0)} />
+      <Checkbox variant="card" label="Weekly digest" description="Every Monday at 8:00" defaultValue />
+    </>
+  );
+}
 ```
 
 ### Vue / Nuxt
@@ -132,6 +174,9 @@ export class CheckboxExample {
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
+| `indeterminate` | `indeterminate` | `boolean` | `false` | Partly checked: a dash for a Select all over a list that's only partly picked; clicking it checks it |
+| `variant` | `variant` | `CheckboxVariant` | `"default"` | "default" (a box and its label) or "card" (a bordered row, clickable anywhere) |
+| `errorMessage` | `error-message` | `string` | `""` | An error shown under the checkbox, e.g. "Accept the terms to go on"; empty shows none |
 | `label` | `label` | `string` | `"Checkbox"` | Visible heading or field label. |
 | `value` | – | `boolean` | `false` | Current value; prevent tc-value-change to control it from the application. |
 | `description` | `description` | `string` | `""` | Supporting explanation under the label. |
@@ -153,6 +198,18 @@ export class CheckboxExample {
 | `checkValidity()` | `void` | Check the current form validity. |
 | `reportValidity()` | `void` | Show the current validation message and focus the first control. |
 
+#### Component tokens
+
+*Custom properties on the element – set them on the element or an ancestor to adjust it.*
+
+| Custom property | Value | Look |
+| --- | --- | --- |
+| `--tc-checkbox-tick` | `12px` | both |
+
+#### Design tokens it reads (28)
+
+`--tc-accent`, `--tc-accent-subtle`, `--tc-border-default`, `--tc-border-selected`, `--tc-border-strong`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-size-sm`, `--tc-hairline`, `--tc-line-height-snug`, `--tc-radius-lg`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-2`, `--tc-space-3`, `--tc-space-6`, `--tc-status-danger-fg`, `--tc-status-danger-solid`, `--tc-surface-inverse`, `--tc-surface-raised`, `--tc-text-on-accent`, `--tc-text-on-inverse`, `--tc-text-primary`, `--tc-text-secondary`
+
 ## Frameworks
 
 *The site shows these one framework at a time, behind tabs; here they're all written out. [Set-up for each framework](../foundations/frameworks.md)*
@@ -173,7 +230,7 @@ export class CheckboxExample {
 | --- | --- | --- | --- | --- | --- |
 | `value` | `el.value = …;` | `<… value={…} />` | `<tc-checkbox :value="…">` | `<tc-checkbox [value]="…">` | `<tc-checkbox {value}>` |
 
-*Also attributes: `label`, `description`, `name`, `disabled`, `required` – see the API table.*
+*Also attributes: `indeterminate`, `variant`, `error-message`, `label`, `description`, `name`, `disabled`, `required` – see the API table.*
 
 ### Events
 
@@ -373,11 +430,15 @@ No slots: everything it shows comes from its properties.
 
 ### Keyboard
 
-Tab and Shift+Tab move through fields and actions. Native inputs, selects and buttons keep their standard keyboard behavior. Multiline editors preserve Enter for new lines.
+| Key | Does |
+| --- | --- |
+| Tab / Shift+Tab | Moves to and from the checkbox |
+| Space | Checks or unchecks it; a partly checked box becomes checked |
 
 ### Screen readers
 
-Visible labels name native controls. Form panels group their controls under a heading and announce action results through a status region. Standard and Clean use the same semantics.
+A native checkbox named by its label (`aria-labelledby`) and described by its second line and its error
+(`aria-describedby`). A partly checked box reads as "mixed". With an error it's `aria-invalid`. The tick is decorative.
 
 ### Every component
 
@@ -391,7 +452,7 @@ Visible labels name native controls. Form panels group their controls under a he
 | Browser | Works fully from | Set by |
 | --- | --- | --- |
 | Chrome / Edge | **123** | light-dark() |
-| Firefox | **120** | light-dark() |
+| Firefox | **121** | :has() |
 | Safari (macOS) | **17.5** | light-dark() |
 | Safari (iOS, iPadOS) | **17.5** | light-dark() |
 
@@ -404,8 +465,10 @@ Visible labels name native controls. Form panels group their controls under a he
 | light-dark() | 123 | 120 | 17.5 | 17.5 | tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
 | Form association (ElementInternals) | 77 (Edge 79) | 98 | 16.4 | 16.4 | internal/settings | The element's value is submitted with its form, and it takes part in form validation and reset. |
 | color-mix() | 111 | 113 | 16.2 | 16.2 | internal/settings, tokens.css | Tints and washes mixed from the tokens. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/kit, internal/settings | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit, internal/settings | Focus rings for keyboard users. |
+| :has() | 105 | 121 | 15.4 | 15.4 | itself | Layout and state that depend on what's inside a part (an icon present, a focused field). |
 | structuredClone() | 98 | 94 | 15.4 | 15.4 | internal/settings | – |
+| inset | 87 | 66 | 14.1 | 14.1 | itself | – |
 | :is() and :where() | 88 | 78 | 14 | 14 | internal/base, internal/settings, tokens.css | Every rule is keyed on :where() so the page can override it. |
 
 ### Progressive
@@ -415,17 +478,17 @@ Visible labels name native controls. Form panels group their controls under a he
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 0.9 KB | 0.4 KB |
+| **This component alone** | 7.8 KB | 2.9 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
@@ -434,8 +497,8 @@ Visible labels name native controls. Form panels group their controls under a he
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **23.9 KB** | **6.7 KB** |
-| With Lit – the first component on a page | 44.6 KB | 13.4 KB |
+| **Added to a page that already has Lit** | **28.9 KB** | **7.6 KB** |
+| With Lit – the first component on a page | 49.6 KB | 14.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -443,9 +506,9 @@ Visible labels name native controls. Form panels group their controls under a he
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 5 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| First render | **0.8 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -462,18 +525,27 @@ Visible labels name native controls. Form panels group their controls under a he
 
 ## Content
 
-Give the control a visible label and a short description where the meaning needs explanation. Use name for form submission. A secret field masks display, but its value remains available to the host application.
+- Write the label as the thing that becomes true: "Include citations", "Email me the weekly digest".
+- Keep the second line to what the person needs to decide – what it costs, when it happens.
+- Say how to fix an error: "Accept the terms to go on", not "Invalid".
 
 ## Do and don't
 
 ### Do
 
-Keep values application-owned with value/onChange, or use defaultValue for local editing. Use disabled while settings cannot be changed. For long operations, honor the provided AbortSignal and reject failed operations so the component offers a retry.
+- Use the partly checked state only for a parent over a list, and set it from the list's own state.
+- Use card rows for two to six options with a line each.
+- Keep `value` application-owned with `value` and `onChange`, or start it with `defaultValue`.
 
 ### Don't
 
-Don't treat client-side validation or policy previews as backend enforcement. Don't store credentials in exported configuration; reference application-managed credentials instead.
+- Don't use a checkbox for something that takes effect at once – that's a Switch.
+- Don't leave `indeterminate` on once every item or none is picked.
+- Don't treat a checked box as consent the server can trust; check it there too.
 
 ## Related
 
-- [Model Picker](model-picker.md) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
+- [Switch](switch.md) – An accessible on/off setting
+- [Radio Group](radio-group.md) – A native keyboard-operated single choice
+- [Segmented Control](segmented-control.md) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
+- [Terms Dialog](terms-dialog.md) – Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits

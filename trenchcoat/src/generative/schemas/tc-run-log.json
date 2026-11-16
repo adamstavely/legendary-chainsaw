@@ -95,13 +95,13 @@
     "labels": {
       "type": "object",
       "properties": {
+        "failed": {
+          "type": "string"
+        },
         "queued": {
           "type": "string"
         },
         "running": {
-          "type": "string"
-        },
-        "failed": {
           "type": "string"
         },
         "succeeded": {
@@ -161,6 +161,15 @@
         "range": {
           "type": "string"
         },
+        "user": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "string"
+        },
+        "show": {
+          "type": "string"
+        },
         "run": {
           "type": "string"
         },
@@ -170,16 +179,7 @@
         "trigger": {
           "type": "string"
         },
-        "show": {
-          "type": "string"
-        },
-        "user": {
-          "type": "string"
-        },
         "started": {
-          "type": "string"
-        },
-        "tokens": {
           "type": "string"
         },
         "statusCol": {

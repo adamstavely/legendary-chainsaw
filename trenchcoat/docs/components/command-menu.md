@@ -509,23 +509,23 @@ when results arrive the status region says how many (“5 results”), or the em
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 44.5 KB | 14.1 KB |
+| **This component alone** | 44.6 KB | 14.1 KB |
 | Lit · the library every element is built on, the parts it uses | 21.4 KB | – |
-| `internal/popover` · Shared Trenchcoat code | 8.6 KB | – |
+| `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.5 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **61.1 KB** | **19.5 KB** |
-| With Lit – the first component on a page | 83.6 KB | 26.8 KB |
+| **Added to a page that already has Lit** | **61.6 KB** | **19.7 KB** |
+| With Lit – the first component on a page | 84.1 KB | 27.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -533,13 +533,13 @@ when results arrive the status region says how many (“5 results”), or the em
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.4 ms** | the gallery demo's data, 214 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of groups replaced |
-| First on the page | 33 ms | default properties; includes adding its CSS to the document |
-| 100 items | 15 ms | groups: first render, 1,384 nodes; update 1.6 ms |
-| 1,000 items | 9.6 ms | groups: first render, 1,384 nodes; update 1.5 ms |
+| First render | **4.3 ms** | the gallery demo's data, 214 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of groups replaced |
+| First on the page | 27 ms | default properties; includes adding its CSS to the document |
+| 100 items | 12 ms | groups: first render, 1,384 nodes; update 1.0 ms |
+| 1,000 items | 6.5 ms | groups: first render, 1,384 nodes; update 1.1 ms |
 
-1,000 items of groups: 9.6 ms, 1,384 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of groups: 6.5 ms, 1,384 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

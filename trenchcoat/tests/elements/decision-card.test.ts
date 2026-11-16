@@ -320,6 +320,80 @@ describe("tc-decision-card", () => {
     await act(async () => root.unmount());
   });
 
+  describe("variants: preview tiles", () => {
+    const PIXEL = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%23ccc'/%3E%3C/svg%3E";
+    const VARIANTS: DecisionCardOption[] = [
+      { id: "bars", label: "Bars", detail: "Easiest to compare", image: PIXEL, imageAlt: "Bar chart draft", recommended: true },
+      { id: "treemap", label: "Treemap", image: "javascript:alert(1)" },
+      { id: "donut", label: "Donut" },
+    ];
+    const variants = (look = "standard") =>
+      fixture<TcDecisionCard>(html`<tc-decision-card look=${look} kind="variant" agent="Report agent" question="Which chart?" .options=${VARIANTS}></tc-decision-card>`);
+
+    test("tiles: an image with its alt, a numbered blank tile without one or with an unsafe link", async () => {
+      const el = await variants();
+      expect(el.querySelector(".ui-dcd__choices")!.hasAttribute("data-tiles")).toBe(true);
+      const tiles = [...el.querySelectorAll(".ui-dcd__tile")];
+      expect(tiles).toHaveLength(3);
+      const img = tiles[0].querySelector("img")!;
+      expect(img.getAttribute("src")).toBe(PIXEL);
+      expect(img.alt).toBe("Bar chart draft");
+      expect(tiles[1].querySelector("img")).toBeNull();
+      expect(tiles[1].textContent!.trim()).toBe("2");
+      expect(tiles[2].textContent!.trim()).toBe("3");
+      // Still a radio group, the recommended one holding the tab stop
+      expect(el.querySelector('[role="radiogroup"]')).not.toBeNull();
+      expect(radios(el).map((r) => r.tabIndex)).toEqual([0, -1, -1]);
+      expect(radios(el).every((r) => r.getAttribute("aria-checked") === "false")).toBe(true);
+    });
+
+    test("picked by click, arrows and 1–3; Send folds into the receipt", async () => {
+      const el = await variants();
+      const picks = listen<{ value: string }>(el, "tc-value-change");
+      radio(el, "treemap").click();
+      await settle();
+      await key(radio(el, "treemap"), "ArrowRight");
+      await key(el.querySelector(".ui-dcd__form")!, "1");
+      expect(picks.map((p) => p.value)).toEqual(["treemap", "donut", "bars"]);
+      await expect.poll(() => document.activeElement).toBe(radio(el, "bars"));
+      const made = listen<DecisionCardMade>(el, "tc-decision");
+      await key(radio(el, "treemap"), "3");
+      btn(el, "Send")!.click();
+      await settle();
+      expect(made).toEqual([{ choice: "donut" }]);
+      expect(el.querySelector(".ui-dcd__receipt-text")!.textContent).toBe("You chose: Donut");
+    });
+
+    test("React wrapper: kind variant with images", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const seen: string[] = [];
+      await act(async () => root.render(React.createElement(DecisionCard, { kind: "variant", agent: "Report agent", question: "Which chart?", options: VARIANTS, onDecision: (d) => seen.push(d.choice) })));
+      await settle();
+      const el = host.querySelector<TcDecisionCard>("tc-decision-card")!;
+      radio(el, "bars").click();
+      await act(async () => settle());
+      btn(el, "Send")!.click();
+      await act(async () => settle());
+      expect(seen).toEqual(["bars"]);
+      await act(async () => root.unmount());
+    });
+
+    for (const look of ["standard", "clean"] as const)
+      for (const theme of ["light", "dark"] as const)
+        test(`axe: tiles – ${look}, ${theme}`, async () => {
+          const wrap = await fixture(
+            html`<div data-tc-theme=${theme} style="padding: 16px; background: ${theme === "dark" ? "#0e0e10" : "#fff"}">
+              <tc-decision-card look=${look} kind="variant" agent="Report agent" question="Which chart?" .options=${VARIANTS} allow-other value="treemap"></tc-decision-card>
+            </div>`,
+          );
+          await finish(wrap);
+          const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+          expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+        });
+  });
+
   for (const look of ["standard", "clean"] as const) {
     for (const theme of ["light", "dark"] as const) {
       test(`axe: no violations – ${look}, ${theme}`, async () => {

@@ -9,7 +9,7 @@
 one pull request at a glance: branches, review, checks, whether it can merge, and the button its state calls for.
 
 - **Element:** `<tc-pull-request>`
-- **Size:** 12.9 KB gzip · 47.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 13.3 KB gzip · 49.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -466,7 +466,7 @@ Mark ready, Update branch or Resolve, `role="status"` says what's under way, unl
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -483,9 +483,9 @@ Mark ready, Update branch or Resolve, `role="status"` says what's under way, unl
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| [switch](switch.md) · Element it renders | 0.7 KB | – |
-| **Added to a page that already has Lit** | **47.8 KB** | **12.9 KB** |
-| With Lit – the first component on a page | 68.3 KB | 19.6 KB |
+| [switch](switch.md) · Element it renders | 2.8 KB | – |
+| **Added to a page that already has Lit** | **49.9 KB** | **13.3 KB** |
+| With Lit – the first component on a page | 70.3 KB | 19.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -493,13 +493,13 @@ Mark ready, Update branch or Resolve, `role="status"` says what's under way, unl
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.0 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of mergeMethods replaced |
-| First on the page | 21 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.1 ms | mergeMethods: first render, 165 nodes; update 1.5 ms |
-| 1,000 items | 34 ms | mergeMethods: first render, 1,065 nodes; update 15 ms |
+| First render | **2.4 ms** | the gallery demo's data, 68 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of mergeMethods replaced |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.9 ms | mergeMethods: first render, 165 nodes; update 0.8 ms |
+| 1,000 items | 21 ms | mergeMethods: first render, 1,065 nodes; update 11 ms |
 
-1,000 items of mergeMethods: 34 ms, 1,065 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of mergeMethods: 21 ms, 1,065 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

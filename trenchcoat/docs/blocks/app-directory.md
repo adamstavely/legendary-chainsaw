@@ -453,7 +453,7 @@ alert. One status region, there from the start, announces each change: "Slack co
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -469,10 +469,10 @@ alert. One status region, there from the start, announces each change: "Slack co
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
-| [button](../components/button.md) · Element it renders | 12.4 KB | – |
+| [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **76.0 KB** | **25.0 KB** |
-| With Lit – the first component on a page | 97.8 KB | 32.0 KB |
+| **Added to a page that already has Lit** | **76.3 KB** | **25.1 KB** |
+| With Lit – the first component on a page | 98.1 KB | 32.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -480,9 +480,9 @@ alert. One status region, there from the start, announces each change: "Slack co
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.1 ms** | default properties, 256 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | re-render with the same data |
-| First on the page | 32 ms | default properties; includes adding its CSS to the document |
+| First render | **2.0 ms** | default properties, 256 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | re-render with the same data |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

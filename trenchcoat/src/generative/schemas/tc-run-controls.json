@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-run-controls.json",
+  "title": "tc-run-controls",
+  "description": "One composer with every control a running agent needs – stop, resume, retry, steer, queue, mode, permissions, context.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "A heading for the card; empty (the default) leaves the header out"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "disconnected",
+        "done",
+        "idle",
+        "stopped",
+        "streaming"
+      ],
+      "description": "Where the run is. Changed by the controls unless tc-state-change is prevented"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "act",
+        "chat"
+      ],
+      "description": "Chat or Act. Changed by the toggle unless tc-mode-change is prevented"
+    },
+    "permission": {
+      "type": "string",
+      "enum": [
+        "ask",
+        "auto-edit",
+        "full"
+      ],
+      "description": "What the agent may do without asking. Changed by the select unless tc-permission-change is prevented"
+    },
+    "queue": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The asks waiting to go out, in order. Changed by Queue and the chips unless tc-queue-change is prevented"
+    },
+    "context": {
+      "type": "number",
+      "description": "How full the context window is, 0–1; unset hides the ring"
+    },
+    "partial": {
+      "type": "number",
+      "description": "How many characters of the answer have arrived – Resume carries on from here"
+    },
+    "value": {
+      "type": "string",
+      "description": "The text in the field"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Everything disabled"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "placeholder": {
+          "type": "string"
+        },
+        "steerPlaceholder": {
+          "type": "string"
+        },
+        "send": {
+          "type": "string"
+        },
+        "steer": {
+          "type": "string"
+        },
+        "queue": {
+          "type": "string"
+        },
+        "stop": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "dismiss": {
+          "type": "string"
+        },
+        "streaming": {
+          "type": "string"
+        },
+        "queued": {
+          "type": "string"
+        },
+        "stopped": {
+          "type": "string"
+        },
+        "disconnected": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "chat": {
+          "type": "string"
+        },
+        "act": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "permission": {
+          "type": "string"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "auto-edit": {
+          "type": "string"
+        },
+        "full": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it uses, merged over the defaults"
+    }
+  },
+  "additionalProperties": false
+}

@@ -8,11 +8,12 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-408 items · 408 files
+417 items · 417 files
 
-## Agents (61)
+## Agents (67)
 
 - [Agent Create](agent-create.md) – Describe an agent and get a working draft – a request with example chips, Generate, then the draft streamed in to edit: name, instructions, tools as switches, model, triggers, and the model's open questions to answer before Create
+- [Agent Crew](agent-crew.md) – A lead agent and its sub-agents as one live tree of cards, every agent on screen – what each does now, its context in words and a bar, its tools and the last thing it was handed; handoffs run as a light along the connectors and light up the card they reach, a click opens the agent to steer, pause or resume it, and tabs switch between projects
 - [Agent Cursors](agent-cursors.md) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
 - [Agent Findings](agent-findings.md) – A group of agents checking something – one row per agent with its progress, beside a feed of what they've found, newest first, with severity in words, filters and new findings announced
 - [Agent Fleet](agent-fleet.md) – Several top-level agents side by side – each card sums up its sub-agents in words, with status, cost and time, and a click opens its tree beside it while the last one folds back into its card
@@ -26,8 +27,10 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Agent Plan](agent-plan.md) – An agent's step-by-step plan to review before it runs – rename, drag to reorder, remove or add steps, then watch each one run with live timers and retry from a failed step
 - [Agent Queue](agent-queue.md) – The work waiting for your agents, and how fast it moves – jobs drop into a live queue, glide into free worker slots as growing bars and land in Done or Failed, while a depth chart shows the backlog build up when a rate limit pauses the workers and drain when they resume
 - [Agent Recap](agent-recap.md) – What your agents did while you were away, for a home page – a small chart of the period with a bar per 15 or 30 minutes stacked by done, failed and needs you and a marker on each notable event, then Needs you, Failed and Done as columns acted on in place, items gliding out as they're handled, and Clear done
+- [Agent Sequence](agent-sequence.md) – One agent run as a sequence diagram – a lifeline for you, every agent and every tool, calls as solid arrows, replies dashed and failures in words, work bars on the lifelines, labelled frames round parallel and retried messages; new messages draw themselves across in a live run, and a click opens a message's or participant's details
 - [Agent Steering](agent-steering.md) – Steer an agent while it works – queue a note for the next step and watch it glide into the plan when the agent picks it up, or interrupt right away
 - [Agent Summary](agent-summary.md) – One agent's profile – status, model, tools, owner, live and draft versions, two weeks of runs as a daily chart that switches to a table, success rate, median run and cost, recent failures with their errors, and Edit, Run test and Pause
+- [Agent Trail](agent-trail.md) – The steps an agent works through as one quiet trail – the task and "3/5" on top, done steps with a check and their time, the current one with what it's doing and its sub-steps under a live timer, a waiting step on a dashed ring with Needs your OK, Approve and Decline, and a light running down to where it is
 - [Agent Tree](agent-tree.md) – Who started whom – an orchestrator and its sub-agents as a live tree, with status, cost and time on every card, costs rolling up each branch, and branches that fold to one line
 - [Approval Card](approval-card.md) – An agent asks before it acts – risk badge, preview with an optional diff or arguments, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 - [Approval Gates](approval-gates.md) – The approval requests of one agent run as a stack of cards – the one to decide now on top with who asks, the diff or arguments and the steps it holds; approve, reject or ask for changes with a note, and it drops into the decided list while the next rises
@@ -39,10 +42,12 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Conflict Radar](conflict-radar.md) – Which parallel agents touch the same files and where they collide – a grid of files by agents, conflicts first, status in words, and who changed which lines
 - [Context Map](context-map.md) – What fills an agent's context window, as a living treemap – system prompt, tools, memory, every file, the chat and tool results as tiles that glide as it grows, the free space dashed, and compaction squeezing old turns into a summary
 - [Context Window](context-window.md) – What fills the model's context, as a field of cells – hover a part to light it up, remove files, and compact the conversation while its cells shimmer and clear
+- [Cost Waterfall](cost-waterfall.md) – Where an agent run's money and tokens went – each step a bar stepping up to the total, the costliest in the accent, Cost or Tokens and By cost or In order, a total that rolls up as steps arrive, and details per row
 - [Decision Card](decision-card.md) – One question an agent needs answered before it carries on, docked above the composer – how long it has waited, numbered options with one recommended (focused, never picked), 1–9 to pick, Something else, or Approve and Decline with a reason, a queue to step through, and a receipt with Undo
 - [Decision Inbox](decision-inbox.md) – Open decisions with two quick answers each – answered ones confirm and fold away
 - [Decision Tree](decision-tree.md) – An agent stuck on a decision lays out its options as a tree – the consequences of each branch, the risky ones marked, its own pick highlighted – and you choose a path or write your own
 - [Delegate Board](delegate-board.md) – Hand work to your agents by dragging it onto them – each agent previews its new “busy until” time, or switch to Auto and every new task goes to whoever is free first
+- [Diff Timeline](diff-timeline.md) – What a coding agent changed in a pull request, edit by edit – lines added and removed so far as two overlaid lines, a row per file in the order it was reached with its edits on one time axis and its own diff bar, an edit's diff on hover, and a scrubber with Play to replay the run
 - [Eval Criteria Editor](eval-criteria-editor.md) – What an LLM judge asks about each answer – criteria as questions answered pass or fail, on a scale with words at its ends, or with a label, weights shown as each one's share of the score, worked examples, problems in words beside the field, reorder from the keyboard, the assembled judge prompt to copy, and Try on sample
 - [Failure Clusters](failure-clusters.md) – Failing chats grouped by topic, biggest first – a size bar, the count and share, the trend in a word and an arrow, the criteria each fails, and a row that opens to a summary, quotes, Open chats, Add to dataset and Mark as known; filtered by criterion, or as bubbles
 - [Fallback Chain](fallback-chain.md) – One request finding a model that answers, as a small flow – each model in fallback order, waiting, trying, failed, answered or skipped, with reasons and timings
@@ -50,6 +55,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Handoff](handoff.md) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
 - [Judge Bracket](judge-bracket.md) – How an LLM judge picks the best of several attempts, as a tournament – matches that fill as verdicts stream in, the winner moving on along its connector and the loser stepping back, any match's two answers with the judge's reason and confidence, and the champion to use
 - [Live View](live-view.md) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
+- [Memory Graph](memory-graph.md) – What an agent remembers and the tools it can reach, around it – each memory a card with the file, chat or email it came from, each tool with what it may do where, joined by rounded connectors; a light runs out to the tool in use and in from what it recalls or learns, and you can switch any card off, forget a memory with Undo, or add a file or connect a tool from the agent
 - [Parallel Attempts](parallel-attempts.md) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
 - [Permission Request](permission-request.md) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - [Plan vs Actual](plan-vs-actual.md) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
@@ -74,7 +80,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trace Waterfall](trace-waterfall.md) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
 - [Trigger Builder](trigger-builder.md) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 
-## AI configuration (35)
+## AI configuration (37)
 
 - [AI Column Create](ai-column-create.md) – One prompt filled in for every row of a table – the column's name and what it holds (text, number, yes or no, choices, link or JSON), the prompt with the table's columns as {{variables}} inserted from chips and unknown ones called out, the model and web search, Try on 3 rows with the answers shown, and Create column beside the run's estimate
 - [Budget Alerts](budget-alerts.md) – Spend alerts set by dragging markers along the month's budget – spent so far and the forecast hatched beyond it, a line at the budget, each alert a slider ("Alert at $4,000, 80% of budget") moved by pointer or keys, added by clicking the bar, with its channel, recipients and when the forecast crosses it
@@ -88,6 +94,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Embed Configurator](embed-configurator.md) – Style a site's chat widget beside a live preview – title, greeting, up to four starter prompts to add, move and remove, an accent with its contrast in words, the corner, the radius, the launcher's words and the domains it may load on, with the install snippet to copy
 - [Embed Widget](embed-widget.md) – The chat a visitor opens on a website – a corner launcher with an unread count, and a panel with the agent's name and reply time, a greeting, starter questions, the conversation with a person taking over, a message field and a privacy line, styled by the site's accent, radius and side
 - [Evaluation Dataset Editor](evaluation-dataset-editor.md) – Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
+- [Flow Builder](flow-builder.md) – An automation built in place as a top-down flow – a + on every line opens a short step menu, If / else forks into named paths that join below, steps renamed, moved and removed with Undo and Redo, and a test run that sends a light down the line into the working step
 - [Instruction Editor](instruction-editor.md) – System and developer instructions with variable chips, missing and unused warnings, an app-supplied token count, versions and a word diff
 - [Judge Sampling](judge-sampling.md) – How much of an agent's traffic an LLM judge reads, and what it costs – a stepped rate per segment, rules that always include a chat, the judge model, and live estimates of chats judged a day, the monthly cost and what the sample can see, with a budget cap that warns
 - [Knowledge Source Manager](knowledge-source-manager.md) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
@@ -100,6 +107,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Provider connection](provider-connection.md) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
 - [Quality Alerts](quality-alerts.md) – Alert rules that read as sentences – "Alert #ops-quality when Correctness drops below 3.5 over 24 hours on at least 50 chats", each slot a labelled field, with an on/off switch, when it last fired, how often it would have fired in the last 30 days, and problems in words
 - [Quickstart](quickstart.md) – A first API request with the key filled in – cURL, Python, TypeScript and Go tabs over four numbered steps (Install, Set your key, Send a request, See the response), the key in an environment variable shown masked until revealed, Copy that warns when it copies the key, and Run it with the response the page passes back
+- [Rate Limit Planner](rate-limit-planner.md) – Plan when agent runs happen under one API rate limit – the day's load as a stepped area against the limit with the overflow hatched, the peak and time over in words, a bar per run to drag or move with the arrow keys, fixed runs, and Spread out to lower the peak
 - [Rate Limit Status](rate-limit-status.md) – How close each model is to its provider's rate limits – requests, input and output tokens a minute as meters, the headroom in words (Plenty, Near limit, Limited with a reset countdown), 429s in the last hour, the tier and a sparkline of the last hour's peak, tightest first
 - [Retrieval Settings](retrieval-settings.md) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
 - [Secrets Manager](secrets-manager.md) – The secrets agents run on, write-only – missing ones first with the agents that need them, expired and expiring next, Set value or Replace in a password field that's handed to the page and forgotten, Delete that names what will stop working, and new secrets by UPPER_SNAKE name
@@ -112,7 +120,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trigger List](trigger-list.md) – Every way an agent starts, one row each – schedule, webhook, event, email or manual in words, when it last fired and how often this week, errors in words, a switch to turn it off, Edit, and Add trigger by kind
 - [Workflow Canvas](workflow-canvas.md) – An agent workflow as a node graph – step cards with their kind, status in a mark and a word, and curved labelled connectors; pan and zoom, drag steps and connect them from their ports or the keyboard (M moves, C connects, A adds), a flowing connector into the running step, and the same graph as a list
 
-## AI & chat (56)
+## AI & chat (57)
 
 - [Agent Face](agent-face.md) – Donovan's animated face, which shows what the agent is doing – nine states that blend on springs, blinks and glances, a nod or a hop, sharp from 16 to 256 px and resting when it isn't busy
 - [AI Answer](ai-answer.md) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
@@ -160,6 +168,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Region Overlay](region-overlay.md) – What a vision model read, drawn on the image – numbered boxes linked to a list with each region's kind, confidence in a word and a percentage and the text it read, filtered by kind and a confidence threshold, with the boxes switched off to see the image plainly
 - [Response Selection](response-selection.md) – Select part of a model's answer and act on it – reply quoting it, ask why, or request an edit that comes back as a diff to accept or reject
 - [Retrieval Inspector](retrieval-inspector.md) – What the model was given to answer with – every retrieved chunk with its score, source, freshness, and whether the answer used it
+- [Run Controls](run-controls.md) – Every control a running agent needs in one composer – Stop, then Resume from where the answer stopped, Retry or Dismiss; steer it mid-answer or queue what's next as numbered chips; Chat or Act, permissions and how full the context is, folding into More when narrow
 - [Selection Translate](selection-translate.md) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 - [Session State](session-state.md) – Where a long LLM session stands – a health pill, tiles for the primary goal, open loops, pending artifacts and context pressure with a meter that warns as it fills, and status chips, the tiles optionally opening what they count
 - [Smart Recommendation](smart-recommendation.md) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo

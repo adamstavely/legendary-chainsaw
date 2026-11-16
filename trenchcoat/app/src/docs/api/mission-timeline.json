@@ -1,0 +1,495 @@
+{
+ "elements": [
+  {
+   "tag": "tc-mission-timeline",
+   "className": "TcMissionTimeline",
+   "description": "The home of an agent product on one clock – what happened since you looked, every agent on its own lane, and what\nneeds you, under one status filter.",
+   "properties": [
+    {
+     "name": "agents",
+     "attribute": null,
+     "type": "LaneAgent[]",
+     "default": "[]",
+     "description": "One lane per agent – Agent Lanes' `agents`",
+     "readonly": false
+    },
+    {
+     "name": "tasks",
+     "attribute": null,
+     "type": "LaneTask[]",
+     "default": "[]",
+     "description": "The agents' tasks – Agent Lanes' `tasks`",
+     "readonly": false
+    },
+    {
+     "name": "span",
+     "attribute": "span",
+     "type": "number | undefined",
+     "default": "SPAN",
+     "description": "How much time the timeline shows, in ms – 30 minutes by default, also when set to undefined",
+     "readonly": false
+    },
+    {
+     "name": "rate",
+     "attribute": "rate",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How fast the timeline's clock runs against real time, for demos – Agent Lanes' `rate`",
+     "readonly": false
+    },
+    {
+     "name": "onApprove",
+     "attribute": null,
+     "type": "LaneTaskHandler | undefined",
+     "default": "undefined",
+     "description": "Approve on a waiting task; it may return a promise",
+     "readonly": false
+    },
+    {
+     "name": "onReject",
+     "attribute": null,
+     "type": "LaneTaskHandler | undefined",
+     "default": "undefined",
+     "description": "Reject on a waiting task; it may return a promise",
+     "readonly": false
+    },
+    {
+     "name": "openable",
+     "attribute": "openable",
+     "type": "boolean",
+     "default": "false",
+     "description": "A task's details show Open, which fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The status filter changed ({ filter }: MissionFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "mtl",
+   "cssProperties": [],
+   "tokens": []
+  }
+ ],
+ "functions": [
+  {
+   "name": "laneAgentStatuses",
+   "signature": "laneAgentStatuses(agents: LaneAgent[], tasks: LaneTask[]): void",
+   "description": "Each agent's status from its tasks: running, waiting, failed (its latest task) or done"
+  }
+ ],
+ "react": [
+  {
+   "component": "MissionTimeline",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading (default \"Mission timeline\")"
+    },
+    {
+     "name": "filter",
+     "type": "MissionFilter",
+     "optional": true,
+     "description": "Which agents show: \"all\", \"running\", \"waiting\" or \"failed\". Controlled when defined"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "MissionFilter",
+     "optional": true,
+     "description": "The filter at first when uncontrolled – \"all\" by default"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: MissionFilter) => void",
+     "optional": true,
+     "description": "Called with the new filter"
+    },
+    {
+     "name": "onOpenTask",
+     "type": "(task: LaneTask) => void",
+     "optional": true,
+     "description": "\"Open\" in a task's details – shown when given"
+    },
+    {
+     "name": "onDecide",
+     "type": "TcMissionTimeline[\"decide\"]",
+     "optional": true,
+     "description": "A decision on the side was answered; it may return a promise"
+    }
+   ],
+   "hides": [
+    "heading",
+    "filter",
+    "decide",
+    "openable",
+    "children"
+   ],
+   "events": {
+    "tc-filter-change": "onFilterChange",
+    "tc-open": "onOpenTask"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-mission-timeline",
+   "className": "TcMissionTimeline",
+   "module": "@adamstavely/trenchcoat/mission-timeline",
+   "data": [
+    "agents",
+    "tasks",
+    "onApprove",
+    "onReject"
+   ],
+   "attributes": [
+    {
+     "name": "span",
+     "attribute": "span"
+    },
+    {
+     "name": "rate",
+     "attribute": "rate"
+    },
+    {
+     "name": "openable",
+     "attribute": "openable"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "agent-lanes",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "agent-lanes",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "agent-lanes",
+     "agent-recap",
+     "internal/mission"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "agent-lanes",
+     "internal/kit",
+     "agent-recap"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "agent-lanes"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "agent-lanes",
+     "agent-recap"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "agent-lanes"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "agent-lanes",
+     "internal/base",
+     "agent-recap",
+     "internal/mission",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "agent-lanes",
+     "agent-recap"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "agent-lanes"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "agent-recap",
+     "internal/mission",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (agent-lanes)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (agent-lanes)",
+   "requestAnimationFrame (internal/chart/motion › subscribeTick)",
+   "requestAnimationFrame (internal/chart/motion › loop)"
+  ],
+  "animations": 3,
+  "observers": [
+   "IntersectionObserver (agent-lanes)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "IntersectionObserver (agent-recap)"
+  ],
+  "clock": [
+   "Date.now() (agent-lanes)",
+   "Date.now() (agent-recap)",
+   "performance.now() (internal/chart/motion-controller › clock)"
+  ],
+  "listeners": [
+   "document visibilitychange (agent-lanes)",
+   "document pointerdown (agent-lanes)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "agent-lanes",
+    "agent-recap"
+   ],
+   "hidden": [
+    "agent-lanes"
+   ],
+   "reducedMotion": [
+    "CSS (agent-lanes)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (agent-recap)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 135716,
+  "gzip": 35237
+ }
+}

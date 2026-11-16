@@ -592,7 +592,7 @@ Approving then is held back: a status message says which field to fix, and focus
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -616,13 +616,13 @@ Approving then is held back: a status message says which field to fix, and focus
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.1 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of details replaced |
-| First on the page | 31 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.8 ms | details: first render, 350 nodes; update 0.4 ms |
-| 1,000 items | 16 ms | details: first render, 3,050 nodes; update 1.5 ms |
+| First render | **0.6 ms** | the gallery demo's data, 59 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of details replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.1 ms | details: first render, 350 nodes; update 0.2 ms |
+| 1,000 items | 12 ms | details: first render, 3,050 nodes; update 1.0 ms |
 
-1,000 items of details: 16 ms, 3,050 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of details: 12 ms, 3,050 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

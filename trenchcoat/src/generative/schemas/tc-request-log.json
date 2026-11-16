@@ -85,10 +85,13 @@
         "model": {
           "type": "string"
         },
+        "close": {
+          "type": "string"
+        },
         "cost": {
           "type": "string"
         },
-        "close": {
+        "tokens": {
           "type": "string"
         },
         "median": {
@@ -131,9 +134,6 @@
           "type": "string"
         },
         "endpoint": {
-          "type": "string"
-        },
-        "tokens": {
           "type": "string"
         },
         "cache": {

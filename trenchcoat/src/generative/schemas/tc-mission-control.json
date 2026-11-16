@@ -1,0 +1,326 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-mission-control.json",
+  "title": "tc-mission-control",
+  "description": "The home of an agent product – what happened since you looked, who runs under whom, and what needs you, under one\nstatus filter.",
+  "type": "object",
+  "properties": {
+    "root": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/TreeAgentStatus"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "started": {
+          "type": "number"
+        },
+        "ended": {
+          "type": "number"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeAgent"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "task",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "The orchestrator, with its sub-agents as `children` – the Agent Tree's `root`"
+    },
+    "selectable": {
+      "type": "boolean",
+      "description": "Agent cards are buttons that fire tc-select"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The block's heading – \"Mission control\" or \"Mission timeline\" by default"
+    },
+    "since": {
+      "type": "number",
+      "description": "Since when \"Since you looked\" counts, epoch ms – by default the first event"
+    },
+    "now": {
+      "type": "number",
+      "description": "The end of the period, epoch ms – by default the last event. The block reads no clock of its own"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MissionEvent"
+      },
+      "description": "What happened in the period, for the chart and the line in words"
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MissionDecision"
+      },
+      "description": "The decisions waiting on you, shown on the side"
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/DecisionAnswer"
+      },
+      "description": "The decisions answered so far, by id – the Decision Inbox's own state, passed through"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "all",
+        "failed",
+        "running",
+        "waiting"
+      ],
+      "description": "Which agents show: all, or only running, waiting or failed ones. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "A locale for times, e.g. \"en-GB\""
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "since": {
+          "type": "string"
+        },
+        "sinceTitle": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failedEvents": {
+          "type": "string"
+        },
+        "needsYou": {
+          "type": "string"
+        },
+        "needYou": {
+          "type": "string"
+        },
+        "nothing": {
+          "type": "string"
+        },
+        "needsYouTitle": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "agents": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TreeAgentStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "queued",
+        "running",
+        "stopped",
+        "waiting"
+      ]
+    },
+    "TreeAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string",
+          "description": "What it was asked to do"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          },
+          "description": "Marks of the tools it works with (cloned) – shown as small overlapping tiles"
+        },
+        "status": {
+          "$ref": "#/definitions/TreeAgentStatus"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Its own cost so far – the children's costs are added on top"
+        },
+        "ask": {
+          "type": "string",
+          "description": "What it waits for you to decide – shown when you open \"needs you\""
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong – shown when you open \"failed\""
+        },
+        "started": {
+          "type": "number",
+          "description": "When it started and ended (ms) – for the time it took"
+        },
+        "ended": {
+          "type": "number"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeAgent"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "task",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "MissionEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agentId": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened, in epoch ms"
+        },
+        "kind": {
+          "$ref": "#/definitions/RecapKind"
+        },
+        "label": {
+          "type": "string",
+          "description": "What happened, for its marker: \"Tax ID check timed out\""
+        },
+        "notable": {
+          "type": "boolean",
+          "description": "Gets a marker over the chart – by default failed and needs-you events do, done ones don't"
+        }
+      },
+      "required": [
+        "at",
+        "kind"
+      ],
+      "description": "Something that happened since you looked; `agentId` ties it to an agent, so the filter can keep or drop it"
+    },
+    "RecapKind": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "needs-you"
+      ]
+    },
+    "MissionDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agentId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Short context under the title"
+        },
+        "primary": {
+          "type": "string",
+          "description": "Main answer, shown as the dark button"
+        },
+        "secondary": {
+          "type": "string",
+          "description": "Other answer, shown as the light button"
+        },
+        "collapsed": {
+          "type": "boolean",
+          "description": "Starts folded to one muted line – click to open"
+        }
+      },
+      "required": [
+        "id",
+        "primary",
+        "secondary",
+        "title"
+      ],
+      "description": "A decision waiting on you; `agentId` ties it to the agent that asks"
+    },
+    "DecisionAnswer": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary"
+      ]
+    }
+  }
+}

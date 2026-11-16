@@ -4,8 +4,8 @@ import type { ApprovalGate } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* An agent publishing a research institute's annual field-survey report has stopped at three gates. Decide the top
-   one – Approve, Reject or Ask for changes with a note – and it drops into Decided while the next rises. Open a
-   decided row to see what was decided. */
+   one – Approve, Reject or Ask for changes with a note – and it drops into Decided while the next rises. A request
+   with arguments can be changed first (try the newsletter's send time). Open a decided row to see what was decided. */
 
 const NOW = Date.UTC(2026, 10, 6, 14, 10);
 const min = (m: number) => NOW - m * 60_000;
@@ -82,10 +82,10 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         run="Publish the 2026 field-survey report"
         defaultGates={GATES}
         now={NOW}
-        onDecide={({ gate, decision, note }) =>
+        onDecide={({ gate, decision, note, edited }) =>
           new Promise<void>((resolve) =>
             setTimeout(() => {
-              setLog(`${decision === "approved" ? "Approved" : decision === "rejected" ? "Rejected" : "Asked for changes on"} “${gate.title}”${note ? ` – “${note}”` : ""}`);
+              setLog(`${decision === "approved" ? (edited ? "Approved with changes" : "Approved") : decision === "rejected" ? "Rejected" : "Asked for changes on"} “${gate.title}”${note ? ` – “${note}”` : ""}`);
               resolve();
             }, 600),
           )

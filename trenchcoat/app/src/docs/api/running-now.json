@@ -78,6 +78,14 @@
      "readonly": false
     },
     {
+     "name": "pausable",
+     "attribute": "pausable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offer Pause on running tasks and Resume on paused ones",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -90,7 +98,7 @@
     {
      "name": "tc-task-action",
      "detail": "",
-     "description": "Review, Stop or Open was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open",
+     "description": "Review, Stop, Open, Pause or Resume was chosen on a task ({ id, action, task }: RunningTaskAction); cancelable – prevented, the panel stays open and a paused or resumed task keeps its status",
      "cancelable": true
     },
     {
@@ -277,7 +285,7 @@
      "name": "onTaskAction",
      "type": "(action: RunningNowAction, task: RunningTask) => boolean | void",
      "optional": true,
-     "description": "Review, Stop or Open was chosen on a task; return false to keep the panel open"
+     "description": "Review, Stop, Open, Pause or Resume was chosen on a task; return false to keep the panel open (and a paused or resumed task its status)"
     }
    ],
    "hides": [],
@@ -356,7 +364,7 @@
      "name": "onTaskAction",
      "type": "(action: RunningNowAction, task: RunningTask) => boolean | void",
      "optional": true,
-     "description": "Review, Stop or Open was chosen on a task; return false to keep the panel open"
+     "description": "Review, Stop, Open, Pause or Resume was chosen on a task; return false to keep the panel open (and a paused or resumed task its status)"
     }
    ],
    "hides": [
@@ -400,6 +408,10 @@
     {
      "name": "notifiable",
      "attribute": "notifiable"
+    },
+    {
+     "name": "pausable",
+     "attribute": "pausable"
     }
    ],
    "events": [
@@ -707,7 +719,7 @@
   "windowed": false
  },
  "size": {
-  "min": 42775,
-  "gzip": 13541
+  "min": 44823,
+  "gzip": 13946
  }
 }

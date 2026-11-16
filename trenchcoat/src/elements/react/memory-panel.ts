@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcMemoryPanel, type Memory } from "../memory-panel";
+import { TcMemoryPanel, type Memory, type MemoryConsent } from "../memory-panel";
 import { h, useControlled } from "./internal";
 
-export type { Memory } from "../memory-panel";
+export type { Memory, MemoryConsent } from "../memory-panel";
 
 const RawMemoryPanel = createComponent({
   tagName: "tc-memory-panel",
@@ -13,6 +13,7 @@ const RawMemoryPanel = createComponent({
     onTcMemoriesChange: "tc-memories-change" as EventName<CustomEvent<{ memories: Memory[] }>>,
     onTcEnabledChange: "tc-enabled-change" as EventName<CustomEvent<{ enabled: boolean }>>,
     onTcAction: "tc-action" as EventName<CustomEvent<null>>,
+    onTcConsent: "tc-consent" as EventName<CustomEvent<MemoryConsent>>,
   },
 });
 type RawMemoryPanelProps = React.ComponentProps<typeof RawMemoryPanel>;

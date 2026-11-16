@@ -14,7 +14,9 @@ import { adoptStyles } from "./internal/styles";
  * <tc-approval-gates> – the approval requests of one agent run as a stack of cards. The request to decide now is on
  * top: who asks, what exactly (a diff or the call's arguments, from tc-approval-card) and why, and the steps it holds
  * back. The other open requests peek out behind it ("1 of 2"). Approve, Reject or Ask for changes (with a note):
- * the card drops into the Decided list below and the next one rises. A strip above says it in words – “Waiting on
+ * the card drops into the Decided list below and the next one rises. A request with arguments can be changed first:
+ * "Change it first" turns them into fields, and "Approve with changes" sends the edited arguments – the decided row
+ * says "Approved with changes" and which ones changed. A strip above says it in words – “Waiting on
  * you 2 · Decided 1/3 · Paused – 3 steps wait on 2 gates”. Decided rows fold open to show what was decided.
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
@@ -25,12 +27,13 @@ import { adoptStyles } from "./internal/styles";
  * card, or to the decided row when nothing else waits.
  */
 
-/* Layers, check, x, pencil, pause and chevron-down: Lucide (ISC, lucide.dev) */
+/* Layers, check, x, pencil, square-pen, pause and chevron-down: Lucide (ISC, lucide.dev) */
 const layersIcon = svg`<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path>`;
 const mini = (body: ReturnType<typeof svg>) => html`<svg class="ui-apg__mini" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
 const checkIcon = mini(svg`<path d="M20 6 9 17l-5-5"></path>`);
 const crossIcon = mini(svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`);
 const pencilIcon = mini(svg`<path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z"></path><path d="m15 5 4 4"></path>`);
+const editIcon = mini(svg`<path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>`);
 const pauseIcon = mini(svg`<rect x="14" y="4" width="4" height="16" rx="1"></rect><rect x="6" y="4" width="4" height="16" rx="1"></rect>`);
 const chevronIcon = mini(svg`<path d="m6 9 6 6 6-6"></path>`);
 
@@ -64,11 +67,23 @@ export type ApprovalGate = {
   context?: { before?: string[]; touches?: string[] };
   /** Marks a request that holds up the whole run */
   blocking?: boolean;
+  /** Approved with changes: `args` holds the arguments as approved */
+  edited?: boolean;
+  /** With `edited`: the arguments as the agent asked for them */
+  originalArgs?: ApprovalArgs;
 };
 
 /** Details of the events */
-export type GateDecide = { gate: ApprovalGate; decision: GateDecision; note: string };
-export type GatesChange = { gates: ApprovalGate[]; gate: ApprovalGate; decision: GateDecision; note: string };
+export type GateDecide = {
+  gate: ApprovalGate;
+  decision: GateDecision;
+  note: string;
+  /** "Approve with changes": the arguments as approved */
+  args?: ApprovalArgs;
+  /** "Approve with changes": whether any argument differs from what the agent asked for */
+  edited?: boolean;
+};
+export type GatesChange = { gates: ApprovalGate[]; gate: ApprovalGate; decision: GateDecision; note: string; args?: ApprovalArgs; edited?: boolean };
 export type GatesExpandedChange = { expanded: string | null };
 
 export type ApprovalGatesLabels = {
@@ -98,6 +113,14 @@ export type ApprovalGatesLabels = {
   approved: string;
   rejected: string;
   "changes-requested": string;
+  edit: string;
+  approveEdited: string;
+  approvedEdited: string;
+  editing: string;
+  changed: string;
+  asked: string;
+  invalidNumber: string;
+  invalidJson: string;
 };
 export const defaultApprovalGatesLabels: ApprovalGatesLabels = {
   waiting: "Waiting on you",
@@ -126,7 +149,21 @@ export const defaultApprovalGatesLabels: ApprovalGatesLabels = {
   approved: "Approved",
   rejected: "Rejected",
   "changes-requested": "Changes asked",
+  edit: "Change it first",
+  approveEdited: "Approve with changes",
+  approvedEdited: "Approved with changes",
+  editing: "Change the arguments, then approve",
+  changed: "Changed",
+  asked: "As asked",
+  invalidNumber: "Enter a number",
+  invalidJson: "Enter valid JSON",
 };
+
+type ArgKind = "string" | "number" | "boolean" | "json";
+const argKind = (v: unknown): ArgKind => (typeof v === "string" ? "string" : typeof v === "number" ? "number" : typeof v === "boolean" ? "boolean" : "json");
+const argText = (v: unknown) => (argKind(v) === "json" ? JSON.stringify(v, null, 2) : String(v));
+/** The keys whose values differ */
+const changedKeys = (a: ApprovalArgs = {}, b: ApprovalArgs = {}) => [...new Set([...Object.keys(a), ...Object.keys(b)])].filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k]));
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const fmtCache = new Map<string, Intl.DateTimeFormat>();
@@ -151,8 +188,8 @@ let uid = 0;
 /**
  * The approval requests of an agent run as a stack of cards – decide the top one, and it drops into the decided list.
  * @tag tc-approval-gates
- * @fires tc-decide - Approve, Reject or Send (Ask for changes) was pressed ({ gate, decision, note }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called
- * @fires tc-gates-change - A decision went through ({ gates, gate, decision, note }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use)
+ * @fires tc-decide - Approve, Approve with changes, Reject or Send (Ask for changes) was pressed ({ gate, decision, note, args?, edited? }: GateDecide); cancelable – prevented, nothing is decided and onDecide isn't called
+ * @fires tc-gates-change - A decision went through ({ gates, gate, decision, note, args?, edited? }: GatesChange); cancelable – prevented, `gates` stays as it was (controlled use)
  * @fires tc-expanded-change - A decided row was folded open or shut ({ expanded }: GatesExpandedChange); cancelable – prevented, `expanded` stays as it was
  */
 export class TcApprovalGates extends TcElement {
@@ -178,6 +215,12 @@ export class TcApprovalGates extends TcElement {
   /** @internal The open note form, by gate id */
   @state() accessor noteFor: string | null = null;
   /** @internal */ @state() accessor noteText = "";
+  /** @internal The gate whose arguments are being changed */
+  @state() accessor editFor: string | null = null;
+  /** @internal The changed arguments as typed, by key */
+  @state() accessor editDraft: Record<string, string> = {};
+  /** @internal Arguments that don't parse, by key, with what's wrong */
+  @state() accessor editErrors: Record<string, string> = {};
   /** @internal The top card's "Full context", by gate id */
   @state() accessor contextFor: string | null = null;
   /** @internal The decision on its way (a pending onDecide promise) */
@@ -234,14 +277,15 @@ export class TcApprovalGates extends TcElement {
       .map(({ g }) => g);
   }
 
-  private async decide(gate: ApprovalGate, decision: GateDecision) {
+  private async decide(gate: ApprovalGate, decision: GateDecision, args?: ApprovalArgs) {
     if (this.busy) return;
     const note = decision === "changes-requested" ? this.noteText.trim() : "";
     if (decision === "changes-requested" && !note) {
       this.querySelector<HTMLTextAreaElement>(".ui-apg__note-field")?.focus();
       return;
     }
-    const detail: GateDecide = { gate, decision, note };
+    const edited = args ? changedKeys(gate.args, args).length > 0 : undefined;
+    const detail: GateDecide = { gate, decision, note, ...(args ? { args, edited } : {}) };
     if (!this.emit<GateDecide>("tc-decide", detail, { cancelable: true })) return;
     this.failed = false;
     let result: void | Promise<unknown>;
@@ -265,7 +309,13 @@ export class TcApprovalGates extends TcElement {
       if (!this.alive) return;
       this.busy = null;
     }
-    const next: ApprovalGate = { ...gate, status: decision, ...(this.now !== undefined ? { decidedAt: this.now } : {}), ...(note ? { note } : {}) };
+    const next: ApprovalGate = {
+      ...gate,
+      status: decision,
+      ...(this.now !== undefined ? { decidedAt: this.now } : {}),
+      ...(note ? { note } : {}),
+      ...(args && edited ? { args, edited: true, originalArgs: gate.args } : {}),
+    };
     const gates = this.gates.map((g) => (g.id === gate.id ? next : g));
     const following = gates.find((g) => g.status === "open");
     const w = this.words;
@@ -274,10 +324,65 @@ export class TcApprovalGates extends TcElement {
     this.rising = following?.id ?? null;
     this.noteFor = null;
     this.noteText = "";
+    this.editFor = null;
+    this.editDraft = {};
+    this.editErrors = {};
     this.contextFor = null;
     this.focusAfter = this.contains(document.activeElement) ? gate.id : null;
-    this.announce = `${w[decision]}: ${gate.title}. ${following ? `Next: ${following.title}.` : `${w.nothingWaits}.`}`;
-    if (this.emit<GatesChange>("tc-gates-change", { gates, gate: next, decision, note }, { cancelable: true })) this.gates = gates;
+    this.announce = `${edited ? w.approvedEdited : w[decision]}: ${gate.title}. ${following ? `Next: ${following.title}.` : `${w.nothingWaits}.`}`;
+    if (this.emit<GatesChange>("tc-gates-change", { gates, gate: next, decision, note, ...(args ? { args, edited } : {}) }, { cancelable: true })) this.gates = gates;
+  }
+
+  private openEdit(gate: ApprovalGate) {
+    if (this.busy || !gate.args) return;
+    this.noteFor = null;
+    this.editFor = gate.id;
+    this.editDraft = Object.fromEntries(Object.entries(gate.args).map(([k, v]) => [k, argText(v)]));
+    this.editErrors = {};
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-apg__edit-field")?.focus());
+  }
+
+  private closeEdit() {
+    this.editFor = null;
+    this.editDraft = {};
+    this.editErrors = {};
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-apg__edit")?.focus());
+  }
+
+  /** The typed arguments read back into their types; null, with the errors shown, when one doesn't parse */
+  private parseEdit(gate: ApprovalGate): ApprovalArgs | null {
+    const w = this.words;
+    const out: ApprovalArgs = {};
+    const errors: Record<string, string> = {};
+    for (const [k, v] of Object.entries(gate.args ?? {})) {
+      const text = this.editDraft[k] ?? argText(v);
+      const kind = argKind(v);
+      if (kind === "string") out[k] = text;
+      else if (kind === "boolean") out[k] = text === "true";
+      else if (kind === "number") {
+        const n = text.trim() === "" ? NaN : Number(text);
+        if (Number.isFinite(n)) out[k] = n;
+        else errors[k] = w.invalidNumber;
+      } else {
+        try {
+          out[k] = JSON.parse(text);
+        } catch {
+          errors[k] = w.invalidJson;
+        }
+      }
+    }
+    this.editErrors = errors;
+    const first = Object.keys(errors)[0];
+    if (first) {
+      void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-apg__edit-field[data-key="${CSS.escape(first)}"]`)?.focus());
+      return null;
+    }
+    return out;
+  }
+
+  private approveEdited(gate: ApprovalGate) {
+    const args = this.parseEdit(gate);
+    if (args) void this.decide(gate, "approved", args);
   }
 
   private setExpanded(id: string | null) {
@@ -318,6 +423,11 @@ export class TcApprovalGates extends TcElement {
       this.noteText = "";
     }
     if (this.contextFor && open[0]?.id !== this.contextFor) this.contextFor = null;
+    if (this.editFor && open[0]?.id !== this.editFor) {
+      this.editFor = null;
+      this.editDraft = {};
+      this.editErrors = {};
+    }
     const decided = this.decided;
     if (!decided.some((g) => g.id === this.activeRow)) this.activeRow = decided[0]?.id ?? null;
     this.toggleAttribute("data-busy", !!this.busy);
@@ -364,6 +474,7 @@ export class TcApprovalGates extends TcElement {
     const hasContext = !!(ctx?.before?.length || ctx?.touches?.length);
     const ctxOpen = hasContext && this.contextFor === gate.id;
     const noteOpen = this.noteFor === gate.id;
+    const editOpen = this.editFor === gate.id && !!gate.args;
     const holds = gate.holds ?? [];
     const spinner = html`<svg class="ui-apg__spinner" viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="6"></circle>`}</svg>`;
     return html`<div
@@ -386,9 +497,10 @@ export class TcApprovalGates extends TcElement {
       ${gate.diff?.lines.length || gate.args
         ? html`<div class="ui-apg__show">
             ${gate.diff?.lines.length ? renderApprovalDiff(gate.diff, w.diff) : nothing}
-            ${gate.args ? renderApprovalArgs(gate.args, w.args) : nothing}
+            ${gate.args && !editOpen ? renderApprovalArgs(gate.args, w.args) : nothing}
           </div>`
         : nothing}
+      ${editOpen ? this.renderEditor(gate, id) : nothing}
       ${hasContext
         ? html`<button type="button" class="ui-apg__fold" aria-expanded=${ctxOpen ? "true" : "false"} aria-controls="${id}-ctx" @click=${() => (this.contextFor = ctxOpen ? null : gate.id)}>
               ${chevronIcon}${w.context}
@@ -442,13 +554,65 @@ export class TcApprovalGates extends TcElement {
       ${this.failed ? html`<p class="ui-apg__error" role="alert">${w.error}</p>` : nothing}
       ${noteOpen
         ? nothing
+        : editOpen
+          ? html`<div class="ui-apg__actions">
+              <span class="ui-apg__grow"></span>
+              <button type="button" class="ui-apg__btn ui-apg__btn--ghost ui-apg__edit-cancel" aria-disabled=${ifDefined(busy ? "true" : undefined)} @click=${() => !this.busy && this.closeEdit()}>${w.cancel}</button>
+              <button type="button" class="ui-apg__btn ui-apg__btn--primary ui-apg__approve-edited" aria-disabled=${ifDefined(busy ? "true" : undefined)} @click=${() => this.approveEdited(gate)}>${w.approveEdited}${busy === "approved" ? spinner : nothing}</button>
+            </div>`
         : html`<div class="ui-apg__actions">
             <button type="button" class="ui-apg__btn ui-apg__btn--ghost ui-apg__changes" aria-disabled=${ifDefined(busy ? "true" : undefined)} @click=${() => this.openNote(gate)}>${pencilIcon}${w.changes}</button>
+            ${gate.args ? html`<button type="button" class="ui-apg__btn ui-apg__btn--ghost ui-apg__edit" aria-disabled=${ifDefined(busy ? "true" : undefined)} @click=${() => this.openEdit(gate)}>${editIcon}${w.edit}</button>` : nothing}
             <span class="ui-apg__grow"></span>
             <button type="button" class="ui-apg__btn ui-apg__btn--secondary ui-apg__reject" aria-disabled=${ifDefined(busy ? "true" : undefined)} @click=${() => void this.decide(gate, "rejected")}>${w.reject}${busy === "rejected" ? spinner : nothing}</button>
             <button type="button" class="ui-apg__btn ui-apg__btn--primary ui-apg__approve" aria-disabled=${ifDefined(busy ? "true" : undefined)} @click=${() => void this.decide(gate, "approved")}>${w.approve}${busy === "approved" ? spinner : nothing}</button>
           </div>`}
     </div>`;
+  }
+
+  /** "Change it first": a field per argument – text, a number, a switch, or JSON for anything nested */
+  private renderEditor(gate: ApprovalGate, id: string) {
+    const w = this.words;
+    const busy = !!this.busy;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.isComposing) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        this.closeEdit();
+      } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        this.approveEdited(gate);
+      }
+    };
+    const set = (k: string, v: string) => {
+      this.editDraft = { ...this.editDraft, [k]: v };
+      if (this.editErrors[k]) {
+        const { [k]: _gone, ...rest } = this.editErrors;
+        this.editErrors = rest;
+      }
+    };
+    return html`<fieldset class="ui-apg__editor" @keydown=${onKey}>
+      <legend class="ui-apg__note-label">${w.editing}</legend>
+      ${Object.entries(gate.args ?? {}).map(([k, v], i) => {
+        const kind = argKind(v);
+        const fid = `${id}-arg-${i}`;
+        const err = this.editErrors[k];
+        const text = this.editDraft[k] ?? argText(v);
+        const changed = text !== argText(v);
+        const errId = `${fid}-err`;
+        const field =
+          kind === "boolean"
+            ? html`<input class="ui-apg__edit-field ui-apg__edit-check" data-key=${k} id=${fid} type="checkbox" .checked=${live(text === "true")} ?disabled=${busy} @change=${(e: Event) => set(k, String((e.target as HTMLInputElement).checked))} />`
+            : kind === "json"
+              ? html`<textarea class="ui-apg__edit-field ui-apg__note-field ui-apg__edit-json" data-key=${k} id=${fid} rows=${Math.min(8, text.split("\n").length)} .value=${live(text)} ?disabled=${busy} aria-invalid=${err ? "true" : "false"} aria-describedby=${ifDefined(err ? errId : undefined)} @input=${(e: Event) => set(k, (e.target as HTMLTextAreaElement).value)}></textarea>`
+              : html`<input class="ui-apg__edit-field ui-apg__note-field" data-key=${k} id=${fid} type="text" inputmode=${ifDefined(kind === "number" ? "decimal" : undefined)} .value=${live(text)} ?disabled=${busy} aria-invalid=${err ? "true" : "false"} aria-describedby=${ifDefined(err ? errId : undefined)} @input=${(e: Event) => set(k, (e.target as HTMLInputElement).value)} />`;
+        return html`<div class="ui-apg__edit-row" data-kind=${kind} ?data-changed=${changed}>
+          <label class="ui-apg__edit-key" for=${fid}><code>${k}</code>${changed ? html`<span class="ui-apg__edit-tag">${w.changed}</span>` : nothing}</label>
+          ${field}
+          ${err ? html`<p class="ui-apg__error" id=${errId}>${err}</p>` : nothing}
+        </div>`;
+      })}
+    </fieldset>`;
   }
 
   private renderStack(open: ApprovalGate[]) {
@@ -477,6 +641,8 @@ export class TcApprovalGates extends TcElement {
           const time = g.decidedAt !== undefined ? when(g.decidedAt, this.now, this.locale, w.justNow) : this.decidedHere.includes(g.id) ? w.justNow : "";
           const status = g.status as GateDecision;
           const hasDetail = !!(g.reason || g.note || g.diff?.lines.length || g.args || g.holds?.length);
+          const edited = status === "approved" && !!g.edited;
+          const changed = edited ? changedKeys(g.originalArgs, g.args) : [];
           return html`<li class="ui-apg__item" ?data-land=${this.landing === g.id}>
             <button
               type="button"
@@ -491,7 +657,7 @@ export class TcApprovalGates extends TcElement {
             >
               <span class="ui-apg__mark" data-status=${status} aria-hidden="true">${status === "approved" ? checkIcon : status === "rejected" ? crossIcon : pencilIcon}</span>
               <span class="ui-apg__row-title">${g.title}</span><span class="tc-sr-only">, </span>
-              <span class="ui-apg__row-meta">${g.agent ? html`<span class="ui-apg__row-agent">${g.agent} · </span>` : nothing}<span class="ui-apg__row-status">${w[status]}</span>${time ? html`<span class="ui-apg__row-time"> · ${time}</span>` : nothing}</span>
+              <span class="ui-apg__row-meta">${g.agent ? html`<span class="ui-apg__row-agent">${g.agent} · </span>` : nothing}<span class="ui-apg__row-status">${edited ? w.approvedEdited : w[status]}</span>${time ? html`<span class="ui-apg__row-time"> · ${time}</span>` : nothing}</span>
               ${hasDetail ? html`<span class="ui-apg__chev" aria-hidden="true">${chevronIcon}</span>` : nothing}
             </button>
             ${hasDetail
@@ -499,7 +665,9 @@ export class TcApprovalGates extends TcElement {
                   ${g.reason ? html`<p class="ui-apg__reason">${g.reason}</p>` : nothing}
                   ${g.note ? html`<p class="ui-apg__said"><span class="ui-apg__eyebrow">${w.note}</span>${g.note}</p>` : nothing}
                   ${open && g.diff?.lines.length ? renderApprovalDiff(g.diff, w.diff) : nothing}
+                  ${changed.length ? html`<p class="ui-apg__said"><span class="ui-apg__eyebrow">${w.changed}</span><span class="tc-sr-only">: </span>${changed.join(", ")}</p>` : nothing}
                   ${open && g.args ? renderApprovalArgs(g.args, w.args) : nothing}
+                  ${open && edited && g.originalArgs ? renderApprovalArgs(g.originalArgs, w.asked) : nothing}
                   ${g.holds?.length ? html`<p class="ui-apg__holds">${pauseIcon}<span>${status === "approved" ? w.released : w.held} ${plural(g.holds.length, "step", "steps")}: ${g.holds.join(", ")}</span></p>` : nothing}
                 </div>`
               : nothing}
@@ -764,6 +932,20 @@ export class TcApprovalGates extends TcElement {
 .ui-apg__note-field:hover { box-shadow: var(--tc-field-shadow-hover); }
 .ui-apg__note-field:focus { box-shadow: var(--tc-field-shadow-focus); }
 .ui-apg__note-actions { display: flex; justify-content: flex-end; gap: var(--tc-space-1); }
+/* Change it first: a field per argument */
+.ui-apg__editor { display: grid; gap: var(--tc-space-2-5); min-width: 0; margin: 0; padding: 0; border: 0; }
+.ui-apg__editor > legend { padding: 0; margin-bottom: var(--tc-space-2); }
+.ui-apg__edit-row { display: grid; gap: var(--tc-space-1); min-width: 0; }
+.ui-apg__edit-row[data-kind="boolean"] { grid-template-columns: auto 1fr; align-items: center; justify-items: start; }
+.ui-apg__edit-row[data-kind="boolean"] > .ui-apg__edit-key { order: 2; }
+.ui-apg__edit-key { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); }
+.ui-apg__edit-key code { font-family: var(--tc-font-mono); color: var(--tc-text-primary); }
+.ui-apg__edit-tag { height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-accent-subtle); color: var(--tc-accent-text); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-pill-h); }
+input.ui-apg__edit-field.ui-apg__note-field { min-height: 0; height: var(--tc-field-h); padding-block: 0; }
+.ui-apg__edit-json { font-family: var(--tc-font-mono); font-size: var(--tc-font-size-sm); }
+.ui-apg__edit-field[aria-invalid="true"] { box-shadow: var(--tc-field-shadow-invalid); }
+.ui-apg__edit-check { width: var(--tc-space-4); height: var(--tc-space-4); margin: 0; accent-color: var(--tc-accent-solid); }
+.ui-apg__edit-check:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-apg__error { margin: 0; color: var(--tc-status-danger-fg); font-size: var(--tc-font-size-sm); }
 /* The decision: Ask for changes on the left, Reject and Approve on the right */
 .ui-apg__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); margin-top: var(--tc-space-1); }
