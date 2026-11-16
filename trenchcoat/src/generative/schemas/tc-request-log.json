@@ -85,10 +85,10 @@
         "model": {
           "type": "string"
         },
-        "cost": {
+        "close": {
           "type": "string"
         },
-        "close": {
+        "cost": {
           "type": "string"
         },
         "tokens": {

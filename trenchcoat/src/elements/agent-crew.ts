@@ -397,7 +397,7 @@ export class TcAgentCrew extends TcElement {
     const scroll = this.querySelector<HTMLElement>(".ui-crew__scroll");
     if (!scroll || typeof ResizeObserver === "undefined") return;
     this.ro = new ResizeObserver(() => {
-      this.wide = scroll.clientWidth >= 560;
+      this.wide = scroll.clientWidth >= 440;
       this.measure();
     });
     this.ro.observe(scroll);

@@ -2,6 +2,12 @@
 
 # Changelog
 
+## 0.32.0 – Memory Graph, Agent Crew and Run Controls
+
+- **Memory Graph:** what an agent remembers and the tools it can reach, on a ring round it – each memory with the file, chat or email it came from, each tool with what it may do where, joined by curved connectors; a light runs out to the tool in use and in from what it recalls or learns. Switch any card off, forget a memory with Undo, or add a file or connect a tool from the agent. Narrow, it becomes the agent over two lists.
+- **Agent Crew:** a lead agent and its sub-agents as one live tree of cards, every agent on screen – what each does now, its context in words and a bar, its tools and the last thing it was handed; handoffs run as a light along the connectors. Open an agent to steer, pause or resume it; tabs switch between projects.
+- **Run Controls:** every control a running agent needs in one composer – Stop, then Resume from where the answer stopped, Retry or Dismiss; steer mid-answer or queue what's next; Chat or Act, permissions and how full the context is, folding into More when narrow.
+
 ## 0.31.0 – Checkbox, Switch, Running Now, Decision Card, Approval Gates and Memory Panel grow
 
 - **Checkbox:** `indeterminate` shows a partly checked state for Select all (clicking checks it); `variant="card"` is a bordered row clickable anywhere; `error-message` (or a failed required check) shows an error under it; the check draws itself, except under reduced motion. The input is named by its label alone and described by its second line.

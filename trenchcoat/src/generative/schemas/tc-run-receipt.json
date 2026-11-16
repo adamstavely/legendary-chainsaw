@@ -105,10 +105,10 @@
     "labels": {
       "type": "object",
       "properties": {
-        "running": {
+        "failed": {
           "type": "string"
         },
-        "failed": {
+        "running": {
           "type": "string"
         },
         "succeeded": {

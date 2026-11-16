@@ -52,10 +52,10 @@
     "labels": {
       "type": "object",
       "properties": {
-        "queued": {
+        "failed": {
           "type": "string"
         },
-        "failed": {
+        "queued": {
           "type": "string"
         },
         "clean": {

@@ -62,16 +62,16 @@
     "statusLabels": {
       "type": "object",
       "properties": {
-        "idle": {
-          "type": "string"
-        },
-        "running": {
+        "failed": {
           "type": "string"
         },
         "done": {
           "type": "string"
         },
-        "failed": {
+        "idle": {
+          "type": "string"
+        },
+        "running": {
           "type": "string"
         },
         "skipped": {

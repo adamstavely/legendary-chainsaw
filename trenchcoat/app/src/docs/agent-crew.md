@@ -57,7 +57,7 @@ between their crews.
 
 Standard puts the header on the gray tray above a white card holding the tree; Clean is one white card with the
 header as its first row. Wide, the lead sits over its sub-agents side by side and the tree scrolls sideways if it
-doesn't fit; under 560 px every level becomes an indented list. `--tc-crew-card-w`, `--tc-crew-indent` and
+doesn't fit; under 440 px every level becomes an indented list. `--tc-crew-card-w`, `--tc-crew-indent` and
 `--tc-crew-link` size the cards and colour the connectors.
 
 ## Keyboard

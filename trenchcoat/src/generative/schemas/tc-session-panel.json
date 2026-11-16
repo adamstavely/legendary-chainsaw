@@ -99,10 +99,10 @@
         "tools": {
           "type": "string"
         },
-        "changes": {
+        "context": {
           "type": "string"
         },
-        "context": {
+        "changes": {
           "type": "string"
         },
         "environment": {

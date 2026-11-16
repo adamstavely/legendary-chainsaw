@@ -104,13 +104,13 @@ export const MEMORY_GRAPH_MORE = "__more";
 const SPOTS = 6;
 
 /* The ring's geometry, in px */
-const AGENT_W = 168;
+const AGENT_W = 148;
 // About how tall the agent is, so cards above and below it keep clear of it
 const AGENT_H = 80;
-const CARD_MIN = 136;
+const CARD_MIN = 124;
 const CARD_MAX = 210;
 // Room between the agent and the nearest cards for the connectors
-const LINK = 44;
+const LINK = 32;
 const CARD_H = 58;
 const ROW_GAP = 26;
 // The ring is this much taller than the outermost cards, so the top and bottom ones curve in towards the agent
