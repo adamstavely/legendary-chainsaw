@@ -2,6 +2,12 @@
 
 # Changelog
 
+## 0.35.0 – Agent screens: Agent Orchestration, Agents and AI Chat / Double Sidebar
+
+- **Agent Orchestration:** a live multi-agent run – who started whom as a tree, every agent's trace on one time axis below it, and an agent's tasks, context and cost in the side panel, with its answer when it waits for you; status, cost so far and Stop in the header.
+- **Agents:** your team of agents as calm cards – mark, role, status in words, the apps each may use, model, runs and spend, the ones that need attention first and why; picking one opens its profile, instructions, skills and recent tasks on the right, and New agent opens Agent Create.
+- **AI Chat / Double Sidebar:** an assistant chat with search in a double sidebar – a column of icons on the page's edge, the chats in a light column with a project switcher (a drawer when narrow), and what it found in the work area on the right.
+
 ## 0.34.0 – Agent blocks: Mission Control, Mission Timeline, Run Inspector and Live Session
 
 - **Mission Control:** the home of an agent product – what happened since you looked as a small chart and a line in words, who runs under whom (Agent Tree), and what needs you on the side (Decision Inbox), with one status filter for all three; narrow, what needs you comes first.
