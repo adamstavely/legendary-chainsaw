@@ -27,6 +27,12 @@ export type HelpVideoChapter = {
   time: number;
   title: string;
 };
+/** One line of the transcript */
+export type HelpVideoCue = {
+  /** Where it's said, in seconds */
+  time: number;
+  text: string;
+};
 export type HelpVideoSize = "sm" | "md" | "lg";
 export type HelpVideoOpenChange = { open: boolean };
 export type HelpVideoWatchedChange = { watched: boolean };
@@ -42,6 +48,10 @@ export type HelpVideoLabels = {
   finished: string;
   again: string;
   done: string;
+  transcript: string;
+  download: string;
+  transcriptLoading: string;
+  transcriptError: string;
 };
 export const defaultHelpVideoLabels: HelpVideoLabels = {
   watch: "Watch video",
@@ -53,7 +63,47 @@ export const defaultHelpVideoLabels: HelpVideoLabels = {
   finished: "Finished",
   again: "Watch again",
   done: "Done",
+  transcript: "Transcript",
+  download: "Download transcript",
+  transcriptLoading: "Loading the transcript…",
+  transcriptError: "The transcript couldn't be loaded.",
 };
+
+/** The seconds in a WebVTT timestamp – "01:02.500" or "1:01:02.500" */
+function vttSeconds(stamp: string) {
+  const parts = stamp.trim().split(":").map(Number);
+  return parts.reduce((total, n) => total * 60 + n, 0);
+}
+
+/**
+ * A WebVTT file's cues as transcript lines: each cue's start and its words, with tags such as <v Name> and <b>
+ * removed and the lines of one cue joined. NOTE, STYLE and REGION blocks are skipped.
+ */
+export function parseHelpVideoVtt(vtt: string): HelpVideoCue[] {
+  const cues: HelpVideoCue[] = [];
+  for (const block of vtt.replace(/\r\n?/g, "\n").split(/\n{2,}/)) {
+    const lines = block.split("\n");
+    const at = lines.findIndex((l) => l.includes("-->"));
+    if (at < 0 || /^(NOTE|STYLE|REGION)\b/.test(lines[0] ?? "")) continue;
+    const text = lines
+      .slice(at + 1)
+      .join(" ")
+      .replace(/<[^>]*>/g, "")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&nbsp;/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (text) cues.push({ time: vttSeconds(lines[at]!.split("-->")[0]!), text });
+  }
+  return cues;
+}
+
+/** A transcript as plain text: the title, then each line with its time */
+export function helpVideoTranscriptText(heading: string, cues: HelpVideoCue[]) {
+  return `${heading ? `${heading}\n\n` : ""}${cues.map((c) => `[${helpVideoTime(c.time)}] ${c.text}`).join("\n")}\n`;
+}
 
 /** m:ss, or h:mm:ss past an hour, from seconds */
 export function helpVideoTime(seconds: number) {
@@ -67,7 +117,9 @@ export function helpVideoTime(seconds: number) {
 const CHECK = svg`<path d="M20 6 9 17l-5-5"></path>`;
 const CROSS = svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`;
 const AGAIN = svg`<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path>`;
-const HOLES = [3.6, 8.1, 12.6, 17.1];
+const LINES = svg`<path d="M4 6h16"></path><path d="M4 10h16"></path><path d="M4 14h10"></path><path d="M4 18h7"></path>`;
+const SAVE = svg`<path d="M12 4v11"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path>`;
+const HOLES =[3.6, 8.1, 12.6, 17.1];
 let instances = 0;
 
 /**
@@ -109,12 +161,20 @@ export class TcHelpVideo extends TcElement {
   @property({ type: Boolean, reflect: true }) accessor open = false;
   /** Start playing a file as soon as the player opens */
   @property({ type: Boolean }) accessor autoplay = true;
+  /** The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown */
+  @property({ attribute: false }) accessor transcript: HelpVideoCue[] | undefined = undefined;
+  /** A transcript file to download instead of the text one made from the lines, e.g. a PDF */
+  @property({ attribute: "transcript-file" }) accessor transcriptFile: string | undefined = undefined;
   /** Rename any of the words */
   @property({ attribute: false }) accessor labels: Partial<HelpVideoLabels> = {};
 
   @state() private accessor time = 0;
   @state() private accessor ended = false;
   @state() private accessor announcement = "";
+  @state() private accessor reading = false;
+  @state() private accessor loaded: HelpVideoCue[] | undefined = undefined;
+  @state() private accessor loading: "idle" | "loading" | "error" = "idle";
+  private loadingFrom: string | undefined;
   private readonly uid = `tc-hvd-${++instances}`;
   private readonly modal = new ModalController(this, {
     dialog: () => this.querySelector<HTMLDialogElement>(".ui-hvd__dialog"),
@@ -136,12 +196,80 @@ export class TcHelpVideo extends TcElement {
       this.time = 0;
       this.ended = false;
     }
+    if (changed.has("captions") && changed.get("captions") !== undefined) {
+      this.loaded = undefined;
+      this.loading = "idle";
+      this.loadingFrom = undefined;
+    }
   }
 
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
     this.modal.sync(this.open);
     if (changed.has("open") && this.open && this.autoplay && this.src) this.player?.play()?.catch(() => {});
+    // Keep the line being said in view – scrolling the transcript only, never the page
+    if (this.reading && (changed.has("time") || changed.has("reading"))) {
+      const list = this.querySelector<HTMLElement>(".ui-hvd__transcript");
+      const now = list?.querySelector<HTMLElement>("[data-at]");
+      if (list && now) {
+        const top = now.offsetTop - list.offsetTop;
+        if (top < list.scrollTop || top + now.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = Math.max(0, top - list.clientHeight / 3);
+      }
+    }
+  }
+
+  /** The transcript's lines: the ones given, or the ones read from the captions file */
+  get transcriptCues(): HelpVideoCue[] | undefined {
+    return this.transcript ?? this.loaded;
+  }
+
+  private get hasTranscript() {
+    return !!(this.transcript?.length || this.transcriptFile || (this.captions && this.src));
+  }
+
+  /** Reads the captions file into transcript lines, once */
+  private async loadTranscript(): Promise<HelpVideoCue[] | undefined> {
+    if (this.transcript) return this.transcript;
+    if (this.loaded) return this.loaded;
+    const from = this.captions;
+    if (!from || this.loadingFrom === from) return undefined;
+    this.loadingFrom = from;
+    this.loading = "loading";
+    try {
+      const res = await fetch(from);
+      if (!res.ok) throw new Error(String(res.status));
+      const cues = parseHelpVideoVtt(await res.text());
+      if (this.captions !== from) return undefined;
+      this.loaded = cues;
+      this.loading = "idle";
+      return cues;
+    } catch {
+      if (this.captions === from) {
+        this.loading = "error";
+        this.loadingFrom = undefined;
+      }
+      return undefined;
+    }
+  }
+
+  private toggleTranscript() {
+    this.reading = !this.reading;
+    if (this.reading) void this.loadTranscript();
+  }
+
+  /** Saves the transcript as a text file */
+  private async download() {
+    const cues = await this.loadTranscript();
+    if (!cues?.length) return;
+    const url = URL.createObjectURL(new Blob([helpVideoTranscriptText(this.heading, cues)], { type: "text/plain" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${this.heading.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "help-video"}-transcript.txt`;
+    a.hidden = true;
+    this.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
   private setOpen(open: boolean) {
@@ -204,6 +332,45 @@ export class TcHelpVideo extends TcElement {
     return html`<p class="ui-hvd__unavailable">${this.words.unavailable}</p>`;
   }
 
+  /** The Transcript and Download buttons under the video, and the transcript when it's shown */
+  private renderTranscript() {
+    const w = this.words;
+    const cues = this.transcriptCues;
+    const panel = `${this.uid}-transcript`;
+    const canMake = !!(this.transcript?.length || this.captions);
+    const seekable = !!this.src;
+    const at = cues ? cues.reduce((best, c, k) => (c.time <= this.time + 0.25 ? k : best), -1) : -1;
+    return html`<div class="ui-hvd__tools">
+        ${this.transcript?.length || this.captions
+          ? html`<button type="button" class="ui-hvd__tool ui-hvd__show" aria-expanded=${this.reading ? "true" : "false"} aria-controls=${panel} @click=${() => this.toggleTranscript()}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">${LINES}</svg>${w.transcript}
+            </button>`
+          : nothing}
+        ${this.transcriptFile
+          ? html`<a class="ui-hvd__tool ui-hvd__download" href=${this.transcriptFile} download><svg viewBox="0 0 24 24" aria-hidden="true">${SAVE}</svg>${w.download}</a>`
+          : canMake
+            ? html`<button type="button" class="ui-hvd__tool ui-hvd__download" @click=${() => void this.download()}><svg viewBox="0 0 24 24" aria-hidden="true">${SAVE}</svg>${w.download}</button>`
+            : nothing}
+      </div>
+      ${this.reading && canMake
+        ? html`<div class="ui-hvd__reader" id=${panel} role="region" aria-label=${w.transcript}>
+            ${cues?.length
+              ? html`<ol class="ui-hvd__transcript" tabindex="-1">
+                  ${cues.map((c, k) =>
+                    seekable
+                      ? html`<li>
+                          <button type="button" class="ui-hvd__cue" ?data-at=${k === at} aria-current=${k === at ? "true" : "false"} @click=${() => this.seek(c.time)}>
+                            <span class="ui-hvd__cue-time">${helpVideoTime(c.time)}</span> <span>${c.text}</span>
+                          </button>
+                        </li>`
+                      : html`<li class="ui-hvd__cue"><span class="ui-hvd__cue-time">${helpVideoTime(c.time)}</span> <span>${c.text}</span></li>`,
+                  )}
+                </ol>`
+              : html`<p class="ui-hvd__reader-note" role="status">${this.loading === "error" ? w.transcriptError : this.loading === "loading" ? w.transcriptLoading : ""}</p>`}
+          </div>`
+        : nothing}`;
+  }
+
   private renderPlayer() {
     if (!this.open) return nothing;
     const w = this.words;
@@ -218,6 +385,7 @@ export class TcHelpVideo extends TcElement {
         <button type="button" class="ui-hvd__close" @click=${() => this.setOpen(false)}><svg viewBox="0 0 24 24" aria-hidden="true">${CROSS}</svg><span class="tc-sr-only">${w.close}</span></button>
       </div>
       <div class="ui-hvd__screen">${this.renderScreen()}</div>
+      ${this.hasTranscript ? this.renderTranscript() : nothing}
       ${this.description || chapters.length
         ? html`<div class="ui-hvd__info">
             ${this.description ? html`<p class="ui-hvd__about" id=${`${this.uid}-about`}>${this.description}</p>` : nothing}
@@ -341,6 +509,22 @@ export class TcHelpVideo extends TcElement {
 .ui-hvd__chapter[data-at] { border-color: var(--tc-text-primary); background: var(--tc-text-primary); color: var(--tc-surface-raised); }
 .ui-hvd__chapter-time { font-variant-numeric: tabular-nums; }
 .ui-hvd__chapter:not([data-at]) .ui-hvd__chapter-time { color: var(--tc-text-secondary); }
+.ui-hvd__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); padding: var(--tc-space-2) var(--tc-space-3) 0; }
+.ui-hvd__tool { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); margin: 0; padding: 0 var(--tc-space-2); border: 0; border-radius: var(--tc-control-radius-sm); background: transparent; color: var(--tc-text-secondary); font: inherit; font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); text-decoration: none; cursor: pointer; }
+.ui-hvd__tool:hover { background: var(--tc-surface-tray); color: var(--tc-text-primary); }
+.ui-hvd__tool[aria-expanded="true"] { background: var(--tc-surface-tray); color: var(--tc-text-primary); }
+.ui-hvd__tool:focus-visible, .ui-hvd__cue:focus-visible, .ui-hvd__chapter:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-hvd__tool svg { width: var(--tc-space-4); height: var(--tc-space-4); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ui-hvd__download { margin-left: auto; }
+.ui-hvd__reader { margin: var(--tc-space-2) var(--tc-space-4) 0; border: var(--tc-hairline) solid var(--tc-border-default); border-radius: var(--tc-radius-md); background: var(--tc-surface-sunken); }
+.ui-hvd__transcript { display: grid; max-height: calc(var(--tc-space-16) * 3); padding: var(--tc-space-1); overflow-y: auto; overscroll-behavior: contain; }
+.ui-hvd__cue { display: grid; grid-template-columns: calc(var(--tc-space-10)) 1fr; gap: var(--tc-space-2); width: 100%; margin: 0; padding: var(--tc-space-1) var(--tc-space-2); border: 0; border-radius: var(--tc-radius-sm); background: transparent; color: var(--tc-text-primary); font: inherit; text-align: left; }
+button.ui-hvd__cue { cursor: pointer; }
+button.ui-hvd__cue:hover { background: var(--tc-surface-tray); }
+.ui-hvd__cue[data-at] { border-radius: 0 var(--tc-radius-sm) var(--tc-radius-sm) 0; background: var(--tc-surface-raised); box-shadow: inset var(--tc-space-0-5) 0 0 var(--tc-text-primary); }
+.ui-hvd__cue-time { color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-variant-numeric: tabular-nums; line-height: inherit; padding-top: var(--tc-space-0-5); }
+.ui-hvd__reader-note { padding: var(--tc-space-3); color: var(--tc-text-secondary); }
+.ui-hvd__reader-note:empty { display: none; }
 .ui-hvd__gap { height: var(--tc-space-4); }
 .ui-hvd__end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-4); }
 .ui-hvd__end-actions { display: inline-flex; flex-wrap: wrap; gap: var(--tc-space-2); }

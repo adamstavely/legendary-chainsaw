@@ -48,7 +48,7 @@ features that set those versions, and the features it uses only where they exist
 | forced-colors media query | 89 | 89 | 16 | 16 | 522 | Progressive – In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | adoptedStyleSheets | 73 | 101 | 16.4 | 16.4 | 521 | Progressive – Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same. |
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | 133 | Progressive – Scrollbars keep the browser's default width. |
-| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 94 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
+| overscroll-behavior: contain | 63 | 59 | 16 | 16 | 95 | Progressive – Scrolling past the end of a list carries on scrolling the page. |
 | Popover API | 114 | 125 | 17 | 18.3 | 40 | Progressive – Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them. |
 | @property | 85 | 128 | 16.4 | 16.4 | 30 | Progressive – The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state. |
 | field-sizing | 123 | 152 | 26.2 | 26.2 | 25 | Progressive – Text fields grow with their text. Without it they keep their minimum height and scroll. |

@@ -22254,7 +22254,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-20",
-   "hash": "e4e7b28755b7c2c5",
+   "hash": "326d3e55edf1c551",
    "bundle": {
     "own": {
      "min": 34126,
@@ -23352,6 +23352,11 @@
       "min": 24678
      },
      {
+      "name": "help-video",
+      "kind": "element",
+      "min": 24541
+     },
+     {
       "name": "conversation-branches",
       "kind": "element",
       "min": 24465
@@ -23945,11 +23950,6 @@
       "name": "agent-summary",
       "kind": "element",
       "min": 17277
-     },
-     {
-      "name": "help-video",
-      "kind": "element",
-      "min": 17206
      },
      {
       "name": "score-ring",
@@ -25557,6 +25557,11 @@
       "min": 3368
      },
      {
+      "name": "src/generative/schemas/tc-help-video.json",
+      "kind": "other",
+      "min": 3357
+     },
+     {
       "name": "src/generative/schemas/tc-agent-crew.json",
       "kind": "other",
       "min": 3321
@@ -26020,11 +26025,6 @@
       "name": "src/generative/schemas/tc-friction-profile.json",
       "kind": "other",
       "min": 2689
-     },
-     {
-      "name": "src/generative/schemas/tc-help-video.json",
-      "kind": "other",
-      "min": 2686
      },
      {
       "name": "src/generative/schemas/tc-access-review.json",
@@ -27453,20 +27453,20 @@
      }
     ],
     "withoutLit": {
-     "min": 12534496,
-     "gzip": 3102742
+     "min": 12542523,
+     "gzip": 3105689
     },
     "withLit": {
-     "min": 12447912,
-     "gzip": 3074230
+     "min": 12455918,
+     "gzip": 3076149
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 8.9,
-    "first": 0.9,
+    "cold": 7.3,
+    "first": 1,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -29014,11 +29014,11 @@
   },
   "help-video": {
    "measuredAt": "2026-11-20",
-   "hash": "3bb145c70a69d615",
+   "hash": "f89ce85633f3b371",
    "bundle": {
     "own": {
-     "min": 19142,
-     "gzip": 6210
+     "min": 26397,
+     "gzip": 8021
     },
     "shared": [
      {
@@ -29049,7 +29049,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
@@ -29063,21 +29063,21 @@
      }
     ],
     "withoutLit": {
-     "min": 27593,
-     "gzip": 8601
+     "min": 34848,
+     "gzip": 10394
     },
     "withLit": {
-     "min": 47631,
-     "gzip": 15088
+     "min": 54884,
+     "gzip": 16849
     }
    },
    "render": {
     "tag": "tc-help-video",
     "source": "demo",
     "runs": 7,
-    "cold": 14.1,
+    "cold": 14.6,
     "first": 0.4,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "one item of chapters replaced",
     "nodes": 20,
     "scale": {
@@ -29086,14 +29086,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.4,
+       "first": 0.9,
        "update": 0.1,
        "nodes": 20
       },
       {
        "items": 1000,
-       "first": 0.4,
-       "update": 0,
+       "first": 0.7,
+       "update": 0.1,
        "nodes": 20
       }
      ]
@@ -29109,7 +29109,7 @@
      },
      "reducedMotion": {
       "frames": 0,
-      "timers": 92.33
+      "timers": 89.33
      }
     },
     "errors": []

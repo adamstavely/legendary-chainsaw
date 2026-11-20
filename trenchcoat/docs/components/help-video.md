@@ -9,7 +9,7 @@
 Point-in-time help – a small film-frame icon to put beside a heading, a field label or a toolbar, with a tooltip naming the video and its length and a check once watched; a click opens one short tutorial in a modal player with captions, chapters and Watch again
 
 - **Element:** `<tc-help-video>`
-- **Size:** 8.4 KB gzip · 26.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.2 KB gzip · 34.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -29,7 +29,7 @@ The live example is in the gallery at `#/help-video`, at 320 px, 480 px or full 
 
 Point-in-time help: a small film-frame icon that sits beside a heading, a field label or a toolbar, and opens one short tutorial in a modal player. Sprinkle one wherever a feature is easier to show than to explain. Each carries its own video.
 
-The icon is a single film cell with sprocket holes along its top and bottom and a play mark cut through it, drawn in the text colour and sized to the text around it. Pointing at it shows a tooltip with the video's title and length. Once the video has been watched, a small check sits on the icon's corner. The player has the title, the video with its captions, a short description, chapters to jump to and, at the end, Watch again and Done. Escape, Close or a click outside shuts it, and focus goes back to the icon.
+The icon is a single film cell with sprocket holes along its top and bottom and a play mark cut through it, drawn in the text colour and sized to the text around it. Pointing at it shows a tooltip with the video's title and length. Once the video has been watched, a small check sits on the icon's corner. The player has the title, the video with its captions, Transcript and Download transcript, a short description, chapters to jump to and, at the end, Watch again and Done. Transcript opens the words beside the video as timed lines: the line being said is marked as it plays, and a line jumps the video to it. They're read from the captions file unless the page passes its own `transcript`; Download saves them as a text file, or links `transcript-file` when the page has one, such as a PDF. Escape, Close or a click outside shuts it, and focus goes back to the icon.
 
 ### When to use
 
@@ -50,7 +50,7 @@ The icon is a single film cell with sprocket holes along its top and bottom and 
 1. **Trigger** `.ui-hvd__trigger` – the button, holding `.ui-hvd__mark` with the film cell `.ui-hvd__icon`, and `.ui-hvd__seen` once watched
 2. **Label** `.ui-hvd__label` – words beside the icon, when `label` is set
 3. **Tooltip** `.ui-hvd__tip` – the title and length, on hover and keyboard focus, when there's no label
-4. **Player** `.ui-hvd__dialog` – `.ui-hvd__bar` with `.ui-hvd__kicker`, the title and `.ui-hvd__close`; `.ui-hvd__screen` with the video; `.ui-hvd__info` with the description and `.ui-hvd__chapter` buttons; `.ui-hvd__end` with Watch again and Done once it has played through
+4. **Player** `.ui-hvd__dialog` – `.ui-hvd__bar` with `.ui-hvd__kicker`, the title and `.ui-hvd__close`; `.ui-hvd__screen` with the video; `.ui-hvd__tools` with `.ui-hvd__show` (Transcript) and `.ui-hvd__download`, and `.ui-hvd__reader` with the `.ui-hvd__cue` lines when shown; `.ui-hvd__info` with the description and `.ui-hvd__chapter` buttons; `.ui-hvd__end` with Watch again and Done once it has played through
 
 ## Looks
 
@@ -123,12 +123,12 @@ import "@adamstavely/trenchcoat/help-video";
 import "@adamstavely/trenchcoat/tokens.css";
 import type { TcHelpVideo } from "@adamstavely/trenchcoat/help-video";
 
-defineProps<{ chapters: TcHelpVideo["chapters"]; labels: TcHelpVideo["labels"] }>();
+defineProps<{ chapters: TcHelpVideo["chapters"]; transcript: TcHelpVideo["transcript"] }>();
 const onOpenChange = (e: CustomEvent) => console.log(e.detail);
 </script>
 
 <template>
-  <tc-help-video :chapters="chapters" :labels="labels" @tc-open-change="onOpenChange"></tc-help-video>
+  <tc-help-video :chapters="chapters" :transcript="transcript" @tc-open-change="onOpenChange"></tc-help-video>
 </template>
 ```
 
@@ -144,11 +144,11 @@ import type { TcHelpVideo } from "@adamstavely/trenchcoat/help-video";
 @Component({
   selector: "app-help-video-example",
   imports: [HelpVideo],
-  template: `<tc-help-video [chapters]="chapters()" [labels]="labels()" (tc-open-change)="onOpenChange($event)"></tc-help-video>`,
+  template: `<tc-help-video [chapters]="chapters()" [transcript]="transcript()" (tc-open-change)="onOpenChange($event)"></tc-help-video>`,
 })
 export class HelpVideoExample {
   readonly chapters = input.required<TcHelpVideo["chapters"]>();
-  readonly labels = input.required<TcHelpVideo["labels"]>();
+  readonly transcript = input.required<TcHelpVideo["transcript"]>();
   onOpenChange(e: CustomEvent) {
     console.log(e.detail);
   }
@@ -165,7 +165,7 @@ export class HelpVideoExample {
   import "@adamstavely/trenchcoat/tokens.css";
   import type { TcHelpVideo } from "@adamstavely/trenchcoat/help-video";
 
-  let { chapters, labels }: { chapters: TcHelpVideo["chapters"]; labels: TcHelpVideo["labels"] } = $props();
+  let { chapters, transcript }: { chapters: TcHelpVideo["chapters"]; transcript: TcHelpVideo["transcript"] } = $props();
   let el: TcHelpVideo;
   // Event names with dashes are listened to on the element
   $effect(() => {
@@ -175,7 +175,7 @@ export class HelpVideoExample {
   });
 </script>
 
-<tc-help-video bind:this={el} {chapters} {labels}></tc-help-video>
+<tc-help-video bind:this={el} {chapters} {transcript}></tc-help-video>
 ```
 
 *Generated from the element's API and compiled in `examples/svelte` by `npm run check:snippets`. The Frameworks section below covers events, control, slots, server rendering and types.*
@@ -201,8 +201,11 @@ export class HelpVideoExample {
 | `watched` | `watched` | `boolean` | `false` | Whether it has been watched – a check on the icon. Set when a file plays to its end, unless a tc-watched-change listener calls preventDefault() |
 | `open` | `open` | `boolean` | `false` | Whether the player is open. Changed by the user unless a tc-open-change listener calls preventDefault() |
 | `autoplay` | `autoplay` | `boolean` | `true` | Start playing a file as soon as the player opens |
+| `transcript` | – | `HelpVideoCue[] \| undefined` | `undefined` | The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown |
+| `transcriptFile` | `transcript-file` | `string \| undefined` | `undefined` | A transcript file to download instead of the text one made from the lines, e.g. a PDF |
 | `labels` | – | `Partial<HelpVideoLabels>` | `{}` | Rename any of the words |
 | `player` | – | `HTMLVideoElement \| null` | – | The &lt;video> in the open player, when it plays a file |
+| `transcriptCues` | – | `HelpVideoCue[] \| undefined` | – | The transcript's lines: the ones given, or the ones read from the captions file |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -223,9 +226,9 @@ export class HelpVideoExample {
 | `--tc-hvd-ink-hover` | `var(--tc-text-primary)` | both |
 | `--tc-hvd-player` | `calc(var(--tc-space-16) * 12)` | both |
 
-#### Design tokens it reads (51)
+#### Design tokens it reads (54)
 
-`--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-standard`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-gray-200`, `--tc-gray-950`, `--tc-hairline`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-radius-full`, `--tc-radius-sm`, `--tc-scrim`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-16`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-success-fg`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-font-size`, `--tc-tooltip-px`, `--tc-tooltip-py`, `--tc-tooltip-radius`, `--tc-z-popover`
+`--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-standard`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-gray-200`, `--tc-gray-950`, `--tc-hairline`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-radius-full`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-scrim`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-10`, `--tc-space-16`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-success-fg`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-surface-tray`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-font-size`, `--tc-tooltip-px`, `--tc-tooltip-py`, `--tc-tooltip-radius`, `--tc-z-popover`
 
 #### Functions
 
@@ -233,6 +236,8 @@ export class HelpVideoExample {
 
 | Function | Description |
 | --- | --- |
+| `parseHelpVideoVtt(vtt: string): HelpVideoCue[]` | A WebVTT file's cues as transcript lines: each cue's start and its words, with tags such as &lt;v Name> and &lt;b> removed and the lines of one cue joined. NOTE, STYLE and REGION blocks are skipped. |
+| `helpVideoTranscriptText(heading: string, cues: HelpVideoCue[]): void` | A transcript as plain text: the title, then each line with its time |
 | `helpVideoTime(seconds: number): void` | m:ss, or h:mm:ss past an hour, from seconds |
 
 ## Frameworks
@@ -254,9 +259,10 @@ export class HelpVideoExample {
 | Property | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
 | --- | --- | --- | --- | --- | --- |
 | `chapters` | `el.chapters = …;` | `<… chapters={…} />` | `<tc-help-video :chapters="…">` | `<tc-help-video [chapters]="…">` | `<tc-help-video {chapters}>` |
+| `transcript` | `el.transcript = …;` | `<… transcript={…} />` | `<tc-help-video :transcript="…">` | `<tc-help-video [transcript]="…">` | `<tc-help-video {transcript}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-help-video :labels="…">` | `<tc-help-video [labels]="…">` | `<tc-help-video {labels}>` |
 
-*Also attributes: `heading`, `description`, `duration`, `src`, `type`, `poster`, `captions`, `captions-lang` and 6 more – see the API table.*
+*Also attributes: `heading`, `description`, `duration`, `src`, `type`, `poster`, `captions`, `captions-lang` and 7 more – see the API table.*
 
 ### Events
 
@@ -408,12 +414,13 @@ Follows the WAI-ARIA [Dialog (modal) pattern](https://www.w3.org/WAI/ARIA/apg/pa
 |---|---|
 | Tab | Move to the icon; its tooltip shows |
 | Enter / Space | Open the player; the video takes focus and starts |
-| Tab in the player | Move through the video's controls, the chapters, Watch again, Done and Close – focus stays in the player |
+| Tab in the player | Move through the video's controls, Transcript, Download, the transcript's lines, the chapters, Watch again, Done and Close – focus stays in the player |
+| Enter on a transcript line | Jump the video to that line |
 | Escape | Close the player; focus goes back to the icon |
 
 ### Screen readers
 
-The icon is a button named "Watch video:" with the title, its length and whether it was watched, and it says it opens a dialog. With a `label`, the name starts with the label's words. The player is a modal dialog named after the video and described by its description; the rest of the page is inert while it's open. The current chapter is marked with `aria-current`. When the video plays to its end, a polite status line says it was watched. The drawing and the tooltip are hidden from assistive technology, because the button's name already says what they show.
+The icon is a button named "Watch video:" with the title, its length and whether it was watched, and it says it opens a dialog. With a `label`, the name starts with the label's words. The player is a modal dialog named after the video and described by its description; the rest of the page is inert while it's open. The current chapter is marked with `aria-current`. Transcript says whether it's expanded and which region it controls; the transcript is a region named Transcript, each line a button with its time and words, and the line being said is marked with `aria-current`. If the captions file can't be read, a status line says so. When the video plays to its end, a polite status line says it was watched. The drawing and the tooltip are hidden from assistive technology, because the button's name already says what they show.
 
 ### Every component
 
@@ -452,6 +459,7 @@ The icon is a button named "Watch video:" with the title, its length and whether
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
 | forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
@@ -461,7 +469,7 @@ The icon is a button named "Watch video:" with the title, its length and whether
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 18.7 KB | 6.1 KB |
+| **This component alone** | 25.8 KB | 7.8 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -470,8 +478,8 @@ The icon is a button named "Watch video:" with the title, its length and whether
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **26.9 KB** | **8.4 KB** |
-| With Lit – the first component on a page | 46.5 KB | 14.7 KB |
+| **Added to a page that already has Lit** | **34.0 KB** | **10.2 KB** |
+| With Lit – the first component on a page | 53.6 KB | 16.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -480,10 +488,10 @@ The icon is a button named "Watch video:" with the title, its length and whether
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **0.4 ms** | the gallery demo's data, 20 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of chapters replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.4 ms | chapters: first render, 20 nodes; update 0.1 ms |
-| 1,000 items | 0.4 ms | chapters: first render, 20 nodes; update 0.0 ms |
+| Typical update | **0.1 ms** | one item of chapters replaced |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.9 ms | chapters: first render, 20 nodes; update 0.1 ms |
+| 1,000 items | 0.7 ms | chapters: first render, 20 nodes; update 0.1 ms |
 
 What it renders doesn't grow with chapters (tested to 1,000 items).
 
@@ -491,9 +499,9 @@ What it renders doesn't grow with chapters (tested to 1,000 items).
 
 ### Runtime
 
-- At rest with the demo's data: **89 timer callbacks/s** on screen, **89 timer callbacks/s** scrolled away, **92 timer callbacks/s** under reduced motion (measured).
+- At rest with the demo's data: **89 timer callbacks/s** on screen, **89 timer callbacks/s** scrolled away, **89 timer callbacks/s** under reduced motion (measured).
 - No animation-frame loop.
-- No timers.
+- Timers: `setTimeout`.
 - Stops or pauses under reduced motion.
 - Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController).
 - Doesn't read the clock.
@@ -505,7 +513,7 @@ What it renders doesn't grow with chapters (tested to 1,000 items).
 - Title the video by the task it teaches: "Set a risk threshold", not "Help" or "Video".
 - Keep descriptions to a sentence; they show under the player.
 - Give `duration` in seconds, and chapters as `{ time, title }` with `time` in seconds.
-- Always pass captions (`captions`, a WebVTT file) for a file you host. Embeds from a video host bring their own.
+- Always pass captions (`captions`, a WebVTT file) for a file you host – they're the transcript too. Embeds from a video host bring their own captions; pass `transcript` lines (or a `transcript-file`) so the transcript is there as well.
 - Use `label` sparingly – "Watch how" beside a button that people hesitate over.
 
 ## Do and don't
@@ -515,6 +523,7 @@ What it renders doesn't grow with chapters (tested to 1,000 items).
 - Put the icon right after the words it explains, on the same line.
 - Store `watched` per person and pass it back, so the checks survive a reload.
 - Set `watched` yourself for an embed – the element can't see when an iframe's video ends.
+- Mark speakers in the captions with `<v Name>` if you like – the transcript drops the tags and keeps the words.
 
 ### Don't
 

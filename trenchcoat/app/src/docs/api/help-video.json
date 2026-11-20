@@ -126,6 +126,22 @@
      "readonly": false
     },
     {
+     "name": "transcript",
+     "attribute": null,
+     "type": "HelpVideoCue[] | undefined",
+     "default": "undefined",
+     "description": "The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown",
+     "readonly": false
+    },
+    {
+     "name": "transcriptFile",
+     "attribute": "transcript-file",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A transcript file to download instead of the text one made from the lines, e.g. a PDF",
+     "readonly": false
+    },
+    {
      "name": "labels",
      "attribute": null,
      "type": "Partial<HelpVideoLabels>",
@@ -139,6 +155,14 @@
      "type": "HTMLVideoElement | null",
      "default": null,
      "description": "The <video> in the open player, when it plays a file",
+     "readonly": true
+    },
+    {
+     "name": "transcriptCues",
+     "attribute": null,
+     "type": "HelpVideoCue[] | undefined",
+     "default": null,
+     "description": "The transcript's lines: the ones given, or the ones read from the captions file",
      "readonly": true
     },
     {
@@ -226,12 +250,14 @@
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-radius-full",
+    "--tc-radius-md",
     "--tc-radius-sm",
     "--tc-scrim",
     "--tc-shadow-overlay",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
+    "--tc-space-10",
     "--tc-space-16",
     "--tc-space-2",
     "--tc-space-3",
@@ -239,6 +265,7 @@
     "--tc-space-6",
     "--tc-status-success-fg",
     "--tc-surface-raised",
+    "--tc-surface-sunken",
     "--tc-surface-tray",
     "--tc-text-primary",
     "--tc-text-secondary",
@@ -253,6 +280,16 @@
   }
  ],
  "functions": [
+  {
+   "name": "parseHelpVideoVtt",
+   "signature": "parseHelpVideoVtt(vtt: string): HelpVideoCue[]",
+   "description": "A WebVTT file's cues as transcript lines: each cue's start and its words, with tags such as <v Name> and <b>\nremoved and the lines of one cue joined. NOTE, STYLE and REGION blocks are skipped."
+  },
+  {
+   "name": "helpVideoTranscriptText",
+   "signature": "helpVideoTranscriptText(heading: string, cues: HelpVideoCue[]): void",
+   "description": "A transcript as plain text: the title, then each line with its time"
+  },
   {
    "name": "helpVideoTime",
    "signature": "helpVideoTime(seconds: number): void",
@@ -327,6 +364,7 @@
    "module": "@adamstavely/trenchcoat/help-video",
    "data": [
     "chapters",
+    "transcript",
     "labels"
    ],
    "attributes": [
@@ -385,6 +423,10 @@
     {
      "name": "autoplay",
      "attribute": "autoplay"
+    },
+    {
+     "name": "transcriptFile",
+     "attribute": "transcript-file"
     }
    ],
    "events": [
@@ -578,11 +620,30 @@
      "internal/kit",
      "tokens.css"
     ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
    }
   ]
  },
  "runtime": {
-  "timers": [],
+  "timers": [
+   "setTimeout"
+  ],
   "frames": [],
   "animations": 0,
   "observers": [
@@ -602,7 +663,7 @@
   "windowed": false
  },
  "size": {
-  "min": 27593,
-  "gzip": 8601
+  "min": 34848,
+  "gzip": 10394
  }
 }

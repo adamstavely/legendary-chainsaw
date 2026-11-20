@@ -3,8 +3,8 @@ import * as React from "react";
 import { TcHelpVideo, type HelpVideoOpenChange, type HelpVideoWatchedChange } from "../help-video";
 import { h, useControlled } from "./internal";
 
-export type { HelpVideoChapter, HelpVideoLabels, HelpVideoOpenChange, HelpVideoSize, HelpVideoWatchedChange } from "../help-video";
-export { defaultHelpVideoLabels, helpVideoTime } from "../help-video";
+export type { HelpVideoChapter, HelpVideoCue, HelpVideoLabels, HelpVideoOpenChange, HelpVideoSize, HelpVideoWatchedChange } from "../help-video";
+export { defaultHelpVideoLabels, helpVideoTime, helpVideoTranscriptText, parseHelpVideoVtt } from "../help-video";
 
 const RawHelpVideo = createComponent({
   tagName: "tc-help-video",

@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/help-video";
-import { helpVideoTime, type HelpVideoOpenChange, type HelpVideoWatchedChange, type TcHelpVideo } from "../../src/elements/help-video";
+import { helpVideoTime, helpVideoTranscriptText, parseHelpVideoVtt, type HelpVideoOpenChange, type HelpVideoWatchedChange, type TcHelpVideo } from "../../src/elements/help-video";
 import { HelpVideo } from "../../src/elements/react/help-video";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -191,6 +191,101 @@ describe("tc-help-video", () => {
   });
 });
 
+describe("transcript", () => {
+  const VTT = "WEBVTT\n\nNOTE made for the test\n\n1\n00:00.000 --> 00:04.000\n<v Guide>Sort the queue</v> by risk.\n\n00:04.000 --> 00:09.500\nThen take the ones\nthat are yours &amp; done.\n\n01:00:02.000 --> 01:00:05.000\nThe end.\n";
+  const vttUrl = () => `data:text/vtt,${encodeURIComponent(VTT)}`;
+
+  test("WebVTT becomes timed lines without tags, and a text file lists them with times", () => {
+    const cues = parseHelpVideoVtt(VTT);
+    expect(cues).toEqual([
+      { time: 0, text: "Sort the queue by risk." },
+      { time: 4, text: "Then take the ones that are yours & done." },
+      { time: 3602, text: "The end." },
+    ]);
+    expect(helpVideoTranscriptText("Triage", cues)).toBe("Triage\n\n[0:00] Sort the queue by risk.\n[0:04] Then take the ones that are yours & done.\n[1:00:02] The end.\n");
+  });
+
+  test("Transcript shows the captions as lines that follow the video and jump to their time", async () => {
+    const el = await fixture<TcHelpVideo>(html`<tc-help-video heading="Triage the queue" src=${SRC} captions=${vttUrl()} .autoplay=${false}></tc-help-video>`);
+    el.open = true;
+    await settle();
+    const show = el.querySelector<HTMLButtonElement>(".ui-hvd__show")!;
+    expect(text(show)).toBe("Transcript");
+    expect(show.getAttribute("aria-expanded")).toBe("false");
+    expect(el.querySelector(".ui-hvd__reader")).toBeNull();
+    show.click();
+    await expect.poll(() => el.querySelectorAll(".ui-hvd__transcript .ui-hvd__cue").length).toBe(3);
+    expect(show.getAttribute("aria-expanded")).toBe("true");
+    const reader = el.querySelector(".ui-hvd__reader")!;
+    expect(reader.id).toBe(show.getAttribute("aria-controls"));
+    expect(reader.getAttribute("role")).toBe("region");
+    expect(reader.getAttribute("aria-label")).toBe("Transcript");
+    const cues = [...el.querySelectorAll<HTMLButtonElement>("button.ui-hvd__cue")];
+    expect(text(cues[1])).toBe("0:04 Then take the ones that are yours & done.");
+    expect(cues[0]!.getAttribute("aria-current")).toBe("true");
+    let sought = -1;
+    Object.defineProperty(el.player!, "currentTime", { configurable: true, get: () => sought, set: (v: number) => (sought = v) });
+    el.player!.play = () => Promise.resolve();
+    cues[1]!.click();
+    expect(sought).toBe(4);
+    Object.defineProperty(el.player!, "currentTime", { configurable: true, get: () => 5 });
+    el.player!.dispatchEvent(new Event("timeupdate"));
+    await settle();
+    expect(cues[1]!.getAttribute("aria-current")).toBe("true");
+    expect(cues[0]!.hasAttribute("data-at")).toBe(false);
+    show.click();
+    await settle();
+    expect(el.querySelector(".ui-hvd__reader")).toBeNull();
+  });
+
+  test("Download saves a text file named after the video", async () => {
+    const el = await fixture<TcHelpVideo>(html`<tc-help-video heading="Triage the queue!" src=${SRC} captions=${vttUrl()} .autoplay=${false}></tc-help-video>`);
+    el.open = true;
+    await settle();
+    const saved: { name: string; href: string }[] = [];
+    const click = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function (this: HTMLAnchorElement) {
+      saved.push({ name: this.download, href: this.href });
+    };
+    try {
+      const dl = el.querySelector<HTMLButtonElement>("button.ui-hvd__download")!;
+      expect(text(dl)).toBe("Download transcript");
+      dl.click();
+      await expect.poll(() => saved.length).toBe(1);
+    } finally {
+      HTMLAnchorElement.prototype.click = click;
+    }
+    expect(saved[0]!.name).toBe("triage-the-queue-transcript.txt");
+    expect(saved[0]!.href.startsWith("blob:")).toBe(true);
+    expect(el.querySelector("a[download]")).toBeNull();
+  });
+
+  test("given lines and a file: the lines show without jumping for an embed, and Download links the file", async () => {
+    const el = await fixture<TcHelpVideo>(
+      html`<tc-help-video heading="Queue" embed="about:blank" transcript-file="/help/queue.pdf" .transcript=${[{ time: 0, text: "Sort by risk." }]}></tc-help-video>`,
+    );
+    el.open = true;
+    await settle();
+    const dl = el.querySelector<HTMLAnchorElement>("a.ui-hvd__download")!;
+    expect(dl.getAttribute("href")).toBe("/help/queue.pdf");
+    expect(dl.hasAttribute("download")).toBe(true);
+    el.querySelector<HTMLButtonElement>(".ui-hvd__show")!.click();
+    await settle();
+    expect(el.querySelector("button.ui-hvd__cue")).toBeNull();
+    expect(text(el.querySelector("li.ui-hvd__cue"))).toBe("0:00 Sort by risk.");
+  });
+
+  test("no captions and no lines: no transcript buttons; a captions file that fails says so", async () => {
+    const none = await fixture<TcHelpVideo>(html`<tc-help-video heading="Queue" src=${SRC} .autoplay=${false} open></tc-help-video>`);
+    await settle();
+    expect(none.querySelector(".ui-hvd__tools")).toBeNull();
+    const bad = await fixture<TcHelpVideo>(html`<tc-help-video heading="Queue" src=${SRC} captions="/no/such/captions.vtt" .autoplay=${false} open></tc-help-video>`);
+    await settle();
+    bad.querySelector<HTMLButtonElement>(".ui-hvd__show")!.click();
+    await expect.poll(() => text(bad.querySelector(".ui-hvd__reader-note"))).toBe("The transcript couldn't be loaded.");
+  });
+});
+
 describe("React", () => {
   test("uncontrolled watched survives re-renders, and a controlled open stays until the parent changes it", async () => {
     const host = document.body.appendChild(document.createElement("div"));
@@ -239,10 +334,15 @@ describe("accessibility", () => {
     }
   }
 
-  test("no axe violations with the player open", async () => {
+  test("no axe violations with the player and its transcript open", async () => {
     const el = await help();
+    el.transcript = [
+      { time: 0, text: "Sort new alerts by risk." },
+      { time: 48, text: "Take the ones that are yours." },
+    ];
     el.open = true;
     await settle();
+    el.querySelector<HTMLButtonElement>(".ui-hvd__show")!.click();
     el.player!.dispatchEvent(new Event("ended"));
     await finish(el);
     const { violations } = await axe.run(dialog(el));

@@ -8,7 +8,7 @@ related: tooltip, tips-panel, setup-guide, dialog
 
 Point-in-time help: a small film-frame icon that sits beside a heading, a field label or a toolbar, and opens one short tutorial in a modal player. Sprinkle one wherever a feature is easier to show than to explain. Each carries its own video.
 
-The icon is a single film cell with sprocket holes along its top and bottom and a play mark cut through it, drawn in the text colour and sized to the text around it. Pointing at it shows a tooltip with the video's title and length. Once the video has been watched, a small check sits on the icon's corner. The player has the title, the video with its captions, a short description, chapters to jump to and, at the end, Watch again and Done. Escape, Close or a click outside shuts it, and focus goes back to the icon.
+The icon is a single film cell with sprocket holes along its top and bottom and a play mark cut through it, drawn in the text colour and sized to the text around it. Pointing at it shows a tooltip with the video's title and length. Once the video has been watched, a small check sits on the icon's corner. The player has the title, the video with its captions, Transcript and Download transcript, a short description, chapters to jump to and, at the end, Watch again and Done. Transcript opens the words beside the video as timed lines: the line being said is marked as it plays, and a line jumps the video to it. They're read from the captions file unless the page passes its own `transcript`; Download saves them as a text file, or links `transcript-file` when the page has one, such as a PDF. Escape, Close or a click outside shuts it, and focus goes back to the icon.
 
 ## When to use
 
@@ -27,7 +27,7 @@ The icon is a single film cell with sprocket holes along its top and bottom and 
 1. **Trigger** `.ui-hvd__trigger` – the button, holding `.ui-hvd__mark` with the film cell `.ui-hvd__icon`, and `.ui-hvd__seen` once watched
 2. **Label** `.ui-hvd__label` – words beside the icon, when `label` is set
 3. **Tooltip** `.ui-hvd__tip` – the title and length, on hover and keyboard focus, when there's no label
-4. **Player** `.ui-hvd__dialog` – `.ui-hvd__bar` with `.ui-hvd__kicker`, the title and `.ui-hvd__close`; `.ui-hvd__screen` with the video; `.ui-hvd__info` with the description and `.ui-hvd__chapter` buttons; `.ui-hvd__end` with Watch again and Done once it has played through
+4. **Player** `.ui-hvd__dialog` – `.ui-hvd__bar` with `.ui-hvd__kicker`, the title and `.ui-hvd__close`; `.ui-hvd__screen` with the video; `.ui-hvd__tools` with `.ui-hvd__show` (Transcript) and `.ui-hvd__download`, and `.ui-hvd__reader` with the `.ui-hvd__cue` lines when shown; `.ui-hvd__info` with the description and `.ui-hvd__chapter` buttons; `.ui-hvd__end` with Watch again and Done once it has played through
 
 ## Looks
 
@@ -39,19 +39,20 @@ The icon is the same in Standard and Clean: the text colour, a shade quieter (`-
 |---|---|
 | Tab | Move to the icon; its tooltip shows |
 | Enter / Space | Open the player; the video takes focus and starts |
-| Tab in the player | Move through the video's controls, the chapters, Watch again, Done and Close – focus stays in the player |
+| Tab in the player | Move through the video's controls, Transcript, Download, the transcript's lines, the chapters, Watch again, Done and Close – focus stays in the player |
+| Enter on a transcript line | Jump the video to that line |
 | Escape | Close the player; focus goes back to the icon |
 
 ## Screen readers
 
-The icon is a button named "Watch video:" with the title, its length and whether it was watched, and it says it opens a dialog. With a `label`, the name starts with the label's words. The player is a modal dialog named after the video and described by its description; the rest of the page is inert while it's open. The current chapter is marked with `aria-current`. When the video plays to its end, a polite status line says it was watched. The drawing and the tooltip are hidden from assistive technology, because the button's name already says what they show.
+The icon is a button named "Watch video:" with the title, its length and whether it was watched, and it says it opens a dialog. With a `label`, the name starts with the label's words. The player is a modal dialog named after the video and described by its description; the rest of the page is inert while it's open. The current chapter is marked with `aria-current`. Transcript says whether it's expanded and which region it controls; the transcript is a region named Transcript, each line a button with its time and words, and the line being said is marked with `aria-current`. If the captions file can't be read, a status line says so. When the video plays to its end, a polite status line says it was watched. The drawing and the tooltip are hidden from assistive technology, because the button's name already says what they show.
 
 ## Content
 
 - Title the video by the task it teaches: "Set a risk threshold", not "Help" or "Video".
 - Keep descriptions to a sentence; they show under the player.
 - Give `duration` in seconds, and chapters as `{ time, title }` with `time` in seconds.
-- Always pass captions (`captions`, a WebVTT file) for a file you host. Embeds from a video host bring their own.
+- Always pass captions (`captions`, a WebVTT file) for a file you host – they're the transcript too. Embeds from a video host bring their own captions; pass `transcript` lines (or a `transcript-file`) so the transcript is there as well.
 - Use `label` sparingly – "Watch how" beside a button that people hesitate over.
 
 ## Do
@@ -59,6 +60,7 @@ The icon is a button named "Watch video:" with the title, its length and whether
 - Put the icon right after the words it explains, on the same line.
 - Store `watched` per person and pass it back, so the checks survive a reload.
 - Set `watched` yourself for an embed – the element can't see when an iframe's video ends.
+- Mark speakers in the captions with `<v Name>` if you like – the transcript drops the tags and keeps the words.
 
 ## Don't
 

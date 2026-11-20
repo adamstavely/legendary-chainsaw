@@ -79,6 +79,18 @@
       "type": "boolean",
       "description": "Start playing a file as soon as the player opens"
     },
+    "transcript": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HelpVideoCue"
+      },
+      "description": "The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown"
+    },
+    "transcriptFile": {
+      "type": "string",
+      "description": "A transcript file to download instead of the text one made from the lines, e.g. a PDF",
+      "format": "uri-reference"
+    },
     "labels": {
       "type": "object",
       "properties": {
@@ -108,6 +120,18 @@
         },
         "done": {
           "type": "string"
+        },
+        "transcript": {
+          "type": "string"
+        },
+        "download": {
+          "type": "string"
+        },
+        "transcriptLoading": {
+          "type": "string"
+        },
+        "transcriptError": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -132,6 +156,24 @@
         "title"
       ],
       "additionalProperties": false
+    },
+    "HelpVideoCue": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "number",
+          "description": "Where it's said, in seconds"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "time",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One line of the transcript"
     }
   }
 }

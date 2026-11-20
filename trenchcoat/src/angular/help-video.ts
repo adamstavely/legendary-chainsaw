@@ -75,6 +75,14 @@ export class HelpVideo {
   @Input() set autoplay(v: TcHelpVideo["autoplay"] | "" | "true" | "false") {
     this.#el.autoplay = typeof v === "string" ? v !== "false" : v;
   }
+  /** The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown */
+  @Input() set transcript(v: TcHelpVideo["transcript"]) {
+    this.#el.transcript = v;
+  }
+  /** A transcript file to download instead of the text one made from the lines, e.g. a PDF */
+  @Input() set transcriptFile(v: TcHelpVideo["transcriptFile"]) {
+    this.#el.transcriptFile = v;
+  }
   /** Rename any of the words */
   @Input() set labels(v: TcHelpVideo["labels"]) {
     this.#el.labels = v;

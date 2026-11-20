@@ -64,10 +64,10 @@
     "healthLabels": {
       "type": "object",
       "properties": {
-        "on-track": {
+        "watch": {
           "type": "string"
         },
-        "watch": {
+        "on-track": {
           "type": "string"
         },
         "at-risk": {
