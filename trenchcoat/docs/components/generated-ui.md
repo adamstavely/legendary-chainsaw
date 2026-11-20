@@ -9,7 +9,7 @@
 A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
 
 - **Element:** `<tc-generated-ui>`
-- **Size:** 3024.4 KB gzip · 12220.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 3030.0 KB gzip · 12240.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -331,7 +331,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 
 ## Performance
 
-*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-20 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -675,6 +675,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [bubble-chart](bubble-chart.md) · Element it renders | 17.0 KB | – |
 | [activity-calendar](activity-calendar.md) · Element it renders | 17.0 KB | – |
 | [agent-summary](agent-summary.md) · Element it renders | 16.9 KB | – |
+| [help-video](help-video.md) · Element it renders | 16.8 KB | – |
 | [score-ring](score-ring.md) · Element it renders | 16.8 KB | – |
 | [account-list](account-list.md) · Element it renders | 16.6 KB | – |
 | [notification-stack](notification-stack.md) · Element it renders | 16.6 KB | – |
@@ -691,7 +692,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [capacity-bars](capacity-bars.md) · Element it renders | 15.9 KB | – |
 | [budget-burn](budget-burn.md) · Element it renders | 15.9 KB | – |
 | [testimonial-wall](../blocks/testimonial-wall.md) · Element it renders | 15.8 KB | – |
-| [biometric-status](biometric-status.md) · Element it renders | 15.7 KB | – |
+| [biometric-status](biometric-status.md) · Element it renders | 15.8 KB | – |
 | [candlestick-chart](candlestick-chart.md) · Element it renders | 15.7 KB | – |
 | [prompt-starters](prompt-starters.md) · Element it renders | 15.7 KB | – |
 | [copy-page-menu](copy-page-menu.md) · Element it renders | 15.7 KB | – |
@@ -878,7 +879,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [area-chart](area-chart.md) · Element it renders | 0.8 KB | – |
 | [line-chart](line-chart.md) · Element it renders | 0.8 KB | – |
 | [pie-chart](pie-chart.md) · Element it renders | 0.7 KB | – |
-| `src/generative/registry.ts` · Dependency | 79.1 KB | – |
+| `src/generative/registry.ts` · Dependency | 79.3 KB | – |
 | `src/generative/schemas/tc-ai-side-pane.json` · Dependency | 14.2 KB | – |
 | `src/generative/schemas/tc-verification-queue.json` · Dependency | 9.2 KB | – |
 | `src/generative/schemas/tc-claim-answer.json` · Dependency | 8.8 KB | – |
@@ -1089,6 +1090,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-branch-switcher.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-biometric-status.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-friction-profile.json` · Dependency | 2.6 KB | – |
+| `src/generative/schemas/tc-help-video.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-access-review.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-share-link-manager.json` · Dependency | 2.6 KB | – |
 | `src/generative/schemas/tc-run-manifest.json` · Dependency | 2.6 KB | – |
@@ -1374,8 +1376,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/vendor/agent-face/element/no-dom.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
 | `src/vendor/agent-face/engine/index.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **12220.9 KB** | **3024.4 KB** |
-| With Lit – the first component on a page | 12136.6 KB | 2996.4 KB |
+| **Added to a page that already has Lit** | **12240.7 KB** | **3030.0 KB** |
+| With Lit – the first component on a page | 12156.2 KB | 3002.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -1383,9 +1385,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| First render | **0.9 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 9.4 ms | default properties; includes adding its CSS to the document |
+| First on the page | 8.9 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

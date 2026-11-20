@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-help-video.json",
+  "title": "tc-help-video",
+  "description": "Point-in-time help: a small film-frame icon to put beside a heading or label, opening one short tutorial in a modal player with captions and chapters.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The video's title – the tooltip, the player's heading and the icon's accessible name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line or two about what it shows, under the player"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Its length in seconds, shown in the tooltip and the player"
+    },
+    "src": {
+      "type": "string",
+      "description": "A video file the browser can play",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "type": {
+      "type": "string",
+      "description": "The file's type, e.g. \"video/mp4\", when the URL doesn't say"
+    },
+    "poster": {
+      "type": "string",
+      "description": "The player's picture before it plays"
+    },
+    "captions": {
+      "type": "string",
+      "description": "A WebVTT captions file for `src`",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "captionsLang": {
+      "type": "string",
+      "description": "The captions' language (default \"en\")"
+    },
+    "embed": {
+      "type": "string",
+      "description": "An embed URL from a video host, played in an iframe instead of `src`",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HelpVideoChapter"
+      },
+      "description": "Points in the video to jump to (with `src`)"
+    },
+    "label": {
+      "type": "string",
+      "description": "Words beside the icon, e.g. \"Watch how\"; unset, the icon stands alone with a tooltip"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "description": "The icon's size against the text around it: \"sm\" (1em), \"md\" (1.25em, the default) or \"lg\" (1.5em)"
+    },
+    "watched": {
+      "type": "boolean",
+      "description": "Whether it has been watched – a check on the icon. Set when a file plays to its end, unless a tc-watched-change listener calls preventDefault()"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the player is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "autoplay": {
+      "type": "boolean",
+      "description": "Start playing a file as soon as the player opens"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "watch": {
+          "type": "string"
+        },
+        "watched": {
+          "type": "string"
+        },
+        "kicker": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "chapters": {
+          "type": "string"
+        },
+        "unavailable": {
+          "type": "string"
+        },
+        "finished": {
+          "type": "string"
+        },
+        "again": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "HelpVideoChapter": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "number",
+          "description": "Where it starts, in seconds"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "time",
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

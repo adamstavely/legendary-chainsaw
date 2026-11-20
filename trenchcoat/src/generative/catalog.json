@@ -1955,6 +1955,15 @@
     ]
   },
   {
+    "tag": "tc-help-video",
+    "name": "HelpVideo",
+    "description": "Point-in-time help: a small film-frame icon to put beside a heading or label, opening one short tutorial in a modal player with captions and chapters.",
+    "events": [
+      "tc-open-change",
+      "tc-watched-change"
+    ]
+  },
+  {
     "tag": "tc-hexbin-chart",
     "name": "HexbinChart",
     "description": "Many points by x and y gathered into hexagons shaded by count – or the sum or mean of a value – with a ramp legend,",
