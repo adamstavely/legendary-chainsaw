@@ -207,6 +207,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-header-brand": { events: ["tc-navigate"], load: () => import("../elements/header-brand"), schema: () => import("./schemas/tc-header-brand.json") },
   "tc-header-nav": { events: ["tc-panel-change","tc-account-select","tc-setup-continue"], load: () => import("../elements/header-nav"), schema: () => import("./schemas/tc-header-nav.json") },
   "tc-heatmap": { events: ["tc-selected-change","tc-view-change"], load: () => import("../elements/heatmap"), schema: () => import("./schemas/tc-heatmap.json") },
+  "tc-help-video": { events: ["tc-open-change","tc-watched-change","tc-update-seen-change"], load: () => import("../elements/help-video"), schema: () => import("./schemas/tc-help-video.json") },
   "tc-hexbin-chart": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/hexbin-chart"), schema: () => import("./schemas/tc-hexbin-chart.json") },
   "tc-histogram": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/histogram"), schema: () => import("./schemas/tc-histogram.json") },
   "tc-icon-rail": { events: ["tc-selected-change","tc-action"], load: () => import("../elements/icon-rail"), schema: () => import("./schemas/tc-icon-rail.json") },

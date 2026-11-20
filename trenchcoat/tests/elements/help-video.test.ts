@@ -1,0 +1,433 @@
+/*
+ * <tc-help-video> in real browsers: the icon, its name, size, label and tooltip, opening the player, files, embeds and
+ * nothing to play, chapters, watching to the end, Watch again and Done, closing and focus, cancelable events, the
+ * React wrapper and axe in both looks and both themes – with the player open too.
+ */
+import { html } from "lit";
+import axe from "axe-core";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { afterEach, describe, expect, test } from "vitest";
+import "../../src/elements/help-video";
+import { helpVideoTime, helpVideoTranscriptText, parseHelpVideoVtt, type HelpVideoOpenChange, type HelpVideoWatchedChange, type TcHelpVideo } from "../../src/elements/help-video";
+import { HelpVideo } from "../../src/elements/react/help-video";
+import { cleanup, finish, fixture, settle } from "./helpers";
+
+afterEach(cleanup);
+
+const SRC = "data:video/mp4;base64,";
+const CHAPTERS = [
+  { time: 0, title: "Sort by risk" },
+  { time: 48, title: "Take an alert" },
+];
+const text = (el: Element | null | undefined) => (el?.textContent ?? "").replace(/\s+/g, " ").trim();
+const help = () =>
+  fixture<TcHelpVideo>(
+    html`<tc-help-video heading="Triage the queue" duration="125" src=${SRC} captions="data:text/vtt,WEBVTT" description="Sort new alerts by risk." .chapters=${CHAPTERS} .autoplay=${false}></tc-help-video>`,
+  );
+const trigger = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-hvd__trigger")!;
+const dialog = (el: Element) => el.querySelector<HTMLDialogElement>(".ui-hvd__dialog")!;
+
+describe("tc-help-video", () => {
+  for (const look of ["standard", "clean"]) {
+    test(`renders in ${look}: one button with the film cell, named after the video`, async () => {
+      const wrap = await fixture<HTMLElement>(html`<div><tc-help-video look=${look} heading="Triage the queue" duration="125" src=${SRC}></tc-help-video></div>`);
+      const el = wrap.querySelector<TcHelpVideo>("tc-help-video")!;
+      expect(el.dataset.ui).toBe("hvd");
+      expect(el.dataset.look).toBe(look);
+      const b = trigger(el);
+      expect(b.getAttribute("aria-haspopup")).toBe("dialog");
+      expect(text(b.querySelector(".tc-sr-only"))).toBe("Watch video: Triage the queue, 2:05");
+      expect(b.querySelectorAll(".ui-hvd__icon mask rect")).toHaveLength(9);
+      expect(text(b.querySelector(".ui-hvd__tip"))).toBe("Triage the queue · 2:05");
+      expect(b.querySelector(".ui-hvd__seen")).toBeNull();
+      expect(dialog(el).open).toBe(false);
+      expect(el.querySelectorAll("button")).toHaveLength(1);
+    });
+  }
+
+  test("sizes follow the text, a label replaces the tooltip, and watched adds a check", async () => {
+    const el = await fixture<HTMLElement>(html`<div style="font-size: 20px">
+      <tc-help-video heading="A" size="sm"></tc-help-video><tc-help-video heading="B"></tc-help-video><tc-help-video heading="C" size="lg"></tc-help-video>
+      <tc-help-video heading="Export the trail" label="Watch how" watched></tc-help-video>
+    </div>`);
+    const [sm, md, lg, labelled] = [...el.querySelectorAll<TcHelpVideo>("tc-help-video")];
+    const size = (x: Element) => x.querySelector(".ui-hvd__mark")!.getBoundingClientRect().width;
+    expect(size(sm!)).toBeCloseTo(20, 0);
+    expect(size(md!)).toBeCloseTo(25, 0);
+    expect(size(lg!)).toBeCloseTo(30, 0);
+    expect(trigger(sm!).getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
+    expect(text(labelled!.querySelector(".ui-hvd__label"))).toBe("Watch how");
+    expect(labelled!.querySelector(".ui-hvd__tip")).toBeNull();
+    expect(text(trigger(labelled!))).toBe("Watch how : Export the trail, Watched");
+    expect(labelled!.querySelector(".ui-hvd__seen")).toBeTruthy();
+    // Two on a page don't share a mask
+    const masks = [...el.querySelectorAll("mask")].map((m) => m.id);
+    expect(new Set(masks).size).toBe(4);
+  });
+
+  test("times read m:ss, or h:mm:ss past an hour", () => {
+    expect(helpVideoTime(0)).toBe("0:00");
+    expect(helpVideoTime(65.4)).toBe("1:05");
+    expect(helpVideoTime(3725)).toBe("1:02:05");
+    expect(helpVideoTime(-3)).toBe("0:00");
+  });
+
+  test("a click opens the player with the file, captions, description and chapters; Close returns focus", async () => {
+    const el = await help();
+    const seen: HelpVideoOpenChange[] = [];
+    el.addEventListener("tc-open-change", (e) => seen.push((e as CustomEvent<HelpVideoOpenChange>).detail));
+    trigger(el).focus();
+    trigger(el).click();
+    await settle();
+    expect(seen).toEqual([{ open: true }]);
+    expect(el.open).toBe(true);
+    expect(el.hasAttribute("open")).toBe(true);
+    const d = dialog(el);
+    expect(d.open).toBe(true);
+    expect(document.getElementById(d.getAttribute("aria-labelledby")!)!.textContent).toBe("Triage the queue");
+    expect(document.getElementById(d.getAttribute("aria-describedby")!)!.textContent).toBe("Sort new alerts by risk.");
+    expect(text(el.querySelector(".ui-hvd__kicker"))).toBe("Help video · 2:05");
+    const video = el.player!;
+    expect(video.controls).toBe(true);
+    expect(video.querySelector("source")!.getAttribute("src")).toBe(SRC);
+    expect(video.querySelector("track")!.getAttribute("kind")).toBe("captions");
+    expect(document.activeElement).toBe(video);
+    expect([...el.querySelectorAll(".ui-hvd__chapter")].map(text)).toEqual(["0:00 Sort by risk", "0:48 Take an alert"]);
+    el.querySelector<HTMLButtonElement>(".ui-hvd__close")!.click();
+    await settle();
+    expect(el.open).toBe(false);
+    expect(dialog(el).open).toBe(false);
+    expect(el.player).toBeNull();
+    expect(seen[1]).toEqual({ open: false });
+    await expect.poll(() => document.activeElement).toBe(trigger(el));
+  });
+
+  test("Escape and a click on the backdrop close the player", async () => {
+    const el = await help();
+    el.open = true;
+    await settle();
+    dialog(el).dispatchEvent(new Event("cancel", { cancelable: true }));
+    await settle();
+    expect(el.open).toBe(false);
+    el.open = true;
+    await settle();
+    dialog(el).dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle();
+    expect(el.open).toBe(false);
+  });
+
+  test("chapters follow where the video is", async () => {
+    const el = await help();
+    el.open = true;
+    await settle();
+    const video = el.player!;
+    expect(el.querySelectorAll(".ui-hvd__chapter")[0]!.getAttribute("aria-current")).toBe("true");
+    Object.defineProperty(video, "currentTime", { configurable: true, get: () => 50, set: () => {} });
+    video.dispatchEvent(new Event("timeupdate"));
+    await settle();
+    expect(el.querySelectorAll(".ui-hvd__chapter")[1]!.getAttribute("aria-current")).toBe("true");
+    expect(el.querySelectorAll(".ui-hvd__chapter")[0]!.getAttribute("aria-current")).toBe("false");
+  });
+
+  test("played to its end it's watched and announced, with Watch again and Done", async () => {
+    const el = await help();
+    const seen: HelpVideoWatchedChange[] = [];
+    el.addEventListener("tc-watched-change", (e) => seen.push((e as CustomEvent<HelpVideoWatchedChange>).detail));
+    el.open = true;
+    await settle();
+    el.player!.dispatchEvent(new Event("ended"));
+    await settle();
+    expect(seen).toEqual([{ watched: true }]);
+    expect(el.watched).toBe(true);
+    expect(el.hasAttribute("watched")).toBe(true);
+    expect(text(el.querySelector('[role="status"]'))).toBe("Watched: Triage the queue");
+    expect(text(el.querySelector(".ui-hvd__done"))).toBe("Finished");
+    expect(text(el.querySelector(".ui-hvd__kicker"))).toBe("Help video · 2:05 · Watched");
+    el.querySelector<HTMLButtonElement>(".ui-hvd__again")!.click();
+    await settle();
+    expect(el.querySelector(".ui-hvd__end")).toBeNull();
+    el.player!.dispatchEvent(new Event("ended"));
+    await settle();
+    expect(seen).toHaveLength(1);
+    el.querySelector<HTMLButtonElement>(".ui-hvd__finish")!.click();
+    await settle();
+    expect(el.open).toBe(false);
+    expect(trigger(el).querySelector(".ui-hvd__seen")).toBeTruthy();
+    expect(text(trigger(el).querySelector(".tc-sr-only"))).toBe("Watch video: Triage the queue, 2:05, Watched");
+  });
+
+  test("an embed plays in a named iframe; with nothing to play it says so", async () => {
+    const el = await fixture<TcHelpVideo>(html`<tc-help-video heading="Export the trail" embed="about:blank" .chapters=${CHAPTERS}></tc-help-video>`);
+    el.open = true;
+    await settle();
+    expect(el.querySelector("iframe")!.title).toBe("Export the trail");
+    expect(el.player).toBeNull();
+    expect(el.querySelector(".ui-hvd__chapters")).toBeNull();
+    expect(text(el.querySelector(".ui-hvd__kicker"))).toBe("Help video");
+    el.embed = undefined;
+    await settle();
+    expect(text(el.querySelector(".ui-hvd__unavailable"))).toBe("This video can't be played here.");
+    expect(dialog(el).hasAttribute("aria-describedby")).toBe(false);
+  });
+
+  test("prevented events keep the state, and renamed words show", async () => {
+    const el = await help();
+    el.addEventListener("tc-open-change", (e) => e.preventDefault());
+    trigger(el).click();
+    await settle();
+    expect(el.open).toBe(false);
+    expect(dialog(el).open).toBe(false);
+    const other = await fixture<TcHelpVideo>(html`<tc-help-video heading="Queue" src=${SRC} .autoplay=${false} .labels=${{ watch: "Play", kicker: "Tutorial" }}></tc-help-video>`);
+    other.addEventListener("tc-watched-change", (e) => e.preventDefault());
+    expect(text(trigger(other).querySelector(".tc-sr-only"))).toBe("Play: Queue");
+    other.open = true;
+    await settle();
+    expect(text(other.querySelector(".ui-hvd__kicker"))).toBe("Tutorial");
+    other.player!.dispatchEvent(new Event("ended"));
+    await settle();
+    expect(other.watched).toBe(false);
+  });
+});
+
+describe("transcript", () => {
+  const VTT = "WEBVTT\n\nNOTE made for the test\n\n1\n00:00.000 --> 00:04.000\n<v Guide>Sort the queue</v> by risk.\n\n00:04.000 --> 00:09.500\nThen take the ones\nthat are yours &amp; done.\n\n01:00:02.000 --> 01:00:05.000\nThe end.\n";
+  const vttUrl = () => `data:text/vtt,${encodeURIComponent(VTT)}`;
+
+  test("WebVTT becomes timed lines without tags, and a text file lists them with times", () => {
+    const cues = parseHelpVideoVtt(VTT);
+    expect(cues).toEqual([
+      { time: 0, text: "Sort the queue by risk." },
+      { time: 4, text: "Then take the ones that are yours & done." },
+      { time: 3602, text: "The end." },
+    ]);
+    expect(helpVideoTranscriptText("Triage", cues)).toBe("Triage\n\n[0:00] Sort the queue by risk.\n[0:04] Then take the ones that are yours & done.\n[1:00:02] The end.\n");
+  });
+
+  test("Transcript shows the captions as lines that follow the video and jump to their time", async () => {
+    const el = await fixture<TcHelpVideo>(html`<tc-help-video heading="Triage the queue" src=${SRC} captions=${vttUrl()} .autoplay=${false}></tc-help-video>`);
+    el.open = true;
+    await settle();
+    const show = el.querySelector<HTMLButtonElement>(".ui-hvd__show")!;
+    expect(text(show)).toBe("Transcript");
+    expect(show.getAttribute("aria-expanded")).toBe("false");
+    expect(el.querySelector(".ui-hvd__reader")).toBeNull();
+    show.click();
+    await expect.poll(() => el.querySelectorAll(".ui-hvd__transcript .ui-hvd__cue").length).toBe(3);
+    expect(show.getAttribute("aria-expanded")).toBe("true");
+    const reader = el.querySelector(".ui-hvd__reader")!;
+    expect(reader.id).toBe(show.getAttribute("aria-controls"));
+    expect(reader.getAttribute("role")).toBe("region");
+    expect(reader.getAttribute("aria-label")).toBe("Transcript");
+    const cues = [...el.querySelectorAll<HTMLButtonElement>("button.ui-hvd__cue")];
+    expect(text(cues[1])).toBe("0:04 Then take the ones that are yours & done.");
+    expect(cues[0]!.getAttribute("aria-current")).toBe("true");
+    let sought = -1;
+    Object.defineProperty(el.player!, "currentTime", { configurable: true, get: () => sought, set: (v: number) => (sought = v) });
+    el.player!.play = () => Promise.resolve();
+    cues[1]!.click();
+    expect(sought).toBe(4);
+    Object.defineProperty(el.player!, "currentTime", { configurable: true, get: () => 5 });
+    el.player!.dispatchEvent(new Event("timeupdate"));
+    await settle();
+    expect(cues[1]!.getAttribute("aria-current")).toBe("true");
+    expect(cues[0]!.hasAttribute("data-at")).toBe(false);
+    show.click();
+    await settle();
+    expect(el.querySelector(".ui-hvd__reader")).toBeNull();
+  });
+
+  test("Download saves a text file named after the video", async () => {
+    const el = await fixture<TcHelpVideo>(html`<tc-help-video heading="Triage the queue!" src=${SRC} captions=${vttUrl()} .autoplay=${false}></tc-help-video>`);
+    el.open = true;
+    await settle();
+    const saved: { name: string; href: string }[] = [];
+    const click = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function (this: HTMLAnchorElement) {
+      saved.push({ name: this.download, href: this.href });
+    };
+    try {
+      const dl = el.querySelector<HTMLButtonElement>("button.ui-hvd__download")!;
+      expect(text(dl)).toBe("Download transcript");
+      dl.click();
+      await expect.poll(() => saved.length).toBe(1);
+    } finally {
+      HTMLAnchorElement.prototype.click = click;
+    }
+    expect(saved[0]!.name).toBe("triage-the-queue-transcript.txt");
+    expect(saved[0]!.href.startsWith("blob:")).toBe(true);
+    expect(el.querySelector("a[download]")).toBeNull();
+  });
+
+  test("given lines and a file: the lines show without jumping for an embed, and Download links the file", async () => {
+    const el = await fixture<TcHelpVideo>(
+      html`<tc-help-video heading="Queue" embed="about:blank" transcript-file="/help/queue.pdf" .transcript=${[{ time: 0, text: "Sort by risk." }]}></tc-help-video>`,
+    );
+    el.open = true;
+    await settle();
+    const dl = el.querySelector<HTMLAnchorElement>("a.ui-hvd__download")!;
+    expect(dl.getAttribute("href")).toBe("/help/queue.pdf");
+    expect(dl.hasAttribute("download")).toBe(true);
+    el.querySelector<HTMLButtonElement>(".ui-hvd__show")!.click();
+    await settle();
+    expect(el.querySelector("button.ui-hvd__cue")).toBeNull();
+    expect(text(el.querySelector("li.ui-hvd__cue"))).toBe("0:00 Sort by risk.");
+  });
+
+  test("no captions and no lines: no transcript buttons; a captions file that fails says so", async () => {
+    const none = await fixture<TcHelpVideo>(html`<tc-help-video heading="Queue" src=${SRC} .autoplay=${false} open></tc-help-video>`);
+    await settle();
+    expect(none.querySelector(".ui-hvd__tools")).toBeNull();
+    const bad = await fixture<TcHelpVideo>(html`<tc-help-video heading="Queue" src=${SRC} captions="/no/such/captions.vtt" .autoplay=${false} open></tc-help-video>`);
+    await settle();
+    bad.querySelector<HTMLButtonElement>(".ui-hvd__show")!.click();
+    await expect.poll(() => text(bad.querySelector(".ui-hvd__reader-note"))).toBe("The transcript couldn't be loaded.");
+  });
+});
+
+describe("updated dot", () => {
+  const NOW = Date.UTC(2026, 10, 20, 12);
+  const updated = (attrs: { on?: string; days?: number; seen?: boolean; now?: number }) =>
+    fixture<TcHelpVideo>(
+      html`<tc-help-video heading="Triage the queue" duration="125" src=${SRC} .autoplay=${false} updated-on=${attrs.on ?? ""} new-days=${attrs.days ?? 14} ?update-seen=${!!attrs.seen} .now=${attrs.now ?? NOW}></tc-help-video>`,
+    );
+  const dot = (el: Element) => el.querySelector(".ui-hvd__trigger .ui-hvd__new");
+
+  test("shows for new-days days after updated-on, and says so in the name and tooltip", async () => {
+    const el = await updated({ on: "2026-11-17" });
+    expect(el.showsUpdate).toBe(true);
+    expect(dot(el)).not.toBeNull();
+    expect(dot(el)!.getAttribute("aria-hidden")).toBe("true");
+    expect(text(trigger(el).querySelector(".tc-sr-only"))).toBe("Watch video: Triage the queue, 2:05, Updated");
+    expect(text(trigger(el).querySelector(".ui-hvd__tip"))).toBe("Triage the queue · 2:05 · Updated");
+    const mark = el.querySelector(".ui-hvd__mark")!.getBoundingClientRect();
+    const d = dot(el)!.getBoundingClientRect();
+    expect(d.right).toBeGreaterThan(mark.right);
+    expect(d.top).toBeLessThan(mark.top);
+    el.now = Date.UTC(2026, 11, 1, 0);
+    await settle();
+    expect(dot(el)).toBeNull();
+    el.newDays = 30;
+    await settle();
+    expect(dot(el)).not.toBeNull();
+  });
+
+  test("no dot without a date, with a date that doesn't parse, or once seen", async () => {
+    for (const el of [await updated({}), await updated({ on: "soon" }), await updated({ on: "2026-11-17", seen: true })]) {
+      expect(el.showsUpdate).toBe(false);
+      expect(dot(el)).toBeNull();
+      expect(text(trigger(el).querySelector(".tc-sr-only"))).not.toContain("Updated");
+    }
+  });
+
+  test("opening clears it with a cancelable event; the player still says when it was updated", async () => {
+    const el = await updated({ on: "2026-11-17" });
+    const seen: boolean[] = [];
+    el.addEventListener("tc-update-seen-change", (e) => seen.push((e as CustomEvent<{ updateSeen: boolean }>).detail.updateSeen));
+    trigger(el).click();
+    await settle();
+    expect(seen).toEqual([true]);
+    expect(el.updateSeen).toBe(true);
+    expect(el.hasAttribute("update-seen")).toBe(true);
+    expect(dot(el)).toBeNull();
+    expect(text(el.querySelector(".ui-hvd__kicker"))).toBe("Help video · 2:05 · Updated Nov 17");
+    el.open = false;
+    await settle();
+    trigger(el).click();
+    await settle();
+    expect(seen).toEqual([true]);
+
+    const kept = await updated({ on: "2026-11-17" });
+    kept.addEventListener("tc-update-seen-change", (e) => e.preventDefault());
+    trigger(kept).click();
+    await settle();
+    expect(kept.open).toBe(true);
+    expect(kept.updateSeen).toBe(false);
+    expect(dot(kept)).not.toBeNull();
+  });
+});
+
+describe("React", () => {
+  test("uncontrolled watched survives re-renders, and a controlled open stays until the parent changes it", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const node = (extra = {}) => React.createElement(HelpVideo, { title: "Queue", src: SRC, autoplay: false, ...extra });
+    await act(async () => root.render(node()));
+    await settle();
+    const el = host.querySelector<TcHelpVideo>("tc-help-video")!;
+    expect(el.heading).toBe("Queue");
+    await act(async () => trigger(el).click());
+    await settle();
+    await act(async () => el.player!.dispatchEvent(new Event("ended")));
+    await act(async () => root.render(node()));
+    await settle();
+    expect(el.watched).toBe(true);
+    let asked: boolean | undefined;
+    await act(async () => root.render(node({ open: false, onOpenChange: (o: boolean) => (asked = o) })));
+    await settle();
+    expect(el.open).toBe(false);
+    await act(async () => trigger(el).click());
+    await settle();
+    expect(asked).toBe(true);
+    expect(el.open).toBe(false);
+    await act(async () => root.render(node({ open: true })));
+    await settle();
+    expect(dialog(el).open).toBe(true);
+    await act(async () => root.unmount());
+    host.remove();
+  });
+
+  test("a controlled updateSeen keeps the dot until the parent clears it", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    let asked: boolean | undefined;
+    const node = (updateSeen: boolean) =>
+      React.createElement(HelpVideo, { title: "Queue", src: SRC, autoplay: false, updatedOn: "2026-11-17", now: Date.UTC(2026, 10, 20), updateSeen, onUpdateSeenChange: (v: boolean) => (asked = v) });
+    await act(async () => root.render(node(false)));
+    await settle();
+    const el = host.querySelector<TcHelpVideo>("tc-help-video")!;
+    await act(async () => trigger(el).click());
+    await settle();
+    expect(asked).toBe(true);
+    expect(el.querySelector(".ui-hvd__new")).not.toBeNull();
+    await act(async () => root.render(node(true)));
+    await settle();
+    expect(el.querySelector(".ui-hvd__new")).toBeNull();
+    await act(async () => root.unmount());
+    host.remove();
+  });
+});
+
+describe("accessibility", () => {
+  for (const look of ["standard", "clean"]) {
+    for (const scheme of ["light", "dark"]) {
+      test(`no axe violations, ${look} ${scheme}`, async () => {
+        const wrap = await fixture<HTMLElement>(
+          html`<div data-look=${look} style=${`color-scheme: ${scheme}; background: Canvas; color: CanvasText`}>
+            <h2>Alert queue <tc-help-video look=${look} heading="Triage the queue" duration="125" updated-on="2026-11-17" .now=${Date.UTC(2026, 10, 20)}></tc-help-video></h2>
+            <p>Export <tc-help-video look=${look} heading="Export the trail" label="Watch how" size="sm" watched></tc-help-video></p>
+          </div>`,
+        );
+        await finish(wrap);
+        const { violations } = await axe.run(wrap);
+        expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);
+      });
+    }
+  }
+
+  test("no axe violations with the player and its transcript open", async () => {
+    const el = await help();
+    el.transcript = [
+      { time: 0, text: "Sort new alerts by risk." },
+      { time: 48, text: "Take the ones that are yours." },
+    ];
+    el.open = true;
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-hvd__show")!.click();
+    el.player!.dispatchEvent(new Event("ended"));
+    await finish(el);
+    const { violations } = await axe.run(dialog(el));
+    expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);
+  });
+});

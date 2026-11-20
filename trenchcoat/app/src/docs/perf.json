@@ -22253,8 +22253,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-11-16",
-   "hash": "6d81a212966ab187",
+   "measuredAt": "2026-11-20",
+   "hash": "90de1da9f7a9d430",
    "bundle": {
     "own": {
      "min": 34126,
@@ -22709,7 +22709,7 @@
      {
       "name": "billing-schedule",
       "kind": "element",
-      "min": 47811
+      "min": 47815
      },
      {
       "name": "playbook-canvas",
@@ -23225,6 +23225,11 @@
       "name": "agent-team",
       "kind": "element",
       "min": 26433
+     },
+     {
+      "name": "help-video",
+      "kind": "element",
+      "min": 26412
      },
      {
       "name": "share-panel",
@@ -24029,7 +24034,7 @@
      {
       "name": "biometric-status",
       "kind": "element",
-      "min": 16121
+      "min": 16129
      },
      {
       "name": "candlestick-chart",
@@ -24964,7 +24969,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 81024
+      "min": 81209
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -25350,6 +25355,11 @@
       "name": "src/generative/schemas/tc-pie-chart.json",
       "kind": "other",
       "min": 3942
+     },
+     {
+      "name": "src/generative/schemas/tc-help-video.json",
+      "kind": "other",
+      "min": 3936
      },
      {
       "name": "src/generative/schemas/tc-beeswarm-chart.json",
@@ -27443,21 +27453,21 @@
      }
     ],
     "withoutLit": {
-     "min": 12514192,
-     "gzip": 3097016
+     "min": 12545005,
+     "gzip": 3106490
     },
     "withLit": {
-     "min": 12427847,
-     "gzip": 3068353
+     "min": 12458392,
+     "gzip": 3076844
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 9.4,
-    "first": 1.7,
-    "update": 0.2,
+    "cold": 8.7,
+    "first": 0.8,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -29000,6 +29010,109 @@
     "errors": [
      "ResizeObserver loop completed with undelivered notifications."
     ]
+   }
+  },
+  "help-video": {
+   "measuredAt": "2026-11-20",
+   "hash": "c2287632446a644a",
+   "bundle": {
+    "own": {
+     "min": 28218,
+     "gzip": 8538
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18955
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/modal",
+      "kind": "internal",
+      "min": 1573
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 36669,
+     "gzip": 10911
+    },
+    "withLit": {
+     "min": 56705,
+     "gzip": 17359
+    }
+   },
+   "render": {
+    "tag": "tc-help-video",
+    "source": "demo",
+    "runs": 7,
+    "cold": 14.9,
+    "first": 1.3,
+    "update": 0.3,
+    "updateKind": "one item of chapters replaced",
+    "nodes": 21,
+    "scale": {
+     "property": "chapters",
+     "demoItems": 3,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.8,
+       "update": 0,
+       "nodes": 21
+      },
+      {
+       "items": 1000,
+       "first": 0.8,
+       "update": 0,
+       "nodes": 21
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 92.33
+     },
+     "away": {
+      "frames": 0,
+      "timers": 89.33
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 89.33
+     }
+    },
+    "errors": []
    }
   },
   "hexbin-chart": {
