@@ -142,6 +142,38 @@
      "readonly": false
     },
     {
+     "name": "updatedOn",
+     "attribute": "updated-on",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "When the video last changed, as a date (\"2026-11-12\"); for `new-days` days after it, a dot on the icon says so",
+     "readonly": false
+    },
+    {
+     "name": "newDays",
+     "attribute": "new-days",
+     "type": "number",
+     "default": "14",
+     "description": "How many days after `updated-on` the dot shows (default 14)",
+     "readonly": false
+    },
+    {
+     "name": "updateSeen",
+     "attribute": "update-seen",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether this person has seen the update – the dot is cleared. Set when the player opens, unless a tc-update-seen-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time to measure `new-days` from, in milliseconds; unset, the clock's",
+     "readonly": false
+    },
+    {
      "name": "labels",
      "attribute": null,
      "type": "Partial<HelpVideoLabels>",
@@ -166,6 +198,14 @@
      "readonly": true
     },
     {
+     "name": "showsUpdate",
+     "attribute": null,
+     "type": "boolean",
+     "default": null,
+     "description": "Whether the Updated dot shows: a recent update this person hasn't opened yet",
+     "readonly": true
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -185,6 +225,12 @@
      "name": "tc-watched-change",
      "detail": "",
      "description": "The video played to its end ({ watched }: HelpVideoWatchedChange); cancelable – prevented, `watched` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update-seen-change",
+     "detail": "",
+     "description": "The player was opened while the Updated dot showed ({ updateSeen }: HelpVideoUpdateSeenChange); cancelable – prevented, the dot stays",
      "cancelable": true
     }
    ],
@@ -219,9 +265,17 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-hvd-dot",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
+    "--tc-accent",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
@@ -233,6 +287,7 @@
     "--tc-control-radius-sm",
     "--tc-duration-fast",
     "--tc-duration-moderate",
+    "--tc-duration-slow",
     "--tc-ease-standard",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
@@ -342,17 +397,37 @@
      "type": "(watched: boolean) => void",
      "optional": true,
      "description": "The video played to its end"
+    },
+    {
+     "name": "updateSeen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether this person has seen the update, clearing the Updated dot – controlled when given"
+    },
+    {
+     "name": "defaultUpdateSeen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Update seen on mount when `updateSeen` isn't controlled"
+    },
+    {
+     "name": "onUpdateSeenChange",
+     "type": "(updateSeen: boolean) => void",
+     "optional": true,
+     "description": "The player was opened while the Updated dot showed"
     }
    ],
    "hides": [
     "heading",
     "open",
     "watched",
+    "updateSeen",
     "children"
    ],
    "events": {
     "tc-open-change": null,
-    "tc-watched-change": null
+    "tc-watched-change": null,
+    "tc-update-seen-change": null
    }
   }
  ],
@@ -427,6 +502,22 @@
     {
      "name": "transcriptFile",
      "attribute": "transcript-file"
+    },
+    {
+     "name": "updatedOn",
+     "attribute": "updated-on"
+    },
+    {
+     "name": "newDays",
+     "attribute": "new-days"
+    },
+    {
+     "name": "updateSeen",
+     "attribute": "update-seen"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
     }
    ],
    "events": [
@@ -436,6 +527,10 @@
     },
     {
      "name": "tc-watched-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update-seen-change",
      "cancelable": true
     }
    ],
@@ -447,6 +542,10 @@
     {
      "property": "open",
      "event": "tc-open-change"
+    },
+    {
+     "property": "updateSeen",
+     "event": "tc-update-seen-change"
     }
    ],
    "form": null,
@@ -650,7 +749,9 @@
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
-  "clock": [],
+  "clock": [
+   "Date.now()"
+  ],
   "listeners": [],
   "pauses": {
    "offscreen": [],
@@ -663,7 +764,7 @@
   "windowed": false
  },
  "size": {
-  "min": 34848,
-  "gzip": 10394
+  "min": 36669,
+  "gzip": 10911
  }
 }

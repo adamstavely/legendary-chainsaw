@@ -15,6 +15,9 @@ import { ModalController } from "./internal/modal";
  *     (tc-watched-change), and a page can set `watched` itself – e.g. for an embed, or from what it stored
  *   · the player plays a file (`src`, with an optional WebVTT `captions` track) or an embed (`embed`, an iframe URL
  *     from a video host); with neither it says the video can't be played here. Chapters jump within a file
+ *   · `updated-on` (a date) puts a small dot on the icon's top-right corner for `new-days` days (14 by default), to say
+ *     the video changed; opening it clears the dot (tc-update-seen-change), and a page passes `update-seen` back to
+ *     keep it cleared
  *   · `open` is the page's to own (tc-open-change, cancelable – a page with its own player prevents it)
  *   · Escape, Close or a click outside shuts it, and focus goes back to the icon
  * The icon looks the same in Standard and Clean; the player is a card in both.
@@ -36,6 +39,7 @@ export type HelpVideoCue = {
 export type HelpVideoSize = "sm" | "md" | "lg";
 export type HelpVideoOpenChange = { open: boolean };
 export type HelpVideoWatchedChange = { watched: boolean };
+export type HelpVideoUpdateSeenChange = { updateSeen: boolean };
 
 /** The element's words, every one renameable through `labels` */
 export type HelpVideoLabels = {
@@ -52,6 +56,7 @@ export type HelpVideoLabels = {
   download: string;
   transcriptLoading: string;
   transcriptError: string;
+  updated: string;
 };
 export const defaultHelpVideoLabels: HelpVideoLabels = {
   watch: "Watch video",
@@ -67,7 +72,10 @@ export const defaultHelpVideoLabels: HelpVideoLabels = {
   download: "Download transcript",
   transcriptLoading: "Loading the transcript…",
   transcriptError: "The transcript couldn't be loaded.",
+  updated: "Updated",
 };
+
+const DAY = 86_400_000;
 
 /** The seconds in a WebVTT timestamp – "01:02.500" or "1:01:02.500" */
 function vttSeconds(stamp: string) {
@@ -127,6 +135,7 @@ let instances = 0;
  * @tag tc-help-video
  * @fires tc-open-change - The player was opened or closed ({ open }: HelpVideoOpenChange); cancelable – prevented, `open` stays as it was
  * @fires tc-watched-change - The video played to its end ({ watched }: HelpVideoWatchedChange); cancelable – prevented, `watched` stays as it was
+ * @fires tc-update-seen-change - The player was opened while the Updated dot showed ({ updateSeen }: HelpVideoUpdateSeenChange); cancelable – prevented, the dot stays
  */
 export class TcHelpVideo extends TcElement {
   static override ui = "hvd";
@@ -165,6 +174,14 @@ export class TcHelpVideo extends TcElement {
   @property({ attribute: false }) accessor transcript: HelpVideoCue[] | undefined = undefined;
   /** A transcript file to download instead of the text one made from the lines, e.g. a PDF */
   @property({ attribute: "transcript-file" }) accessor transcriptFile: string | undefined = undefined;
+  /** When the video last changed, as a date ("2026-11-12"); for `new-days` days after it, a dot on the icon says so */
+  @property({ attribute: "updated-on" }) accessor updatedOn: string | undefined = undefined;
+  /** How many days after `updated-on` the dot shows (default 14) */
+  @property({ type: Number, attribute: "new-days" }) accessor newDays = 14;
+  /** Whether this person has seen the update – the dot is cleared. Set when the player opens, unless a tc-update-seen-change listener calls preventDefault() */
+  @property({ type: Boolean, reflect: true, attribute: "update-seen" }) accessor updateSeen = false;
+  /** The time to measure `new-days` from, in milliseconds; unset, the clock's */
+  @property({ type: Number }) accessor now: number | undefined = undefined;
   /** Rename any of the words */
   @property({ attribute: false }) accessor labels: Partial<HelpVideoLabels> = {};
 
@@ -272,9 +289,24 @@ export class TcHelpVideo extends TcElement {
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
+  /** When the update was made, if it was in the last `new-days` days */
+  private get recentUpdate(): Date | undefined {
+    if (!this.updatedOn) return undefined;
+    const at = new Date(this.updatedOn);
+    if (Number.isNaN(at.getTime())) return undefined;
+    return (this.now ?? Date.now()) < at.getTime() + this.newDays * DAY ? at : undefined;
+  }
+
+  /** Whether the Updated dot shows: a recent update this person hasn't opened yet */
+  get showsUpdate(): boolean {
+    return !!this.recentUpdate && !this.updateSeen;
+  }
+
   private setOpen(open: boolean) {
     if (open === this.open) return;
-    if (this.emit<HelpVideoOpenChange>("tc-open-change", { open }, { cancelable: true })) this.open = open;
+    if (!this.emit<HelpVideoOpenChange>("tc-open-change", { open }, { cancelable: true })) return;
+    if (open && this.showsUpdate && this.emit<HelpVideoUpdateSeenChange>("tc-update-seen-change", { updateSeen: true }, { cancelable: true })) this.updateSeen = true;
+    this.open = open;
   }
 
   private finish() {
@@ -376,10 +408,11 @@ export class TcHelpVideo extends TcElement {
     const w = this.words;
     const chapters = this.src ? this.chapters : [];
     const at = chapters.reduce((best, c, k) => (c.time <= this.time + 0.25 ? k : best), -1);
+    const updated = this.recentUpdate;
     return html`<div class="ui-hvd__panel">
       <div class="ui-hvd__bar">
         <div class="ui-hvd__heading">
-          <p class="ui-hvd__kicker">${w.kicker}${this.duration != null ? ` · ${helpVideoTime(this.duration)}` : ""}${this.watched ? ` · ${w.watched}` : ""}</p>
+          <p class="ui-hvd__kicker">${w.kicker}${this.duration != null ? ` · ${helpVideoTime(this.duration)}` : ""}${this.watched ? ` · ${w.watched}` : ""}${updated ? html` · <span class="ui-hvd__kicker-new">${w.updated} ${updated.toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" })}</span>` : nothing}</p>
           <h3 class="ui-hvd__name" id=${`${this.uid}-name`}>${this.heading}</h3>
         </div>
         <button type="button" class="ui-hvd__close" @click=${() => this.setOpen(false)}><svg viewBox="0 0 24 24" aria-hidden="true">${CROSS}</svg><span class="tc-sr-only">${w.close}</span></button>
@@ -420,7 +453,8 @@ export class TcHelpVideo extends TcElement {
   protected override render() {
     const w = this.words;
     const length = this.duration != null ? helpVideoTime(this.duration) : "";
-    const tip = [this.heading, length].filter(Boolean).join(" · ");
+    const fresh = this.showsUpdate;
+    const tip = [this.heading, length, fresh ? w.updated : ""].filter(Boolean).join(" · ");
     return html`<button
         type="button"
         class="ui-hvd__trigger"
@@ -428,9 +462,9 @@ export class TcHelpVideo extends TcElement {
         ?data-labelled=${!!this.label}
         @click=${() => this.setOpen(true)}
       >
-        <span class="ui-hvd__mark">${this.icon()}${this.watched ? html`<span class="ui-hvd__seen" aria-hidden="true"><svg viewBox="0 0 24 24">${CHECK}</svg></span>` : nothing}</span>
+        <span class="ui-hvd__mark">${this.icon()}${this.watched ? html`<span class="ui-hvd__seen" aria-hidden="true"><svg viewBox="0 0 24 24">${CHECK}</svg></span>` : nothing}${fresh ? html`<span class="ui-hvd__new" aria-hidden="true"></span>` : nothing}</span>
         ${this.label ? html`<span class="ui-hvd__label">${this.label}</span>` : nothing}
-        <span class="tc-sr-only">${this.label ? "" : w.watch}: ${this.heading}${length ? `, ${length}` : ""}${this.watched ? `, ${w.watched}` : ""}</span>
+        <span class="tc-sr-only">${this.label ? "" : w.watch}: ${this.heading}${length ? `, ${length}` : ""}${this.watched ? `, ${w.watched}` : ""}${fresh ? `, ${w.updated}` : ""}</span>
         ${!this.label && tip ? html`<span class="ui-hvd__tip" aria-hidden="true">${tip}</span>` : nothing}
       </button>
       <dialog
@@ -458,7 +492,7 @@ export class TcHelpVideo extends TcElement {
 /* The icon's size and colours, and the player's widest – override them on the element */
 [data-ui="hvd"] {
   --tc-hvd-size: 1.25em; --tc-hvd-ink: var(--tc-text-secondary); --tc-hvd-ink-hover: var(--tc-text-primary);
-  --tc-hvd-player: calc(var(--tc-space-16) * 12);
+  --tc-hvd-player: calc(var(--tc-space-16) * 12); --tc-hvd-dot: var(--tc-accent);
   position: relative; display: inline-flex; vertical-align: middle; font-weight: var(--tc-font-weight-regular); text-align: left;
 }
 [data-ui="hvd"][size="sm"] { --tc-hvd-size: 1em; }
@@ -480,6 +514,9 @@ export class TcHelpVideo extends TcElement {
 .ui-hvd__trigger:hover .ui-hvd__icon { transform: scale(1.08) rotate(-4deg); }
 .ui-hvd__seen { position: absolute; right: -22%; bottom: -18%; display: grid; place-items: center; width: 58%; height: 58%; border-radius: var(--tc-radius-full); background: var(--tc-status-success-fg); box-shadow: 0 0 0 var(--tc-space-0-5) var(--tc-surface-raised); color: var(--tc-surface-raised); }
 .ui-hvd__seen svg { width: 72%; height: 72%; fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.ui-hvd__new { position: absolute; top: -10%; right: -10%; width: 30%; height: 30%; min-width: var(--tc-space-1); min-height: var(--tc-space-1); border-radius: var(--tc-radius-full); background: var(--tc-hvd-dot); box-shadow: 0 0 0 var(--tc-space-0-5) var(--tc-surface-raised); animation: tc-hvd-new var(--tc-duration-slow) var(--tc-ease-standard) 2; }
+@keyframes tc-hvd-new { 50% { transform: scale(1.35); } }
+.ui-hvd__kicker-new { color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); }
 .ui-hvd__label { white-space: nowrap; }
 .ui-hvd__tip { position: absolute; left: 50%; bottom: calc(100% + var(--tc-space-1-5)); z-index: var(--tc-z-popover); width: max-content; max-width: calc(var(--tc-space-16) * 4); padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); white-space: normal; text-align: center; pointer-events: none; opacity: 0; transform: translate(-50%, var(--tc-space-0-5)); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-hvd__trigger:is(:hover, :focus-visible) .ui-hvd__tip { opacity: 1; transform: translate(-50%, 0); transition-delay: var(--tc-duration-moderate); }
@@ -534,9 +571,11 @@ button.ui-hvd__cue:hover { background: var(--tc-surface-tray); }
 @media (prefers-reduced-motion: reduce) {
   .ui-hvd__trigger, .ui-hvd__icon, .ui-hvd__tip { transition: none; }
   .ui-hvd__trigger:hover .ui-hvd__icon { transform: none; }
+  .ui-hvd__new { animation: none; }
 }
 @media (forced-colors: active) {
   .ui-hvd__cell { fill: ButtonText; }
+  .ui-hvd__new { forced-color-adjust: none; background: Highlight; box-shadow: none; }
   .ui-hvd__seen { forced-color-adjust: none; background: Highlight; color: HighlightText; box-shadow: none; }
   .ui-hvd__chapter[data-at] { forced-color-adjust: none; background: Highlight; color: HighlightText; }
 }

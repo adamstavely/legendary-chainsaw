@@ -286,6 +286,68 @@ describe("transcript", () => {
   });
 });
 
+describe("updated dot", () => {
+  const NOW = Date.UTC(2026, 10, 20, 12);
+  const updated = (attrs: { on?: string; days?: number; seen?: boolean; now?: number }) =>
+    fixture<TcHelpVideo>(
+      html`<tc-help-video heading="Triage the queue" duration="125" src=${SRC} .autoplay=${false} updated-on=${attrs.on ?? ""} new-days=${attrs.days ?? 14} ?update-seen=${!!attrs.seen} .now=${attrs.now ?? NOW}></tc-help-video>`,
+    );
+  const dot = (el: Element) => el.querySelector(".ui-hvd__trigger .ui-hvd__new");
+
+  test("shows for new-days days after updated-on, and says so in the name and tooltip", async () => {
+    const el = await updated({ on: "2026-11-17" });
+    expect(el.showsUpdate).toBe(true);
+    expect(dot(el)).not.toBeNull();
+    expect(dot(el)!.getAttribute("aria-hidden")).toBe("true");
+    expect(text(trigger(el).querySelector(".tc-sr-only"))).toBe("Watch video: Triage the queue, 2:05, Updated");
+    expect(text(trigger(el).querySelector(".ui-hvd__tip"))).toBe("Triage the queue · 2:05 · Updated");
+    const mark = el.querySelector(".ui-hvd__mark")!.getBoundingClientRect();
+    const d = dot(el)!.getBoundingClientRect();
+    expect(d.right).toBeGreaterThan(mark.right);
+    expect(d.top).toBeLessThan(mark.top);
+    el.now = Date.UTC(2026, 11, 1, 0);
+    await settle();
+    expect(dot(el)).toBeNull();
+    el.newDays = 30;
+    await settle();
+    expect(dot(el)).not.toBeNull();
+  });
+
+  test("no dot without a date, with a date that doesn't parse, or once seen", async () => {
+    for (const el of [await updated({}), await updated({ on: "soon" }), await updated({ on: "2026-11-17", seen: true })]) {
+      expect(el.showsUpdate).toBe(false);
+      expect(dot(el)).toBeNull();
+      expect(text(trigger(el).querySelector(".tc-sr-only"))).not.toContain("Updated");
+    }
+  });
+
+  test("opening clears it with a cancelable event; the player still says when it was updated", async () => {
+    const el = await updated({ on: "2026-11-17" });
+    const seen: boolean[] = [];
+    el.addEventListener("tc-update-seen-change", (e) => seen.push((e as CustomEvent<{ updateSeen: boolean }>).detail.updateSeen));
+    trigger(el).click();
+    await settle();
+    expect(seen).toEqual([true]);
+    expect(el.updateSeen).toBe(true);
+    expect(el.hasAttribute("update-seen")).toBe(true);
+    expect(dot(el)).toBeNull();
+    expect(text(el.querySelector(".ui-hvd__kicker"))).toBe("Help video · 2:05 · Updated Nov 17");
+    el.open = false;
+    await settle();
+    trigger(el).click();
+    await settle();
+    expect(seen).toEqual([true]);
+
+    const kept = await updated({ on: "2026-11-17" });
+    kept.addEventListener("tc-update-seen-change", (e) => e.preventDefault());
+    trigger(kept).click();
+    await settle();
+    expect(kept.open).toBe(true);
+    expect(kept.updateSeen).toBe(false);
+    expect(dot(kept)).not.toBeNull();
+  });
+});
+
 describe("React", () => {
   test("uncontrolled watched survives re-renders, and a controlled open stays until the parent changes it", async () => {
     const host = document.body.appendChild(document.createElement("div"));
@@ -315,6 +377,26 @@ describe("React", () => {
     await act(async () => root.unmount());
     host.remove();
   });
+
+  test("a controlled updateSeen keeps the dot until the parent clears it", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    let asked: boolean | undefined;
+    const node = (updateSeen: boolean) =>
+      React.createElement(HelpVideo, { title: "Queue", src: SRC, autoplay: false, updatedOn: "2026-11-17", now: Date.UTC(2026, 10, 20), updateSeen, onUpdateSeenChange: (v: boolean) => (asked = v) });
+    await act(async () => root.render(node(false)));
+    await settle();
+    const el = host.querySelector<TcHelpVideo>("tc-help-video")!;
+    await act(async () => trigger(el).click());
+    await settle();
+    expect(asked).toBe(true);
+    expect(el.querySelector(".ui-hvd__new")).not.toBeNull();
+    await act(async () => root.render(node(true)));
+    await settle();
+    expect(el.querySelector(".ui-hvd__new")).toBeNull();
+    await act(async () => root.unmount());
+    host.remove();
+  });
 });
 
 describe("accessibility", () => {
@@ -323,7 +405,7 @@ describe("accessibility", () => {
       test(`no axe violations, ${look} ${scheme}`, async () => {
         const wrap = await fixture<HTMLElement>(
           html`<div data-look=${look} style=${`color-scheme: ${scheme}; background: Canvas; color: CanvasText`}>
-            <h2>Alert queue <tc-help-video look=${look} heading="Triage the queue" duration="125"></tc-help-video></h2>
+            <h2>Alert queue <tc-help-video look=${look} heading="Triage the queue" duration="125" updated-on="2026-11-17" .now=${Date.UTC(2026, 10, 20)}></tc-help-video></h2>
             <p>Export <tc-help-video look=${look} heading="Export the trail" label="Watch how" size="sm" watched></tc-help-video></p>
           </div>`,
         );

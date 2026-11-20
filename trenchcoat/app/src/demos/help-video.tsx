@@ -202,6 +202,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const { HelpVideo } = ui;
   const [watched, setWatched] = useState<Record<string, boolean>>({ threshold: true });
   const [clips, setClips] = useState<Record<string, Clip>>({});
+  const [seenUpdate, setSeenUpdate] = useState<Record<string, boolean>>({});
+  // The queue tutorial was re-recorded three days ago, so its icon carries the Updated dot for 14 days
+  const updatedOn = useMemo(() => ({ queue: new Date(Date.now() - 3 * 86_400_000).toISOString().slice(0, 10) }) as Record<string, string>, []);
   const fieldId = useId();
   const posters = useMemo(() => TUTORIALS.map((t, i) => (typeof document === "undefined" ? undefined : poster(t, i))), []);
 
@@ -237,6 +240,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       chapters: t.chapters?.map((title, k) => ({ time: (k * t.seconds) / t.chapters!.length, title })) ?? [],
       watched: !!watched[id],
       onWatchedChange: (w: boolean) => setWatched((all) => ({ ...all, [id]: w })),
+      updatedOn: updatedOn[id],
+      updateSeen: !!seenUpdate[id],
+      onUpdateSeenChange: (seen: boolean) => setSeenUpdate((all) => ({ ...all, [id]: seen })),
     };
   };
   const ready = Object.keys(clips).length;
@@ -265,8 +271,11 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       </div>
       <div style={{ ...caption, textAlign: "center" }}>
         {ready < TUTORIALS.length ? `Recording the demo's clips from its own drawing (${ready} of ${TUTORIALS.length} ready). ` : "Point at an icon for its title; click it to play. "}
-        <button type="button" style={textButton} onClick={() => setWatched({})}>
-          Mark all unwatched
+        <button type="button" style={textButton} onClick={() => {
+            setWatched({});
+            setSeenUpdate({});
+          }}>
+          Reset watched and updates
         </button>
       </div>
     </div>

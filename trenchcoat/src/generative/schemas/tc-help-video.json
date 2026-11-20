@@ -91,6 +91,22 @@
       "description": "A transcript file to download instead of the text one made from the lines, e.g. a PDF",
       "format": "uri-reference"
     },
+    "updatedOn": {
+      "type": "string",
+      "description": "When the video last changed, as a date (\"2026-11-12\"); for `new-days` days after it, a dot on the icon says so"
+    },
+    "newDays": {
+      "type": "number",
+      "description": "How many days after `updated-on` the dot shows (default 14)"
+    },
+    "updateSeen": {
+      "type": "boolean",
+      "description": "Whether this person has seen the update – the dot is cleared. Set when the player opens, unless a tc-update-seen-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time to measure `new-days` from, in milliseconds; unset, the clock's"
+    },
     "labels": {
       "type": "object",
       "properties": {
@@ -131,6 +147,9 @@
           "type": "string"
         },
         "transcriptError": {
+          "type": "string"
+        },
+        "updated": {
           "type": "string"
         }
       },

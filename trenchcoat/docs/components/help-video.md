@@ -9,7 +9,7 @@
 Point-in-time help – a small film-frame icon to put beside a heading, a field label or a toolbar, with a tooltip naming the video and its length and a check once watched; a click opens one short tutorial in a modal player with captions, chapters and Watch again
 
 - **Element:** `<tc-help-video>`
-- **Size:** 10.2 KB gzip · 34.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.7 KB gzip · 35.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -29,7 +29,7 @@ The live example is in the gallery at `#/help-video`, at 320 px, 480 px or full 
 
 Point-in-time help: a small film-frame icon that sits beside a heading, a field label or a toolbar, and opens one short tutorial in a modal player. Sprinkle one wherever a feature is easier to show than to explain. Each carries its own video.
 
-The icon is a single film cell with sprocket holes along its top and bottom and a play mark cut through it, drawn in the text colour and sized to the text around it. Pointing at it shows a tooltip with the video's title and length. Once the video has been watched, a small check sits on the icon's corner. The player has the title, the video with its captions, Transcript and Download transcript, a short description, chapters to jump to and, at the end, Watch again and Done. Transcript opens the words beside the video as timed lines: the line being said is marked as it plays, and a line jumps the video to it. They're read from the captions file unless the page passes its own `transcript`; Download saves them as a text file, or links `transcript-file` when the page has one, such as a PDF. Escape, Close or a click outside shuts it, and focus goes back to the icon.
+The icon is a single film cell with sprocket holes along its top and bottom and a play mark cut through it, drawn in the text colour and sized to the text around it. Pointing at it shows a tooltip with the video's title and length. Once the video has been watched, a small check sits on the icon's bottom corner. When the video changes, set `updated-on` to the date: a small dot sits on the icon's top-right corner for `new-days` days (14 by default), the tooltip and name say Updated, and the player's header says when. Opening the video clears the dot for that person (`tc-update-seen-change`); pass `update-seen` back to keep it cleared. The player has the title, the video with its captions, Transcript and Download transcript, a short description, chapters to jump to and, at the end, Watch again and Done. Transcript opens the words beside the video as timed lines: the line being said is marked as it plays, and a line jumps the video to it. They're read from the captions file unless the page passes its own `transcript`; Download saves them as a text file, or links `transcript-file` when the page has one, such as a PDF. Escape, Close or a click outside shuts it, and focus goes back to the icon.
 
 ### When to use
 
@@ -47,14 +47,14 @@ The icon is a single film cell with sprocket holes along its top and bottom and 
 
 *Turn on “Show anatomy” on the example to see each part numbered on the live component.*
 
-1. **Trigger** `.ui-hvd__trigger` – the button, holding `.ui-hvd__mark` with the film cell `.ui-hvd__icon`, and `.ui-hvd__seen` once watched
+1. **Trigger** `.ui-hvd__trigger` – the button, holding `.ui-hvd__mark` with the film cell `.ui-hvd__icon`, `.ui-hvd__seen` once watched, and `.ui-hvd__new` – the Updated dot – after a recent update
 2. **Label** `.ui-hvd__label` – words beside the icon, when `label` is set
 3. **Tooltip** `.ui-hvd__tip` – the title and length, on hover and keyboard focus, when there's no label
 4. **Player** `.ui-hvd__dialog` – `.ui-hvd__bar` with `.ui-hvd__kicker`, the title and `.ui-hvd__close`; `.ui-hvd__screen` with the video; `.ui-hvd__tools` with `.ui-hvd__show` (Transcript) and `.ui-hvd__download`, and `.ui-hvd__reader` with the `.ui-hvd__cue` lines when shown; `.ui-hvd__info` with the description and `.ui-hvd__chapter` buttons; `.ui-hvd__end` with Watch again and Done once it has played through
 
 ## Looks
 
-The icon is the same in Standard and Clean: the text colour, a shade quieter (`--tc-hvd-ink`), turning to the full text colour on hover (`--tc-hvd-ink-hover`). With `label` it becomes a small pill. `size` sets it against the text around it – `sm` 1em for labels and toolbars, `md` 1.25em for section headings, `lg` 1.5em for page titles – and `--tc-hvd-size` takes any length. `--tc-hvd-player` sets the player's widest.
+The icon is the same in Standard and Clean: the text colour, a shade quieter (`--tc-hvd-ink`), turning to the full text colour on hover (`--tc-hvd-ink-hover`). With `label` it becomes a small pill. `size` sets it against the text around it – `sm` 1em for labels and toolbars, `md` 1.25em for section headings, `lg` 1.5em for page titles – and `--tc-hvd-size` takes any length. `--tc-hvd-player` sets the player's widest, and `--tc-hvd-dot` the Updated dot's colour (the accent by default).
 
 ## Usage
 
@@ -70,6 +70,7 @@ The icon is the same in Standard and Clean: the text colour, a shade quieter (`-
     src="/help/queue.mp4"
     captions="/help/queue.vtt"
     poster="/help/queue.jpg"
+    updated-on="2026-11-17"
   ></tc-help-video>
 </h2>
 
@@ -85,6 +86,9 @@ The icon is the same in Standard and Clean: the text colour, a shade quieter (`-
   ];
   help.watched = localStorage.getItem("help:queue") === "watched";
   help.addEventListener("tc-watched-change", () => localStorage.setItem("help:queue", "watched"));
+  // The dot clears once this person opens the update; key it by the date so the next update shows again
+  help.updateSeen = localStorage.getItem("help:queue:update") === help.updatedOn;
+  help.addEventListener("tc-update-seen-change", () => localStorage.setItem("help:queue:update", help.updatedOn));
 </script>
 ```
 
@@ -203,9 +207,14 @@ export class HelpVideoExample {
 | `autoplay` | `autoplay` | `boolean` | `true` | Start playing a file as soon as the player opens |
 | `transcript` | – | `HelpVideoCue[] \| undefined` | `undefined` | The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown |
 | `transcriptFile` | `transcript-file` | `string \| undefined` | `undefined` | A transcript file to download instead of the text one made from the lines, e.g. a PDF |
+| `updatedOn` | `updated-on` | `string \| undefined` | `undefined` | When the video last changed, as a date ("2026-11-12"); for `new-days` days after it, a dot on the icon says so |
+| `newDays` | `new-days` | `number` | `14` | How many days after `updated-on` the dot shows (default 14) |
+| `updateSeen` | `update-seen` | `boolean` | `false` | Whether this person has seen the update – the dot is cleared. Set when the player opens, unless a tc-update-seen-change listener calls preventDefault() |
+| `now` | `now` | `number \| undefined` | `undefined` | The time to measure `new-days` from, in milliseconds; unset, the clock's |
 | `labels` | – | `Partial<HelpVideoLabels>` | `{}` | Rename any of the words |
 | `player` | – | `HTMLVideoElement \| null` | – | The &lt;video> in the open player, when it plays a file |
 | `transcriptCues` | – | `HelpVideoCue[] \| undefined` | – | The transcript's lines: the ones given, or the ones read from the captions file |
+| `showsUpdate` | – | `boolean` | – | Whether the Updated dot shows: a recent update this person hasn't opened yet |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -214,6 +223,7 @@ export class HelpVideoExample {
 | --- | --- | --- | --- |
 | `tc-open-change` | – | Yes | The player was opened or closed ({ open }: HelpVideoOpenChange); cancelable – prevented, `open` stays as it was |
 | `tc-watched-change` | – | Yes | The video played to its end ({ watched }: HelpVideoWatchedChange); cancelable – prevented, `watched` stays as it was |
+| `tc-update-seen-change` | – | Yes | The player was opened while the Updated dot showed ({ updateSeen }: HelpVideoUpdateSeenChange); cancelable – prevented, the dot stays |
 
 #### Component tokens
 
@@ -225,10 +235,11 @@ export class HelpVideoExample {
 | `--tc-hvd-ink` | `var(--tc-text-secondary)` | both |
 | `--tc-hvd-ink-hover` | `var(--tc-text-primary)` | both |
 | `--tc-hvd-player` | `calc(var(--tc-space-16) * 12)` | both |
+| `--tc-hvd-dot` | `var(--tc-accent)` | both |
 
-#### Design tokens it reads (54)
+#### Design tokens it reads (56)
 
-`--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-ease-standard`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-gray-200`, `--tc-gray-950`, `--tc-hairline`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-radius-full`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-scrim`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-10`, `--tc-space-16`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-success-fg`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-surface-tray`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-font-size`, `--tc-tooltip-px`, `--tc-tooltip-py`, `--tc-tooltip-radius`, `--tc-z-popover`
+`--tc-accent`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-duration-fast`, `--tc-duration-moderate`, `--tc-duration-slow`, `--tc-ease-standard`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-font-weight-semibold`, `--tc-gray-200`, `--tc-gray-950`, `--tc-hairline`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-radius-full`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-scrim`, `--tc-shadow-overlay`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-10`, `--tc-space-16`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-success-fg`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-surface-tray`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-font-size`, `--tc-tooltip-px`, `--tc-tooltip-py`, `--tc-tooltip-radius`, `--tc-z-popover`
 
 #### Functions
 
@@ -262,7 +273,7 @@ export class HelpVideoExample {
 | `transcript` | `el.transcript = …;` | `<… transcript={…} />` | `<tc-help-video :transcript="…">` | `<tc-help-video [transcript]="…">` | `<tc-help-video {transcript}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-help-video :labels="…">` | `<tc-help-video [labels]="…">` | `<tc-help-video {labels}>` |
 
-*Also attributes: `heading`, `description`, `duration`, `src`, `type`, `poster`, `captions`, `captions-lang` and 7 more – see the API table.*
+*Also attributes: `heading`, `description`, `duration`, `src`, `type`, `poster`, `captions`, `captions-lang` and 11 more – see the API table.*
 
 ### Events
 
@@ -270,12 +281,13 @@ export class HelpVideoExample {
 | --- | --- | --- | --- | --- | --- | --- |
 | `tc-open-change` | Yes | `el.addEventListener("tc-open-change", (e) => …)` | `ref.current.addEventListener("tc-open-change", …)` | `@tc-open-change="…"` | `(tc-open-change)="…($event)"` | `el.addEventListener("tc-open-change", …)` |
 | `tc-watched-change` | Yes | `el.addEventListener("tc-watched-change", (e) => …)` | `ref.current.addEventListener("tc-watched-change", …)` | `@tc-watched-change="…"` | `(tc-watched-change)="…($event)"` | `el.addEventListener("tc-watched-change", …)` |
+| `tc-update-seen-change` | Yes | `el.addEventListener("tc-update-seen-change", (e) => …)` | `ref.current.addEventListener("tc-update-seen-change", …)` | `@tc-update-seen-change="…"` | `(tc-update-seen-change)="…($event)"` | `el.addEventListener("tc-update-seen-change", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-The element changes `watched` and `open` itself unless a listener calls `preventDefault()` on `tc-watched-change` or `tc-open-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `watched`, `open` and `updateSeen` itself unless a listener calls `preventDefault()` on `tc-watched-change`, `tc-open-change` or `tc-update-seen-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -401,8 +413,11 @@ No slots: everything it shows comes from its properties.
 | `watched` | `boolean` | Whether it has been watched – controlled when given |
 | `defaultWatched` | `boolean` | Watched on mount when `watched` isn't controlled |
 | `onWatchedChange` | `(watched: boolean) => void` | The video played to its end |
+| `updateSeen` | `boolean` | Whether this person has seen the update, clearing the Updated dot – controlled when given |
+| `defaultUpdateSeen` | `boolean` | Update seen on mount when `updateSeen` isn't controlled |
+| `onUpdateSeenChange` | `(updateSeen: boolean) => void` | The player was opened while the Updated dot showed |
 
-*Renamed or hidden on the wrapper: `heading`, `open`, `watched`, `children`*
+*Renamed or hidden on the wrapper: `heading`, `open`, `watched`, `updateSeen`, `children`*
 
 ## Accessibility
 
@@ -420,7 +435,7 @@ Follows the WAI-ARIA [Dialog (modal) pattern](https://www.w3.org/WAI/ARIA/apg/pa
 
 ### Screen readers
 
-The icon is a button named "Watch video:" with the title, its length and whether it was watched, and it says it opens a dialog. With a `label`, the name starts with the label's words. The player is a modal dialog named after the video and described by its description; the rest of the page is inert while it's open. The current chapter is marked with `aria-current`. Transcript says whether it's expanded and which region it controls; the transcript is a region named Transcript, each line a button with its time and words, and the line being said is marked with `aria-current`. If the captions file can't be read, a status line says so. When the video plays to its end, a polite status line says it was watched. The drawing and the tooltip are hidden from assistive technology, because the button's name already says what they show.
+The icon is a button named "Watch video:" with the title, its length and whether it was watched, and it says it opens a dialog. With a `label`, the name starts with the label's words. While the Updated dot shows, the name ends with "Updated"; the dot itself is hidden from assistive technology. The player is a modal dialog named after the video and described by its description; the rest of the page is inert while it's open. The current chapter is marked with `aria-current`. Transcript says whether it's expanded and which region it controls; the transcript is a region named Transcript, each line a button with its time and words, and the line being said is marked with `aria-current`. If the captions file can't be read, a status line says so. When the video plays to its end, a polite status line says it was watched. The drawing and the tooltip are hidden from assistive technology, because the button's name already says what they show.
 
 ### Every component
 
@@ -469,7 +484,7 @@ The icon is a button named "Watch video:" with the title, its length and whether
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 25.8 KB | 7.8 KB |
+| **This component alone** | 27.6 KB | 8.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -478,8 +493,8 @@ The icon is a button named "Watch video:" with the title, its length and whether
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **34.0 KB** | **10.2 KB** |
-| With Lit – the first component on a page | 53.6 KB | 16.5 KB |
+| **Added to a page that already has Lit** | **35.8 KB** | **10.7 KB** |
+| With Lit – the first component on a page | 55.4 KB | 17.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,11 +502,11 @@ The icon is a button named "Watch video:" with the title, its length and whether
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 20 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of chapters replaced |
+| First render | **1.3 ms** | the gallery demo's data, 21 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of chapters replaced |
 | First on the page | 15 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.9 ms | chapters: first render, 20 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | chapters: first render, 20 nodes; update 0.1 ms |
+| 100 items | 0.8 ms | chapters: first render, 21 nodes; update 0.0 ms |
+| 1,000 items | 0.8 ms | chapters: first render, 21 nodes; update 0.0 ms |
 
 What it renders doesn't grow with chapters (tested to 1,000 items).
 
@@ -499,12 +514,12 @@ What it renders doesn't grow with chapters (tested to 1,000 items).
 
 ### Runtime
 
-- At rest with the demo's data: **89 timer callbacks/s** on screen, **89 timer callbacks/s** scrolled away, **89 timer callbacks/s** under reduced motion (measured).
+- At rest with the demo's data: **92 timer callbacks/s** on screen, **89 timer callbacks/s** scrolled away, **89 timer callbacks/s** under reduced motion (measured).
 - No animation-frame loop.
 - Timers: `setTimeout`.
 - Stops or pauses under reduced motion.
 - Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController).
-- Doesn't read the clock.
+- Reads the clock: `Date.now()`.
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
 
@@ -522,6 +537,7 @@ What it renders doesn't grow with chapters (tested to 1,000 items).
 
 - Put the icon right after the words it explains, on the same line.
 - Store `watched` per person and pass it back, so the checks survive a reload.
+- Set `updated-on` only for a change worth re-watching – a new step, a moved button – and store `update-seen` per person and per update, so the dot comes back for the next one.
 - Set `watched` yourself for an embed – the element can't see when an iframe's video ends.
 - Mark speakers in the captions with `<v Name>` if you like – the transcript drops the tags and keeps the words.
 

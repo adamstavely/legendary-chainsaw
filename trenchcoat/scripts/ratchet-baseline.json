@@ -301,6 +301,9 @@
   "src/elements/gradient-text.ts": {
     "background-position animation": 1
   },
+  "src/elements/help-video.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/inline-diff.ts": {
     "literal spacing": 3
   },
