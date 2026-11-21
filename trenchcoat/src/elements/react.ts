@@ -233,6 +233,7 @@ export * from "./react/handoff-brief";
 export * from "./react/header-brand";
 export * from "./react/header-nav";
 export * from "./react/heatmap";
+export * from "./react/help-guide";
 export * from "./react/help-video";
 export * from "./react/hexbin-chart";
 export * from "./react/histogram";

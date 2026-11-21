@@ -22253,12 +22253,12 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-11-20",
-   "hash": "90de1da9f7a9d430",
+   "measuredAt": "2026-11-21",
+   "hash": "a7f7bd66983adced",
    "bundle": {
     "own": {
      "min": 34126,
-     "gzip": 10892
+     "gzip": 10973
     },
     "shared": [
      {
@@ -22709,7 +22709,7 @@
      {
       "name": "billing-schedule",
       "kind": "element",
-      "min": 47815
+      "min": 47823
      },
      {
       "name": "playbook-canvas",
@@ -24472,6 +24472,11 @@
       "min": 9134
      },
      {
+      "name": "help-guide",
+      "kind": "element",
+      "min": 9020
+     },
+     {
       "name": "bulk-action-bar",
       "kind": "element",
       "min": 8613
@@ -24969,7 +24974,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 81209
+      "min": 81390
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -25142,6 +25147,11 @@
       "min": 4607
      },
      {
+      "name": "src/generative/schemas/tc-flow-builder.json",
+      "kind": "other",
+      "min": 4598
+     },
+     {
       "name": "src/generative/schemas/tc-retrieval-inspector.json",
       "kind": "other",
       "min": 4592
@@ -25172,9 +25182,9 @@
       "min": 4495
      },
      {
-      "name": "src/generative/schemas/tc-flow-builder.json",
+      "name": "src/generative/schemas/tc-step-inspector.json",
       "kind": "other",
-      "min": 4490
+      "min": 4486
      },
      {
       "name": "src/generative/schemas/tc-histogram.json",
@@ -25202,11 +25212,6 @@
       "min": 4400
      },
      {
-      "name": "src/generative/schemas/tc-step-inspector.json",
-      "kind": "other",
-      "min": 4378
-     },
-     {
       "name": "src/generative/schemas/tc-mcp-connection-manager.json",
       "kind": "other",
       "min": 4368
@@ -25227,6 +25232,11 @@
       "min": 4314
      },
      {
+      "name": "src/generative/schemas/tc-step-picker.json",
+      "kind": "other",
+      "min": 4305
+     },
+     {
       "name": "src/generative/schemas/tc-data-region.json",
       "kind": "other",
       "min": 4282
@@ -25245,11 +25255,6 @@
       "name": "src/generative/schemas/tc-approval-gates.json",
       "kind": "other",
       "min": 4217
-     },
-     {
-      "name": "src/generative/schemas/tc-step-picker.json",
-      "kind": "other",
-      "min": 4197
      },
      {
       "name": "src/generative/schemas/tc-reflection-gate.json",
@@ -25297,6 +25302,11 @@
       "min": 4083
      },
      {
+      "name": "src/generative/schemas/tc-workflow-canvas.json",
+      "kind": "other",
+      "min": 4079
+     },
+     {
       "name": "src/generative/schemas/tc-dumbbell-chart.json",
       "kind": "other",
       "min": 4071
@@ -25340,11 +25350,6 @@
       "name": "src/generative/schemas/tc-bullet-chart.json",
       "kind": "other",
       "min": 3973
-     },
-     {
-      "name": "src/generative/schemas/tc-workflow-canvas.json",
-      "kind": "other",
-      "min": 3971
      },
      {
       "name": "src/generative/schemas/tc-segmented-bar.json",
@@ -25542,6 +25547,11 @@
       "min": 3450
      },
      {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3428
+     },
+     {
       "name": "src/generative/schemas/tc-cell-inspector.json",
       "kind": "other",
       "min": 3398
@@ -25565,11 +25575,6 @@
       "name": "src/generative/schemas/tc-agent-crew.json",
       "kind": "other",
       "min": 3321
-     },
-     {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3320
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
@@ -26612,6 +26617,11 @@
       "min": 2007
      },
      {
+      "name": "src/generative/schemas/tc-help-guide.json",
+      "kind": "other",
+      "min": 2002
+     },
+     {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
       "min": 1998
@@ -27453,20 +27463,20 @@
      }
     ],
     "withoutLit": {
-     "min": 12545005,
-     "gzip": 3106490
+     "min": 12556949,
+     "gzip": 3140981
     },
     "withLit": {
-     "min": 12458392,
-     "gzip": 3076844
+     "min": 12470143,
+     "gzip": 3109791
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 8.7,
-    "first": 0.8,
+    "cold": 10.8,
+    "first": 0.7,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -29010,6 +29020,87 @@
     "errors": [
      "ResizeObserver loop completed with undelivered notifications."
     ]
+   }
+  },
+  "help-guide": {
+   "measuredAt": "2026-11-21",
+   "hash": "00cd22c703a94da6",
+   "bundle": {
+    "own": {
+     "min": 10990,
+     "gzip": 4261
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18902
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 17909,
+     "gzip": 6274
+    },
+    "withLit": {
+     "min": 37904,
+     "gzip": 12815
+    }
+   },
+   "render": {
+    "tag": "tc-help-guide",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.3,
+    "first": 1,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 14,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
    }
   },
   "help-video": {

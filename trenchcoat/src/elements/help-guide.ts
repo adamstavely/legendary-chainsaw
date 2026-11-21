@@ -1,5 +1,6 @@
 import { html, nothing, svg } from "lit";
 import { property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 
 /*
@@ -127,9 +128,9 @@ export class TcHelpGuide extends TcElement {
     const name = [this.heading, time, this.read ? w.readDone : "", fresh ? w.updated : "", this.sameTab ? "" : w.newTab].filter(Boolean).join(", ");
     return html`<a
       class="ui-hgd__trigger"
-      href=${this.href || nothing}
-      target=${this.sameTab ? nothing : "_blank"}
-      rel=${this.sameTab ? nothing : "noopener"}
+      href=${ifDefined(this.href || undefined)}
+      target=${ifDefined(this.sameTab ? undefined : "_blank")}
+      rel=${ifDefined(this.sameTab ? undefined : "noopener")}
       ?data-labelled=${!!this.label}
       @click=${(e: MouseEvent) => this.open(e)}
     >

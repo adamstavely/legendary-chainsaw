@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-help-guide.json",
+  "title": "tc-help-guide",
+  "description": "Point-in-time help from the help center: a small guide icon to put beside a heading or label, linking to one written tutorial.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The guide's title – the tooltip and the link's accessible name"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the guide is: a page in the help center",
+      "format": "uri-reference"
+    },
+    "minutes": {
+      "type": "number",
+      "description": "How long it takes to read, in minutes – \"5 min read\" in the tooltip"
+    },
+    "sameTab": {
+      "type": "boolean",
+      "description": "Opens the guide in this tab rather than a new one"
+    },
+    "label": {
+      "type": "string",
+      "description": "Words beside the icon, e.g. \"Read the guide\"; unset, the icon stands alone with a tooltip"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "description": "The icon's size against the text around it: \"sm\" (1em), \"md\" (1.25em, the default) or \"lg\" (1.5em)"
+    },
+    "read": {
+      "type": "boolean",
+      "description": "Whether it has been read – a check on the icon. Set when it's opened, unless a tc-read-change listener calls preventDefault()"
+    },
+    "updatedOn": {
+      "type": "string",
+      "description": "When the guide last changed, as a date (\"2026-11-17\"); for `new-days` days after it, a dot on the icon says so"
+    },
+    "newDays": {
+      "type": "number",
+      "description": "How many days after `updated-on` the dot shows (default 14)"
+    },
+    "updateSeen": {
+      "type": "boolean",
+      "description": "Whether this person has seen the update – the dot is cleared. Set when the guide is opened, unless a tc-update-seen-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time to measure `new-days` from, in milliseconds; unset, the clock's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "type": "string"
+        },
+        "readDone": {
+          "type": "string"
+        },
+        "minutes": {
+          "type": "string"
+        },
+        "newTab": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false
+}
