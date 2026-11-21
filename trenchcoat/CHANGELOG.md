@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased – Help Guide
+
+- **[Help Guide](#/help-guide):** point-in-time help from the help center – [Help Video](#/help-video)'s sibling for features explained in a written guide. A small guide icon (a page with its corner folded and lines of text cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, that links to one tutorial (`href`, in a new tab unless `same-tab`). A tooltip names the guide and its reading time (`minutes`), `label` puts words beside it, a check shows once it's been read (`tc-read-change`), and `updated-on` puts a small dot on its corner for `new-days` days after the guide changes, until it's opened (`tc-update-seen-change`). Opening fires a cancelable `tc-guide-open`, so an app can show the guide in its own panel instead of following the link.
+
 ## Unreleased – Help Video
 
 - **Help Video:** point-in-time help – a small film-frame icon (a film cell with sprocket holes and a play mark cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, with a tooltip naming the video and its length, words beside it if wanted ("Watch how"), and a check once watched. A click opens one short tutorial in a modal player with captions, chapters to jump to, and Watch again and Done at the end; a file played to its end counts as watched (`tc-watched-change`), embeds from a video host play in an iframe, and Escape puts focus back on the icon. The player's Transcript shows the words as timed lines, read from the captions or passed as `transcript`, marking the line being said and jumping to a line when picked; Download transcript saves them as a text file, or links `transcript-file`. `updated-on` puts a small dot on the icon's top-right corner for `new-days` days (14 by default) after the video changes, until the person opens it (`tc-update-seen-change`, `update-seen`).
