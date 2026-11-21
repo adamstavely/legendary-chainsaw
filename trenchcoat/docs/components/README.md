@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-417 items · 417 files
+418 items · 418 files
 
 ## Agents (67)
 
@@ -219,9 +219,10 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Top Spenders](top-spenders.md) – Who is behind most of the AI spend, ranked – members, teams, API keys and agents with their share as a bar, the amount, the change on the previous period in words ("Up 42%"), the model they used most and a daily sparkline; kind chips, the long tail folded into "and 38 others – $1,204", and a row that opens
 - [Usage Meter](usage-meter.md) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 
-## Feedback & onboarding (10)
+## Feedback & onboarding (11)
 
 - [Background Tasks](background-tasks.md) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
+- [Help Video](help-video.md) – Point-in-time help – a small film-frame icon to put beside a heading, a field label or a toolbar, with a tooltip naming the video and its length and a check once watched; a click opens one short tutorial in a modal player with captions, chapters and Watch again
 - [Notification Stack](notification-stack.md) – Notice cards stacked behind each other – dismiss the front one to reveal the next
 - [Notifications](notifications.md) – The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 - [Progress Tracker](progress-tracker.md) – Onboarding checklist with an animated progress bar, ticks that draw themselves and auto play

@@ -1,0 +1,770 @@
+{
+ "elements": [
+  {
+   "tag": "tc-help-video",
+   "className": "TcHelpVideo",
+   "description": "Point-in-time help: a small film-frame icon to put beside a heading or label, opening one short tutorial in a modal player with captions and chapters.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The video's title – the tooltip, the player's heading and the icon's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A line or two about what it shows, under the player",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Its length in seconds, shown in the tooltip and the player",
+     "readonly": false
+    },
+    {
+     "name": "src",
+     "attribute": "src",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A video file the browser can play",
+     "readonly": false
+    },
+    {
+     "name": "type",
+     "attribute": "type",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The file's type, e.g. \"video/mp4\", when the URL doesn't say",
+     "readonly": false
+    },
+    {
+     "name": "poster",
+     "attribute": "poster",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The player's picture before it plays",
+     "readonly": false
+    },
+    {
+     "name": "captions",
+     "attribute": "captions",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A WebVTT captions file for `src`",
+     "readonly": false
+    },
+    {
+     "name": "captionsLang",
+     "attribute": "captions-lang",
+     "type": "string",
+     "default": "\"en\"",
+     "description": "The captions' language (default \"en\")",
+     "readonly": false
+    },
+    {
+     "name": "embed",
+     "attribute": "embed",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "An embed URL from a video host, played in an iframe instead of `src`",
+     "readonly": false
+    },
+    {
+     "name": "chapters",
+     "attribute": null,
+     "type": "HelpVideoChapter[]",
+     "default": "[]",
+     "description": "Points in the video to jump to (with `src`)",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Words beside the icon, e.g. \"Watch how\"; unset, the icon stands alone with a tooltip",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "HelpVideoSize",
+     "default": "\"md\"",
+     "description": "The icon's size against the text around it: \"sm\" (1em), \"md\" (1.25em, the default) or \"lg\" (1.5em)",
+     "readonly": false
+    },
+    {
+     "name": "watched",
+     "attribute": "watched",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether it has been watched – a check on the icon. Set when a file plays to its end, unless a tc-watched-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the player is open. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "autoplay",
+     "attribute": "autoplay",
+     "type": "boolean",
+     "default": "true",
+     "description": "Start playing a file as soon as the player opens",
+     "readonly": false
+    },
+    {
+     "name": "transcript",
+     "attribute": null,
+     "type": "HelpVideoCue[] | undefined",
+     "default": "undefined",
+     "description": "The transcript's lines, `{ time, text }`. Unset, it's read from the `captions` file when first shown",
+     "readonly": false
+    },
+    {
+     "name": "transcriptFile",
+     "attribute": "transcript-file",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A transcript file to download instead of the text one made from the lines, e.g. a PDF",
+     "readonly": false
+    },
+    {
+     "name": "updatedOn",
+     "attribute": "updated-on",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "When the video last changed, as a date (\"2026-11-12\"); for `new-days` days after it, a dot on the icon says so",
+     "readonly": false
+    },
+    {
+     "name": "newDays",
+     "attribute": "new-days",
+     "type": "number",
+     "default": "14",
+     "description": "How many days after `updated-on` the dot shows (default 14)",
+     "readonly": false
+    },
+    {
+     "name": "updateSeen",
+     "attribute": "update-seen",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether this person has seen the update – the dot is cleared. Set when the player opens, unless a tc-update-seen-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time to measure `new-days` from, in milliseconds; unset, the clock's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<HelpVideoLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "player",
+     "attribute": null,
+     "type": "HTMLVideoElement | null",
+     "default": null,
+     "description": "The <video> in the open player, when it plays a file",
+     "readonly": true
+    },
+    {
+     "name": "transcriptCues",
+     "attribute": null,
+     "type": "HelpVideoCue[] | undefined",
+     "default": null,
+     "description": "The transcript's lines: the ones given, or the ones read from the captions file",
+     "readonly": true
+    },
+    {
+     "name": "showsUpdate",
+     "attribute": null,
+     "type": "boolean",
+     "default": null,
+     "description": "Whether the Updated dot shows: a recent update this person hasn't opened yet",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The player was opened or closed ({ open }: HelpVideoOpenChange); cancelable – prevented, `open` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-watched-change",
+     "detail": "",
+     "description": "The video played to its end ({ watched }: HelpVideoWatchedChange); cancelable – prevented, `watched` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update-seen-change",
+     "detail": "",
+     "description": "The player was opened while the Updated dot showed ({ updateSeen }: HelpVideoUpdateSeenChange); cancelable – prevented, the dot stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "hvd",
+   "cssProperties": [
+    {
+     "name": "--tc-hvd-size",
+     "value": "1.25em",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hvd-ink",
+     "value": "var(--tc-text-secondary)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hvd-ink-hover",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hvd-player",
+     "value": "calc(var(--tc-space-16) * 12)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hvd-dot",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-gray-200",
+    "--tc-gray-950",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-scrim",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-success-fg",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "parseHelpVideoVtt",
+   "signature": "parseHelpVideoVtt(vtt: string): HelpVideoCue[]",
+   "description": "A WebVTT file's cues as transcript lines: each cue's start and its words, with tags such as <v Name> and <b>\nremoved and the lines of one cue joined. NOTE, STYLE and REGION blocks are skipped."
+  },
+  {
+   "name": "helpVideoTranscriptText",
+   "signature": "helpVideoTranscriptText(heading: string, cues: HelpVideoCue[]): void",
+   "description": "A transcript as plain text: the title, then each line with its time"
+  },
+  {
+   "name": "helpVideoTime",
+   "signature": "helpVideoTime(seconds: number): void",
+   "description": "m:ss, or h:mm:ss past an hour, from seconds"
+  }
+ ],
+ "react": [
+  {
+   "component": "HelpVideo",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The video's title – the tooltip, the player's heading and the icon's accessible name"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the player is open – controlled when given"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Open on mount when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The player was opened or closed"
+    },
+    {
+     "name": "watched",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it has been watched – controlled when given"
+    },
+    {
+     "name": "defaultWatched",
+     "type": "boolean",
+     "optional": true,
+     "description": "Watched on mount when `watched` isn't controlled"
+    },
+    {
+     "name": "onWatchedChange",
+     "type": "(watched: boolean) => void",
+     "optional": true,
+     "description": "The video played to its end"
+    },
+    {
+     "name": "updateSeen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether this person has seen the update, clearing the Updated dot – controlled when given"
+    },
+    {
+     "name": "defaultUpdateSeen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Update seen on mount when `updateSeen` isn't controlled"
+    },
+    {
+     "name": "onUpdateSeenChange",
+     "type": "(updateSeen: boolean) => void",
+     "optional": true,
+     "description": "The player was opened while the Updated dot showed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "open",
+    "watched",
+    "updateSeen",
+    "children"
+   ],
+   "events": {
+    "tc-open-change": null,
+    "tc-watched-change": null,
+    "tc-update-seen-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-help-video",
+   "className": "TcHelpVideo",
+   "module": "@adamstavely/trenchcoat/help-video",
+   "data": [
+    "chapters",
+    "transcript",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "duration",
+     "attribute": "duration"
+    },
+    {
+     "name": "src",
+     "attribute": "src"
+    },
+    {
+     "name": "type",
+     "attribute": "type"
+    },
+    {
+     "name": "poster",
+     "attribute": "poster"
+    },
+    {
+     "name": "captions",
+     "attribute": "captions"
+    },
+    {
+     "name": "captionsLang",
+     "attribute": "captions-lang"
+    },
+    {
+     "name": "embed",
+     "attribute": "embed"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "size",
+     "attribute": "size"
+    },
+    {
+     "name": "watched",
+     "attribute": "watched"
+    },
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "autoplay",
+     "attribute": "autoplay"
+    },
+    {
+     "name": "transcriptFile",
+     "attribute": "transcript-file"
+    },
+    {
+     "name": "updatedOn",
+     "attribute": "updated-on"
+    },
+    {
+     "name": "newDays",
+     "attribute": "new-days"
+    },
+    {
+     "name": "updateSeen",
+     "attribute": "update-seen"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-watched-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update-seen-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "watched",
+     "event": "tc-watched-change"
+    },
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    },
+    {
+     "property": "updateSeen",
+     "event": "tc-update-seen-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 36669,
+  "gzip": 10911
+ }
+}

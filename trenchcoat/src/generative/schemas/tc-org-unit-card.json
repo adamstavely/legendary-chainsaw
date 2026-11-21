@@ -52,10 +52,10 @@
     "health": {
       "type": "object",
       "properties": {
-        "on-track": {
+        "watch": {
           "type": "number"
         },
-        "watch": {
+        "on-track": {
           "type": "number"
         },
         "at-risk": {
@@ -68,10 +68,10 @@
     "healthLabels": {
       "type": "object",
       "properties": {
-        "on-track": {
+        "watch": {
           "type": "string"
         },
-        "watch": {
+        "on-track": {
           "type": "string"
         },
         "at-risk": {
