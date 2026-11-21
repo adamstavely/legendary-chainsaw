@@ -79,6 +79,18 @@ export class LineChart {
   @Input() set upper(v: TcLineChart["upper"]) {
     this.#el.upper = v;
   }
+  /** Last period's value at each x – the emphasised series' – drawn as a quiet dashed line behind it, with the change in the tooltip. Not for stacked areas */
+  @Input() set compare(v: TcLineChart["compare"]) {
+    this.#el.compare = v;
+  }
+  /** What the compared line is called (default "Last period") */
+  @Input() set compareLabel(v: TcLineChart["compareLabel"]) {
+    this.#el.compareLabel = v;
+  }
+  /** What the emphasised line is called beside it, when it has no series name (default "This period") */
+  @Input() set currentLabel(v: TcLineChart["currentLabel"]) {
+    this.#el.currentLabel = v;
+  }
   /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
   @Input() set brush(v: TcLineChart["brush"]) {
     this.#el.brush = v;
@@ -146,6 +158,10 @@ export class LineChart {
   /** The words it shows and says, merged over defaultChartLabels */
   @Input() set labels(v: TcLineChart["labels"]) {
     this.#el.labels = v;
+  }
+  /** A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) */
+  @Input() set sync(v: TcLineChart["sync"]) {
+    this.#el.sync = v;
   }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcLineChart["look"]) {

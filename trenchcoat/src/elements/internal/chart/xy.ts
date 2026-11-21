@@ -3,7 +3,8 @@
  * https://github.com/Junhan2/ztd-charts): values over x – dates, numbers or categories – as lines or filled areas, the
  * nearest x under the pointer read across every series, names at the lines' ends, reference lines, and long series
  * thinned to about two points per pixel. Not from ztd: `lower` and `upper` shade a band round each line – an
- * uncertainty or forecast range – that glides with it.
+ * uncertainty or forecast range – that glides with it; `compare` draws the emphasised series' last period as a quiet
+ * dashed line behind it, with this period against the last in the tooltip.
  */
 import { html, nothing, svg } from "lit";
 import { property, state } from "lit/decorators.js";
@@ -28,7 +29,7 @@ export type XYReferenceLine = { y: number; label?: string };
 export type ChartBrushChange = { range: XRange | null };
 
 /** A series as drawn: its points, an area's floor, and its band's x, low and high edges (px) where it has one */
-type SeriesDraw = { s: number; name: string; pts: number[]; xs: number[]; base?: number[]; band?: { xs: number[]; lo: number[]; up: number[] }; ink: string; hi: boolean };
+type SeriesDraw = { s: number; name: string; pts: number[]; xs: number[]; base?: number[]; band?: { xs: number[]; lo: number[]; up: number[] }; cmp?: { xs: number[]; ys: number[] }; ink: string; hi: boolean };
 
 let gradCount = 0;
 
@@ -83,6 +84,12 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   @property({ attribute: false }) accessor lower: Accessor<T, number> | undefined = undefined;
   /** A band's high edge, with `lower` */
   @property({ attribute: false }) accessor upper: Accessor<T, number> | undefined = undefined;
+  /** Last period's value at each x – the emphasised series' – drawn as a quiet dashed line behind it, with the change in the tooltip. Not for stacked areas */
+  @property({ attribute: false }) accessor compare: Accessor<T, number> | undefined = undefined;
+  /** What the compared line is called (default "Last period") */
+  @property({ attribute: "compare-label" }) accessor compareLabel = "Last period";
+  /** What the emphasised line is called beside it, when it has no series name (default "This period") */
+  @property({ attribute: "current-label" }) accessor currentLabel = "This period";
   /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
   @property() accessor brush: BrushMode = "none";
 
@@ -103,7 +110,7 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
 
   protected override defaultDuration = 1100;
   protected override stagger = 120;
-  protected override modelKeys = ["x", "y", "series", "curve", "xType", "yDomain", "zero", "colorMode", "endLabels", "maxPoints", "referenceLines", "yLabel", "lower", "upper", "zoomed", ...this.extraKeys()];
+  protected override modelKeys = ["x", "y", "series", "curve", "xType", "yDomain", "zero", "colorMode", "endLabels", "maxPoints", "referenceLines", "yLabel", "lower", "upper", "compare", "compareLabel", "currentLabel", "zoomed", ...this.extraKeys()];
 
   protected abstract readonly isArea: boolean;
   /** "none" (overlapping), "stacked" or "percent" – areas only */
@@ -127,6 +134,8 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   private st: ReturnType<typeof stack> | null = null;
   /** Each series' band, [low, high] at each x, or null where it has none */
   private bands: ([number, number] | null)[][] | null = null;
+  /** Last period's value at each x, and the series it belongs to */
+  private cmp: { s: number; vals: number[] } | null = null;
   private draws: SeriesDraw[] = [];
   private hiSet: ReadonlySet<number> = new Set();
   private g = {
@@ -196,12 +205,27 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       );
     }
     this.bands = bands;
+    let cmp: { s: number; vals: number[] } | null = null;
+    if (mode === "none" && this.compare !== undefined) {
+      const gc = numGetter(this.compare, "compare");
+      const cs = [...hi][0] ?? 0;
+      cmp = {
+        s: cs,
+        vals: model.keys.map((_, k) => {
+          const r = model.rows[cs]?.[k];
+          const v = r ? gc(r, k) : NaN;
+          return Number.isFinite(v) ? v : NaN;
+        }),
+      };
+    }
+    this.cmp = cmp;
     const inkOf = (s: number) => (categorical ? categoricalInk(s) : hi.has(s) ? emphasisInk(true) : isArea ? emphasisInk(false) : LINE_REST);
 
     const allY: number[] = [];
     if (stacked) stacked.y1.forEach((r) => r.forEach((v) => allY.push(v)));
     else model.values.forEach((r) => r.forEach((v) => Number.isFinite(v) && allY.push(v)));
     bands?.forEach((r) => r.forEach((b) => b && allY.push(b[0], b[1])));
+    cmp?.vals.forEach((v) => Number.isFinite(v) && allY.push(v));
     // A reference line outside the data still fits in the drawing
     this.referenceLines.forEach((r) => allY.push(r.y));
     const [mn, mx] = extent(allY.length ? allY : [0, 1]);
@@ -231,7 +255,9 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       const base = stacked ? idx.map((k) => y(stacked.y0[s][k])) : isArea ? idx.map(() => y(base0)) : undefined;
       const bk = bands ? idx.filter((k) => bands[s][k]) : [];
       const band = bk.length > 1 ? { xs: bk.map((k) => xs(k)), lo: bk.map((k) => y(bands![s][k]![0])), up: bk.map((k) => y(bands![s][k]![1])) } : undefined;
-      return { s, name, pts, xs: idx.map((k) => xs(k)), base, band, ink: inkOf(s), hi: hi.has(s) };
+      const ck = cmp && cmp.s === s ? model.keys.map((_, k) => k).filter((k) => Number.isFinite(cmp.vals[k])) : [];
+      const cmpDraw = ck.length > 1 ? { xs: ck.map((k) => xs(k)), ys: ck.map((k) => y(cmp!.vals[k])) } : undefined;
+      return { s, name, pts, xs: idx.map((k) => xs(k)), base, band, cmp: cmpDraw, ink: inkOf(s), hi: hi.has(s) };
     });
 
     // The emphasised series is drawn last, on top
@@ -242,13 +268,16 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
     const marks = order.map((d, k) => {
       const bl = d.band ? [...d.band.lo, ...d.band.up] : [];
       const bp = d.band ? [d.band.lo.length, d.band.up.length] : [];
+      // Last period's line rides at the end of the mark, so it glides with the data
+      const cl = d.cmp?.ys ?? [];
+      const cp = d.cmp ? [cl.length] : [];
       if (isArea) {
         const b = d.base ?? d.pts.map(() => baseLine);
         const bFrom = bl.map(() => baseLine);
-        return { key: `s:${d.name}`, to: [1, ...d.pts, ...b, ...bl], from: [0, ...d.pts.map(() => baseLine), ...b.map(() => baseLine), ...bFrom], delay: k * this.stagger * 0.5, parts: [1, d.pts.length, b.length, ...bp], data: d };
+        return { key: `s:${d.name}`, to: [1, ...d.pts, ...b, ...bl, ...cl], from: [0, ...d.pts.map(() => baseLine), ...b.map(() => baseLine), ...bFrom, ...cl.map(() => baseLine)], delay: k * this.stagger * 0.5, parts: [1, d.pts.length, b.length, ...bp, ...cp], data: d };
       }
       const mid = lineAt(d);
-      return { key: `s:${d.name}`, to: [1, ...d.pts, ...bl], from: [0, ...d.pts, ...mid, ...mid], enter: [0, ...d.pts, ...mid, ...mid], delay: k * this.stagger, parts: [1, d.pts.length, ...bp], data: d };
+      return { key: `s:${d.name}`, to: [1, ...d.pts, ...bl, ...cl], from: [0, ...d.pts, ...mid, ...mid, ...cl], enter: [0, ...d.pts, ...mid, ...mid, ...cl], delay: k * this.stagger, parts: [1, d.pts.length, ...bp, ...cp], data: d };
     });
 
     const many = nS > 1;
@@ -262,14 +291,14 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
         label: model.labels[k],
         value: Number.isFinite(v) ? v : null,
         formatted: model.series
-          .map((s, si) => (Number.isFinite(model.values[si][k]) ? `${many && s ? `${s} ` : ""}${f.fv(model.values[si][k])}${this.bandText(si, k, f)}` : null))
+          .map((s, si) => (Number.isFinite(model.values[si][k]) ? `${many && s ? `${s} ` : ""}${f.fv(model.values[si][k])}${this.bandText(si, k, f)}${this.compareText(si, k, f)}` : null))
           .filter(Boolean)
           .join(", "),
       };
     });
     const first = model.labels[0] ?? "";
     const last = model.labels[model.labels.length - 1] ?? "";
-    const summary = `${many ? `${nS} series (${model.series.join(", ")}), ` : ""}from ${first} to ${last}, ${model.keys.length} points`;
+    const summary = `${many ? `${nS} series (${model.series.join(", ")}), ` : ""}from ${first} to ${last}, ${model.keys.length} points${cmp ? `, compared with ${this.compareLabel.toLowerCase()}` : ""}`;
     return { marks, events, summary };
   }
 
@@ -364,13 +393,47 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       .sort((a, b) => b.v - a.v)
       .slice(0, 8)
       .map((r) => ({
+        si: r.si,
         label: r.s || this.words.value,
-        value: percent && stacked ? `${Math.round(stacked.y1[r.si][k] - stacked.y0[r.si][k])}% · ${f.fv(r.v)}` : `${f.fv(r.v)}${this.bandText(r.si, k, f)}`,
+        value: percent && stacked ? `${Math.round(stacked.y1[r.si][k] - stacked.y0[r.si][k])}% · ${f.fv(r.v)}` : `${f.fv(r.v)}${this.bandText(r.si, k, f)}${this.changeText(r.si, k, f)}`,
         color: this.draws[r.si]?.ink,
         strong: this.hiSet.has(r.si),
       }));
+    const c = this.cmp;
+    if (c && Number.isFinite(c.vals[k])) {
+      const at = rows.findIndex((r) => r.si === c.s);
+      rows.splice(at < 0 ? rows.length : at + 1, 0, { si: -1, label: this.compareLabel, value: f.fv(c.vals[k]), color: LINE_REST, strong: false });
+      if (model.series.length === 1 && rows[0]) rows[0].label = this.currentLabel;
+    }
     const yy = Math.min(...model.series.map((_, si) => (stacked ? y(stacked.y1[si][k]) : Number.isFinite(model.values[si][k]) ? y(model.values[si][k]) : f.height)));
     return { x: xs(k), y: Math.max(top, yy), title: model.labels[k], rows };
+  }
+
+  /** " · +15.1%" after the compared series' value: how it changed since last period */
+  private changeText(s: number, k: number, f: ChartFrame) {
+    const c = this.cmp;
+    if (!c || c.s !== s) return "";
+    const r = changeRatio(c.vals[k], this.sm.values[s]?.[k]);
+    return r === null ? "" : ` · ${signedPercent(r, f.locale)}`;
+  }
+
+  /** ", last period 378" after the compared series' value, for the keyboard's reading */
+  private compareText(s: number, k: number, f: ChartFrame) {
+    const c = this.cmp;
+    if (!c || c.s !== s || !Number.isFinite(c.vals[k])) return "";
+    return `, ${this.compareLabel.toLowerCase()} ${f.fv(c.vals[k])}${this.changeText(s, k, f).replace(" · ", ", ")}`;
+  }
+
+  /** This period and last period, named over the chart when there's a comparison */
+  protected override headerLegend() {
+    const c = this.cmp;
+    if (!c) return nothing;
+    const d = this.draws[c.s];
+    const name = this.sm.series.length > 1 && this.sm.series[c.s] ? this.sm.series[c.s] : this.currentLabel;
+    return html`<ul class="tc-chart__legend" aria-label="Series">
+      <li class="tc-chart__key"><span class="tc-chart__swatch tc-xy__swatch-line" aria-hidden="true" style=${`background: ${d?.ink ?? emphasisInk(true)}`}></span>${name}</li>
+      <li class="tc-chart__key"><span class="tc-chart__swatch tc-xy__swatch-line" data-dashed aria-hidden="true" style=${`--tc-xy-ink: ${LINE_REST}`}></span>${this.compareLabel}</li>
+    </ul>`;
   }
 
   /** " (low–high)" after a value whose series has a band at x */
@@ -420,6 +483,10 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       // The band's edges follow the line's (and an area's floor's) values in the mark
       const bandAt = isArea ? 1 + 2 * n : 1 + n;
       const nb = d.band?.xs.length ?? 0;
+      const cmpAt = bandAt + 2 * nb;
+      const cmpLine = d.cmp
+        ? svg`<path class="tc-xy__compare" d=${linePath(d.cmp.xs.map((xx, i) => [xx, v[cmpAt + i] ?? d.cmp!.ys[i]] as [number, number]), curve)} opacity=${Math.min(1, drawn * 1.2)}></path>`
+        : nothing;
       const band = d.band
         ? svg`<path class="tc-xy__band" ?data-hi=${d.hi} d=${areaPath(
             d.band.xs.map((xx, i) => [xx, v[bandAt + nb + i] ?? d.band!.up[i]] as [number, number]),
@@ -432,6 +499,7 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
         const floor = d.xs.map((xx, i) => [xx, bs[i] ?? y(base0)] as [number, number]);
         return svg`<g opacity=${it.exiting ? 0.4 : 1}>
           ${band}
+          ${cmpLine}
           <path class="tc-xy__area" ?data-stacked=${mode !== "none"} ?data-hi=${d.hi} d=${areaPath(pts, floor, curve)} style=${`fill: ${d.ink}`}></path>
           <path class="tc-xy__edge" ?data-stacked=${mode !== "none"} ?data-hi=${d.hi} d=${linePath(pts, curve)} style=${`stroke: ${d.ink}`} opacity=${Math.min(1, drawn * 1.4)}></path>
         </g>`;
@@ -439,6 +507,7 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       const dash = drawn < 0.999;
       return svg`<g opacity=${it.exiting ? 0.4 : 1}>
         ${band}
+        ${cmpLine}
         ${this.underFill() && d.hi ? svg`<path d=${areaPath(pts, pts.map(([xx]) => [xx, y(base0)] as [number, number]), curve)} fill=${`url(#${this.gid})`} opacity=${drawn}></path>` : nothing}
         <path class="tc-xy__line" ?data-hi=${d.hi} d=${linePath(pts, curve)} style=${`stroke: ${d.ink}`}
           pathLength=${dash ? 1 : nothing} stroke-dasharray=${dash ? "1 1" : nothing} stroke-dashoffset=${dash ? 1 - drawn : nothing}></path>
@@ -462,6 +531,7 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
               if (!Number.isFinite(val)) return nothing;
               return svg`<circle class="tc-xy__point" cx=${xs(k)} cy=${y(val)} r=${this.hiSet.has(si) ? 4.2 : 3.2} style=${`fill: ${this.draws[si]?.ink}`}></circle>`;
             })}
+            ${this.cmp && Number.isFinite(this.cmp.vals[k]) ? svg`<circle class="tc-xy__point" data-compare cx=${xs(k)} cy=${y(this.cmp.vals[k])} r="3.2"></circle>` : nothing}
           </g>`
         : nothing;
 
@@ -528,6 +598,10 @@ const xyCss = /* css */ `
 .tc-xy__edge[data-stacked] { stroke: var(--tc-plot-bg) !important; stroke-width: 1.2; }
 .tc-xy__band { fill-opacity: 0.14; stroke: none; }
 .tc-xy__band[data-hi] { fill-opacity: 0.2; }
+.tc-xy__compare { fill: none; stroke: var(--tc-plot-line-rest); stroke-width: 1.6; stroke-dasharray: 4 4; stroke-linecap: round; }
+.tc-xy__point[data-compare] { fill: var(--tc-plot-line-rest); }
+.tc-xy__swatch-line { width: 14px; height: 2px; border-radius: var(--tc-radius-full); }
+.tc-xy__swatch-line[data-dashed] { background: repeating-linear-gradient(90deg, var(--tc-xy-ink) 0 4px, transparent 4px 7px); }
 .tc-xy__cursor { stroke: var(--tc-plot-zero); stroke-width: 1; }
 .tc-xy__point { stroke: var(--tc-plot-bg); stroke-width: 2; }
 .tc-xy__ref { stroke: var(--tc-plot-zero); stroke-dasharray: 3 3; }

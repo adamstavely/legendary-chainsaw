@@ -4996,12 +4996,12 @@
    }
   },
   "area-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "cef645d191560a10",
+   "measuredAt": "2026-11-21",
+   "hash": "0201977bd76d7983",
    "bundle": {
     "own": {
      "min": 2912,
-     "gzip": 1620
+     "gzip": 1626
     },
     "shared": [
      {
@@ -5012,12 +5012,12 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18958
+      "min": 19664
      },
      {
       "name": "internal/chart/xy",
       "kind": "internal",
-      "min": 15429
+      "min": 18387
      },
      {
       "name": "internal/chart/motion",
@@ -5037,7 +5037,7 @@
      {
       "name": "internal/chart/series",
       "kind": "internal",
-      "min": 2541
+      "min": 2546
      },
      {
       "name": "internal/chart/scale",
@@ -5126,21 +5126,21 @@
      }
     ],
     "withoutLit": {
-     "min": 72508,
-     "gzip": 26019
+     "min": 76181,
+     "gzip": 27292
     },
     "withLit": {
-     "min": 92284,
-     "gzip": 32303
+     "min": 95957,
+     "gzip": 33645
     }
    },
    "render": {
     "tag": "tc-area-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 13.1,
-    "first": 1.4,
-    "update": 0.4,
+    "cold": 24.8,
+    "first": 0.6,
+    "update": 0.3,
     "updateKind": "one item of data replaced",
     "nodes": 24,
     "scale": {
@@ -5149,14 +5149,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.4,
+       "first": 0.6,
+       "update": 0.2,
        "nodes": 24
       },
       {
        "items": 1000,
-       "first": 1.8,
-       "update": 0.6,
+       "first": 0.8,
+       "update": 0.3,
        "nodes": 24
       }
      ]
@@ -6404,12 +6404,12 @@
    }
   },
   "bar-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "e5c759e29491864e",
+   "measuredAt": "2026-11-21",
+   "hash": "5ba1a7a748baac89",
    "bundle": {
     "own": {
-     "min": 10466,
-     "gzip": 4878
+     "min": 13075,
+     "gzip": 5850
     },
     "shared": [
      {
@@ -6420,7 +6420,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18926
+      "min": 19661
      },
      {
       "name": "internal/chart/motion",
@@ -6440,7 +6440,7 @@
      {
       "name": "internal/chart/series",
       "kind": "internal",
-      "min": 1983
+      "min": 1986
      },
      {
       "name": "internal/chart/motion-controller",
@@ -6473,6 +6473,11 @@
       "min": 1089
      },
      {
+      "name": "internal/chart/brush",
+      "kind": "internal",
+      "min": 1062
+     },
+     {
       "name": "internal/chart/stack",
       "kind": "internal",
       "min": 1006
@@ -6480,7 +6485,7 @@
      {
       "name": "internal/chart/accessor",
       "kind": "internal",
-      "min": 849
+      "min": 904
      },
      {
       "name": "internal/chart/geometry",
@@ -6524,21 +6529,21 @@
      }
     ],
     "withoutLit": {
-     "min": 55935,
-     "gzip": 20238
+     "min": 60300,
+     "gzip": 21728
     },
     "withLit": {
-     "min": 75832,
-     "gzip": 26588
+     "min": 80175,
+     "gzip": 28073
     }
    },
    "render": {
     "tag": "tc-bar-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.8,
-    "first": 1.7,
-    "update": 0.4,
+    "cold": 20.6,
+    "first": 1.2,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 41,
     "scale": {
@@ -6547,21 +6552,21 @@
      "points": [
       {
        "items": 100,
-       "first": 2.1,
-       "update": 0.3,
+       "first": 1.7,
+       "update": 0.2,
        "nodes": 41
       },
       {
        "items": 1000,
-       "first": 2.6,
-       "update": 0.9,
+       "first": 1.8,
+       "update": 0.6,
        "nodes": 41
       }
      ]
     },
     "idle": {
      "visible": {
-      "frames": 59,
+      "frames": 60,
       "timers": 0
      },
      "away": {
@@ -6586,12 +6591,12 @@
    }
   },
   "beeswarm-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "2f941ae4451c65fa",
+   "measuredAt": "2026-11-21",
+   "hash": "5cdf339b73b1b6bd",
    "bundle": {
     "own": {
      "min": 10027,
-     "gzip": 4670
+     "gzip": 4693
     },
     "shared": [
      {
@@ -6602,7 +6607,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18889
+      "min": 19595
      },
      {
       "name": "internal/chart/motion",
@@ -6711,21 +6716,21 @@
      }
     ],
     "withoutLit": {
-     "min": 51662,
-     "gzip": 18538
+     "min": 52368,
+     "gzip": 18851
     },
     "withLit": {
-     "min": 71546,
-     "gzip": 24869
+     "min": 72252,
+     "gzip": 25201
     }
    },
    "render": {
     "tag": "tc-beeswarm-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.6,
-    "first": 2.1,
-    "update": 0.9,
+    "cold": 18.8,
+    "first": 1.9,
+    "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 207,
     "scale": {
@@ -6734,14 +6739,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.8,
+       "first": 2.5,
        "update": 0.5,
        "nodes": 207
       },
       {
        "items": 1000,
-       "first": 4.7,
-       "update": 1.6,
+       "first": 4,
+       "update": 1.7,
        "nodes": 207
       }
      ]
@@ -7240,12 +7245,12 @@
    }
   },
   "box-plot": {
-   "measuredAt": "2026-11-11",
-   "hash": "b9a759b5a6b68351",
+   "measuredAt": "2026-11-21",
+   "hash": "6207bb43f9367adf",
    "bundle": {
     "own": {
      "min": 9964,
-     "gzip": 4370
+     "gzip": 4386
     },
     "shared": [
      {
@@ -7256,7 +7261,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18889
+      "min": 19595
      },
      {
       "name": "internal/chart/motion",
@@ -7350,21 +7355,21 @@
      }
     ],
     "withoutLit": {
-     "min": 52418,
-     "gzip": 18560
+     "min": 53124,
+     "gzip": 18860
     },
     "withLit": {
-     "min": 72333,
-     "gzip": 24907
+     "min": 73039,
+     "gzip": 25252
     }
    },
    "render": {
     "tag": "tc-box-plot",
     "source": "demo",
     "runs": 7,
-    "cold": 21.3,
-    "first": 1.9,
-    "update": 0.6,
+    "cold": 18.7,
+    "first": 1.3,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 43,
     "scale": {
@@ -7373,14 +7378,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
+       "first": 1.3,
        "update": 0.3,
        "nodes": 40
       },
       {
        "items": 1000,
-       "first": 2.3,
-       "update": 0.7,
+       "first": 1.6,
+       "update": 0.8,
        "nodes": 43
       }
      ]
@@ -7834,12 +7839,12 @@
    }
   },
   "bubble-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "328f2e632ec9505c",
+   "measuredAt": "2026-11-21",
+   "hash": "700c4c14f05e3305",
    "bundle": {
     "own": {
      "min": 19897,
-     "gzip": 8319
+     "gzip": 8376
     },
     "shared": [
      {
@@ -7850,7 +7855,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18926
+      "min": 19632
      },
      {
       "name": "internal/chart/motion",
@@ -7959,21 +7964,21 @@
      }
     ],
     "withoutLit": {
-     "min": 63173,
-     "gzip": 22336
+     "min": 63881,
+     "gzip": 22688
     },
     "withLit": {
-     "min": 83034,
-     "gzip": 28656
+     "min": 83740,
+     "gzip": 29000
     }
    },
    "render": {
     "tag": "tc-bubble-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 23,
-    "first": 1.2,
-    "update": 0.5,
+    "cold": 19.3,
+    "first": 0.7,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 47,
     "scale": {
@@ -7982,14 +7987,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.5,
-       "update": 1.3,
+       "first": 2.1,
+       "update": 0.6,
        "nodes": 205
       },
       {
        "items": 1000,
-       "first": 8,
-       "update": 3,
+       "first": 5.4,
+       "update": 3.1,
        "nodes": 205
       }
      ]
@@ -8428,12 +8433,12 @@
    }
   },
   "bullet-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "1c92b7507b203f5f",
+   "measuredAt": "2026-11-21",
+   "hash": "c814ae131e11c9d9",
    "bundle": {
     "own": {
      "min": 9043,
-     "gzip": 4011
+     "gzip": 4023
     },
     "shared": [
      {
@@ -8444,7 +8449,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18836
+      "min": 19542
      },
      {
       "name": "internal/chart/motion",
@@ -8533,21 +8538,21 @@
      }
     ],
     "withoutLit": {
-     "min": 48915,
-     "gzip": 17189
+     "min": 49621,
+     "gzip": 17463
     },
     "withLit": {
-     "min": 68831,
-     "gzip": 23479
+     "min": 69537,
+     "gzip": 23836
     }
    },
    "render": {
     "tag": "tc-bullet-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19,
-    "first": 1.7,
-    "update": 0.6,
+    "cold": 18.1,
+    "first": 1.1,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 34,
     "scale": {
@@ -8556,14 +8561,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5.8,
-       "update": 1.1,
+       "first": 4.1,
+       "update": 1.2,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 5.8,
-       "update": 2.1,
+       "first": 13.2,
+       "update": 4.4,
        "nodes": 204
       }
      ]
@@ -8586,12 +8591,12 @@
    }
   },
   "bump-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "ea418037060342ba",
+   "measuredAt": "2026-11-21",
+   "hash": "25f7c43d1e0d0766",
    "bundle": {
     "own": {
      "min": 8374,
-     "gzip": 3904
+     "gzip": 3934
     },
     "shared": [
      {
@@ -8602,7 +8607,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18888
+      "min": 19594
      },
      {
       "name": "internal/chart/motion",
@@ -8701,20 +8706,20 @@
      }
     ],
     "withoutLit": {
-     "min": 51154,
-     "gzip": 18183
+     "min": 51860,
+     "gzip": 18500
     },
     "withLit": {
-     "min": 71073,
-     "gzip": 24521
+     "min": 71779,
+     "gzip": 24894
     }
    },
    "render": {
     "tag": "tc-bump-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.8,
-    "first": 1.8,
+    "cold": 12.1,
+    "first": 1.5,
     "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 39,
@@ -8724,13 +8729,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2.1,
-       "update": 0.4,
+       "first": 1.5,
+       "update": 0.3,
        "nodes": 39
       },
       {
        "items": 1000,
-       "first": 3.8,
+       "first": 1.5,
        "update": 0.7,
        "nodes": 39
       }
@@ -8849,12 +8854,12 @@
    }
   },
   "calendar-heatmap": {
-   "measuredAt": "2026-11-11",
-   "hash": "c5df2852857d5c79",
+   "measuredAt": "2026-11-21",
+   "hash": "7fc82dfcfb2cd0d7",
    "bundle": {
     "own": {
      "min": 13567,
-     "gzip": 6064
+     "gzip": 6097
     },
     "shared": [
      {
@@ -8865,7 +8870,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18836
+      "min": 19542
      },
      {
       "name": "internal/chart/motion",
@@ -8964,21 +8969,21 @@
      }
     ],
     "withoutLit": {
-     "min": 53503,
-     "gzip": 18850
+     "min": 54209,
+     "gzip": 19138
     },
     "withLit": {
-     "min": 74020,
-     "gzip": 25349
+     "min": 74726,
+     "gzip": 25683
     }
    },
    "render": {
     "tag": "tc-calendar-heatmap",
     "source": "demo",
     "runs": 7,
-    "cold": 17.4,
-    "first": 2.2,
-    "update": 2,
+    "cold": 18.8,
+    "first": 2.4,
+    "update": 2.1,
     "updateKind": "one item of data replaced",
     "nodes": 221,
     "scale": {
@@ -8987,14 +8992,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.1,
-       "update": 0.5,
+       "first": 1.3,
+       "update": 0.3,
        "nodes": 221
       },
       {
        "items": 1000,
-       "first": 2.4,
-       "update": 1.1,
+       "first": 1.7,
+       "update": 0.6,
        "nodes": 221
       }
      ]
@@ -9026,12 +9031,12 @@
    }
   },
   "candlestick-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "100a9e80596d41e7",
+   "measuredAt": "2026-11-21",
+   "hash": "f25e31e8c20a139a",
    "bundle": {
     "own": {
      "min": 18587,
-     "gzip": 7727
+     "gzip": 7779
     },
     "shared": [
      {
@@ -9042,7 +9047,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18861
+      "min": 19567
      },
      {
       "name": "internal/chart/motion",
@@ -9131,21 +9136,21 @@
      }
     ],
     "withoutLit": {
-     "min": 64590,
-     "gzip": 22460
+     "min": 65296,
+     "gzip": 22790
     },
     "withLit": {
-     "min": 84446,
-     "gzip": 28760
+     "min": 85152,
+     "gzip": 29118
     }
    },
    "render": {
     "tag": "tc-candlestick-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 20.4,
-    "first": 2.9,
-    "update": 0.9,
+    "cold": 13.3,
+    "first": 1.6,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 124,
     "scale": {
@@ -9154,14 +9159,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.7,
-       "update": 0.9,
+       "first": 1.7,
+       "update": 0.5,
        "nodes": 216
       },
       {
        "items": 1000,
-       "first": 5.1,
-       "update": 2.1,
+       "first": 3.3,
+       "update": 1.5,
        "nodes": 216
       }
      ]
@@ -10048,12 +10053,12 @@
    }
   },
   "chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "5fcad501e8c4894f",
+   "measuredAt": "2026-11-21",
+   "hash": "7a084f639bd1d394",
    "bundle": {
     "own": {
      "min": 4871,
-     "gzip": 2430
+     "gzip": 2441
     },
     "shared": [
      {
@@ -10064,7 +10069,12 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 19128
+      "min": 19841
+     },
+     {
+      "name": "internal/chart/xy",
+      "kind": "internal",
+      "min": 18657
      },
      {
       "name": "internal/chart/spec",
@@ -10072,14 +10082,9 @@
       "min": 17054
      },
      {
-      "name": "internal/chart/xy",
-      "kind": "internal",
-      "min": 15622
-     },
-     {
       "name": "internal/chart/pie",
       "kind": "internal",
-      "min": 6472
+      "min": 6470
      },
      {
       "name": "internal/chart/motion",
@@ -10094,7 +10099,7 @@
      {
       "name": "internal/chart/force",
       "kind": "internal",
-      "min": 4330
+      "min": 4362
      },
      {
       "name": "internal/chart/stats",
@@ -10124,7 +10129,7 @@
      {
       "name": "internal/chart/sankey",
       "kind": "internal",
-      "min": 3081
+      "min": 3049
      },
      {
       "name": "internal/chart/series",
@@ -10249,12 +10254,12 @@
      {
       "name": "bubble-chart",
       "kind": "element",
-      "min": 17233
+      "min": 17231
      },
      {
       "name": "candlestick-chart",
       "kind": "element",
-      "min": 15825
+      "min": 15820
      },
      {
       "name": "sparkline",
@@ -10269,7 +10274,7 @@
      {
       "name": "network-graph",
       "kind": "element",
-      "min": 13095
+      "min": 13106
      },
      {
       "name": "radial-bar-chart",
@@ -10279,7 +10284,7 @@
      {
       "name": "calendar-heatmap",
       "kind": "element",
-      "min": 10852
+      "min": 10850
      },
      {
       "name": "combo-chart",
@@ -10287,14 +10292,19 @@
       "min": 10704
      },
      {
+      "name": "bar-chart",
+      "kind": "element",
+      "min": 10265
+     },
+     {
       "name": "venn-diagram",
       "kind": "element",
-      "min": 9559
+      "min": 9571
      },
      {
       "name": "hexbin-chart",
       "kind": "element",
-      "min": 8401
+      "min": 8400
      },
      {
       "name": "parallel-chart",
@@ -10304,17 +10314,7 @@
      {
       "name": "histogram",
       "kind": "element",
-      "min": 7799
-     },
-     {
-      "name": "bar-chart",
-      "kind": "element",
-      "min": 7758
-     },
-     {
-      "name": "box-plot",
-      "kind": "element",
-      "min": 7398
+      "min": 7805
      },
      {
       "name": "waffle-chart",
@@ -10322,9 +10322,14 @@
       "min": 7389
      },
      {
+      "name": "box-plot",
+      "kind": "element",
+      "min": 7381
+     },
+     {
       "name": "beeswarm-chart",
       "kind": "element",
-      "min": 7299
+      "min": 7297
      },
      {
       "name": "waterfall-chart",
@@ -10349,12 +10354,12 @@
      {
       "name": "sankey-chart",
       "kind": "element",
-      "min": 6541
+      "min": 6539
      },
      {
       "name": "rose-chart",
       "kind": "element",
-      "min": 6463
+      "min": 6461
      },
      {
       "name": "slope-chart",
@@ -10369,7 +10374,7 @@
      {
       "name": "ridgeline-chart",
       "kind": "element",
-      "min": 6220
+      "min": 6217
      },
      {
       "name": "chord-chart",
@@ -10409,7 +10414,7 @@
      {
       "name": "marimekko-chart",
       "kind": "element",
-      "min": 4630
+      "min": 4627
      },
      {
       "name": "donut-chart",
@@ -10438,21 +10443,21 @@
      }
     ],
     "withoutLit": {
-     "min": 458246,
-     "gzip": 146413
+     "min": 464518,
+     "gzip": 149132
     },
     "withLit": {
-     "min": 475643,
-     "gzip": 151568
+     "min": 481886,
+     "gzip": 154368
     }
    },
    "render": {
     "tag": "tc-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 2,
-    "first": 0.5,
-    "update": 1.1,
+    "cold": 2.1,
+    "first": 0.2,
+    "update": 0.5,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
@@ -11014,12 +11019,12 @@
    }
   },
   "chord-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "92e7a94569f63f98",
+   "measuredAt": "2026-11-21",
+   "hash": "6e28e2d7412f9894",
    "bundle": {
     "own": {
      "min": 8721,
-     "gzip": 3990
+     "gzip": 4026
     },
     "shared": [
      {
@@ -11030,7 +11035,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18884
+      "min": 19590
      },
      {
       "name": "internal/chart/motion",
@@ -11124,21 +11129,21 @@
      }
     ],
     "withoutLit": {
-     "min": 48589,
-     "gzip": 17136
+     "min": 49297,
+     "gzip": 17425
     },
     "withLit": {
-     "min": 68510,
-     "gzip": 23444
+     "min": 69216,
+     "gzip": 23819
     }
    },
    "render": {
     "tag": "tc-chord-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.6,
-    "first": 2.4,
-    "update": 0.5,
+    "cold": 18.6,
+    "first": 1.7,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 64,
     "scale": {
@@ -11147,14 +11152,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.6,
+       "first": 2,
        "update": 0.4,
        "nodes": 64
       },
       {
        "items": 1000,
-       "first": 3,
-       "update": 0.8,
+       "first": 2.1,
+       "update": 0.7,
        "nodes": 64
       }
      ]
@@ -12509,12 +12514,12 @@
    }
   },
   "combo-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "86bbcbf0a0edf6e0",
+   "measuredAt": "2026-11-21",
+   "hash": "dac8c6b5b68e4820",
    "bundle": {
     "own": {
      "min": 13233,
-     "gzip": 5834
+     "gzip": 5880
     },
     "shared": [
      {
@@ -12525,7 +12530,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18928
+      "min": 19634
      },
      {
       "name": "internal/chart/motion",
@@ -12624,21 +12629,21 @@
      }
     ],
     "withoutLit": {
-     "min": 58790,
-     "gzip": 21168
+     "min": 59496,
+     "gzip": 21544
     },
     "withLit": {
-     "min": 78688,
-     "gzip": 27499
+     "min": 79394,
+     "gzip": 27868
     }
    },
    "render": {
     "tag": "tc-combo-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 12.7,
-    "first": 2.4,
-    "update": 0.6,
+    "cold": 18.9,
+    "first": 2,
+    "update": 0.9,
     "updateKind": "one item of data replaced",
     "nodes": 70,
     "scale": {
@@ -12647,14 +12652,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.2,
+       "first": 2.4,
        "update": 0.7,
        "nodes": 70
       },
       {
        "items": 1000,
-       "first": 3.5,
-       "update": 1.4,
+       "first": 3.4,
+       "update": 1.5,
        "nodes": 70
       }
      ]
@@ -17253,12 +17258,12 @@
    }
   },
   "donut-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "0839904f01b0134f",
+   "measuredAt": "2026-11-21",
+   "hash": "32f7dca61748c235",
    "bundle": {
     "own": {
      "min": 3507,
-     "gzip": 1831
+     "gzip": 1827
     },
     "shared": [
      {
@@ -17269,7 +17274,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18949
+      "min": 19655
      },
      {
       "name": "internal/chart/pie",
@@ -17358,21 +17363,21 @@
      }
     ],
     "withoutLit": {
-     "min": 50136,
-     "gzip": 17700
+     "min": 50842,
+     "gzip": 18001
     },
     "withLit": {
-     "min": 69983,
-     "gzip": 23983
+     "min": 70689,
+     "gzip": 24343
     }
    },
    "render": {
     "tag": "tc-donut-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.5,
-    "first": 1.8,
-    "update": 0.4,
+    "cold": 18.1,
+    "first": 0.6,
+    "update": 0.3,
     "updateKind": "one item of data replaced",
     "nodes": 34,
     "scale": {
@@ -17381,14 +17386,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.6,
-       "update": 1.2,
+       "first": 2.2,
+       "update": 0.5,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 5.5,
-       "update": 2.5,
+       "first": 3,
+       "update": 1.3,
        "nodes": 204
       }
      ]
@@ -17671,12 +17676,12 @@
    }
   },
   "dumbbell-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "47163afd5412ef88",
+   "measuredAt": "2026-11-21",
+   "hash": "d6d48801306cdee9",
    "bundle": {
     "own": {
      "min": 9033,
-     "gzip": 4061
+     "gzip": 4088
     },
     "shared": [
      {
@@ -17687,7 +17692,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18888
+      "min": 19594
      },
      {
       "name": "internal/chart/motion",
@@ -17771,20 +17776,20 @@
      }
     ],
     "withoutLit": {
-     "min": 48747,
-     "gzip": 17093
+     "min": 49455,
+     "gzip": 17363
     },
     "withLit": {
-     "min": 68644,
-     "gzip": 23387
+     "min": 69350,
+     "gzip": 23761
     }
    },
    "render": {
     "tag": "tc-dumbbell-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.5,
-    "first": 2.1,
+    "cold": 19.6,
+    "first": 1.6,
     "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 56,
@@ -17794,14 +17799,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.5,
-       "update": 0.7,
+       "first": 4,
+       "update": 1,
        "nodes": 217
       },
       {
        "items": 1000,
-       "first": 6.7,
-       "update": 2.2,
+       "first": 10.7,
+       "update": 3.5,
        "nodes": 217
       }
      ]
@@ -21796,12 +21801,12 @@
    }
   },
   "funnel-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "f94e729790f1d5dc",
+   "measuredAt": "2026-11-21",
+   "hash": "6310e61201adb32e",
    "bundle": {
     "own": {
      "min": 7427,
-     "gzip": 3592
+     "gzip": 3609
     },
     "shared": [
      {
@@ -21812,7 +21817,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18889
+      "min": 19595
      },
      {
       "name": "internal/chart/motion",
@@ -21896,21 +21901,21 @@
      }
     ],
     "withoutLit": {
-     "min": 46347,
-     "gzip": 16351
+     "min": 47053,
+     "gzip": 16622
     },
     "withLit": {
-     "min": 66257,
-     "gzip": 22654
+     "min": 66963,
+     "gzip": 23011
     }
    },
    "render": {
     "tag": "tc-funnel-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.7,
-    "first": 2.4,
-    "update": 0.8,
+    "cold": 18.6,
+    "first": 1.3,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 38,
     "scale": {
@@ -21919,14 +21924,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.8,
-       "update": 1,
+       "first": 3.9,
+       "update": 1.1,
        "nodes": 202
       },
       {
        "items": 1000,
-       "first": 10.3,
-       "update": 4.2,
+       "first": 10.6,
+       "update": 3.9,
        "nodes": 202
       }
      ]
@@ -22253,12 +22258,12 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-11-20",
-   "hash": "90de1da9f7a9d430",
+   "measuredAt": "2026-11-21",
+   "hash": "7a7d45cb9ce07ee5",
    "bundle": {
     "own": {
      "min": 34126,
-     "gzip": 10892
+     "gzip": 10973
     },
     "shared": [
      {
@@ -22269,17 +22274,17 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 19189
+      "min": 19905
+     },
+     {
+      "name": "internal/chart/xy",
+      "kind": "internal",
+      "min": 18916
      },
      {
       "name": "internal/chart/spec",
       "kind": "internal",
       "min": 17138
-     },
-     {
-      "name": "internal/chart/xy",
-      "kind": "internal",
-      "min": 15901
      },
      {
       "name": "internal/settings",
@@ -22709,7 +22714,7 @@
      {
       "name": "billing-schedule",
       "kind": "element",
-      "min": 47815
+      "min": 47855
      },
      {
       "name": "playbook-canvas",
@@ -22967,6 +22972,11 @@
       "min": 33665
      },
      {
+      "name": "thinking-state",
+      "kind": "element",
+      "min": 33494
+     },
+     {
       "name": "sandbox-log",
       "kind": "element",
       "min": 33201
@@ -22980,11 +22990,6 @@
       "name": "kpi-board",
       "kind": "element",
       "min": 32887
-     },
-     {
-      "name": "thinking-state",
-      "kind": "element",
-      "min": 32878
      },
      {
       "name": "policy-simulator",
@@ -24417,6 +24422,11 @@
       "min": 10578
      },
      {
+      "name": "bar-chart",
+      "kind": "element",
+      "min": 10505
+     },
+     {
       "name": "audit-trail",
       "kind": "element",
       "min": 10482
@@ -24520,11 +24530,6 @@
       "name": "parallel-chart",
       "kind": "element",
       "min": 8015
-     },
-     {
-      "name": "bar-chart",
-      "kind": "element",
-      "min": 7938
      },
      {
       "name": "empty-calendar",
@@ -24987,14 +24992,24 @@
       "min": 9055
      },
      {
+      "name": "src/generative/schemas/tc-line-chart.json",
+      "kind": "other",
+      "min": 6486
+     },
+     {
       "name": "src/generative/schemas/tc-configuration-release-control.json",
       "kind": "other",
       "min": 6455
      },
      {
+      "name": "src/generative/schemas/tc-area-chart.json",
+      "kind": "other",
+      "min": 6454
+     },
+     {
       "name": "src/generative/schemas/tc-bubble-chart.json",
       "kind": "other",
-      "min": 6030
+      "min": 6227
      },
      {
       "name": "src/generative/schemas/tc-session-panel.json",
@@ -25012,19 +25027,14 @@
       "min": 5978
      },
      {
-      "name": "src/generative/schemas/tc-line-chart.json",
-      "kind": "other",
-      "min": 5850
-     },
-     {
       "name": "src/generative/schemas/tc-priority-list.json",
       "kind": "other",
       "min": 5827
      },
      {
-      "name": "src/generative/schemas/tc-area-chart.json",
+      "name": "src/generative/schemas/tc-hexbin-chart.json",
       "kind": "other",
-      "min": 5818
+      "min": 5801
      },
      {
       "name": "src/generative/schemas/tc-playbook-canvas.json",
@@ -25042,19 +25052,14 @@
       "min": 5731
      },
      {
-      "name": "src/generative/schemas/tc-hexbin-chart.json",
+      "name": "src/generative/schemas/tc-combo-chart.json",
       "kind": "other",
-      "min": 5604
+      "min": 5644
      },
      {
       "name": "src/generative/schemas/tc-case-review.json",
       "kind": "other",
       "min": 5581
-     },
-     {
-      "name": "src/generative/schemas/tc-combo-chart.json",
-      "kind": "other",
-      "min": 5447
      },
      {
       "name": "src/generative/schemas/tc-file-details.json",
@@ -25064,7 +25069,7 @@
      {
       "name": "src/generative/schemas/tc-network-graph.json",
       "kind": "other",
-      "min": 5201
+      "min": 5398
      },
      {
       "name": "src/generative/schemas/tc-org-unit-card.json",
@@ -25072,9 +25077,19 @@
       "min": 5146
      },
      {
+      "name": "src/generative/schemas/tc-candlestick-chart.json",
+      "kind": "other",
+      "min": 5115
+     },
+     {
       "name": "src/generative/schemas/tc-mission-timeline.json",
       "kind": "other",
       "min": 5101
+     },
+     {
+      "name": "src/generative/schemas/tc-bar-chart.json",
+      "kind": "other",
+      "min": 5097
      },
      {
       "name": "src/generative/schemas/tc-evaluation-dataset-editor.json",
@@ -25097,14 +25112,14 @@
       "min": 5036
      },
      {
+      "name": "src/generative/schemas/tc-parallel-chart.json",
+      "kind": "other",
+      "min": 4997
+     },
+     {
       "name": "src/generative/schemas/tc-review-center.json",
       "kind": "other",
       "min": 4954
-     },
-     {
-      "name": "src/generative/schemas/tc-candlestick-chart.json",
-      "kind": "other",
-      "min": 4918
      },
      {
       "name": "src/generative/schemas/tc-mission-control.json",
@@ -25112,12 +25127,12 @@
       "min": 4855
      },
      {
-      "name": "src/generative/schemas/tc-parallel-chart.json",
+      "name": "src/vendor/agent-face/engine/engine.ts",
       "kind": "other",
-      "min": 4800
+      "min": 4762
      },
      {
-      "name": "src/vendor/agent-face/engine/engine.ts",
+      "name": "src/generative/schemas/tc-donut-chart.json",
       "kind": "other",
       "min": 4762
      },
@@ -25137,6 +25152,16 @@
       "min": 4716
      },
      {
+      "name": "src/generative/schemas/tc-histogram.json",
+      "kind": "other",
+      "min": 4674
+     },
+     {
+      "name": "src/generative/schemas/tc-stream-graph.json",
+      "kind": "other",
+      "min": 4644
+     },
+     {
       "name": "src/generative/schemas/tc-ai-summary.json",
       "kind": "other",
       "min": 4607
@@ -25147,9 +25172,9 @@
       "min": 4592
      },
      {
-      "name": "src/generative/schemas/tc-donut-chart.json",
+      "name": "src/generative/schemas/tc-flow-builder.json",
       "kind": "other",
-      "min": 4565
+      "min": 4574
      },
      {
       "name": "src/generative/schemas/tc-pull-request.json",
@@ -25172,29 +25197,19 @@
       "min": 4495
      },
      {
-      "name": "src/generative/schemas/tc-flow-builder.json",
-      "kind": "other",
-      "min": 4490
-     },
-     {
-      "name": "src/generative/schemas/tc-histogram.json",
-      "kind": "other",
-      "min": 4477
-     },
-     {
       "name": "src/generative/schemas/tc-handoff-brief.json",
       "kind": "other",
       "min": 4476
      },
      {
-      "name": "src/generative/schemas/tc-stream-graph.json",
+      "name": "src/generative/schemas/tc-waterfall-chart.json",
       "kind": "other",
-      "min": 4447
+      "min": 4467
      },
      {
-      "name": "src/generative/schemas/tc-bar-chart.json",
+      "name": "src/generative/schemas/tc-step-inspector.json",
       "kind": "other",
-      "min": 4416
+      "min": 4462
      },
      {
       "name": "src/generative/schemas/tc-channel-setup.json",
@@ -25202,14 +25217,14 @@
       "min": 4400
      },
      {
-      "name": "src/generative/schemas/tc-step-inspector.json",
-      "kind": "other",
-      "min": 4378
-     },
-     {
       "name": "src/generative/schemas/tc-mcp-connection-manager.json",
       "kind": "other",
       "min": 4368
+     },
+     {
+      "name": "src/generative/schemas/tc-treemap.json",
+      "kind": "other",
+      "min": 4358
      },
      {
       "name": "src/generative/schemas/tc-transcript-review.json",
@@ -25227,14 +25242,34 @@
       "min": 4314
      },
      {
+      "name": "src/generative/schemas/tc-slope-chart.json",
+      "kind": "other",
+      "min": 4299
+     },
+     {
+      "name": "src/generative/schemas/tc-box-plot.json",
+      "kind": "other",
+      "min": 4294
+     },
+     {
+      "name": "src/generative/schemas/tc-radial-bar-chart.json",
+      "kind": "other",
+      "min": 4287
+     },
+     {
       "name": "src/generative/schemas/tc-data-region.json",
       "kind": "other",
       "min": 4282
      },
      {
-      "name": "src/generative/schemas/tc-waterfall-chart.json",
+      "name": "src/generative/schemas/tc-step-picker.json",
       "kind": "other",
-      "min": 4270
+      "min": 4281
+     },
+     {
+      "name": "src/generative/schemas/tc-dumbbell-chart.json",
+      "kind": "other",
+      "min": 4268
      },
      {
       "name": "src/generative/schemas/tc-policy-simulator.json",
@@ -25242,14 +25277,34 @@
       "min": 4267
      },
      {
+      "name": "src/generative/schemas/tc-pareto-chart.json",
+      "kind": "other",
+      "min": 4250
+     },
+     {
+      "name": "src/generative/schemas/tc-waffle-chart.json",
+      "kind": "other",
+      "min": 4239
+     },
+     {
+      "name": "src/generative/schemas/tc-sunburst-chart.json",
+      "kind": "other",
+      "min": 4236
+     },
+     {
+      "name": "src/generative/schemas/tc-rose-chart.json",
+      "kind": "other",
+      "min": 4234
+     },
+     {
+      "name": "src/generative/schemas/tc-ridgeline-chart.json",
+      "kind": "other",
+      "min": 4229
+     },
+     {
       "name": "src/generative/schemas/tc-approval-gates.json",
       "kind": "other",
       "min": 4217
-     },
-     {
-      "name": "src/generative/schemas/tc-step-picker.json",
-      "kind": "other",
-      "min": 4197
      },
      {
       "name": "src/generative/schemas/tc-reflection-gate.json",
@@ -25262,9 +25317,19 @@
       "min": 4172
      },
      {
-      "name": "src/generative/schemas/tc-treemap.json",
+      "name": "src/generative/schemas/tc-bullet-chart.json",
       "kind": "other",
-      "min": 4161
+      "min": 4170
+     },
+     {
+      "name": "src/generative/schemas/tc-segmented-bar.json",
+      "kind": "other",
+      "min": 4162
+     },
+     {
+      "name": "src/generative/schemas/tc-pie-chart.json",
+      "kind": "other",
+      "min": 4139
      },
      {
       "name": "src/generative/schemas/tc-collaboration-stream.json",
@@ -25272,19 +25337,9 @@
       "min": 4125
      },
      {
-      "name": "src/generative/schemas/tc-slope-chart.json",
+      "name": "src/generative/schemas/tc-beeswarm-chart.json",
       "kind": "other",
-      "min": 4102
-     },
-     {
-      "name": "src/generative/schemas/tc-box-plot.json",
-      "kind": "other",
-      "min": 4097
-     },
-     {
-      "name": "src/generative/schemas/tc-radial-bar-chart.json",
-      "kind": "other",
-      "min": 4090
+      "min": 4091
      },
      {
       "name": "src/generative/schemas/tc-run-checkpoints.json",
@@ -25297,39 +25352,24 @@
       "min": 4083
      },
      {
-      "name": "src/generative/schemas/tc-dumbbell-chart.json",
-      "kind": "other",
-      "min": 4071
-     },
-     {
       "name": "src/generative/schemas/tc-request-log.json",
       "kind": "other",
       "min": 4065
      },
      {
-      "name": "src/generative/schemas/tc-pareto-chart.json",
+      "name": "src/generative/schemas/tc-workflow-canvas.json",
       "kind": "other",
-      "min": 4053
+      "min": 4055
      },
      {
-      "name": "src/generative/schemas/tc-waffle-chart.json",
+      "name": "src/generative/schemas/tc-calendar-heatmap.json",
       "kind": "other",
-      "min": 4042
+      "min": 4045
      },
      {
-      "name": "src/generative/schemas/tc-sunburst-chart.json",
-      "kind": "other",
-      "min": 4039
-     },
-     {
-      "name": "src/generative/schemas/tc-rose-chart.json",
+      "name": "src/generative/schemas/tc-venn-diagram.json",
       "kind": "other",
       "min": 4037
-     },
-     {
-      "name": "src/generative/schemas/tc-ridgeline-chart.json",
-      "kind": "other",
-      "min": 4032
      },
      {
       "name": "src/generative/schemas/tc-tool-access-map.json",
@@ -25337,24 +25377,19 @@
       "min": 4020
      },
      {
-      "name": "src/generative/schemas/tc-bullet-chart.json",
+      "name": "src/generative/schemas/tc-funnel-chart.json",
       "kind": "other",
-      "min": 3973
+      "min": 3982
      },
      {
-      "name": "src/generative/schemas/tc-workflow-canvas.json",
+      "name": "src/generative/schemas/tc-chord-chart.json",
       "kind": "other",
-      "min": 3971
+      "min": 3962
      },
      {
-      "name": "src/generative/schemas/tc-segmented-bar.json",
+      "name": "src/generative/schemas/tc-sankey-chart.json",
       "kind": "other",
-      "min": 3965
-     },
-     {
-      "name": "src/generative/schemas/tc-pie-chart.json",
-      "kind": "other",
-      "min": 3942
+      "min": 3944
      },
      {
       "name": "src/generative/schemas/tc-help-video.json",
@@ -25362,9 +25397,14 @@
       "min": 3936
      },
      {
-      "name": "src/generative/schemas/tc-beeswarm-chart.json",
+      "name": "src/generative/schemas/tc-lollipop-chart.json",
       "kind": "other",
-      "min": 3894
+      "min": 3936
+     },
+     {
+      "name": "src/generative/schemas/tc-bump-chart.json",
+      "kind": "other",
+      "min": 3898
      },
      {
       "name": "src/generative/schemas/tc-trust-center.json",
@@ -25382,24 +25422,14 @@
       "min": 3851
      },
      {
-      "name": "src/generative/schemas/tc-calendar-heatmap.json",
-      "kind": "other",
-      "min": 3848
-     },
-     {
-      "name": "src/generative/schemas/tc-venn-diagram.json",
-      "kind": "other",
-      "min": 3840
-     },
-     {
       "name": "src/generative/schemas/tc-fine-tune-card.json",
       "kind": "other",
       "min": 3830
      },
      {
-      "name": "src/generative/schemas/tc-funnel-chart.json",
+      "name": "src/generative/schemas/tc-marimekko-chart.json",
       "kind": "other",
-      "min": 3785
+      "min": 3822
      },
      {
       "name": "src/generative/schemas/tc-agent-handoff.json",
@@ -25417,24 +25447,9 @@
       "min": 3771
      },
      {
-      "name": "src/generative/schemas/tc-chord-chart.json",
-      "kind": "other",
-      "min": 3765
-     },
-     {
-      "name": "src/generative/schemas/tc-sankey-chart.json",
-      "kind": "other",
-      "min": 3747
-     },
-     {
       "name": "src/generative/schemas/tc-retrieval-settings.json",
       "kind": "other",
       "min": 3743
-     },
-     {
-      "name": "src/generative/schemas/tc-lollipop-chart.json",
-      "kind": "other",
-      "min": 3739
      },
      {
       "name": "src/generative/schemas/tc-profile-header.json",
@@ -25447,11 +25462,6 @@
       "min": 3722
      },
      {
-      "name": "src/generative/schemas/tc-bump-chart.json",
-      "kind": "other",
-      "min": 3701
-     },
-     {
       "name": "src/generative/schemas/tc-run-receipt.json",
       "kind": "other",
       "min": 3689
@@ -25460,11 +25470,6 @@
       "name": "src/generative/schemas/tc-access-request.json",
       "kind": "other",
       "min": 3642
-     },
-     {
-      "name": "src/generative/schemas/tc-marimekko-chart.json",
-      "kind": "other",
-      "min": 3625
      },
      {
       "name": "src/generative/schemas/tc-oversight-home.json",
@@ -25542,6 +25547,11 @@
       "min": 3450
      },
      {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3404
+     },
+     {
       "name": "src/generative/schemas/tc-cell-inspector.json",
       "kind": "other",
       "min": 3398
@@ -25565,11 +25575,6 @@
       "name": "src/generative/schemas/tc-agent-crew.json",
       "kind": "other",
       "min": 3321
-     },
-     {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3320
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
@@ -26317,6 +26322,11 @@
       "min": 2308
      },
      {
+      "name": "src/generative/schemas/tc-thinking-state.json",
+      "kind": "other",
+      "min": 2308
+     },
+     {
       "name": "src/generative/schemas/tc-point-and-ask.json",
       "kind": "other",
       "min": 2307
@@ -26415,11 +26425,6 @@
       "name": "src/generative/schemas/tc-thread-header.json",
       "kind": "other",
       "min": 2201
-     },
-     {
-      "name": "src/generative/schemas/tc-thinking-state.json",
-      "kind": "other",
-      "min": 2185
      },
      {
       "name": "src/generative/schemas/tc-redaction-review.json",
@@ -27453,19 +27458,19 @@
      }
     ],
     "withoutLit": {
-     "min": 12545005,
-     "gzip": 3106490
+     "min": 12560856,
+     "gzip": 3143877
     },
     "withLit": {
-     "min": 12458392,
-     "gzip": 3076844
+     "min": 12474146,
+     "gzip": 3112659
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 8.7,
+    "cold": 5.3,
     "first": 0.8,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -29116,12 +29121,12 @@
    }
   },
   "hexbin-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "babeb0f28658d7f3",
+   "measuredAt": "2026-11-21",
+   "hash": "a6f8b21c642b6f37",
    "bundle": {
     "own": {
      "min": 10808,
-     "gzip": 4929
+     "gzip": 4961
     },
     "shared": [
      {
@@ -29132,7 +29137,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18835
+      "min": 19541
      },
      {
       "name": "internal/chart/motion",
@@ -29216,20 +29221,20 @@
      }
     ],
     "withoutLit": {
-     "min": 50576,
-     "gzip": 17884
+     "min": 51282,
+     "gzip": 18183
     },
     "withLit": {
-     "min": 70479,
-     "gzip": 24216
+     "min": 71185,
+     "gzip": 24566
     }
    },
    "render": {
     "tag": "tc-hexbin-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.7,
-    "first": 4.3,
+    "cold": 19.1,
+    "first": 4.1,
     "update": 3.3,
     "updateKind": "one item of data replaced",
     "nodes": 180,
@@ -29245,8 +29250,8 @@
       },
       {
        "items": 1000,
-       "first": 1,
-       "update": 0.4,
+       "first": 1.2,
+       "update": 0.3,
        "nodes": 147
       }
      ]
@@ -29278,12 +29283,12 @@
    }
   },
   "histogram": {
-   "measuredAt": "2026-11-11",
-   "hash": "e5ba48dffcf4e092",
+   "measuredAt": "2026-11-21",
+   "hash": "c4709f2a497f0b21",
    "bundle": {
     "own": {
      "min": 10490,
-     "gzip": 4785
+     "gzip": 4804
     },
     "shared": [
      {
@@ -29294,7 +29299,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18890
+      "min": 19596
      },
      {
       "name": "internal/chart/motion",
@@ -29393,21 +29398,21 @@
      }
     ],
     "withoutLit": {
-     "min": 53756,
-     "gzip": 19209
+     "min": 54462,
+     "gzip": 19545
     },
     "withLit": {
-     "min": 73674,
-     "gzip": 25573
+     "min": 74380,
+     "gzip": 25931
     }
    },
    "render": {
     "tag": "tc-histogram",
     "source": "demo",
     "runs": 7,
-    "cold": 12.7,
-    "first": 2.1,
-    "update": 1,
+    "cold": 18.9,
+    "first": 2.2,
+    "update": 1.3,
     "updateKind": "one item of data replaced",
     "nodes": 77,
     "scale": {
@@ -29416,14 +29421,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.6,
-       "update": 0.5,
+       "first": 0.8,
+       "update": 0.2,
        "nodes": 71
       },
       {
        "items": 1000,
-       "first": 4.1,
-       "update": 2.4,
+       "first": 2,
+       "update": 1.1,
        "nodes": 131
       }
      ]
@@ -32573,12 +32578,12 @@
    }
   },
   "line-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "a145d2e90ba3afc2",
+   "measuredAt": "2026-11-21",
+   "hash": "c16a138cd85fac9e",
    "bundle": {
     "own": {
      "min": 2849,
-     "gzip": 1590
+     "gzip": 1595
     },
     "shared": [
      {
@@ -32589,12 +32594,12 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18958
+      "min": 19664
      },
      {
       "name": "internal/chart/xy",
       "kind": "internal",
-      "min": 15429
+      "min": 18387
      },
      {
       "name": "internal/chart/motion",
@@ -32614,7 +32619,7 @@
      {
       "name": "internal/chart/series",
       "kind": "internal",
-      "min": 2541
+      "min": 2546
      },
      {
       "name": "internal/chart/scale",
@@ -32703,21 +32708,21 @@
      }
     ],
     "withoutLit": {
-     "min": 72455,
-     "gzip": 25998
+     "min": 76130,
+     "gzip": 27264
     },
     "withLit": {
-     "min": 92232,
-     "gzip": 32269
+     "min": 95905,
+     "gzip": 33612
     }
    },
    "render": {
     "tag": "tc-line-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 20.2,
-    "first": 2.1,
-    "update": 0.7,
+    "cold": 19.3,
+    "first": 1,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 51,
     "scale": {
@@ -32726,13 +32731,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2,
-       "update": 0.3,
+       "first": 1.6,
+       "update": 0.4,
        "nodes": 51
       },
       {
        "items": 1000,
-       "first": 3.5,
+       "first": 2.4,
        "update": 1.2,
        "nodes": 51
       }
@@ -33549,12 +33554,12 @@
    }
   },
   "lollipop-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "f78f6918fb8ef306",
+   "measuredAt": "2026-11-21",
+   "hash": "546e9b052504e6d6",
    "bundle": {
     "own": {
      "min": 8027,
-     "gzip": 3817
+     "gzip": 3848
     },
     "shared": [
      {
@@ -33565,7 +33570,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18888
+      "min": 19594
      },
      {
       "name": "internal/chart/motion",
@@ -33649,21 +33654,21 @@
      }
     ],
     "withoutLit": {
-     "min": 48973,
-     "gzip": 17415
+     "min": 49679,
+     "gzip": 17706
     },
     "withLit": {
-     "min": 68884,
-     "gzip": 23732
+     "min": 69590,
+     "gzip": 24104
     }
    },
    "render": {
     "tag": "tc-lollipop-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 22.2,
-    "first": 1.8,
-    "update": 0.4,
+    "cold": 18,
+    "first": 1.4,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 48,
     "scale": {
@@ -33672,13 +33677,13 @@
      "points": [
       {
        "items": 100,
-       "first": 6.1,
-       "update": 0.8,
+       "first": 3.8,
+       "update": 0.6,
        "nodes": 206
       },
       {
        "items": 1000,
-       "first": 8.4,
+       "first": 9.5,
        "update": 2.9,
        "nodes": 206
       }
@@ -34065,12 +34070,12 @@
    }
   },
   "marimekko-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "cb3ff620fb30db4f",
+   "measuredAt": "2026-11-21",
+   "hash": "c2d8dd01d6f981fc",
    "bundle": {
     "own": {
      "min": 7138,
-     "gzip": 3588
+     "gzip": 3605
     },
     "shared": [
      {
@@ -34081,7 +34086,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18834
+      "min": 19540
      },
      {
       "name": "internal/chart/motion",
@@ -34170,20 +34175,20 @@
      }
     ],
     "withoutLit": {
-     "min": 47181,
-     "gzip": 16838
+     "min": 47887,
+     "gzip": 17118
     },
     "withLit": {
-     "min": 67075,
-     "gzip": 23136
+     "min": 67781,
+     "gzip": 23478
     }
    },
    "render": {
     "tag": "tc-marimekko-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.9,
-    "first": 2.4,
+    "cold": 18.7,
+    "first": 1.7,
     "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 75,
@@ -34193,14 +34198,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.2,
-       "update": 0.6,
+       "first": 1.6,
+       "update": 0.4,
        "nodes": 75
       },
       {
        "items": 1000,
-       "first": 3.7,
-       "update": 1.1,
+       "first": 1.8,
+       "update": 0.7,
        "nodes": 75
       }
      ]
@@ -36529,12 +36534,12 @@
    }
   },
   "network-graph": {
-   "measuredAt": "2026-11-11",
-   "hash": "d5f9a6adbe8077c1",
+   "measuredAt": "2026-11-21",
+   "hash": "a16efbbb53fcfa2a",
    "bundle": {
     "own": {
      "min": 15694,
-     "gzip": 6814
+     "gzip": 6852
     },
     "shared": [
      {
@@ -36545,7 +36550,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18927
+      "min": 19633
      },
      {
       "name": "internal/chart/motion",
@@ -36639,21 +36644,21 @@
      }
     ],
     "withoutLit": {
-     "min": 58832,
-     "gzip": 21173
+     "min": 59538,
+     "gzip": 21526
     },
     "withLit": {
-     "min": 78695,
-     "gzip": 27496
+     "min": 79401,
+     "gzip": 27852
     }
    },
    "render": {
     "tag": "tc-network-graph",
     "source": "demo",
     "runs": 7,
-    "cold": 21.6,
-    "first": 7.2,
-    "update": 4,
+    "cold": 18.7,
+    "first": 6.7,
+    "update": 3.6,
     "updateKind": "one item of links replaced",
     "nodes": 157,
     "scale": {
@@ -36662,14 +36667,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.2,
+       "first": 7.1,
        "update": 3.5,
        "nodes": 157
       },
       {
        "items": 1000,
        "first": 6.8,
-       "update": 4.2,
+       "update": 3.4,
        "nodes": 157
       }
      ]
@@ -38646,12 +38651,12 @@
    }
   },
   "parallel-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "2ffee0294052a54b",
+   "measuredAt": "2026-11-21",
+   "hash": "e2e62557fdccc32f",
    "bundle": {
     "own": {
      "min": 10518,
-     "gzip": 4710
+     "gzip": 4739
     },
     "shared": [
      {
@@ -38662,7 +38667,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18836
+      "min": 19542
      },
      {
       "name": "internal/chart/motion",
@@ -38761,21 +38766,21 @@
      }
     ],
     "withoutLit": {
-     "min": 50621,
-     "gzip": 17963
+     "min": 51327,
+     "gzip": 18258
     },
     "withLit": {
-     "min": 70510,
-     "gzip": 24251
+     "min": 71216,
+     "gzip": 24599
     }
    },
    "render": {
     "tag": "tc-parallel-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 20.3,
-    "first": 2.4,
-    "update": 0.6,
+    "cold": 18.5,
+    "first": 1.5,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 53,
     "scale": {
@@ -38784,14 +38789,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5.7,
-       "update": 0.9,
+       "first": 4,
+       "update": 0.8,
        "nodes": 205
       },
       {
        "items": 1000,
-       "first": 8,
-       "update": 4.1,
+       "first": 8.4,
+       "update": 3.9,
        "nodes": 205
       }
      ]
@@ -38823,12 +38828,12 @@
    }
   },
   "pareto-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "3858010ce1336983",
+   "measuredAt": "2026-11-21",
+   "hash": "2cfbf3876d8eac90",
    "bundle": {
     "own": {
      "min": 8457,
-     "gzip": 4065
+     "gzip": 4101
     },
     "shared": [
      {
@@ -38839,7 +38844,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18889
+      "min": 19595
      },
      {
       "name": "internal/chart/motion",
@@ -38928,21 +38933,21 @@
      }
     ],
     "withoutLit": {
-     "min": 49986,
-     "gzip": 17799
+     "min": 50692,
+     "gzip": 18095
     },
     "withLit": {
-     "min": 69900,
-     "gzip": 24124
+     "min": 70606,
+     "gzip": 24497
     }
    },
    "render": {
     "tag": "tc-pareto-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 22.1,
-    "first": 2.2,
-    "update": 0.6,
+    "cold": 18.5,
+    "first": 1,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 45,
     "scale": {
@@ -38951,21 +38956,21 @@
      "points": [
       {
        "items": 100,
-       "first": 4.2,
-       "update": 0.8,
+       "first": 1.9,
+       "update": 0.4,
        "nodes": 206
       },
       {
        "items": 1000,
-       "first": 5.1,
-       "update": 2.2,
+       "first": 3.8,
+       "update": 1.8,
        "nodes": 206
       }
      ]
     },
     "idle": {
      "visible": {
-      "frames": 59,
+      "frames": 58,
       "timers": 0
      },
      "away": {
@@ -39391,12 +39396,12 @@
    }
   },
   "pie-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "78a463121bc56c1f",
+   "measuredAt": "2026-11-21",
+   "hash": "df12c92fd62668a8",
    "bundle": {
     "own": {
      "min": 2772,
-     "gzip": 1567
+     "gzip": 1581
     },
     "shared": [
      {
@@ -39407,7 +39412,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18949
+      "min": 19655
      },
      {
       "name": "internal/chart/pie",
@@ -39496,21 +39501,21 @@
      }
     ],
     "withoutLit": {
-     "min": 49381,
-     "gzip": 17507
+     "min": 50087,
+     "gzip": 17792
     },
     "withLit": {
-     "min": 69229,
-     "gzip": 23784
+     "min": 69935,
+     "gzip": 24155
     }
    },
    "render": {
     "tag": "tc-pie-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 20.1,
-    "first": 1.8,
-    "update": 0.5,
+    "cold": 18.2,
+    "first": 1,
+    "update": 0.3,
     "updateKind": "one item of data replaced",
     "nodes": 36,
     "scale": {
@@ -39519,13 +39524,13 @@
      "points": [
       {
        "items": 100,
-       "first": 6.1,
-       "update": 1.3,
+       "first": 3.6,
+       "update": 0.9,
        "nodes": 203
       },
       {
        "items": 1000,
-       "first": 8.8,
+       "first": 7.8,
        "update": 4.3,
        "nodes": 203
       }
@@ -43046,12 +43051,12 @@
    }
   },
   "radial-bar-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "108df7cc7012a776",
+   "measuredAt": "2026-11-21",
+   "hash": "3c09d65e77ac6b7b",
    "bundle": {
     "own": {
      "min": 13571,
-     "gzip": 5428
+     "gzip": 5472
     },
     "shared": [
      {
@@ -43062,7 +43067,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18921
+      "min": 19627
      },
      {
       "name": "internal/chart/motion",
@@ -43146,20 +43151,20 @@
      }
     ],
     "withoutLit": {
-     "min": 52273,
-     "gzip": 17560
+     "min": 52979,
+     "gzip": 17859
     },
     "withLit": {
-     "min": 72159,
-     "gzip": 23854
+     "min": 72865,
+     "gzip": 24226
     }
    },
    "render": {
     "tag": "tc-radial-bar-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.5,
-    "first": 1.7,
+    "cold": 18.1,
+    "first": 1.2,
     "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 37,
@@ -43169,14 +43174,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.9,
+       "first": 3.8,
        "update": 0.9,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 8.2,
-       "update": 3.1,
+       "first": 7.1,
+       "update": 2.7,
        "nodes": 204
       }
      ]
@@ -45524,12 +45529,12 @@
    }
   },
   "ridgeline-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "411563a9e8ae6323",
+   "measuredAt": "2026-11-21",
+   "hash": "d42c770cc3163460",
    "bundle": {
     "own": {
      "min": 8815,
-     "gzip": 4152
+     "gzip": 4174
     },
     "shared": [
      {
@@ -45540,7 +45545,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18889
+      "min": 19595
      },
      {
       "name": "internal/chart/motion",
@@ -45634,21 +45639,21 @@
      }
     ],
     "withoutLit": {
-     "min": 49566,
-     "gzip": 17601
+     "min": 50272,
+     "gzip": 17899
     },
     "withLit": {
-     "min": 69489,
-     "gzip": 23945
+     "min": 70195,
+     "gzip": 24299
     }
    },
    "render": {
     "tag": "tc-ridgeline-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 13.8,
-    "first": 2.4,
-    "update": 1.1,
+    "cold": 19.9,
+    "first": 2.1,
+    "update": 1.3,
     "updateKind": "one item of data replaced",
     "nodes": 39,
     "scale": {
@@ -45657,14 +45662,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.7,
+       "first": 1.5,
        "update": 0.4,
        "nodes": 27
       },
       {
        "items": 1000,
-       "first": 2.9,
-       "update": 1.8,
+       "first": 3,
+       "update": 1.9,
        "nodes": 39
       }
      ]
@@ -46089,12 +46094,12 @@
    }
   },
   "rose-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "6359e1ebf372fd3b",
+   "measuredAt": "2026-11-21",
+   "hash": "ac5e602cc67b52f9",
    "bundle": {
     "own": {
      "min": 9051,
-     "gzip": 4359
+     "gzip": 4388
     },
     "shared": [
      {
@@ -46105,7 +46110,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18926
+      "min": 19632
      },
      {
       "name": "internal/chart/motion",
@@ -46194,21 +46199,21 @@
      }
     ],
     "withoutLit": {
-     "min": 49118,
-     "gzip": 17487
+     "min": 49824,
+     "gzip": 17788
     },
     "withLit": {
-     "min": 69023,
-     "gzip": 23792
+     "min": 69727,
+     "gzip": 24169
     }
    },
    "render": {
     "tag": "tc-rose-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 22.8,
-    "first": 1.9,
-    "update": 0.4,
+    "cold": 18.7,
+    "first": 0.6,
+    "update": 0.1,
     "updateKind": "one item of data replaced",
     "nodes": 58,
     "scale": {
@@ -46218,12 +46223,12 @@
       {
        "items": 100,
        "first": 1.5,
-       "update": 0.2,
+       "update": 0.3,
        "nodes": 58
       },
       {
        "items": 1000,
-       "first": 2.6,
+       "first": 1.7,
        "update": 0.6,
        "nodes": 58
       }
@@ -47435,12 +47440,12 @@
    }
   },
   "sankey-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "b0ba805f021244c8",
+   "measuredAt": "2026-11-21",
+   "hash": "715db02909ebdb34",
    "bundle": {
     "own": {
      "min": 9062,
-     "gzip": 4098
+     "gzip": 4128
     },
     "shared": [
      {
@@ -47451,7 +47456,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18890
+      "min": 19596
      },
      {
       "name": "internal/chart/motion",
@@ -47545,21 +47550,21 @@
      }
     ],
     "withoutLit": {
-     "min": 50987,
-     "gzip": 17989
+     "min": 51693,
+     "gzip": 18280
     },
     "withLit": {
-     "min": 70910,
-     "gzip": 24307
+     "min": 71616,
+     "gzip": 24661
     }
    },
    "render": {
     "tag": "tc-sankey-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 21.2,
-    "first": 2.8,
-    "update": 0.7,
+    "cold": 19.9,
+    "first": 1.8,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 103,
     "scale": {
@@ -47568,14 +47573,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.6,
-       "update": 1.1,
+       "first": 3.6,
+       "update": 0.9,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 4,
-       "update": 1.7,
+       "first": 6.6,
+       "update": 5.1,
        "nodes": 204
       }
      ]
@@ -48924,12 +48929,12 @@
    }
   },
   "segmented-bar": {
-   "measuredAt": "2026-11-11",
-   "hash": "757557951df9c3b7",
+   "measuredAt": "2026-11-21",
+   "hash": "babbcf04a8d9f506",
    "bundle": {
     "own": {
      "min": 7140,
-     "gzip": 3426
+     "gzip": 3437
     },
     "shared": [
      {
@@ -48940,7 +48945,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18924
+      "min": 19630
      },
      {
       "name": "internal/chart/motion",
@@ -49024,21 +49029,21 @@
      }
     ],
     "withoutLit": {
-     "min": 46072,
-     "gzip": 16213
+     "min": 46778,
+     "gzip": 16479
     },
     "withLit": {
-     "min": 65984,
-     "gzip": 22528
+     "min": 66690,
+     "gzip": 22864
     }
    },
    "render": {
     "tag": "tc-segmented-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 19.9,
-    "first": 1.3,
-    "update": 0.4,
+    "cold": 18.8,
+    "first": 1.2,
+    "update": 0.3,
     "updateKind": "one item of data replaced",
     "nodes": 37,
     "scale": {
@@ -49047,14 +49052,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.2,
-       "update": 1,
+       "first": 2.6,
+       "update": 0.6,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 8.5,
-       "update": 3,
+       "first": 5.6,
+       "update": 1.6,
        "nodes": 204
       }
      ]
@@ -51367,12 +51372,12 @@
    }
   },
   "slope-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "11f75b8c0ab7dfdc",
+   "measuredAt": "2026-11-21",
+   "hash": "9223e72e7ca3401e",
    "bundle": {
     "own": {
      "min": 8831,
-     "gzip": 4020
+     "gzip": 4044
     },
     "shared": [
      {
@@ -51383,7 +51388,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18888
+      "min": 19594
      },
      {
       "name": "internal/chart/motion",
@@ -51467,21 +51472,21 @@
      }
     ],
     "withoutLit": {
-     "min": 48807,
-     "gzip": 17167
+     "min": 49513,
+     "gzip": 17464
     },
     "withLit": {
-     "min": 68717,
-     "gzip": 23492
+     "min": 69423,
+     "gzip": 23855
     }
    },
    "render": {
     "tag": "tc-slope-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19,
-    "first": 1.7,
-    "update": 0.7,
+    "cold": 21.2,
+    "first": 1.3,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 38,
     "scale": {
@@ -51490,14 +51495,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5.7,
+       "first": 5,
        "update": 1.2,
        "nodes": 205
       },
       {
        "items": 1000,
-       "first": 12.3,
-       "update": 5.1,
+       "first": 11.5,
+       "update": 4.7,
        "nodes": 205
       }
      ]
@@ -51529,12 +51534,12 @@
    }
   },
   "small-multiples": {
-   "measuredAt": "2026-11-11",
-   "hash": "2347f99a46d50294",
+   "measuredAt": "2026-11-21",
+   "hash": "5f00b152e8a13225",
    "bundle": {
     "own": {
      "min": 15286,
-     "gzip": 6165
+     "gzip": 6188
     },
     "shared": [
      {
@@ -51545,7 +51550,12 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 19128
+      "min": 19841
+     },
+     {
+      "name": "internal/chart/xy",
+      "kind": "internal",
+      "min": 18657
      },
      {
       "name": "internal/chart/spec",
@@ -51553,14 +51563,9 @@
       "min": 17054
      },
      {
-      "name": "internal/chart/xy",
-      "kind": "internal",
-      "min": 15622
-     },
-     {
       "name": "internal/chart/pie",
       "kind": "internal",
-      "min": 6472
+      "min": 6470
      },
      {
       "name": "internal/chart/motion",
@@ -51575,7 +51580,7 @@
      {
       "name": "internal/chart/force",
       "kind": "internal",
-      "min": 4330
+      "min": 4362
      },
      {
       "name": "internal/chart/stats",
@@ -51605,7 +51610,7 @@
      {
       "name": "internal/chart/sankey",
       "kind": "internal",
-      "min": 3081
+      "min": 3049
      },
      {
       "name": "internal/chart/series",
@@ -51730,12 +51735,12 @@
      {
       "name": "bubble-chart",
       "kind": "element",
-      "min": 17233
+      "min": 17231
      },
      {
       "name": "candlestick-chart",
       "kind": "element",
-      "min": 15825
+      "min": 15820
      },
      {
       "name": "sparkline",
@@ -51750,7 +51755,7 @@
      {
       "name": "network-graph",
       "kind": "element",
-      "min": 13095
+      "min": 13106
      },
      {
       "name": "radial-bar-chart",
@@ -51760,7 +51765,7 @@
      {
       "name": "calendar-heatmap",
       "kind": "element",
-      "min": 10852
+      "min": 10850
      },
      {
       "name": "combo-chart",
@@ -51768,14 +51773,19 @@
       "min": 10704
      },
      {
+      "name": "bar-chart",
+      "kind": "element",
+      "min": 10265
+     },
+     {
       "name": "venn-diagram",
       "kind": "element",
-      "min": 9559
+      "min": 9571
      },
      {
       "name": "hexbin-chart",
       "kind": "element",
-      "min": 8401
+      "min": 8400
      },
      {
       "name": "parallel-chart",
@@ -51785,17 +51795,7 @@
      {
       "name": "histogram",
       "kind": "element",
-      "min": 7799
-     },
-     {
-      "name": "bar-chart",
-      "kind": "element",
-      "min": 7758
-     },
-     {
-      "name": "box-plot",
-      "kind": "element",
-      "min": 7398
+      "min": 7805
      },
      {
       "name": "waffle-chart",
@@ -51803,9 +51803,14 @@
       "min": 7389
      },
      {
+      "name": "box-plot",
+      "kind": "element",
+      "min": 7381
+     },
+     {
       "name": "beeswarm-chart",
       "kind": "element",
-      "min": 7299
+      "min": 7297
      },
      {
       "name": "waterfall-chart",
@@ -51830,12 +51835,12 @@
      {
       "name": "sankey-chart",
       "kind": "element",
-      "min": 6541
+      "min": 6539
      },
      {
       "name": "rose-chart",
       "kind": "element",
-      "min": 6463
+      "min": 6461
      },
      {
       "name": "slope-chart",
@@ -51850,7 +51855,7 @@
      {
       "name": "ridgeline-chart",
       "kind": "element",
-      "min": 6220
+      "min": 6217
      },
      {
       "name": "chord-chart",
@@ -51890,7 +51895,7 @@
      {
       "name": "marimekko-chart",
       "kind": "element",
-      "min": 4630
+      "min": 4627
      },
      {
       "name": "donut-chart",
@@ -51919,21 +51924,21 @@
      }
     ],
     "withoutLit": {
-     "min": 468447,
-     "gzip": 149915
+     "min": 474719,
+     "gzip": 152645
     },
     "withLit": {
-     "min": 487614,
-     "gzip": 155855
+     "min": 493857,
+     "gzip": 158675
     }
    },
    "render": {
     "tag": "tc-small-multiples",
     "source": "demo",
     "runs": 7,
-    "cold": 18,
-    "first": 0.6,
-    "update": 1.1,
+    "cold": 16.8,
+    "first": 0.8,
+    "update": 2.2,
     "updateKind": "re-render with the same data",
     "nodes": 16,
     "scale": null,
@@ -53489,12 +53494,12 @@
    }
   },
   "stream-graph": {
-   "measuredAt": "2026-11-11",
-   "hash": "26f099f8e18b5967",
+   "measuredAt": "2026-11-21",
+   "hash": "276123976e9bda2e",
    "bundle": {
     "own": {
      "min": 8899,
-     "gzip": 4208
+     "gzip": 4231
     },
     "shared": [
      {
@@ -53505,7 +53510,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18890
+      "min": 19596
      },
      {
       "name": "internal/chart/motion",
@@ -53609,21 +53614,21 @@
      }
     ],
     "withoutLit": {
-     "min": 56599,
-     "gzip": 20399
+     "min": 57305,
+     "gzip": 20724
     },
     "withLit": {
-     "min": 76541,
-     "gzip": 26761
+     "min": 77247,
+     "gzip": 27100
     }
    },
    "render": {
     "tag": "tc-stream-graph",
     "source": "demo",
     "runs": 7,
-    "cold": 15.5,
-    "first": 2.5,
-    "update": 0.6,
+    "cold": 20.1,
+    "first": 2.1,
+    "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 61,
     "scale": {
@@ -53632,14 +53637,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.2,
-       "update": 0.5,
+       "first": 2,
+       "update": 0.4,
        "nodes": 61
       },
       {
        "items": 1000,
-       "first": 2.9,
-       "update": 0.8,
+       "first": 2.8,
+       "update": 0.9,
        "nodes": 61
       }
      ]
@@ -54039,12 +54044,12 @@
    }
   },
   "sunburst-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "f1c093b583043c77",
+   "measuredAt": "2026-11-21",
+   "hash": "4bd0a3f634b74c50",
    "bundle": {
     "own": {
      "min": 9248,
-     "gzip": 4426
+     "gzip": 4449
     },
     "shared": [
      {
@@ -54055,7 +54060,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18835
+      "min": 19541
      },
      {
       "name": "internal/chart/motion",
@@ -54144,21 +54149,21 @@
      }
     ],
     "withoutLit": {
-     "min": 50201,
-     "gzip": 17923
+     "min": 50907,
+     "gzip": 18197
     },
     "withLit": {
-     "min": 70113,
-     "gzip": 24245
+     "min": 70819,
+     "gzip": 24580
     }
    },
    "render": {
     "tag": "tc-sunburst-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 25.5,
-    "first": 2.3,
-    "update": 0.8,
+    "cold": 19.1,
+    "first": 0.8,
+    "update": 0.3,
     "updateKind": "one item of data replaced",
     "nodes": 72,
     "scale": {
@@ -54167,13 +54172,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2.4,
+       "first": 1.5,
        "update": 0.4,
        "nodes": 72
       },
       {
        "items": 1000,
-       "first": 1.4,
+       "first": 1.7,
        "update": 0.5,
        "nodes": 72
       }
@@ -55988,12 +55993,12 @@
    }
   },
   "thinking-state": {
-   "measuredAt": "2026-11-11",
-   "hash": "427aff7bb003fe9c",
+   "measuredAt": "2026-11-21",
+   "hash": "f315c71174189e43",
    "bundle": {
     "own": {
-     "min": 34997,
-     "gzip": 8668
+     "min": 35602,
+     "gzip": 8920
     },
     "shared": [
      {
@@ -56038,21 +56043,21 @@
      }
     ],
     "withoutLit": {
-     "min": 42710,
-     "gzip": 10971
+     "min": 43315,
+     "gzip": 11237
     },
     "withLit": {
-     "min": 64272,
-     "gzip": 18037
+     "min": 64877,
+     "gzip": 18344
     }
    },
    "render": {
     "tag": "tc-thinking-state",
     "source": "demo",
     "runs": 7,
-    "cold": 16.6,
-    "first": 1,
-    "update": 0.4,
+    "cold": 18.6,
+    "first": 0.7,
+    "update": 0.3,
     "updateKind": "one item of steps replaced",
     "nodes": 10,
     "scale": {
@@ -56061,14 +56066,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.1,
-       "update": 0.1,
+       "first": 0.5,
+       "update": 0,
        "nodes": 10
       },
       {
        "items": 1000,
-       "first": 1.9,
-       "update": 0.2,
+       "first": 1.1,
+       "update": 0.1,
        "nodes": 10
       }
      ]
@@ -57748,12 +57753,12 @@
    }
   },
   "treemap": {
-   "measuredAt": "2026-11-11",
-   "hash": "47c4bce8ac693838",
+   "measuredAt": "2026-11-21",
+   "hash": "9b848444adafc849",
    "bundle": {
     "own": {
      "min": 7774,
-     "gzip": 3730
+     "gzip": 3757
     },
     "shared": [
      {
@@ -57764,7 +57769,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18888
+      "min": 19594
      },
      {
       "name": "internal/chart/motion",
@@ -57853,21 +57858,21 @@
      }
     ],
     "withoutLit": {
-     "min": 48602,
-     "gzip": 17267
+     "min": 49308,
+     "gzip": 17551
     },
     "withLit": {
-     "min": 68516,
-     "gzip": 23586
+     "min": 69222,
+     "gzip": 23955
     }
    },
    "render": {
     "tag": "tc-treemap",
     "source": "demo",
     "runs": 7,
-    "cold": 23,
-    "first": 1.8,
-    "update": 0.6,
+    "cold": 9.1,
+    "first": 0.8,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 47,
     "scale": {
@@ -57876,14 +57881,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.2,
+       "first": 0.8,
+       "update": 0,
        "nodes": 47
       },
       {
        "items": 1000,
-       "first": 2.9,
-       "update": 0.5,
+       "first": 0.9,
+       "update": 0.3,
        "nodes": 47
       }
      ]
@@ -58696,12 +58701,12 @@
    }
   },
   "venn-diagram": {
-   "measuredAt": "2026-11-11",
-   "hash": "c82197848fce48c3",
+   "measuredAt": "2026-11-21",
+   "hash": "62c3a0fee351a1e3",
    "bundle": {
     "own": {
      "min": 11912,
-     "gzip": 5449
+     "gzip": 5487
     },
     "shared": [
      {
@@ -58712,7 +58717,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18876
+      "min": 19582
      },
      {
       "name": "internal/chart/motion",
@@ -58786,21 +58791,21 @@
      }
     ],
     "withoutLit": {
-     "min": 49220,
-     "gzip": 17352
+     "min": 49926,
+     "gzip": 17653
     },
     "withLit": {
-     "min": 69129,
-     "gzip": 23665
+     "min": 69835,
+     "gzip": 24044
     }
    },
    "render": {
     "tag": "tc-venn-diagram",
     "source": "demo",
     "runs": 7,
-    "cold": 26.3,
-    "first": 1.7,
-    "update": 0.9,
+    "cold": 11.7,
+    "first": 1.2,
+    "update": 0.7,
     "updateKind": "one item of data replaced",
     "nodes": 43,
     "scale": {
@@ -58809,14 +58814,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.1,
-       "update": 1,
+       "first": 1.9,
+       "update": 0.8,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 3.2,
-       "update": 1,
+       "first": 2.1,
+       "update": 1.2,
        "nodes": 204
       }
      ]
@@ -59241,12 +59246,12 @@
    }
   },
   "waffle-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "23bf699c81ece249",
+   "measuredAt": "2026-11-21",
+   "hash": "606ed526a3f98a3b",
    "bundle": {
     "own": {
      "min": 9862,
-     "gzip": 4397
+     "gzip": 4418
     },
     "shared": [
      {
@@ -59257,7 +59262,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18835
+      "min": 19541
      },
      {
       "name": "internal/chart/motion",
@@ -59341,21 +59346,21 @@
      }
     ],
     "withoutLit": {
-     "min": 48171,
-     "gzip": 16753
+     "min": 48877,
+     "gzip": 17017
     },
     "withLit": {
-     "min": 68708,
-     "gzip": 23259
+     "min": 69414,
+     "gzip": 23610
     }
    },
    "render": {
     "tag": "tc-waffle-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19,
-    "first": 0.8,
-    "update": 2.1,
+    "cold": 11.7,
+    "first": 0.7,
+    "update": 1.6,
     "updateKind": "one item of data replaced",
     "nodes": 44,
     "scale": {
@@ -59364,14 +59369,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.7,
-       "update": 0.6,
+       "first": 2.7,
+       "update": 0.4,
        "nodes": 406
       },
       {
        "items": 1000,
-       "first": 12.9,
-       "update": 2.2,
+       "first": 13.8,
+       "update": 2.3,
        "nodes": 2206
       }
      ]
@@ -59507,12 +59512,12 @@
    }
   },
   "waterfall-chart": {
-   "measuredAt": "2026-11-11",
-   "hash": "a93830422aeb4e0e",
+   "measuredAt": "2026-11-21",
+   "hash": "712652bce4fab5bc",
    "bundle": {
     "own": {
      "min": 9371,
-     "gzip": 4304
+     "gzip": 4322
     },
     "shared": [
      {
@@ -59523,7 +59528,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 18835
+      "min": 19541
      },
      {
       "name": "internal/chart/motion",
@@ -59612,21 +59617,21 @@
      }
     ],
     "withoutLit": {
-     "min": 50278,
-     "gzip": 17837
+     "min": 50984,
+     "gzip": 18128
     },
     "withLit": {
-     "min": 70172,
-     "gzip": 24147
+     "min": 70878,
+     "gzip": 24511
     }
    },
    "render": {
     "tag": "tc-waterfall-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19.7,
-    "first": 1.2,
-    "update": 0.4,
+    "cold": 10.2,
+    "first": 0.7,
+    "update": 0.2,
     "updateKind": "one item of data replaced",
     "nodes": 51,
     "scale": {
@@ -59635,14 +59640,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.7,
-       "update": 0.4,
+       "first": 1.6,
+       "update": 0.2,
        "nodes": 212
       },
       {
        "items": 1000,
-       "first": 4.9,
-       "update": 1.3,
+       "first": 3.7,
+       "update": 1,
        "nodes": 212
       }
      ]

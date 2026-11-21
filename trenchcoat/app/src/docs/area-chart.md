@@ -21,6 +21,15 @@ With `brush="select"`, dragging across the plot (or Shift+arrows and Enter) pick
 with its highest and lowest points, firing `tc-brush`; `brush="zoom"` narrows the chart to the range, with a Show
 all button to undo it.
 
+`compare` names last period's value on each row (`.compare=${"prev"}`): the emphasised series' last period is drawn as
+a quiet dashed line behind it, a small legend names This period and Last period (`current-label`, `compare-label`),
+and the tooltip reads this period's value with its change – "410 · +17.1%" – above last period's. Use it for "this
+week against last week" on a dashboard card.
+
+`sync` gives several charts one pointer: charts with the same name – a Line Chart of spend, a Bar Chart of requests –
+show the same day at once, each with its own tooltip, matched by x. A chart a person is moving through with the
+keyboard keeps its own place. It works on every chart.
+
 ## When to use
 
 - How a total grows and what it's made of, over time.

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type * as UI from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
-/* A research institute's sequencing core: samples processed by lab this week and last (“Show last week” glides the
-   bars to the other week), and the same weeks split by instrument, stacked. */
+/* A research institute's sequencing core: samples processed by lab this week, last week marked on each bar (“Show
+   last week” glides the bars to the other week); the same weeks split by instrument, stacked; and this week day by day
+   with today still counting, beside the median turnaround – point at a day in one and the other follows. */
 
 const LABS = ["Genomics", "Imaging", "Proteomics", "Field ecology", "Neuro", "Climate"];
 const WEEKS = [
@@ -28,15 +29,31 @@ const RUNS = [
   { day: "Fri", instrument: "PacBio", runs: 2 },
 ];
 
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const PER_DAY = [118, 142, 131, 156];
+const TURNAROUND = [31, 28, 34, 26, 29];
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { BarChart } = ui;
   const [w, setW] = useState(0);
-  const data = LABS.map((x, i) => ({ x, y: WEEKS[w][i] }));
+  const data = LABS.map((x, i) => ({ x, y: WEEKS[w][i], prev: WEEKS[1 - w][i] }));
+  // Today's count climbs while the page is open, as samples come off the line
+  const [today, setToday] = useState(64);
+  useEffect(() => {
+    const t = setInterval(() => setToday((n) => (n >= 150 ? 64 : n + 3 + Math.round(Math.random() * 4))), 1600);
+    return () => clearInterval(t);
+  }, []);
+  const { LineChart } = ui;
+  const perDay = DAYS.map((x, k) => ({ x, y: k < 4 ? PER_DAY[k] : today }));
   return (
     <div style={{ width: "100%", maxWidth: 980, display: "grid", gap: 8 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 12 }}>
-        <BarChart title="Samples processed" description={w === 0 ? "This week, by lab" : "Last week, by lab"} data={data} />
+        <BarChart title="Samples processed" description={w === 0 ? "This week by lab, against last week" : "Last week by lab, against this week"} data={data} compare="prev" compareLabel={w === 0 ? "Last week" : "This week"} />
         <BarChart title="Sequencing runs" description="By day and instrument" data={RUNS} x="day" y="runs" series="instrument" layout="stacked" />
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 12 }}>
+        <BarChart title="Samples by day" description="This week – today is still counting" data={perDay} live sync="core-week" highlight="none" />
+        <LineChart title="Median turnaround" description="Hours from receipt to result" unit=" h" data={DAYS.map((x, k) => ({ x, y: TURNAROUND[k] }))} sync="core-week" xType="band" curve="linear" />
       </div>
       <div style={{ ...caption, textAlign: "center" }}>
         Point at a bar, or Tab in and use the arrows.{" "}

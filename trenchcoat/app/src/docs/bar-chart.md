@@ -15,6 +15,18 @@ the value axis's range, so several charts side by side share one scale (Small Mu
 Values sit at the bars' ends, thinned when they'd overlap. The bars grow from the baseline when the chart scrolls into
 view and glide to new values when the data changes. Ported from ztd-charts (MIT).
 
+`compare` names last period's value on each row (one series). Where last period was higher, a dashed open box sits
+above the bar up to it, and the value is written above the box; where it was lower, a dashed line crosses the bar at
+its height. The tooltip reads the value with its change – "320 · +6.7%" – above last period's (`compare-label` renames
+it).
+
+`live` is for usage that's still counting: the last bar – today – breathes, and its value is read "so far"
+(`live-label`). Raise its value as the numbers come in and it grows into its new height. Use it on metering and
+billing pages; leave it off for a finished period.
+
+`sync` gives several charts one pointer: charts with the same name show the same category at once, each with its own
+tooltip, so a bar chart of requests and a line chart of spend can be read together.
+
 ## When to use
 
 - Comparing a value across a handful to a few dozen categories.

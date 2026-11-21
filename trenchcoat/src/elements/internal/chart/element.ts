@@ -25,8 +25,8 @@ import { dataSignature } from "./parse";
 import type { ChartEvent, Highlight, Row, TooltipData } from "./types";
 
 export type ChartView = "chart" | "table";
-/** How the active mark was reached; "linked" is another chart's echo (linkActive) */
-export type ActiveVia = "pointer" | "keyboard" | "touch" | "linked";
+/** How the active mark was reached; "linked" is another chart's echo (linkActive), "synced" a chart in the same `sync` group */
+export type ActiveVia = "pointer" | "keyboard" | "touch" | "linked" | "synced";
 
 /** Details of the events */
 export type ChartViewChange = { view: ChartView };
@@ -98,6 +98,9 @@ export const emphasisCategorical = (n: number, hi: ReadonlySet<number>) => {
 export const AXIS_FONT = 11;
 
 let uidCount = 0;
+/** Every connected chart, for `sync` groups */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const connectedCharts = new Set<TcChartElement<any, any>>();
 const MAX_TABLE_ROWS = 60;
 const fill = (s: string, vars: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k: string) => String(vars[k] ?? ""));
 
@@ -140,6 +143,8 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
   @property() accessor view: ChartView = "chart";
   /** The words it shows and says, merged over defaultChartLabels */
   @property({ attribute: false }) accessor labels: Partial<ChartLabels> = {};
+  /** A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) */
+  @property() accessor sync: string | undefined = undefined;
 
   /** @internal The measured plot width; null until measured */
   @state() accessor measured: number | null = null;
@@ -203,6 +208,7 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
     for (const [key, css] of chartSheets) adoptStyles(key, css, this.ownerDocument);
     this.dataset.chart = "";
     super.connectedCallback();
+    connectedCharts.add(this);
     document.addEventListener("pointerdown", this.onDocDown);
     if (typeof IntersectionObserver === "function") {
       this.io = new IntersectionObserver(
@@ -224,6 +230,7 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
+    connectedCharts.delete(this);
     document.removeEventListener("pointerdown", this.onDocDown);
     this.ro?.disconnect();
     this.ro = undefined;
@@ -303,6 +310,29 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
     this.active = i;
     this.via = i === null ? null : via;
     if (changedMark) this.emit<ChartMarkHover<T>>("tc-mark-hover", { event: i === null ? null : (this.model.events[i] ?? null) });
+    if (changedMark && this.sync && via !== "linked" && via !== "synced") {
+      const at = i === null ? null : this.syncPoint(i);
+      for (const peer of connectedCharts) if (peer !== this && peer.sync === this.sync) peer.followSync(at);
+    }
+  }
+  /** The x a mark stands for, which charts in a `sync` group match on: its key and its label */
+  protected syncPoint(i: number): { key: string; label: string } | null {
+    const e = this.model.events[i];
+    return e ? { key: e.key, label: e.label } : null;
+  }
+  /** The mark at another chart's x – by key, else by label – or -1 */
+  protected syncIndex(at: { key: string; label: string }) {
+    const n = this.model.events.length;
+    for (let j = 0; j < n; j++) if (this.syncPoint(j)?.key === at.key) return j;
+    for (let j = 0; j < n; j++) if (this.syncPoint(j)?.label === at.label) return j;
+    return -1;
+  }
+  /** Shows the mark at a chart in the same `sync` group's x (or none), with its tooltip. A mark this chart's own pointer or keyboard is on wins */
+  private followSync(at: { key: string; label: string } | null) {
+    if (this.via !== null && this.via !== "synced" && this.via !== "linked") return;
+    const i = at === null ? -1 : this.syncIndex(at);
+    this.active = i < 0 ? null : i;
+    this.via = i < 0 ? null : "synced";
   }
   /**
    * Shows the mark with this event key (or none) as active, as an echo of another chart – drawn, but with no tooltip,
