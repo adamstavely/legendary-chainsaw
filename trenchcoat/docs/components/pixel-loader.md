@@ -9,7 +9,7 @@
 A small working row – a 5 × 5 grid of dots lit in a wave, a snake, a twinkle or an orbit, a shimmering label and the time since the work started, settling into a check or a cross when it ends
 
 - **Element:** `<tc-pixel-loader>`
-- **Size:** 6.5 KB gzip · 18.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.8 KB gzip · 33.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -26,6 +26,10 @@ A small working row – a 5 × 5 grid of dots lit in a wave, a snake, a twinkle 
 The live example is in the gallery at `#/pixel-loader`, at 320 px, 480 px or full width, with “Show anatomy” to number its parts.
 
 ## Overview
+
+Superseded by [Thinking Loader](thinking-loader.md) with `mark="pixels"`, which does everything here and more (phases,
+a cross on error, the rays mark). `<tc-pixel-loader>` stays as that element with Pixel Loader's own look and the same
+properties, so existing pages keep working; use Thinking Loader for new ones.
 
 A small row that says some work is under way: a 5 × 5 grid of dots lit in a pattern, a label with a light sweeping
 over it, and how long the work has taken so far – 0.2s, 12s, 1m 4s. Four patterns give different kinds of work their
@@ -96,13 +100,12 @@ export function Export({ done, started }: { done: boolean; started: number }) {
 <script setup lang="ts">
 import "@adamstavely/trenchcoat/pixel-loader";
 import "@adamstavely/trenchcoat/tokens.css";
-import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";
 
-defineProps<{ labels: TcPixelLoader["labels"] }>();
+const onPhaseChange = (e: CustomEvent) => console.log(e.detail);
 </script>
 
 <template>
-  <tc-pixel-loader :labels="labels"></tc-pixel-loader>
+  <tc-pixel-loader @tc-phase-change="onPhaseChange"></tc-pixel-loader>
 </template>
 ```
 
@@ -111,17 +114,18 @@ defineProps<{ labels: TcPixelLoader["labels"] }>();
 ### Angular
 
 ```ts
-import { Component, input } from "@angular/core";
+import { Component } from "@angular/core";
 import { PixelLoader } from "@adamstavely/trenchcoat/angular/pixel-loader";
-import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";
 
 @Component({
   selector: "app-pixel-loader-example",
   imports: [PixelLoader],
-  template: `<tc-pixel-loader [labels]="labels()"></tc-pixel-loader>`,
+  template: `<tc-pixel-loader (tc-phase-change)="onPhaseChange($event)"></tc-pixel-loader>`,
 })
 export class PixelLoaderExample {
-  readonly labels = input.required<TcPixelLoader["labels"]>();
+  onPhaseChange(e: CustomEvent) {
+    console.log(e.detail);
+  }
 }
 ```
 
@@ -135,11 +139,16 @@ export class PixelLoaderExample {
   import "@adamstavely/trenchcoat/tokens.css";
   import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";
 
-  let { labels }: { labels: TcPixelLoader["labels"] } = $props();
   let el: TcPixelLoader;
+  // Event names with dashes are listened to on the element
+  $effect(() => {
+    const on = (e: Event) => console.log((e as CustomEvent).detail);
+    el.addEventListener("tc-phase-change", on);
+    return () => el.removeEventListener("tc-phase-change", on);
+  });
 </script>
 
-<tc-pixel-loader bind:this={el} {labels}></tc-pixel-loader>
+<tc-pixel-loader bind:this={el}></tc-pixel-loader>
 ```
 
 *Generated from the element's API and compiled in `examples/svelte` by `npm run check:snippets`. The Frameworks section below covers events, control, slots, server rendering and types.*
@@ -150,15 +159,13 @@ export class PixelLoaderExample {
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `label` | `label` | `string` | `"Working"` | What the work is, in a few words |
-| `pattern` | `pattern` | `PixelLoaderPattern` | `"wave"` | How the dots move: a diagonal "wave", a lit dot that "drive"s a snake path, a seeded "dots" twinkle, or an "orbit" round the edge |
-| `state` | `state` | `PixelLoaderState` | `"working"` | "working" animates and counts; "done" settles into a check and stops the clock; "error" into a cross |
-| `started` | `started` | `number \| undefined` | `undefined` | When the work started, in epoch ms; by default when the loader connected (or went back to working) |
-| `now` | `now` | `number \| undefined` | `undefined` | The current time, in epoch ms – given, the loader keeps no clock of its own and shows the time up to it |
-| `hideTime` | `hide-time` | `boolean` | `false` | Hides the elapsed time |
-| `size` | `size` | `"sm" \| "md"` | `"md"` | "md" is the default; "sm" fits inside a chat bubble or a row |
-| `labels` | – | `Partial<PixelLoaderLabels>` | `{}` | Rename the words for how it ended, over the defaults |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
+
+#### Events
+
+| Event | Detail | Cancelable | Description |
+| --- | --- | --- | --- |
+| `tc-phase-change` | – | Yes | The timer moved to another phase (detail: { phase: number }); cancelable – the phase stays if a listener calls preventDefault() |
 
 #### Component tokens
 
@@ -168,22 +175,12 @@ export class PixelLoaderExample {
 | --- | --- | --- |
 | `--tc-pixel-loader-dot` | `3px` | both |
 | `--tc-pixel-loader-gap` | `2px` | both |
-| `--tc-pixel-loader-cycle` | `1400ms` | both |
 | `--tc-pixel-loader-ink` | `var(--tc-accent)` | standard, clean |
 | `--tc-pixel-loader-shine` | `light-dark(rgba(255, 255, 255, 0.85), #ffffff)` | standard, clean |
 
-#### Design tokens it reads (31)
+#### Design tokens it reads (25)
 
-`--tc-accent`, `--tc-border-default`, `--tc-control-h-sm`, `--tc-duration-moderate`, `--tc-duration-shimmer`, `--tc-duration-slower`, `--tc-ease-standard`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-line-height-snug`, `--tc-pxl-phase`, `--tc-radius-full`, `--tc-radius-md`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-status-danger-solid`, `--tc-status-success-solid`, `--tc-surface-raised`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`
-
-#### Functions
-
-*Exported from the module next to the element.*
-
-| Function | Description |
-| --- | --- |
-| `defaultPixelLoaderLabels: PixelLoaderLabels` | The words used when the page gives none |
-| `formatElapsed(ms: number): void` | 0.2s under ten seconds, then whole seconds, then minutes and seconds |
+`--tc-accent`, `--tc-border-default`, `--tc-control-h-sm`, `--tc-duration-shimmer`, `--tc-duration-slower`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-line-height-snug`, `--tc-radius-full`, `--tc-radius-md`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-surface-raised`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`
 
 ## Frameworks
 
@@ -199,21 +196,19 @@ export class PixelLoaderExample {
 
 ### Data properties
 
-*Lists, objects and functions are properties, not attributes – bind them as properties:*
-
-| Property | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
-| --- | --- | --- | --- | --- | --- |
-| `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-pixel-loader :labels="…">` | `<tc-pixel-loader [labels]="…">` | `<tc-pixel-loader {labels}>` |
-
-*Also attributes: `label`, `pattern`, `state`, `started`, `now`, `hide-time`, `size` – see the API table.*
+*Everything it takes is a string, number or boolean, so attributes work too.*
 
 ### Events
 
-*No `tc-` events of its own: listen for the native ones (`click`, `focus`…) as usual.*
+| Event | Cancelable | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
+| --- | --- | --- | --- | --- | --- | --- |
+| `tc-phase-change` | Yes | `el.addEventListener("tc-phase-change", (e) => …)` | `ref.current.addEventListener("tc-phase-change", …)` | `@tc-phase-change="…"` | `(tc-phase-change)="…($event)"` | `el.addEventListener("tc-phase-change", …)` |
+
+*React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-Nothing to control: it keeps no value the user changes.
+`tc-phase-change` is cancelable: call `preventDefault()` to stop what the element would do next.
 
 ### Slots and children
 
@@ -231,8 +226,8 @@ No slots: everything it shows comes from its properties.
 
 - **HTML:** With TypeScript or `// @ts-check`, `document.querySelector("tc-pixel-loader")` returns a `TcPixelLoader` (the module adds the tag to `HTMLElementTagNameMap`). The class: `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
 - **React / Next.js:** The element class: `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
-- **Vue / Nuxt:** Add `import type {} from "@adamstavely/trenchcoat/vue";` to a `.d.ts` file: `vue-tsc` then checks the tag's props and `@tc-…` events in templates. A property's type: `TcPixelLoader["labels"]` with `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
-- **Angular:** The directive types the template: `[labels]` takes `TcPixelLoader["labels"]`, and `$event` is the event's `CustomEvent<…>`, so a misspelt input or a wrong type fails the build. For the element itself, `#ref` with `exportAs` gives the directive and its `element`. `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
+- **Vue / Nuxt:** Add `import type {} from "@adamstavely/trenchcoat/vue";` to a `.d.ts` file: `vue-tsc` then checks the tag's props and `@tc-…` events in templates. A property's type: `TcPixelLoader["look"]` with `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
+- **Angular:** The directive types the template: `[look]` takes `TcPixelLoader["look"]`, and `$event` is the event's `CustomEvent<…>`, so a misspelt input or a wrong type fails the build. For the element itself, `#ref` with `exportAs` gives the directive and its `element`. `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
 - **Svelte:** Add `import type {} from "@adamstavely/trenchcoat/svelte";` to a `.d.ts` file: `svelte-check` then knows the tag's props. Type `bind:this` with `import type { TcPixelLoader } from "@adamstavely/trenchcoat/pixel-loader";`
 
 ## Accessibility
@@ -269,13 +264,14 @@ hidden, so the time isn't read out every tenth of a second.
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Why |
 | --- | --- | --- | --- | --- | --- | --- |
-| light-dark() | 123 | 120 | 17.5 | 17.5 | itself, tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
+| light-dark() | 123 | 120 | 17.5 | 17.5 | itself, thinking-loader, tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
 | color-mix() | 111 | 113 | 16.2 | 16.2 | tokens.css | Tints and washes mixed from the tokens. |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/kit | Focus rings for keyboard users. |
-| inset | 87 | 66 | 14.1 | 14.1 | itself | – |
-| :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| inset | 87 | 66 | 14.1 | 14.1 | itself, thinking-loader | – |
+| :is() and :where() | 88 | 78 | 14 | 14 | itself, thinking-loader, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | thinking-loader | – |
 | IntersectionObserver | 51 (Edge 15) | 55 | 12.1 | 12.2 | internal/controllers | – |
-| CSS masks (with the -webkit- prefix) | Any (Edge 79) | 53 | 4 | 3.2 | itself | – |
+| CSS masks (with the -webkit- prefix) | Any (Edge 79) | 53 | 4 | 3.2 | itself, thinking-loader | – |
 
 ### Progressive
 
@@ -284,26 +280,28 @@ hidden, so the time isn't read out every tenth of a second.
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, internal/pixel-mark, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 11.6 KB | 4.3 KB |
-| Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
+| **This component alone** | 4.2 KB | 1.5 KB |
+| Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
+| `internal/pixel-mark` · Shared Trenchcoat code | 3.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **18.8 KB** | **6.5 KB** |
-| With Lit – the first component on a page | 38.4 KB | 12.8 KB |
+| [thinking-loader](thinking-loader.md) · Element it renders | 16.8 KB | – |
+| **Added to a page that already has Lit** | **33.7 KB** | **9.8 KB** |
+| With Lit – the first component on a page | 53.9 KB | 16.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -311,9 +309,9 @@ hidden, so the time isn't read out every tenth of a second.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.0 ms** | the gallery demo's data, 32 DOM nodes – to layout, median of 7 |
+| First render | **1.1 ms** | the gallery demo's data, 32 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | re-render with the same data |
-| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -321,11 +319,11 @@ hidden, so the time isn't read out every tenth of a second.
 
 - At rest with the demo's data: **9 timer callbacks/s** on screen, **9 timer callbacks/s** scrolled away, **9 timer callbacks/s** under reduced motion (measured).
 - No animation-frame loop.
-- Timers: `setInterval, cleared`.
-- 1 infinite CSS animation.
+- Timers: `setInterval, cleared` (thinking-loader).
+- 3 infinite CSS animations.
 - Stops or pauses off screen and under reduced motion.
-- Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `IntersectionObserver` (internal/controllers – OffScreenController).
-- Reads the clock: `Date.now()`.
+- Observers: `ResizeObserver` (thinking-loader), `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `IntersectionObserver` (internal/controllers – OffScreenController).
+- Reads the clock: `Date.now()` (thinking-loader).
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
 

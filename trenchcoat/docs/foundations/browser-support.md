@@ -28,7 +28,7 @@ features that set those versions, and the features it uses only where they exist
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | 521 | Needed |
 | Container size queries | 105 | 110 | 16 | 16 | 386 | Needed |
 | inset | 87 | 66 | 14.1 | 14.1 | 240 | Needed |
-| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 206 | Needed |
+| ResizeObserver | 64 | 69 | 13.1 | 13.4 | 207 | Needed |
 | inert | 102 | 112 | 15.5 | 15.5 | 177 | Needed |
 | IntersectionObserver | 51 | 55 | 12.1 | 12.2 | 177 | Needed |
 | :has() | 105 | 121 | 15.4 | 15.4 | 117 | Needed |

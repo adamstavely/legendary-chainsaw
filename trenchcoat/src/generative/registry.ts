@@ -297,7 +297,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-person-hovercard": { events: ["tc-person-lookup","tc-action","tc-open","tc-open-change"], load: () => import("../elements/person-hovercard"), schema: () => import("./schemas/tc-person-hovercard.json") },
   "tc-person-links": { events: ["tc-selected-change","tc-action"], load: () => import("../elements/person-links"), schema: () => import("./schemas/tc-person-links.json") },
   "tc-pie-chart": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/pie-chart"), schema: () => import("./schemas/tc-pie-chart.json") },
-  "tc-pixel-loader": { events: [], load: () => import("../elements/pixel-loader"), schema: () => import("./schemas/tc-pixel-loader.json") },
+  "tc-pixel-loader": { events: ["tc-phase-change"], load: () => import("../elements/pixel-loader"), schema: () => import("./schemas/tc-pixel-loader.json") },
   "tc-place-list": { events: ["tc-selected-change"], load: () => import("../elements/place-list"), schema: () => import("./schemas/tc-place-list.json") },
   "tc-plan-vs-actual": { events: [], load: () => import("../elements/plan-vs-actual"), schema: () => import("./schemas/tc-plan-vs-actual.json") },
   "tc-playbook-canvas": { events: ["tc-value-change","tc-selected-change","tc-dry-run","tc-dry-run-clear","tc-version-open"], load: () => import("../elements/playbook-canvas"), schema: () => import("./schemas/tc-playbook-canvas.json") },

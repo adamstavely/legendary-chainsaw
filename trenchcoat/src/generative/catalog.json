@@ -2771,8 +2771,10 @@
   {
     "tag": "tc-pixel-loader",
     "name": "PixelLoader",
-    "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends.",
-    "events": []
+    "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends. Superseded by tc-thinking-loader with mark=\"pixels\".",
+    "events": [
+      "tc-phase-change"
+    ]
   },
   {
     "tag": "tc-place-list",

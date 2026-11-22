@@ -53,6 +53,8 @@ export class TcPixelLoader extends TcThinkingLoader {
   constructor() {
     super();
     this.label = "Working";
+    // Says what it draws, for a page that reads `mark`
+    this.mark = "pixels";
   }
 
   /** Always the pixel grid */

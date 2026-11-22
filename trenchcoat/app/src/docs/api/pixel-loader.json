@@ -3,72 +3,8 @@
   {
    "tag": "tc-pixel-loader",
    "className": "TcPixelLoader",
-   "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends.",
+   "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends. Superseded by tc-thinking-loader with mark=\"pixels\".",
    "properties": [
-    {
-     "name": "label",
-     "attribute": "label",
-     "type": "string",
-     "default": "\"Working\"",
-     "description": "What the work is, in a few words",
-     "readonly": false
-    },
-    {
-     "name": "pattern",
-     "attribute": "pattern",
-     "type": "PixelLoaderPattern",
-     "default": "\"wave\"",
-     "description": "How the dots move: a diagonal \"wave\", a lit dot that \"drive\"s a snake path, a seeded \"dots\" twinkle, or an \"orbit\" round the edge",
-     "readonly": false
-    },
-    {
-     "name": "state",
-     "attribute": "state",
-     "type": "PixelLoaderState",
-     "default": "\"working\"",
-     "description": "\"working\" animates and counts; \"done\" settles into a check and stops the clock; \"error\" into a cross",
-     "readonly": false
-    },
-    {
-     "name": "started",
-     "attribute": "started",
-     "type": "number | undefined",
-     "default": "undefined",
-     "description": "When the work started, in epoch ms; by default when the loader connected (or went back to working)",
-     "readonly": false
-    },
-    {
-     "name": "now",
-     "attribute": "now",
-     "type": "number | undefined",
-     "default": "undefined",
-     "description": "The current time, in epoch ms – given, the loader keeps no clock of its own and shows the time up to it",
-     "readonly": false
-    },
-    {
-     "name": "hideTime",
-     "attribute": "hide-time",
-     "type": "boolean",
-     "default": "false",
-     "description": "Hides the elapsed time",
-     "readonly": false
-    },
-    {
-     "name": "size",
-     "attribute": "size",
-     "type": "\"sm\" | \"md\"",
-     "default": "\"md\"",
-     "description": "\"md\" is the default; \"sm\" fits inside a chat bubble or a row",
-     "readonly": false
-    },
-    {
-     "name": "labels",
-     "attribute": null,
-     "type": "Partial<PixelLoaderLabels>",
-     "default": "{}",
-     "description": "Rename the words for how it ended, over the defaults",
-     "readonly": false
-    },
     {
      "name": "look",
      "attribute": "look",
@@ -78,7 +14,14 @@
      "readonly": false
     }
    ],
-   "events": [],
+   "events": [
+    {
+     "name": "tc-phase-change",
+     "detail": "",
+     "description": "The timer moved to another phase (detail: { phase: number }); cancelable – the phase stays if a listener calls preventDefault()",
+     "cancelable": true
+    }
+   ],
    "slots": [],
    "methods": [],
    "ui": "pxl",
@@ -93,13 +36,6 @@
     {
      "name": "--tc-pixel-loader-gap",
      "value": "2px",
-     "looks": [
-      "both"
-     ]
-    },
-    {
-     "name": "--tc-pixel-loader-cycle",
-     "value": "1400ms",
      "looks": [
       "both"
      ]
@@ -125,10 +61,8 @@
     "--tc-accent",
     "--tc-border-default",
     "--tc-control-h-sm",
-    "--tc-duration-moderate",
     "--tc-duration-shimmer",
     "--tc-duration-slower",
-    "--tc-ease-standard",
     "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
@@ -136,10 +70,8 @@
     "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-line-height-snug",
-    "--tc-pxl-phase",
     "--tc-radius-full",
     "--tc-radius-md",
-    "--tc-radius-xs",
     "--tc-shadow-control",
     "--tc-shadow-raised",
     "--tc-space-1",
@@ -147,8 +79,6 @@
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
-    "--tc-status-danger-solid",
-    "--tc-status-success-solid",
     "--tc-surface-raised",
     "--tc-text-muted",
     "--tc-text-primary",
@@ -156,18 +86,7 @@
    ]
   }
  ],
- "functions": [
-  {
-   "name": "defaultPixelLoaderLabels",
-   "signature": "defaultPixelLoaderLabels: PixelLoaderLabels",
-   "description": "The words used when the page gives none"
-  },
-  {
-   "name": "formatElapsed",
-   "signature": "formatElapsed(ms: number): void",
-   "description": "0.2s under ten seconds, then whole seconds, then minutes and seconds"
-  }
- ],
+ "functions": [],
  "react": [
   {
    "component": "PixelLoader",
@@ -183,40 +102,14 @@
    "tag": "tc-pixel-loader",
    "className": "TcPixelLoader",
    "module": "@adamstavely/trenchcoat/pixel-loader",
-   "data": [
-    "labels"
-   ],
-   "attributes": [
+   "data": [],
+   "attributes": [],
+   "events": [
     {
-     "name": "label",
-     "attribute": "label"
-    },
-    {
-     "name": "pattern",
-     "attribute": "pattern"
-    },
-    {
-     "name": "state",
-     "attribute": "state"
-    },
-    {
-     "name": "started",
-     "attribute": "started"
-    },
-    {
-     "name": "now",
-     "attribute": "now"
-    },
-    {
-     "name": "hideTime",
-     "attribute": "hide-time"
-    },
-    {
-     "name": "size",
-     "attribute": "size"
+     "name": "tc-phase-change",
+     "cancelable": true
     }
    ],
-   "events": [],
    "controlled": [],
    "form": null,
    "slots": []
@@ -263,6 +156,7 @@
     "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
     "via": [
      "itself",
+     "thinking-loader",
      "tokens.css"
     ]
    },
@@ -313,7 +207,8 @@
     },
     "progressive": false,
     "via": [
-     "itself"
+     "itself",
+     "thinking-loader"
     ]
    },
    {
@@ -331,8 +226,25 @@
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
      "itself",
+     "thinking-loader",
      "internal/base",
      "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "thinking-loader"
     ]
    },
    {
@@ -365,7 +277,8 @@
     "progressive": false,
     "note": "with the -webkit- prefix",
     "via": [
-     "itself"
+     "itself",
+     "thinking-loader"
     ]
    },
    {
@@ -399,9 +312,9 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
-     "itself",
      "internal/card-head",
      "internal/kit",
+     "internal/pixel-mark",
      "tokens.css"
     ]
    }
@@ -409,34 +322,37 @@
  },
  "runtime": {
   "timers": [
-   "setInterval, cleared"
+   "setInterval, cleared (thinking-loader)"
   ],
   "frames": [],
-  "animations": 1,
+  "animations": 3,
   "observers": [
+   "ResizeObserver (thinking-loader)",
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "IntersectionObserver (internal/controllers › OffScreenController)"
   ],
   "clock": [
-   "Date.now()"
+   "Date.now() (thinking-loader)"
   ],
   "listeners": [],
   "pauses": {
    "offscreen": [
-    "itself",
+    "thinking-loader",
     "internal/controllers › OffScreenController"
    ],
    "hidden": [],
    "reducedMotion": [
     "CSS",
-    "CSS (internal/kit › kitCss)"
+    "CSS (thinking-loader)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/pixel-mark)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 19213,
-  "gzip": 6679
+  "min": 34527,
+  "gzip": 10030
  }
 }
