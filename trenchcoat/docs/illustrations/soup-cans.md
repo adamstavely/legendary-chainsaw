@@ -38,9 +38,9 @@ or inventory, a pile to work through. The short can in front wobbles a couple of
 
 ### When not to use
 
-- A search or filter with no matches – use [Nothing Found](nothing-found.md).
-- An inbox or queue with nothing left to do – use [All Done](all-done.md).
-- A brand-new workspace – use [First Use](first-use.md).
+- A search or filter with no matches – use [Page State](page-state.md) with `status="nothing-found"`.
+- An inbox or queue with nothing left to do – use [Tray Status](tray-status.md) with `status="all-done"`.
+- A brand-new workspace – use [Page State](page-state.md) with `status="first-use"`.
 
 ## Anatomy
 
@@ -314,10 +314,9 @@ When it stands for a state, say it in words beside it or as the caption: "Nothin
 
 ## Related
 
-- [All Done](all-done.md) – An empty tray with a check above it, with the words You're all caught up, for an inbox or queue with nothing waiting
-- [First Use](first-use.md) – An empty workspace with one highlighted spot to start from, with the words Nothing here yet, for a new team or project
-- [Nothing Found](nothing-found.md) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
-- [Awaiting Review](awaiting-review.md) – A document with an hourglass on it, with the words Awaiting review, for content held until someone approves it
+- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Doc Status](doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
 
 ## Changelog
 

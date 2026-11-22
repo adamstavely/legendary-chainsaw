@@ -8,19 +8,15 @@
  * it lets its illustration be the empty state.
  * Sits in the Trenchcoat App Shell.
  * Imports: App Shell (AppShell, Icon) from Trenchcoat screens; Awaiting Review, In Translation, In Quality Control,
- * In Coordination, Pending Release, Released and Data Table from `@adamstavely/trenchcoat/react`; icons from lucide-react 1.55.0.
+ * In Coordination, Pending Release, Released (as Doc Status) and Data Table from `@adamstavely/trenchcoat/react`; icons from lucide-react 1.55.0.
  */
 
-import { useCallback, useId, useRef, useState, type ComponentPropsWithoutRef, type ComponentType, type KeyboardEvent, type Ref } from "react";
+import { useCallback, useId, useRef, useState, type ComponentPropsWithoutRef, type KeyboardEvent, type Ref } from "react";
 import { ChevronRightIcon, ComponentIcon, GitBranchIcon, HouseIcon, ImageIcon, LayersIcon, PaletteIcon, RocketIcon, TagIcon } from "lucide-react";
 import {
-  AwaitingReview,
   DataTable,
-  InCoordination,
-  InQualityControl,
-  InTranslation,
-  PendingRelease,
-  Released,
+  DocStatus,
+  type DocStatusValue,
   type DataColumn,
   type DataRow,
   type TagTone,
@@ -50,13 +46,13 @@ const nav: ShellNavItem[] = [
 
 export type ReleaseStage = "Awaiting review" | "In translation" | "In quality control" | "In coordination" | "Pending release" | "Released";
 
-const STAGES: { id: ReleaseStage; Art: ComponentType<{ caption?: string }>; about: string }[] = [
-  { id: "Awaiting review", Art: AwaitingReview, about: "Sent in and waiting for a design system editor to approve it – usually within two working days." },
-  { id: "In translation", Art: InTranslation, about: "Approved, and being translated into French and German so every version goes out together." },
-  { id: "In quality control", Art: InQualityControl, about: "A second reviewer checks accessibility, tokens and the docs against the release checklist." },
-  { id: "In coordination", Art: InCoordination, about: "Waiting on the teams that use it to agree a date, when a change affects their pages." },
-  { id: "Pending release", Art: PendingRelease, about: "Ready, and scheduled for the next release – Thursday's 4.6 – where it can still be pulled." },
-  { id: "Released", Art: Released, about: "Out in Meridian 4.5 and live on the docs site, in all three languages." },
+const STAGES: { id: ReleaseStage; status: DocStatusValue; about: string }[] = [
+  { id: "Awaiting review", status: "awaiting-review", about: "Sent in and waiting for a design system editor to approve it – usually within two working days." },
+  { id: "In translation", status: "in-translation", about: "Approved, and being translated into French and German so every version goes out together." },
+  { id: "In quality control", status: "in-quality-control", about: "A second reviewer checks accessibility, tokens and the docs against the release checklist." },
+  { id: "In coordination", status: "in-coordination", about: "Waiting on the teams that use it to agree a date, when a change affects their pages." },
+  { id: "Pending release", status: "pending-release", about: "Ready, and scheduled for the next release – Thursday's 4.6 – where it can still be pulled." },
+  { id: "Released", status: "released", about: "Out in Meridian 4.5 and live on the docs site, in all three languages." },
 ];
 
 type Item = { id: string; name: string; kind: string; owner: string; version: string; updated: string; stage: ReleaseStage };
@@ -128,7 +124,6 @@ export function DesignSystemReleasesScreen({
     list.current?.querySelectorAll<HTMLElement>('[role="tab"]')[next]?.focus();
   };
 
-  const Art = current.Art;
   return (
     <AppShell {...rest} ref={ref} active="Releases" nav={nav} groups={groups} onNavigate={onNavigate} workspace={workspace} user={user}>
       <style href="ui-ds-releases" precedence="default">
@@ -178,7 +173,7 @@ export function DesignSystemReleasesScreen({
         >
           <div className="ui-dsr__intro">
             <div className="ui-dsr__art">
-              <Art caption="" />
+              <DocStatus status={current.status} caption="" />
             </div>
             <div className="ui-dsr__about">
               <h2 className="ui-dsr__h2">{current.id}</h2>

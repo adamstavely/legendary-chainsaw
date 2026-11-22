@@ -38,8 +38,8 @@ content to people your server allows.
 
 ### When not to use
 
-- A file that isn't safe to open – use [Malware Blocked](../illustrations/malware-blocked.md).
-- Someone without permission – use [No Access](../illustrations/no-access.md).
+- A file that isn't safe to open – use [Doc Status](../illustrations/doc-status.md) with `status="malware-blocked"`.
+- Someone without permission – use [Page State](../illustrations/page-state.md) with `status="no-access"`.
 - A picture on its own, on an overlay you build – use [Content Hidden](../illustrations/content-hidden.md).
 
 ## Anatomy
@@ -401,7 +401,7 @@ is shown or hidden. Give the content its own names and alt text.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -417,7 +417,7 @@ is shown or hidden. Give the content its own names and alt text.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | [content-hidden](../illustrations/content-hidden.md) · Element it renders | 4.5 KB | – |
 | **Added to a page that already has Lit** | **18.7 KB** | **6.6 KB** |
-| With Lit – the first component on a page | 38.2 KB | 12.9 KB |
+| With Lit – the first component on a page | 38.2 KB | 13.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -425,9 +425,9 @@ is shown or hidden. Give the content its own names and alt text.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.8 ms** | the gallery demo's data, 125 DOM nodes – to layout, median of 7 |
+| First render | **2.3 ms** | the gallery demo's data, 125 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -463,7 +463,7 @@ such as "Show photo", with `reveal-label`.
 
 ## Related
 
-- [Content Hidden](../illustrations/content-hidden.md) – A photo pixelated to a person's outline with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
-- [Malware Blocked](../illustrations/malware-blocked.md) – A file behind a warning shield with a bug on it, with the words Potential malware, for a file that can't be shown
-- [No Access](../illustrations/no-access.md) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
+- [Content Hidden](../illustrations/content-hidden.md) – A picture pixelated into an obscured grid with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
+- [Doc Status](../illustrations/doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
+- [Page State](../illustrations/page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
 - [Dialog](dialog.md) – A native modal with interactive content and restored focus

@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: first-use, all-done
+related: page-state, tray-status
 ---
 
 ## Overview
@@ -20,7 +20,7 @@ that explains how the product is built.
 
 ## When not to use
 
-- An error or an empty list – use a state illustration such as `something-wrong` or `all-done`.
+- An error or an empty list – use a state illustration such as `page-state` or `tray-status`.
 - As proof of conformance: it says what the product aims for, not what it meets.
 
 ## Anatomy

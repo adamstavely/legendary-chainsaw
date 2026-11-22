@@ -45,7 +45,7 @@ The same parts carry from stage to stage, so a talk, a design-system guide or on
 ### When not to use
 
 - Showing a real component: put the component itself on the page.
-- An empty or error state – use a state illustration such as [First Use](first-use.md) or [Something Wrong](something-wrong.md).
+- An empty or error state – use a state illustration such as [Page State](page-state.md).
 
 ## Anatomy
 
@@ -348,7 +348,7 @@ the room between the logo and the search form. `defaultAtomicDesignLabels` has t
 ## Related
 
 - [Accessibility Principles](accessibility-principles.md) – Visual, hearing, motor and cognitive needs on pastel tiles, with arrows up from the four principles that serve them – perceivable, operable, understandable and robust – for an accessibility statement or design guide
-- [First Use](first-use.md) – An empty workspace with one highlighted spot to start from, with the words Nothing here yet, for a new team or project
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
 
 ## Changelog
 

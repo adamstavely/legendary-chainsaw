@@ -84,6 +84,17 @@ for (const slug of slugs) {
   // shared chart parts there
   let code = [`src/elements/${slug}.ts`, `src/elements/react/${slug}.ts`].filter(existsSync).map((f) => readFileSync(f, "utf8")).join("\n");
   if (code.includes("./internal/chart/")) code += readdirSync("src/elements/internal/chart").map((f) => readFileSync(join("src/elements/internal/chart", f), "utf8")).join("\n");
+  // Parts named from the element's own prefix – class=${`${p}-tray`}, in the element or a shared internal/ helper it
+  // imports (internal/doc-stage.ts draws every document status's page, badge and caption that way)
+  const ui = code.match(/static (?:override )?ui = "([a-z0-9-]+)"/)?.[1];
+  if (ui) {
+    let built = code;
+    for (const m of code.matchAll(/from "\.\/internal\/([a-z0-9-]+)"/g)) {
+      const helper = `src/elements/internal/${m[1]}.ts`;
+      if (existsSync(helper)) built += readFileSync(helper, "utf8");
+    }
+    for (const m of built.matchAll(/class=\$\{`\$\{[a-zA-Z]+\}([-_]{1,2}[a-z0-9-]+)/g)) code += ` ui-${ui}${m[1]}`;
+  }
   for (const m of source.matchAll(/^\d+\.\s+\*\*.+?\*\*\s+`([^`]+)`/gm))
     for (const cls of m[1].match(/\.([\w-]+)/g) ?? []) if (!cls.startsWith(".tc-head") && !code.includes(cls.slice(1))) add(slug, `anatomy selector ${m[1]} names ${cls}, which the element never renders`);
 

@@ -38,9 +38,9 @@ it follows reduced motion and rests when nothing's happening.
 
 ### When not to use
 
-- Beside a serious decision or an error – use [Agent Face](../components/agent-face.md) alone, or [Something Wrong](something-wrong.md).
-- Search with no results – use [Nothing Found](nothing-found.md).
-- Someone without permission – use [No Access](no-access.md).
+- Beside a serious decision or an error – use [Agent Face](../components/agent-face.md) alone, or [Page State](page-state.md) with `status="something-wrong"`.
+- Search with no results – use [Page State](page-state.md) with `status="nothing-found"`.
+- Someone without permission – use [Page State](page-state.md) with `status="no-access"`.
 
 ## Anatomy
 
@@ -322,9 +322,7 @@ Pair it with a short heading ("You're all caught up"). Use `name` to rename the 
 ## Related
 
 - [Agent Face](../components/agent-face.md) – Donovan's animated face, which shows what the agent is doing – nine states that blend on springs, blinks and glances, a nod or a hop, sharp from 16 to 256 px and resting when it isn't busy
-- [Nothing Found](nothing-found.md) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
-- [Something Wrong](something-wrong.md) – Two connected tiles with the line between them broken, for a page or request that failed; the gap pulses a few times and rests
-- [No Access](no-access.md) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
 
 ## Changelog
 

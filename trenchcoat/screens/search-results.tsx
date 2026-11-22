@@ -10,7 +10,7 @@
  */
 
 import { useMemo, useState, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
-import { AiSearch, FacetSidebar, NothingFound, ResultsList, type Facet, type FacetValues, type SearchResult } from "@adamstavely/trenchcoat/react";
+import { AiSearch, FacetSidebar, PageState, ResultsList, type Facet, type FacetValues, type SearchResult } from "@adamstavely/trenchcoat/react";
 import { AppShell, type AppShellProps } from "@/components/ui/app-shell";
 
 const RESULTS: SearchResult[] = [
@@ -63,7 +63,7 @@ export function SearchResultsScreen({ defaultQuery = "trial", onNavigate, worksp
           ) : (
             <div style={{ textAlign: "center" }}>
               <div style={{ maxWidth: 280, margin: "0 auto" }}>
-                <NothingFound />
+                <PageState status="nothing-found" />
               </div>
               <p style={{ margin: 0, color: "var(--tc-text-secondary, light-dark(#404040, #c8c8cc))" }}>No results. Try different words, or clear the filters.</p>
             </div>
