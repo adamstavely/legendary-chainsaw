@@ -298,9 +298,9 @@ The host is `role="img"`, named by `label` or else by its words, so what's happe
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 8 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 8.1 ms | default properties; includes adding its CSS to the document |
+| First render | **0.6 ms** | the gallery demo's data, 8 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | re-render with the same data |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

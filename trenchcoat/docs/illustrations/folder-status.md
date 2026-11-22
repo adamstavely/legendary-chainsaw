@@ -284,7 +284,7 @@ The host is `role="img"`, named by `label` or else by its words, so where the fo
 | --- | --- | --- |
 | First render | **0.5 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 121 ms | default properties; includes adding its CSS to the document |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

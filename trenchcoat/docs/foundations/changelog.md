@@ -2,6 +2,57 @@
 
 # Changelog
 
+## Unreleased – Doc Status: every document state in one illustration
+
+- **[Doc Status](../illustrations/doc-status.md):** one illustration for where a document stands; its `status` picks the badge's drawing, colours, short motion and words. 44 statuses:
+  - workflow: draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, added to Readbook (a book tile);
+  - work: queued, processing, in progress, success, partly processed (finished with some errors), failed, uploading, downloading, working offline (changes are saved on this device and sync when you're back online), locked, sync conflict;
+  - files: malware scan, malware blocked, preview unavailable, converting to text (the page read under a scan bracket);
+  - access and signing: restricted, on legal hold, redacted (black bars over the page's text), password protected (a password field over the page), encrypted, shared, awaiting signature, signed, comments waiting;
+  - keeping: archived, in trash, expired, duplicate, update available;
+  - metadata cleansing: required, in progress, failed, done.
+
+  Words follow the status unless `caption` sets your own. The colours are a small family – green, red, blue, amber, slate, purple, teal and a few more – shared by statuses that mean the same. The shared drawing lives in `internal/doc-stage.ts`.
+- **Removed:** the eleven separate document illustrations it replaces. Use Doc Status with their status:
+
+| Removed tag | Use | Removed React component | Use |
+|---|---|---|---|
+| `<tc-released>` | `<tc-doc-status status="released">` | `<Released />` | `<DocStatus status="released" />` |
+| `<tc-pending-release>` | `<tc-doc-status status="pending-release">` | `<PendingRelease />` | `<DocStatus status="pending-release" />` |
+| `<tc-awaiting-review>` | `<tc-doc-status status="awaiting-review">` | `<AwaitingReview />` | `<DocStatus status="awaiting-review" />` |
+| `<tc-in-translation>` | `<tc-doc-status status="in-translation">` | `<InTranslation />` | `<DocStatus status="in-translation" />` |
+| `<tc-in-quality-control>` | `<tc-doc-status status="in-quality-control">` | `<InQualityControl />` | `<DocStatus status="in-quality-control" />` |
+| `<tc-in-coordination>` | `<tc-doc-status status="in-coordination">` | `<InCoordination />` | `<DocStatus status="in-coordination" />` |
+| `<tc-processing>` | `<tc-doc-status status="processing">` | `<Processing />` | `<DocStatus status="processing" />` |
+| `<tc-uploading>` | `<tc-doc-status status="uploading">` | `<Uploading />` | `<DocStatus status="uploading" />` |
+| `<tc-downloading>` | `<tc-doc-status status="downloading">` | `<Downloading />` | `<DocStatus status="downloading" />` |
+| `<tc-malware-blocked>` | `<tc-doc-status status="malware-blocked">` | `<MalwareBlocked />` | `<DocStatus status="malware-blocked" />` |
+| `<tc-preview-unavailable>` | `<tc-doc-status status="preview-unavailable">` | `<PreviewUnavailable />` | `<DocStatus status="preview-unavailable" />` |
+
+[Scan Status](../components/scan-status.md) and the Design System Releases screen now use Doc Status.
+
+- **[Tray Status](../illustrations/tray-status.md):** one tray illustration with a `status` – `all-done`, `empty`, `no-matches`, `drop-to-upload`, `new-items` (with `count`, shown on the badge and in the words, "99+" past 99), `importing`, `import-complete`, `import-errors`, `export-ready`, `sync-complete`, `paused`, `upload-failed` or `storage-full` – each with its own badge, colour, finite motion and words. It replaces All Done and Upload Failed, which are removed; their scenes are unchanged:
+
+  | Old | New | React |
+  |---|---|---|
+  | `<tc-all-done>` | `<tc-tray-status status="all-done">` | `<TrayStatus status="all-done" />` |
+  | `<tc-upload-failed>` | `<tc-tray-status status="upload-failed">` | `<TrayStatus status="upload-failed" />` |
+
+- **[Folder Status](../illustrations/folder-status.md):** a folder illustration with a `status` – `empty`, `shared`, `syncing`, `archived`, `locked` or `restricted` (a classification, unlike `locked`) – each with its own badge, colour, finite motion and words.
+- **[Page State](../illustrations/page-state.md):** one illustration for full-page and empty states, with a `status`. It holds the scenes of seven illustrations, unchanged and now removed, plus seven new ones: `not-found`, `maintenance`, `session-expired`, `access-requested`, `coming-soon`, `region-unavailable` and `ai-unavailable` (the assistant's mark with a pause badge, "AI is unavailable", for when the model or an AI feature is down or turned off). Words follow the status unless `caption` sets its own; `nothing-found`, `something-wrong` and `no-access` stay wordless and decorative unless given `caption` or `label`, as before.
+
+  | Old | New | React |
+  |---|---|---|
+  | `<tc-nothing-found>` | `<tc-page-state status="nothing-found">` | `<PageState status="nothing-found" />` |
+  | `<tc-offline>` | `<tc-page-state status="offline">` | `<PageState status="offline" />` |
+  | `<tc-something-wrong>` | `<tc-page-state status="something-wrong">` | `<PageState status="something-wrong" />` |
+  | `<tc-link-expired>` | `<tc-page-state status="link-expired">` | `<PageState status="link-expired" />` |
+  | `<tc-no-access>` | `<tc-page-state status="no-access">` | `<PageState status="no-access" />` |
+  | `<tc-limit-reached>` | `<tc-page-state status="limit-reached">` | `<PageState status="limit-reached" />` |
+  | `<tc-first-use>` | `<tc-page-state status="first-use">` | `<PageState status="first-use" />` |
+
+- **[Content Hidden](../illustrations/content-hidden.md):** the picture is now an obscured grid of squares with no shape in it, instead of a person's outline.
+
 ## Unreleased – Fewer copies: one loader, shared internals
 
 - **[Thinking Loader](../components/thinking-loader.md):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **Pixel Loader is removed** – use Thinking Loader with `mark="pixels"`:

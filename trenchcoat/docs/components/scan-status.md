@@ -314,9 +314,9 @@ file, and progress is a `progressbar`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.3 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
+| First render | **0.5 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 8.0 ms | default properties; includes adding its CSS to the document |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
