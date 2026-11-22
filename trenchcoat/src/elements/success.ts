@@ -34,9 +34,8 @@ export class TcSuccess extends DocStage {
 `,
   });
 
-  constructor() {
-    super();
-    this.caption = "Success";
+  protected override get defaultCaption() {
+    return "Success";
   }
 
   protected override motif() {

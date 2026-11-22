@@ -39,7 +39,7 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Logo Cluster** (`logo-cluster.tsx`) – Your mark on a white disc in the middle – company logos bounce out of it and settle around it; the ring turns once
 - **Malware Blocked** (`malware-blocked.tsx`) – A file behind a warning shield with a bug on it, with the words Potential malware, for a file that can't be shown
 - **Malware Scan In Progress** (`malware-scan-in-progress.tsx`) – A document with a shield on it and a scan line passing down the page a few times, with the words Scanning for malware, for a file being checked before it can be opened
-- **Metadata Cleansing Required** (`metadata-cleansing-required.tsx`) – A document with a tag on it and a few specks that twinkle beside it, with the words Metadata cleansing required, for records whose metadata needs tidying before they can move on
+- **Metadata Cleansing** (`metadata-cleansing.tsx`) – A document with a tag on its badge and a small mark for where cleansing stands – required (amber, specks twinkle), in progress (blue, dots pulse), failed (red, a cross) or done (green, a check) – with words that follow the status, for records whose metadata is being tidied
 - **Model Wheel** (`model-wheel.tsx`) – AI model names on a turning drum – the rows bend away at the edges and each model lands on a soft gray fill; turns once round the drum and rests (`turns`)
 - **No Access** (`no-access.tsx`) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
 - **Nothing Found** (`nothing-found.tsx`) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests

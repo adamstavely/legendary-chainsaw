@@ -87,13 +87,23 @@ ${o.css}
 export abstract class DocStage extends TcElement {
   static override looks = false;
 
-  /** The words under the drawing; "" leaves them out */
-  @property() accessor caption = "";
+  /** The words under the drawing; unset, the stage's own words; "" leaves them out */
+  @property() accessor caption: string | undefined = undefined;
   /** Accessible description, when it should say more than `caption` */
   @property() accessor label = "";
 
   /** @internal */
   private readonly screen = new OnScreenController(this);
+
+  /** The stage's own words, used when `caption` isn't set */
+  protected get defaultCaption(): string {
+    return "";
+  }
+
+  /** The words shown and used as the name: `caption`, or the stage's own */
+  protected get words(): string {
+    return this.caption ?? this.defaultCaption;
+  }
 
   /** "page" – a document with its corner folded – or "book" */
   protected tile: "page" | "book" = "page";
@@ -109,7 +119,7 @@ export abstract class DocStage extends TcElement {
   }
 
   protected override updated() {
-    const name = this.label || this.caption;
+    const name = this.label || this.words;
     if (name) {
       this.setAttribute("role", "img");
       this.setAttribute("aria-label", name);
@@ -149,6 +159,6 @@ export abstract class DocStage extends TcElement {
         ${this.motif()}
       </g>
       ${this.beside()}`}</svg>
-      ${this.caption ? html`<p class=${`${c}-caption`}>${this.caption}</p>` : nothing}`;
+      ${this.words ? html`<p class=${`${c}-caption`}>${this.words}</p>` : nothing}`;
   }
 }

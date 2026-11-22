@@ -295,7 +295,7 @@ export * from "./react/menu-morph";
 export * from "./react/message-actions";
 export * from "./react/message-drafts";
 export * from "./react/message-status";
-export * from "./react/metadata-cleansing-required";
+export * from "./react/metadata-cleansing";
 export * from "./react/meter-row";
 export * from "./react/metrics-dashboard";
 export * from "./react/mission-control";

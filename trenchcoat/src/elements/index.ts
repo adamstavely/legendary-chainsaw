@@ -284,7 +284,7 @@ export * from "./menu-morph";
 export * from "./message-actions";
 export * from "./message-drafts";
 export * from "./message-status";
-export * from "./metadata-cleansing-required";
+export * from "./metadata-cleansing";
 export * from "./meter-row";
 export * from "./metrics-dashboard";
 export * from "./mission-control";

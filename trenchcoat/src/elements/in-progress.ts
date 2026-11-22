@@ -32,9 +32,8 @@ export class TcInProgress extends DocStage {
 `,
   });
 
-  constructor() {
-    super();
-    this.caption = "In progress";
+  protected override get defaultCaption() {
+    return "In progress";
   }
 
   protected override motif() {

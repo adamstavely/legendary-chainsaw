@@ -34,9 +34,8 @@ export class TcAddedToReadbook extends DocStage {
 
   protected override tile = "book" as const;
 
-  constructor() {
-    super();
-    this.caption = "Added to Readbook";
+  protected override get defaultCaption() {
+    return "Added to Readbook";
   }
 
   protected override motif() {

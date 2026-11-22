@@ -7,7 +7,7 @@ Six illustrations in the style of [Released](#/illustrations/released) – a sof
 - **[Success](#/illustrations/success):** a check that draws itself and a ring that pops out once.
 - **[Failed](#/illustrations/failed):** a cross that draws itself as the badge gives one small shake.
 - **[In Progress](#/illustrations/in-progress):** three dots that pulse in turn a few times.
-- **[Metadata Cleansing Required](#/illustrations/metadata-cleansing-required):** a tag with a few specks that twinkle beside it.
+- **[Metadata Cleansing](#/illustrations/metadata-cleansing):** one illustration for where a record's metadata cleansing stands – `status="required"` (amber, a tag with specks that twinkle), `"in-progress"` (blue, three small dots pulse on the tag's corner), `"failed"` (red, a cross, and one small shake) or `"success"` (green, a check). Its words follow the status – "Metadata cleansing required", "Cleansing metadata", "Metadata cleansing failed", "Metadata cleansed" – unless `caption` sets its own.
 - **[Malware Scan In Progress](#/illustrations/malware-scan-in-progress):** a shield with a scan line passing down the page – the in-progress partner of [Malware Blocked](#/illustrations/malware-blocked).
 - **[Added to Readbook](#/illustrations/added-to-readbook):** a book with a bookmark and a check, its words changeable for your own reading list.
 

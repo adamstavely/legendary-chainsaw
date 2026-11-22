@@ -34,9 +34,8 @@ export class TcFailed extends DocStage {
 `,
   });
 
-  constructor() {
-    super();
-    this.caption = "Failed";
+  protected override get defaultCaption() {
+    return "Failed";
   }
 
   protected override motif() {

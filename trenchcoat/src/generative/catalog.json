@@ -61,6 +61,12 @@
     ]
   },
   {
+    "tag": "tc-added-to-readbook",
+    "name": "AddedToReadbook",
+    "description": "A book with a bookmark and a check on it, for something that was saved to a reading list.",
+    "events": []
+  },
+  {
     "tag": "tc-agent-create",
     "name": "AgentCreate",
     "description": "Describe an agent and get a working draft to edit: name, instructions, tools, model, triggers and open questions.",
@@ -1676,6 +1682,12 @@
     ]
   },
   {
+    "tag": "tc-failed",
+    "name": "Failed",
+    "description": "A document with a cross on it, for something that didn't work – a job, an import or a check.",
+    "events": []
+  },
+  {
     "tag": "tc-failure-clusters",
     "name": "FailureClusters",
     "description": "Failing chats grouped by topic, biggest first – a size bar, count and share, trend in words and the criteria each",
@@ -2057,6 +2069,12 @@
     "events": []
   },
   {
+    "tag": "tc-in-progress",
+    "name": "InProgress",
+    "description": "A document with three dots on it, for work that has started and isn't finished yet.",
+    "events": []
+  },
+  {
     "tag": "tc-in-quality-control",
     "name": "InQualityControl",
     "description": "A document with a magnifying glass over a check on it, for content being checked before it moves on.",
@@ -2341,6 +2359,12 @@
     "events": []
   },
   {
+    "tag": "tc-malware-scan-in-progress",
+    "name": "MalwareScanInProgress",
+    "description": "A document with a shield on it and a scan line passing over the page, for a file that's being checked for malware before it can be opened.",
+    "events": []
+  },
+  {
     "tag": "tc-map-itinerary",
     "name": "MapItinerary",
     "description": "A trip planned day by day – the days as tabs, each day's stops in order with times and travel, and the stops on a",
@@ -2434,6 +2458,12 @@
       "tc-branch",
       "tc-edit"
     ]
+  },
+  {
+    "tag": "tc-metadata-cleansing-required",
+    "name": "MetadataCleansingRequired",
+    "description": "A document with a tag on it and a few specks beside it, for records whose metadata needs tidying before they can move on.",
+    "events": []
   },
   {
     "tag": "tc-meter-row",
@@ -4032,6 +4062,12 @@
       "tc-subscribe",
       "tc-export"
     ]
+  },
+  {
+    "tag": "tc-success",
+    "name": "Success",
+    "description": "A document with a check on it and a ring that pops out once, for something that finished without a problem.",
+    "events": []
   },
   {
     "tag": "tc-success-check",

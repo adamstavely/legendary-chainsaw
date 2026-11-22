@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 528
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 528
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 528
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 528
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 522
+   "elements": 528
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 522
+   "elements": 528
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 522
+   "elements": 528
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 521
+   "elements": 527
   },
   {
    "id": "container-size",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 240
+   "elements": 246
   },
   {
    "id": "resize-observer",
@@ -143,6 +143,20 @@
    "elements": 206
   },
   {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   },
+   "progressive": false,
+   "elements": 183
+  },
+  {
    "id": "inert",
    "name": "inert",
    "bcd": "api.HTMLElement.inert",
@@ -155,20 +169,6 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 177
-  },
-  {
-   "id": "intersection-observer",
-   "name": "IntersectionObserver",
-   "bcd": "api.IntersectionObserver",
-   "versions": {
-    "chrome": "51",
-    "edge": "15",
-    "firefox": "55",
-    "safari": "12.1",
-    "safari_ios": "12.2"
-   },
-   "progressive": false,
    "elements": 177
   },
   {
@@ -187,6 +187,20 @@
    "elements": 117
   },
   {
+   "id": "aspect-ratio",
+   "name": "aspect-ratio",
+   "bcd": "css.properties.aspect-ratio",
+   "versions": {
+    "chrome": "88",
+    "edge": "88",
+    "firefox": "89",
+    "safari": "15",
+    "safari_ios": "15"
+   },
+   "progressive": false,
+   "elements": 80
+  },
+  {
    "id": "individual-transforms",
    "name": "translate, scale and rotate properties",
    "bcd": "css.properties.translate",
@@ -199,20 +213,6 @@
    },
    "progressive": false,
    "elements": 79
-  },
-  {
-   "id": "aspect-ratio",
-   "name": "aspect-ratio",
-   "bcd": "css.properties.aspect-ratio",
-   "versions": {
-    "chrome": "88",
-    "edge": "88",
-    "firefox": "89",
-    "safari": "15",
-    "safari_ios": "15"
-   },
-   "progressive": false,
-   "elements": 74
   },
   {
    "id": "mask",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 522
+   "elements": 528
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 521
+   "elements": 527
   },
   {
    "id": "scrollbar-width",
