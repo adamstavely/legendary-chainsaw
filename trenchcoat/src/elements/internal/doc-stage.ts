@@ -4,8 +4,7 @@ import { TcElement } from "./base";
 import { OnScreenController } from "./controllers";
 
 /*
- * What the document-status illustrations share – Success, Failed, In Progress, Metadata Cleansing Required, Malware
- * Scan In Progress and Added to Readbook: a soft tile (a page with its corner folded, or a closed book), a few lines of
+ * What Doc Status draws for every status: a soft tile (a page with its corner folded, or a closed book), a few lines of
  * text on it, one pastel badge with a darker edge and ink, a soft glow beneath, and the words as real text under it.
  * Drawn on a 320 × 240 viewBox inside a 3 : 2 frame, the same as Released and its siblings, so they sit together.
  *
@@ -15,6 +14,13 @@ import { OnScreenController } from "./controllers";
  *   · the motion is finite, holds still off screen or in a hidden tab (data-paused) and stays still with reduced motion
  *   · colours follow the page theme through light-dark()
  */
+
+/** The page's lines of text, [y, width] – a stage shows the first `lines` of them */
+const PAGE_LINES: [number, number][] = [
+  [48, 36],
+  [62, 52],
+  [76, 44],
+];
 
 /** A stage's colours: the badge, its edge, its ink and the glow beneath, each [light, dark] */
 export type DocStagePalette = {
@@ -29,10 +35,12 @@ export type DocStagePalette = {
  * its own prefix (`ui-<ui>-…`), and its own motion rules. `motion` names the classes that animate, so they pause off
  * screen and stay still with reduced motion.
  */
-export function docStageCss(o: { ui: string; name: string; palette: DocStagePalette; motion: string[]; css: string }) {
+export function docStageCss(o: { ui: string; name: string; palette: DocStagePalette; motion: string[]; css: string; beat?: string }) {
   const { ui, name, palette: p } = o;
   const v = (k: string) => `--tc-${name}-${k}`;
   const moving = [`.ui-${ui}-glow`, ...o.motion.map((c) => `.ui-${ui}-${c}`)].join(", ");
+  // The moving parts, then the glow
+  const still = [...o.motion.map((c) => `.ui-${ui}-${c}`), `.ui-${ui}-glow`].join(", ");
   return /* css */ `
 :where([data-tc-theme="system"]) { color-scheme: light dark; }
 :where([data-theme="light"], [data-tc-theme="light"]) { color-scheme: light; }
@@ -48,7 +56,7 @@ export function docStageCss(o: { ui: string; name: string; palette: DocStagePale
   ${v("ink")}: light-dark(${p.ink[0]}, ${p.ink[1]});
   ${v("glow")}: light-dark(${p.glow[0]}, ${p.glow[1]});
   ${v("soft")}: 12px;
-  ${v("beat")}: 3.2s;
+  ${v("beat")}: ${o.beat ?? "3.2s"};
   position: relative;
   display: block;
   width: 100%;
@@ -73,7 +81,7 @@ ${o.css}
 [data-ui="${ui}"][data-paused] :is(${moving}) { animation-play-state: paused; }
 
 @media (prefers-reduced-motion: reduce) {
-  ${moving} { animation: none; }
+  ${still} { animation: none; }
 }
 @media (forced-colors: active) {
   .ui-${ui}-art { forced-color-adjust: auto; }
@@ -106,15 +114,36 @@ export abstract class DocStage extends TcElement {
   }
 
   /** "page" – a document with its corner folded – or "book" */
-  protected tile: "page" | "book" = "page";
+  protected get tile(): "page" | "book" {
+    return "page";
+  }
   /** The drawing on the badge, in its ink */
   protected abstract motif(): SVGTemplateResult;
+  /** A whole scene drawn over the tile in place of the badge (Malware Blocked's shield); null for the badge */
+  protected scene(): SVGTemplateResult | null {
+    return null;
+  }
+  /** How many lines of text the page shows: 3, or fewer when a scene draws over the rest (or draws its own) */
+  protected get lines(): number {
+    return 3;
+  }
+  /** Where the glow sits under the tile */
+  protected get glowY(): number {
+    return 168;
+  }
+
+  /** Anything drawn on the tile itself, over its lines and under the badge (Redacted's bars) */
+  protected overTile(): SVGTemplateResult | typeof nothing {
+    return nothing;
+  }
+
   /** Anything drawn beside the badge, outside it (sparks, specks) */
   protected beside(): SVGTemplateResult | typeof nothing {
     return nothing;
   }
 
-  private get stage() {
+  /** The element's class prefix, "ui-<ui>" */
+  protected get stage() {
     return `ui-${(this.constructor as typeof TcElement).ui}`;
   }
 
@@ -144,21 +173,21 @@ export abstract class DocStage extends TcElement {
     return svg`
       <path class=${`${c}-page`} d="M124 26h50l26 26v92a12 12 0 0 1-12 12h-64a12 12 0 0 1-12-12V38a12 12 0 0 1 12-12Z" stroke-width="2"></path>
       <path class=${`${c}-fold`} d="M174 26v18a8 8 0 0 0 8 8h18Z"></path>
-      <rect class=${`${c}-line`} x="126" y="48" width="36" height="6" rx="3"></rect>
-      <rect class=${`${c}-line`} x="126" y="62" width="52" height="6" rx="3"></rect>
-      <rect class=${`${c}-line`} x="126" y="76" width="44" height="6" rx="3"></rect>`;
+      ${PAGE_LINES.slice(0, this.lines).map(([y, w]) => svg`<rect class=${`${c}-line`} x="126" y=${y} width=${w} height="6" rx="3"></rect>`)}`;
   }
 
   protected override render() {
     const c = this.stage;
     return html`<svg class=${`${c}-art`} viewBox="0 0 320 240" aria-hidden="true">${svg`
-      <ellipse class=${`${c}-glow`} cx="160" cy="168" rx="92" ry="14"></ellipse>
+      <ellipse class=${`${c}-glow`} cx="160" cy=${this.glowY} rx="92" ry="14"></ellipse>
       ${this.renderTile()}
-      <g class=${`${c}-mark`}>
+      ${this.overTile()}
+      ${this.scene() ??
+      svg`<g class=${`${c}-mark`}>
         <circle class=${`${c}-badge`} cx="160" cy="126" r="30"></circle>
         ${this.motif()}
       </g>
-      ${this.beside()}`}</svg>
+      ${this.beside()}`}`}</svg>
       ${this.words ? html`<p class=${`${c}-caption`}>${this.words}</p>` : nothing}`;
   }
 }

@@ -3,7 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { formatDate } from "./internal/util";
-import "./malware-blocked";
+import "./doc-status";
 
 /*
  * <tc-scan-status> – where a file stands in malware scanning: queued, scanning, clean, suspicious, quarantined or failed,
@@ -135,7 +135,7 @@ export class TcScanStatus extends TcElement {
     const facts = [this.engine ? w.scannedBy.replace("{engine}", this.engine) : "", this.scannedAt !== undefined ? w.scannedAt.replace("{when}", formatDate(this.scannedAt, this.locale, { dateStyle: "medium", timeStyle: "short" })) : ""].filter(Boolean);
     return html`${cardHead({ icon: ICON, title: this.fileName || w.heading, subtitle: this.fileName ? w.heading : undefined, id: `${this.uid}-title` })}
       <div class="ui-scn__card">
-        ${s === "quarantined" ? html`<div class="ui-scn__picture"><tc-malware-blocked caption=""></tc-malware-blocked></div>` : nothing}
+        ${s === "quarantined" ? html`<div class="ui-scn__picture"><tc-doc-status status="malware-blocked" caption=""></tc-doc-status></div>` : nothing}
         <div class="ui-scn__row">${badge}${this.renderProgress(s)}</div>
         ${this.detail ? html`<p class="ui-scn__detail">${this.detail}</p>` : nothing}
         ${facts.length ? html`<p class="ui-scn__facts">${facts.join(" · ")}</p>` : nothing}

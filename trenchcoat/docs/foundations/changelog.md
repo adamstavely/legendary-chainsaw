@@ -2,6 +2,17 @@
 
 # Changelog
 
+## Unreleased – Document-status illustrations
+
+Six illustrations in the style of [Released](../illustrations/released.md) – a soft page (or book) tile, one pastel badge and the words under it – all drawn from one shared base, `internal/doc-stage.ts`, so each is only its badge, colours, motion and words:
+
+- **[Success](../illustrations/success.md):** a check that draws itself and a ring that pops out once.
+- **[Failed](../illustrations/failed.md):** a cross that draws itself as the badge gives one small shake.
+- **[In Progress](../illustrations/in-progress.md):** three dots that pulse in turn a few times.
+- **[Metadata Cleansing](../illustrations/metadata-cleansing.md):** one illustration for where a record's metadata cleansing stands – `status="required"` (amber, a tag with specks that twinkle), `"in-progress"` (blue, three small dots pulse on the tag's corner), `"failed"` (red, a cross, and one small shake) or `"success"` (green, a check). Its words follow the status – "Metadata cleansing required", "Cleansing metadata", "Metadata cleansing failed", "Metadata cleansed" – unless `caption` sets its own.
+- **[Malware Scan In Progress](../illustrations/malware-scan-in-progress.md):** a shield with a scan line passing down the page – the in-progress partner of [Malware Blocked](../illustrations/malware-blocked.md).
+- **[Added to Readbook](../illustrations/added-to-readbook.md):** a book with a bookmark and a check, its words changeable for your own reading list.
+
 ## Unreleased – Help Video
 
 - **Help Video:** point-in-time help – a small film-frame icon (a film cell with sprocket holes and a play mark cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, with a tooltip naming the video and its length, words beside it if wanted ("Watch how"), and a check once watched. A click opens one short tutorial in a modal player with captions, chapters to jump to, and Watch again and Done at the end; a file played to its end counts as watched (`tc-watched-change`), embeds from a video host play in an iframe, and Escape puts focus back on the icon. The player's Transcript shows the words as timed lines, read from the captions or passed as `transcript`, marking the line being said and jumping to a line when picked; Download transcript saves them as a text file, or links `transcript-file`. `updated-on` puts a small dot on the icon's top-right corner for `new-days` days (14 by default) after the video changes, until the person opens it (`tc-update-seen-change`, `update-seen`).

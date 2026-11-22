@@ -8,7 +8,7 @@ import { OnScreenController } from "./internal/controllers";
  * label, an input, a button), a molecule (those three as a search form), an organism (a site header holding it), a
  * template (the page's layout in placeholders) and a page (the same layout with its content). The same parts carry from
  * stage to stage, so a talk or a guide can step through them. Each stage's parts rise in one after another, then rest.
- * Drawn like the other illustrations (all-done, accessibility-principles): soft tiles, one pastel mark (amber) with a
+ * Drawn like the other illustrations (tray-status, accessibility-principles): soft tiles, one pastel mark (amber) with a
  * darker edge and ink, and a soft glow beneath – on a 320 × 240 viewBox in a 4 : 3 frame.
  *
  *   <tc-atomic-design stage="molecule"></tc-atomic-design>

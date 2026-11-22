@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tray-status.json",
+  "title": "tc-tray-status",
+  "description": "A tray scene that says where something stands – all done, empty, an upload that failed, an import complete, an export ready, storage full, or a place to drop files.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "all-done",
+        "drop-to-upload",
+        "empty",
+        "export-ready",
+        "import-complete",
+        "new-items",
+        "paused",
+        "storage-full",
+        "sync-complete",
+        "upload-failed"
+      ],
+      "description": "The scene: \"all-done\", \"empty\", \"drop-to-upload\", \"new-items\", \"import-complete\", \"export-ready\", \"sync-complete\", \"paused\", \"upload-failed\" or \"storage-full\""
+    },
+    "count": {
+      "type": "number",
+      "description": "How many new items \"new-items\" shows, in its badge and its words (default 3)"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The words under the drawing; unset, the status's own words; \"\" leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description, when it should say more than the words"
+    }
+  },
+  "additionalProperties": false
+}

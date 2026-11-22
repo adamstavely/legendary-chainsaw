@@ -708,11 +708,11 @@
   },
   "added-to-readbook": {
    "measuredAt": "2026-11-22",
-   "hash": "adfc5ef0f1b5acfe",
+   "hash": "f9b32dfc0f49ca98",
    "bundle": {
     "own": {
-     "min": 907,
-     "gzip": 534
+     "min": 899,
+     "gzip": 523
     },
     "shared": [
      {
@@ -723,7 +723,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4586
+      "min": 4660
      },
      {
       "name": "internal/card-head",
@@ -757,19 +757,19 @@
      }
     ],
     "withoutLit": {
-     "min": 15048,
-     "gzip": 5671
+     "min": 15114,
+     "gzip": 5693
     },
     "withLit": {
-     "min": 35050,
-     "gzip": 12204
+     "min": 35116,
+     "gzip": 12227
     }
    },
    "render": {
     "tag": "tc-added-to-readbook",
     "source": "demo",
     "runs": 7,
-    "cold": 14.4,
+    "cold": 18.8,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -20403,11 +20403,11 @@
   },
   "failed": {
    "measuredAt": "2026-11-22",
-   "hash": "43ce5fffd99906fa",
+   "hash": "04d23079f439abb3",
    "bundle": {
     "own": {
-     "min": 1206,
-     "gzip": 615
+     "min": 1198,
+     "gzip": 605
     },
     "shared": [
      {
@@ -20418,7 +20418,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4586
+      "min": 4660
      },
      {
       "name": "internal/card-head",
@@ -20452,19 +20452,19 @@
      }
     ],
     "withoutLit": {
-     "min": 15347,
-     "gzip": 5741
+     "min": 15413,
+     "gzip": 5763
     },
     "withLit": {
-     "min": 35349,
-     "gzip": 12274
+     "min": 35415,
+     "gzip": 12296
     }
    },
    "render": {
     "tag": "tc-failed",
     "source": "demo",
     "runs": 7,
-    "cold": 9.3,
+    "cold": 10.3,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -22426,7 +22426,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-22",
-   "hash": "dbc1069df895e5ef",
+   "hash": "1a8b48e561a72d34",
    "bundle": {
     "own": {
      "min": 34126,
@@ -22491,7 +22491,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4642
+      "min": 4716
      },
      {
       "name": "internal/chart/force",
@@ -23231,7 +23231,7 @@
      {
       "name": "bibliography",
       "kind": "element",
-      "min": 30444
+      "min": 30452
      },
      {
       "name": "agent-ledger",
@@ -24994,6 +24994,11 @@
       "min": 4407
      },
      {
+      "name": "metadata-cleansing",
+      "kind": "element",
+      "min": 4270
+     },
+     {
       "name": "drag-lift",
       "kind": "element",
       "min": 4264
@@ -25121,7 +25126,7 @@
      {
       "name": "success",
       "kind": "element",
-      "min": 1249
+      "min": 1241
      },
      {
       "name": "radio-group",
@@ -25131,22 +25136,17 @@
      {
       "name": "failed",
       "kind": "element",
-      "min": 1157
-     },
-     {
-      "name": "metadata-cleansing-required",
-      "kind": "element",
-      "min": 1151
+      "min": 1149
      },
      {
       "name": "in-progress",
       "kind": "element",
-      "min": 1111
+      "min": 1103
      },
      {
       "name": "malware-scan-in-progress",
       "kind": "element",
-      "min": 1076
+      "min": 1068
      },
      {
       "name": "collapse",
@@ -25154,14 +25154,14 @@
       "min": 907
      },
      {
-      "name": "added-to-readbook",
-      "kind": "element",
-      "min": 858
-     },
-     {
       "name": "area-chart",
       "kind": "element",
       "min": 853
+     },
+     {
+      "name": "added-to-readbook",
+      "kind": "element",
+      "min": 850
      },
      {
       "name": "line-chart",
@@ -25176,7 +25176,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 81991
+      "min": 81982
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -27374,6 +27374,11 @@
       "min": 813
      },
      {
+      "name": "src/generative/schemas/tc-metadata-cleansing.json",
+      "kind": "other",
+      "min": 804
+     },
+     {
       "name": "src/generative/schemas/tc-panel-card.json",
       "kind": "other",
       "min": 803
@@ -27414,6 +27419,11 @@
       "min": 652
      },
      {
+      "name": "src/generative/schemas/tc-malware-scan-in-progress.json",
+      "kind": "other",
+      "min": 625
+     },
+     {
       "name": "src/generative/schemas/tc-lead-sourcing.json",
       "kind": "other",
       "min": 616
@@ -27422,11 +27432,6 @@
       "name": "src/generative/schemas/tc-stack-spread.json",
       "kind": "other",
       "min": 611
-     },
-     {
-      "name": "src/generative/schemas/tc-malware-scan-in-progress.json",
-      "kind": "other",
-      "min": 595
      },
      {
       "name": "src/generative/schemas/tc-project-flow.json",
@@ -27439,19 +27444,24 @@
       "min": 586
      },
      {
-      "name": "src/generative/schemas/tc-metadata-cleansing-required.json",
-      "kind": "other",
-      "min": 584
-     },
-     {
       "name": "src/generative/schemas/tc-progress-bar.json",
       "kind": "other",
       "min": 564
      },
      {
+      "name": "src/generative/schemas/tc-added-to-readbook.json",
+      "kind": "other",
+      "min": 562
+     },
+     {
       "name": "src/generative/schemas/tc-preview-unavailable.json",
       "kind": "other",
       "min": 561
+     },
+     {
+      "name": "src/generative/schemas/tc-success.json",
+      "kind": "other",
+      "min": 560
      },
      {
       "name": "src/generative/schemas/tc-upload-failed.json",
@@ -27462,6 +27472,11 @@
       "name": "src/generative/schemas/tc-limit-reached.json",
       "kind": "other",
       "min": 550
+     },
+     {
+      "name": "src/generative/schemas/tc-failed.json",
+      "kind": "other",
+      "min": 548
      },
      {
       "name": "src/generative/schemas/tc-content-hidden.json",
@@ -27477,6 +27492,11 @@
       "name": "src/generative/schemas/tc-malware-blocked.json",
       "kind": "other",
       "min": 545
+     },
+     {
+      "name": "src/generative/schemas/tc-in-progress.json",
+      "kind": "other",
+      "min": 544
      },
      {
       "name": "src/generative/schemas/tc-downloading.json",
@@ -27529,16 +27549,6 @@
       "min": 533
      },
      {
-      "name": "src/generative/schemas/tc-added-to-readbook.json",
-      "kind": "other",
-      "min": 532
-     },
-     {
-      "name": "src/generative/schemas/tc-success.json",
-      "kind": "other",
-      "min": 530
-     },
-     {
       "name": "src/generative/schemas/tc-in-translation.json",
       "kind": "other",
       "min": 529
@@ -27554,19 +27564,9 @@
       "min": 522
      },
      {
-      "name": "src/generative/schemas/tc-failed.json",
-      "kind": "other",
-      "min": 518
-     },
-     {
       "name": "src/generative/schemas/tc-uploading.json",
       "kind": "other",
       "min": 515
-     },
-     {
-      "name": "src/generative/schemas/tc-in-progress.json",
-      "kind": "other",
-      "min": 514
      },
      {
       "name": "src/generative/schemas/tc-released.json",
@@ -27690,19 +27690,19 @@
      }
     ],
     "withoutLit": {
-     "min": 12560972,
-     "gzip": 3144295
+     "min": 12564551,
+     "gzip": 3145600
     },
     "withLit": {
-     "min": 12474081,
-     "gzip": 3112952
+     "min": 12477603,
+     "gzip": 3114200
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 4,
+    "cold": 2.1,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -30378,11 +30378,11 @@
   },
   "in-progress": {
    "measuredAt": "2026-11-22",
-   "hash": "06d375c5ce2dda45",
+   "hash": "e95bc403e08e03af",
    "bundle": {
     "own": {
-     "min": 1160,
-     "gzip": 581
+     "min": 1152,
+     "gzip": 570
     },
     "shared": [
      {
@@ -30393,7 +30393,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4586
+      "min": 4660
      },
      {
       "name": "internal/card-head",
@@ -30427,21 +30427,21 @@
      }
     ],
     "withoutLit": {
-     "min": 15301,
-     "gzip": 5684
+     "min": 15367,
+     "gzip": 5705
     },
     "withLit": {
-     "min": 35303,
-     "gzip": 12213
+     "min": 35369,
+     "gzip": 12235
     }
    },
    "render": {
     "tag": "tc-in-progress",
     "source": "demo",
     "runs": 7,
-    "cold": 7.7,
+    "cold": 9.4,
     "first": 0.4,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 13,
     "scale": null,
@@ -34271,11 +34271,11 @@
   },
   "malware-scan-in-progress": {
    "measuredAt": "2026-11-22",
-   "hash": "fc5446e8e73d4c09",
+   "hash": "26db986f24f7e611",
    "bundle": {
     "own": {
-     "min": 1125,
-     "gzip": 628
+     "min": 1117,
+     "gzip": 618
     },
     "shared": [
      {
@@ -34286,7 +34286,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4586
+      "min": 4660
      },
      {
       "name": "internal/card-head",
@@ -34320,21 +34320,21 @@
      }
     ],
     "withoutLit": {
-     "min": 15267,
-     "gzip": 5729
+     "min": 15333,
+     "gzip": 5750
     },
     "withLit": {
-     "min": 35268,
-     "gzip": 12263
+     "min": 35334,
+     "gzip": 12286
     }
    },
    "render": {
     "tag": "tc-malware-scan-in-progress",
     "source": "demo",
     "runs": 7,
-    "cold": 8.6,
+    "cold": 7.1,
     "first": 0.4,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 12,
     "scale": null,
@@ -35433,13 +35433,13 @@
     "errors": []
    }
   },
-  "metadata-cleansing-required": {
+  "metadata-cleansing": {
    "measuredAt": "2026-11-22",
-   "hash": "411b7fb9e06ff689",
+   "hash": "33df086e53fa0951",
    "bundle": {
     "own": {
-     "min": 1200,
-     "gzip": 632
+     "min": 6305,
+     "gzip": 2769
     },
     "shared": [
      {
@@ -35450,7 +35450,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4586
+      "min": 4660
      },
      {
       "name": "internal/card-head",
@@ -35460,7 +35460,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1868
      },
      {
       "name": "internal/kit",
@@ -35475,28 +35475,28 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      }
     ],
     "withoutLit": {
-     "min": 15342,
-     "gzip": 5733
+     "min": 18524,
+     "gzip": 6633
     },
     "withLit": {
-     "min": 35343,
-     "gzip": 12268
+     "min": 38486,
+     "gzip": 13168
     }
    },
    "render": {
-    "tag": "tc-metadata-cleansing-required",
+    "tag": "tc-metadata-cleansing",
     "source": "demo",
     "runs": 7,
-    "cold": 8.1,
+    "cold": 17.3,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -54454,11 +54454,11 @@
   },
   "success": {
    "measuredAt": "2026-11-22",
-   "hash": "d5d16c11b6e03847",
+   "hash": "f86f665fe76167bd",
    "bundle": {
     "own": {
-     "min": 1298,
-     "gzip": 666
+     "min": 1290,
+     "gzip": 656
     },
     "shared": [
      {
@@ -54469,7 +54469,7 @@
      {
       "name": "internal/doc-stage",
       "kind": "internal",
-      "min": 4586
+      "min": 4660
      },
      {
       "name": "internal/card-head",
@@ -54503,20 +54503,20 @@
      }
     ],
     "withoutLit": {
-     "min": 15440,
-     "gzip": 5759
+     "min": 15506,
+     "gzip": 5781
     },
     "withLit": {
-     "min": 35441,
-     "gzip": 12292
+     "min": 35507,
+     "gzip": 12314
     }
    },
    "render": {
     "tag": "tc-success",
     "source": "demo",
     "runs": 7,
-    "cold": 8,
-    "first": 0.4,
+    "cold": 9.1,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 12,

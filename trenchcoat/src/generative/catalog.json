@@ -61,12 +61,6 @@
     ]
   },
   {
-    "tag": "tc-added-to-readbook",
-    "name": "AddedToReadbook",
-    "description": "A book with a bookmark and a check on it, for something that was saved to a reading list.",
-    "events": []
-  },
-  {
     "tag": "tc-agent-create",
     "name": "AgentCreate",
     "description": "Describe an agent and get a working draft to edit: name, instructions, tools, model, triggers and open questions.",
@@ -372,12 +366,6 @@
     ]
   },
   {
-    "tag": "tc-all-done",
-    "name": "AllDone",
-    "description": "An empty tray with a check above it, for an inbox or queue with nothing waiting.",
-    "events": []
-  },
-  {
     "tag": "tc-answer-arena",
     "name": "AnswerArena",
     "description": "Two to four models' answers to the same prompt side by side, with a vote: which is better (or best), a tie or all bad, and a reason.",
@@ -511,12 +499,6 @@
       "tc-level-change",
       "tc-pinned-change"
     ]
-  },
-  {
-    "tag": "tc-awaiting-review",
-    "name": "AwaitingReview",
-    "description": "A document with an hourglass on it, for content that's held until someone approves it.",
-    "events": []
   },
   {
     "tag": "tc-away-summary",
@@ -1114,7 +1096,7 @@
   {
     "tag": "tc-content-hidden",
     "name": "ContentHidden",
-    "description": "A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.",
+    "description": "A picture pixelated into an obscured grid, with a warning sign on it, for sensitive content that's been covered.",
     "events": []
   },
   {
@@ -1413,6 +1395,12 @@
     ]
   },
   {
+    "tag": "tc-doc-status",
+    "name": "DocStatus",
+    "description": "Where a document stands – released, in review, processing, done, failed, uploading, scanned for malware, metadata being cleansed, saved to a reading list – as one illustration whose `status` picks the drawing, colours and words.",
+    "events": []
+  },
+  {
     "tag": "tc-document-list",
     "name": "DocumentList",
     "description": "Identity and record documents with masked numbers, expiry and a status each – Active, Verified, Expired, Flagged,",
@@ -1430,12 +1418,6 @@
       "tc-mark-hover",
       "tc-mark-click"
     ]
-  },
-  {
-    "tag": "tc-downloading",
-    "name": "Downloading",
-    "description": "A document with a badge showing an arrow dropping into a tray, for a file or an export on its way to the person.",
-    "events": []
   },
   {
     "tag": "tc-drag-lift",
@@ -1682,12 +1664,6 @@
     ]
   },
   {
-    "tag": "tc-failed",
-    "name": "Failed",
-    "description": "A document with a cross on it, for something that didn't work – a job, an import or a check.",
-    "events": []
-  },
-  {
     "tag": "tc-failure-clusters",
     "name": "FailureClusters",
     "description": "Failing chats grouped by topic, biggest first – a size bar, count and share, trend in words and the criteria each",
@@ -1803,12 +1779,6 @@
     ]
   },
   {
-    "tag": "tc-first-use",
-    "name": "FirstUse",
-    "description": "An empty workspace with one highlighted spot to start from, for a new team or project with nothing in it yet.",
-    "events": []
-  },
-  {
     "tag": "tc-flow-builder",
     "name": "FlowBuilder",
     "description": "An automation built in place as a top-down flow – + on every line, If / else paths, undo, and a test run that lights",
@@ -1816,6 +1786,12 @@
       "tc-flow-change",
       "tc-test-run"
     ]
+  },
+  {
+    "tag": "tc-folder-status",
+    "name": "FolderStatus",
+    "description": "A folder scene that says where a folder stands – empty, shared, archived or locked.",
+    "events": []
   },
   {
     "tag": "tc-footnotes",
@@ -2063,30 +2039,6 @@
     ]
   },
   {
-    "tag": "tc-in-coordination",
-    "name": "InCoordination",
-    "description": "A document with three linked points on it, for work being agreed between teams before it goes ahead.",
-    "events": []
-  },
-  {
-    "tag": "tc-in-progress",
-    "name": "InProgress",
-    "description": "A document with three dots on it, for work that has started and isn't finished yet.",
-    "events": []
-  },
-  {
-    "tag": "tc-in-quality-control",
-    "name": "InQualityControl",
-    "description": "A document with a magnifying glass over a check on it, for content being checked before it moves on.",
-    "events": []
-  },
-  {
-    "tag": "tc-in-translation",
-    "name": "InTranslation",
-    "description": "A document with two speech bubbles on it, for content being translated into other languages.",
-    "events": []
-  },
-  {
     "tag": "tc-inline-diff",
     "name": "InlineDiff",
     "description": "Review an AI's word-level edits to prose: accept or reject each change in place.",
@@ -2280,12 +2232,6 @@
     ]
   },
   {
-    "tag": "tc-limit-reached",
-    "name": "LimitReached",
-    "description": "A gauge at the end of its range with a clock beside it, for work that's stopped until a quota or rate limit resets.",
-    "events": []
-  },
-  {
     "tag": "tc-line-chart",
     "name": "LineChart",
     "description": "Values over time or along x as lines – one emphasised or each in its own ink – with names at their ends, reference",
@@ -2313,12 +2259,6 @@
       "tc-selected-change",
       "tc-view-change"
     ]
-  },
-  {
-    "tag": "tc-link-expired",
-    "name": "LinkExpired",
-    "description": "Two chain links on a tile, parted, with a clock badge, for a share link or invitation past its date.",
-    "events": []
   },
   {
     "tag": "tc-list-motion",
@@ -2351,18 +2291,6 @@
       "tc-mark-hover",
       "tc-mark-click"
     ]
-  },
-  {
-    "tag": "tc-malware-blocked",
-    "name": "MalwareBlocked",
-    "description": "A file behind a warning shield with a bug on it, for a file that can't be shown because it may be malware.",
-    "events": []
-  },
-  {
-    "tag": "tc-malware-scan-in-progress",
-    "name": "MalwareScanInProgress",
-    "description": "A document with a shield on it and a scan line passing over the page, for a file that's being checked for malware before it can be opened.",
-    "events": []
   },
   {
     "tag": "tc-map-itinerary",
@@ -2458,12 +2386,6 @@
       "tc-branch",
       "tc-edit"
     ]
-  },
-  {
-    "tag": "tc-metadata-cleansing-required",
-    "name": "MetadataCleansingRequired",
-    "description": "A document with a tag on it and a few specks beside it, for records whose metadata needs tidying before they can move on.",
-    "events": []
   },
   {
     "tag": "tc-meter-row",
@@ -2605,18 +2527,6 @@
     ]
   },
   {
-    "tag": "tc-no-access",
-    "name": "NoAccess",
-    "description": "A folder held shut by a padlock, for when someone isn't entitled to see what they opened.",
-    "events": []
-  },
-  {
-    "tag": "tc-nothing-found",
-    "name": "NothingFound",
-    "description": "A magnifying glass passing over a list of blank results, for a search or filter with no matches.",
-    "events": []
-  },
-  {
     "tag": "tc-notification-stack",
     "name": "NotificationStack",
     "description": "Notices stacked behind each other; dismissing the front one brings up the next.",
@@ -2637,12 +2547,6 @@
     "events": [
       "tc-value-change"
     ]
-  },
-  {
-    "tag": "tc-offline",
-    "name": "Offline",
-    "description": "A cloud and a device with the dashed link between them broken, for a page that can't reach the server right now.",
-    "events": []
   },
   {
     "tag": "tc-ops-overview",
@@ -2703,6 +2607,12 @@
     "events": []
   },
   {
+    "tag": "tc-page-state",
+    "name": "PageState",
+    "description": "The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon and not available in your region – as one illustration.",
+    "events": []
+  },
+  {
     "tag": "tc-panel-card",
     "name": "PanelCard",
     "description": "A compact card for one section of a side panel, which folds or opens something else.",
@@ -2750,12 +2660,6 @@
       "tc-mark-hover",
       "tc-mark-click"
     ]
-  },
-  {
-    "tag": "tc-pending-release",
-    "name": "PendingRelease",
-    "description": "A document with an arrow ready to go up on it, for content approved and waiting for its release.",
-    "events": []
   },
   {
     "tag": "tc-permission-request",
@@ -2886,12 +2790,6 @@
     ]
   },
   {
-    "tag": "tc-preview-unavailable",
-    "name": "PreviewUnavailable",
-    "description": "A file whose contents have faded to a dashed outline, with a question mark, for a file type the viewer can't show.",
-    "events": []
-  },
-  {
     "tag": "tc-pricing-plans",
     "name": "PricingPlans",
     "description": "A pricing section: a Monthly / Yearly switch and a card per plan with limits, a call to action and collapsible details.",
@@ -2947,12 +2845,6 @@
       "tc-create",
       "tc-action"
     ]
-  },
-  {
-    "tag": "tc-processing",
-    "name": "Processing",
-    "description": "A document with a progress ring on it, for a long job that's still running.",
-    "events": []
   },
   {
     "tag": "tc-profile-header",
@@ -3244,12 +3136,6 @@
       "tc-kinds-change",
       "tc-selected-change"
     ]
-  },
-  {
-    "tag": "tc-released",
-    "name": "Released",
-    "description": "A document with a check on it and a few sparks around, for content that's out and live.",
-    "events": []
   },
   {
     "tag": "tc-reliance-gauge",
@@ -3908,12 +3794,6 @@
     ]
   },
   {
-    "tag": "tc-something-wrong",
-    "name": "SomethingWrong",
-    "description": "Two connected tiles with the line between them broken, for a page or request that failed.",
-    "events": []
-  },
-  {
     "tag": "tc-soup-cans",
     "name": "SoupCans",
     "description": "Three plain soup cans with no labels, standing together at different heights.",
@@ -4062,12 +3942,6 @@
       "tc-subscribe",
       "tc-export"
     ]
-  },
-  {
-    "tag": "tc-success",
-    "name": "Success",
-    "description": "A document with a check on it and a ring that pops out once, for something that finished without a problem.",
-    "events": []
   },
   {
     "tag": "tc-success-check",
@@ -4363,6 +4237,12 @@
     ]
   },
   {
+    "tag": "tc-tray-status",
+    "name": "TrayStatus",
+    "description": "A tray scene that says where something stands – all done, empty, an upload that failed, an import complete, an export ready, storage full, or a place to drop files.",
+    "events": []
+  },
+  {
     "tag": "tc-tree-select",
     "name": "TreeSelect",
     "description": "Pick one or many options from a nested hierarchy, with type-to-filter and parent checkboxes.",
@@ -4419,18 +4299,6 @@
     "events": [
       "tc-hidden-change"
     ]
-  },
-  {
-    "tag": "tc-upload-failed",
-    "name": "UploadFailed",
-    "description": "A file lifted above an open tray, its upload arrow stopping short, with a cross badge, for an upload that didn't finish.",
-    "events": []
-  },
-  {
-    "tag": "tc-uploading",
-    "name": "Uploading",
-    "description": "A document with a badge showing an arrow rising out of a tray, for a file on its way up.",
-    "events": []
   },
   {
     "tag": "tc-usage-meter",

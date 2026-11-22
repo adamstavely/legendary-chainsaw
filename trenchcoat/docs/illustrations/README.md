@@ -8,9 +8,10 @@
 
 Decorative, lightly interactive artwork – clouds, folders, orbits, integration diagrams, world maps. Use them in empty states, onboarding and landing pages.
 
-48 items · 48 files
+54 items · 54 files
 
 - [Accessibility Principles](accessibility-principles.md) – Visual, hearing, motor and cognitive needs on pastel tiles, with arrows up from the four principles that serve them – perceivable, operable, understandable and robust – for an accessibility statement or design guide
+- [Added to Readbook](added-to-readbook.md) – A book with a bookmark and a check on it, with the words Added to Readbook, for something saved to a reading list
 - [Agent Scene](agent-scene.md) – The assistant in a small scene – happy above an empty tray, thinking beside a stack of pages, or asleep beside a sign
 - [Agent Team](agent-team.md) – A prompt types itself and branches out into three agents, each with a role and overlapping tool logos – three times, then the team stays
 - [All Done](all-done.md) – An empty tray with a check above it, with the words You're all caught up, for an inbox or queue with nothing waiting
@@ -22,11 +23,13 @@ Decorative, lightly interactive artwork – clouds, folders, orbits, integration
 - [Downloading](downloading.md) – A document with an arrow dropping into a tray on it, with the words Downloading, for a file or an export on its way to the person
 - [Empty Calendar](empty-calendar.md) – Stack of calendar cards marked empty, fanning out on hover; the shimmer runs a few cycles and rests
 - [Enrichment Orbit](enrichment-orbit.md) – Grok tile inside two rings with comets and data nodes orbiting around it – a few rounds, then they rest
+- [Failed](failed.md) – A document with a cross on it as the badge gives one small shake, with the word Failed, for a job, an import or a check that didn't work
 - [First Use](first-use.md) – An empty workspace with one highlighted spot to start from, with the words Nothing here yet, for a new team or project
 - [Ghosted Chat](ghosted-chat.md) – Unanswered chat messages marked as read, with a thumbs-down reply on hover; the red shine sweeps three times
 - [Glass Folder](glass-folder.md) – Glassy blue folder with documents behind a frosted pocket that tips open on hover
 - [Glow Keyboard](glow-keyboard.md) – AI chat input that types itself over a glass keyboard – every key press sends a wave up the gradient floor; after typing each prompt once the scene rests
 - [In Coordination](in-coordination.md) – A document with three linked points on it, with the words In coordination, for work being agreed between teams before it goes ahead
+- [In Progress](in-progress.md) – A document with three dots on it that pulse in turn a few times, with the words In progress, for work that has started and isn't finished yet
 - [In Quality Control](in-quality-control.md) – A document with a magnifying glass over a check on it, with the words In quality control, for content being checked before it moves on
 - [In Translation](in-translation.md) – A document with two speech bubbles on it, with the words In translation, for content being translated into other languages
 - [Inspect Frame](inspect-frame.md) – Any component seen like a selection in a design tool – tilted back, a cursor walks through its rows while a frame with handles, padding numbers on guide lines and a W Fill width chip draw round each; twice through, then it rests on the first row
@@ -39,6 +42,8 @@ Decorative, lightly interactive artwork – clouds, folders, orbits, integration
 - [Link Expired](link-expired.md) – Two parted chain links on a tile with an amber clock badge and the words This link has expired, for a share link or invitation past its date
 - [Logo Cluster](logo-cluster.md) – Your mark on a white disc in the middle – company logos bounce out of it and settle around it; the ring turns once
 - [Malware Blocked](malware-blocked.md) – A file behind a warning shield with a bug on it, with the words Potential malware, for a file that can't be shown
+- [Malware Scan In Progress](malware-scan-in-progress.md) – A document with a shield on it and a scan line passing down the page a few times, with the words Scanning for malware, for a file being checked before it can be opened
+- [Metadata Cleansing](metadata-cleansing.md) – A document with a tag on its badge and a small mark for where cleansing stands – required (amber, specks twinkle), in progress (blue, dots pulse), failed (red, a cross) or done (green, a check) – with words that follow the status, for records whose metadata is being tidied
 - [Model Wheel](model-wheel.md) – AI model names on a turning drum – the rows bend away at the edges and each model lands on a soft gray fill; turns once round the drum and rests (`turns`)
 - [No Access](no-access.md) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
 - [Nothing Found](nothing-found.md) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
@@ -52,6 +57,7 @@ Decorative, lightly interactive artwork – clouds, folders, orbits, integration
 - [Side Folder](side-folder.md) – Glassy blue folder on its side, documents sliding out to the right as the pocket swings open on hover
 - [Something Wrong](something-wrong.md) – Two connected tiles with the line between them broken, for a page or request that failed; the gap pulses a few times and rests
 - [Soup Cans](soup-cans.md) – Three plain soup cans with no labels, standing together at different heights with ridge rings, for items that are there but not yet labelled or sorted
+- [Success](success.md) – A document with a check on it and a ring that pops out once, with the word Success, for a job, an import or a check that finished without a problem
 - [Tab Overload](tab-overload.md) – Overlapping browser windows where the highlight follows the hovered tab
 - [Team Invite](team-invite.md) – Connected teammates – a cursor drags a new one into the empty slot, the line turns solid and they go online
 - [Upload Failed](upload-failed.md) – A file lifted above an open tray, its upload arrow stopping short, with a red cross badge and the words Upload failed, for a file that's too large, isn't accepted or didn't finish uploading

@@ -3,7 +3,7 @@
  * neither, pausing off screen, finite motion, dark colours, the React wrapper and axe. Each illustration's own test
  * file calls docStageBasics and adds what's particular to it.
  */
-import { html, unsafeStatic } from "lit/static-html.js";
+import { html } from "lit";
 import axe from "axe-core";
 import * as React from "react";
 import { act } from "react";
@@ -13,8 +13,15 @@ import type { DocStage } from "../../src/elements/internal/doc-stage";
 import { fixture, settle } from "./helpers";
 
 export function docStageBasics(o: { tag: string; ui: string; caption: string; css: string; moving: string; tile?: "page" | "book"; react: React.ElementType }) {
-  const tag = unsafeStatic(o.tag);
-  const make = (attrs = html``) => fixture<DocStage>(html`<${tag} ${attrs}></${tag}>`);
+  /** The illustration inside a wrapper, with these attributes and inline style */
+  const make = async (attrs: Record<string, string> = {}, wrapStyle = "") => {
+    const wrap = await fixture<HTMLElement>(html`<div style=${wrapStyle}></div>`);
+    const el = document.createElement(o.tag) as DocStage;
+    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+    wrap.append(el);
+    await el.updateComplete;
+    return el;
+  };
 
   test("says where it stands, in visible words and in its name", async () => {
     const el = await make();
@@ -29,7 +36,7 @@ export function docStageBasics(o: { tag: string; ui: string; caption: string; cs
   });
 
   test("label says more, and with no words at all it's decorative", async () => {
-    const el = await fixture<DocStage>(html`<${tag} label="More detail"></${tag}>`);
+    const el = await make({ label: "More detail" });
     expect(el.getAttribute("aria-label")).toBe("More detail");
     el.label = "";
     el.caption = "";
@@ -40,7 +47,7 @@ export function docStageBasics(o: { tag: string; ui: string; caption: string; cs
   });
 
   test("off screen the motion holds, and runs on when it's back", async () => {
-    const el = await fixture<DocStage>(html`<${tag} style="position: absolute; top: 5000px; width: 200px"></${tag}>`);
+    const el = await make({ style: "position: absolute; top: 5000px; width: 200px" });
     await expect.poll(() => el.hasAttribute("data-paused")).toBe(true);
     expect(getComputedStyle(el.querySelector(`.ui-${o.ui}-${o.moving}`)!).animationPlayState).toBe("paused");
     el.style.top = "0";
@@ -49,8 +56,10 @@ export function docStageBasics(o: { tag: string; ui: string; caption: string; cs
 
   test("the motion is finite, and dark follows color-scheme", async () => {
     expect(o.css).not.toMatch(/\binfinite\b/);
-    const wrap = await fixture(html`<div data-tc-theme="dark"><${tag}></${tag}></div>`);
-    expect(getComputedStyle(wrap.querySelector(`.ui-${o.ui}-page`)!).fill).toBe("rgb(42, 42, 46)");
+    const el = await make();
+    el.parentElement!.setAttribute("data-tc-theme", "dark");
+    await settle();
+    expect(getComputedStyle(el.querySelector(`.ui-${o.ui}-page`)!).fill).toBe("rgb(42, 42, 46)");
   });
 
   test("React wrapper: props reach the host, and the ref gets it", async () => {
@@ -69,8 +78,8 @@ export function docStageBasics(o: { tag: string; ui: string; caption: string; cs
 
   test("axe: no violations, in both themes", async () => {
     for (const scheme of ["light", "dark"]) {
-      const wrap = await fixture(html`<div style=${`background: Canvas; color-scheme: ${scheme}`}><${tag}></${tag}></div>`);
-      const { violations } = await axe.run(wrap);
+      const el = await make({}, `background: Canvas; color-scheme: ${scheme}`);
+      const { violations } = await axe.run(el.parentElement!);
       expect(violations.map((v) => v.id)).toEqual([]);
     }
   });

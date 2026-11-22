@@ -67,17 +67,17 @@ describe("tc-scan-status", () => {
   test("the card has the file, details and, in quarantine, the picture", async () => {
     const el = await fixture<TcScanStatus>(html`<tc-scan-status layout="card" file-name="a.zip" state="quarantined" engine="Scanner" detail="Hides itself" .scannedAt=${0} locale="en-GB"></tc-scan-status>`);
     expect(text(el)).toContain("a.zip");
-    expect(el.querySelector("tc-malware-blocked")).toBeTruthy();
+    expect(el.querySelector('tc-doc-status[status="malware-blocked"]')).toBeTruthy();
     expect(text(el.querySelector(".ui-scn__detail"))).toBe("Hides itself");
     expect(text(el.querySelector(".ui-scn__facts"))).toContain("Scanned by Scanner");
     expect(getComputedStyle(el).display).toBe("block");
     el.state = "clean";
     await settle();
-    expect(el.querySelector("tc-malware-blocked")).toBeNull();
+    expect(el.querySelector('tc-doc-status[status="malware-blocked"]')).toBeNull();
   });
 
   test("inline never shows the picture", async () => {
-    expect((await scan("quarantined")).querySelector("tc-malware-blocked")).toBeNull();
+    expect((await scan("quarantined")).querySelector('tc-doc-status[status="malware-blocked"]')).toBeNull();
   });
 
   test("labels can be renamed", async () => {

@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: nothing-found, no-access, malware-blocked, dialog
+related: page-state, doc-status, dialog
 ---
 
 ## Overview
@@ -15,8 +15,8 @@ A picture pixelated into an obscured grid of squares – no shape in it at all �
 
 ## When not to use
 
-- A file that isn't safe to open – use `malware-blocked`.
-- Someone without permission – use `no-access`.
+- A file that isn't safe to open – use `doc-status` with `status="malware-blocked"`.
+- Someone without permission – use `page-state` with `status="no-access"`.
 - Content that must not be shown at all: remove it, and say so in words.
 
 ## Anatomy

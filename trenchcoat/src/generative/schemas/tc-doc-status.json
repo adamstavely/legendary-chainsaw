@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-doc-status.json",
+  "title": "tc-doc-status",
+  "description": "Where a document stands – released, in review, processing, done, failed, uploading, scanned for malware, metadata being cleansed, saved to a reading list – as one illustration whose `status` picks the drawing, colours and words.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "added-to-readbook",
+        "archived",
+        "awaiting-review",
+        "awaiting-signature",
+        "comment-needed",
+        "converting",
+        "downloading",
+        "draft",
+        "duplicate",
+        "encrypted",
+        "expired",
+        "failed",
+        "in-coordination",
+        "in-progress",
+        "in-quality-control",
+        "in-translation",
+        "in-trash",
+        "locked",
+        "malware-blocked",
+        "malware-scan",
+        "metadata-cleansing-failed",
+        "metadata-cleansing-in-progress",
+        "metadata-cleansing-required",
+        "metadata-cleansing-success",
+        "password-protected",
+        "pending-release",
+        "preview-unavailable",
+        "processing",
+        "queued",
+        "redacted",
+        "released",
+        "restricted",
+        "scheduled",
+        "shared",
+        "signed",
+        "success",
+        "sync-conflict",
+        "update-available",
+        "uploading",
+        "working-offline"
+      ],
+      "description": "Where the document stands; picks the drawing, its colours and its words"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The words under the drawing; unset, the stage's own words; \"\" leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description, when it should say more than `caption`"
+    }
+  },
+  "additionalProperties": false
+}
