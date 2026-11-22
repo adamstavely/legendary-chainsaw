@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-418 items · 418 files
+423 items · 423 files
 
 ## Agents (67)
 
@@ -180,7 +180,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Voice Mode](voice-mode.md) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - [Writing Assistant](writing-assistant.md) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
-## Data & charts (36)
+## Data & charts (37)
 
 - [Active Days](active-days.md) – A daily goal month by month – each day's date in a small ring filled towards the goal, a check when it's met, months running on down with their names sticking, the month's days at goal, best streak and busiest weekday, and any day's value and share of the goal on hover or focus
 - [Activity Calendar](activity-calendar.md) – A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
@@ -198,6 +198,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Enrichment Grid](enrichment-grid.md) – A table a model fills in, cell by cell – source columns and sparkle-marked AI columns with their prompt on the header, each cell queued, filling, done with its confidence and source, failed with Retry, or to review; the run counted in words with the time left, Pause / Resume and Retry failed, and only the rows in view drawn
 - [Eval Scorecard](eval-scorecard.md) – Test cases run against prompt or model versions – pass and fail per case, the score across versions, and a failing case opened beside its expected answer
 - [Experiment Card](experiment-card.md) – An A/B test in two lines that quietly unfolds on hover – variants linked to a tiny chart, a metric switch with rolling numbers, and a winner you pick with a click
+- [Export Dialog](export-dialog.md) – Export a list in one modal – CSV, Excel or PDF; the selected rows, the ones the filters show or all, each with its count; which columns, with required ones kept; "Email me when it's ready" for big exports – then progress, a download link with the file's size, the emailed note, or what failed with Retry
 - [File Import](file-import.md) – Drop a spreadsheet and see what was read – the rows and columns found, the delimiter and encoding, a "First row is headers" switch, the first rows with each column's type in words, problems in words (rows of the wrong length, empty columns, a header named twice), and Continue; CSV and TSV read in the browser, Excel through the page
 - [Footnotes](footnotes.md) – A quiet card of caveats and notes under a page's charts – numbered or bulleted, each with an optional link an app's router can take, and nothing at all when there are none
 - [Gauge](gauge.md) – One value against its range as a 270° dial, a half dial or a bar – the value in big type with the band it's in, bands and ticks round it, a target line and the change since last time; optionally a slider you drag or move with the keys
@@ -233,9 +234,11 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Tips Panel](tips-panel.md) – Grid of short tips with one action each – taken tips turn into a done state
 - [Toaster](toaster.md) – Calm toasts from anywhere – a stack that fans out on hover, promise toasts that morph from spinner to check, swipe to dismiss
 
-## Inputs & controls (41)
+## Inputs & controls (45)
 
+- [API Keys](api-keys.md) – A workspace's API keys: each key's name, masked value, permissions, who made it, last use and status in words (Active, Expires in 5 days, Expired, Revoked), Create key with name, permissions and expiry and the new secret shown once with Copy, Revoke asked in place, and inactive keys folded away
 - [App Picker](app-picker.md) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
+- [Assignee Picker](assignee-picker.md) – Assign a case or task to a person, a team or a team's round-robin – a chip that opens a search with Assign to me, each person's open items and a load bar against their capacity, Away and Over capacity in words, and Unassign
 - [Breadcrumbs](breadcrumbs.md) – Where you are in a hierarchy as a trail of links: the current page last, the middle folding into "…" when it doesn't fit or passes `max`, a cancelable `tc-navigate` for routing, and Copy path
 - [Bulk Action Bar](bulk-action-bar.md) – What can be done to everything selected – how many, the page's actions, Select all and Clear, a question before danger, and Undo for a few seconds afterwards
 - [Button](button.md) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
@@ -257,6 +260,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Profile Menu](profile-menu.md) – Account card with the signed-in user, menu actions and profile setup progress
 - [Radio Group](radio-group.md) – A native keyboard-operated single choice
 - [Reaction Bar](reaction-bar.md) – Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
+- [Saved Views](saved-views.md) – Saved views as tabs above a list or table – counts, shared and default marks, rename in place, duplicate, share, set as default and delete with a confirmation, and Save changes, Save as new view and Reset when the view on screen has been edited
 - [Secret Field](secret-field.md) – A masked credential input with an explicit reveal control
 - [Segmented Control](segmented-control.md) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - [Select](select.md) – A plain single-choice dropdown – a secondary-button trigger with the chosen option opens a list with a check on it, optional descriptions and disabled options, arrow keys and type-ahead
@@ -275,6 +279,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [To-do List](todo-list.md) – A to-do list people keep themselves – add, tick off, edit in place, move with Alt + arrows and remove with Undo, with All / To do / Done tabs, progress and Clear done
 - [Tooltip](tooltip.md) – Keyboard, pointer and touch help text
 - [Tree Select](tree-select.md) – Pick one or many from a nested hierarchy: the picked path in the field, a filterable tree with the parents of every match kept, ARIA tree keys, and parent checkboxes that check what's beneath them
+- [Webhooks](webhooks.md) – Webhook endpoints: address, events, an on/off switch and delivery health in words ("3 of 48 failed in the last 24 hours"), recent deliveries with status, timing, attempt and Retry, Add and Edit in place (https only, events with All events), Send test event, Delete asked in place, and a masked signing secret
 - [Year List](year-list.md) – Years to choose one from, newest first – a column, or a row that scrolls – with a count on each, keyboard moves that don't choose, and typing a year to jump to it
 
 ## People & profiles (27)

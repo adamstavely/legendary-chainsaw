@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-assignee-picker.json",
+  "title": "tc-assignee-picker",
+  "description": "Assign a case or task to a person, a team or a team's round-robin – with each person's open items, a load bar against their capacity, Away and Over capacity in words, and Assign to me.",
+  "type": "object",
+  "properties": {
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AssigneePerson"
+      },
+      "description": "The people who can be assigned"
+    },
+    "teams": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AssigneeTeam"
+      },
+      "description": "The teams that can be assigned"
+    },
+    "me": {
+      "type": "string",
+      "description": "The reader's own person id – offers Assign to me"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "person",
+            "round-robin",
+            "team"
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "Who has it: a person, a team or a team's round-robin, or null. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "label": {
+      "type": "string",
+      "description": "The chip's name before the assignee (default \"Assignee\")"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Can't be changed"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "unassigned": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        },
+        "assignToMe": {
+          "type": "string"
+        },
+        "people": {
+          "type": "string"
+        },
+        "teams": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "members": {
+          "type": "string"
+        },
+        "away": {
+          "type": "string"
+        },
+        "overCapacity": {
+          "type": "string"
+        },
+        "roundRobin": {
+          "type": "string"
+        },
+        "roundRobinNote": {
+          "type": "string"
+        },
+        "unassign": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "assigned": {
+          "type": "string"
+        },
+        "cleared": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AssigneePerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "open": {
+          "type": "number",
+          "description": "How many items they already have"
+        },
+        "capacity": {
+          "type": "number",
+          "description": "How many they can carry – the load bar's full width"
+        },
+        "away": {
+          "type": "boolean",
+          "description": "Away – still pickable, said in words"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "AssigneeTeam": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "members": {
+          "type": "number",
+          "description": "How many people are in it"
+        },
+        "open": {
+          "type": "number",
+          "description": "How many items the team has open"
+        },
+        "roundRobin": {
+          "type": "boolean",
+          "description": "Takes turns: offers Round-robin under the team"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

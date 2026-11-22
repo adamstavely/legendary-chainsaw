@@ -29,10 +29,10 @@
         "done": {
           "type": "string"
         },
-        "review": {
+        "active": {
           "type": "string"
         },
-        "active": {
+        "review": {
           "type": "string"
         },
         "blocked": {

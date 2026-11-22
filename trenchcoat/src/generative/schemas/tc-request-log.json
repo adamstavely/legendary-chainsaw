@@ -97,6 +97,12 @@
         "median": {
           "type": "string"
         },
+        "copied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
         "latency": {
           "type": "string"
         },
@@ -106,13 +112,7 @@
         "noMatches": {
           "type": "string"
         },
-        "copied": {
-          "type": "string"
-        },
         "time": {
-          "type": "string"
-        },
-        "copyFailed": {
           "type": "string"
         },
         "request": {
