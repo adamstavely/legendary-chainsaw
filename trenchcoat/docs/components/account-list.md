@@ -461,13 +461,13 @@ The stats are a description list: each value with its label.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.1 ms** | the gallery demo's data, 161 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of accounts replaced |
-| First on the page | 29 ms | default properties; includes adding its CSS to the document |
-| 100 items | 16 ms | accounts: first render, 3,233 nodes; update 2.8 ms |
-| 1,000 items | 138 ms | accounts: first render, 32,033 nodes; update 18 ms |
+| First render | **2.7 ms** | the gallery demo's data, 161 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of accounts replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 24 ms | accounts: first render, 3,233 nodes; update 3.5 ms |
+| 1,000 items | 139 ms | accounts: first render, 32,033 nodes; update 16 ms |
 
-1,000 items of accounts: 138 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
+1,000 items of accounts: 139 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -521,12 +521,12 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.9 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of tasks replaced |
-| First on the page | 9.4 ms | default properties; includes adding its CSS to the document |
-| 10,000 items | 8.2 ms | tasks: first render, 10 nodes; update 3.5 ms |
+| First render | **0.8 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of tasks replaced |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 10,000 items | 10 ms | tasks: first render, 10 nodes; update 3.6 ms |
 
-Windowed: 10,000 items of tasks render 10 nodes in 8.2 ms – only the rows near the viewport are in the page.
+Windowed: 10,000 items of tasks render 10 nodes in 10 ms – only the rows near the viewport are in the page.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -454,13 +454,13 @@ a polite status message, “Passport number shown”. The counts are a list labe
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.1 ms** | the gallery demo's data, 187 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of documents replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 12 ms | documents: first render, 3,246 nodes; update 3.1 ms |
-| 1,000 items | 114 ms | documents: first render, 32,226 nodes; update 25 ms |
+| First render | **3.1 ms** | the gallery demo's data, 187 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of documents replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 26 ms | documents: first render, 3,246 nodes; update 4.5 ms |
+| 1,000 items | 119 ms | documents: first render, 32,226 nodes; update 23 ms |
 
-1,000 items of documents: 114 ms. It renders every item, so a first render passes 50 ms (a long task) at about 440 items – page or filter longer lists.
+1,000 items of documents: 119 ms. It renders every item, so a first render passes 50 ms (a long task) at about 420 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

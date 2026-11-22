@@ -564,11 +564,11 @@ its placeholder.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.9 ms** | the gallery demo's data, 114 DOM nodes – to layout, median of 7 |
+| First render | **3.2 ms** | the gallery demo's data, 114 DOM nodes – to layout, median of 7 |
 | Typical update | **0.6 ms** | one item of sources replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.2 ms | sources: first render, 114 nodes; update 0.2 ms |
-| 1,000 items | 2.1 ms | sources: first render, 114 nodes; update 0.4 ms |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.9 ms | sources: first render, 114 nodes; update 0.4 ms |
+| 1,000 items | 3.0 ms | sources: first render, 114 nodes; update 0.6 ms |
 
 What it renders doesn't grow with sources (tested to 1,000 items).
 

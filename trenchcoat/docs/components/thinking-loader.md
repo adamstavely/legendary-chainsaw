@@ -471,11 +471,11 @@ the moving labels and the time are hidden from assistive technology.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 19 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of phases replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.1 ms | phases: first render, 19 nodes; update 0.1 ms |
-| 1,000 items | 1.0 ms | phases: first render, 19 nodes; update 0.1 ms |
+| First render | **0.6 ms** | the gallery demo's data, 19 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of phases replaced |
+| First on the page | 9.5 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.5 ms | phases: first render, 19 nodes; update 0.1 ms |
+| 1,000 items | 0.5 ms | phases: first render, 19 nodes; update 0.0 ms |
 
 What it renders doesn't grow with phases (tested to 1,000 items).
 

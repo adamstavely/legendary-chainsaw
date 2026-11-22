@@ -469,13 +469,13 @@ headroom has a mark (a tick, a warning sign or a no-entry sign) and a word.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.3 ms** | the gallery demo's data, 121 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of rows replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 33 ms | rows: first render, 3,419 nodes; update 9.0 ms |
-| 1,000 items | 207 ms | rows: first render, 34,019 nodes; update 72 ms |
+| First render | **3.3 ms** | the gallery demo's data, 121 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of rows replaced |
+| First on the page | 13 ms | default properties; includes adding its CSS to the document |
+| 100 items | 38 ms | rows: first render, 3,419 nodes; update 9.4 ms |
+| 1,000 items | 197 ms | rows: first render, 34,019 nodes; update 70 ms |
 
-1,000 items of rows: 207 ms. It renders every item, so a first render passes 50 ms (a long task) at about 240 items – page or filter longer lists.
+1,000 items of rows: 197 ms. It renders every item, so a first render passes 50 ms (a long task) at about 250 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

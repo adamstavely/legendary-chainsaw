@@ -393,11 +393,11 @@ status the app returned, "Nothing more known.", "Couldn't load the details." and
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of kinds replaced |
-| First on the page | 5.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.9 ms | kinds: first render, 14 nodes; update 0.1 ms |
-| 1,000 items | 0.7 ms | kinds: first render, 14 nodes; update 0.1 ms |
+| First render | **1.4 ms** | the gallery demo's data, 14 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of kinds replaced |
+| First on the page | 5.1 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.1 ms | kinds: first render, 14 nodes; update 0.2 ms |
+| 1,000 items | 0.9 ms | kinds: first render, 14 nodes; update 0.0 ms |
 
 What it renders doesn't grow with kinds (tested to 1,000 items).
 

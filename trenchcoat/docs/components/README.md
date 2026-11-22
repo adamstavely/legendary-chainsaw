@@ -8,7 +8,7 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-423 items · 423 files
+422 items · 422 files
 
 ## Agents (67)
 
@@ -120,7 +120,7 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Trigger List](trigger-list.md) – Every way an agent starts, one row each – schedule, webhook, event, email or manual in words, when it last fired and how often this week, errors in words, a switch to turn it off, Edit, and Add trigger by kind
 - [Workflow Canvas](workflow-canvas.md) – An agent workflow as a node graph – step cards with their kind, status in a mark and a word, and curved labelled connectors; pan and zoom, drag steps and connect them from their ports or the keyboard (M moves, C connects, A adds), a flowing connector into the running step, and the same graph as a list
 
-## AI & chat (57)
+## AI & chat (56)
 
 - [Agent Face](agent-face.md) – Donovan's animated face, which shows what the agent is doing – nine states that blend on springs, blinks and glances, a nod or a hop, sharp from 16 to 256 px and resting when it isn't busy
 - [AI Answer](ai-answer.md) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
@@ -160,7 +160,6 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Message Status](message-status.md) – The quiet row under a sent message – a read receipt from sending to delivered to read (or Not sent with Retry), a relative time that keeps itself fresh, and Copy, Send again, Branch into a new chat and Edit
 - [Model Picker](model-picker.md) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
 - [Multiplayer Thread](multiplayer-thread.md) – One chat thread shared by several people and one model – grouped messages with names, joins and leaves, who's here and typing, @-mentions, a switch for whether the model answers every message or only when mentioned, and "Replying to" on its answers
-- [Pixel Loader](pixel-loader.md) – A small working row – a 5 × 5 grid of dots lit in a wave, a snake, a twinkle or an orbit, a shimmering label and the time since the work started, settling into a check or a cross when it ends
 - [Point and Ask](point-and-ask.md) – Pin or box parts of an image and ask about them – numbered marks you drag, nudge and resize from the keyboard, a question per mark and one over all, and answers streamed back under each
 - [Prompt Library](prompt-library.md) – Saved prompt templates with variables – type straight into the sentence, watch the finished prompt assemble below, and use it once every variable is filled
 - [Prompt Starters](prompt-starters.md) – Where to begin, and what to ask next – suggestions for an empty chat and follow-ups after an answer, from the conversation's context

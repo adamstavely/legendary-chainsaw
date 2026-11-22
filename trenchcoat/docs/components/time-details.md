@@ -353,8 +353,8 @@ tooltip itself repeats those words for sighted readers and is hidden from assist
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **1.1 ms** | the gallery demo's data, 15 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | re-render with the same data |
-| First on the page | 2.4 ms | default properties; includes adding its CSS to the document |
+| Typical update | **0.7 ms** | re-render with the same data |
+| First on the page | 2.7 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

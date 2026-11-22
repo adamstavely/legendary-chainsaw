@@ -457,13 +457,13 @@ plate shown”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 217 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of groups replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 34 ms | groups: first render, 10,066 nodes; update 4.4 ms |
-| 1,000 items | 332 ms | groups: first render, 100,516 nodes; update 38 ms |
+| First render | **3.4 ms** | the gallery demo's data, 217 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of groups replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 54 ms | groups: first render, 10,066 nodes; update 5.0 ms |
+| 1,000 items | 331 ms | groups: first render, 100,516 nodes; update 32 ms |
 
-1,000 items of groups: 332 ms. It renders every item, so a first render passes 50 ms (a long task) at about 150 items – page or filter longer lists.
+1,000 items of groups: 331 ms. It renders every item, so a first render passes 50 ms (a long task) at about 150 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

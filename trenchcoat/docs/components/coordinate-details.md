@@ -404,11 +404,11 @@ are "Copy decimal" and "Copy DMS"; each link says it opens in a new tab. A polit
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
+| First render | **0.9 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of providers replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.6 ms | providers: first render, 6 nodes; update 0.1 ms |
-| 1,000 items | 0.3 ms | providers: first render, 6 nodes; update 0.0 ms |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.9 ms | providers: first render, 6 nodes; update 0.1 ms |
+| 1,000 items | 0.7 ms | providers: first render, 6 nodes; update 0.1 ms |
 
 What it renders doesn't grow with providers (tested to 1,000 items).
 

@@ -467,13 +467,13 @@ confirmed in a polite status message.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.8 ms** | the gallery demo's data, 158 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of channels replaced |
-| First on the page | 11 ms | default properties; includes adding its CSS to the document |
-| 100 items | 20 ms | channels: first render, 1,943 nodes; update 4.2 ms |
-| 1,000 items | 92 ms | channels: first render, 19,043 nodes; update 22 ms |
+| First render | **3.5 ms** | the gallery demo's data, 158 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of channels replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 19 ms | channels: first render, 1,943 nodes; update 4.2 ms |
+| 1,000 items | 91 ms | channels: first render, 19,043 nodes; update 21 ms |
 
-1,000 items of channels: 92 ms. It renders every item, so a first render passes 50 ms (a long task) at about 540 items – page or filter longer lists.
+1,000 items of channels: 91 ms. It renders every item, so a first render passes 50 ms (a long task) at about 550 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

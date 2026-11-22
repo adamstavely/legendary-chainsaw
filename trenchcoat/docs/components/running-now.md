@@ -523,11 +523,11 @@ A bell is a toggle button (`aria-pressed`) named “Notify me when <task> finish
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 11 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | one item of tasks replaced |
-| First on the page | 9.0 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.6 ms | tasks: first render, 11 nodes; update 0.1 ms |
-| 1,000 items | 1.6 ms | tasks: first render, 11 nodes; update 0.4 ms |
+| First render | **0.7 ms** | the gallery demo's data, 11 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of tasks replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.9 ms | tasks: first render, 11 nodes; update 0.2 ms |
+| 1,000 items | 1.6 ms | tasks: first render, 11 nodes; update 0.3 ms |
 
 What it renders doesn't grow with tasks (tested to 1,000 items).
 

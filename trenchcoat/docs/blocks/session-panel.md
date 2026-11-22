@@ -473,9 +473,9 @@ announced.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.3 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
-| Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 2.1 ms | default properties; includes adding its CSS to the document |
+| First render | **0.1 ms** | default properties, 1 DOM nodes – to layout, median of 7 |
+| Typical update | **0.0 ms** | re-render with the same data |
+| First on the page | 1.4 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

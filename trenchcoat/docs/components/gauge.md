@@ -515,13 +515,13 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 22 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of bands replaced |
-| First on the page | 9.1 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.6 ms | bands: first render, 24 nodes; update 0.2 ms |
-| 1,000 items | 0.8 ms | bands: first render, 24 nodes; update 0.3 ms |
+| First render | **1.0 ms** | the gallery demo's data, 22 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of bands replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.1 ms | bands: first render, 24 nodes; update 0.3 ms |
+| 1,000 items | 1.8 ms | bands: first render, 24 nodes; update 0.7 ms |
 
-1,000 items of bands: 0.8 ms, 24 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of bands: 1.8 ms, 24 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -488,10 +488,10 @@ the limit” or “at the limit”; an unlimited one is an image named like “P
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of daily replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.7 ms | daily: first render, 289 nodes; update 0.2 ms |
+| First render | **1.8 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of daily replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.5 ms | daily: first render, 289 nodes; update 0.2 ms |
 | 1,000 items | 15 ms | daily: first render, 2,089 nodes; update 1.7 ms |
 
 1,000 items of daily: 15 ms, 2,089 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
