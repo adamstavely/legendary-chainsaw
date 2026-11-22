@@ -7,7 +7,7 @@ A UI kit for AI-native products. Components, illustrations and motion are moving
 - [Components](components/README.md): 418
 - [Blocks](blocks/README.md): 27
 - [Screens](screens/README.md): 25
-- [Illustrations](illustrations/README.md): 54
+- [Illustrations](illustrations/README.md): 32
 - [Motion](motion/README.md): 29
 
 ## What's inside
@@ -48,13 +48,13 @@ Agent Chat · Agent Orchestration · Agent Run · Agents · AI Chat / Double Sid
 
 ### [Illustrations](illustrations/README.md)
 
-54 items · 54 files
+32 items · 32 files
 
 **Animated visuals for empty states and marketing**
 
 Decorative, lightly interactive artwork – clouds, folders, orbits, integration diagrams, world maps. Use them in empty states, onboarding and landing pages.
 
-Accessibility Principles · Added to Readbook · Agent Scene · Agent Team · All Done …
+Accessibility Principles · Agent Scene · Agent Team · Atomic Design · Content Hidden …
 
 ### [Motion](motion/README.md)
 

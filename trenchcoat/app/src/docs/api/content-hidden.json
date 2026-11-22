@@ -3,7 +3,7 @@
   {
    "tag": "tc-content-hidden",
    "className": "TcContentHidden",
-   "description": "A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.",
+   "description": "A picture pixelated into an obscured grid, with a warning sign on it, for sensitive content that's been covered.",
    "properties": [
     {
      "name": "caption",
@@ -370,7 +370,7 @@
   "windowed": false
  },
  "size": {
-  "min": 14211,
-  "gzip": 5346
+  "min": 14203,
+  "gzip": 5357
  }
 }

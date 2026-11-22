@@ -2,16 +2,56 @@
 
 # Changelog
 
-## Unreleased – Document-status illustrations
+## Unreleased – Doc Status: every document state in one illustration
 
-Six illustrations in the style of [Released](../illustrations/released.md) – a soft page (or book) tile, one pastel badge and the words under it – all drawn from one shared base, `internal/doc-stage.ts`, so each is only its badge, colours, motion and words:
+- **[Doc Status](../illustrations/doc-status.md):** one illustration for where a document stands; its `status` picks the badge's drawing, colours, short motion and words. 40 statuses:
+  - workflow: draft, awaiting review, in translation, in quality control, in coordination, pending release, scheduled, released, added to Readbook (a book tile);
+  - work: queued, processing, in progress, success, failed, uploading, downloading, working offline (changes are saved on this device and sync when you're back online), locked, sync conflict;
+  - files: malware scan, malware blocked, preview unavailable, converting to text (the page read under a scan bracket);
+  - access and signing: restricted, redacted (black bars over the page's text), password protected (a password field over the page), encrypted, shared, awaiting signature, signed, comments waiting;
+  - keeping: archived, in trash, expired, duplicate, update available;
+  - metadata cleansing: required, in progress, failed, done.
 
-- **[Success](../illustrations/success.md):** a check that draws itself and a ring that pops out once.
-- **[Failed](../illustrations/failed.md):** a cross that draws itself as the badge gives one small shake.
-- **[In Progress](../illustrations/in-progress.md):** three dots that pulse in turn a few times.
-- **[Metadata Cleansing](../illustrations/metadata-cleansing.md):** one illustration for where a record's metadata cleansing stands – `status="required"` (amber, a tag with specks that twinkle), `"in-progress"` (blue, three small dots pulse on the tag's corner), `"failed"` (red, a cross, and one small shake) or `"success"` (green, a check). Its words follow the status – "Metadata cleansing required", "Cleansing metadata", "Metadata cleansing failed", "Metadata cleansed" – unless `caption` sets its own.
-- **[Malware Scan In Progress](../illustrations/malware-scan-in-progress.md):** a shield with a scan line passing down the page – the in-progress partner of [Malware Blocked](../illustrations/malware-blocked.md).
-- **[Added to Readbook](../illustrations/added-to-readbook.md):** a book with a bookmark and a check, its words changeable for your own reading list.
+  Words follow the status unless `caption` sets your own. The colours are a small family – green, red, blue, amber, slate, purple, teal and a few more – shared by statuses that mean the same. The shared drawing lives in `internal/doc-stage.ts`.
+- **Removed:** the eleven separate document illustrations it replaces. Use Doc Status with their status:
+
+| Removed tag | Use | Removed React component | Use |
+|---|---|---|---|
+| `<tc-released>` | `<tc-doc-status status="released">` | `<Released />` | `<DocStatus status="released" />` |
+| `<tc-pending-release>` | `<tc-doc-status status="pending-release">` | `<PendingRelease />` | `<DocStatus status="pending-release" />` |
+| `<tc-awaiting-review>` | `<tc-doc-status status="awaiting-review">` | `<AwaitingReview />` | `<DocStatus status="awaiting-review" />` |
+| `<tc-in-translation>` | `<tc-doc-status status="in-translation">` | `<InTranslation />` | `<DocStatus status="in-translation" />` |
+| `<tc-in-quality-control>` | `<tc-doc-status status="in-quality-control">` | `<InQualityControl />` | `<DocStatus status="in-quality-control" />` |
+| `<tc-in-coordination>` | `<tc-doc-status status="in-coordination">` | `<InCoordination />` | `<DocStatus status="in-coordination" />` |
+| `<tc-processing>` | `<tc-doc-status status="processing">` | `<Processing />` | `<DocStatus status="processing" />` |
+| `<tc-uploading>` | `<tc-doc-status status="uploading">` | `<Uploading />` | `<DocStatus status="uploading" />` |
+| `<tc-downloading>` | `<tc-doc-status status="downloading">` | `<Downloading />` | `<DocStatus status="downloading" />` |
+| `<tc-malware-blocked>` | `<tc-doc-status status="malware-blocked">` | `<MalwareBlocked />` | `<DocStatus status="malware-blocked" />` |
+| `<tc-preview-unavailable>` | `<tc-doc-status status="preview-unavailable">` | `<PreviewUnavailable />` | `<DocStatus status="preview-unavailable" />` |
+
+[Scan Status](../components/scan-status.md) and the Design System Releases screen now use Doc Status.
+
+- **[Tray Status](../illustrations/tray-status.md):** one tray illustration with a `status` – `all-done`, `empty`, `drop-to-upload`, `new-items` (with `count`, shown on the badge and in the words, "99+" past 99), `import-complete`, `export-ready`, `sync-complete`, `paused`, `upload-failed` or `storage-full` – each with its own badge, colour, finite motion and words. It replaces All Done and Upload Failed, which are removed; their scenes are unchanged:
+
+  | Old | New | React |
+  |---|---|---|
+  | `<tc-all-done>` | `<tc-tray-status status="all-done">` | `<TrayStatus status="all-done" />` |
+  | `<tc-upload-failed>` | `<tc-tray-status status="upload-failed">` | `<TrayStatus status="upload-failed" />` |
+
+- **[Folder Status](../illustrations/folder-status.md):** a folder illustration with a `status` – `empty`, `shared`, `archived` or `locked` – each with its own badge, colour, finite motion and words.
+- **[Page State](../illustrations/page-state.md):** one illustration for full-page and empty states, with a `status`. It holds the scenes of seven illustrations, unchanged and now removed, plus six new ones: `not-found`, `maintenance`, `session-expired`, `access-requested`, `coming-soon` and `region-unavailable`. Words follow the status unless `caption` sets its own; `nothing-found`, `something-wrong` and `no-access` stay wordless and decorative unless given `caption` or `label`, as before.
+
+  | Old | New | React |
+  |---|---|---|
+  | `<tc-nothing-found>` | `<tc-page-state status="nothing-found">` | `<PageState status="nothing-found" />` |
+  | `<tc-offline>` | `<tc-page-state status="offline">` | `<PageState status="offline" />` |
+  | `<tc-something-wrong>` | `<tc-page-state status="something-wrong">` | `<PageState status="something-wrong" />` |
+  | `<tc-link-expired>` | `<tc-page-state status="link-expired">` | `<PageState status="link-expired" />` |
+  | `<tc-no-access>` | `<tc-page-state status="no-access">` | `<PageState status="no-access" />` |
+  | `<tc-limit-reached>` | `<tc-page-state status="limit-reached">` | `<PageState status="limit-reached" />` |
+  | `<tc-first-use>` | `<tc-page-state status="first-use">` | `<PageState status="first-use" />` |
+
+- **[Content Hidden](../illustrations/content-hidden.md):** the picture is now an obscured grid of squares with no shape in it, instead of a person's outline.
 
 ## Unreleased – Help Video
 

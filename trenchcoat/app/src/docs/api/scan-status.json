@@ -255,7 +255,8 @@
     "progressive": false,
     "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
     "via": [
-     "malware-blocked",
+     "doc-status",
+     "internal/doc-stage",
      "tokens.css"
     ]
    },
@@ -306,7 +307,7 @@
     },
     "progressive": false,
     "via": [
-     "malware-blocked"
+     "internal/doc-stage"
     ]
    },
    {
@@ -322,7 +323,7 @@
     },
     "progressive": false,
     "via": [
-     "malware-blocked"
+     "internal/doc-stage"
     ]
    },
    {
@@ -340,7 +341,8 @@
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
      "itself",
-     "malware-blocked",
+     "doc-status",
+     "internal/doc-stage",
      "internal/base",
      "tokens.css"
     ]
@@ -393,6 +395,7 @@
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
      "itself",
+     "internal/doc-stage",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -415,7 +418,7 @@
   ],
   "pauses": {
    "offscreen": [
-    "malware-blocked",
+    "internal/doc-stage › DocStage",
     "internal/controllers › OnScreenController"
    ],
    "hidden": [
@@ -423,14 +426,14 @@
    ],
    "reducedMotion": [
     "CSS",
-    "CSS (malware-blocked)",
+    "CSS (internal/doc-stage › docStageCss)",
     "CSS (internal/kit › kitCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 23404,
-  "gzip": 8032
+  "min": 50114,
+  "gzip": 14535
  }
 }

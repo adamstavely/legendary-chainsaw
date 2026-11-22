@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: export-dialog, file-import, page-state
+related: file-import, page-state
 ---
 
 ## Overview
