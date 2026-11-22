@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { arrowIcon, eyeIcon, eyeOffIcon, lucideIcon as lucide, requestReveal, RowButtonGrid } from "./internal/masked-rows";
 import { pick } from "./internal/util";
 
 /*
@@ -61,8 +62,6 @@ export const defaultAssetStatuses: Record<string, { label: string; tone: AssetTo
 let uidCount = 0;
 
 /* Kinds, status marks, eye, eye-off and arrow: Lucide (ISC, lucide.dev) */
-const lucide = (size: number, body: ReturnType<typeof svg>) =>
-  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const KIND: Record<AssetKind, () => ReturnType<typeof lucide>> = {
   car: () => lucide(16, svg`<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle>`),
   motorcycle: () => lucide(16, svg`<circle cx="18.5" cy="17.5" r="3.5"></circle><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="15" cy="5" r="1"></circle><path d="M12 17.5V14l-3-3 4-3 2 3h2"></path>`),
@@ -78,10 +77,6 @@ const MARK: Record<AssetTone, () => ReturnType<typeof lucide>> = {
   danger: () => lucide(11, svg`<rect width="18" height="11" x="3" y="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>`),
   neutral: () => lucide(11, svg`<path d="M5 12h14"></path>`),
 };
-const eyeIcon = () => lucide(15, svg`<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"></path><circle cx="12" cy="12" r="3"></circle>`);
-const eyeOffIcon = () =>
-  lucide(15, svg`<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><path d="M14.08 14.16a3 3 0 0 1-4.16-4.16"></path><path d="m2 2 20 20"></path>`);
-const arrowIcon = () => lucide(14, svg`<path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>`);
 
 /** "AB-441-KX" → "•••• 1-KX" */
 const mask = (n: string) => (n.length <= 4 ? "••••" : `•••• ${n.slice(-4)}`);
@@ -133,8 +128,8 @@ export class TcAssetList extends TcElement {
   }
 
   private setRevealed(a: Asset, shown: boolean) {
-    const next = shown ? [...this.revealed.filter((x) => x !== a.id), a.id] : this.revealed.filter((x) => x !== a.id);
-    if (!this.emit<AssetRevealedChange>("tc-revealed-change", { revealed: next, id: a.id, shown }, { cancelable: true })) return;
+    const next = requestReveal((name, detail, o) => this.emit(name, detail, o), this.revealed, a.id, shown);
+    if (!next) return;
     this.revealed = next;
     this.announce = `${a.name} ${(a.identifierLabel ?? "identifier").toLowerCase()} ${shown ? "shown" : "hidden"}`;
   }
@@ -145,44 +140,21 @@ export class TcAssetList extends TcElement {
     const row = this.rows[r];
     return row && this.canReveal(row.a) ? [0, 1] : [1];
   }
-  private focusAt(r: number, c: number) {
-    const n = this.rows.length;
-    if (!n) return;
-    r = Math.max(0, Math.min(n - 1, r));
-    const cols = this.cols(r);
-    if (!cols.includes(c)) c = cols[cols.length - 1];
-    this.active = { r, c };
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-at="${r}:${c}"]`)?.focus());
-  }
-  private onKey = (e: KeyboardEvent) => {
-    const btn = (e.target as HTMLElement).closest<HTMLElement>("[data-at]");
-    if (!btn || e.isComposing || e.altKey || e.metaKey || e.ctrlKey) return;
-    const [r, c] = btn.dataset.at!.split(":").map(Number);
-    const cols = this.cols(r);
-    const i = cols.indexOf(c);
-    const moves: Record<string, [number, number]> = {
-      ArrowUp: [r - 1, c],
-      ArrowDown: [r + 1, c],
-      ArrowLeft: [r, cols[Math.max(0, i - 1)]],
-      ArrowRight: [r, cols[Math.min(cols.length - 1, i + 1)]],
-      Home: [0, c],
-      End: [this.rows.length - 1, c],
-    };
-    const move = moves[e.key];
-    if (!move) return;
-    e.preventDefault();
-    this.focusAt(move[0], move[1]);
-  };
+  private grid = new RowButtonGrid<number>(this, {
+    count: () => this.rows.length,
+    keys: (r) => this.cols(r),
+    get: () => ({ r: this.active.r, k: this.active.c }),
+    set: (stop) => (this.active = { r: stop.r, c: stop.k }),
+    fallback: "last",
+  });
+  private onKey = this.grid.onKey;
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     // The tab stop stays on a row and a button that exist
-    const n = this.rows.length;
-    if (n && (this.active.r >= n || !this.cols(this.active.r).includes(this.active.c))) {
-      const r = Math.min(this.active.r, n - 1);
-      this.active = { r, c: this.cols(r).includes(this.active.c) ? this.active.c : 1 };
-    }
+    this.grid.keepInRange();
   }
+
 
   /* ---------- Rendering ---------- */
 

@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { TaskNotify } from "./internal/task-notify";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController, RowWindowController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
@@ -185,7 +186,14 @@ export class TcBackgroundTasks extends TcElement {
   private known = new Map<string, BackgroundTaskStatus>();
   private flip = false;
   private focusAfter: string | null = null;
-  private finishedWatched: BackgroundTasksNotify[] = [];
+  /** Notify when done: the bell, the channel list and telling the page */
+  private readonly notifier = new TaskNotify<BackgroundTask>(this, {
+    watchable: (t) => t.status === "running" || t.status === "queued",
+    name: (t) => t.label,
+    say: (text) => this.say(text),
+    emit: (type, detail, options) => this.emit(type, detail, options),
+    prefix: "ui-bgt",
+  });
 
   private readonly pop = new PopoverController(this, {
     popover: () => this.querySelector<HTMLElement>(".ui-bgt__pop"),
@@ -274,10 +282,7 @@ export class TcBackgroundTasks extends TcElement {
       const before = this.known;
       const news = this.tasks.filter((t) => finished(t) && before.has(t.id) && before.get(t.id) !== t.status);
       if (news.length) this.say(news.map((t) => this.announce?.(t) ?? `${t.label} ${t.status === "done" ? "ready" : "failed"}`).join(". "));
-      if (this.notifiable)
-        for (const t of news)
-          if (this.notify.includes(t.id))
-            this.finishedWatched.push({ id: t.id, status: t.status as "done" | "failed", task: t, channels: this.notifyChannels.length ? (this.notifyVia[t.id] ?? []) : undefined });
+      for (const t of news) this.notifier.finished(t, t.status as "done" | "failed");
       this.known = new Map(this.tasks.map((t) => [t.id, t.status]));
     }
     if (changed.has("layout") && this.layout === "panel" && !this.hasAttribute("role")) this.setAttribute("role", "region");
@@ -291,7 +296,7 @@ export class TcBackgroundTasks extends TcElement {
       if (done.some((id) => !this.seen.has(id))) this.seen = new Set([...this.seen, ...done]);
     }
     if (!this.tasks.some((t) => t.id === this.activeId)) this.activeId = this.ordered[0]?.id ?? "";
-    if (this.channelsFor && !this.tasks.some((t) => t.id === this.channelsFor && this.canNotify(t))) this.channelsFor = "";
+    this.notifier.prune(this.tasks);
   }
 
   protected override updated(changed: PropertyValues<this>) {
@@ -306,9 +311,7 @@ export class TcBackgroundTasks extends TcElement {
       row?.scrollIntoView({ block: "nearest" });
     }
     // A watched task finished: tell the app, after the update that shows it
-    const done = this.finishedWatched;
-    this.finishedWatched = [];
-    for (const d of done) this.emit<BackgroundTasksNotify>("tc-notify", d);
+    this.notifier.flush();
   }
 
   /* ---------- Actions ---------- */
@@ -362,50 +365,6 @@ export class TcBackgroundTasks extends TcElement {
     }
   }
 
-  /** Running and queued tasks can be watched */
-  private canNotify(t: BackgroundTask) {
-    return this.notifiable && (t.status === "running" || t.status === "queued");
-  }
-
-  /** Switches watching a task, or one of its channels */
-  private setNotify(task: BackgroundTask, on: boolean, channels?: string[]) {
-    const notify = on ? [...this.notify.filter((id) => id !== task.id), task.id] : this.notify.filter((id) => id !== task.id);
-    const notifyVia = { ...this.notifyVia };
-    if (channels && channels.length) notifyVia[task.id] = channels;
-    else delete notifyVia[task.id];
-    const detail: BackgroundTasksNotifyChange = { notify, id: task.id, on, notifyVia, ...(channels ? { channels } : {}) };
-    if (!this.emit<BackgroundTasksNotifyChange>("tc-notify-change", detail, { cancelable: true })) {
-      this.requestUpdate();
-      return;
-    }
-    this.notify = notify;
-    this.notifyVia = notifyVia;
-    this.say(on ? `${channels?.length ? `You'll be told by ${channels.join(", ")}` : "You'll be told"} when ${task.label} finishes` : `No longer watching ${task.label}`);
-  }
-
-  private onBell(task: BackgroundTask) {
-    if (this.notifyChannels.length) {
-      this.channelsFor = this.channelsFor === task.id ? "" : task.id;
-      if (this.channelsFor) this.updateComplete.then(() => this.querySelector<HTMLInputElement>(`.ui-bgt__channels[data-id="${CSS.escape(task.id)}"] input`)?.focus());
-      return;
-    }
-    this.setNotify(task, !this.notify.includes(task.id));
-  }
-
-  private onChannel(task: BackgroundTask, channel: string, checked: boolean) {
-    const now = this.notifyVia[task.id] ?? [];
-    const channels = this.notifyChannels.filter((c) => (c === channel ? checked : now.includes(c)));
-    this.setNotify(task, channels.length > 0, channels);
-  }
-
-  private onChannelsKey(e: KeyboardEvent, task: BackgroundTask) {
-    if (e.key !== "Escape") return;
-    // The channel list closes first; the panel stays open
-    e.preventDefault();
-    e.stopPropagation();
-    this.channelsFor = "";
-    this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-bgt__bell[data-id="${CSS.escape(task.id)}"]`)?.focus());
-  }
 
   /* ---------- Keyboard ---------- */
 
@@ -552,7 +511,7 @@ export class TcBackgroundTasks extends TcElement {
     const running = t.status === "running";
     const pct = t.progress == null ? null : Math.round(clamp01(t.progress) * 100);
     const acts: TemplateResult[] = [];
-    const watchable = this.canNotify(t);
+    const watchable = this.notifier.can(t);
     const watched = watchable && this.notify.includes(t.id);
     const menu = watchable && this.notifyChannels.length > 0;
     const open = menu && this.channelsFor === t.id;
@@ -569,7 +528,7 @@ export class TcBackgroundTasks extends TcElement {
           aria-pressed=${ifDefined(menu ? undefined : watched ? "true" : "false")}
           aria-expanded=${ifDefined(menu ? (open ? "true" : "false") : undefined)}
           aria-controls=${ifDefined(open ? `${rid}-ch` : undefined)}
-          @click=${() => this.onBell(t)}
+          @click=${() => this.notifier.bell(t)}
         >
           ${icon(watched ? BELL_ON : BELL)}<span class="ui-bgt__sr">Notify me when ${t.label} finishes${menu && watched && via.length ? `: ${via.join(", ")}` : ""}</span>
         </button>`,
@@ -600,11 +559,11 @@ export class TcBackgroundTasks extends TcElement {
       </div>
       ${acts.length ? html`<div class="ui-bgt__acts">${acts}</div>` : nothing}
       ${open
-        ? html`<fieldset class="ui-bgt__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.onChannelsKey(e, t)}>
+        ? html`<fieldset class="ui-bgt__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.notifier.channelsKey(e, t)}>
             <legend class="ui-bgt__channels-title">Tell me about ${t.label} by</legend>
             ${this.notifyChannels.map(
               (c) => html`<label class="ui-bgt__channel"
-                ><input type="checkbox" tabindex=${tab} .checked=${live(via.includes(c))} @change=${(e: Event) => this.onChannel(t, c, (e.target as HTMLInputElement).checked)} />${c}</label
+                ><input type="checkbox" tabindex=${tab} .checked=${live(via.includes(c))} @change=${(e: Event) => this.notifier.channel(t, c, (e.target as HTMLInputElement).checked)} />${c}</label
               >`,
             )}
           </fieldset>`

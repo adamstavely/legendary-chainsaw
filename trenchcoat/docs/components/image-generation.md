@@ -47,7 +47,7 @@ time left. Use it for the one image a person asked for, and Image Grid when they
 ### When not to use
 
 - Several variations to compare and pick from – use [Image Grid](image-grid.md).
-- A short wait with nothing to show but that it's working – use [Pixel Loader](pixel-loader.md) or [Thinking Loader](thinking-loader.md).
+- A short wait with nothing to show but that it's working – use [Thinking Loader](thinking-loader.md).
 - Many background jobs at once, of any kind – use [Background Tasks](background-tasks.md).
 
 ## Anatomy
@@ -575,6 +575,5 @@ Show more is a disclosure button (`aria-expanded`, `aria-controls` the prompt).
 ## Related
 
 - [Image Grid](image-grid.md) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
-- [Pixel Loader](pixel-loader.md) – A small working row – a 5 × 5 grid of dots lit in a wave, a snake, a twinkle or an orbit, a shimmering label and the time since the work started, settling into a check or a cross when it ends
 - [Thinking Loader](thinking-loader.md) – A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 - [Background Tasks](background-tasks.md) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open

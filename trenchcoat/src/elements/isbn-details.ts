@@ -2,7 +2,7 @@ import { html, nothing, svg, type PropertyValues, type TemplateResult } from "li
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
-import { PopoverController } from "./internal/popover";
+import { InlineCard, InlineLookups, sayAgain, type LookupEntry } from "./internal/inline-details";
 import { marks } from "./internal/selection";
 import { copyText } from "./internal/util";
 import { safeMediaUrl } from "./internal/safe-media";
@@ -208,9 +208,10 @@ const copyIcon = svg`<rect width="14" height="14" x="8" y="8" rx="2" ry="2"></re
 const checkIcon = svg`<path d="M20 6 9 17l-5-5"></path>`;
 const retryIcon = svg`<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path>`;
 
-type Entry = { status: "loading" } | { status: "done"; book: IsbnBook | null } | { status: "error"; message: string };
+type Entry = LookupEntry<IsbnBook>;
+/** A book worth showing: one with a title */
+const isBook = (b: unknown): b is IsbnBook => !!b && typeof b === "object" && typeof (b as IsbnBook).title === "string" && (b as IsbnBook).title.trim() !== "";
 
-const NO_ANSWER = Symbol("no answer");
 let instances = 0;
 
 /**
@@ -246,36 +247,32 @@ export class TcIsbnDetails extends TcElement {
   private readonly uid = `tc-isbn${++instances}`;
   private found: IsbnMatch[] = [];
   private foundFor: string | null = null;
-  private readonly cache = new Map<string, Entry>();
-  private readonly aborts = new Set<AbortController>();
+  private readonly lookups = new InlineLookups<IsbnBook>(() => this.version++, isBook);
   private copiedTimer = 0;
 
-  private readonly pop = new PopoverController(this, {
-    popover: () => this.querySelector<HTMLElement>(".ui-isbn__pop"),
-    anchor: () => {
-      const m = this.markAt(this.openAt);
-      if (!m?.isConnected) return null;
-      // The mark's first line, when it wraps
-      return m.getClientRects()[0] ?? m.getBoundingClientRect();
+  private readonly card = new InlineCard(this, {
+    prefix: "isbn",
+    count: () => this.isbns.length,
+    hoverDelay: () => this.hoverDelay,
+    opened: (i) => {
+      const m = this.isbns[i];
+      this.copied = "";
+      this.emit<IsbnOpenChange>("tc-open-change", { isbn13: m.isbn13 });
+      void this.lookup(m);
     },
-    side: "bottom",
-    align: "start",
-    kind: "dialog",
-    trigger: () => this.markAt(this.openAt),
-    returnFocus: () => this.markAt(this.openAt),
-    // The card stays open until dismissed once it's opened by a click or from the keyboard (pinned)
-    hover: { delay: () => this.hoverDelay },
-    tabBridge: true,
-    closeOnFocusOut: true,
-    onClose: () => this.closed(),
+    closed: () => {
+      this.copied = "";
+      this.emit<IsbnOpenChange>("tc-open-change", { isbn13: null });
+    },
   });
+  private get pop() {
+    return this.card.pop;
+  }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    for (const a of this.aborts) a.abort();
-    this.aborts.clear();
-    // Lookups in flight were aborted: forget them, so the card asks again if the element comes back
-    for (const [k, e] of this.cache) if (e.status === "loading") this.cache.delete(k);
+    // Lookups in flight are aborted and forgotten, so the card asks again if the element comes back
+    this.lookups.abortAll();
     clearTimeout(this.copiedTimer);
   }
 
@@ -290,101 +287,48 @@ export class TcIsbnDetails extends TcElement {
 
   /** Forgets cached details – one ISBN-13's, or all of them – so the next card asks again */
   clearCache(isbn13?: string) {
-    if (isbn13) this.cache.delete(isbn13);
-    else this.cache.clear();
-    this.version++;
+    this.lookups.forget(isbn13 || undefined);
   }
 
   /** Opens the card for the ISBN at `index` in `isbns`, pinned open; focus stays where it is */
   openCard(index = 0) {
-    this.open(index, { pin: true });
+    this.card.open(index, { pin: true });
   }
 
   /** Closes the open card, if any */
   closeCard() {
-    this.close();
+    this.card.close();
   }
 
   /* ---------- Opening and closing ---------- */
-
-  private markAt(i: number) {
-    return i < 0 ? null : this.querySelector<HTMLElement>(`.ui-isbn__mark[data-i="${i}"]`);
-  }
-
-  private open(i: number, how: { pin?: boolean; focus?: boolean } = {}) {
-    const m = this.isbns[i];
-    if (!m) return;
-    if (this.openAt !== i) {
-      if (this.openAt >= 0) this.pop.pinned = false;
-      this.openAt = i;
-      this.copied = "";
-      this.emit<IsbnOpenChange>("tc-open-change", { isbn13: m.isbn13 });
-      void this.lookup(m);
-    }
-    this.pop.show({ focus: !!how.focus, pin: !!how.pin });
-  }
-
-  private close() {
-    if (this.pop.open) this.pop.close();
-    else this.closed();
-  }
-
-  /** After the controller closed it (Escape, outside, focus gone, anchor gone) or close() */
-  private closed() {
-    if (this.openAt < 0) return;
-    this.openAt = -1;
-    this.copied = "";
-    this.emit<IsbnOpenChange>("tc-open-change", { isbn13: null });
-  }
-
-  private onMarkClick(e: MouseEvent, i: number) {
-    // Enter or Space (detail 0): into the card. A click: pin it open, or close a pinned one
-    if (e.detail === 0) this.open(i, { pin: true, focus: true });
-    else if (this.openAt === i && this.pop.pinned) this.close();
-    else this.open(i, { pin: true });
-  }
 
   /* ---------- Looking up ---------- */
 
   private async lookup(m: IsbnMatch) {
     const key = m.isbn13;
-    if (this.cache.has(key)) return;
-    this.cache.set(key, { status: "loading" });
-    this.version++;
-    const abort = new AbortController();
-    this.aborts.add(abort);
-    let answer: unknown = NO_ANSWER;
-    const detail: IsbnLookupDetail = { isbn13: m.isbn13, signal: abort.signal, respondWith: (book) => (answer = book) };
-    if (m.isbn10) detail.isbn10 = m.isbn10;
-    const go = this.emit<IsbnLookupDetail>("tc-isbn-lookup", detail, { cancelable: true });
-    try {
-      let result: unknown = null;
-      if (answer !== NO_ANSWER) result = answer;
-      else if (go && this.resolve) result = this.resolve(key, abort.signal);
-      const book = (await result) as IsbnBook | null | undefined;
-      if (abort.signal.aborted) return;
-      const ok = !!book && typeof book === "object" && typeof book.title === "string" && book.title.trim() !== "";
-      this.cache.set(key, { status: "done", book: ok ? book : null });
-      if (this.isbns[this.openAt]?.isbn13 === key) this.say(ok ? `${book.title}${book.authors?.length ? `, by ${book.authors.join(", ")}` : ""}` : this.notFoundText);
-    } catch (err) {
-      if (abort.signal.aborted) return;
-      this.cache.set(key, { status: "error", message: err instanceof Error ? err.message : String(err ?? "") });
-      if (this.isbns[this.openAt]?.isbn13 === key) this.say(this.errorText);
-    } finally {
-      this.aborts.delete(abort);
-      this.version++;
-    }
+    const entry = await this.lookups.run(
+      key,
+      (hooks) => {
+        const detail: IsbnLookupDetail = { isbn13: m.isbn13, ...hooks };
+        if (m.isbn10) detail.isbn10 = m.isbn10;
+        return this.emit<IsbnLookupDetail>("tc-isbn-lookup", detail, { cancelable: true });
+      },
+      (signal) => this.resolve?.(key, signal) ?? null,
+    );
+    if (!entry || this.isbns[this.openAt]?.isbn13 !== key) return;
+    if (entry.status === "error") this.say(this.errorText);
+    else if (entry.status === "done") this.say(entry.data ? `${entry.data.title}${entry.data.authors?.length ? `, by ${entry.data.authors.join(", ")}` : ""}` : this.notFoundText);
   }
 
   private retry(m: IsbnMatch) {
-    this.cache.delete(m.isbn13);
+    this.lookups.forget(m.isbn13);
     this.say("Trying again…");
     void this.lookup(m);
   }
 
   /** A trailing space makes a repeated message count as new for screen readers */
   private say(text: string) {
-    this.said = this.said === text ? `${text} ` : text;
+    this.said = sayAgain(this.said, text);
   }
 
   private async copy(form: "isbn13" | "isbn10", text: string) {
@@ -415,9 +359,9 @@ export class TcIsbnDetails extends TcElement {
   private renderCard() {
     const m = this.isbns[this.openAt];
     if (!this.pop.open || !m) return nothing;
-    const entry = this.cache.get(m.isbn13) ?? { status: "loading" };
+    const entry = this.lookups.get(m.isbn13) ?? { status: "loading" };
     const titleId = `${this.uid}-title`;
-    const book = entry.status === "done" ? entry.book : null;
+    const book = entry.status === "done" ? entry.data : null;
     const label = book ? undefined : `Book details for ISBN ${m.isbn13}`;
     return html`<div
       class="tc-pop ui-isbn__pop"
@@ -487,10 +431,10 @@ export class TcIsbnDetails extends TcElement {
         aria-expanded=${open ? "true" : "false"}
         aria-describedby=${hint}
         ?data-open=${open}
-        @pointerenter=${(e: PointerEvent) => this.pop.hoverEnter(e, () => this.open(i))}
+        @pointerenter=${(e: PointerEvent) => this.pop.hoverEnter(e, () => this.card.open(i))}
         @pointerleave=${this.pop.hoverLeave}
-        @click=${(e: MouseEvent) => this.onMarkClick(e, i)}
-        @focus=${() => (this.openAt !== i || !this.pop.open) && this.open(i)}
+        @click=${(e: MouseEvent) => this.card.onMarkClick(e, i)}
+        @focus=${() => (this.openAt !== i || !this.pop.open) && this.card.open(i)}
       >${seg.text}</button>`;
     });
     return html`<div class="ui-isbn__text">${body}</div>${this.renderCard()}<span class="ui-isbn__sr" id=${hint}>Book details. Tab moves into them</span><span class="ui-isbn__sr" role="status">${this.said}</span>`;

@@ -1,0 +1,309 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-api-keys.json",
+  "title": "tc-api-keys",
+  "description": "A workspace's API keys: masked values, permissions, last use and status in words, with Create key (the secret shown\nonce) and Revoke.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"API keys\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading, such as what the keys reach"
+    },
+    "keys": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApiKey"
+      },
+      "description": "The keys. A revoke changes it unless a tc-key-revoke listener calls preventDefault()"
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApiKeyScope"
+      },
+      "description": "The permissions a key can have, offered as checkboxes when creating one"
+    },
+    "expiryOptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApiKeyExpiryOption"
+      },
+      "description": "How long a new key can last; by default 30 days, 90 days, 1 year and Never"
+    },
+    "defaultExpiry": {
+      "type": "number",
+      "description": "The expiry picked when the form opens, in days or null; by default 90"
+    },
+    "revealed": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "secret"
+      ],
+      "additionalProperties": false,
+      "description": "A new key's secret to show once, set by the page after tc-key-create; cleared by Done unless a tc-reveal-dismiss listener calls preventDefault()"
+    },
+    "warnDays": {
+      "type": "number",
+      "description": "How many days before expiry a key says \"Expires in n days\" in warning colours"
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Hides Create key, for people who may only look"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" in epoch ms; unset, the clock's"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates and relative times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "expiresIn": {
+          "type": "string"
+        },
+        "expiresToday": {
+          "type": "string"
+        },
+        "expiresTomorrow": {
+          "type": "string"
+        },
+        "expired": {
+          "type": "string"
+        },
+        "revoked": {
+          "type": "string"
+        },
+        "expiresOn": {
+          "type": "string"
+        },
+        "noExpiry": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "createdOn": {
+          "type": "string"
+        },
+        "lastUsed": {
+          "type": "string"
+        },
+        "neverUsed": {
+          "type": "string"
+        },
+        "revoke": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "confirmRevoke": {
+          "type": "string"
+        },
+        "inactive": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "namePlaceholder": {
+          "type": "string"
+        },
+        "nameRequired": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "string"
+        },
+        "noPermissions": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string"
+        },
+        "submit": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "newKey": {
+          "type": "string"
+        },
+        "revealNote": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
+        "show": {
+          "type": "string"
+        },
+        "hide": {
+          "type": "string"
+        },
+        "copyKey": {
+          "type": "string"
+        },
+        "maskedKey": {
+          "type": "string"
+        },
+        "loading": {
+          "type": "string"
+        },
+        "loadFailed": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "emptyHint": {
+          "type": "string"
+        },
+        "announceRevoked": {
+          "type": "string"
+        },
+        "announceCopied": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    },
+    "hideAfter": {
+      "type": "number",
+      "description": "Seconds a shown secret stays before it's masked again; 0 keeps it until Hide (default 30)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ApiKey": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string",
+          "description": "The start of the key that's safe to show, e.g. \"tc_live_\""
+        },
+        "last4": {
+          "type": "string",
+          "description": "Its last four characters, shown after the prefix"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "lastUsedAt": {
+          "type": "number",
+          "description": "Epoch ms; none means it's never been used"
+        },
+        "expiresAt": {
+          "type": "number",
+          "description": "Epoch ms; none means it doesn't expire"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The ids of the scopes it has"
+        },
+        "revokedAt": {
+          "type": "number",
+          "description": "Epoch ms, once revoked"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "prefix",
+        "createdAt"
+      ],
+      "additionalProperties": false
+    },
+    "ApiKeyScope": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ApiKeyExpiryOption": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "days",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "How long a new key lasts: days, or null for never"
+    }
+  }
+}

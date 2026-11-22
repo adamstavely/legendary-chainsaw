@@ -4,7 +4,7 @@ import type { TcThinkingLoader } from "@adamstavely/trenchcoat/thinking-loader";
 import "@adamstavely/trenchcoat/thinking-loader";
 
 /**
- * <tc-thinking-loader> for Angular: A "the model is working" pill: a spinner and a label that walks through phases, then a check and a done label.
+ * <tc-thinking-loader> for Angular: A "the model is working" pill: a mark (rays or a pixel grid) and a label that walks through phases, then a check and a done label – or a cross on error.
  * 
  * imports: [ThinkingLoader] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */
@@ -19,6 +19,10 @@ export class ThinkingLoader {
   @Input() set phases(v: TcThinkingLoader["phases"]) {
     this.#el.phases = v;
   }
+  /** One fixed label instead of `phases` – it stays when the work ends, and the status says how it ended */
+  @Input() set label(v: TcThinkingLoader["label"]) {
+    this.#el.label = v;
+  }
   /** Time per phase, in ms */
   @Input() set interval(v: TcThinkingLoader["interval"] | `${number}`) {
     this.#el.interval = typeof v === "string" ? Number(v) : v;
@@ -31,27 +35,55 @@ export class ThinkingLoader {
   @Input() set manual(v: TcThinkingLoader["manual"] | "" | "true" | "false") {
     this.#el.manual = typeof v === "string" ? v !== "false" : v;
   }
-  /** When the work started, in epoch ms – the done label counts from here. Defaults to when the loader connected (or work restarted) */
+  /** When the work started, in epoch ms – the done label and the time count from here. Defaults to when the loader connected (or work restarted) */
   @Input() set startedAt(v: TcThinkingLoader["startedAt"] | `${number}`) {
     this.#el.startedAt = typeof v === "string" ? Number(v) : v;
+  }
+  /** The same as `startedAt`, kept from Pixel Loader */
+  @Input() set started(v: TcThinkingLoader["started"] | `${number}`) {
+    this.#el.started = typeof v === "string" ? Number(v) : v;
+  }
+  /** The current time, in epoch ms – given, the loader keeps no clock of its own and counts up to it */
+  @Input() set now(v: TcThinkingLoader["now"] | `${number}`) {
+    this.#el.now = typeof v === "string" ? Number(v) : v;
   }
   /** Start over after the last phase instead of holding it – at most twice, then it holds the last phase (WCAG 2.2.2) */
   @Input() set loop(v: TcThinkingLoader["loop"] | "" | "true" | "false") {
     this.#el.loop = typeof v === "string" ? v !== "false" : v;
   }
-  /** Finished: the spinner turns into a check and the label into doneLabel */
+  /** How the work stands: "working" animates and counts; "done" turns the mark into a check; "error" into a cross */
+  @Input() set state(v: TcThinkingLoader["state"]) {
+    this.#el.state = v;
+  }
+  /** Finished – the same as state="done", kept for existing pages */
   @Input() set done(v: TcThinkingLoader["done"] | "" | "true" | "false") {
     this.#el.done = typeof v === "string" ? v !== "false" : v;
   }
-  /** Label once done – a string, or a function that gets the seconds since the loader started */
+  /** Label once done (with `phases`) – a string, or a function that gets the seconds since the loader started */
   @Input() set doneLabel(v: TcThinkingLoader["doneLabel"]) {
     this.#el.doneLabel = v;
+  }
+  /** Rename the words for how it ended, over the defaults */
+  @Input() set labels(v: TcThinkingLoader["labels"]) {
+    this.#el.labels = v;
+  }
+  /** The mark: "rays" (the default) or "pixels", a 5 × 5 grid lit in `pattern` */
+  @Input() set mark(v: TcThinkingLoader["mark"]) {
+    this.#el.mark = v;
+  }
+  /** How the pixels move: a diagonal "wave", a lit dot that "drive"s a snake path, a seeded "dots" twinkle, or an "orbit" round the edge */
+  @Input() set pattern(v: TcThinkingLoader["pattern"]) {
+    this.#el.pattern = v;
+  }
+  /** Hides the time since the work started (shown with mark="pixels") */
+  @Input() set hideTime(v: TcThinkingLoader["hideTime"] | "" | "true" | "false") {
+    this.#el.hideTime = typeof v === "string" ? v !== "false" : v;
   }
   /** "md" is the default pill; "sm" is smaller, e.g. inside a chat bubble */
   @Input() set size(v: TcThinkingLoader["size"]) {
     this.#el.size = v;
   }
-  /** "pill" = bordered capsule, "plain" = just the spinner and the label, e.g. inside a chat bubble */
+  /** "pill" = bordered capsule, "plain" = just the mark and the label, e.g. inside a chat bubble */
   @Input() set variant(v: TcThinkingLoader["variant"]) {
     this.#el.variant = v;
   }

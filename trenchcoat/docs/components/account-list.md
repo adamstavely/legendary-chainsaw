@@ -9,7 +9,7 @@
 The financial accounts linked to a person or a company – institution, type, an IBAN-style identifier masked until shown one at a time, a balance or flagged amount and a status each (Monitored, Flagged, Under review, Closed or your own), with your own stats above
 
 - **Element:** `<tc-account-list>`
-- **Size:** 8.1 KB gzip · 26.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.4 KB gzip · 26.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -436,23 +436,24 @@ The stats are a description list: each value with its label.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 18.7 KB | 6.0 KB |
+| **This component alone** | 17.4 KB | 5.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
+| `internal/masked-rows` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **26.1 KB** | **8.1 KB** |
-| With Lit – the first component on a page | 48.0 KB | 15.3 KB |
+| **Added to a page that already has Lit** | **26.6 KB** | **8.5 KB** |
+| With Lit – the first component on a page | 48.4 KB | 15.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -460,13 +461,13 @@ The stats are a description list: each value with its label.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.0 ms** | the gallery demo's data, 161 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of accounts replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 25 ms | accounts: first render, 3,233 nodes; update 3.4 ms |
-| 1,000 items | 134 ms | accounts: first render, 32,033 nodes; update 17 ms |
+| First render | **2.7 ms** | the gallery demo's data, 161 DOM nodes – to layout, median of 7 |
+| Typical update | **0.7 ms** | one item of accounts replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 24 ms | accounts: first render, 3,233 nodes; update 3.5 ms |
+| 1,000 items | 139 ms | accounts: first render, 32,033 nodes; update 16 ms |
 
-1,000 items of accounts: 134 ms. It renders every item, so a first render passes 50 ms (a long task) at about 370 items – page or filter longer lists.
+1,000 items of accounts: 139 ms. It renders every item, so a first render passes 50 ms (a long task) at about 360 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

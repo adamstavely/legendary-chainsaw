@@ -1,7 +1,7 @@
 ---
 pattern: disclosure
 status: new
-related: image-grid, pixel-loader, thinking-loader, background-tasks
+related: image-grid, thinking-loader, background-tasks
 ---
 
 ## Overview
@@ -26,7 +26,7 @@ time left. Use it for the one image a person asked for, and Image Grid when they
 ## When not to use
 
 - Several variations to compare and pick from – use `image-grid`.
-- A short wait with nothing to show but that it's working – use `pixel-loader` or `thinking-loader`.
+- A short wait with nothing to show but that it's working – use `thinking-loader`.
 - Many background jobs at once, of any kind – use `background-tasks`.
 
 ## Anatomy

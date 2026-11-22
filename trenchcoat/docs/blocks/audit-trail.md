@@ -9,7 +9,7 @@
 Who did what and when, for the record – grouped by day, with search, a filter by outcome, details on demand and a safe CSV export
 
 - **Element:** `<tc-audit-trail>`
-- **Size:** 7.1 KB gzip · 20.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.6 KB gzip · 26.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -27,13 +27,20 @@ The live example is in the gallery at `#/blocks/audit-trail`, in both looks; Rep
 
 ## Overview
 
-Who did what and when, for the record. Events are grouped by day, newest first, each with an outcome in words. Search and
-a filter by outcome narrow it, a row with details opens to show them, and the events showing can be exported as CSV.
+Who did what and when, for the record. Events are grouped by day, newest first, each with an outcome in words. A row
+with details or changes opens to show them: `changes` lists what an edit changed as a small Field / Before / After
+table, with a value that was added or removed said in words, and fields that didn't change left out.
+
+Search covers who, what, on what and the changed fields and values. Filters narrow it by outcome, Person (`actor`), Type
+(`action`) and Date (`range`: today, the last 7 or 30 days, or any time – measured from `now`, or the clock when it isn't
+given). Each filter is the page's to own through its own cancelable change event, Clear filters undoes them all, and the
+count in the header says how many of how many events show. Export gives the events showing as CSV, with a changes column
+when any of them have changes.
 
 ### When to use
 
 - Showing the history of sensitive data or actions to reviewers and auditors.
-- Answering "who shared this, and when?".
+- Answering "who shared this, and when?" – and "what did they change?".
 
 ### When not to use
 
@@ -43,14 +50,15 @@ a filter by outcome narrow it, a row with details opens to show them, and the ev
 
 ## Anatomy
 
-1. **Bar** `.ui-aud__bar` – search, the outcome filter and Export
+1. **Bar** `.ui-aud__bar` – search, then `.ui-aud__filters`: the outcome, `.ui-aud__actor`, `.ui-aud__action` and `.ui-aud__range` filters, `.ui-aud__clear`, and Export
 2. **Day** `.ui-aud__day` – one day's events, under `.ui-aud__date`
 3. **Event** `.ui-aud__event` – `.ui-aud__time`, who did what in `.ui-aud__line`, and `.ui-aud__outcome`
-4. **Details** `.ui-aud__more` – opens `.ui-aud__detail`
+4. **Details** `.ui-aud__more` – opens `.ui-aud__detail` and `.ui-aud__changes`, the Field / Before / After table, where `.ui-aud__kind` says added or removed
 
 ## Looks
 
 Standard puts the header on the gray tray above a white card; Clean is one white card with the header as its first row.
+At narrow widths the search takes the whole first row and the filters wrap onto the next.
 
 ## Usage
 
@@ -70,13 +78,18 @@ Standard puts the header on the gray tray above a white card; Clean is one white
 ### React / Next.js
 
 ```tsx
+import { useState } from "react";
 import { AuditTrail, type AuditEvent } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
-const events: AuditEvent[] = [{ id: "1", at: Date.UTC(2026, 9, 31), actor: "Noor Haddad", action: "shared", target: "Trial 12" }];
+const events: AuditEvent[] = [
+  { id: "1", at: Date.UTC(2026, 9, 31), actor: "Noor Haddad", action: "shared", target: "Trial 12" },
+  { id: "2", at: Date.UTC(2026, 9, 31, 9), actor: "Priya Raman", action: "updated", target: "Trial 12 policy", changes: [{ field: "Expires", after: "31 January 2027" }] },
+];
 
 export function Record() {
-  return <AuditTrail events={events} timeZone="UTC" />;
+  const [actor, setActor] = useState("");
+  return <AuditTrail events={events} timeZone="UTC" actor={actor} onActorChange={setActor} />;
 }
 ```
 
@@ -155,7 +168,11 @@ export class AuditTrailExample {
 | `description` | `description` | `string \| undefined` | `undefined` | A line under the heading |
 | `events` | – | `AuditEvent[]` | `[]` | What happened, in any order: they show newest first |
 | `query` | `query` | `string` | `""` | The search |
-| `outcome` | `outcome` | `AuditOutcomeFilter` | `"all"` | Which outcomes show |
+| `outcome` | `outcome` | `AuditOutcomeFilter` | `"all"` | Which outcomes show. Changed by the filter unless a tc-outcome-change listener calls preventDefault() |
+| `actor` | `actor` | `string` | `""` | Only this person's events; "" for anyone. Changed by the Person filter unless a tc-actor-change listener calls preventDefault() |
+| `action` | `action` | `string` | `""` | Only this action; "" for any. Changed by the Type filter unless a tc-action-change listener calls preventDefault() |
+| `range` | `range` | `AuditRange` | `"all"` | Only events from "today", the last "7d" or "30d", or "all". Changed by the Date filter unless a tc-range-change listener calls preventDefault() |
+| `now` | `now` | `number \| undefined` | `undefined` | The time ranges are measured from, epoch ms; unset, the clock's when the range is picked |
 | `exportable` | `exportable` | `boolean` | `true` | Offer Export |
 | `locale` | `locale` | `string \| undefined` | `undefined` | The locale for dates and times |
 | `timeZone` | `time-zone` | `string \| undefined` | `undefined` | The time zone for dates and times; by default the browser's |
@@ -167,11 +184,15 @@ export class AuditTrailExample {
 | Event | Detail | Cancelable | Description |
 | --- | --- | --- | --- |
 | `tc-query-change` | – | No | The search changed ({ query }: AuditQueryChange) |
+| `tc-actor-change` | – | Yes | The Person filter changed ({ actor }: AuditActorChange; "" is anyone); cancelable – prevented, `actor` stays as it was |
+| `tc-action-change` | – | Yes | The Type filter changed ({ action }: AuditActionChange; "" is any action); cancelable – prevented, `action` stays as it was |
+| `tc-range-change` | – | Yes | The Date filter changed ({ range }: AuditRangeChange); cancelable – prevented, `range` stays as it was |
+| `tc-outcome-change` | – | Yes | The outcome filter changed ({ outcome }: AuditOutcomeChange); cancelable – prevented, `outcome` stays as it was |
 | `tc-export` | – | Yes | Export was pressed ({ events, csv }: AuditExport); cancelable – without a listener preventing it, the file downloads |
 
-#### Design tokens it reads (34)
+#### Design tokens it reads (37)
 
-`--tc-border-subtle`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-field-bg`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-hairline`, `--tc-line-height-normal`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-danger-fg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-border-strong`, `--tc-border-subtle`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-h-sm`, `--tc-control-radius-sm`, `--tc-field-bg`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-line-height-normal`, `--tc-radius-xs`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-3`, `--tc-space-4`, `--tc-space-6`, `--tc-status-danger-fg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tray-inset`, `--tc-tray-radius`
 
 #### Functions
 
@@ -179,8 +200,9 @@ export class AuditTrailExample {
 
 | Function | Description |
 | --- | --- |
+| `auditChanges(e: AuditEvent): AuditChange[]` | The fields an event really changed: a field with the same value before and after is left out |
 | `auditCsvCell(value: string): void` | One CSV cell. A leading = + - @ (or tab, return) is a formula to a spreadsheet, so it's kept as text |
-| `auditCsv(events: AuditEvent[]): void` | The events as CSV, with times in ISO 8601 |
+| `auditCsv(events: AuditEvent[]): void` | The events as CSV, with times in ISO 8601; a changes column ("field: before → after; …") when any event has changes |
 
 ## Frameworks
 
@@ -203,18 +225,115 @@ export class AuditTrailExample {
 | `events` | `el.events = …;` | `<… events={…} />` | `<tc-audit-trail :events="…">` | `<tc-audit-trail [events]="…">` | `<tc-audit-trail {events}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-audit-trail :labels="…">` | `<tc-audit-trail [labels]="…">` | `<tc-audit-trail {labels}>` |
 
-*Also attributes: `heading`, `description`, `query`, `outcome`, `exportable`, `locale`, `time-zone` – see the API table.*
+*Also attributes: `heading`, `description`, `query`, `outcome`, `actor`, `action`, `range`, `now` and 3 more – see the API table.*
 
 ### Events
 
 | Event | Cancelable | HTML | React / Next.js | Vue / Nuxt | Angular | Svelte |
 | --- | --- | --- | --- | --- | --- | --- |
 | `tc-query-change` | No | `el.addEventListener("tc-query-change", (e) => …)` | `onTcQueryChange={…}` | `@tc-query-change="…"` | `(tc-query-change)="…($event)"` | `el.addEventListener("tc-query-change", …)` |
+| `tc-actor-change` | Yes | `el.addEventListener("tc-actor-change", (e) => …)` | `ref.current.addEventListener("tc-actor-change", …)` | `@tc-actor-change="…"` | `(tc-actor-change)="…($event)"` | `el.addEventListener("tc-actor-change", …)` |
+| `tc-action-change` | Yes | `el.addEventListener("tc-action-change", (e) => …)` | `ref.current.addEventListener("tc-action-change", …)` | `@tc-action-change="…"` | `(tc-action-change)="…($event)"` | `el.addEventListener("tc-action-change", …)` |
+| `tc-range-change` | Yes | `el.addEventListener("tc-range-change", (e) => …)` | `ref.current.addEventListener("tc-range-change", …)` | `@tc-range-change="…"` | `(tc-range-change)="…($event)"` | `el.addEventListener("tc-range-change", …)` |
+| `tc-outcome-change` | Yes | `el.addEventListener("tc-outcome-change", (e) => …)` | `ref.current.addEventListener("tc-outcome-change", …)` | `@tc-outcome-change="…"` | `(tc-outcome-change)="…($event)"` | `el.addEventListener("tc-outcome-change", …)` |
 | `tc-export` | Yes | `el.addEventListener("tc-export", (e) => …)` | `onTcExport={…}` | `@tc-export="…"` | `(tc-export)="…($event)"` | `el.addEventListener("tc-export", …)` |
+
+*React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-`tc-export` is cancelable: call `preventDefault()` to stop what the element would do next.
+The element changes `outcome`, `actor`, `action` and `range` itself unless a listener calls `preventDefault()` on `tc-outcome-change`, `tc-actor-change`, `tc-action-change` or `tc-range-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+
+#### HTML
+
+```html
+<tc-audit-trail id="audit-trail"></tc-audit-trail>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/audit-trail";
+
+  const el = document.querySelector("#audit-trail");
+  el.addEventListener("tc-outcome-change", (e) => {
+    e.preventDefault(); // the element keeps its outcome…
+    if (allowed(e.detail.outcome)) el.outcome = e.detail.outcome; // …until the app sets it
+  });
+  const allowed = (next) => true; // your rule
+</script>
+```
+
+#### React / Next.js
+
+*The wrapper doesn't take this value with a callback of its own – see the props below, or use the element through a ref.*
+
+#### Vue / Nuxt
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from "vue";
+import "@adamstavely/trenchcoat/audit-trail";
+import type { TcAuditTrail } from "@adamstavely/trenchcoat/audit-trail";
+
+const props = defineProps<{ initial: TcAuditTrail["outcome"] }>();
+const outcome = shallowRef(props.initial);
+// Controlled: the element proposes, the app decides
+const onOutcomeChange = (e: CustomEvent<{ outcome: TcAuditTrail["outcome"] }>) => {
+  e.preventDefault();
+  outcome.value = e.detail.outcome;
+};
+</script>
+
+<template>
+  <tc-audit-trail :outcome="outcome" @tc-outcome-change="onOutcomeChange"></tc-audit-trail>
+</template>
+```
+
+#### Angular
+
+```ts
+import { Component, input, linkedSignal } from "@angular/core";
+import { AuditTrail } from "@adamstavely/trenchcoat/angular/audit-trail";
+import type { TcAuditTrail } from "@adamstavely/trenchcoat/audit-trail";
+
+@Component({
+  selector: "app-controlled-audit-trail",
+  imports: [AuditTrail],
+  template: `<tc-audit-trail [outcome]="outcome()" (tc-outcome-change)="onOutcomeChange($event)"></tc-audit-trail>`,
+})
+export class ControlledAuditTrail {
+  readonly initial = input.required<TcAuditTrail["outcome"]>();
+  readonly outcome = linkedSignal(() => this.initial());
+  // Controlled: the element proposes, the app decides
+  onOutcomeChange(e: CustomEvent<{ outcome: TcAuditTrail["outcome"] }>) {
+    e.preventDefault();
+    this.outcome.set(e.detail.outcome);
+  }
+}
+```
+
+#### Svelte
+
+```svelte
+<script lang="ts">
+  import "@adamstavely/trenchcoat/audit-trail";
+  import type { TcAuditTrail } from "@adamstavely/trenchcoat/audit-trail";
+
+  let { initial }: { initial: TcAuditTrail["outcome"] } = $props();
+  // A derived the handler can overwrite: it follows initial, and holds the app's value between changes
+  let outcome = $derived(initial);
+  let el: TcAuditTrail;
+  // Controlled: the element proposes, the app decides
+  $effect(() => {
+    const on = (e: Event) => {
+      e.preventDefault();
+      outcome = (e as CustomEvent<{ outcome: TcAuditTrail["outcome"] }>).detail.outcome;
+    };
+    el.addEventListener("tc-outcome-change", on);
+    return () => el.removeEventListener("tc-outcome-change", on);
+  });
+</script>
+
+<tc-audit-trail bind:this={el} {outcome}></tc-audit-trail>
+```
 
 ### Slots and children
 
@@ -243,8 +362,20 @@ No slots: everything it shows comes from its properties.
 | Prop | Type | Description |
 | --- | --- | --- |
 | `title` | `string` | The heading; by default "Audit trail" |
+| `actor` | `string` | Only this person's events ("" for anyone) – controlled when given |
+| `defaultActor` | `string` | The Person filter on mount when `actor` isn't controlled |
+| `onActorChange` | `(actor: string) => void` | The Person filter changed |
+| `action` | `string` | Only this action ("" for any) – controlled when given |
+| `defaultAction` | `string` | The Type filter on mount when `action` isn't controlled |
+| `onActionChange` | `(action: string) => void` | The Type filter changed |
+| `range` | `AuditRange` | The date range – controlled when given |
+| `defaultRange` | `AuditRange` | The Date filter on mount when `range` isn't controlled |
+| `onRangeChange` | `(range: AuditRange) => void` | The Date filter changed |
+| `outcome` | `AuditOutcomeFilter` | Which outcomes show – controlled when given |
+| `defaultOutcome` | `AuditOutcomeFilter` | The outcome filter on mount when `outcome` isn't controlled |
+| `onOutcomeChange` | `(outcome: AuditOutcomeFilter) => void` | The outcome filter changed |
 
-*Renamed or hidden on the wrapper: `heading`, `children`*
+*Renamed or hidden on the wrapper: `heading`, `actor`, `action`, `range`, `outcome`, `children`*
 
 ## Accessibility
 
@@ -252,14 +383,16 @@ No slots: everything it shows comes from its properties.
 
 | Key | What it does |
 |---|---|
-| Tab | Moves through search, the filter, Export and each Details button |
+| Tab | Moves through search, the four filters, Clear filters, Export and each Details button |
 | Enter / Space | Opens or closes a row's details |
 
 ### Screen readers
 
 Each day is a named section with a heading and a list of events. Outcomes are words, and times are `time` elements.
-Details buttons use `aria-expanded` and `aria-controls`, and name the event. `role="status"` announces how many events
-match while searching or filtering.
+Details buttons use `aria-expanded` and `aria-controls`, and name the event. Changes are a table with a caption, column
+headers and the field as each row's header; an empty value is read as "none", and added or removed are words beside the
+field. Each filter is a select named Outcome, Person, Type or Date. `role="status"` announces how many events match while
+searching or filtering.
 
 ### Every piece
 
@@ -300,13 +433,13 @@ match while searching or filtering.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 12.3 KB | 4.5 KB |
+| **This piece alone** | 18.6 KB | 6.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -315,8 +448,8 @@ match while searching or filtering.
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | [collapse](../motion/collapse.md) · Element it renders | 0.8 KB | – |
-| **Added to a page that already has Lit** | **20.6 KB** | **7.1 KB** |
-| With Lit – the first component on a page | 41.3 KB | 13.8 KB |
+| **Added to a page that already has Lit** | **26.9 KB** | **8.6 KB** |
+| With Lit – the first component on a page | 47.6 KB | 15.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -324,9 +457,9 @@ match while searching or filtering.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | default properties, 23 DOM nodes – to layout, median of 7 |
+| First render | **0.9 ms** | default properties, 33 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -337,13 +470,15 @@ match while searching or filtering.
 - No timers.
 - Stops or pauses under reduced motion.
 - Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController).
-- Doesn't read the clock.
+- Reads the clock: `Date.now()`.
 
 *Found in its source and the shared code it uses (gen-docs); “measured” rows come from `measure:perf`.*
 
 ## Content
 
-Write `action` as a past-tense verb that reads on from the name: "Noor Haddad shared". Failed attempts belong in the
+Write `action` as a past-tense verb that reads on from the name: "Noor Haddad shared" – the Type filter lists them, so
+keep the same verb for the same kind of action. Name `changes` fields as people see them on screen ("Risk score", not
+`risk_score`), and give values as they'd be shown. Failed attempts belong in the
 record too, especially denied ones. Set `time-zone` when reviewers need one shared clock, because the default is each
 browser's own. Cells a spreadsheet would run as a formula are exported with a leading apostrophe.
 
@@ -353,6 +488,7 @@ browser's own. Cells a spreadsheet would run as a formula are exported with a le
 
 - Page or limit `events` on the server for long histories. This filters only what it's given.
 - Listen for `tc-export` to log who exported, or call `preventDefault()` to export on the server instead.
+- Own the filters (`actor`, `action`, `range`) when the server pages the record, and fetch what they select.
 
 ### Don't
 

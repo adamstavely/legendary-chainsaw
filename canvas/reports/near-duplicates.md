@@ -20,3 +20,4 @@ Written by `npm run similarity`; don't edit by hand.
 | Code Block (Components)           | Response Examples (Components)      | 0.923      |
 | Collaboration Stream (Components) | Correction Propagation (Components) | 0.923      |
 | Eval Criteria Editor (Components) | Review Queue (Components)           | 0.923      |
+| Model Access (Components)         | Webhooks (Components)               | 0.920      |
