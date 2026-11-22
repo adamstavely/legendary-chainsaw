@@ -518,11 +518,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.2 ms** | the gallery demo's data, 70 DOM nodes – to layout, median of 7 |
-| Typical update | **1.0 ms** | one item of data replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.5 ms | data: first render, 70 nodes; update 0.7 ms |
-| 1,000 items | 3.6 ms | data: first render, 70 nodes; update 1.5 ms |
+| First render | **3.0 ms** | the gallery demo's data, 70 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of data replaced |
+| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.3 ms | data: first render, 70 nodes; update 0.6 ms |
+| 1,000 items | 3.8 ms | data: first render, 70 nodes; update 1.3 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 
@@ -530,7 +530,7 @@ What it renders doesn't grow with data (tested to 1,000 items).
 
 ### Runtime
 
-- At rest with the demo's data: **59 frames/s** on screen, **6 frames/s** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **60 frames/s** on screen, **6 frames/s** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
 - Stops or pauses off screen and under reduced motion.

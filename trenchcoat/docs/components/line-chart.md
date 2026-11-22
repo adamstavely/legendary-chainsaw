@@ -498,11 +498,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of data replaced |
+| First render | **0.9 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of data replaced |
 | First on the page | 15 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.6 ms | data: first render, 51 nodes; update 0.4 ms |
-| 1,000 items | 2.5 ms | data: first render, 51 nodes; update 1.2 ms |
+| 100 items | 1.7 ms | data: first render, 51 nodes; update 0.5 ms |
+| 1,000 items | 2.7 ms | data: first render, 51 nodes; update 1.4 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 

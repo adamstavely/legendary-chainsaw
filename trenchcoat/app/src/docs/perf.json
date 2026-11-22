@@ -5175,9 +5175,9 @@
     "tag": "tc-area-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19.9,
-    "first": 1,
-    "update": 0.3,
+    "cold": 21.7,
+    "first": 1.8,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 24,
     "scale": {
@@ -5186,14 +5186,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.2,
-       "update": 0.2,
+       "first": 2.2,
+       "update": 0.4,
        "nodes": 24
       },
       {
        "items": 1000,
-       "first": 1.5,
-       "update": 0.6,
+       "first": 2.5,
+       "update": 0.9,
        "nodes": 24
       }
      ]
@@ -6610,9 +6610,9 @@
     "tag": "tc-bar-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19.3,
-    "first": 1.4,
-    "update": 0.6,
+    "cold": 14.1,
+    "first": 1.8,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 41,
     "scale": {
@@ -6621,14 +6621,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.5,
-       "update": 0.2,
+       "first": 3.4,
+       "update": 0.5,
        "nodes": 41
       },
       {
        "items": 1000,
-       "first": 1.8,
-       "update": 0.6,
+       "first": 1.9,
+       "update": 0.7,
        "nodes": 41
       }
      ]
@@ -6797,8 +6797,8 @@
     "tag": "tc-beeswarm-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.7,
-    "first": 1.8,
+    "cold": 18.9,
+    "first": 1.9,
     "update": 0.9,
     "updateKind": "one item of data replaced",
     "nodes": 207,
@@ -6808,14 +6808,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2,
-       "update": 0.4,
+       "first": 2.3,
+       "update": 0.5,
        "nodes": 207
       },
       {
        "items": 1000,
-       "first": 4.9,
-       "update": 2,
+       "first": 4.3,
+       "update": 1.6,
        "nodes": 207
       }
      ]
@@ -7436,9 +7436,9 @@
     "tag": "tc-box-plot",
     "source": "demo",
     "runs": 7,
-    "cold": 18.7,
-    "first": 1.4,
-    "update": 0.6,
+    "cold": 18.2,
+    "first": 2.1,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 43,
     "scale": {
@@ -7447,14 +7447,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.2,
-       "update": 0.2,
+       "first": 1.4,
+       "update": 0.4,
        "nodes": 40
       },
       {
        "items": 1000,
-       "first": 1.6,
-       "update": 0.7,
+       "first": 2.7,
+       "update": 0.9,
        "nodes": 43
       }
      ]
@@ -8045,9 +8045,9 @@
     "tag": "tc-bubble-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19.8,
+    "cold": 19.6,
     "first": 1.4,
-    "update": 0.6,
+    "update": 0.7,
     "updateKind": "one item of data replaced",
     "nodes": 47,
     "scale": {
@@ -8056,14 +8056,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.7,
+       "first": 4.2,
        "update": 1.4,
        "nodes": 205
       },
       {
        "items": 1000,
-       "first": 9.3,
-       "update": 4.1,
+       "first": 8.7,
+       "update": 4.3,
        "nodes": 205
       }
      ]
@@ -8619,9 +8619,9 @@
     "tag": "tc-bullet-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 12.3,
-    "first": 1.4,
-    "update": 0.5,
+    "cold": 19.2,
+    "first": 2,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 34,
     "scale": {
@@ -8630,14 +8630,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.1,
-       "update": 1.1,
+       "first": 6.1,
+       "update": 1.2,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 12.9,
-       "update": 4.2,
+       "first": 13,
+       "update": 4.3,
        "nodes": 204
       }
      ]
@@ -8787,9 +8787,9 @@
     "tag": "tc-bump-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.8,
-    "first": 1.4,
-    "update": 0.7,
+    "cold": 16.9,
+    "first": 1.8,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 39,
     "scale": {
@@ -8798,13 +8798,13 @@
      "points": [
       {
        "items": 100,
-       "first": 1.4,
+       "first": 2.4,
        "update": 0.3,
        "nodes": 39
       },
       {
        "items": 1000,
-       "first": 1.5,
+       "first": 2.1,
        "update": 0.7,
        "nodes": 39
       }
@@ -9050,8 +9050,8 @@
     "tag": "tc-calendar-heatmap",
     "source": "demo",
     "runs": 7,
-    "cold": 18.4,
-    "first": 2.4,
+    "cold": 18.1,
+    "first": 2.5,
     "update": 2,
     "updateKind": "one item of data replaced",
     "nodes": 221,
@@ -9061,14 +9061,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.4,
-       "update": 0.6,
+       "first": 2,
+       "update": 0.3,
        "nodes": 221
       },
       {
        "items": 1000,
-       "first": 3,
-       "update": 1.2,
+       "first": 2.2,
+       "update": 1,
        "nodes": 221
       }
      ]
@@ -9217,9 +9217,9 @@
     "tag": "tc-candlestick-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 19.2,
-    "first": 2.9,
-    "update": 1,
+    "cold": 20,
+    "first": 2.8,
+    "update": 0.9,
     "updateKind": "one item of data replaced",
     "nodes": 124,
     "scale": {
@@ -9228,14 +9228,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.3,
-       "update": 1.1,
+       "first": 4.8,
+       "update": 1.3,
        "nodes": 216
       },
       {
        "items": 1000,
-       "first": 7.9,
-       "update": 3.6,
+       "first": 8.9,
+       "update": 4,
        "nodes": 216
       }
      ]
@@ -10524,15 +10524,15 @@
     "tag": "tc-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
-    "first": 0.3,
-    "update": 0.6,
+    "cold": 2.3,
+    "first": 0.4,
+    "update": 0.8,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
     "idle": {
      "visible": {
-      "frames": 58,
+      "frames": 57,
       "timers": 0
      },
      "away": {
@@ -11210,8 +11210,8 @@
     "tag": "tc-chord-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.5,
-    "first": 1.7,
+    "cold": 20,
+    "first": 1.6,
     "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 64,
@@ -11221,14 +11221,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.3,
+       "first": 1.6,
+       "update": 0.4,
        "nodes": 64
       },
       {
        "items": 1000,
-       "first": 2.1,
-       "update": 0.7,
+       "first": 1.9,
+       "update": 0.6,
        "nodes": 64
       }
      ]
@@ -12710,9 +12710,9 @@
     "tag": "tc-combo-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 17.3,
-    "first": 2.2,
-    "update": 1,
+    "cold": 18.5,
+    "first": 3,
+    "update": 0.9,
     "updateKind": "one item of data replaced",
     "nodes": 70,
     "scale": {
@@ -12721,21 +12721,21 @@
      "points": [
       {
        "items": 100,
-       "first": 2.5,
-       "update": 0.7,
+       "first": 3.3,
+       "update": 0.6,
        "nodes": 70
       },
       {
        "items": 1000,
-       "first": 3.6,
-       "update": 1.5,
+       "first": 3.8,
+       "update": 1.3,
        "nodes": 70
       }
      ]
     },
     "idle": {
      "visible": {
-      "frames": 59,
+      "frames": 60,
       "timers": 0
      },
      "away": {
@@ -17545,8 +17545,8 @@
     "tag": "tc-donut-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.9,
-    "first": 1.4,
+    "cold": 12.1,
+    "first": 1.9,
     "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 34,
@@ -17556,14 +17556,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.8,
+       "first": 5,
        "update": 1,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 2.6,
-       "update": 1.1,
+       "first": 5.3,
+       "update": 1.3,
        "nodes": 204
       }
      ]
@@ -17877,8 +17877,8 @@
     "tag": "tc-dumbbell-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 17.7,
-    "first": 1.5,
+    "cold": 16.3,
+    "first": 2.2,
     "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 56,
@@ -17888,14 +17888,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.1,
-       "update": 1,
+       "first": 2.9,
+       "update": 0.4,
        "nodes": 217
       },
       {
        "items": 1000,
-       "first": 5.2,
-       "update": 1.6,
+       "first": 6.6,
+       "update": 2.6,
        "nodes": 217
       }
      ]
@@ -22115,7 +22115,7 @@
     "tag": "tc-funnel-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.1,
+    "cold": 19,
     "first": 1.4,
     "update": 0.6,
     "updateKind": "one item of data replaced",
@@ -22126,14 +22126,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4,
-       "update": 1.2,
+       "first": 4.7,
+       "update": 1,
        "nodes": 202
       },
       {
        "items": 1000,
-       "first": 10.3,
-       "update": 4.4,
+       "first": 11.1,
+       "update": 3.9,
        "nodes": 202
       }
      ]
@@ -22466,7 +22466,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-22",
-   "hash": "e714cc2f0ebf177f",
+   "hash": "8f5f83bcba1412dc",
    "bundle": {
     "own": {
      "min": 34126,
@@ -24431,7 +24431,7 @@
      {
       "name": "away-summary",
       "kind": "element",
-      "min": 14771
+      "min": 14779
      },
      {
       "name": "top-spenders",
@@ -24747,6 +24747,11 @@
       "name": "icon-rail",
       "kind": "element",
       "min": 9149
+     },
+     {
+      "name": "help-guide",
+      "kind": "element",
+      "min": 9021
      },
      {
       "name": "folder-status",
@@ -25146,7 +25151,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 80234
+      "min": 80415
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -26819,6 +26824,11 @@
       "min": 2007
      },
      {
+      "name": "src/generative/schemas/tc-help-guide.json",
+      "kind": "other",
+      "min": 2002
+     },
+     {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
       "min": 1998
@@ -27570,21 +27580,21 @@
      }
     ],
     "withoutLit": {
-     "min": 12674572,
-     "gzip": 3170432
+     "min": 12685975,
+     "gzip": 3172380
     },
     "withLit": {
-     "min": 12587957,
-     "gzip": 3138817
+     "min": 12599169,
+     "gzip": 3140813
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 4.4,
-    "first": 1,
-    "update": 0.2,
+    "cold": 5.4,
+    "first": 1.5,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -29129,6 +29139,87 @@
     ]
    }
   },
+  "help-guide": {
+   "measuredAt": "2026-11-22",
+   "hash": "00cd22c703a94da6",
+   "bundle": {
+    "own": {
+     "min": 10990,
+     "gzip": 4261
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18902
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 17909,
+     "gzip": 6274
+    },
+    "withLit": {
+     "min": 37904,
+     "gzip": 12815
+    }
+   },
+   "render": {
+    "tag": "tc-help-guide",
+    "source": "demo",
+    "runs": 7,
+    "cold": 14.8,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 14,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "help-video": {
    "measuredAt": "2026-11-20",
    "hash": "c2287632446a644a",
@@ -29345,9 +29436,9 @@
     "tag": "tc-hexbin-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.4,
-    "first": 4.1,
-    "update": 3.3,
+    "cold": 20.2,
+    "first": 4,
+    "update": 3.4,
     "updateKind": "one item of data replaced",
     "nodes": 180,
     "scale": {
@@ -29356,13 +29447,13 @@
      "points": [
       {
        "items": 100,
-       "first": 1,
+       "first": 0.9,
        "update": 0.2,
        "nodes": 108
       },
       {
        "items": 1000,
-       "first": 1.1,
+       "first": 1.2,
        "update": 0.3,
        "nodes": 147
       }
@@ -29522,9 +29613,9 @@
     "tag": "tc-histogram",
     "source": "demo",
     "runs": 7,
-    "cold": 18.5,
-    "first": 2.5,
-    "update": 1.5,
+    "cold": 20.6,
+    "first": 2.4,
+    "update": 1.2,
     "updateKind": "one item of data replaced",
     "nodes": 77,
     "scale": {
@@ -29533,14 +29624,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.6,
+       "first": 2.2,
+       "update": 0.7,
        "nodes": 71
       },
       {
        "items": 1000,
-       "first": 4.3,
-       "update": 2.3,
+       "first": 5.1,
+       "update": 2.8,
        "nodes": 131
       }
      ]
@@ -32513,9 +32604,9 @@
     "tag": "tc-line-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 14.7,
-    "first": 1.6,
-    "update": 0.7,
+    "cold": 14.9,
+    "first": 0.9,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 51,
     "scale": {
@@ -32524,14 +32615,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.6,
-       "update": 0.4,
+       "first": 1.7,
+       "update": 0.5,
        "nodes": 51
       },
       {
        "items": 1000,
-       "first": 2.5,
-       "update": 1.2,
+       "first": 2.7,
+       "update": 1.4,
        "nodes": 51
       }
      ]
@@ -33383,9 +33474,9 @@
     "tag": "tc-lollipop-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.3,
-    "first": 1.4,
-    "update": 0.5,
+    "cold": 20,
+    "first": 1.7,
+    "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 48,
     "scale": {
@@ -33394,14 +33485,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.8,
-       "update": 0.7,
+       "first": 4.7,
+       "update": 1,
        "nodes": 206
       },
       {
        "items": 1000,
-       "first": 8.5,
-       "update": 3,
+       "first": 7.8,
+       "update": 2.7,
        "nodes": 206
       }
      ]
@@ -33823,8 +33914,8 @@
     "tag": "tc-marimekko-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.2,
-    "first": 1.9,
+    "cold": 16.1,
+    "first": 2.6,
     "update": 0.7,
     "updateKind": "one item of data replaced",
     "nodes": 75,
@@ -33834,14 +33925,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2,
+       "first": 3,
        "update": 0.5,
        "nodes": 75
       },
       {
        "items": 1000,
-       "first": 2.4,
-       "update": 0.7,
+       "first": 3.5,
+       "update": 1,
        "nodes": 75
       }
      ]
@@ -36297,9 +36388,9 @@
     "tag": "tc-network-graph",
     "source": "demo",
     "runs": 7,
-    "cold": 19.1,
-    "first": 6.7,
-    "update": 3.6,
+    "cold": 18,
+    "first": 6.8,
+    "update": 3.5,
     "updateKind": "one item of links replaced",
     "nodes": 157,
     "scale": {
@@ -36309,13 +36400,13 @@
       {
        "items": 100,
        "first": 7.4,
-       "update": 3.6,
+       "update": 3.5,
        "nodes": 157
       },
       {
        "items": 1000,
        "first": 6.9,
-       "update": 3.6,
+       "update": 3.7,
        "nodes": 157
       }
      ]
@@ -38257,9 +38348,9 @@
     "tag": "tc-parallel-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.8,
-    "first": 1.5,
-    "update": 0.4,
+    "cold": 19.7,
+    "first": 2.4,
+    "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 53,
     "scale": {
@@ -38268,14 +38359,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4,
-       "update": 0.9,
+       "first": 6.3,
+       "update": 1,
        "nodes": 205
       },
       {
        "items": 1000,
-       "first": 5.9,
-       "update": 2.3,
+       "first": 7.9,
+       "update": 3.8,
        "nodes": 205
       }
      ]
@@ -38424,9 +38515,9 @@
     "tag": "tc-pareto-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18,
-    "first": 1.3,
-    "update": 0.5,
+    "cold": 20.3,
+    "first": 1.8,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 45,
     "scale": {
@@ -38435,14 +38526,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.9,
+       "first": 5,
        "update": 0.9,
        "nodes": 206
       },
       {
        "items": 1000,
-       "first": 8.3,
-       "update": 3.8,
+       "first": 7.7,
+       "update": 3.2,
        "nodes": 206
       }
      ]
@@ -38911,9 +39002,9 @@
     "tag": "tc-pie-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18,
+    "cold": 20.5,
     "first": 1.3,
-    "update": 0.3,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 36,
     "scale": {
@@ -38922,21 +39013,21 @@
      "points": [
       {
        "items": 100,
-       "first": 3.9,
-       "update": 1.1,
+       "first": 4.5,
+       "update": 1,
        "nodes": 203
       },
       {
        "items": 1000,
-       "first": 8.3,
-       "update": 4.1,
+       "first": 9.2,
+       "update": 3.6,
        "nodes": 203
       }
      ]
     },
     "idle": {
      "visible": {
-      "frames": 53,
+      "frames": 52,
       "timers": 0
      },
      "away": {
@@ -42318,8 +42409,8 @@
     "tag": "tc-radial-bar-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 12.4,
-    "first": 1.3,
+    "cold": 20.9,
+    "first": 2,
     "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 37,
@@ -42329,14 +42420,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.1,
-       "update": 0.8,
+       "first": 6.1,
+       "update": 1,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 8.6,
-       "update": 2.9,
+       "first": 8.7,
+       "update": 2.2,
        "nodes": 204
       }
      ]
@@ -44730,9 +44821,9 @@
     "tag": "tc-ridgeline-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.3,
+    "cold": 21.2,
     "first": 2.3,
-    "update": 1.4,
+    "update": 1.3,
     "updateKind": "one item of data replaced",
     "nodes": 39,
     "scale": {
@@ -44741,14 +44832,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.7,
-       "update": 0.4,
+       "first": 1.3,
+       "update": 0.5,
        "nodes": 27
       },
       {
        "items": 1000,
-       "first": 3.4,
-       "update": 1.9,
+       "first": 3.2,
+       "update": 2.3,
        "nodes": 39
       }
      ]
@@ -45290,8 +45381,8 @@
     "tag": "tc-rose-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 13.5,
-    "first": 1.3,
+    "cold": 23,
+    "first": 2.3,
     "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 58,
@@ -45301,14 +45392,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.4,
-       "update": 0.3,
+       "first": 1.6,
+       "update": 0.4,
        "nodes": 58
       },
       {
        "items": 1000,
-       "first": 1.6,
-       "update": 0.5,
+       "first": 3,
+       "update": 0.7,
        "nodes": 58
       }
      ]
@@ -46646,9 +46737,9 @@
     "tag": "tc-sankey-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.7,
-    "first": 2.2,
-    "update": 0.9,
+    "cold": 20.1,
+    "first": 2.6,
+    "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 103,
     "scale": {
@@ -46657,14 +46748,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.1,
-       "update": 0.8,
+       "first": 4.8,
+       "update": 1,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 4.2,
-       "update": 2,
+       "first": 7.7,
+       "update": 4.3,
        "nodes": 204
       }
      ]
@@ -48233,9 +48324,9 @@
     "tag": "tc-segmented-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 19.1,
-    "first": 1.1,
-    "update": 0.3,
+    "cold": 14.9,
+    "first": 1.3,
+    "update": 0.4,
     "updateKind": "one item of data replaced",
     "nodes": 37,
     "scale": {
@@ -48244,14 +48335,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.3,
+       "first": 3.8,
        "update": 0.9,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 9.3,
-       "update": 3.2,
+       "first": 8.7,
+       "update": 1.6,
        "nodes": 204
       }
      ]
@@ -50681,9 +50772,9 @@
     "tag": "tc-slope-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.3,
-    "first": 1.2,
-    "update": 0.4,
+    "cold": 19,
+    "first": 2.1,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 38,
     "scale": {
@@ -50692,14 +50783,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.6,
+       "first": 7.2,
        "update": 1.2,
        "nodes": 205
       },
       {
        "items": 1000,
-       "first": 11.6,
-       "update": 5.1,
+       "first": 11.5,
+       "update": 4.9,
        "nodes": 205
       }
      ]
@@ -51133,9 +51224,9 @@
     "tag": "tc-small-multiples",
     "source": "demo",
     "runs": 7,
-    "cold": 17.3,
-    "first": 0.7,
-    "update": 1.8,
+    "cold": 17.7,
+    "first": 0.8,
+    "update": 1.9,
     "updateKind": "re-render with the same data",
     "nodes": 16,
     "scale": null,
@@ -52742,9 +52833,9 @@
     "tag": "tc-stream-graph",
     "source": "demo",
     "runs": 7,
-    "cold": 18.9,
-    "first": 1.9,
-    "update": 0.8,
+    "cold": 16.9,
+    "first": 2.3,
+    "update": 0.9,
     "updateKind": "one item of data replaced",
     "nodes": 61,
     "scale": {
@@ -52753,14 +52844,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.3,
+       "first": 2.9,
+       "update": 0.4,
        "nodes": 61
       },
       {
        "items": 1000,
-       "first": 2.2,
-       "update": 0.7,
+       "first": 3.2,
+       "update": 1,
        "nodes": 61
       }
      ]
@@ -53277,8 +53368,8 @@
     "tag": "tc-sunburst-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.5,
-    "first": 2,
+    "cold": 21.7,
+    "first": 2.1,
     "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 72,
@@ -53288,14 +53379,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.2,
-       "update": 0.6,
+       "first": 3.2,
+       "update": 0.5,
        "nodes": 72
       },
       {
        "items": 1000,
-       "first": 2.6,
-       "update": 0.9,
+       "first": 1.4,
+       "update": 0.4,
        "nodes": 72
       }
      ]
@@ -55176,9 +55267,9 @@
     "tag": "tc-thinking-state",
     "source": "demo",
     "runs": 7,
-    "cold": 17.1,
-    "first": 1.1,
-    "update": 0.3,
+    "cold": 20.9,
+    "first": 1.6,
+    "update": 0.4,
     "updateKind": "one item of steps replaced",
     "nodes": 10,
     "scale": {
@@ -55187,13 +55278,13 @@
      "points": [
       {
        "items": 100,
-       "first": 1.1,
-       "update": 0.1,
+       "first": 1.2,
+       "update": 0.2,
        "nodes": 10
       },
       {
        "items": 1000,
-       "first": 2.1,
+       "first": 2.3,
        "update": 0.3,
        "nodes": 10
       }
@@ -57072,9 +57163,9 @@
     "tag": "tc-treemap",
     "source": "demo",
     "runs": 7,
-    "cold": 18.6,
-    "first": 1.6,
-    "update": 0.8,
+    "cold": 20.1,
+    "first": 1.4,
+    "update": 0.6,
     "updateKind": "one item of data replaced",
     "nodes": 47,
     "scale": {
@@ -57089,8 +57180,8 @@
       },
       {
        "items": 1000,
-       "first": 2,
-       "update": 0.6,
+       "first": 1.8,
+       "update": 0.5,
        "nodes": 47
       }
      ]
@@ -57848,9 +57939,9 @@
     "tag": "tc-venn-diagram",
     "source": "demo",
     "runs": 7,
-    "cold": 18.2,
-    "first": 1.4,
-    "update": 0.9,
+    "cold": 18.8,
+    "first": 1.2,
+    "update": 0.8,
     "updateKind": "one item of data replaced",
     "nodes": 43,
     "scale": {
@@ -57859,14 +57950,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.9,
-       "update": 0.9,
+       "first": 2.7,
+       "update": 2.7,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 2.5,
-       "update": 1.1,
+       "first": 3.1,
+       "update": 1.4,
        "nodes": 204
       }
      ]
@@ -58403,8 +58494,8 @@
     "tag": "tc-waffle-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.3,
-    "first": 0.7,
+    "cold": 19.4,
+    "first": 0.9,
     "update": 2.3,
     "updateKind": "one item of data replaced",
     "nodes": 44,
@@ -58414,14 +58505,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.9,
-       "update": 0.6,
+       "first": 4,
+       "update": 0.7,
        "nodes": 406
       },
       {
        "items": 1000,
-       "first": 14.3,
-       "update": 2.2,
+       "first": 17.4,
+       "update": 2.7,
        "nodes": 2206
       }
      ]
@@ -58674,9 +58765,9 @@
     "tag": "tc-waterfall-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 18.3,
-    "first": 1.5,
-    "update": 0.6,
+    "cold": 21.1,
+    "first": 2.1,
+    "update": 0.5,
     "updateKind": "one item of data replaced",
     "nodes": 51,
     "scale": {
@@ -58685,13 +58776,13 @@
      "points": [
       {
        "items": 100,
-       "first": 4.1,
-       "update": 0.6,
+       "first": 4.6,
+       "update": 0.8,
        "nodes": 212
       },
       {
        "items": 1000,
-       "first": 8.5,
+       "first": 8.4,
        "update": 2.1,
        "nodes": 212
       }

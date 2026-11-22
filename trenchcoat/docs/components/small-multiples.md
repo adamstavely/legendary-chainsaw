@@ -436,9 +436,9 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
-| Typical update | **1.8 ms** | re-render with the same data |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| First render | **0.8 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
+| Typical update | **1.9 ms** | re-render with the same data |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

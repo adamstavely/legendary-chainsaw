@@ -6,13 +6,13 @@ Each component page has a **Performance** section: what the component costs to d
 and update, how far it scales, and what it does when nobody's using it. The numbers come from `npm run measure:perf`
 and live in `app/src/docs/perf.json`; each page says when it was measured.
 
-*510 components measured, between 2026-10-27 and 2026-11-22, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
+*511 components measured, between 2026-10-27 and 2026-11-22, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
 
 ### Largest, on a page that has Lit
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 3096.1 KB | 12377.5 KB | 10.7 KB |
+| [generated-ui](../components/generated-ui.md) | 3098.0 KB | 12388.6 KB | 10.7 KB |
 | [ai-side-pane](../blocks/ai-side-pane.md) | 163.3 KB | 688.0 KB | 11.2 KB |
 | [small-multiples](../components/small-multiples.md) | 149.1 KB | 463.6 KB | 6.0 KB |
 | [chart](../components/chart.md) | 145.6 KB | 453.6 KB | 2.4 KB |
@@ -31,7 +31,7 @@ and live in `app/src/docs/perf.json`; each page says when it was measured.
 | [multi-calendar](../components/multi-calendar.md) | 9 ms | 1.5 ms | 1368 |
 | [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 8.1 ms | 2.4 ms | 1049 |
 | [active-days](../components/active-days.md) | 7.9 ms | 5.2 ms | 718 |
-| [network-graph](../components/network-graph.md) | 6.7 ms | 3.6 ms | 157 |
+| [network-graph](../components/network-graph.md) | 6.8 ms | 3.5 ms | 157 |
 | [fan-out-grid](../components/fan-out-grid.md) | 6.6 ms | 0.7 ms | 176 |
 
 ## Bundle

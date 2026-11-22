@@ -527,11 +527,11 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **6.7 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
-| Typical update | **3.6 ms** | one item of links replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.4 ms | links: first render, 157 nodes; update 3.6 ms |
-| 1,000 items | 6.9 ms | links: first render, 157 nodes; update 3.6 ms |
+| First render | **6.8 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
+| Typical update | **3.5 ms** | one item of links replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.4 ms | links: first render, 157 nodes; update 3.5 ms |
+| 1,000 items | 6.9 ms | links: first render, 157 nodes; update 3.7 ms |
 
 What it renders doesn't grow with links (tested to 1,000 items).
 

@@ -475,11 +475,11 @@ readers. “+N more” is a button with `aria-expanded`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.1 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of steps replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.1 ms | steps: first render, 10 nodes; update 0.1 ms |
-| 1,000 items | 2.1 ms | steps: first render, 10 nodes; update 0.3 ms |
+| First render | **1.6 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of steps replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.2 ms | steps: first render, 10 nodes; update 0.2 ms |
+| 1,000 items | 2.3 ms | steps: first render, 10 nodes; update 0.3 ms |
 
 What it renders doesn't grow with steps (tested to 1,000 items).
 

@@ -591,12 +591,12 @@ The legend, with `group`, is a toolbar with one tab stop of its own:
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **1.4 ms** | the gallery demo's data, 47 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of data replaced |
+| Typical update | **0.7 ms** | one item of data replaced |
 | First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.7 ms | data: first render, 205 nodes; update 1.4 ms |
-| 1,000 items | 9.3 ms | data: first render, 205 nodes; update 4.1 ms |
+| 100 items | 4.2 ms | data: first render, 205 nodes; update 1.4 ms |
+| 1,000 items | 8.7 ms | data: first render, 205 nodes; update 4.3 ms |
 
-1,000 items of data: 9.3 ms, 205 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of data: 8.7 ms, 205 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -503,13 +503,13 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.5 ms** | the gallery demo's data, 53 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of data replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.0 ms | data: first render, 205 nodes; update 0.9 ms |
-| 1,000 items | 5.9 ms | data: first render, 205 nodes; update 2.3 ms |
+| First render | **2.4 ms** | the gallery demo's data, 53 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of data replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.3 ms | data: first render, 205 nodes; update 1.0 ms |
+| 1,000 items | 7.9 ms | data: first render, 205 nodes; update 3.8 ms |
 
-1,000 items of data: 5.9 ms, 205 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of data: 7.9 ms, 205 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

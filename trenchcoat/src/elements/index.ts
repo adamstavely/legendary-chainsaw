@@ -223,6 +223,7 @@ export * from "./handoff-brief";
 export * from "./header-brand";
 export * from "./header-nav";
 export * from "./heatmap";
+export * from "./help-guide";
 export * from "./help-video";
 export * from "./hexbin-chart";
 export * from "./histogram";
