@@ -4,9 +4,10 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
-import { copyText, formatDate } from "./internal/util";
+import { formatDate } from "./internal/util";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { safeUrl } from "./internal/safe-url";
+import { CopiedFlash, lucide, summaryActions, summaryCaret, summaryError, summaryIdle, summaryLengthKey, summaryParas, summarySkeleton } from "./internal/summary-shell";
 
 /*
  * <tc-file-summary> – what's in a file, summarised by AI. The header names the file with an icon for its type, its
@@ -58,9 +59,7 @@ export type FileSummaryRetry = { reason: "regenerate" | "error" };
 
 let uidCount = 0;
 
-/* File types, copy, check, refresh, external link, sparkles, alert: Lucide (ISC, lucide.dev) */
-const lucide = (body: TemplateResult, size = 16) =>
-  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+/* File types, external link, sparkles: Lucide (ISC, lucide.dev); copy, check, refresh and alert are in internal/summary-shell */
 const page = svg`<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path>`;
 const KIND_ICON: Record<FileSummaryKind, TemplateResult> = {
   pdf: svg`${page}<path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path>`,
@@ -104,13 +103,9 @@ const EXT: Record<string, FileSummaryKind> = {
   webm: "video",
   mkv: "video",
 };
-const copyIcon = () => lucide(svg`<rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>`, 14);
-const checkIcon = () => lucide(svg`<path d="M20 6 9 17l-5-5"></path>`, 14);
-const refreshIcon = () => lucide(svg`<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path>`, 14);
 const openIcon = () => lucide(svg`<path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>`, 14);
 const sparkIcon = () =>
   lucide(svg`<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path>`, 14);
-const alertIcon = () => lucide(svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path>`, 16);
 
 /** The kind of a file: given, else from its extension */
 export const fileSummaryKind = (file: Pick<FileSummaryFile, "name" | "kind">): FileSummaryKind => file.kind ?? EXT[file.name.split(".").pop()?.toLowerCase() ?? ""] ?? "other";
@@ -188,11 +183,10 @@ export class TcFileSummary extends TcElement {
   /** The language for dates and numbers, e.g. "en-GB"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
 
-  @state() private accessor copied = false;
   @state() private accessor announce = "";
 
   private uid = `tc-fsum-${++uidCount}`;
-  private copiedTimer = 0;
+  private flash = new CopiedFlash(this);
 
   constructor() {
     super();
@@ -201,11 +195,6 @@ export class TcFileSummary extends TcElement {
     // Focus never drops to <body> when a button it was on goes away or is disabled (Summarise, Retry, Copy and
     // Regenerate while summarising)
     new FocusRescueController(this, () => this.querySelector<HTMLElement>(".ui-fsum__len [tabindex='0']"));
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    clearTimeout(this.copiedTimer);
   }
 
   /* ---------- Actions ---------- */
@@ -222,11 +211,8 @@ export class TcFileSummary extends TcElement {
 
   private async copy() {
     const text = this.plainText;
-    if (!(await copyText(text))) return;
-    this.copied = true;
+    if (!(await this.flash.copy(text))) return;
     this.announce = "Summary copied";
-    clearTimeout(this.copiedTimer);
-    this.copiedTimer = window.setTimeout(() => (this.copied = false), 1800);
     this.emit("tc-copy", { text });
   }
 
@@ -237,12 +223,10 @@ export class TcFileSummary extends TcElement {
   }
 
   private onLengthKey(e: KeyboardEvent) {
-    const order = ["short", "detailed"] as const;
-    const at = order.indexOf(this.length);
-    const to = ["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key) ? (at + 1) % 2 : e.key === "Home" ? 0 : e.key === "End" ? 1 : -1;
-    if (to < 0) return;
+    const to = summaryLengthKey(e, this.length);
+    if (!to) return;
     e.preventDefault();
-    this.setLength(order[to]);
+    this.setLength(to);
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-fsum__len [data-len="${this.length}"]`)?.focus());
   }
 
@@ -271,7 +255,7 @@ export class TcFileSummary extends TcElement {
       else if (this.status === "error") this.announce = `Couldn't summarise ${this.file.name}${this.error ? `: ${this.error}` : ""}`;
       else this.announce = "";
     }
-    if (changed.has("status") && this.status !== "done") this.copied = false;
+    if (changed.has("status") && this.status !== "done") this.flash.reset();
     // The header icon takes the file type's colour
     this.dataset.kind = this.kind;
   }
@@ -313,11 +297,10 @@ export class TcFileSummary extends TcElement {
 
   private renderSummary() {
     const streaming = this.status === "summarising";
-    const paras = this.summary.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
-    if (!paras.length && streaming)
-      return html`<div class="ui-fsum__skeleton" aria-hidden="true"><span></span><span></span><span></span></div>`;
+    const paras = summaryParas(this.summary);
+    if (!paras.length && streaming) return summarySkeleton("fsum");
     return html`<div class="ui-fsum__summary" aria-busy=${streaming ? "true" : "false"}>
-      ${paras.map((p, i) => html`<p class="ui-fsum__p">${p}${streaming && i === paras.length - 1 ? html`<span class="ui-fsum__caret" aria-hidden="true"></span>` : nothing}</p>`)}
+      ${paras.map((p, i) => html`<p class="ui-fsum__p">${p}${streaming && i === paras.length - 1 ? summaryCaret("fsum") : nothing}</p>`)}
     </div>`;
   }
 
@@ -385,19 +368,13 @@ export class TcFileSummary extends TcElement {
   private renderBody() {
     const s = this.status;
     if (s === "idle")
-      return html`<div class="ui-fsum__idle">
-        <p class="ui-fsum__idle-text">Get the gist, the key points with their ${this.kind === "audio" || this.kind === "video" ? "times" : "pages"}, and who and what it mentions.</p>
-        <button type="button" class="ui-fsum__primary" @click=${() => this.emit("tc-summarise", null)}>${sparkIcon()}Summarise</button>
-      </div>`;
-    if (s === "error")
-      return html`<div class="ui-fsum__error" role="alert">
-        <span class="ui-fsum__error-icon">${alertIcon()}</span>
-        <div class="ui-fsum__error-text">
-          <p class="ui-fsum__error-title">Couldn't summarise this file</p>
-          ${this.error ? html`<p class="ui-fsum__error-detail">${this.error}</p>` : nothing}
-        </div>
-        <button type="button" class="tc-btn-sm ui-fsum__retry" @click=${() => this.emit<FileSummaryRetry>("tc-retry", { reason: "error" })}>${refreshIcon()}Retry</button>
-      </div>`;
+      return summaryIdle(
+        "fsum",
+        `Get the gist, the key points with their ${this.kind === "audio" || this.kind === "video" ? "times" : "pages"}, and who and what it mentions.`,
+        sparkIcon(),
+        () => this.emit("tc-summarise", null),
+      );
+    if (s === "error") return summaryError("fsum", "Couldn't summarise this file", this.error, () => this.emit<FileSummaryRetry>("tc-retry", { reason: "error" }));
     return html`<div class="ui-fsum__body">
       ${this.renderSummary()} ${this.renderPoints()} ${this.renderEntities()}
       ${this.coverage ? html`<p class="ui-fsum__coverage">${this.coverage}</p>` : nothing}
@@ -414,10 +391,7 @@ export class TcFileSummary extends TcElement {
     return html`<div class="ui-fsum__foot">
       <span class="ui-fsum__by">${sparkIcon()}<span>${by}</span></span>
       <span class="ui-fsum__actions">
-        <button type="button" class="tc-btn-sm ui-fsum__copy" ?disabled=${!done} ?data-copied=${this.copied} @click=${() => void this.copy()}>
-          ${this.copied ? checkIcon() : copyIcon()}<span>${this.copied ? "Copied" : "Copy"}</span>
-        </button>
-        <button type="button" class="tc-btn-sm ui-fsum__regen" ?disabled=${!done} @click=${() => this.emit<FileSummaryRetry>("tc-retry", { reason: "regenerate" })}>${refreshIcon()}<span>Regenerate</span></button>
+        ${summaryActions("fsum", { done, copied: this.flash.copied, copy: () => void this.copy(), regenerate: () => this.emit<FileSummaryRetry>("tc-retry", { reason: "regenerate" }) })}
         ${showOpen
           ? safeUrl(this.href)
             ? html`<a

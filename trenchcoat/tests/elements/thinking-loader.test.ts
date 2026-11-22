@@ -133,11 +133,78 @@ describe("tc-thinking-loader", () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  describe('mark="pixels" and a fixed label (what Pixel Loader did)', () => {
+    const dots = (el: Element) => [...el.querySelectorAll<HTMLElement>(".ui-tl__dot")];
+    const lit = (el: Element) => dots(el).flatMap((d, i) => (d.hasAttribute("data-lit") ? [i] : []));
+    const time = (el: Element) => el.querySelector(".ui-tl__time")!.textContent;
+
+    test("the grid replaces the rays, the time ticks without re-rendering, and the label stays when done", async () => {
+      const el = await fixture<TcThinkingLoader>(html`<tc-thinking-loader mark="pixels" pattern="orbit" label="Reading the audit log"></tc-thinking-loader>`);
+      expect(el.querySelector(".ui-tl__icon")).toBeNull();
+      expect(dots(el)).toHaveLength(25);
+      expect(el.querySelector(".ui-tl__grid")!.getAttribute("aria-hidden")).toBe("true");
+      expect(dots(el).filter((d) => d.hasAttribute("data-rest"))).toHaveLength(9);
+      expect(el.dataset.status).toBe("working");
+      // The host stays the status; the line under it isn't a second one
+      expect(el.getAttribute("role")).toBe("status");
+      expect(el.querySelector(".ui-tl__sr")!.hasAttribute("role")).toBe(false);
+      expect(el.querySelector(".ui-tl__sr")!.textContent).toBe("Reading the audit log");
+      const updates = vi.spyOn(el as unknown as { update: (c: unknown) => void }, "update");
+      vi.advanceTimersByTime(2300);
+      expect(time(el)).toBe("2.3s");
+      expect(updates).not.toHaveBeenCalled();
+      el.state = "done";
+      await el.updateComplete;
+      expect(lit(el)).toEqual([4, 8, 10, 12, 16]);
+      expect(label(el)).toBe("Reading the audit log");
+      expect(el.querySelector(".ui-tl__sr")!.textContent).toBe("Done: Reading the audit log");
+      expect(vi.getTimerCount()).toBe(0);
+    });
+
+    test("error: a cross (pixels or rays), and the status says it failed", async () => {
+      const px = await fixture<TcThinkingLoader>(html`<tc-thinking-loader mark="pixels" label="Exporting" .labels=${{ error: "Couldn't finish" }}></tc-thinking-loader>`);
+      px.state = "error";
+      await px.updateComplete;
+      expect(lit(px)).toEqual([0, 4, 6, 8, 12, 16, 18, 20, 24]);
+      expect(px.querySelector(".ui-tl__sr")!.textContent).toBe("Couldn't finish: Exporting");
+      const rays = await fixture<TcThinkingLoader>(html`<tc-thinking-loader state="error"></tc-thinking-loader>`);
+      expect(rays.dataset.status).toBe("error");
+      expect(rays.hasAttribute("data-done")).toBe(false);
+      expect(label(rays)).toBe("Failed");
+      expect(getComputedStyle(rays.querySelector(".ui-tl__cross")!).opacity).not.toBe("0");
+    });
+
+    test("started and now from Pixel Loader work too; hide-time drops the time; rays show no time", async () => {
+      const driven = await fixture<TcThinkingLoader>(html`<tc-thinking-loader mark="pixels" .started=${0} .now=${64_000}></tc-thinking-loader>`);
+      expect(time(driven)).toBe("1m 4s");
+      driven.now = 65_000;
+      await driven.updateComplete;
+      expect(time(driven)).toBe("1m 5s");
+      const hidden = await fixture<TcThinkingLoader>(html`<tc-thinking-loader mark="pixels" hide-time></tc-thinking-loader>`);
+      expect(hidden.querySelector(".ui-tl__time")).toBeNull();
+      const rays = await fixture<TcThinkingLoader>(html`<tc-thinking-loader></tc-thinking-loader>`);
+      expect(rays.querySelector(".ui-tl__time")).toBeNull();
+    });
+  });
+
+  test(`tc-pixel-loader is this element with mark="pixels" and its own look`, async () => {
+    await import("../../src/elements/pixel-loader");
+    const { TcThinkingLoader: Base } = await import("../../src/elements/thinking-loader");
+    const el = await fixture<TcThinkingLoader>(html`<tc-pixel-loader mark="rays"></tc-pixel-loader>`);
+    expect(el).toBeInstanceOf(Base);
+    expect(el.dataset.ui).toBe("pxl");
+    // Always the grid, whatever mark says
+    expect(el.querySelectorAll(".ui-pxl__dot")).toHaveLength(25);
+    expect(el.querySelector(".ui-pxl__label")!.textContent).toBe("Working");
+  });
+
   test("axe: no violations in either look", async () => {
     vi.useRealTimers();
     const wrap = await fixture(html`<div>
       <tc-thinking-loader></tc-thinking-loader>
       <tc-thinking-loader look="clean" done></tc-thinking-loader>
+      <tc-thinking-loader mark="pixels" pattern="drive" label="Matching vendor IDs"></tc-thinking-loader>
+      <tc-thinking-loader look="clean" mark="pixels" label="Uploading" state="error"></tc-thinking-loader>
     </div>`);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);

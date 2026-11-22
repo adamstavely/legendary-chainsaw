@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased – Fewer copies: one loader, shared internals
+
+- **[Thinking Loader](#/thinking-loader):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **[Pixel Loader](#/pixel-loader)** is now Thinking Loader with `mark="pixels"`; its tag, properties, events and look keep working, and new pages should use Thinking Loader.
+- **Shared code, no change to any element's API or look:**
+  - [Running Now](#/running-now) and [Background Tasks](#/background-tasks) share one controller for "notify me when it's done" – the bell, its channels and the events.
+  - The five hover cards for things found in text – [Coordinate Details](#/coordinate-details), [Entity Details](#/entity-details), [Identifier Details](#/identifier-details), [Time Details](#/time-details) and [ISBN Details](#/isbn-details) – share their card's open, pin, keyboard and announcement behaviour, and all use the shared lookup cache.
+  - [Account List](#/account-list), [Asset List](#/asset-list), [Contact Channels](#/contact-channels) and [Document List](#/document-list) share revealing one value at a time and their row-and-button keyboard.
+  - [AI Summary](#/ai-summary) and [File Summary](#/file-summary) share their status states, shimmer and caret, Copy and Regenerate, and Short / Detailed.
+  - [Meter Row](#/meter-row), [Usage Meter](#/usage-meter) and [Rate Limit Status](#/rate-limit-status) share one meter bar and its warning thresholds.
+  - [Gauge](#/gauge) draws its arcs with the same geometry as the charts and [Score Ring](#/score-ring).
+
 ## Unreleased – Help Video
 
 - **Help Video:** point-in-time help – a small film-frame icon (a film cell with sprocket holes and a play mark cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, with a tooltip naming the video and its length, words beside it if wanted ("Watch how"), and a check once watched. A click opens one short tutorial in a modal player with captions, chapters to jump to, and Watch again and Done at the end; a file played to its end counts as watched (`tc-watched-change`), embeds from a video host play in an iframe, and Escape puts focus back on the icon. The player's Transcript shows the words as timed lines, read from the captions or passed as `transcript`, marking the line being said and jumping to a line when picked; Download transcript saves them as a text file, or links `transcript-file`. `updated-on` puts a small dot on the icon's top-right corner for `new-days` days (14 by default) after the video changes, until the person opens it (`tc-update-seen-change`, `update-seen`).

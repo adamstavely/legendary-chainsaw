@@ -5,6 +5,7 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { compact } from "./internal/format";
 import { pick } from "./internal/util";
+import { meterBar, meterTone } from "./internal/meter";
 
 /*
  * <tc-rate-limit-status> – how close each model is to its provider's rate limits. One row per provider and model:
@@ -103,9 +104,11 @@ export function rateLimitShare(row: RateLimitRow) {
 }
 /** Plenty under 70% of the limit, Near limit under 100%, Limited at or over it */
 export function rateLimitHeadroom(row: RateLimitRow): RateLimitHeadroom {
-  const share = rateLimitShare(row);
-  return share >= 1 ? "limited" : share >= 0.7 ? "near" : "plenty";
+  return headroomOf(rateLimitShare(row));
 }
+/** Plenty, Near limit or Limited for one share of a limit */
+const HEADROOM = { normal: "plenty", warning: "near", danger: "limited" } as const;
+const headroomOf = (share: number): RateLimitHeadroom => HEADROOM[meterTone(share, 0.7, 1)];
 /** "18 s", "2 min 5 s" – the time until a reset */
 export function rateLimitCountdown(ms: number) {
   const s = Math.max(0, Math.ceil(ms / 1000));
@@ -240,23 +243,19 @@ export class TcRateLimitStatus extends TcElement {
     const w = this.words;
     const share = u.limit > 0 ? u.used / u.limit : 0;
     const pct = Math.round(share * 100);
-    const level: RateLimitHeadroom = share >= 1 ? "limited" : share >= 0.7 ? "near" : "plenty";
+    const level = headroomOf(share);
     const id = `${this.uid}-${row.id}-${m}`;
     return html`<div class="ui-rlst__metric" data-tone=${TONE[level]}>
       <span class="ui-rlst__metric-label" id=${id}>${w.metrics[m]}</span>
       <span class="ui-rlst__metric-value" aria-hidden="true">${compact(u.used)} / ${compact(u.limit)}</span>
-      <!-- role="meter" goes through the ARIA-reflecting role property: lit-analyzer's role list predates ARIA 1.2's meter -->
-      <div
-        class="ui-rlst__meter"
-        .role=${"meter"}
-        aria-labelledby=${id}
-        aria-valuemin="0"
-        aria-valuemax=${u.limit}
-        aria-valuenow=${Math.min(u.used, u.limit)}
-        aria-valuetext=${`${this.num(u.used)} of ${this.num(u.limit)} ${w.units[m]}, ${pct}%`}
-      >
-        <span class="ui-rlst__meter-fill" style=${`inline-size: ${Math.min(100, pct)}%`}></span>
-      </div>
+      ${meterBar({
+        cls: "ui-rlst__meter",
+        labelledBy: id,
+        max: u.limit,
+        now: Math.min(u.used, u.limit),
+        valueText: `${this.num(u.used)} of ${this.num(u.limit)} ${w.units[m]}, ${pct}%`,
+        content: html`<span class="ui-rlst__meter-fill" style=${`inline-size: ${Math.min(100, pct)}%`}></span>`,
+      })}
     </div>`;
   }
 

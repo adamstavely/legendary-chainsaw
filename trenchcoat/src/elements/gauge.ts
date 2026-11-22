@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
+import { arcLine, polar } from "./internal/chart/geometry";
 
 /*
  * <tc-gauge> – one value against its range: a 270° dial (`variant` arc), a half dial (semicircle), a straight bar, or
@@ -54,9 +55,14 @@ const MAX_TICKS = 120;
 const DIAL_PX = { sm: 112, md: 168, lg: 216 } as const;
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
-const at = (deg: number, r: number) => `${(CX + r * Math.cos(rad(deg))).toFixed(2)} ${(CY + r * Math.sin(rad(deg))).toFixed(2)}`;
+/** The dial's angles run clockwise from 3 o'clock in degrees; the shared geometry's from 12 o'clock in radians */
+const toArc = (deg: number) => rad(deg + 90);
+const at = (deg: number, r: number) => {
+  const [x, y] = polar(CX, CY, r, toArc(deg));
+  return `${x.toFixed(2)} ${y.toFixed(2)}`;
+};
 /** An arc of radius r from one angle to another, clockwise */
-const arcPath = (from: number, to: number, r: number) => `M ${at(from, r)} A ${r} ${r} 0 ${to - from > 180 ? 1 : 0} 1 ${at(to, r)}`;
+const dialArc = (from: number, to: number, r: number) => arcLine(CX, CY, r, toArc(from), toArc(to));
 
 /**
  * One value against its range – a dial, a half dial or a bar – with the band it's in, the bands round it, a target
@@ -254,9 +260,9 @@ export class TcGauge extends TcElement {
     const target = this.target !== undefined && Number.isFinite(this.target) ? deg(this.frac(this.target)) : null;
     const tone = this.current?.tone ?? this.tone;
     return svg`<svg class="ui-gau__svg" viewBox=${shape.box} aria-hidden="true">
-      <path class="ui-gau__track" d=${arcPath(deg(0), deg(1), R)}></path>
-      <path class="ui-gau__fill" data-tone=${tone} ?data-empty=${f === 0} pathLength="100" d=${arcPath(deg(0), deg(1), R)} style=${`stroke-dashoffset: ${(100 - f * 100).toFixed(2)}`}></path>
-      ${spans.map((s) => svg`<path class="ui-gau__band" data-tone=${s.band.tone} d=${arcPath(deg(this.frac(s.from)), deg(this.frac(s.to)), RB)}></path>`)}
+      <path class="ui-gau__track" d=${dialArc(deg(0), deg(1), R)}></path>
+      <path class="ui-gau__fill" data-tone=${tone} ?data-empty=${f === 0} pathLength="100" d=${dialArc(deg(0), deg(1), R)} style=${`stroke-dashoffset: ${(100 - f * 100).toFixed(2)}`}></path>
+      ${spans.map((s) => svg`<path class="ui-gau__band" data-tone=${s.band.tone} d=${dialArc(deg(this.frac(s.from)), deg(this.frac(s.to)), RB)}></path>`)}
       ${spans.slice(1).map((s) => {
         const a = deg(this.frac(s.from));
         return svg`<path class="ui-gau__tick" d=${`M ${at(a, RB - 4)} L ${at(a, RB + 3)}`}></path>`;
@@ -292,7 +298,7 @@ export class TcGauge extends TcElement {
           return svg`<path class="ui-gau__mark" ?data-on=${on} style=${`--tc-gau-delay: ${delay.toFixed(3)}`} d=${`M ${at(a, TICK_IN)} L ${at(a, TICK_OUT)}`}></path>`;
         })}
       </g>
-      ${spans.map((s) => svg`<path class="ui-gau__band" data-tone=${s.band.tone} d=${arcPath(deg(this.frac(s.from)), deg(this.frac(s.to)), RB)}></path>`)}
+      ${spans.map((s) => svg`<path class="ui-gau__band" data-tone=${s.band.tone} d=${dialArc(deg(this.frac(s.from)), deg(this.frac(s.to)), RB)}></path>`)}
       ${spans.slice(1).map((s) => {
         const a = deg(this.frac(s.from));
         return svg`<path class="ui-gau__tick" d=${`M ${at(a, RB - 4)} L ${at(a, RB + 3)}`}></path>`;

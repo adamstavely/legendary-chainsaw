@@ -6,6 +6,10 @@ related: thinking-loader, thinking-state, background-tasks, diff-table
 
 ## Overview
 
+Superseded by [Thinking Loader](#/thinking-loader) with `mark="pixels"`, which does everything here and more (phases,
+a cross on error, the rays mark). `<tc-pixel-loader>` stays as that element with Pixel Loader's own look and the same
+properties, so existing pages keep working; use Thinking Loader for new ones.
+
 A small row that says some work is under way: a 5 × 5 grid of dots lit in a pattern, a label with a light sweeping
 over it, and how long the work has taken so far – 0.2s, 12s, 1m 4s. Four patterns give different kinds of work their
 own feel: a diagonal wave, a lit dot driving a snake path, a seeded twinkle and an orbit round the edge. When the work

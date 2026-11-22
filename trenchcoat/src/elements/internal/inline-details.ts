@@ -1,5 +1,13 @@
+import type { ReactiveElement } from "lit";
+import { PopoverController } from "./popover";
+
 /*
- * What tc-entity-details and tc-identifier-details share: asking the page about one thing found in their text.
+ * What the detect-in-text hover cards share – tc-coordinate-details, tc-entity-details, tc-identifier-details,
+ * tc-isbn-details and tc-time-details: asking the page about one thing found in their text (InlineLookups), and the
+ * card itself – which mark it's open on, opening and closing it, pinning it with a click, the right-click and Menu-key
+ * openers, and a status line that announces a repeated message (InlineCard).
+ *
+ * InlineLookups – asking the page about one thing found in the text.
  * A cancelable lookup event fires first, with `respondWith()` for the answer; when nobody answers and the event isn't
  * prevented, the element's `resolve` hook is asked. Answers are cached by key for the element's life; failures aren't,
  * so the card can offer Retry. Lookups in flight are aborted when the element leaves the page, and forgotten, so a
@@ -117,4 +125,110 @@ export function firstOfOverlaps<R extends { start: number; end: number }>(ranges
   const kept: R[] = [];
   for (const r of ranges) if (!kept.some((k) => r.start < k.end && k.start < r.end)) kept.push(r);
   return kept.sort((a, b) => a.start - b.start);
+}
+
+/** The status line's next message: a trailing space makes a repeated message count as new for screen readers */
+export const sayAgain = (said: string, text: string) => (said === text ? `${text} ` : text);
+
+/** How a card opens: pinned (it stays until dismissed) and with focus moved into it */
+export type InlineOpen = { pin?: boolean; focus?: boolean };
+
+/**
+ * The card of a detect-in-text element: one card at a time, on the mark at `host.openAt` (-1 when none). The host keeps
+ * `openAt` as reactive state and renders its marks as `.ui-<prefix>__mark[data-i]` buttons and the card as
+ * `.ui-<prefix>__pop`; the card's body, lookups and events stay the host's own.
+ *   · "dialog" (the default) – below the mark's first line, focus returns to the mark, Tab moves into it
+ *   · "tooltip" – above the mark, centred, nothing inside to reach
+ */
+export class InlineCard {
+  readonly pop: PopoverController;
+
+  constructor(
+    private readonly host: ReactiveElement & { openAt: number },
+    private readonly o: {
+      /** The element's CSS prefix: "ent" for .ui-ent__mark and .ui-ent__pop */
+      prefix: string;
+      /** How many marks there are */
+      count: () => number;
+      hoverDelay: () => number;
+      /** Whether right-click and the Menu key open a card */
+      menu?: () => boolean;
+      kind?: "dialog" | "tooltip";
+      /** A card opened on mark i (it wasn't open there before): reset per-card state, fire tc-open-change, look it up */
+      opened: (i: number) => void;
+      /** The card closed: reset per-card state and fire tc-open-change */
+      closed: () => void;
+    },
+  ) {
+    const tip = o.kind === "tooltip";
+    this.pop = new PopoverController(host, {
+      popover: () => host.querySelector<HTMLElement>(`.ui-${o.prefix}__pop`),
+      anchor: () => {
+        const m = this.markAt(host.openAt);
+        if (!m?.isConnected) return null;
+        // The mark's first line, when it wraps
+        return m.getClientRects()[0] ?? m.getBoundingClientRect();
+      },
+      side: tip ? "top" : "bottom",
+      align: tip ? "center" : "start",
+      kind: tip ? "tooltip" : "dialog",
+      trigger: () => this.markAt(host.openAt),
+      ...(tip ? {} : { returnFocus: () => this.markAt(host.openAt), tabBridge: true }),
+      hover: { delay: o.hoverDelay },
+      closeOnFocusOut: true,
+      onClose: () => this.closed(),
+    });
+  }
+
+  /** The mark button for match i */
+  markAt(i: number) {
+    return i < 0 ? null : this.host.querySelector<HTMLElement>(`.ui-${this.o.prefix}__mark[data-i="${i}"]`);
+  }
+
+  /** Opens the card on mark i; a card that was pinned elsewhere lets go */
+  open(i: number, how: InlineOpen = {}) {
+    if (i < 0 || i >= this.o.count()) return;
+    if (this.host.openAt !== i) {
+      if (this.host.openAt >= 0) this.pop.pinned = false;
+      this.host.openAt = i;
+      this.o.opened(i);
+    }
+    this.pop.show({ focus: !!how.focus, pin: !!how.pin });
+  }
+
+  /** After the controller closed it (Escape, outside, focus gone, anchor gone) or close() */
+  closed() {
+    if (this.host.openAt < 0) return;
+    this.host.openAt = -1;
+    this.o.closed();
+  }
+
+  /** Closes the open card, if any */
+  close() {
+    if (this.pop.open) this.pop.close();
+    else this.closed();
+  }
+
+  /** A mark's click: Enter or Space (detail 0) opens the card with focus in it; a click pins it, or closes a pinned one */
+  onMarkClick(e: MouseEvent, i: number) {
+    if (e.detail === 0) this.open(i, { pin: true, focus: true });
+    else if (this.host.openAt === i && this.pop.pinned) this.close();
+    else this.open(i, { pin: true });
+  }
+
+  /** A mark's right-click: the card takes the place of the browser's menu, on the marks only */
+  onMarkMenu(e: MouseEvent, i: number) {
+    if (this.o.menu && !this.o.menu()) return;
+    e.preventDefault();
+    if (this.host.openAt !== i || !this.pop.open || !this.pop.pinned) this.open(i, { pin: true });
+  }
+
+  /** A mark's Menu key or Shift + F10: the card, with focus in it */
+  onMarkKey(e: KeyboardEvent, i: number) {
+    if (this.o.menu && !this.o.menu()) return;
+    if (e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) {
+      e.preventDefault();
+      this.open(i, { pin: true, focus: true });
+    }
+  }
 }

@@ -12,6 +12,16 @@ new width. When the work is done, the spinner turns into a check and the label s
 (“Thought for 6s”). It tells people something is happening, and roughly what, without taking room from the
 conversation.
 
+`mark="pixels"` swaps the rays for a 5 × 5 grid of dots lit in a `pattern` – a diagonal wave, a dot driving a snake
+path, a twinkle or an orbit round the edge – and adds the time the work has taken beside the label (0.2s, 12s, 1m 4s;
+`hide-time` leaves it off). Give one fixed `label` instead of `phases` when the work is one thing ("Reading the audit
+log"): it stays when the work ends, and the status says how it ended – "Done: Reading the audit log".
+
+`state` says how the work stands – "working", "done" or "error", which turns the mark into a cross in the danger
+colour. It's the preferred way; the older `done` boolean still works and means `state="done"`. `startedAt` sets where
+the count starts (`started` is the same), and `now` lets the page drive the clock. This is what Pixel Loader did:
+`<tc-pixel-loader>` is now this element with `mark="pixels"` and its own look.
+
 ## When to use
 
 - The gap between sending a message and the first words of the answer.
@@ -27,7 +37,10 @@ conversation.
 
 1. **Spinner** `.ui-tl__spinner` – eight rays turning while the model works
 2. **Check** `.ui-tl__check` – takes the spinner's place once done
-3. **Label** `.ui-tl__text` – the current phase with a light sweeping over it, then the done label
+3. **Cross** `.ui-tl__cross` – takes the spinner's place on an error
+4. **Grid** `.ui-tl__grid` – with `mark="pixels"`, 25 `.ui-tl__dot`s in place of the spinner, settling into a check or a cross
+5. **Label** `.ui-tl__text` – the current phase with a light sweeping over it, then the done label
+6. **Time** `.ui-tl__time` – with `mark="pixels"`, the time the work has taken, unless `hide-time`
 
 ## Looks
 
@@ -43,7 +56,9 @@ Nothing to operate – the loader only reports.
 
 The element is a polite status region (`role="status"`, unless the page sets its own role). It announces the first
 phase (“Thinking”) and then the done label (“Thought for 6s”) – not every phase on the way, so screen reader users
-aren't interrupted every couple of seconds. The spinner and the moving labels are hidden from assistive technology.
+aren't interrupted every couple of seconds. With a fixed `label` it announces the label, then how it ended – “Done:
+Reading the audit log” or “Failed: …” (`labels` renames the words). The ticking time is never announced. The mark,
+the moving labels and the time are hidden from assistive technology.
 
 ## Content
 
@@ -79,8 +94,11 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
   loader.doneLabel = (s) => `Thought for ${s}s`;
   loader.addEventListener("tc-phase-change", (e) => console.log(e.detail.phase));
   // Later, when the answer starts streaming:
-  setTimeout(() => (loader.done = true), 4200);
+  setTimeout(() => (loader.state = "done"), 4200);
 </script>
+
+<!-- One fixed label, a grid of dots and the time it's taken -->
+<tc-thinking-loader mark="pixels" pattern="orbit" label="Reading the audit log"></tc-thinking-loader>
 ```
 
 ```tsx
