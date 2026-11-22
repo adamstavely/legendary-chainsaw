@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "@adamstavely/trenchcoat/generative/schemas/tc-audit-trail.json",
   "title": "tc-audit-trail",
-  "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
+  "description": "Who did what and when, for the record – with what changed, before and after – with search, filters by outcome, person, type and date, and export.",
   "type": "object",
   "properties": {
     "heading": {
@@ -34,7 +34,29 @@
           "const": "all"
         }
       ],
-      "description": "Which outcomes show"
+      "description": "Which outcomes show. Changed by the filter unless a tc-outcome-change listener calls preventDefault()"
+    },
+    "actor": {
+      "type": "string",
+      "description": "Only this person's events; \"\" for anyone. Changed by the Person filter unless a tc-actor-change listener calls preventDefault()"
+    },
+    "action": {
+      "type": "string",
+      "description": "Only this action; \"\" for any. Changed by the Type filter unless a tc-action-change listener calls preventDefault()"
+    },
+    "range": {
+      "type": "string",
+      "enum": [
+        "30d",
+        "7d",
+        "all",
+        "today"
+      ],
+      "description": "Only events from \"today\", the last \"7d\" or \"30d\", or \"all\". Changed by the Date filter unless a tc-range-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time ranges are measured from, epoch ms; unset, the clock's when the range is picked"
     },
     "exportable": {
       "type": "boolean",
@@ -92,6 +114,60 @@
         },
         "countOne": {
           "type": "string"
+        },
+        "countOf": {
+          "type": "string"
+        },
+        "person": {
+          "type": "string"
+        },
+        "anyone": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "anyAction": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "today": {
+          "type": "string"
+        },
+        "last7": {
+          "type": "string"
+        },
+        "last30": {
+          "type": "string"
+        },
+        "anyTime": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "changes": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "none": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -129,6 +205,13 @@
         "detail": {
           "type": "string",
           "description": "More about it: shown when the row opens"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditChange"
+          },
+          "description": "What it changed, field by field: shown when the row opens. A field whose value didn't change isn't listed"
         }
       },
       "required": [
@@ -146,6 +229,25 @@
         "failed",
         "success"
       ]
+    },
+    "AuditChange": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "additionalProperties": false,
+      "description": "One field an event changed. No `before`: it was added. No `after`: it was removed"
     }
   }
 }

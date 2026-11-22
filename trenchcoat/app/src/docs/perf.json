@@ -4354,6 +4354,114 @@
     "errors": []
    }
   },
+  "api-keys": {
+   "measuredAt": "2026-11-22",
+   "hash": "6b124f7bb4fa6cca",
+   "bundle": {
+    "own": {
+     "min": 30942,
+     "gzip": 9064
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21686
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 501
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/trigger-tip",
+      "kind": "internal",
+      "min": 141
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 39098,
+     "gzip": 11490
+    },
+    "withLit": {
+     "min": 62028,
+     "gzip": 19058
+    }
+   },
+   "render": {
+    "tag": "tc-api-keys",
+    "source": "demo",
+    "runs": 7,
+    "cold": 23.3,
+    "first": 2.2,
+    "update": 0.7,
+    "updateKind": "one item of keys replaced",
+    "nodes": 139,
+    "scale": {
+     "property": "keys",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 12.9,
+       "update": 4.5,
+       "nodes": 2419
+      },
+      {
+       "items": 1000,
+       "first": 124.6,
+       "update": 39.6,
+       "nodes": 24019
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "api-reference-nav": {
    "measuredAt": "2026-11-13",
    "hash": "b4eaf27fa501e833",
@@ -5408,6 +5516,109 @@
     "errors": []
    }
   },
+  "assignee-picker": {
+   "measuredAt": "2026-11-22",
+   "hash": "3eb068024add3071",
+   "bundle": {
+    "own": {
+     "min": 18656,
+     "gzip": 6492
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18993
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 9274
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 34817,
+     "gzip": 11496
+    },
+    "withLit": {
+     "min": 54868,
+     "gzip": 17901
+    }
+   },
+   "render": {
+    "tag": "tc-assignee-picker",
+    "source": "demo",
+    "runs": 7,
+    "cold": 11.2,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "one item of people replaced",
+    "nodes": 8,
+    "scale": {
+     "property": "people",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.4,
+       "update": 0,
+       "nodes": 8
+      },
+      {
+       "items": 1000,
+       "first": 0.4,
+       "update": 0.1,
+       "nodes": 8
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "atomic-design": {
    "measuredAt": "2026-11-11",
    "hash": "2d6fe77d7e43cf18",
@@ -5772,18 +5983,18 @@
    }
   },
   "audit-trail": {
-   "measuredAt": "2026-11-11",
-   "hash": "a8e9b6039824eb32",
+   "measuredAt": "2026-11-22",
+   "hash": "035fd29825750a7a",
    "bundle": {
     "own": {
-     "min": 12577,
-     "gzip": 4649
+     "min": 19055,
+     "gzip": 6282
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19961
+      "min": 19963
      },
      {
       "name": "internal/card-head",
@@ -5803,7 +6014,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
@@ -5822,23 +6033,23 @@
      }
     ],
     "withoutLit": {
-     "min": 21094,
-     "gzip": 7223
+     "min": 27581,
+     "gzip": 8856
     },
     "withLit": {
-     "min": 42252,
-     "gzip": 14132
+     "min": 48744,
+     "gzip": 15827
     }
    },
    "render": {
     "tag": "tc-audit-trail",
     "source": "defaults",
     "runs": 7,
-    "cold": 21.8,
-    "first": 0.7,
+    "cold": 21.2,
+    "first": 0.9,
     "update": 0.2,
     "updateKind": "re-render with the same data",
-    "nodes": 23,
+    "nodes": 33,
     "scale": null,
     "idle": {
      "visible": {
@@ -20006,6 +20217,109 @@
     "errors": []
    }
   },
+  "export-dialog": {
+   "measuredAt": "2026-11-22",
+   "hash": "df0ec375cfad672d",
+   "bundle": {
+    "own": {
+     "min": 23132,
+     "gzip": 6954
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19908
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/modal",
+      "kind": "internal",
+      "min": 1573
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 31583,
+     "gzip": 9431
+    },
+    "withLit": {
+     "min": 52726,
+     "gzip": 16368
+    }
+   },
+   "render": {
+    "tag": "tc-export-dialog",
+    "source": "demo",
+    "runs": 7,
+    "cold": 5.1,
+    "first": 0.4,
+    "update": 0.2,
+    "updateKind": "one item of columns replaced",
+    "nodes": 2,
+    "scale": {
+     "property": "columns",
+     "demoItems": 8,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.4,
+       "update": 0.1,
+       "nodes": 2
+      },
+      {
+       "items": 1000,
+       "first": 0.3,
+       "update": 0.1,
+       "nodes": 2
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "extraction-review": {
    "measuredAt": "2026-11-11",
    "hash": "d3e418bc81375554",
@@ -22253,8 +22567,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-11-21",
-   "hash": "a7f7bd66983adced",
+   "measuredAt": "2026-11-22",
+   "hash": "7ffc827ca796450b",
    "bundle": {
     "own": {
      "min": 34126,
@@ -22264,7 +22578,7 @@
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 27006
+      "min": 27004
      },
      {
       "name": "internal/chart/element",
@@ -22279,7 +22593,7 @@
      {
       "name": "internal/chart/xy",
       "kind": "internal",
-      "min": 15901
+      "min": 15915
      },
      {
       "name": "internal/settings",
@@ -22309,7 +22623,7 @@
      {
       "name": "internal/chart/pie",
       "kind": "internal",
-      "min": 6555
+      "min": 6573
      },
      {
       "name": "internal/chart/motion",
@@ -22349,7 +22663,7 @@
      {
       "name": "internal/chart/sankey",
       "kind": "internal",
-      "min": 3224
+      "min": 3227
      },
      {
       "name": "internal/card-head",
@@ -22374,7 +22688,7 @@
      {
       "name": "internal/chart/loaders",
       "kind": "internal",
-      "min": 2465
+      "min": 2469
      },
      {
       "name": "internal/chart/format",
@@ -22539,17 +22853,17 @@
      {
       "name": "chat-composer",
       "kind": "element",
-      "min": 141481
+      "min": 141480
      },
      {
       "name": "review-center",
       "kind": "element",
-      "min": 103058
+      "min": 103056
      },
      {
       "name": "agent-queue",
       "kind": "element",
-      "min": 90799
+      "min": 90796
      },
      {
       "name": "project-flow",
@@ -22564,17 +22878,17 @@
      {
       "name": "agent-graph",
       "kind": "element",
-      "min": 80790
+      "min": 80851
      },
      {
       "name": "stepper-form",
       "kind": "element",
-      "min": 80440
+      "min": 80439
      },
      {
       "name": "evaluation-dataset-editor",
       "kind": "element",
-      "min": 74583
+      "min": 74569
      },
      {
       "name": "region-dach",
@@ -22594,7 +22908,7 @@
      {
       "name": "client-context",
       "kind": "element",
-      "min": 61694
+      "min": 61691
      },
      {
       "name": "cited-answer",
@@ -22614,7 +22928,7 @@
      {
       "name": "approval-card",
       "kind": "element",
-      "min": 58975
+      "min": 58971
      },
      {
       "name": "configuration-release-control",
@@ -22629,12 +22943,12 @@
      {
       "name": "trace-waterfall",
       "kind": "element",
-      "min": 57131
+      "min": 57135
      },
      {
       "name": "decision-tree",
       "kind": "element",
-      "min": 56118
+      "min": 56124
      },
      {
       "name": "app-directory",
@@ -22654,7 +22968,7 @@
      {
       "name": "tool-configuration",
       "kind": "element",
-      "min": 52114
+      "min": 52105
      },
      {
       "name": "data-table",
@@ -22664,17 +22978,17 @@
      {
       "name": "knowledge-source-manager",
       "kind": "element",
-      "min": 51889
+      "min": 51883
      },
      {
       "name": "transcript-review",
       "kind": "element",
-      "min": 51772
+      "min": 51771
      },
      {
       "name": "integration-picker",
       "kind": "element",
-      "min": 50501
+      "min": 50500
      },
      {
       "name": "agent-inbox",
@@ -22684,37 +22998,37 @@
      {
       "name": "json-viewer",
       "kind": "element",
-      "min": 49389
+      "min": 49387
      },
      {
       "name": "ai-workspace",
       "kind": "element",
-      "min": 49233
+      "min": 49230
      },
      {
       "name": "prompt-library",
       "kind": "element",
-      "min": 49131
+      "min": 49129
      },
      {
       "name": "agent-tree",
       "kind": "element",
-      "min": 48540
+      "min": 48546
      },
      {
       "name": "email-draft",
       "kind": "element",
-      "min": 48500
+      "min": 48499
      },
      {
       "name": "billing-schedule",
       "kind": "element",
-      "min": 47823
+      "min": 47862
      },
      {
       "name": "playbook-canvas",
       "kind": "element",
-      "min": 47140
+      "min": 47137
      },
      {
       "name": "world-map",
@@ -22759,7 +23073,7 @@
      {
       "name": "image-grid",
       "kind": "element",
-      "min": 44496
+      "min": 44495
      },
      {
       "name": "tool-call-card",
@@ -22769,7 +23083,7 @@
      {
       "name": "integration-settings",
       "kind": "element",
-      "min": 44345
+      "min": 44343
      },
      {
       "name": "run-checkpoints",
@@ -22784,12 +23098,12 @@
      {
       "name": "conversation-annotation",
       "kind": "element",
-      "min": 43494
+      "min": 43493
      },
      {
       "name": "mcp-connection-manager",
       "kind": "element",
-      "min": 43224
+      "min": 43219
      },
      {
       "name": "combobox",
@@ -22799,17 +23113,17 @@
      {
       "name": "output-schema-builder",
       "kind": "element",
-      "min": 42502
+      "min": 42498
      },
      {
       "name": "ai-summary",
       "kind": "element",
-      "min": 42373
+      "min": 42372
      },
      {
       "name": "writing-assistant",
       "kind": "element",
-      "min": 42066
+      "min": 42065
      },
      {
       "name": "comments-panel",
@@ -22819,7 +23133,7 @@
      {
       "name": "trigger-builder",
       "kind": "element",
-      "min": 41012
+      "min": 41006
      },
      {
       "name": "mention-picker",
@@ -22829,7 +23143,7 @@
      {
       "name": "provider-connection",
       "kind": "element",
-      "min": 40819
+      "min": 40811
      },
      {
       "name": "workflow-canvas",
@@ -22839,12 +23153,17 @@
      {
       "name": "text-annotator",
       "kind": "element",
-      "min": 39692
+      "min": 39691
      },
      {
       "name": "experiment-card",
       "kind": "element",
       "min": 39649
+     },
+     {
+      "name": "breakdown-chart",
+      "kind": "element",
+      "min": 38929
      },
      {
       "name": "lineage-graph",
@@ -22857,19 +23176,14 @@
       "min": 38857
      },
      {
-      "name": "breakdown-chart",
-      "kind": "element",
-      "min": 38814
-     },
-     {
       "name": "agent-steering",
       "kind": "element",
-      "min": 38476
+      "min": 38475
      },
      {
       "name": "approval-gates",
       "kind": "element",
-      "min": 38428
+      "min": 38424
      },
      {
       "name": "model-picker",
@@ -22879,12 +23193,12 @@
      {
       "name": "plan-vs-actual",
       "kind": "element",
-      "min": 37328
+      "min": 37331
      },
      {
       "name": "memory-graph",
       "kind": "element",
-      "min": 36288
+      "min": 36294
      },
      {
       "name": "version-history",
@@ -22894,17 +23208,17 @@
      {
       "name": "agent-lanes",
       "kind": "element",
-      "min": 35684
-     },
-     {
-      "name": "retrieval-settings",
-      "kind": "element",
-      "min": 35625
+      "min": 35688
      },
      {
       "name": "task-board",
       "kind": "element",
       "min": 35619
+     },
+     {
+      "name": "retrieval-settings",
+      "kind": "element",
+      "min": 35614
      },
      {
       "name": "tool-permissions",
@@ -22919,7 +23233,7 @@
      {
       "name": "reflection-gate",
       "kind": "element",
-      "min": 35279
+      "min": 35277
      },
      {
       "name": "claim-answer",
@@ -22929,7 +23243,7 @@
      {
       "name": "preview-frame",
       "kind": "element",
-      "min": 35019
+      "min": 35018
      },
      {
       "name": "model-routing",
@@ -22949,12 +23263,12 @@
      {
       "name": "instruction-editor",
       "kind": "element",
-      "min": 34255
+      "min": 34253
      },
      {
       "name": "metrics-dashboard",
       "kind": "element",
-      "min": 33866
+      "min": 33868
      },
      {
       "name": "code-block",
@@ -22964,12 +23278,12 @@
      {
       "name": "handoff",
       "kind": "element",
-      "min": 33665
+      "min": 33663
      },
      {
       "name": "sandbox-log",
       "kind": "element",
-      "min": 33201
+      "min": 33200
      },
      {
       "name": "structured-output",
@@ -22989,7 +23303,7 @@
      {
       "name": "policy-simulator",
       "kind": "element",
-      "min": 32450
+      "min": 32448
      },
      {
       "name": "filter-menu",
@@ -23004,7 +23318,7 @@
      {
       "name": "model-settings",
       "kind": "element",
-      "min": 31821
+      "min": 31820
      },
      {
       "name": "artifact-panel",
@@ -23014,12 +23328,12 @@
      {
       "name": "handoff-brief",
       "kind": "element",
-      "min": 31769
+      "min": 31766
      },
      {
       "name": "flow-builder",
       "kind": "element",
-      "min": 31264
+      "min": 31263
      },
      {
       "name": "roadmap-timeline",
@@ -23029,7 +23343,7 @@
      {
       "name": "extraction-review",
       "kind": "element",
-      "min": 31006
+      "min": 31005
      },
      {
       "name": "heatmap",
@@ -23054,7 +23368,7 @@
      {
       "name": "bibliography",
       "kind": "element",
-      "min": 30444
+      "min": 30491
      },
      {
       "name": "agent-ledger",
@@ -23079,22 +23393,22 @@
      {
       "name": "review-queue",
       "kind": "element",
-      "min": 29992
+      "min": 29991
      },
      {
       "name": "org-chart",
       "kind": "element",
-      "min": 29970
+      "min": 29969
      },
      {
       "name": "response-selection",
       "kind": "element",
-      "min": 29726
+      "min": 29725
      },
      {
       "name": "team-roster",
       "kind": "element",
-      "min": 29717
+      "min": 29715
      },
      {
       "name": "role-editor",
@@ -23104,7 +23418,7 @@
      {
       "name": "risk-register",
       "kind": "element",
-      "min": 29433
+      "min": 29432
      },
      {
       "name": "agent-gallery",
@@ -23119,12 +23433,17 @@
      {
       "name": "eval-criteria-editor",
       "kind": "element",
-      "min": 29281
+      "min": 29269
      },
      {
       "name": "access-request",
       "kind": "element",
       "min": 29172
+     },
+     {
+      "name": "api-keys",
+      "kind": "element",
+      "min": 28855
      },
      {
       "name": "attestation-check",
@@ -23134,7 +23453,7 @@
      {
       "name": "decision-card",
       "kind": "element",
-      "min": 28526
+      "min": 28524
      },
      {
       "name": "answer-arena",
@@ -23144,12 +23463,12 @@
      {
       "name": "cell-inspector",
       "kind": "element",
-      "min": 28000
+      "min": 27999
      },
      {
       "name": "import-review",
       "kind": "element",
-      "min": 27929
+      "min": 27927
      },
      {
       "name": "parallel-attempts",
@@ -23169,12 +23488,17 @@
      {
       "name": "color-picker",
       "kind": "element",
-      "min": 27377
+      "min": 27376
      },
      {
       "name": "identifier-details",
       "kind": "element",
       "min": 27274
+     },
+     {
+      "name": "saved-views",
+      "kind": "element",
+      "min": 27253
      },
      {
       "name": "compact-breakdown",
@@ -23184,7 +23508,12 @@
      {
       "name": "money-flow",
       "kind": "element",
-      "min": 27207
+      "min": 27210
+     },
+     {
+      "name": "webhooks",
+      "kind": "element",
+      "min": 27163
      },
      {
       "name": "run-compare",
@@ -23204,7 +23533,7 @@
      {
       "name": "tree-select",
       "kind": "element",
-      "min": 26617
+      "min": 26616
      },
      {
       "name": "skill-detail",
@@ -23219,7 +23548,7 @@
      {
       "name": "clarifying-questions",
       "kind": "element",
-      "min": 26488
+      "min": 26487
      },
      {
       "name": "agent-team",
@@ -23234,22 +23563,22 @@
      {
       "name": "share-panel",
       "kind": "element",
-      "min": 26310
-     },
-     {
-      "name": "channel-setup",
-      "kind": "element",
-      "min": 26206
+      "min": 26308
      },
      {
       "name": "kpi-chart",
       "kind": "element",
-      "min": 26198
+      "min": 26202
+     },
+     {
+      "name": "channel-setup",
+      "kind": "element",
+      "min": 26199
      },
      {
       "name": "run-estimate",
       "kind": "element",
-      "min": 26067
+      "min": 26065
      },
      {
       "name": "judge-bracket",
@@ -23264,12 +23593,12 @@
      {
       "name": "invoice-credit",
       "kind": "element",
-      "min": 25898
+      "min": 25897
      },
      {
       "name": "line-items",
       "kind": "element",
-      "min": 25831
+      "min": 25830
      },
      {
       "name": "agent-sequence",
@@ -23284,7 +23613,7 @@
      {
       "name": "file-import",
       "kind": "element",
-      "min": 25651
+      "min": 25650
      },
      {
       "name": "knowledge-promotion",
@@ -23299,12 +23628,12 @@
      {
       "name": "edit-region",
       "kind": "element",
-      "min": 25166
+      "min": 25163
      },
      {
       "name": "running-now",
       "kind": "element",
-      "min": 25106
+      "min": 25105
      },
      {
       "name": "file-summary",
@@ -23324,12 +23653,12 @@
      {
       "name": "facet-sidebar",
       "kind": "element",
-      "min": 24921
+      "min": 24916
      },
      {
       "name": "step-inspector",
       "kind": "element",
-      "min": 24856
+      "min": 24851
      },
      {
       "name": "request-log",
@@ -23344,7 +23673,7 @@
      {
       "name": "feedback-rubric",
       "kind": "element",
-      "min": 24738
+      "min": 24737
      },
      {
       "name": "integration-grid",
@@ -23354,7 +23683,7 @@
      {
       "name": "synthesis-notes",
       "kind": "element",
-      "min": 24678
+      "min": 24676
      },
      {
       "name": "conversation-branches",
@@ -23364,17 +23693,17 @@
      {
       "name": "gate-config",
       "kind": "element",
-      "min": 24422
+      "min": 24419
      },
      {
       "name": "recipe-card",
       "kind": "element",
-      "min": 24393
+      "min": 24391
      },
      {
       "name": "query-builder",
       "kind": "element",
-      "min": 24283
+      "min": 24276
      },
      {
       "name": "entity-details",
@@ -23389,7 +23718,7 @@
      {
       "name": "text-to-speech",
       "kind": "element",
-      "min": 23822
+      "min": 23819
      },
      {
       "name": "run-manifest",
@@ -23417,14 +23746,14 @@
       "min": 23585
      },
      {
-      "name": "review-conflict",
-      "kind": "element",
-      "min": 23556
-     },
-     {
       "name": "co-occurrence",
       "kind": "element",
       "min": 23553
+     },
+     {
+      "name": "review-conflict",
+      "kind": "element",
+      "min": 23552
      },
      {
       "name": "evidence-list",
@@ -23434,12 +23763,12 @@
      {
       "name": "pull-request",
       "kind": "element",
-      "min": 23376
+      "min": 23375
      },
      {
       "name": "point-and-ask",
       "kind": "element",
-      "min": 23329
+      "min": 23327
      },
      {
       "name": "status-tracker",
@@ -23459,7 +23788,7 @@
      {
       "name": "search-results",
       "kind": "element",
-      "min": 23112
+      "min": 23110
      },
      {
       "name": "data-region",
@@ -23469,17 +23798,17 @@
      {
       "name": "scheduled-runs",
       "kind": "element",
-      "min": 22884
+      "min": 22882
      },
      {
       "name": "failure-clusters",
       "kind": "element",
-      "min": 22792
+      "min": 22791
      },
      {
       "name": "multiplayer-thread",
       "kind": "element",
-      "min": 22752
+      "min": 22750
      },
      {
       "name": "guardrail-notice",
@@ -23499,12 +23828,12 @@
      {
       "name": "conflict-radar",
       "kind": "element",
-      "min": 22559
+      "min": 22558
      },
      {
       "name": "skill-library",
       "kind": "element",
-      "min": 22514
+      "min": 22508
      },
      {
       "name": "gap-exposure",
@@ -23524,7 +23853,7 @@
      {
       "name": "problem-list",
       "kind": "element",
-      "min": 22047
+      "min": 22046
      },
      {
       "name": "diff-table",
@@ -23534,12 +23863,12 @@
      {
       "name": "region-overlay",
       "kind": "element",
-      "min": 21979
+      "min": 21978
      },
      {
       "name": "speed-reader",
       "kind": "element",
-      "min": 21911
+      "min": 21908
      },
      {
       "name": "stage-bars",
@@ -23549,7 +23878,7 @@
      {
       "name": "ai-column-create",
       "kind": "element",
-      "min": 21705
+      "min": 21699
      },
      {
       "name": "run-controls",
@@ -23564,7 +23893,7 @@
      {
       "name": "todo-list",
       "kind": "element",
-      "min": 21466
+      "min": 21463
      },
      {
       "name": "rate-limit-planner",
@@ -23587,14 +23916,19 @@
       "min": 21199
      },
      {
+      "name": "export-dialog",
+      "kind": "element",
+      "min": 21189
+     },
+     {
       "name": "embed-configurator",
       "kind": "element",
-      "min": 21163
+      "min": 21158
      },
      {
       "name": "routine-form",
       "kind": "element",
-      "min": 21042
+      "min": 21038
      },
      {
       "name": "fingerprint-card",
@@ -23634,7 +23968,7 @@
      {
       "name": "secrets-manager",
       "kind": "element",
-      "min": 20452
+      "min": 20449
      },
      {
       "name": "spend-breakdown",
@@ -23644,7 +23978,7 @@
      {
       "name": "saved-search-alerts",
       "kind": "element",
-      "min": 20437
+      "min": 20433
      },
      {
       "name": "diff-timeline",
@@ -23659,12 +23993,12 @@
      {
       "name": "agent-findings",
       "kind": "element",
-      "min": 20177
+      "min": 20173
      },
      {
       "name": "signature-pad",
       "kind": "element",
-      "min": 20161
+      "min": 20160
      },
      {
       "name": "agent-fleet",
@@ -23679,7 +24013,7 @@
      {
       "name": "test-run-panel",
       "kind": "element",
-      "min": 20037
+      "min": 20034
      },
      {
       "name": "subprocessor-list",
@@ -23694,7 +24028,7 @@
      {
       "name": "embed-widget",
       "kind": "element",
-      "min": 19847
+      "min": 19846
      },
      {
       "name": "geo-location",
@@ -23739,12 +24073,12 @@
      {
       "name": "schema-fields",
       "kind": "element",
-      "min": 19536
+      "min": 19535
      },
      {
       "name": "seat-usage",
       "kind": "element",
-      "min": 19496
+      "min": 19493
      },
      {
       "name": "trust-center",
@@ -23774,7 +24108,7 @@
      {
       "name": "judge-sampling",
       "kind": "element",
-      "min": 19140
+      "min": 19136
      },
      {
       "name": "travel-itinerary",
@@ -23799,12 +24133,12 @@
      {
       "name": "branch-switcher",
       "kind": "element",
-      "min": 18839
+      "min": 18838
      },
      {
       "name": "score-survey",
       "kind": "element",
-      "min": 18827
+      "min": 18826
      },
      {
       "name": "spend-limits",
@@ -23834,7 +24168,7 @@
      {
       "name": "quality-alerts",
       "kind": "element",
-      "min": 18699
+      "min": 18697
      },
      {
       "name": "validity-badge",
@@ -23859,7 +24193,7 @@
      {
       "name": "session-list",
       "kind": "element",
-      "min": 18396
+      "min": 18395
      },
      {
       "name": "profile-header",
@@ -23889,7 +24223,7 @@
      {
       "name": "console-panel",
       "kind": "element",
-      "min": 18020
+      "min": 18019
      },
      {
       "name": "red-team-finding",
@@ -23904,12 +24238,12 @@
      {
       "name": "tag-input",
       "kind": "element",
-      "min": 17856
+      "min": 17855
      },
      {
       "name": "agent-list",
       "kind": "element",
-      "min": 17646
+      "min": 17645
      },
      {
       "name": "model-access",
@@ -23919,7 +24253,7 @@
      {
       "name": "team-flag-editor",
       "kind": "element",
-      "min": 17554
+      "min": 17551
      },
      {
       "name": "contact-channels",
@@ -23932,14 +24266,14 @@
       "min": 17545
      },
      {
+      "name": "bubble-chart",
+      "kind": "element",
+      "min": 17435
+     },
+     {
       "name": "provenance-summary",
       "kind": "element",
       "min": 17432
-     },
-     {
-      "name": "bubble-chart",
-      "kind": "element",
-      "min": 17429
      },
      {
       "name": "activity-calendar",
@@ -23962,6 +24296,11 @@
       "min": 17034
      },
      {
+      "name": "audit-trail",
+      "kind": "element",
+      "min": 17004
+     },
+     {
       "name": "notification-stack",
       "kind": "element",
       "min": 16996
@@ -23969,7 +24308,7 @@
      {
       "name": "model-wheel",
       "kind": "element",
-      "min": 16937
+      "min": 16940
      },
      {
       "name": "data-controls",
@@ -23989,7 +24328,7 @@
      {
       "name": "column-mapper",
       "kind": "element",
-      "min": 16766
+      "min": 16765
      },
      {
       "name": "fact-sheet",
@@ -24002,9 +24341,14 @@
       "min": 16674
      },
      {
+      "name": "assignee-picker",
+      "kind": "element",
+      "min": 16606
+     },
+     {
       "name": "file-tree",
       "kind": "element",
-      "min": 16431
+      "min": 16430
      },
      {
       "name": "activity-clock",
@@ -24039,7 +24383,7 @@
      {
       "name": "candlestick-chart",
       "kind": "element",
-      "min": 16087
+      "min": 16110
      },
      {
       "name": "prompt-starters",
@@ -24064,7 +24408,7 @@
      {
       "name": "step-picker",
       "kind": "element",
-      "min": 15984
+      "min": 15983
      },
      {
       "name": "publish-readiness",
@@ -24079,7 +24423,7 @@
      {
       "name": "thread-header",
       "kind": "element",
-      "min": 15669
+      "min": 15668
      },
      {
       "name": "atomic-design",
@@ -24114,7 +24458,7 @@
      {
       "name": "legal-hold-manager",
       "kind": "element",
-      "min": 15155
+      "min": 15153
      },
      {
       "name": "document-list",
@@ -24169,7 +24513,7 @@
      {
       "name": "approval-chain",
       "kind": "element",
-      "min": 14679
+      "min": 14677
      },
      {
       "name": "trigger-list",
@@ -24179,7 +24523,7 @@
      {
       "name": "message-drafts",
       "kind": "element",
-      "min": 14633
+      "min": 14632
      },
      {
       "name": "header-nav",
@@ -24204,7 +24548,7 @@
      {
       "name": "case-review",
       "kind": "element",
-      "min": 13927
+      "min": 13925
      },
      {
       "name": "subagent-list",
@@ -24229,7 +24573,7 @@
      {
       "name": "terminal",
       "kind": "element",
-      "min": 13747
+      "min": 13746
      },
      {
       "name": "endpoint-bar",
@@ -24239,7 +24583,7 @@
      {
       "name": "access-review",
       "kind": "element",
-      "min": 13507
+      "min": 13506
      },
      {
       "name": "agent-trail",
@@ -24249,12 +24593,12 @@
      {
       "name": "network-graph",
       "kind": "element",
-      "min": 13430
+      "min": 13438
      },
      {
       "name": "before-after",
       "kind": "element",
-      "min": 13284
+      "min": 13320
      },
      {
       "name": "session-state",
@@ -24284,7 +24628,7 @@
      {
       "name": "small-multiples",
       "kind": "element",
-      "min": 12979
+      "min": 13005
      },
      {
       "name": "place-list",
@@ -24309,7 +24653,7 @@
      {
       "name": "share-link-manager",
       "kind": "element",
-      "min": 12428
+      "min": 12427
      },
      {
       "name": "pr-link",
@@ -24344,7 +24688,7 @@
      {
       "name": "time-details",
       "kind": "element",
-      "min": 11554
+      "min": 11556
      },
      {
       "name": "reaction-bar",
@@ -24354,7 +24698,7 @@
      {
       "name": "sensitivity-label-picker",
       "kind": "element",
-      "min": 11339
+      "min": 11338
      },
      {
       "name": "web-vitals",
@@ -24369,7 +24713,7 @@
      {
       "name": "radial-bar-chart",
       "kind": "element",
-      "min": 11219
+      "min": 11221
      },
      {
       "name": "live-session",
@@ -24379,7 +24723,7 @@
      {
       "name": "calendar-heatmap",
       "kind": "element",
-      "min": 11004
+      "min": 11009
      },
      {
       "name": "check-status",
@@ -24389,7 +24733,7 @@
      {
       "name": "combo-chart",
       "kind": "element",
-      "min": 10924
+      "min": 10929
      },
      {
       "name": "citation-badge",
@@ -24414,12 +24758,7 @@
      {
       "name": "ghost-completion",
       "kind": "element",
-      "min": 10578
-     },
-     {
-      "name": "audit-trail",
-      "kind": "element",
-      "min": 10482
+      "min": 10577
      },
      {
       "name": "oversight-home",
@@ -24429,7 +24768,7 @@
      {
       "name": "menu-morph",
       "kind": "element",
-      "min": 10335
+      "min": 10338
      },
      {
       "name": "pixel-loader",
@@ -24439,7 +24778,7 @@
      {
       "name": "venn-diagram",
       "kind": "element",
-      "min": 9865
+      "min": 9868
      },
      {
       "name": "change-summary",
@@ -24462,19 +24801,14 @@
       "min": 9329
      },
      {
+      "name": "banner-stack",
+      "kind": "element",
+      "min": 9159
+     },
+     {
       "name": "icon-rail",
       "kind": "element",
       "min": 9148
-     },
-     {
-      "name": "banner-stack",
-      "kind": "element",
-      "min": 9134
-     },
-     {
-      "name": "help-guide",
-      "kind": "element",
-      "min": 9020
      },
      {
       "name": "bulk-action-bar",
@@ -24484,7 +24818,7 @@
      {
       "name": "hexbin-chart",
       "kind": "element",
-      "min": 8557
+      "min": 8562
      },
      {
       "name": "accessibility-principles",
@@ -24519,17 +24853,17 @@
      {
       "name": "histogram",
       "kind": "element",
-      "min": 8027
+      "min": 8030
      },
      {
       "name": "parallel-chart",
       "kind": "element",
-      "min": 8015
+      "min": 8019
      },
      {
       "name": "bar-chart",
       "kind": "element",
-      "min": 7938
+      "min": 7984
      },
      {
       "name": "empty-calendar",
@@ -24539,7 +24873,7 @@
      {
       "name": "box-plot",
       "kind": "element",
-      "min": 7533
+      "min": 7537
      },
      {
       "name": "tab-overload",
@@ -24549,7 +24883,7 @@
      {
       "name": "waffle-chart",
       "kind": "element",
-      "min": 7497
+      "min": 7499
      },
      {
       "name": "year-list",
@@ -24559,12 +24893,12 @@
      {
       "name": "beeswarm-chart",
       "kind": "element",
-      "min": 7422
+      "min": 7453
      },
      {
       "name": "badge-pop",
       "kind": "element",
-      "min": 7406
+      "min": 7422
      },
      {
       "name": "file-details",
@@ -24579,7 +24913,7 @@
      {
       "name": "waterfall-chart",
       "kind": "element",
-      "min": 6956
+      "min": 6959
      },
      {
       "name": "sunburst-chart",
@@ -24609,17 +24943,17 @@
      {
       "name": "bullet-chart",
       "kind": "element",
-      "min": 6669
+      "min": 6671
      },
      {
       "name": "rose-chart",
       "kind": "element",
-      "min": 6641
+      "min": 6643
      },
      {
       "name": "sankey-chart",
       "kind": "element",
-      "min": 6604
+      "min": 6606
      },
      {
       "name": "soup-cans",
@@ -24634,7 +24968,7 @@
      {
       "name": "slope-chart",
       "kind": "element",
-      "min": 6454
+      "min": 6462
      },
      {
       "name": "panel-card",
@@ -24644,17 +24978,17 @@
      {
       "name": "ridgeline-chart",
       "kind": "element",
-      "min": 6349
+      "min": 6351
      },
      {
       "name": "stream-graph",
       "kind": "element",
-      "min": 6328
+      "min": 6350
      },
      {
       "name": "chord-chart",
       "kind": "element",
-      "min": 6244
+      "min": 6246
      },
      {
       "name": "stack-spread",
@@ -24664,7 +24998,7 @@
      {
       "name": "pareto-chart",
       "kind": "element",
-      "min": 6088
+      "min": 6097
      },
      {
       "name": "bump-chart",
@@ -24674,7 +25008,7 @@
      {
       "name": "checkbox",
       "kind": "element",
-      "min": 5902
+      "min": 5900
      },
      {
       "name": "page-slide",
@@ -24684,7 +25018,7 @@
      {
       "name": "lollipop-chart",
       "kind": "element",
-      "min": 5523
+      "min": 5528
      },
      {
       "name": "evidence-gallery",
@@ -24714,7 +25048,7 @@
      {
       "name": "funnel-chart",
       "kind": "element",
-      "min": 5078
+      "min": 5082
      },
      {
       "name": "content-shield",
@@ -24749,7 +25083,7 @@
      {
       "name": "marimekko-chart",
       "kind": "element",
-      "min": 4682
+      "min": 4687
      },
      {
       "name": "awaiting-review",
@@ -24874,7 +25208,7 @@
      {
       "name": "switch",
       "kind": "element",
-      "min": 2905
+      "min": 2904
      },
      {
       "name": "progress-bar",
@@ -24904,7 +25238,7 @@
      {
       "name": "slider-field",
       "kind": "element",
-      "min": 2043
+      "min": 2041
      },
      {
       "name": "staggered-reveal",
@@ -24924,7 +25258,7 @@
      {
       "name": "number-field",
       "kind": "element",
-      "min": 1785
+      "min": 1784
      },
      {
       "name": "mission-control",
@@ -24939,7 +25273,7 @@
      {
       "name": "secret-field",
       "kind": "element",
-      "min": 1462
+      "min": 1461
      },
      {
       "name": "list-motion",
@@ -24949,7 +25283,7 @@
      {
       "name": "radio-group",
       "kind": "element",
-      "min": 1237
+      "min": 1236
      },
      {
       "name": "collapse",
@@ -24974,7 +25308,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 81390
+      "min": 82405
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -25149,7 +25483,7 @@
      {
       "name": "src/generative/schemas/tc-flow-builder.json",
       "kind": "other",
-      "min": 4598
+      "min": 4602
      },
      {
       "name": "src/generative/schemas/tc-retrieval-inspector.json",
@@ -25184,7 +25518,7 @@
      {
       "name": "src/generative/schemas/tc-step-inspector.json",
       "kind": "other",
-      "min": 4486
+      "min": 4490
      },
      {
       "name": "src/generative/schemas/tc-histogram.json",
@@ -25234,7 +25568,7 @@
      {
       "name": "src/generative/schemas/tc-step-picker.json",
       "kind": "other",
-      "min": 4305
+      "min": 4309
      },
      {
       "name": "src/generative/schemas/tc-data-region.json",
@@ -25260,6 +25594,11 @@
       "name": "src/generative/schemas/tc-reflection-gate.json",
       "kind": "other",
       "min": 4184
+     },
+     {
+      "name": "src/generative/schemas/tc-api-keys.json",
+      "kind": "other",
+      "min": 4176
      },
      {
       "name": "src/generative/schemas/tc-agent-queue.json",
@@ -25304,7 +25643,7 @@
      {
       "name": "src/generative/schemas/tc-workflow-canvas.json",
       "kind": "other",
-      "min": 4079
+      "min": 4083
      },
      {
       "name": "src/generative/schemas/tc-dumbbell-chart.json",
@@ -25370,6 +25709,11 @@
       "name": "src/generative/schemas/tc-beeswarm-chart.json",
       "kind": "other",
       "min": 3894
+     },
+     {
+      "name": "src/generative/schemas/tc-export-dialog.json",
+      "kind": "other",
+      "min": 3892
      },
      {
       "name": "src/generative/schemas/tc-trust-center.json",
@@ -25467,6 +25811,11 @@
       "min": 3642
      },
      {
+      "name": "src/generative/schemas/tc-audit-trail.json",
+      "kind": "other",
+      "min": 3633
+     },
+     {
       "name": "src/generative/schemas/tc-marimekko-chart.json",
       "kind": "other",
       "min": 3625
@@ -25485,6 +25834,11 @@
       "name": "src/generative/schemas/tc-search-results.json",
       "kind": "other",
       "min": 3589
+     },
+     {
+      "name": "src/generative/schemas/tc-webhooks.json",
+      "kind": "other",
+      "min": 3552
      },
      {
       "name": "src/generative/schemas/tc-agent-findings.json",
@@ -25549,7 +25903,7 @@
      {
       "name": "src/generative/schemas/tc-app-directory.json",
       "kind": "other",
-      "min": 3428
+      "min": 3432
      },
      {
       "name": "src/generative/schemas/tc-cell-inspector.json",
@@ -26187,6 +26541,11 @@
       "min": 2486
      },
      {
+      "name": "src/generative/schemas/tc-assignee-picker.json",
+      "kind": "other",
+      "min": 2482
+     },
+     {
       "name": "src/generative/schemas/tc-review-conflict.json",
       "kind": "other",
       "min": 2477
@@ -26422,6 +26781,11 @@
       "min": 2201
      },
      {
+      "name": "src/generative/schemas/tc-saved-views.json",
+      "kind": "other",
+      "min": 2200
+     },
+     {
       "name": "src/generative/schemas/tc-thinking-state.json",
       "kind": "other",
       "min": 2185
@@ -26617,19 +26981,9 @@
       "min": 2007
      },
      {
-      "name": "src/generative/schemas/tc-help-guide.json",
-      "kind": "other",
-      "min": 2002
-     },
-     {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
       "min": 1998
-     },
-     {
-      "name": "src/generative/schemas/tc-audit-trail.json",
-      "kind": "other",
-      "min": 1988
      },
      {
       "name": "src/generative/schemas/tc-budget-guard.json",
@@ -27463,21 +27817,21 @@
      }
     ],
     "withoutLit": {
-     "min": 12556949,
-     "gzip": 3140981
+     "min": 12693986,
+     "gzip": 3174639
     },
     "withLit": {
-     "min": 12470143,
-     "gzip": 3109791
+     "min": 12606056,
+     "gzip": 3142743
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 10.8,
-    "first": 0.7,
-    "update": 0.1,
+    "cold": 5.5,
+    "first": 0.6,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -29020,87 +29374,6 @@
     "errors": [
      "ResizeObserver loop completed with undelivered notifications."
     ]
-   }
-  },
-  "help-guide": {
-   "measuredAt": "2026-11-21",
-   "hash": "00cd22c703a94da6",
-   "bundle": {
-    "own": {
-     "min": 10990,
-     "gzip": 4261
-    },
-    "shared": [
-     {
-      "name": "Lit",
-      "kind": "lit",
-      "min": 18902
-     },
-     {
-      "name": "internal/card-head",
-      "kind": "internal",
-      "min": 2359
-     },
-     {
-      "name": "internal/base",
-      "kind": "internal",
-      "min": 1864
-     },
-     {
-      "name": "internal/kit",
-      "kind": "internal",
-      "min": 1348
-     },
-     {
-      "name": "internal/look",
-      "kind": "internal",
-      "min": 440
-     },
-     {
-      "name": "internal/styles",
-      "kind": "internal",
-      "min": 435
-     },
-     {
-      "name": "internal/controllers",
-      "kind": "internal",
-      "min": 132
-     }
-    ],
-    "withoutLit": {
-     "min": 17909,
-     "gzip": 6274
-    },
-    "withLit": {
-     "min": 37904,
-     "gzip": 12815
-    }
-   },
-   "render": {
-    "tag": "tc-help-guide",
-    "source": "demo",
-    "runs": 7,
-    "cold": 16.3,
-    "first": 1,
-    "update": 0.2,
-    "updateKind": "re-render with the same data",
-    "nodes": 14,
-    "scale": null,
-    "idle": {
-     "visible": {
-      "frames": 0,
-      "timers": 0
-     },
-     "away": {
-      "frames": 0,
-      "timers": 0
-     },
-     "reducedMotion": {
-      "frames": 0,
-      "timers": 0
-     }
-    },
-    "errors": []
    }
   },
   "help-video": {
@@ -47800,6 +48073,109 @@
     "errors": []
    }
   },
+  "saved-views": {
+   "measuredAt": "2026-11-22",
+   "hash": "18d4c79a53bcaf50",
+   "bundle": {
+    "own": {
+     "min": 29289,
+     "gzip": 8419
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21108
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 9277
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 45451,
+     "gzip": 13525
+    },
+    "withLit": {
+     "min": 67754,
+     "gzip": 20835
+    }
+   },
+   "render": {
+    "tag": "tc-saved-views",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.7,
+    "first": 1.6,
+    "update": 0.4,
+    "updateKind": "one item of views replaced",
+    "nodes": 65,
+    "scale": {
+     "property": "views",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 7.8,
+       "update": 1.9,
+       "nodes": 1222
+      },
+      {
+       "items": 1000,
+       "first": 54.7,
+       "update": 11.4,
+       "nodes": 12022
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "scan-status": {
    "measuredAt": "2026-11-11",
    "hash": "64dea6e952b7ea2a",
@@ -59833,6 +60209,109 @@
        "first": 136.4,
        "update": 61.6,
        "nodes": 17021
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "webhooks": {
+   "measuredAt": "2026-11-22",
+   "hash": "55372f9c18c2107d",
+   "bundle": {
+    "own": {
+     "min": 29202,
+     "gzip": 8386
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21676
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 3113
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 501
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 37281,
+     "gzip": 10803
+    },
+    "withLit": {
+     "min": 60209,
+     "gzip": 18369
+    }
+   },
+   "render": {
+    "tag": "tc-webhooks",
+    "source": "demo",
+    "runs": 7,
+    "cold": 17.1,
+    "first": 3.8,
+    "update": 1.9,
+    "updateKind": "one item of eventTypes replaced",
+    "nodes": 238,
+    "scale": {
+     "property": "eventTypes",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 2.6,
+       "update": 0.9,
+       "nodes": 238
+      },
+      {
+       "items": 1000,
+       "first": 2.3,
+       "update": 0.8,
+       "nodes": 238
       }
      ]
     },
