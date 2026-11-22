@@ -461,7 +461,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-21 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -500,11 +500,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.9 ms** | the gallery demo's data, 207 DOM nodes – to layout, median of 7 |
-| Typical update | **0.8 ms** | one item of data replaced |
+| First render | **1.8 ms** | the gallery demo's data, 207 DOM nodes – to layout, median of 7 |
+| Typical update | **0.9 ms** | one item of data replaced |
 | First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.5 ms | data: first render, 207 nodes; update 0.5 ms |
-| 1,000 items | 4.0 ms | data: first render, 207 nodes; update 1.7 ms |
+| 100 items | 2.0 ms | data: first render, 207 nodes; update 0.4 ms |
+| 1,000 items | 4.9 ms | data: first render, 207 nodes; update 2.0 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 

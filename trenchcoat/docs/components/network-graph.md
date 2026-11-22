@@ -491,7 +491,7 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 
 ## Performance
 
-*Measured 2026-11-21 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -530,8 +530,8 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 | First render | **6.7 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
 | Typical update | **3.6 ms** | one item of links replaced |
 | First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.1 ms | links: first render, 157 nodes; update 3.5 ms |
-| 1,000 items | 6.8 ms | links: first render, 157 nodes; update 3.4 ms |
+| 100 items | 7.4 ms | links: first render, 157 nodes; update 3.6 ms |
+| 1,000 items | 6.9 ms | links: first render, 157 nodes; update 3.6 ms |
 
 What it renders doesn't grow with links (tested to 1,000 items).
 

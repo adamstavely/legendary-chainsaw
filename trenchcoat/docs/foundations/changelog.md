@@ -2,6 +2,13 @@
 
 # Changelog
 
+## Unreleased – Dashboard charts and finished thinking
+
+- **[Line Chart](../components/line-chart.md) and [Area Chart](../components/area-chart.md):** `compare` draws the emphasised series' last period as a quiet dashed line behind it, named in a small legend (`current-label`, `compare-label`), with this period's value and its change against last period in the tooltip ("410 · +17.1%") and in what the keyboard reads.
+- **[Bar Chart](../components/bar-chart.md):** `compare` marks last period on each bar – a dashed open box above it where last period was higher, a dashed line across it where it was lower – with the change in the tooltip; `live` marks the last bar as still counting – today's usage – so it breathes, reads "so far" (`live-label`) and grows as the page raises it.
+- **[Every chart](../components/README.md):** `sync` names a group; charts in it follow one pointer, each showing the same x with its own tooltip – a bar chart of requests and a line chart of spend read together. A chart someone is moving through with the keyboard keeps its own place.
+- **[Thinking State](../components/thinking-state.md):** finished, the header says how many sources its searches turned up beside the time – "Worked for 18s · 12 sources" – and so does the status message; `hide-tally` leaves it off.
+
 ## 0.36.0 – Status illustrations, review and admin pieces, fewer copies, Help Video
 
 **Breaking:** 21 tags are removed – 20 illustrations now live in Doc Status, Tray Status and Page State, and Pixel Loader is Thinking Loader with `mark="pixels"`. Each section below has a table from the old tag to the new one.

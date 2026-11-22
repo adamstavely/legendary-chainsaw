@@ -451,7 +451,7 @@ readers. “+N more” is a button with `aria-expanded`.
 
 ## Performance
 
-*Measured 2026-11-21 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -475,11 +475,11 @@ readers. “+N more” is a button with `aria-expanded`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| First render | **1.1 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | one item of steps replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.5 ms | steps: first render, 10 nodes; update 0.0 ms |
-| 1,000 items | 1.1 ms | steps: first render, 10 nodes; update 0.1 ms |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.1 ms | steps: first render, 10 nodes; update 0.1 ms |
+| 1,000 items | 2.1 ms | steps: first render, 10 nodes; update 0.3 ms |
 
 What it renders doesn't grow with steps (tested to 1,000 items).
 

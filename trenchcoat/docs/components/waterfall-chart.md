@@ -458,7 +458,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-21 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -493,13 +493,13 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of data replaced |
-| First on the page | 10 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.6 ms | data: first render, 212 nodes; update 0.2 ms |
-| 1,000 items | 3.7 ms | data: first render, 212 nodes; update 1.0 ms |
+| First render | **1.5 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of data replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.1 ms | data: first render, 212 nodes; update 0.6 ms |
+| 1,000 items | 8.5 ms | data: first render, 212 nodes; update 2.1 ms |
 
-1,000 items of data: 3.7 ms, 212 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of data: 8.5 ms, 212 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
