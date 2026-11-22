@@ -219,7 +219,7 @@
      ]
     },
     {
-     "name": "--tc-pixel-loader-ink",
+     "name": "--tc-thinking-loader-pixel-ink",
      "value": "var(--tc-accent)",
      "looks": [
       "standard",
@@ -227,7 +227,7 @@
      ]
     },
     {
-     "name": "--tc-pixel-loader-dot",
+     "name": "--tc-thinking-loader-pixel-dot",
      "value": "2px",
      "looks": [
       "standard",
@@ -235,7 +235,7 @@
      ]
     },
     {
-     "name": "--tc-pixel-loader-gap",
+     "name": "--tc-thinking-loader-pixel-gap",
      "value": "1.5px",
      "looks": [
       "standard",
@@ -601,9 +601,9 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "internal/pixel-mark",
      "internal/card-head",
      "internal/kit",
-     "internal/pixel-mark",
      "tokens.css"
     ]
    }
@@ -633,14 +633,14 @@
    "hidden": [],
    "reducedMotion": [
     "CSS",
-    "CSS (internal/kit › kitCss)",
-    "CSS (internal/pixel-mark › pixelMarkCss)"
+    "CSS (internal/pixel-mark)",
+    "CSS (internal/kit › kitCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 30467,
-  "gzip": 9468
+  "min": 30632,
+  "gzip": 9482
  }
 }

@@ -9,7 +9,7 @@
 A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 
 - **Element:** `<tc-thinking-loader>`
-- **Size:** 9.2 KB gzip · 29.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.3 KB gzip · 29.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -41,7 +41,7 @@ log"): it stays when the work ends, and the status says how it ended – "Done: 
 `state` says how the work stands – "working", "done" or "error", which turns the mark into a cross in the danger
 colour. It's the preferred way; the older `done` boolean still works and means `state="done"`. `startedAt` sets where
 the count starts (`started` is the same), and `now` lets the page drive the clock. This is what Pixel Loader did:
-`<tc-pixel-loader>` is now this element with `mark="pixels"` and its own look.
+It replaces Pixel Loader, which was removed: use `<tc-thinking-loader mark="pixels">`.
 
 ### When to use
 
@@ -214,9 +214,9 @@ export class ThinkingLoaderExample {
 | `--tc-thinking-loader-font` | `var(--tc-font-size-md)` | standard, clean |
 | `--tc-thinking-loader-lh` | `var(--tc-line-height-normal)` | standard, clean |
 | `--tc-thinking-loader-icon` | `16px` | standard, clean |
-| `--tc-pixel-loader-ink` | `var(--tc-accent)` | standard, clean |
-| `--tc-pixel-loader-dot` | `2px` | standard, clean |
-| `--tc-pixel-loader-gap` | `1.5px` | standard, clean |
+| `--tc-thinking-loader-pixel-ink` | `var(--tc-accent)` | standard, clean |
+| `--tc-thinking-loader-pixel-dot` | `2px` | standard, clean |
+| `--tc-thinking-loader-pixel-gap` | `1.5px` | standard, clean |
 
 #### Design tokens it reads (38)
 
@@ -443,7 +443,7 @@ the moving labels and the time are hidden from assistive technology.
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, internal/pixel-mark, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/pixel-mark, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
@@ -453,7 +453,7 @@ the moving labels and the time are hidden from assistive technology.
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 19.2 KB | 6.1 KB |
+| **This component alone** | 19.3 KB | 6.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
 | `internal/pixel-mark` · Shared Trenchcoat code | 3.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
@@ -462,8 +462,8 @@ the moving labels and the time are hidden from assistive technology.
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **29.8 KB** | **9.3 KB** |
-| With Lit – the first component on a page | 49.9 KB | 15.9 KB |
+| **Added to a page that already has Lit** | **29.9 KB** | **9.3 KB** |
+| With Lit – the first component on a page | 50.1 KB | 15.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -471,11 +471,11 @@ the moving labels and the time are hidden from assistive technology.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 19 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | one item of phases replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.8 ms | phases: first render, 19 nodes; update 0.0 ms |
-| 1,000 items | 0.9 ms | phases: first render, 19 nodes; update 0.0 ms |
+| First render | **1.3 ms** | the gallery demo's data, 19 DOM nodes – to layout, median of 7 |
+| Typical update | **0.3 ms** | one item of phases replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.1 ms | phases: first render, 19 nodes; update 0.1 ms |
+| 1,000 items | 1.0 ms | phases: first render, 19 nodes; update 0.1 ms |
 
 What it renders doesn't grow with phases (tested to 1,000 items).
 

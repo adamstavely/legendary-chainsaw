@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 521
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 521
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 521
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 522
+   "elements": 521
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 522
+   "elements": 521
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 522
+   "elements": 521
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 522
+   "elements": 521
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 521
+   "elements": 520
   },
   {
    "id": "container-size",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 240
+   "elements": 239
   },
   {
    "id": "resize-observer",
@@ -140,7 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 207
+   "elements": 206
   },
   {
    "id": "inert",
@@ -169,7 +169,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 177
+   "elements": 176
   },
   {
    "id": "has",
@@ -227,7 +227,7 @@
    },
    "progressive": false,
    "note": "with the -webkit- prefix",
-   "elements": 64
+   "elements": 63
   },
   {
    "id": "clipboard",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 522
+   "elements": 521
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 521
+   "elements": 520
   },
   {
    "id": "scrollbar-width",
