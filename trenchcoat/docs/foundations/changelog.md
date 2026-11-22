@@ -2,7 +2,11 @@
 
 # Changelog
 
-## Unreleased – Doc Status: every document state in one illustration
+## 0.36.0 – Status illustrations, review and admin pieces, fewer copies, Help Video
+
+**Breaking:** 21 tags are removed – 20 illustrations now live in Doc Status, Tray Status and Page State, and Pixel Loader is Thinking Loader with `mark="pixels"`. Each section below has a table from the old tag to the new one.
+
+### Status illustrations: Doc, Tray, Folder and Page State
 
 - **[Doc Status](../illustrations/doc-status.md):** one illustration for where a document stands; its `status` picks the badge's drawing, colours, short motion and words. 44 statuses:
   - workflow: draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, added to Readbook (a book tile);
@@ -53,7 +57,7 @@
 
 - **[Content Hidden](../illustrations/content-hidden.md):** the picture is now an obscured grid of squares with no shape in it, instead of a person's outline.
 
-## Unreleased – Fewer copies: one loader, shared internals
+### Fewer copies: one loader, shared internals
 
 - **[Thinking Loader](../components/thinking-loader.md):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **Pixel Loader is removed** – use Thinking Loader with `mark="pixels"`:
 
@@ -71,7 +75,7 @@
   - [Meter Row](../components/meter-row.md), [Usage Meter](../components/usage-meter.md) and [Rate Limit Status](../components/rate-limit-status.md) share one meter bar and its warning thresholds.
   - [Gauge](../components/gauge.md) draws its arcs with the same geometry as the charts and [Score Ring](../components/score-ring.md).
 
-## Unreleased – Audit, views, export, assignment and developer settings
+### Audit, views, export, assignment and developer settings
 
 - **[Audit Trail](../blocks/audit-trail.md):** a row that opens shows what changed – a Field / Before / After table from `changes`, with "added" and "removed" in words – and search matches the fields and values. Person, Type and Date filters (Today, Last 7 days, Last 30 days) join search and outcome, each controllable (`actor`, `action`, `range`, with cancelable `tc-actor-change`, `tc-action-change`, `tc-range-change`, and `tc-outcome-change` for the outcome), with Clear filters and "n of total events". Export takes the filtered events and adds a `changes` column.
 - **[Export Dialog](../components/export-dialog.md):** export a list in one modal – CSV, Excel or PDF; the selected rows, the ones the filters show or all, each with its count; which columns, with required ones kept; and "Email me when it's ready" for big exports. The page drives what follows through `status`: progress with Cancel, a download link with the file's name and size, the emailed note, or what failed with Retry.
@@ -80,7 +84,7 @@
 - **[API Keys](../components/api-keys.md):** a workspace's API keys with their permissions, who made them, last use and status in words (Active, Expires in 5 days, Expired, Revoked). Create key asks for a name, permissions and expiry; the page answers with `revealed`, and the new secret shows once with Copy. Revoke is confirmed in place, and inactive keys fold away.
 - **[Webhooks](../components/webhooks.md):** webhook endpoints with their events, an on/off switch and delivery health in words ("3 of 48 failed in the last 24 hours"); recent deliveries with status, timing, attempt and Retry; Add and Edit in place (https only); Send test event; Delete confirmed in place; and a masked signing secret.
 
-## Unreleased – Help Video
+### Help Video
 
 - **Help Video:** point-in-time help – a small film-frame icon (a film cell with sprocket holes and a play mark cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, with a tooltip naming the video and its length, words beside it if wanted ("Watch how"), and a check once watched. A click opens one short tutorial in a modal player with captions, chapters to jump to, and Watch again and Done at the end; a file played to its end counts as watched (`tc-watched-change`), embeds from a video host play in an iframe, and Escape puts focus back on the icon. The player's Transcript shows the words as timed lines, read from the captions or passed as `transcript`, marking the line being said and jumping to a line when picked; Download transcript saves them as a text file, or links `transcript-file`. `updated-on` puts a small dot on the icon's top-right corner for `new-days` days (14 by default) after the video changes, until the person opens it (`tc-update-seen-change`, `update-seen`).
 
