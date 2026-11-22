@@ -4,7 +4,7 @@
 
 A UI kit for AI-native products. Components, illustrations and motion are moving to Lit web components that any framework can use, packaged with one stylesheet, `tokens.css`. Blocks and Screens are single React files you can copy.
 
-- [Components](components/README.md): 422
+- [Components](components/README.md): 423
 - [Blocks](blocks/README.md): 27
 - [Screens](screens/README.md): 25
 - [Illustrations](illustrations/README.md): 32
@@ -18,7 +18,7 @@ Motion → Components → Blocks → Screens, + Illustrations
 
 ### [Components](components/README.md)
 
-422 items · 422 files
+423 items · 423 files
 
 **Interactive building blocks for AI-native products**
 
