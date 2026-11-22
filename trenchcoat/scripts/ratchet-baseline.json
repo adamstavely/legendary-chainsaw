@@ -167,9 +167,15 @@
   "src/elements/alert-feed.ts": {
     "clock/environment read": 1
   },
+  "src/elements/api-keys.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/approval-card.ts": {
     "clock/environment read": 1,
     "literal spacing": 1
+  },
+  "src/elements/audit-trail.ts": {
+    "clock/environment read": 1
   },
   "src/elements/autonomy-dial.ts": {
     "literal spacing": 1
@@ -526,6 +532,9 @@
     "clock/environment read": 3,
     "literal border-radius": 1,
     "literal spacing": 1
+  },
+  "src/elements/webhooks.ts": {
+    "clock/environment read": 1
   },
   "src/elements/work-item.ts": {
     "clock/environment read": 1

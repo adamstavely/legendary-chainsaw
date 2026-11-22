@@ -1,0 +1,257 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-export-dialog.json",
+  "title": "tc-export-dialog",
+  "description": "Export a list: format, which rows and which columns, then progress, a download link, or an email when it's ready.",
+  "type": "object",
+  "properties": {
+    "open": {
+      "type": "boolean",
+      "description": "Whether the dialog is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading: what's being exported"
+    },
+    "formats": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExportFormat"
+      },
+      "description": "The formats on offer, in order"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "csv",
+        "pdf",
+        "xlsx"
+      ],
+      "description": "The format picked. Changed by the user unless a tc-format-change listener calls preventDefault()"
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "selected": {
+          "type": "number"
+        },
+        "filtered": {
+          "type": "number"
+        },
+        "all": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "all"
+      ],
+      "additionalProperties": false,
+      "description": "How many rows each choice holds: the selected ones, the ones the filters show (unset: no filters) and all"
+    },
+    "rows": {
+      "type": "string",
+      "enum": [
+        "all",
+        "filtered",
+        "selected"
+      ],
+      "description": "Which rows to export. Changed by the user unless a tc-rows-change listener calls preventDefault()"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExportColumn"
+      },
+      "description": "The columns on offer, in order; required ones can't be left out"
+    },
+    "selectedColumns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the columns to export; unset, all of them. Changed by the user unless a tc-selected-columns-change listener calls preventDefault()"
+    },
+    "email": {
+      "type": "string",
+      "description": "The person's email address; set, \"Email me when it's ready\" is offered"
+    },
+    "emailMe": {
+      "type": "boolean",
+      "description": "Whether to email the file instead of waiting; unset, ticked when the rows exceed `email-threshold`. Changed by the user unless a tc-email-me-change listener calls preventDefault()"
+    },
+    "emailThreshold": {
+      "type": "number",
+      "description": "Above this many rows \"Email me\" starts ticked (default 5000)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "emailed",
+        "failed",
+        "idle",
+        "preparing",
+        "ready"
+      ],
+      "description": "Where the export is: \"idle\" (the form), \"preparing\", \"ready\", \"emailed\" or \"failed\" – the page's to set after tc-export"
+    },
+    "progress": {
+      "type": "number",
+      "description": "How far preparing has got, 0–1; unset, the bar moves without a number"
+    },
+    "downloadUrl": {
+      "type": "string",
+      "description": "The file to download, when ready",
+      "format": "uri-reference"
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The file's name, when ready"
+    },
+    "fileSize": {
+      "type": "number",
+      "description": "The file's size in bytes, when ready"
+    },
+    "error": {
+      "type": "string",
+      "description": "What went wrong, when it failed"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string"
+        },
+        "csv": {
+          "type": "string"
+        },
+        "csvHint": {
+          "type": "string"
+        },
+        "xlsx": {
+          "type": "string"
+        },
+        "xlsxHint": {
+          "type": "string"
+        },
+        "pdf": {
+          "type": "string"
+        },
+        "pdfHint": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "string"
+        },
+        "filtered": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "noneSelected": {
+          "type": "string"
+        },
+        "noFilter": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "string"
+        },
+        "columnsCount": {
+          "type": "string"
+        },
+        "selectAll": {
+          "type": "string"
+        },
+        "selectNone": {
+          "type": "string"
+        },
+        "required": {
+          "type": "string"
+        },
+        "emailMe": {
+          "type": "string"
+        },
+        "emailHint": {
+          "type": "string"
+        },
+        "export": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "preparing": {
+          "type": "string"
+        },
+        "percent": {
+          "type": "string"
+        },
+        "ready": {
+          "type": "string"
+        },
+        "download": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "emailed": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ExportFormat": {
+      "type": "string",
+      "enum": [
+        "csv",
+        "pdf",
+        "xlsx"
+      ]
+    },
+    "ExportColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

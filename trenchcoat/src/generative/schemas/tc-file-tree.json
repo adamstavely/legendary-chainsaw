@@ -70,13 +70,13 @@
         "loading": {
           "type": "string"
         },
+        "added": {
+          "type": "string"
+        },
         "noMatches": {
           "type": "string"
         },
         "deleted": {
-          "type": "string"
-        },
-        "added": {
           "type": "string"
         },
         "modified": {

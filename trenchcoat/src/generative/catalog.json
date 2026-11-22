@@ -380,6 +380,17 @@
     ]
   },
   {
+    "tag": "tc-api-keys",
+    "name": "ApiKeys",
+    "description": "A workspace's API keys: masked values, permissions, last use and status in words, with Create key (the secret shown",
+    "events": [
+      "tc-key-create",
+      "tc-key-revoke",
+      "tc-reveal-dismiss",
+      "tc-copy"
+    ]
+  },
+  {
     "tag": "tc-api-reference-nav",
     "name": "ApiReferenceNav",
     "description": "An API reference's side navigation: endpoints grouped by resource, with method badges, a filter and the current page.",
@@ -462,6 +473,14 @@
     ]
   },
   {
+    "tag": "tc-assignee-picker",
+    "name": "AssigneePicker",
+    "description": "Assign a case or task to a person, a team or a team's round-robin – with each person's open items, a load bar against their capacity, Away and Over capacity in words, and Assign to me.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
     "tag": "tc-atomic-design",
     "name": "AtomicDesign",
     "description": "Atomic design, one stage at a time – from the five stages in a row to atoms, a molecule, an organism, a template and a page.",
@@ -491,9 +510,13 @@
   {
     "tag": "tc-audit-trail",
     "name": "AuditTrail",
-    "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
+    "description": "Who did what and when, for the record – with what changed, before and after – with search, filters by outcome, person, type and date, and export.",
     "events": [
       "tc-query-change",
+      "tc-actor-change",
+      "tc-action-change",
+      "tc-range-change",
+      "tc-outcome-change",
       "tc-export"
     ]
   },
@@ -1646,6 +1669,20 @@
       "tc-open-change",
       "tc-metric-change",
       "tc-winner-change"
+    ]
+  },
+  {
+    "tag": "tc-export-dialog",
+    "name": "ExportDialog",
+    "description": "Export a list: format, which rows and which columns, then progress, a download link, or an email when it's ready.",
+    "events": [
+      "tc-open-change",
+      "tc-format-change",
+      "tc-rows-change",
+      "tc-selected-columns-change",
+      "tc-email-me-change",
+      "tc-export",
+      "tc-export-cancel"
     ]
   },
   {
@@ -3526,6 +3563,22 @@
     ]
   },
   {
+    "tag": "tc-saved-views",
+    "name": "SavedViews",
+    "description": "Saved views as tabs above a list or table – counts, shared and default marks, rename, duplicate, share, set as default and delete, and Save changes when the view on screen has been edited.",
+    "events": [
+      "tc-active-change",
+      "tc-view-save",
+      "tc-view-create",
+      "tc-view-reset",
+      "tc-view-rename",
+      "tc-view-duplicate",
+      "tc-view-share",
+      "tc-view-default",
+      "tc-view-delete"
+    ]
+  },
+  {
     "tag": "tc-scan-status",
     "name": "ScanStatus",
     "description": "Where a file stands in malware scanning.",
@@ -4475,6 +4528,19 @@
     "description": "Core Web Vitals for a page: a tile per measure with its value, a rating word, a three-zone track and earlier readings.",
     "events": [
       "tc-device-change"
+    ]
+  },
+  {
+    "tag": "tc-webhooks",
+    "name": "Webhooks",
+    "description": "A workspace's webhook endpoints: events, an on/off switch, delivery health in words, recent deliveries with Retry,",
+    "events": [
+      "tc-endpoint-toggle",
+      "tc-endpoint-create",
+      "tc-endpoint-update",
+      "tc-endpoint-delete",
+      "tc-endpoint-test",
+      "tc-delivery-retry"
     ]
   },
   {

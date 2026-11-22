@@ -2,23 +2,14 @@
 
 # Changelog
 
-## Unreleased – Fewer copies: one loader, shared internals
+## Unreleased – Audit, views, export, assignment and developer settings
 
-- **[Thinking Loader](../components/thinking-loader.md):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **Pixel Loader is removed** – use Thinking Loader with `mark="pixels"`:
-
-  | Before | Now |
-  |---|---|
-  | `<tc-pixel-loader pattern="drive" label="Matching vendor IDs">` | `<tc-thinking-loader mark="pixels" pattern="drive" label="Matching vendor IDs">` |
-  | `<PixelLoader … />` (React) | `<ThinkingLoader mark="pixels" … />` |
-  | `--tc-pixel-loader-ink`, `-dot`, `-gap` | `--tc-thinking-loader-pixel-ink`, `-dot`, `-gap` |
-  | `formatElapsed` from `pixel-loader` | `formatElapsed` from `thinking-loader` |
-- **Shared code, no change to any element's API or look:**
-  - [Running Now](../components/running-now.md) and [Background Tasks](../components/background-tasks.md) share one controller for "notify me when it's done" – the bell, its channels and the events.
-  - The five hover cards for things found in text – [Coordinate Details](../components/coordinate-details.md), [Entity Details](../components/entity-details.md), [Identifier Details](../components/identifier-details.md), [Time Details](../components/time-details.md) and [ISBN Details](../components/isbn-details.md) – share their card's open, pin, keyboard and announcement behaviour, and all use the shared lookup cache.
-  - [Account List](../components/account-list.md), [Asset List](../components/asset-list.md), [Contact Channels](../components/contact-channels.md) and [Document List](../components/document-list.md) share revealing one value at a time and their row-and-button keyboard.
-  - [AI Summary](../components/ai-summary.md) and [File Summary](../components/file-summary.md) share their status states, shimmer and caret, Copy and Regenerate, and Short / Detailed.
-  - [Meter Row](../components/meter-row.md), [Usage Meter](../components/usage-meter.md) and [Rate Limit Status](../components/rate-limit-status.md) share one meter bar and its warning thresholds.
-  - [Gauge](../components/gauge.md) draws its arcs with the same geometry as the charts and [Score Ring](../components/score-ring.md).
+- **[Audit Trail](../blocks/audit-trail.md):** a row that opens shows what changed – a Field / Before / After table from `changes`, with "added" and "removed" in words – and search matches the fields and values. Person, Type and Date filters (Today, Last 7 days, Last 30 days) join search and outcome, each controllable (`actor`, `action`, `range`, with cancelable `tc-actor-change`, `tc-action-change`, `tc-range-change`, and `tc-outcome-change` for the outcome), with Clear filters and "n of total events". Export takes the filtered events and adds a `changes` column.
+- **[Export Dialog](../components/export-dialog.md):** export a list in one modal – CSV, Excel or PDF; the selected rows, the ones the filters show or all, each with its count; which columns, with required ones kept; and "Email me when it's ready" for big exports. The page drives what follows through `status`: progress with Cancel, a download link with the file's name and size, the emailed note, or what failed with Retry.
+- **[Saved Views](../components/saved-views.md):** saved views as tabs above a list or table, with counts and shared and default marks. Each can be renamed in place, duplicated, shared, set as the default or deleted after a confirmation; when the view on screen has been edited (`dirty`), Save changes, Save as new view and Reset appear. Every request is a cancelable event and the page keeps `views`.
+- **[Assignee Picker](../components/assignee-picker.md):** assign a case or task to a person, a team or a team's round-robin – a chip that opens a search with Assign to me, each person's open items and a load bar against their capacity, Away and Over capacity in words, and Unassign (`value`, cancelable `tc-value-change`).
+- **[API Keys](../components/api-keys.md):** a workspace's API keys with their permissions, who made them, last use and status in words (Active, Expires in 5 days, Expired, Revoked). Create key asks for a name, permissions and expiry; the page answers with `revealed`, and the new secret shows once with Copy. Revoke is confirmed in place, and inactive keys fold away.
+- **[Webhooks](../components/webhooks.md):** webhook endpoints with their events, an on/off switch and delivery health in words ("3 of 48 failed in the last 24 hours"); recent deliveries with status, timing, attempt and Retry; Add and Edit in place (https only); Send test event; Delete confirmed in place; and a masked signing secret.
 
 ## Unreleased – Help Video
 

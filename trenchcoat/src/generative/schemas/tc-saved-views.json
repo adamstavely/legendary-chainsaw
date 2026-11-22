@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-saved-views.json",
+  "title": "tc-saved-views",
+  "description": "Saved views as tabs above a list or table – counts, shared and default marks, rename, duplicate, share, set as default and delete, and Save changes when the view on screen has been edited.",
+  "type": "object",
+  "properties": {
+    "views": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SavedView"
+      },
+      "description": "The saved views, in the order shown"
+    },
+    "active": {
+      "type": "string",
+      "description": "The open view's id. Changed by the user unless a tc-active-change listener calls preventDefault()"
+    },
+    "dirty": {
+      "type": "boolean",
+      "description": "The filters on screen differ from the open view – shows Edited and the Save changes bar"
+    },
+    "controls": {
+      "type": "string",
+      "description": "The id of the list or table the views filter, for aria-controls"
+    },
+    "hideCreate": {
+      "type": "boolean",
+      "description": "Hides \"+ New view\""
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "views": {
+          "type": "string"
+        },
+        "options": {
+          "type": "string"
+        },
+        "optionsFor": {
+          "type": "string"
+        },
+        "rename": {
+          "type": "string"
+        },
+        "duplicate": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "unshare": {
+          "type": "string"
+        },
+        "makeDefault": {
+          "type": "string"
+        },
+        "delete": {
+          "type": "string"
+        },
+        "confirmDelete": {
+          "type": "string"
+        },
+        "confirmNote": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "shared": {
+          "type": "string"
+        },
+        "isDefault": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "edited": {
+          "type": "string"
+        },
+        "editedNote": {
+          "type": "string"
+        },
+        "save": {
+          "type": "string"
+        },
+        "saveAsNew": {
+          "type": "string"
+        },
+        "reset": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "namePlaceholder": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "renamed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SavedView": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many items it holds – shown on the tab"
+        },
+        "shared": {
+          "type": "boolean",
+          "description": "Shared with the team"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Whose view it is, when it isn't the reader's – read with the tab"
+        },
+        "isDefault": {
+          "type": "boolean",
+          "description": "The view that opens first"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

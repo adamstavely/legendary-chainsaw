@@ -1,0 +1,291 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-webhooks.json",
+  "title": "tc-webhooks",
+  "description": "A workspace's webhook endpoints: events, an on/off switch, delivery health in words, recent deliveries with Retry,\nand Add, Edit, Send test event and Delete.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"Webhooks\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WebhookEndpoint"
+      },
+      "description": "The endpoints. Toggling, editing and deleting change it unless the event's listener calls preventDefault()"
+    },
+    "eventTypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WebhookEventType"
+      },
+      "description": "The events an endpoint can get, offered as checkboxes and named on its chips"
+    },
+    "maxDeliveries": {
+      "type": "number",
+      "description": "How many recent deliveries an open endpoint lists"
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Hides Add, Edit, Delete and the switches, for people who may only look"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" in epoch ms; unset, the clock's"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
+        },
+        "health": {
+          "type": "string"
+        },
+        "allDelivered": {
+          "type": "string"
+        },
+        "quiet": {
+          "type": "string"
+        },
+        "noDeliveries": {
+          "type": "string"
+        },
+        "deliveries": {
+          "type": "string"
+        },
+        "delivered": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "retrying": {
+          "type": "string"
+        },
+        "noResponse": {
+          "type": "string"
+        },
+        "attempt": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "test": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "confirmRemove": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "urlHint": {
+          "type": "string"
+        },
+        "urlInvalid": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "events": {
+          "type": "string"
+        },
+        "allEvents": {
+          "type": "string"
+        },
+        "eventsRequired": {
+          "type": "string"
+        },
+        "save": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "string"
+        },
+        "show": {
+          "type": "string"
+        },
+        "hide": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "emptyHint": {
+          "type": "string"
+        },
+        "announceDeleted": {
+          "type": "string"
+        },
+        "announceOn": {
+          "type": "string"
+        },
+        "announceOff": {
+          "type": "string"
+        },
+        "announceSaved": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WebhookEndpoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The event type ids it gets"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "secret": {
+          "type": "string",
+          "description": "The signing secret, shown masked with Show and Copy"
+        },
+        "deliveries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WebhookDelivery"
+          },
+          "description": "Recent deliveries, newest first"
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "events",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "WebhookDelivery": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "event": {
+          "type": "string",
+          "description": "The event type's id"
+        },
+        "status": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "The HTTP status the endpoint answered with; null when it didn't answer"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "durationMs": {
+          "type": "number"
+        },
+        "attempt": {
+          "type": "number"
+        },
+        "nextRetryAt": {
+          "type": "number",
+          "description": "Epoch ms of the next try, while a retry waits"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "event",
+        "status",
+        "ok"
+      ],
+      "additionalProperties": false
+    },
+    "WebhookEventType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
