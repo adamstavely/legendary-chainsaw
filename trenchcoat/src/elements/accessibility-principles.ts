@@ -8,7 +8,7 @@ import { OnScreenController } from "./internal/controllers";
  * pastel badge on a soft tile, above the four principles that serve them (perceivable, operable, understandable,
  * robust), with a connector from each principle up to the needs it meets. For an accessibility statement, a design
  * guide or onboarding. The connectors draw in one after another and the gear in the head turns a few times, then rests.
- * Drawn like the other illustrations (all-done, something-wrong): soft tiles, one pastel mark with a darker edge and
+ * Drawn like the other illustrations (tray-status, something-wrong): soft tiles, one pastel mark with a darker edge and
  * ink, and a soft glow beneath – on a 320 × 240 viewBox in a 4 : 3 frame, taller than the 3 : 2 states so the words fit.
  *
  *   <tc-accessibility-principles></tc-accessibility-principles>

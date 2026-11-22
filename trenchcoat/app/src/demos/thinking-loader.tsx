@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/thinking-loader";
+import type * as UI from "../../../src/elements/react";
 import { bubble } from "../demo-kit";
 
 const phases = ["Thinking", "Searching the web", "Reading 12 sources", "Comparing prices", "Writing response"];
@@ -54,6 +54,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           {done ? "The cheapest flight on Friday leaves at 7:40 and costs $184." : "…"}
         </div>
       </div>
+      {/* mark="pixels": a grid of dots in place of the rays, one fixed label and the time it's taken */}
+      <ThinkingLoader key={`pixels-${run}`} mark="pixels" pattern="orbit" size="sm" label="Reading the audit log" state={done ? "done" : "working"} />
     </div>
   );
 }

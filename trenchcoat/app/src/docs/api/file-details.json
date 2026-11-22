@@ -663,7 +663,7 @@
  },
  "runtime": {
   "timers": [
-   "setTimeout (file-summary)",
+   "setTimeout (internal/summary-shell › CopiedFlash)",
    "setTimeout (internal/popover › PopoverController)",
    "setTimeout (share-panel)"
   ],
@@ -703,7 +703,7 @@
   "windowed": false
  },
  "size": {
-  "min": 127191,
-  "gzip": 34464
+  "min": 127652,
+  "gzip": 34654
  }
 }

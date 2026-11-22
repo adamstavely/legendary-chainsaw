@@ -9,7 +9,7 @@
 One file in one place – what it is, the team's flag on it, what's in it, its versions, and who it's shared with after their entitlements are checked (uses `team-flag-picker`, `file-summary`, `version-history`, `share-panel`)
 
 - **Element:** `<tc-file-details>`
-- **Size:** 33.7 KB gzip · 124.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 33.8 KB gzip · 124.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -431,7 +431,7 @@ itself, including who isn't authorized in the share panel.
 
 ## Performance
 
-*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -442,6 +442,7 @@ itself, including who isn't authorized in the share panel.
 | `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 4.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
+| `internal/summary-shell` · Shared Trenchcoat code | 2.4 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/team-flag` · Shared Trenchcoat code | 0.8 KB | – |
@@ -451,10 +452,10 @@ itself, including who isn't authorized in the share panel.
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
 | [version-history](../components/version-history.md) · Element it renders | 34.9 KB | – |
 | [share-panel](../components/share-panel.md) · Element it renders | 25.3 KB | – |
-| [file-summary](../components/file-summary.md) · Element it renders | 24.0 KB | – |
+| [file-summary](../components/file-summary.md) · Element it renders | 21.9 KB | – |
 | [team-flag-picker](../components/team-flag-picker.md) · Element it renders | 7.9 KB | – |
-| **Added to a page that already has Lit** | **124.2 KB** | **33.7 KB** |
-| With Lit – the first component on a page | 146.5 KB | 41.1 KB |
+| **Added to a page that already has Lit** | **124.7 KB** | **34.0 KB** |
+| With Lit – the first component on a page | 146.9 KB | 41.5 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -462,9 +463,9 @@ itself, including who isn't authorized in the share panel.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.6 ms** | default properties, 43 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| First render | **1.5 ms** | default properties, 43 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -472,7 +473,7 @@ itself, including who isn't authorized in the share panel.
 
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame, cancelled` (internal/popover – PopoverController), `requestAnimationFrame, cancelled` (internal/controllers – RowWindowController).
-- Timers: `setTimeout` (file-summary), `setTimeout` (internal/popover – PopoverController), `setTimeout` (share-panel).
+- Timers: `setTimeout` (internal/summary-shell – CopiedFlash), `setTimeout` (internal/popover – PopoverController), `setTimeout` (share-panel).
 - 4 infinite CSS animations.
 - Stops or pauses off screen and under reduced motion.
 - Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OffScreenController), `ResizeObserver` (internal/popover – PopoverController).

@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: malware-blocked, file-details, background-tasks, content-shield
+related: doc-status, file-details, background-tasks, content-shield
 ---
 
 ## Overview
@@ -16,7 +16,7 @@ word. Inline for a row in a list, or a card with what scanned it and when.
 
 ## When not to use
 
-- Only the blocked state, as a full picture – use `malware-blocked`.
+- Only the blocked state, as a full picture – use `doc-status` with `status="malware-blocked"`.
 - A long-running job in general – use `background-tasks`.
 
 ## Anatomy

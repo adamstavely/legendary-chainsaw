@@ -5,7 +5,7 @@ import { OnScreenController } from "./internal/controllers";
 
 /*
  * <tc-soup-cans> – three plain soup cans with no labels, standing in a cluster at different heights, with ridge rings
- * round each; the short one in front wobbles a couple of times and rests. Drawn like the state illustrations (awaiting-review, all-done, no-access): soft pastel
+ * round each; the short one in front wobbles a couple of times and rests. Drawn like the state illustrations (awaiting-review, tray-status, no-access): soft pastel
  * shapes with a darker edge and ink, and a soft glow beneath. Drawn on a 320 × 240 viewBox inside a 3 : 2 frame.
  *
  *   <tc-soup-cans></tc-soup-cans>

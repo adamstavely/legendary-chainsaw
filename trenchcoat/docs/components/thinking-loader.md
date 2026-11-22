@@ -9,7 +9,7 @@
 A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 
 - **Element:** `<tc-thinking-loader>`
-- **Size:** 7.1 KB gzip · 22.3 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 9.3 KB gzip · 29.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -33,6 +33,16 @@ new width. When the work is done, the spinner turns into a check and the label s
 (“Thought for 6s”). It tells people something is happening, and roughly what, without taking room from the
 conversation.
 
+`mark="pixels"` swaps the rays for a 5 × 5 grid of dots lit in a `pattern` – a diagonal wave, a dot driving a snake
+path, a twinkle or an orbit round the edge – and adds the time the work has taken beside the label (0.2s, 12s, 1m 4s;
+`hide-time` leaves it off). Give one fixed `label` instead of `phases` when the work is one thing ("Reading the audit
+log"): it stays when the work ends, and the status says how it ended – "Done: Reading the audit log".
+
+`state` says how the work stands – "working", "done" or "error", which turns the mark into a cross in the danger
+colour. It's the preferred way; the older `done` boolean still works and means `state="done"`. `startedAt` sets where
+the count starts (`started` is the same), and `now` lets the page drive the clock. This is what Pixel Loader did:
+It replaces Pixel Loader, which was removed: use `<tc-thinking-loader mark="pixels">`.
+
 ### When to use
 
 - The gap between sending a message and the first words of the answer.
@@ -50,7 +60,10 @@ conversation.
 
 1. **Spinner** `.ui-tl__spinner` – eight rays turning while the model works
 2. **Check** `.ui-tl__check` – takes the spinner's place once done
-3. **Label** `.ui-tl__text` – the current phase with a light sweeping over it, then the done label
+3. **Cross** `.ui-tl__cross` – takes the spinner's place on an error
+4. **Grid** `.ui-tl__grid` – with `mark="pixels"`, 25 `.ui-tl__dot`s in place of the spinner, settling into a check or a cross
+5. **Label** `.ui-tl__text` – the current phase with a light sweeping over it, then the done label
+6. **Time** `.ui-tl__time` – with `mark="pixels"`, the time the work has taken, unless `hide-time`
 
 ## Looks
 
@@ -74,8 +87,11 @@ spinner and the label, and `size="sm"` makes everything smaller.
   loader.doneLabel = (s) => `Thought for ${s}s`;
   loader.addEventListener("tc-phase-change", (e) => console.log(e.detail.phase));
   // Later, when the answer starts streaming:
-  setTimeout(() => (loader.done = true), 4200);
+  setTimeout(() => (loader.state = "done"), 4200);
 </script>
+
+<!-- One fixed label, a grid of dots and the time it's taken -->
+<tc-thinking-loader mark="pixels" pattern="orbit" label="Reading the audit log"></tc-thinking-loader>
 ```
 
 ### React / Next.js
@@ -161,15 +177,24 @@ export class ThinkingLoaderExample {
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `phases` | – | `string[]` | `["Thinking", "Searching the web", "Reading sources", "Writing response"]` | Labels to walk through, one after another |
+| `label` | `label` | `string \| undefined` | `undefined` | One fixed label instead of `phases` – it stays when the work ends, and the status says how it ended |
 | `interval` | `interval` | `number` | `2200` | Time per phase, in ms |
 | `phase` | `phase` | `number` | `0` | The phase shown. The timer moves it on unless a tc-phase-change listener calls preventDefault() |
 | `manual` | `manual` | `boolean` | `false` | The phase is set from outside (e.g. from stream events): no timer |
-| `startedAt` | `startedAt` | `number \| undefined` | `undefined` | When the work started, in epoch ms – the done label counts from here. Defaults to when the loader connected (or work restarted) |
+| `startedAt` | `startedAt` | `number \| undefined` | `undefined` | When the work started, in epoch ms – the done label and the time count from here. Defaults to when the loader connected (or work restarted) |
+| `started` | `started` | `number \| undefined` | `undefined` | The same as `startedAt`, kept from Pixel Loader |
+| `now` | `now` | `number \| undefined` | `undefined` | The current time, in epoch ms – given, the loader keeps no clock of its own and counts up to it |
 | `loop` | `loop` | `boolean` | `false` | Start over after the last phase instead of holding it – at most twice, then it holds the last phase (WCAG 2.2.2) |
-| `done` | `done` | `boolean` | `false` | Finished: the spinner turns into a check and the label into doneLabel |
-| `doneLabel` | – | `string \| ((seconds: number) => string)` | – | Label once done – a string, or a function that gets the seconds since the loader started |
+| `state` | `state` | `ThinkingLoaderState` | `"working"` | How the work stands: "working" animates and counts; "done" turns the mark into a check; "error" into a cross |
+| `done` | `done` | `boolean` | `false` | Finished – the same as state="done", kept for existing pages |
+| `doneLabel` | – | `string \| ((seconds: number) => string)` | – | Label once done (with `phases`) – a string, or a function that gets the seconds since the loader started |
+| `labels` | – | `Partial<ThinkingLoaderLabels>` | `{}` | Rename the words for how it ended, over the defaults |
+| `mark` | `mark` | `ThinkingLoaderMark` | `"rays"` | The mark: "rays" (the default) or "pixels", a 5 × 5 grid lit in `pattern` |
+| `pattern` | `pattern` | `ThinkingLoaderPattern` | `"wave"` | How the pixels move: a diagonal "wave", a lit dot that "drive"s a snake path, a seeded "dots" twinkle, or an "orbit" round the edge |
+| `hideTime` | `hide-time` | `boolean` | `false` | Hides the time since the work started (shown with mark="pixels") |
 | `size` | `size` | `"sm" \| "md"` | `"md"` | "md" is the default pill; "sm" is smaller, e.g. inside a chat bubble |
-| `variant` | `variant` | `"pill" \| "plain"` | `"pill"` | "pill" = bordered capsule, "plain" = just the spinner and the label, e.g. inside a chat bubble |
+| `variant` | `variant` | `"pill" \| "plain"` | `"pill"` | "pill" = bordered capsule, "plain" = just the mark and the label, e.g. inside a chat bubble |
+| `status` | – | `ThinkingLoaderState` | – | How the work stands, from `state` or the older `done` |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -189,10 +214,13 @@ export class ThinkingLoaderExample {
 | `--tc-thinking-loader-font` | `var(--tc-font-size-md)` | standard, clean |
 | `--tc-thinking-loader-lh` | `var(--tc-line-height-normal)` | standard, clean |
 | `--tc-thinking-loader-icon` | `16px` | standard, clean |
+| `--tc-thinking-loader-pixel-ink` | `var(--tc-accent)` | standard, clean |
+| `--tc-thinking-loader-pixel-dot` | `2px` | standard, clean |
+| `--tc-thinking-loader-pixel-gap` | `1.5px` | standard, clean |
 
-#### Design tokens it reads (36)
+#### Design tokens it reads (38)
 
-`--tc-accent`, `--tc-border-default`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-reveal`, `--tc-duration-shimmer`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-radius-full`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-surface-raised`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tracking-normal`
+`--tc-accent`, `--tc-border-default`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-reveal`, `--tc-duration-shimmer`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-font-sans`, `--tc-font-size-lg`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-line-height-none`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-radius-full`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-4`, `--tc-status-danger-solid`, `--tc-surface-raised`, `--tc-text-muted`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-tracking-normal`
 
 ## Frameworks
 
@@ -214,8 +242,9 @@ export class ThinkingLoaderExample {
 | --- | --- | --- | --- | --- | --- |
 | `phases` | `el.phases = …;` | `<… phases={…} />` | `<tc-thinking-loader :phases="…">` | `<tc-thinking-loader [phases]="…">` | `<tc-thinking-loader {phases}>` |
 | `doneLabel` | `el.doneLabel = …;` | `<… doneLabel={…} />` | `<tc-thinking-loader :doneLabel="…">` | `<tc-thinking-loader [doneLabel]="…">` | `<tc-thinking-loader {doneLabel}>` |
+| `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-thinking-loader :labels="…">` | `<tc-thinking-loader [labels]="…">` | `<tc-thinking-loader {labels}>` |
 
-*Also attributes: `interval`, `phase`, `manual`, `startedAt`, `loop`, `done`, `size`, `variant` – see the API table.*
+*Also attributes: `label`, `interval`, `phase`, `manual`, `startedAt`, `started`, `now`, `loop` and 7 more – see the API table.*
 
 ### Events
 
@@ -372,7 +401,9 @@ Nothing to operate – the loader only reports.
 
 The element is a polite status region (`role="status"`, unless the page sets its own role). It announces the first
 phase (“Thinking”) and then the done label (“Thought for 6s”) – not every phase on the way, so screen reader users
-aren't interrupted every couple of seconds. The spinner and the moving labels are hidden from assistive technology.
+aren't interrupted every couple of seconds. With a fixed `label` it announces the label, then how it ended – “Done:
+Reading the audit log” or “Failed: …” (`labels` renames the words). The ticking time is never announced. The mark,
+the moving labels and the time are hidden from assistive technology.
 
 ### Every component
 
@@ -412,26 +443,27 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/pixel-mark, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 15.2 KB | 5.0 KB |
+| **This component alone** | 19.3 KB | 6.1 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
+| `internal/pixel-mark` · Shared Trenchcoat code | 3.5 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **22.3 KB** | **7.1 KB** |
-| With Lit – the first component on a page | 42.6 KB | 13.6 KB |
+| **Added to a page that already has Lit** | **29.9 KB** | **9.3 KB** |
+| With Lit – the first component on a page | 50.1 KB | 15.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -439,11 +471,11 @@ aren't interrupted every couple of seconds. The spinner and the moving labels ar
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 17 DOM nodes – to layout, median of 7 |
+| First render | **0.6 ms** | the gallery demo's data, 19 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | one item of phases replaced |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.7 ms | phases: first render, 17 nodes; update 0.1 ms |
-| 1,000 items | 0.6 ms | phases: first render, 17 nodes; update 0.0 ms |
+| First on the page | 9.5 ms | default properties; includes adding its CSS to the document |
+| 100 items | 0.5 ms | phases: first render, 19 nodes; update 0.1 ms |
+| 1,000 items | 0.5 ms | phases: first render, 19 nodes; update 0.0 ms |
 
 What it renders doesn't grow with phases (tested to 1,000 items).
 
@@ -454,7 +486,7 @@ What it renders doesn't grow with phases (tested to 1,000 items).
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - No animation-frame loop.
 - Timers: `setInterval, cleared`.
-- 2 infinite CSS animations.
+- 3 infinite CSS animations.
 - Stops or pauses off screen and under reduced motion.
 - Observers: `ResizeObserver`, `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `IntersectionObserver` (internal/controllers – OffScreenController).
 - Reads the clock: `Date.now()`.

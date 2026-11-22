@@ -6,7 +6,7 @@
 
 **Illustrations** · New
 
-A photo pixelated to a person's outline with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
+A picture pixelated into an obscured grid with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
 
 - **Element:** `<tc-content-hidden>`
 - **Size:** 5.2 KB gzip · 13.9 KB min, on a page that has Lit · [Performance](#performance)
@@ -27,7 +27,7 @@ The live example is in the gallery at `#/illustrations/content-hidden`, at 320 p
 
 ## Overview
 
-A photo pixelated down to a person's outline, with a warning sign on it and the words Sensitive content. It's made to sit on an overlay that covers obscene, sexual or graphic content, so people choose whether to see it and aren't shown it by surprise. It's drawn like the other state illustrations – a soft tile, one pastel mark – and the mosaic is only squares: it depicts nothing.
+A picture pixelated into an obscured grid of squares – no shape in it at all – with a warning sign on it and the words Sensitive content. It's made to sit on an overlay that covers obscene, sexual or graphic content, so people choose whether to see it and aren't shown it by surprise. It's drawn like the other state illustrations – a soft tile, one pastel mark – and the mosaic is only squares: it depicts nothing.
 
 ### When to use
 
@@ -36,15 +36,15 @@ A photo pixelated down to a person's outline, with a warning sign on it and the 
 
 ### When not to use
 
-- A file that isn't safe to open – use [Malware Blocked](malware-blocked.md).
-- Someone without permission – use [No Access](no-access.md).
+- A file that isn't safe to open – use [Doc Status](doc-status.md) with `status="malware-blocked"`.
+- Someone without permission – use [Page State](page-state.md) with `status="no-access"`.
 - Content that must not be shown at all: remove it, and say so in words.
 
 ## Anatomy
 
 *Turn on “Show anatomy” on the example to see each part numbered on the live component.*
 
-1. **Picture** `.ui-chd-card` – a stand-in, pixelated to an outline, never the real content
+1. **Picture** `.ui-chd-card` – a stand-in, pixelated into an obscured grid, never the real content
 2. **Mark** `.ui-chd-mark` – the warning sign
 3. **Words** `.ui-chd-caption` – what's happened; the default is Sensitive content
 
@@ -255,7 +255,7 @@ The host is `role="img"`, named by `label` or else by `caption`, so the message 
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -269,7 +269,7 @@ The host is `role="img"`, named by `label` or else by `caption`, so the message 
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **13.9 KB** | **5.2 KB** |
+| **Added to a page that already has Lit** | **13.9 KB** | **5.3 KB** |
 | With Lit – the first component on a page | 33.4 KB | 11.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
@@ -278,9 +278,9 @@ The host is `role="img"`, named by `label` or else by `caption`, so the message 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.5 ms** | the gallery demo's data, 119 DOM nodes – to layout, median of 7 |
+| First render | **2.0 ms** | the gallery demo's data, 119 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | re-render with the same data |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -314,9 +314,8 @@ Say why if you can, beside it: "Flagged as graphic violence". Keep the wording f
 
 ## Related
 
-- [Nothing Found](nothing-found.md) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
-- [No Access](no-access.md) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
-- [Malware Blocked](malware-blocked.md) – A file behind a warning shield with a bug on it, with the words Potential malware, for a file that can't be shown
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Doc Status](doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
 - [Dialog](../components/dialog.md) – A native modal with interactive content and restored focus
 
 ## Changelog

@@ -9,7 +9,7 @@
 Where a file stands in malware scanning – queued, scanning, clean, suspicious, quarantined or failed, inline or as a card, with Rescan and Request review
 
 - **Element:** `<tc-scan-status>`
-- **Size:** 7.8 KB gzip · 22.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.5 KB gzip · 50.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -37,7 +37,7 @@ word. Inline for a row in a list, or a card with what scanned it and when.
 
 ### When not to use
 
-- Only the blocked state, as a full picture – use [Malware Blocked](../illustrations/malware-blocked.md).
+- Only the blocked state, as a full picture – use [Doc Status](../illustrations/doc-status.md) with `status="malware-blocked"`.
 - A long-running job in general – use [Background Tasks](background-tasks.md).
 
 ## Anatomy
@@ -269,12 +269,12 @@ file, and progress is a `progressbar`.
 
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Why |
 | --- | --- | --- | --- | --- | --- | --- |
-| light-dark() | 123 | 120 | 17.5 | 17.5 | malware-blocked, tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
+| light-dark() | 123 | 120 | 17.5 | 17.5 | doc-status, internal/doc-stage, tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
 | color-mix() | 111 | 113 | 16.2 | 16.2 | tokens.css | Tints and washes mixed from the tokens. |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/kit | Focus rings for keyboard users. |
-| aspect-ratio | 88 | 89 | 15 | 15 | malware-blocked | – |
-| inset | 87 | 66 | 14.1 | 14.1 | malware-blocked | – |
-| :is() and :where() | 88 | 78 | 14 | 14 | itself, malware-blocked, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| aspect-ratio | 88 | 89 | 15 | 15 | internal/doc-stage | – |
+| inset | 87 | 66 | 14.1 | 14.1 | internal/doc-stage | – |
+| :is() and :where() | 88 | 78 | 14 | 14 | itself, doc-status, internal/doc-stage, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
 | IntersectionObserver | 51 (Edge 15) | 55 | 12.1 | 12.2 | internal/controllers | – |
 
 ### Progressive
@@ -284,11 +284,11 @@ file, and progress is a `progressbar`.
 | Feature | Chrome / Edge | Firefox | Safari | iOS | Used in | Without it |
 | --- | --- | --- | --- | --- | --- | --- |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/doc-stage, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -296,6 +296,7 @@ file, and progress is a `progressbar`.
 | --- | --- | --- |
 | **This component alone** | 10.3 KB | 4.1 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
+| `internal/doc-stage` · Shared Trenchcoat code | 4.7 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -303,9 +304,9 @@ file, and progress is a `progressbar`.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
-| [malware-blocked](../illustrations/malware-blocked.md) · Element it renders | 4.3 KB | – |
-| **Added to a page that already has Lit** | **22.9 KB** | **7.8 KB** |
-| With Lit – the first component on a page | 42.4 KB | 14.1 KB |
+| [doc-status](../illustrations/doc-status.md) · Element it renders | 27.3 KB | – |
+| **Added to a page that already has Lit** | **50.6 KB** | **14.6 KB** |
+| With Lit – the first component on a page | 70.1 KB | 21.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -313,9 +314,9 @@ file, and progress is a `progressbar`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
+| First render | **0.5 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -349,7 +350,7 @@ Say what was found in `detail`, in plain words. Say suspicious or potential unle
 
 ## Related
 
-- [Malware Blocked](../illustrations/malware-blocked.md) – A file behind a warning shield with a bug on it, with the words Potential malware, for a file that can't be shown
+- [Doc Status](../illustrations/doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
 - [File Details](../blocks/file-details.md) – One file in one place – what it is, the team's flag on it, what's in it, its versions, and who it's shared with after their entitlements are checked (uses `team-flag-picker`, `file-summary`, `version-history`, `share-panel`)
 - [Background Tasks](background-tasks.md) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 - [Content Shield](content-shield.md) – Keeps content unloaded until someone chooses to see it – a picture, the reason and Show, with the content cloned in only on reveal and removed again on Hide

@@ -64,6 +64,9 @@
         "agent": {
           "type": "string"
         },
+        "team": {
+          "type": "string"
+        },
         "grounded": {
           "type": "string"
         },
@@ -86,9 +89,6 @@
           "type": "string"
         },
         "session": {
-          "type": "string"
-        },
-        "team": {
           "type": "string"
         }
       },
@@ -104,6 +104,9 @@
         "agent": {
           "type": "string"
         },
+        "team": {
+          "type": "string"
+        },
         "grounded": {
           "type": "string"
         },
@@ -126,9 +129,6 @@
           "type": "string"
         },
         "session": {
-          "type": "string"
-        },
-        "team": {
           "type": "string"
         }
       },
@@ -192,6 +192,9 @@
         "agent": {
           "type": "number"
         },
+        "team": {
+          "type": "number"
+        },
         "grounded": {
           "type": "number"
         },
@@ -214,9 +217,6 @@
           "type": "number"
         },
         "session": {
-          "type": "number"
-        },
-        "team": {
           "type": "number"
         }
       },

@@ -2,16 +2,91 @@
 
 # Changelog
 
-## Unreleased – Dashboard charts and finished thinking
+## 0.36.0 – Status illustrations, review and admin pieces, fewer copies, Help Video
 
-- **[Line Chart](../components/line-chart.md) and [Area Chart](../components/area-chart.md):** `compare` draws the emphasised series' last period as a quiet dashed line behind it, named in a small legend (`current-label`, `compare-label`), with this period's value and its change against last period in the tooltip ("410 · +17.1%") and in what the keyboard reads.
-- **[Bar Chart](../components/bar-chart.md):** `compare` marks last period on each bar – a dashed open box above it where last period was higher, a dashed line across it where it was lower – with the change in the tooltip; `live` marks the last bar as still counting – today's usage – so it breathes, reads "so far" (`live-label`) and grows as the page raises it.
-- **[Every chart](../components/README.md):** `sync` names a group; charts in it follow one pointer, each showing the same x with its own tooltip – a bar chart of requests and a line chart of spend read together. A chart someone is moving through with the keyboard keeps its own place.
-- **[Thinking State](../components/thinking-state.md):** finished, the header says how many sources its searches turned up beside the time – "Worked for 18s · 12 sources" – and so does the status message; `hide-tally` leaves it off.
+**Breaking:** 21 tags are removed – 20 illustrations now live in Doc Status, Tray Status and Page State, and Pixel Loader is Thinking Loader with `mark="pixels"`. Each section below has a table from the old tag to the new one.
 
-## Unreleased – Help Video
+### Status illustrations: Doc, Tray, Folder and Page State
 
-- **[Help Video](../components/help-video.md):** point-in-time help – a small film-frame icon (a film cell with sprocket holes and a play mark cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, with a tooltip naming the video and its length, words beside it if wanted ("Watch how"), and a check once watched. A click opens one short tutorial in a modal player with captions, chapters to jump to, and Watch again and Done at the end; a file played to its end counts as watched (`tc-watched-change`), embeds from a video host play in an iframe, and Escape puts focus back on the icon. The player's Transcript shows the words as timed lines, read from the captions or passed as `transcript`, marking the line being said and jumping to a line when picked; Download transcript saves them as a text file, or links `transcript-file`. `updated-on` puts a small dot on the icon's top-right corner for `new-days` days (14 by default) after the video changes, until the person opens it (`tc-update-seen-change`, `update-seen`).
+- **[Doc Status](../illustrations/doc-status.md):** one illustration for where a document stands; its `status` picks the badge's drawing, colours, short motion and words. 44 statuses:
+  - workflow: draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, added to Readbook (a book tile);
+  - work: queued, processing, in progress, success, partly processed (finished with some errors), failed, uploading, downloading, working offline (changes are saved on this device and sync when you're back online), locked, sync conflict;
+  - files: malware scan, malware blocked, preview unavailable, converting to text (the page read under a scan bracket);
+  - access and signing: restricted, on legal hold, redacted (black bars over the page's text), password protected (a password field over the page), encrypted, shared, awaiting signature, signed, comments waiting;
+  - keeping: archived, in trash, expired, duplicate, update available;
+  - metadata cleansing: required, in progress, failed, done.
+
+  Words follow the status unless `caption` sets your own. The colours are a small family – green, red, blue, amber, slate, purple, teal and a few more – shared by statuses that mean the same. The shared drawing lives in `internal/doc-stage.ts`.
+- **Removed:** the eleven separate document illustrations it replaces. Use Doc Status with their status:
+
+| Removed tag | Use | Removed React component | Use |
+|---|---|---|---|
+| `<tc-released>` | `<tc-doc-status status="released">` | `<Released />` | `<DocStatus status="released" />` |
+| `<tc-pending-release>` | `<tc-doc-status status="pending-release">` | `<PendingRelease />` | `<DocStatus status="pending-release" />` |
+| `<tc-awaiting-review>` | `<tc-doc-status status="awaiting-review">` | `<AwaitingReview />` | `<DocStatus status="awaiting-review" />` |
+| `<tc-in-translation>` | `<tc-doc-status status="in-translation">` | `<InTranslation />` | `<DocStatus status="in-translation" />` |
+| `<tc-in-quality-control>` | `<tc-doc-status status="in-quality-control">` | `<InQualityControl />` | `<DocStatus status="in-quality-control" />` |
+| `<tc-in-coordination>` | `<tc-doc-status status="in-coordination">` | `<InCoordination />` | `<DocStatus status="in-coordination" />` |
+| `<tc-processing>` | `<tc-doc-status status="processing">` | `<Processing />` | `<DocStatus status="processing" />` |
+| `<tc-uploading>` | `<tc-doc-status status="uploading">` | `<Uploading />` | `<DocStatus status="uploading" />` |
+| `<tc-downloading>` | `<tc-doc-status status="downloading">` | `<Downloading />` | `<DocStatus status="downloading" />` |
+| `<tc-malware-blocked>` | `<tc-doc-status status="malware-blocked">` | `<MalwareBlocked />` | `<DocStatus status="malware-blocked" />` |
+| `<tc-preview-unavailable>` | `<tc-doc-status status="preview-unavailable">` | `<PreviewUnavailable />` | `<DocStatus status="preview-unavailable" />` |
+
+[Scan Status](../components/scan-status.md) and the Design System Releases screen now use Doc Status.
+
+- **[Tray Status](../illustrations/tray-status.md):** one tray illustration with a `status` – `all-done`, `empty`, `no-matches`, `drop-to-upload`, `new-items` (with `count`, shown on the badge and in the words, "99+" past 99), `importing`, `import-complete`, `import-errors`, `export-ready`, `sync-complete`, `paused`, `upload-failed` or `storage-full` – each with its own badge, colour, finite motion and words. It replaces All Done and Upload Failed, which are removed; their scenes are unchanged:
+
+  | Old | New | React |
+  |---|---|---|
+  | `<tc-all-done>` | `<tc-tray-status status="all-done">` | `<TrayStatus status="all-done" />` |
+  | `<tc-upload-failed>` | `<tc-tray-status status="upload-failed">` | `<TrayStatus status="upload-failed" />` |
+
+- **[Folder Status](../illustrations/folder-status.md):** a folder illustration with a `status` – `empty`, `shared`, `syncing`, `archived`, `locked` or `restricted` (a classification, unlike `locked`) – each with its own badge, colour, finite motion and words.
+- **[Page State](../illustrations/page-state.md):** one illustration for full-page and empty states, with a `status`. It holds the scenes of seven illustrations, unchanged and now removed, plus seven new ones: `not-found`, `maintenance`, `session-expired`, `access-requested`, `coming-soon`, `region-unavailable` and `ai-unavailable` (the assistant's mark with a pause badge, "AI is unavailable", for when the model or an AI feature is down or turned off). Words follow the status unless `caption` sets its own; `nothing-found`, `something-wrong` and `no-access` stay wordless and decorative unless given `caption` or `label`, as before.
+
+  | Old | New | React |
+  |---|---|---|
+  | `<tc-nothing-found>` | `<tc-page-state status="nothing-found">` | `<PageState status="nothing-found" />` |
+  | `<tc-offline>` | `<tc-page-state status="offline">` | `<PageState status="offline" />` |
+  | `<tc-something-wrong>` | `<tc-page-state status="something-wrong">` | `<PageState status="something-wrong" />` |
+  | `<tc-link-expired>` | `<tc-page-state status="link-expired">` | `<PageState status="link-expired" />` |
+  | `<tc-no-access>` | `<tc-page-state status="no-access">` | `<PageState status="no-access" />` |
+  | `<tc-limit-reached>` | `<tc-page-state status="limit-reached">` | `<PageState status="limit-reached" />` |
+  | `<tc-first-use>` | `<tc-page-state status="first-use">` | `<PageState status="first-use" />` |
+
+- **[Content Hidden](../illustrations/content-hidden.md):** the picture is now an obscured grid of squares with no shape in it, instead of a person's outline.
+
+### Fewer copies: one loader, shared internals
+
+- **[Thinking Loader](../components/thinking-loader.md):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **Pixel Loader is removed** – use Thinking Loader with `mark="pixels"`:
+
+  | Before | Now |
+  |---|---|
+  | `<tc-pixel-loader pattern="drive" label="Matching vendor IDs">` | `<tc-thinking-loader mark="pixels" pattern="drive" label="Matching vendor IDs">` |
+  | `<PixelLoader … />` (React) | `<ThinkingLoader mark="pixels" … />` |
+  | `--tc-pixel-loader-ink`, `-dot`, `-gap` | `--tc-thinking-loader-pixel-ink`, `-dot`, `-gap` |
+  | `formatElapsed` from `pixel-loader` | `formatElapsed` from `thinking-loader` |
+- **Shared code, no change to any element's API or look:**
+  - [Running Now](../components/running-now.md) and [Background Tasks](../components/background-tasks.md) share one controller for "notify me when it's done" – the bell, its channels and the events.
+  - The five hover cards for things found in text – [Coordinate Details](../components/coordinate-details.md), [Entity Details](../components/entity-details.md), [Identifier Details](../components/identifier-details.md), [Time Details](../components/time-details.md) and [ISBN Details](../components/isbn-details.md) – share their card's open, pin, keyboard and announcement behaviour, and all use the shared lookup cache.
+  - [Account List](../components/account-list.md), [Asset List](../components/asset-list.md), [Contact Channels](../components/contact-channels.md) and [Document List](../components/document-list.md) share revealing one value at a time and their row-and-button keyboard.
+  - [AI Summary](../components/ai-summary.md) and [File Summary](../components/file-summary.md) share their status states, shimmer and caret, Copy and Regenerate, and Short / Detailed.
+  - [Meter Row](../components/meter-row.md), [Usage Meter](../components/usage-meter.md) and [Rate Limit Status](../components/rate-limit-status.md) share one meter bar and its warning thresholds.
+  - [Gauge](../components/gauge.md) draws its arcs with the same geometry as the charts and [Score Ring](../components/score-ring.md).
+
+### Audit, views, export, assignment and developer settings
+
+- **[Audit Trail](../blocks/audit-trail.md):** a row that opens shows what changed – a Field / Before / After table from `changes`, with "added" and "removed" in words – and search matches the fields and values. Person, Type and Date filters (Today, Last 7 days, Last 30 days) join search and outcome, each controllable (`actor`, `action`, `range`, with cancelable `tc-actor-change`, `tc-action-change`, `tc-range-change`, and `tc-outcome-change` for the outcome), with Clear filters and "n of total events". Export takes the filtered events and adds a `changes` column.
+- **[Export Dialog](../components/export-dialog.md):** export a list in one modal – CSV, Excel or PDF; the selected rows, the ones the filters show or all, each with its count; which columns, with required ones kept; and "Email me when it's ready" for big exports. The page drives what follows through `status`: progress with Cancel, a download link with the file's name and size, the emailed note, or what failed with Retry.
+- **[Saved Views](../components/saved-views.md):** saved views as tabs above a list or table, with counts and shared and default marks. Each can be renamed in place, duplicated, shared, set as the default or deleted after a confirmation; when the view on screen has been edited (`dirty`), Save changes, Save as new view and Reset appear. Every request is a cancelable event and the page keeps `views`.
+- **[Assignee Picker](../components/assignee-picker.md):** assign a case or task to a person, a team or a team's round-robin – a chip that opens a search with Assign to me, each person's open items and a load bar against their capacity, Away and Over capacity in words, and Unassign (`value`, cancelable `tc-value-change`).
+- **[API Keys](../components/api-keys.md):** a workspace's API keys with their permissions, who made them, last use and status in words (Active, Expires in 5 days, Expired, Revoked). Create key asks for a name, permissions and expiry; the page answers with `revealed`, and the new secret shows once with Copy. Revoke is confirmed in place, and inactive keys fold away.
+- **[Webhooks](../components/webhooks.md):** webhook endpoints with their events, an on/off switch and delivery health in words ("3 of 48 failed in the last 24 hours"); recent deliveries with status, timing, attempt and Retry; Add and Edit in place (https only); Send test event; Delete confirmed in place; and a masked signing secret.
+
+### Help Video
+
+- **Help Video:** point-in-time help – a small film-frame icon (a film cell with sprocket holes and a play mark cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, with a tooltip naming the video and its length, words beside it if wanted ("Watch how"), and a check once watched. A click opens one short tutorial in a modal player with captions, chapters to jump to, and Watch again and Done at the end; a file played to its end counts as watched (`tc-watched-change`), embeds from a video host play in an iframe, and Escape puts focus back on the icon. The player's Transcript shows the words as timed lines, read from the captions or passed as `transcript`, marking the line being said and jumping to a line when picked; Download transcript saves them as a text file, or links `transcript-file`. `updated-on` puts a small dot on the icon's top-right corner for `new-days` days (14 by default) after the video changes, until the person opens it (`tc-update-seen-change`, `update-seen`).
 
 ## 0.35.0 – Agent screens: Agent Orchestration, Agents and AI Chat / Double Sidebar
 

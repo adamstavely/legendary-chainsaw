@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: agent-face, nothing-found, something-wrong, no-access
+related: agent-face, page-state
 ---
 
 ## Overview
@@ -17,9 +17,9 @@ it follows reduced motion and rests when nothing's happening.
 
 ## When not to use
 
-- Beside a serious decision or an error – use `agent-face` alone, or `something-wrong`.
-- Search with no results – use `nothing-found`.
-- Someone without permission – use `no-access`.
+- Beside a serious decision or an error – use `agent-face` alone, or `page-state` with `status="something-wrong"`.
+- Search with no results – use `page-state` with `status="nothing-found"`.
+- Someone without permission – use `page-state` with `status="no-access"`.
 
 ## Anatomy
 

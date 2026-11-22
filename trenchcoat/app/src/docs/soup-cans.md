@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: all-done, first-use, nothing-found, awaiting-review
+related: tray-status, page-state, doc-status
 ---
 
 ## Overview
@@ -17,9 +17,9 @@ or inventory, a pile to work through. The short can in front wobbles a couple of
 
 ## When not to use
 
-- A search or filter with no matches – use `nothing-found`.
-- An inbox or queue with nothing left to do – use `all-done`.
-- A brand-new workspace – use `first-use`.
+- A search or filter with no matches – use `page-state` with `status="nothing-found"`.
+- An inbox or queue with nothing left to do – use `tray-status` with `status="all-done"`.
+- A brand-new workspace – use `page-state` with `status="first-use"`.
 
 ## Anatomy
 

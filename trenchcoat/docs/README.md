@@ -4,10 +4,10 @@
 
 A UI kit for AI-native products. Components, illustrations and motion are moving to Lit web components that any framework can use, packaged with one stylesheet, `tokens.css`. Blocks and Screens are single React files you can copy.
 
-- [Components](components/README.md): 418
+- [Components](components/README.md): 422
 - [Blocks](blocks/README.md): 27
 - [Screens](screens/README.md): 25
-- [Illustrations](illustrations/README.md): 48
+- [Illustrations](illustrations/README.md): 32
 - [Motion](motion/README.md): 29
 
 ## What's inside
@@ -18,7 +18,7 @@ Motion → Components → Blocks → Screens, + Illustrations
 
 ### [Components](components/README.md)
 
-418 items · 418 files
+422 items · 422 files
 
 **Interactive building blocks for AI-native products**
 
@@ -48,13 +48,13 @@ Agent Chat · Agent Orchestration · Agent Run · Agents · AI Chat / Double Sid
 
 ### [Illustrations](illustrations/README.md)
 
-48 items · 48 files
+32 items · 32 files
 
 **Animated visuals for empty states and marketing**
 
 Decorative, lightly interactive artwork – clouds, folders, orbits, integration diagrams, world maps. Use them in empty states, onboarding and landing pages.
 
-Accessibility Principles · Agent Scene · Agent Team · All Done · Atomic Design …
+Accessibility Principles · Agent Scene · Agent Team · Atomic Design · Content Hidden …
 
 ### [Motion](motion/README.md)
 

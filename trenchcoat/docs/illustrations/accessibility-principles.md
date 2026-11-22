@@ -41,7 +41,7 @@ that explains how the product is built.
 
 ### When not to use
 
-- An error or an empty list – use a state illustration such as [Something Wrong](something-wrong.md) or [All Done](all-done.md).
+- An error or an empty list – use a state illustration such as [Page State](page-state.md) or [Tray Status](tray-status.md).
 - As proof of conformance: it says what the product aims for, not what it meets.
 
 ## Anatomy
@@ -337,8 +337,8 @@ the text beside it already says the same, and it's left out of the accessibility
 
 ## Related
 
-- [First Use](first-use.md) – An empty workspace with one highlighted spot to start from, with the words Nothing here yet, for a new team or project
-- [All Done](all-done.md) – An empty tray with a check above it, with the words You're all caught up, for an inbox or queue with nothing waiting
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 
 ## Changelog
 
