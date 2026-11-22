@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: all-done, upload-failed, scan-status, import-review
+related: tray-status, page-state, folder-status, scan-status
 ---
 
 ## Overview
