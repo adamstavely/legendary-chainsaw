@@ -6,13 +6,13 @@ import { docStageCss, DocStage, type DocStagePalette } from "./internal/doc-stag
  * <tc-doc-status> – where a document stands, as one illustration: a soft page (or book) tile, one pastel badge with a
  * darker edge and ink, a soft glow beneath, and the words as real text under it. `status` picks the badge's drawing,
  * its colours, its short motion and the words:
- *   · workflow: draft, awaiting-review, in-translation, in-quality-control, in-coordination, pending-release, scheduled,
+ *   · workflow: draft, awaiting-review, approved, changes-requested, in-translation, in-quality-control, in-coordination, pending-release, scheduled,
  *     released, added-to-readbook (a book with a bookmark)
- *   · work: queued, processing, in-progress, success, failed, uploading, downloading, working-offline (a cloud with a
+ *   · work: queued, processing, in-progress, success, partially-processed, failed, uploading, downloading, working-offline (a cloud with a
  *     line through it), locked, sync-conflict
  *   · files: malware-scan, malware-blocked (a warning shield in front of the file, not a badge), preview-unavailable
  *     (the contents faded to a dashed outline, with a question mark), converting (its text read by a scan bracket)
- *   · access and signing: restricted, redacted (bars over the page's text), password-protected (a password field
+ *   · access and signing: restricted, legal-hold, redacted (bars over the page's text), password-protected (a password field
  *     over it), encrypted, shared, awaiting-signature, signed, comment-needed
  *   · keeping: archived, in-trash, expired, duplicate, update-available
  *   · metadata: metadata-cleansing-required, -in-progress, -failed, -success (a tag, with the state on its corner)
@@ -70,7 +70,11 @@ export type DocStatus =
   | "password-protected"
   | "update-available"
   | "converting"
-  | "comment-needed";
+  | "comment-needed"
+  | "approved"
+  | "changes-requested"
+  | "partially-processed"
+  | "legal-hold";
 
 /** What a status draws, given the class prefix (`ui-dst`) and the custom-property namer */
 type Draw = (c: string, v: (k: string) => string) => SVGTemplateResult;
@@ -546,6 +550,40 @@ ${sc}.${c}-read { fill: var(${v("mark-edge")}); opacity: 0; animation: ${kf}-rea
     css: (c, v, kf, sc) => `
 ${sc}.${c}-bubble-mark { animation: ${kf}-nod calc(var(${v("beat")}) / 2) var(--tc-ease-move) 2; }
 @keyframes ${kf}-nod { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-3px); } }`,
+  },
+  approved: {
+    words: "Approved",
+    palette: GREEN,
+    motif: (c) => svg`<g class=${`${c}-stamp`}><circle class=${`${c}-ink`} cx="160" cy="111" r="4"></circle><path class=${`${c}-ink`} d="M157 115v5h6v-5M147 120h26v6h-26Z"></path></g>
+      <path class=${`${c}-ink ${c}-tick`} d="M151 134l5 5 10-10"></path>`,
+    motion: ["stamp", "tick"],
+    css: (c, v, kf, sc) => `${settleOnce(c, "stamp", v, kf, sc, "translateY(-7px)")}
+${sc}.${c}-tick { stroke-dasharray: 24; animation: ${kf}-draw calc(var(${v("beat")}) * 0.25) var(--tc-ease-move) calc(var(${v("beat")}) * 0.3) backwards; }
+${drawKf(kf, 24)}`,
+  },
+  "changes-requested": {
+    words: "Changes requested",
+    palette: AMBER,
+    motif: (c) => svg`<g class=${`${c}-back`}><path class=${`${c}-ink`} d="M152 117h12a8 8 0 0 1 0 16h-10"></path><path class=${`${c}-ink`} d="M157 111l-6 6 6 6"></path></g>`,
+    motion: ["back"],
+    css: (c, v, kf, sc) => settleOnce(c, "back", v, kf, sc, "translateX(6px)"),
+  },
+  "partially-processed": {
+    words: "Partly processed",
+    palette: AMBER,
+    motif: (c) => svg`<circle class=${`${c}-track`} cx="158" cy="124" r="14"></circle><path class=${`${c}-ink ${c}-half`} d="M158 110a14 14 0 0 1 0 28"></path>${chip(c)}<path class=${`${c}-chip-ink`} d="M184 141v7M184 154v.5"></path>`,
+    motion: ["half"],
+    css: (c, v, kf, sc) => `${chipCss(c, v, kf, sc)}
+${sc}.${c}-track { fill: none; stroke: var(${v("mark-edge")}); stroke-width: 5; }
+${sc}.${c}-half { stroke-width: 5; stroke-dasharray: 46; animation: ${kf}-draw calc(var(${v("beat")}) * 0.35) var(--tc-ease-move) calc(var(${v("beat")}) / 16) backwards; }
+${drawKf(kf, 46)}`,
+  },
+  "legal-hold": {
+    words: "On legal hold",
+    palette: PURPLE,
+    motif: (c) => svg`<g class=${`${c}-gavel`}><path class=${`${c}-ink`} d="M148 117l9-9 9 9-9 9Z"></path><path class=${`${c}-ink`} d="M161 122l12 12"></path></g><path class=${`${c}-ink`} d="M145 141h20"></path>`,
+    motion: ["gavel"],
+    css: (c, v, kf, sc) => settleOnce(c, "gavel", v, kf, sc, "rotate(-18deg)"),
   },
   "working-offline": {
     words: "Working offline",

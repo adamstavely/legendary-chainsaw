@@ -20,7 +20,7 @@ describe("tc-doc-status", () => {
 
   test("every status: its words and name, its tile and its drawing", async () => {
     const el = await fixture<TcDocStatus>(html`<tc-doc-status></tc-doc-status>`);
-    expect(STATUSES).toHaveLength(40);
+    expect(STATUSES).toHaveLength(44);
     for (const status of STATUSES) {
       el.status = status;
       await settle();
@@ -70,6 +70,10 @@ describe("tc-doc-status", () => {
     expect(await fill("password-protected")).toBe(await fill("locked"));
     expect(await fill("converting")).toBe(await fill("processing"));
     expect(await fill("comment-needed")).toBe(await fill("awaiting-review"));
+    expect(await fill("approved")).toBe(await fill("released"));
+    expect(await fill("changes-requested")).toBe(await fill("locked"));
+    expect(await fill("partially-processed")).toBe(await fill("locked"));
+    expect(await fill("legal-hold")).toBe(await fill("awaiting-review"));
   });
 
   test("an unknown status draws the default; a caption of the page's own wins, and \"\" makes it decorative", async () => {

@@ -12,6 +12,8 @@ const GROUPS: { title: string; items: [Status, string][] }[] = [
     title: "Workflow",
     items: [
       ["awaiting-review", "The annual report waits for the editor."],
+      ["approved", "Approved by Noor on 18 November."],
+      ["changes-requested", "Two figures need their sources before it can go on."],
       ["in-translation", "French and German versions in progress."],
       ["in-quality-control", "Checking figures against the source data."],
       ["in-coordination", "Three teams are agreeing the final wording."],
@@ -29,6 +31,7 @@ const GROUPS: { title: string; items: [Status, string][] }[] = [
       ["queued", "Third in line for the export worker."],
       ["in-progress", "Priya is reviewing the case."],
       ["success", "All 1,240 cases imported."],
+      ["partially-processed", "1,212 of 1,240 cases imported; 28 need a date."],
       ["failed", "The import stopped at row 412."],
       ["uploading", "field-notes.pdf, 4.2 MB of 6 MB."],
       ["downloading", "Preparing the archive for download."],
@@ -40,6 +43,7 @@ const GROUPS: { title: string; items: [Status, string][] }[] = [
     title: "Access, signing and keeping",
     items: [
       ["restricted", "Only the review panel can open it."],
+      ["legal-hold", "Kept unchanged for the Henley review."],
       ["redacted", "Names and account numbers are hidden."],
       ["password-protected", "Enter the password Priya sent you to open it."],
       ["encrypted", "Stored encrypted with the institute's key."],

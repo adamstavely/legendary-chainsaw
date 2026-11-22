@@ -11,6 +11,8 @@ import { OnScreenController } from "./internal/controllers";
  *   · "shared" (blue) – two small people on the badge; the badge settles a few times. "Shared folder"
  *   · "archived" (slate) – a box with an arrow going into it on the badge; the arrow drops a few times. "Archived"
  *   · "locked" (amber) – a small padlock badge on the folder's corner; the lock settles a few times. "Locked folder"
+ *   · "syncing" (blue) – circular arrows on the badge that turn a few times. "Syncing"
+ *   · "restricted" (red) – a shield on the badge: a classification, not a lock. "Restricted folder"
  * Its words follow the status unless `caption` sets its own.
  *
  *   <tc-folder-status status="shared"></tc-folder-status>
@@ -21,7 +23,7 @@ import { OnScreenController } from "./internal/controllers";
  * page theme through light-dark().
  */
 
-export type FolderStatusKind = "empty" | "shared" | "archived" | "locked";
+export type FolderStatusKind = "empty" | "shared" | "archived" | "locked" | "syncing" | "restricted";
 
 /** The words for each status, when `caption` isn't set */
 export const folderStatusWords: Record<FolderStatusKind, string> = {
@@ -29,6 +31,8 @@ export const folderStatusWords: Record<FolderStatusKind, string> = {
   shared: "Shared folder",
   archived: "Archived",
   locked: "Locked folder",
+  syncing: "Syncing",
+  restricted: "Restricted folder",
 };
 
 type Pair = [string, string];
@@ -120,6 +124,46 @@ const SCENES: Record<FolderStatusKind, Scene> = {
         <rect class=${`${p}-ink`} x="207" y="143" width="22" height="15" rx="3"></rect>
       </g>`,
   },
+  syncing: {
+    palette: {
+      mark: ["#d6eef8", "#1c3f52"],
+      markEdge: ["#7cc1e0", "#5aaed4"],
+      ink: ["#1b6a8c", "#cdeaf7"],
+      glow: ["rgba(90, 170, 215, 0.24)", "rgba(90, 170, 215, 0.12)"],
+    },
+    moving: ["spin", "glow"],
+    motion: (p, v) => /* css */ `
+.${p}-spin { transform-box: fill-box; transform-origin: center; animation: ${p}-turn var(${v("beat")}) var(--tc-ease-standard) 3; }`,
+    draw: (p) => svg`
+      ${glow(p)}
+      ${back(p)}
+      ${front(p)}
+      <circle class=${`${p}-badge`} cx="160" cy="116" r="26"></circle>
+      <g class=${`${p}-spin`}>
+        <path class=${`${p}-ink`} d="M146 112a15 15 0 0 1 26-8M174 120a15 15 0 0 1-26 8"></path>
+        <path class=${`${p}-ink`} d="M172 96v8h-8M148 136v-8h8"></path>
+      </g>`,
+  },
+  restricted: {
+    palette: {
+      mark: ["#fde2df", "#5a2724"],
+      markEdge: ["#f0a197", "#c96a60"],
+      ink: ["#a8231a", "#fbd2cd"],
+      glow: ["rgba(240, 112, 102, 0.2)", "rgba(240, 112, 102, 0.1)"],
+    },
+    moving: ["mark", "glow"],
+    motion: (p, v) => /* css */ `
+.${p}-mark { transform-box: fill-box; transform-origin: center; animation: ${p}-settle var(${v("beat")}) var(--tc-ease-standard) 3; }`,
+    draw: (p) => svg`
+      ${glow(p)}
+      ${back(p)}
+      ${front(p)}
+      <g class=${`${p}-mark`}>
+        <circle class=${`${p}-badge`} cx="160" cy="116" r="26"></circle>
+        <path class=${`${p}-ink`} d="M160 101l12 4v9c0 8-5 14-12 17-7-3-12-9-12-17v-9Z"></path>
+        <path class=${`${p}-ink`} d="M160 110v8M160 123v0.5"></path>
+      </g>`,
+  },
 };
 
 /**
@@ -173,6 +217,7 @@ ${statuses.map((s) => scope(s, SCENES[s].motion(p, v).trim())).join("\n")}
 @keyframes ${p}-open { 0%, 100% { transform: skewX(0) scaleY(1); } 45% { transform: skewX(-4deg) scaleY(0.94); } }
 @keyframes ${p}-settle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 @keyframes ${p}-drop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(4px); } }
+@keyframes ${p}-turn { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 @keyframes ${p}-breathe { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
 /* Off screen or in a hidden tab: the motion holds still */
@@ -194,9 +239,9 @@ ${statuses.map((s) => scope(s, SCENES[s].motion(p, v).trim())).join("\n")}
 export class TcFolderStatus extends TcElement {
   static override ui = "fds";
   static override looks = false;
-  static override css = folderCss({ ui: "fds", name: "folder-status", statuses: ["empty", "shared", "archived", "locked"] });
+  static override css = folderCss({ ui: "fds", name: "folder-status", statuses: ["empty", "shared", "archived", "locked", "syncing", "restricted"] });
 
-  /** Where the folder stands: "empty", "shared", "archived" or "locked" */
+  /** Where the folder stands: "empty", "shared", "syncing", "archived", "locked" or "restricted" */
   @property({ reflect: true }) accessor status: FolderStatusKind = "empty";
   /** The words under the drawing; unset, the status's own words; "" leaves them out */
   @property() accessor caption: string | undefined = undefined;

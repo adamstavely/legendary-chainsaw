@@ -4,8 +4,10 @@ import type * as UI from "../../../../src/elements/react";
 const NOTES = [
   ["empty", "Drop case files here to start this folder."],
   ["shared", "Shared with the fraud review team – 6 people can edit."],
+  ["syncing", "Copying 48 files from the bank's drop folder."],
   ["archived", "Closed cases from 2025, kept for seven years."],
   ["locked", "Held for legal review. Ask Noor Haddad for access."],
+  ["restricted", "Classified Confidential – only the investigations team can open it."],
 ] as const;
 
 export default function Demo({ ui }: { ui: typeof UI }) {

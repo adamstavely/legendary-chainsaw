@@ -17,6 +17,7 @@ const NOTES = [
   ["maintenance", "Case review is being upgraded. It'll be back by 02:00 UTC."],
   ["coming-soon", "Bulk reassignment arrives next month."],
   ["region-unavailable", "Case review isn't offered in this country yet."],
+  ["ai-unavailable", "AI summaries are paused. Search, filters and case notes still work."],
 ] as const;
 
 export default function Demo({ ui }: { ui: typeof UI }) {

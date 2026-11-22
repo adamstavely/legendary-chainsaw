@@ -22,7 +22,7 @@ const attr = (el: Element, sel: string, name: string) => el.querySelector(sel)?.
 
 describe("tc-page-state", () => {
   test("every status says what happened in visible words and in its name, or is decorative without words", async () => {
-    expect(STATUSES).toHaveLength(13);
+    expect(STATUSES).toHaveLength(14);
     for (const status of STATUSES) {
       const el = await make(status);
       expect(el.dataset.ui).toBe("pgs");
@@ -103,6 +103,18 @@ describe("tc-page-state", () => {
     expect(groups.size).toBe(4);
     expect(marks.get("offline")).toBe(marks.get("coming-soon"));
     expect(marks.get("region-unavailable")).toBe(marks.get("not-found"));
+    expect(marks.get("ai-unavailable")).toBe(marks.get("access-requested"));
+  });
+
+  test("ai-unavailable: the assistant's mark with a pause badge, its sparkle dimming once, and its words", async () => {
+    const el = await make("ai-unavailable");
+    expect(el.getAttribute("aria-label")).toBe("AI is unavailable");
+    expect(el.querySelector(".ui-pgs-sparkle")).not.toBeNull();
+    const dim = getComputedStyle(el.querySelector(".ui-pgs-sparkle")!);
+    expect(dim.animationName).toBe("ui-pgs-dim");
+    expect(dim.animationIterationCount).toBe("1");
+    // The pause badge: two bars
+    expect(el.querySelector(".ui-pgs-settle path.ui-pgs-ink")!.getAttribute("d")).toBe("M200 126v16M212 126v16");
   });
 
   test("off screen the motion holds, and runs on when it's back", async () => {

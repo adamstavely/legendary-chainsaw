@@ -19,6 +19,9 @@ import { OnScreenController } from "./internal/controllers";
  *   · "new-items" (blue) – a tray with `count` on its badge ("99+" past 99). "3 new"
  *   · "paused" (slate) – a tray with a pause mark. "Paused"
  *   · "sync-complete" (green) – a tray with circular arrows that turn once and a check. "Sync complete"
+ *   · "importing" (blue) – pages falling into the tray one after another, a progress ring turning on the badge. "Importing"
+ *   · "import-errors" (amber) – pages in the tray with a "!". "Imported with errors"
+ *   · "no-matches" (slate) – an empty tray with a funnel on the badge: filters hide everything. "No matches"
  * Its words follow the status unless `caption` sets its own.
  *
  *   <tc-tray-status status="upload-failed"></tc-tray-status>
@@ -30,7 +33,7 @@ import { OnScreenController } from "./internal/controllers";
  * status="upload-failed" draw their scenes exactly as they were.
  */
 
-export type TrayStatusKind = "all-done" | "upload-failed" | "empty" | "import-complete" | "export-ready" | "storage-full" | "drop-to-upload" | "new-items" | "paused" | "sync-complete";
+export type TrayStatusKind = "all-done" | "upload-failed" | "empty" | "import-complete" | "export-ready" | "storage-full" | "drop-to-upload" | "new-items" | "paused" | "sync-complete" | "importing" | "import-errors" | "no-matches";
 
 /** The words for each status, when `caption` isn't set */
 export const trayStatusWords: Record<TrayStatusKind, string> = {
@@ -44,6 +47,9 @@ export const trayStatusWords: Record<TrayStatusKind, string> = {
   "new-items": "{n} new",
   paused: "Paused",
   "sync-complete": "Sync complete",
+  importing: "Importing",
+  "import-errors": "Imported with errors",
+  "no-matches": "No matches",
 };
 
 /** A count as the badge shows it: 1 to 99, then "99+" */
@@ -283,6 +289,72 @@ const SCENES: Record<TrayStatusKind, Scene> = {
       </g>
       <path class=${`${p}-check`} d="M152 70l6 6 10-10"></path>`,
   },
+  importing: {
+    palette: {
+      mark: ["#d6eef8", "#1c3f52"],
+      markEdge: ["#7cc1e0", "#5aaed4"],
+      ink: ["#1b6a8c", "#cdeaf7"],
+      glow: ["rgba(90, 170, 215, 0.24)", "rgba(90, 170, 215, 0.12)"],
+    },
+    beat: "3s",
+    moving: ["fall", "ring", "glow"],
+    motion: (p, v) => /* css */ `
+.${p}-fall { animation: ${p}-fall var(${v("beat")}) var(--tc-ease-move) 3 both; }
+.${p}-ring { transform-box: fill-box; transform-origin: center; animation: ${p}-turn var(${v("beat")}) linear 3; }`,
+    draw: (p) => svg`
+      <ellipse class=${`${p}-glow`} cx="160" cy="166" rx="96" ry="14"></ellipse>
+      <rect class=${`${p}-tile ${p}-fall`} x="112" y="70" width="56" height="44" rx="8" stroke-width="2"></rect>
+      <rect class=${`${p}-tile ${p}-fall`} x="132" y="64" width="56" height="48" rx="8" stroke-width="2" style="animation-delay: calc(var(--tc-tray-status-beat, 3s) / 6)"></rect>
+      <rect class=${`${p}-tray`} x="86" y="104" width="148" height="52" rx="14" stroke-width="2"></rect>
+      <path class=${`${p}-rim`} d="M104 124h24l8 10h48l8-10h24"></path>
+      <circle class=${`${p}-badge`} cx="200" cy="62" r="20"></circle>
+      <circle class=${`${p}-track`} cx="200" cy="62" r="10"></circle>
+      <path class=${`${p}-ink ${p}-ring`} d="M200 52a10 10 0 0 1 10 10"></path>`,
+  },
+  "import-errors": {
+    palette: {
+      mark: ["#fdf0d5", "#4a3a14"],
+      markEdge: ["#ecc06a", "#c9a24a"],
+      ink: ["#7f5300", "#f7e2b5"],
+      glow: ["rgba(230, 170, 70, 0.24)", "rgba(230, 170, 70, 0.12)"],
+    },
+    beat: "3s",
+    moving: ["pages", "glow"],
+    motion: (p, v) => /* css */ `
+.${p}-pages { animation: ${p}-drop-in calc(var(${v("beat")}) / 3) var(--tc-ease-move) 1 backwards; }`,
+    draw: (p) => svg`
+      <ellipse class=${`${p}-glow`} cx="160" cy="166" rx="96" ry="14"></ellipse>
+      <g class=${`${p}-pages`}>
+        <rect class=${`${p}-tile`} x="108" y="72" width="64" height="52" rx="8" stroke-width="2" transform="rotate(-6 140 98)"></rect>
+        <rect class=${`${p}-tile`} x="124" y="66" width="64" height="56" rx="8" stroke-width="2"></rect>
+        <rect class=${`${p}-line`} x="134" y="78" width="30" height="5" rx="2.5"></rect>
+        <rect class=${`${p}-line`} x="134" y="89" width="40" height="5" rx="2.5"></rect>
+      </g>
+      <rect class=${`${p}-tray`} x="86" y="104" width="148" height="52" rx="14" stroke-width="2"></rect>
+      <path class=${`${p}-rim`} d="M104 124h24l8 10h48l8-10h24"></path>
+      <circle class=${`${p}-badge`} cx="200" cy="62" r="20"></circle>
+      <path class=${`${p}-ink`} d="M200 52v12M200 71v0.5"></path>`,
+  },
+  "no-matches": {
+    palette: {
+      mark: ["#e9edf2", "#2f343b"],
+      markEdge: ["#b7c0cc", "#6b7480"],
+      ink: ["#475467", "#d5dbe3"],
+      glow: ["rgba(140, 155, 175, 0.22)", "rgba(140, 155, 175, 0.1)"],
+    },
+    beat: "3s",
+    moving: ["mark", "glow"],
+    motion: (p, v) => /* css */ `
+.${p}-mark { transform-box: fill-box; transform-origin: center; animation: ${p}-settle var(${v("beat")}) var(--tc-ease-standard) 3; }`,
+    draw: (p) => svg`
+      <ellipse class=${`${p}-glow`} cx="160" cy="166" rx="96" ry="14"></ellipse>
+      <rect class=${`${p}-tray`} x="86" y="92" width="148" height="64" rx="14" stroke-width="2"></rect>
+      <path class=${`${p}-rim`} d="M104 116h24l8 12h48l8-12h24"></path>
+      <g class=${`${p}-mark`}>
+        <circle class=${`${p}-badge`} cx="160" cy="70" r="28"></circle>
+        <path class=${`${p}-ink`} d="M147 60h26l-10 12v10l-6 3V72Z"></path>
+      </g>`,
+  },
 };
 
 /**
@@ -336,6 +408,7 @@ ${one ? "" : statuses.slice(1).map((s) => `[data-ui="${ui}"][status="${s}"] {\n 
 .${p}-badge { fill: var(${v("mark")}); stroke: var(${v("mark-edge")}); stroke-width: 4; }
 .${p}-ink { fill: none; stroke: var(${v("ink")}); stroke-width: 4; stroke-linecap: round; }
 .${p}-outline { fill: none; stroke: var(${v("mark-edge")}); stroke-width: 3; stroke-dasharray: 8 7; stroke-linecap: round; }
+.${p}-track { fill: none; stroke: var(${v("mark-edge")}); stroke-width: 4; opacity: 0.5; }
 .${p}-bars { fill: none; stroke: var(${v("ink")}); stroke-width: 6; stroke-linecap: round; }
 .${p}-count { fill: var(${v("ink")}); font-family: var(--tc-font-sans); font-variant-numeric: tabular-nums; }
 .${p}-dash { fill: none; stroke: var(${v("rim")}); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 2 12; }
@@ -349,6 +422,7 @@ ${statuses.map((s) => scope(s, SCENES[s].motion(p, v).trim())).join("\n")}
 @keyframes ${p}-drop-in { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes ${p}-wobble { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-3deg); } 60% { transform: rotate(2deg); } }
 @keyframes ${p}-hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ${p}-fall { 0% { opacity: 0; transform: translateY(-26px); } 35%, 100% { opacity: 1; transform: translateY(0); } }
 @keyframes ${p}-turn { from { transform: rotate(-180deg); } to { transform: rotate(0); } }
 @keyframes ${p}-breathe { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
@@ -371,9 +445,9 @@ ${statuses.map((s) => scope(s, SCENES[s].motion(p, v).trim())).join("\n")}
 export class TcTrayStatus extends TcElement {
   static override ui = "trs";
   static override looks = false;
-  static override css = trayCss({ ui: "trs", name: "tray-status", statuses: ["all-done", "upload-failed", "empty", "import-complete", "export-ready", "storage-full", "drop-to-upload", "new-items", "paused", "sync-complete"] });
+  static override css = trayCss({ ui: "trs", name: "tray-status", statuses: ["all-done", "upload-failed", "empty", "import-complete", "export-ready", "storage-full", "drop-to-upload", "new-items", "paused", "sync-complete", "importing", "import-errors", "no-matches"] });
 
-  /** The scene: "all-done", "empty", "drop-to-upload", "new-items", "import-complete", "export-ready", "sync-complete", "paused", "upload-failed" or "storage-full" */
+  /** The scene: "all-done", "empty", "drop-to-upload", "new-items", "import-complete", "export-ready", "sync-complete", "paused", "importing", "import-errors", "no-matches", "upload-failed" or "storage-full" */
   @property({ reflect: true }) accessor status: TrayStatusKind = "all-done";
   /** How many new items "new-items" shows, in its badge and its words (default 3) */
   @property({ type: Number }) accessor count = 3;

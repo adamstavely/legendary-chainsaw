@@ -23,6 +23,7 @@ The full-page and empty states as one illustration: a small scene in the soft st
 | `maintenance` | A wrench on a tile | Amber | Down for maintenance | Planned downtime, with when it'll be back |
 | `coming-soon` | A wrapped box | Blue | Coming soon | A feature that isn't released yet |
 | `region-unavailable` | A globe with a slash through it | Slate | Not available in your region | A service that isn't offered where someone is |
+| `ai-unavailable` | The assistant's mark – a chat bubble with a sparkle – with a pause badge | Purple | AI is unavailable | The model or an AI feature is down or turned off; say what still works beside it |
 
 Words follow the status unless `caption` sets its own. `nothing-found`, `something-wrong` and `no-access` fill the frame and have no words of their own, so they're decorative unless given `caption` or `label` – put the message beside them. Each scene moves a little a few times and rests.
 

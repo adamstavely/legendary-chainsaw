@@ -20,6 +20,9 @@ A tray scene that says where something stands, in the soft style of the state il
 | `new-items` | A tray with `count` on its badge ("99+" past 99) | Blue | The badge settles a few times | 3 new (follows `count`) |
 | `paused` | A tray with a pause mark | Slate | The badge settles twice | Paused |
 | `sync-complete` | A tray with circular arrows and a check | Green | The arrows turn once and the check draws itself | Sync complete |
+| `importing` | Pages falling into the tray one after another, a progress ring on the badge | Blue | The pages fall in and the ring turns, a few times | Importing |
+| `import-errors` | Pages in the tray with a "!" | Amber | The pages drop in once | Imported with errors |
+| `no-matches` | An empty tray with a funnel on the badge | Slate | The badge settles a few times | No matches |
 
 The words follow the status – and for `new-items` the `count` – unless `caption` sets its own. It replaces `<tc-all-done>` and `<tc-upload-failed>`: `status="all-done"` and `status="upload-failed"` draw their scenes exactly as they were.
 
@@ -35,6 +38,9 @@ The words follow the status – and for `new-items` the `count` – unless `capt
 - New items waiting since the person last looked (`new-items`), with `count` saying how many – the words follow it ("12 new").
 - A queue, intake or sync that's been paused on purpose (`paused`), with who paused it and Resume.
 - A sync with another system that finished (`sync-complete`), with when it last ran.
+- An import that's running (`importing`) – the in-progress partner of `import-complete` – with how far it's got.
+- An import that finished but left rows to fix (`import-errors`), leading into `import-review`.
+- Filters that hide everything (`no-matches`), with a way to clear them – unlike `empty`, where nothing exists yet.
 
 ## When not to use
 
@@ -45,7 +51,7 @@ The words follow the status – and for `new-items` the `count` – unless `capt
 ## Anatomy
 
 1. **Tray** `.ui-trs-tray` or `.ui-trs-tile` – the tray, and the pages or file in or above it (`.ui-trs-outline` is the dashed page of `drop-to-upload`)
-2. **Mark** `.ui-trs-badge` – the round badge, with a check, a cross, a download or up arrow, a "!", a count (`.ui-trs-count`), a pause mark or turning arrows in ink (`empty` has none)
+2. **Mark** `.ui-trs-badge` – the round badge, with a check, a cross, a download or up arrow, a "!", a count (`.ui-trs-count`), a pause mark, turning arrows, a progress ring or a funnel in ink (`empty` has none)
 3. **Words** `.ui-trs-caption` – what's happened; the default follows the status
 
 ## Looks

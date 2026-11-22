@@ -15,6 +15,8 @@ It replaces the eleven illustrations that were each one of these – `released`,
 | `status` | Colour | On the badge | Use it for |
 |---|---|---|---|
 | `awaiting-review` | Purple | An hourglass that turns | Waiting for someone to approve it |
+| `approved` | Green | A stamp with a check | Reviewed and accepted |
+| `changes-requested` | Amber | An arrow turning back | Reviewed and sent back for changes – say what to change |
 | `in-translation` | Teal | Two speech bubbles | Being translated |
 | `in-quality-control` | Blue | A magnifier with a check | Being checked before release |
 | `in-coordination` | Amber | Three linked nodes | Several people or teams agreeing it |
@@ -24,6 +26,7 @@ It replaces the eleven illustrations that were each one of these – `released`,
 | `processing` | Teal | A progress ring that turns | A long job with measurable progress |
 | `in-progress` | Blue | Three dots that pulse | Work under way, no number to show |
 | `success` | Green | A check, a ring that pops out | Finished without a problem |
+| `partially-processed` | Amber | A half-filled ring, an amber "!" on the corner | Finished with some errors – say which parts failed and offer Retry |
 | `failed` | Red | A cross, one small shake | Didn't work – say why beside it |
 | `uploading` | Lime | An arrow rising out of a tray | On its way up |
 | `downloading` | Sky blue | An arrow dropping into a tray | On its way to the person |
@@ -45,6 +48,7 @@ It replaces the eleven illustrations that were each one of these – `released`,
 | `duplicate` | Amber | Two pages with "=" | The same as another document – link to it |
 | `sync-conflict` | Amber | Two pages, an amber "!" on the corner | This copy and another changed apart – pairs with working offline |
 | `restricted` | Red | A classification shield | Only some people may open it |
+| `legal-hold` | Purple | A gavel | Kept unchanged for a legal matter – it can't be edited or deleted until the hold is released |
 | `redacted` | Slate | Black bars over the page's text, an eye with a line through it | Parts are hidden before it's shared |
 | `awaiting-signature` | Purple | A pen nib | Waiting for someone to sign |
 | `signed` | Green | A pen nib, a check on the corner | Signed by everyone it needed |

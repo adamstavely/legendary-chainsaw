@@ -14,6 +14,8 @@ A folder scene that says where a folder stands, in the soft style of the state i
 | `shared` | Two small people on the badge | Blue | The badge settles a few times | Shared folder |
 | `archived` | A box with an arrow going into it on the badge | Slate | The arrow drops a few times | Archived |
 | `locked` | A small padlock badge on the folder's corner | Amber | The lock settles a few times | Locked folder |
+| `syncing` | Circular arrows on the badge | Blue | The arrows turn a few times | Syncing |
+| `restricted` | A shield on the badge | Red | The badge settles a few times | Restricted folder |
 
 The words follow the status unless `caption` sets its own.
 
@@ -23,6 +25,8 @@ The words follow the status unless `caption` sets its own.
 - A folder others can see or edit (`shared`), with who it's shared with.
 - A folder kept for the record but out of the way (`archived`), with how long it's kept and how to restore it.
 - A folder people can't open right now (`locked`) – a legal hold, a permission – with who to ask.
+- A folder that's copying to or from another system (`syncing`), with how far it's got.
+- A folder whose contents carry a classification (`restricted`) – who may see it, not whether it's shut – beside the classification in words (see `sensitivity-label-picker`).
 
 ## When not to use
 
@@ -33,7 +37,7 @@ The words follow the status unless `caption` sets its own.
 ## Anatomy
 
 1. **Folder** `.ui-fds-back` and `.ui-fds-front` – the back with its tab, and the front flap
-2. **Mark** `.ui-fds-badge` – the round badge, with people, a box or a padlock in ink (`empty` has none)
+2. **Mark** `.ui-fds-badge` – the round badge, with people, a box, a padlock, turning arrows or a shield in ink (`empty` has none)
 3. **Words** `.ui-fds-caption` – where the folder stands; the default follows the status
 
 ## Looks
@@ -60,7 +64,8 @@ Say what it means and what to do beside it: "Held for legal review. Ask Noor Had
 ## Don't
 
 - Don't rely on it to keep a folder shut – a locked folder is your server's decision; this is a picture and words.
-- Don't use it as the only sign that a folder is shared or locked.
+- Don't use it as the only sign that a folder is shared, locked or restricted.
+- Don't use `restricted` for a lock, or `locked` for a classification – they mean different things.
 
 ## Example
 

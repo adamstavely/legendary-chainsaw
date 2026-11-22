@@ -15,7 +15,7 @@ import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
-const STATUSES: FolderStatusKind[] = ["empty", "shared", "archived", "locked"];
+const STATUSES: FolderStatusKind[] = ["empty", "shared", "archived", "locked", "syncing", "restricted"];
 
 describe("tc-folder-status", () => {
   test("each status draws its own scene, colour and words", async () => {
@@ -33,12 +33,13 @@ describe("tc-folder-status", () => {
       expect(el.querySelector(".ui-fds-back")).not.toBeNull();
       expect(el.querySelector(".ui-fds-flap") !== null).toBe(status === "empty");
       expect(el.querySelector(".ui-fds-arrow") !== null).toBe(status === "archived");
+      expect(el.querySelector(".ui-fds-spin") !== null).toBe(status === "syncing");
       const badge = el.querySelector(".ui-fds-badge");
       expect(badge !== null).toBe(status !== "empty");
       if (badge) fills.add(getComputedStyle(badge).fill);
     }
-    // Blue, slate and amber badges
-    expect(fills.size).toBe(3);
+    // Blue, slate, amber and red badges
+    expect(fills.size).toBe(4);
   });
 
   test("a caption of its own wins; label says more; with no words it's decorative", async () => {
@@ -65,7 +66,7 @@ describe("tc-folder-status", () => {
     expect(getComputedStyle(el.querySelector(".ui-fds-mark")!).animationPlayState).toBe("paused");
     el.style.top = "0";
     await expect.poll(() => el.hasAttribute("data-paused")).toBe(false);
-    for (const [status, cls] of [["empty", "flap"], ["shared", "mark"], ["archived", "arrow"], ["locked", "mark"]] as const) {
+    for (const [status, cls] of [["empty", "flap"], ["shared", "mark"], ["archived", "arrow"], ["locked", "mark"], ["syncing", "spin"], ["restricted", "mark"]] as const) {
       el.status = status;
       await settle();
       const cs = getComputedStyle(el.querySelector(`.ui-fds-${cls}`)!);

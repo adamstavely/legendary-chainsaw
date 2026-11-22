@@ -20,6 +20,7 @@ import { OnScreenController } from "./internal/controllers";
  *   · access-requested – an envelope with an hourglass; "Access requested"
  *   · coming-soon – a wrapped box; "Coming soon"
  *   · region-unavailable – a globe with a slash through it; "Not available in your region"
+ *   · ai-unavailable – the assistant's mark, a chat bubble with a sparkle, with a pause badge; "AI is unavailable"
  * Words follow the status unless `caption` sets its own; nothing-found, something-wrong and no-access fill the frame
  * and have no words of their own, so they're decorative unless given `caption` or `label`.
  *
@@ -43,7 +44,8 @@ export type PageStateKind =
   | "session-expired"
   | "access-requested"
   | "coming-soon"
-  | "region-unavailable";
+  | "region-unavailable"
+  | "ai-unavailable";
 
 /** The words for each status, when `caption` isn't set; "" – the scene fills the frame and has none of its own */
 export const pageStateWords: Record<PageStateKind, string> = {
@@ -60,6 +62,7 @@ export const pageStateWords: Record<PageStateKind, string> = {
   "access-requested": "Access requested",
   "coming-soon": "Coming soon",
   "region-unavailable": "Not available in your region",
+  "ai-unavailable": "AI is unavailable",
 };
 
 const v = (k: string) => `--tc-page-state-${k}`;
@@ -77,7 +80,7 @@ const PURPLE = { mark: ["#ece4fb", "#3b2d5a"] as Pair, "mark-edge": ["#b9a1ea", 
 
 /** The classes that move, so they pause off screen and stay still with reduced motion */
 const MOVING = [
-  "breathe", "glass", "row", "link", "spark", "left", "right", "hand", "lock", "swing", "spot", "settle", "turn", "flip", "bounce", "strike",
+  "breathe", "glass", "row", "link", "spark", "left", "right", "hand", "lock", "swing", "spot", "settle", "turn", "flip", "bounce", "strike", "dim",
 ].map((c) => `.ui-pgs-${c}`);
 
 const css = /* css */ `
@@ -116,6 +119,7 @@ ${tone("session-expired", { ...AMBER, glow: ["rgba(250, 176, 130, 0.22)", "rgba(
 ${tone("access-requested", PURPLE)}
 ${tone("coming-soon", BLUE)}
 ${tone("region-unavailable", SLATE)}
+${tone("ai-unavailable", PURPLE)}
 
 .ui-pgs-art { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 .ui-pgs-caption { position: absolute; right: 0; bottom: 0; left: 0; margin: 0; color: var(--tc-text-primary); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); text-align: center; }
@@ -192,11 +196,14 @@ ${tone("region-unavailable", SLATE)}
 .ui-pgs-turn { transform-box: fill-box; transform-origin: 30% 70%; animation: ui-pgs-turn var(${v("beat")}) var(--tc-ease-standard) 3; }
 .ui-pgs-flip { transform-box: fill-box; transform-origin: center; animation: ui-pgs-flip var(${v("beat")}) var(--tc-ease-standard) 2; }
 .ui-pgs-bounce { animation: ui-pgs-bounce var(${v("beat")}) var(--tc-ease-standard) 3; }
+.ui-pgs-dim { animation: ui-pgs-dim var(${v("beat")}) var(--tc-ease-standard) 1; }
+.ui-pgs-sparkle { fill: var(${v("ink")}); }
 .ui-pgs-strike { stroke-dasharray: 90; animation: ui-pgs-strike calc(var(${v("beat")}) * 0.35) var(--tc-ease-move) calc(var(${v("beat")}) / 8) backwards; }
 @keyframes ui-pgs-settle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 @keyframes ui-pgs-turn { 0%, 100% { transform: rotate(0deg); } 35% { transform: rotate(-14deg); } 65% { transform: rotate(6deg); } }
 @keyframes ui-pgs-flip { 0%, 60% { transform: rotate(0deg); } 100% { transform: rotate(180deg); } }
 @keyframes ui-pgs-bounce { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-8px); } 55% { transform: translateY(0); } 70% { transform: translateY(-3px); } }
+@keyframes ui-pgs-dim { 0%, 100% { opacity: 1; } 45% { opacity: 0.3; } }
 @keyframes ui-pgs-strike { from { stroke-dashoffset: 90; } to { stroke-dashoffset: 0; } }
 
 /* Off screen or in a hidden tab: the motion holds still */
@@ -337,10 +344,19 @@ const SCENES: Record<PageStateKind, () => SVGTemplateResult> = {
       <circle class="ui-pgs-badge" cx="160" cy="102" r="40"></circle>
       <path class="ui-pgs-ink" d="M120 102h80M160 62c-14 12-14 68 0 80M160 62c14 12 14 68 0 80M126 82h68M126 122h68"></path>
       <path class="ui-pgs-ink ui-pgs-strike" d="M128 70l64 64" stroke-width="6"></path>`,
+  "ai-unavailable": () => svg`
+      <ellipse class="ui-pgs-glow ui-pgs-breathe" cx="160" cy="166" rx="92" ry="12"></ellipse>
+      <rect class="ui-pgs-tile" x="96" y="50" width="128" height="104" rx="16" stroke-width="2"></rect>
+      <path class="ui-pgs-badge" d="M126 76h56a12 12 0 0 1 12 12v30a12 12 0 0 1-12 12h-30l-14 12v-12h-12a12 12 0 0 1-12-12V88a12 12 0 0 1 12-12Z"></path>
+      <path class="ui-pgs-sparkle ui-pgs-dim" d="M154 86c2 10 5 13 15 15-10 2-13 5-15 15-2-10-5-13-15-15 10-2 13-5 15-15Z"></path>
+      <g class="ui-pgs-settle">
+        <circle class="ui-pgs-badge" cx="206" cy="134" r="20"></circle>
+        <path class="ui-pgs-ink" d="M200 126v16M212 126v16"></path>
+      </g>`,
 };
 
 /**
- * The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon and not available in your region – as one illustration.
+ * The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon, not available in your region and AI unavailable – as one illustration.
  * @tag tc-page-state
  */
 export class TcPageState extends TcElement {
@@ -348,7 +364,7 @@ export class TcPageState extends TcElement {
   static override looks = false;
   static override css = css;
 
-  /** Which state: "nothing-found", "offline", "something-wrong", "link-expired", "no-access", "limit-reached", "first-use", "not-found", "maintenance", "session-expired", "access-requested", "coming-soon" or "region-unavailable" */
+  /** Which state: "nothing-found", "offline", "something-wrong", "link-expired", "no-access", "limit-reached", "first-use", "not-found", "maintenance", "session-expired", "access-requested", "coming-soon", "region-unavailable" or "ai-unavailable" */
   @property({ reflect: true }) accessor status: PageStateKind = "nothing-found";
   /** The words under the drawing; unset, the status's own; "" leaves them out */
   @property() accessor caption: string | undefined = undefined;

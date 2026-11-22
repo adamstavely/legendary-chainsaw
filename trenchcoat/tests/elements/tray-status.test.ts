@@ -15,7 +15,7 @@ import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
-const STATUSES: TrayStatusKind[] = ["all-done", "upload-failed", "empty", "import-complete", "export-ready", "storage-full", "drop-to-upload", "new-items", "paused", "sync-complete"];
+const STATUSES: TrayStatusKind[] = ["all-done", "upload-failed", "empty", "import-complete", "export-ready", "storage-full", "drop-to-upload", "new-items", "paused", "sync-complete", "importing", "import-errors", "no-matches"];
 
 describe("tc-tray-status", () => {
   test("each status draws its own scene, colour and words", async () => {
@@ -36,7 +36,9 @@ describe("tc-tray-status", () => {
       expect(el.querySelector(".ui-trs-bars") !== null).toBe(status === "paused");
       expect(el.querySelector(".ui-trs-spin") !== null).toBe(status === "sync-complete");
       expect(el.querySelector(".ui-trs-file") !== null).toBe(status === "upload-failed" || status === "export-ready");
-      expect(el.querySelector(".ui-trs-pages") !== null).toBe(status === "import-complete");
+      expect(el.querySelector(".ui-trs-pages") !== null).toBe(status === "import-complete" || status === "import-errors");
+      expect(el.querySelectorAll(".ui-trs-fall").length).toBe(status === "importing" ? 2 : 0);
+      expect(el.querySelector(".ui-trs-ring") !== null).toBe(status === "importing");
       expect(el.querySelector(".ui-trs-spill") !== null).toBe(status === "storage-full");
       expect(el.querySelector(".ui-trs-outline") !== null).toBe(status === "drop-to-upload");
       // Every scene but the empty tray has a badge
@@ -77,7 +79,7 @@ describe("tc-tray-status", () => {
     await settle();
     expect(getComputedStyle(el.querySelector(".ui-trs-mark")!).animationIterationCount).toBe("3");
     // Each scene's own motion runs, a set number of times
-    for (const [status, cls, n] of [["empty", "mark", "3"], ["import-complete", "pages", "1"], ["export-ready", "file", "3"], ["storage-full", "spill", "3"], ["drop-to-upload", "hover", "3"], ["new-items", "mark", "3"], ["paused", "mark", "2"], ["sync-complete", "spin", "1"]] as const) {
+    for (const [status, cls, n] of [["empty", "mark", "3"], ["import-complete", "pages", "1"], ["export-ready", "file", "3"], ["storage-full", "spill", "3"], ["drop-to-upload", "hover", "3"], ["new-items", "mark", "3"], ["paused", "mark", "2"], ["sync-complete", "spin", "1"], ["importing", "ring", "3"], ["importing", "fall", "3"], ["import-errors", "pages", "1"], ["no-matches", "mark", "3"]] as const) {
       el.status = status;
       await settle();
       const cs = getComputedStyle(el.querySelector(`.ui-trs-${cls}`)!);

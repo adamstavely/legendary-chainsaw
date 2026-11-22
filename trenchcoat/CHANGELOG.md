@@ -2,11 +2,11 @@
 
 ## Unreleased – Doc Status: every document state in one illustration
 
-- **[Doc Status](#/illustrations/doc-status):** one illustration for where a document stands; its `status` picks the badge's drawing, colours, short motion and words. 40 statuses:
-  - workflow: draft, awaiting review, in translation, in quality control, in coordination, pending release, scheduled, released, added to Readbook (a book tile);
-  - work: queued, processing, in progress, success, failed, uploading, downloading, working offline (changes are saved on this device and sync when you're back online), locked, sync conflict;
+- **[Doc Status](#/illustrations/doc-status):** one illustration for where a document stands; its `status` picks the badge's drawing, colours, short motion and words. 44 statuses:
+  - workflow: draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, added to Readbook (a book tile);
+  - work: queued, processing, in progress, success, partly processed (finished with some errors), failed, uploading, downloading, working offline (changes are saved on this device and sync when you're back online), locked, sync conflict;
   - files: malware scan, malware blocked, preview unavailable, converting to text (the page read under a scan bracket);
-  - access and signing: restricted, redacted (black bars over the page's text), password protected (a password field over the page), encrypted, shared, awaiting signature, signed, comments waiting;
+  - access and signing: restricted, on legal hold, redacted (black bars over the page's text), password protected (a password field over the page), encrypted, shared, awaiting signature, signed, comments waiting;
   - keeping: archived, in trash, expired, duplicate, update available;
   - metadata cleansing: required, in progress, failed, done.
 
@@ -29,15 +29,15 @@
 
 [Scan Status](#/scan-status) and the Design System Releases screen now use Doc Status.
 
-- **[Tray Status](#/illustrations/tray-status):** one tray illustration with a `status` – `all-done`, `empty`, `drop-to-upload`, `new-items` (with `count`, shown on the badge and in the words, "99+" past 99), `import-complete`, `export-ready`, `sync-complete`, `paused`, `upload-failed` or `storage-full` – each with its own badge, colour, finite motion and words. It replaces All Done and Upload Failed, which are removed; their scenes are unchanged:
+- **[Tray Status](#/illustrations/tray-status):** one tray illustration with a `status` – `all-done`, `empty`, `no-matches`, `drop-to-upload`, `new-items` (with `count`, shown on the badge and in the words, "99+" past 99), `importing`, `import-complete`, `import-errors`, `export-ready`, `sync-complete`, `paused`, `upload-failed` or `storage-full` – each with its own badge, colour, finite motion and words. It replaces All Done and Upload Failed, which are removed; their scenes are unchanged:
 
   | Old | New | React |
   |---|---|---|
   | `<tc-all-done>` | `<tc-tray-status status="all-done">` | `<TrayStatus status="all-done" />` |
   | `<tc-upload-failed>` | `<tc-tray-status status="upload-failed">` | `<TrayStatus status="upload-failed" />` |
 
-- **[Folder Status](#/illustrations/folder-status):** a folder illustration with a `status` – `empty`, `shared`, `archived` or `locked` – each with its own badge, colour, finite motion and words.
-- **[Page State](#/illustrations/page-state):** one illustration for full-page and empty states, with a `status`. It holds the scenes of seven illustrations, unchanged and now removed, plus six new ones: `not-found`, `maintenance`, `session-expired`, `access-requested`, `coming-soon` and `region-unavailable`. Words follow the status unless `caption` sets its own; `nothing-found`, `something-wrong` and `no-access` stay wordless and decorative unless given `caption` or `label`, as before.
+- **[Folder Status](#/illustrations/folder-status):** a folder illustration with a `status` – `empty`, `shared`, `syncing`, `archived`, `locked` or `restricted` (a classification, unlike `locked`) – each with its own badge, colour, finite motion and words.
+- **[Page State](#/illustrations/page-state):** one illustration for full-page and empty states, with a `status`. It holds the scenes of seven illustrations, unchanged and now removed, plus seven new ones: `not-found`, `maintenance`, `session-expired`, `access-requested`, `coming-soon`, `region-unavailable` and `ai-unavailable` (the assistant's mark with a pause badge, "AI is unavailable", for when the model or an AI feature is down or turned off). Words follow the status unless `caption` sets its own; `nothing-found`, `something-wrong` and `no-access` stay wordless and decorative unless given `caption` or `label`, as before.
 
   | Old | New | React |
   |---|---|---|
