@@ -22461,7 +22461,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-22",
-   "hash": "5c9d94214ec1142b",
+   "hash": "e5a047ccc8fd3800",
    "bundle": {
     "own": {
      "min": 34126,
@@ -24739,6 +24739,11 @@
       "min": 9149
      },
      {
+      "name": "help-guide",
+      "kind": "element",
+      "min": 9021
+     },
+     {
       "name": "folder-status",
       "kind": "element",
       "min": 8905
@@ -24831,7 +24836,7 @@
      {
       "name": "badge-pop",
       "kind": "element",
-      "min": 7423
+      "min": 7431
      },
      {
       "name": "file-details",
@@ -25141,7 +25146,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 80234
+      "min": 80415
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -25314,6 +25319,11 @@
       "min": 4607
      },
      {
+      "name": "src/generative/schemas/tc-flow-builder.json",
+      "kind": "other",
+      "min": 4598
+     },
+     {
       "name": "src/generative/schemas/tc-retrieval-inspector.json",
       "kind": "other",
       "min": 4592
@@ -25322,11 +25332,6 @@
       "name": "src/generative/schemas/tc-donut-chart.json",
       "kind": "other",
       "min": 4565
-     },
-     {
-      "name": "src/generative/schemas/tc-flow-builder.json",
-      "kind": "other",
-      "min": 4558
      },
      {
       "name": "src/generative/schemas/tc-pull-request.json",
@@ -25349,6 +25354,11 @@
       "min": 4495
      },
      {
+      "name": "src/generative/schemas/tc-step-inspector.json",
+      "kind": "other",
+      "min": 4486
+     },
+     {
       "name": "src/generative/schemas/tc-histogram.json",
       "kind": "other",
       "min": 4477
@@ -25362,11 +25372,6 @@
       "name": "src/generative/schemas/tc-stream-graph.json",
       "kind": "other",
       "min": 4447
-     },
-     {
-      "name": "src/generative/schemas/tc-step-inspector.json",
-      "kind": "other",
-      "min": 4446
      },
      {
       "name": "src/generative/schemas/tc-bar-chart.json",
@@ -25399,6 +25404,11 @@
       "min": 4314
      },
      {
+      "name": "src/generative/schemas/tc-step-picker.json",
+      "kind": "other",
+      "min": 4305
+     },
+     {
       "name": "src/generative/schemas/tc-data-region.json",
       "kind": "other",
       "min": 4282
@@ -25412,11 +25422,6 @@
       "name": "src/generative/schemas/tc-policy-simulator.json",
       "kind": "other",
       "min": 4267
-     },
-     {
-      "name": "src/generative/schemas/tc-step-picker.json",
-      "kind": "other",
-      "min": 4265
      },
      {
       "name": "src/generative/schemas/tc-approval-gates.json",
@@ -25474,6 +25479,11 @@
       "min": 4083
      },
      {
+      "name": "src/generative/schemas/tc-workflow-canvas.json",
+      "kind": "other",
+      "min": 4079
+     },
+     {
       "name": "src/generative/schemas/tc-dumbbell-chart.json",
       "kind": "other",
       "min": 4071
@@ -25495,11 +25505,6 @@
      },
      {
       "name": "src/generative/schemas/tc-sunburst-chart.json",
-      "kind": "other",
-      "min": 4039
-     },
-     {
-      "name": "src/generative/schemas/tc-workflow-canvas.json",
       "kind": "other",
       "min": 4039
      },
@@ -25734,6 +25739,11 @@
       "min": 3450
      },
      {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3428
+     },
+     {
       "name": "src/generative/schemas/tc-cell-inspector.json",
       "kind": "other",
       "min": 3398
@@ -25742,11 +25752,6 @@
       "name": "src/generative/schemas/tc-small-multiples.json",
       "kind": "other",
       "min": 3391
-     },
-     {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3388
      },
      {
       "name": "src/generative/schemas/tc-change-impact.json",
@@ -26814,6 +26819,11 @@
       "min": 2007
      },
      {
+      "name": "src/generative/schemas/tc-help-guide.json",
+      "kind": "other",
+      "min": 2002
+     },
+     {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
       "min": 1998
@@ -27565,21 +27575,21 @@
      }
     ],
     "withoutLit": {
-     "min": 12659064,
-     "gzip": 3166040
+     "min": 12670666,
+     "gzip": 3167590
     },
     "withLit": {
-     "min": 12572543,
-     "gzip": 3133965
+     "min": 12583955,
+     "gzip": 3135890
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 6.1,
-    "first": 0.9,
-    "update": 0.1,
+    "cold": 6.9,
+    "first": 0.8,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -29122,6 +29132,87 @@
     "errors": [
      "ResizeObserver loop completed with undelivered notifications."
     ]
+   }
+  },
+  "help-guide": {
+   "measuredAt": "2026-11-22",
+   "hash": "00cd22c703a94da6",
+   "bundle": {
+    "own": {
+     "min": 10990,
+     "gzip": 4261
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18902
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2359
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 17909,
+     "gzip": 6274
+    },
+    "withLit": {
+     "min": 37904,
+     "gzip": 12815
+    }
+   },
+   "render": {
+    "tag": "tc-help-guide",
+    "source": "demo",
+    "runs": 7,
+    "cold": 14.8,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 14,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
    }
   },
   "help-video": {

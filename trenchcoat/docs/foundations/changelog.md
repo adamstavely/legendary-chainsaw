@@ -2,6 +2,10 @@
 
 # Changelog
 
+## Unreleased – Help Guide
+
+- **[Help Guide](../components/help-guide.md):** point-in-time help from the help center – [Help Video](../components/help-video.md)'s sibling for features explained in a written guide. A small guide icon (a page with its corner folded and lines of text cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, that links to one tutorial (`href`, in a new tab unless `same-tab`). A tooltip names the guide and its reading time (`minutes`), `label` puts words beside it, a check shows once it's been read (`tc-read-change`), and `updated-on` puts a small dot on its corner for `new-days` days after the guide changes, until it's opened (`tc-update-seen-change`). Opening fires a cancelable `tc-guide-open`, so an app can show the guide in its own panel instead of following the link.
+
 ## 0.36.0 – Status illustrations, review and admin pieces, fewer copies, Help Video
 
 **Breaking:** 21 tags are removed – 20 illustrations now live in Doc Status, Tray Status and Page State, and Pixel Loader is Thinking Loader with `mark="pixels"`. Each section below has a table from the old tag to the new one.

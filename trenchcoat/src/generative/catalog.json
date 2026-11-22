@@ -1980,6 +1980,16 @@
     ]
   },
   {
+    "tag": "tc-help-guide",
+    "name": "HelpGuide",
+    "description": "Point-in-time help from the help center: a small guide icon to put beside a heading or label, linking to one written tutorial.",
+    "events": [
+      "tc-guide-open",
+      "tc-read-change",
+      "tc-update-seen-change"
+    ]
+  },
+  {
     "tag": "tc-help-video",
     "name": "HelpVideo",
     "description": "Point-in-time help: a small film-frame icon to put beside a heading or label, opening one short tutorial in a modal player with captions and chapters.",

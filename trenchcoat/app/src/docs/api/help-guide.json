@@ -1,0 +1,524 @@
+{
+ "elements": [
+  {
+   "tag": "tc-help-guide",
+   "className": "TcHelpGuide",
+   "description": "Point-in-time help from the help center: a small guide icon to put beside a heading or label, linking to one written tutorial.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The guide's title – the tooltip and the link's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "href",
+     "attribute": "href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where the guide is: a page in the help center",
+     "readonly": false
+    },
+    {
+     "name": "minutes",
+     "attribute": "minutes",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How long it takes to read, in minutes – \"5 min read\" in the tooltip",
+     "readonly": false
+    },
+    {
+     "name": "sameTab",
+     "attribute": "same-tab",
+     "type": "boolean",
+     "default": "false",
+     "description": "Opens the guide in this tab rather than a new one",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Words beside the icon, e.g. \"Read the guide\"; unset, the icon stands alone with a tooltip",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "HelpGuideSize",
+     "default": "\"md\"",
+     "description": "The icon's size against the text around it: \"sm\" (1em), \"md\" (1.25em, the default) or \"lg\" (1.5em)",
+     "readonly": false
+    },
+    {
+     "name": "read",
+     "attribute": "read",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether it has been read – a check on the icon. Set when it's opened, unless a tc-read-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "updatedOn",
+     "attribute": "updated-on",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "When the guide last changed, as a date (\"2026-11-17\"); for `new-days` days after it, a dot on the icon says so",
+     "readonly": false
+    },
+    {
+     "name": "newDays",
+     "attribute": "new-days",
+     "type": "number",
+     "default": "14",
+     "description": "How many days after `updated-on` the dot shows (default 14)",
+     "readonly": false
+    },
+    {
+     "name": "updateSeen",
+     "attribute": "update-seen",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether this person has seen the update – the dot is cleared. Set when the guide is opened, unless a tc-update-seen-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time to measure `new-days` from, in milliseconds; unset, the clock's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<HelpGuideLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "showsUpdate",
+     "attribute": null,
+     "type": "boolean",
+     "default": null,
+     "description": "Whether the Updated dot shows: a change in the last `new-days` days this person hasn't opened yet",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-guide-open",
+     "detail": "",
+     "description": "The guide was opened ({ href, heading }: HelpGuideOpen); cancelable – prevented, the link doesn't navigate, so the page can show the guide its own way",
+     "cancelable": true
+    },
+    {
+     "name": "tc-read-change",
+     "detail": "",
+     "description": "The guide was opened for the first time ({ read }: HelpGuideReadChange); cancelable – prevented, `read` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update-seen-change",
+     "detail": "",
+     "description": "The guide was opened while the Updated dot showed ({ updateSeen }: HelpGuideUpdateSeenChange); cancelable – prevented, the dot stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "hgd",
+   "cssProperties": [
+    {
+     "name": "--tc-hgd-size",
+     "value": "1.25em",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hgd-ink",
+     "value": "var(--tc-text-secondary)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hgd-ink-hover",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hgd-dot",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-border-default",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-line-height-none",
+    "--tc-line-height-snug",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-16",
+    "--tc-space-6",
+    "--tc-status-success-fg",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "HelpGuide",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The guide's title – the tooltip and the link's accessible name"
+    },
+    {
+     "name": "onGuideOpen",
+     "type": "(detail: HelpGuideOpen, event: CustomEvent<HelpGuideOpen>) => void",
+     "optional": true,
+     "description": "The guide was opened; call event.preventDefault() to show it your own way instead of following the link"
+    },
+    {
+     "name": "read",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it has been read – controlled when given"
+    },
+    {
+     "name": "defaultRead",
+     "type": "boolean",
+     "optional": true,
+     "description": "Read on mount when `read` isn't controlled"
+    },
+    {
+     "name": "onReadChange",
+     "type": "(read: boolean) => void",
+     "optional": true,
+     "description": "The guide was opened for the first time"
+    },
+    {
+     "name": "updateSeen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether this person has seen the update, clearing the Updated dot – controlled when given"
+    },
+    {
+     "name": "defaultUpdateSeen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Update seen on mount when `updateSeen` isn't controlled"
+    },
+    {
+     "name": "onUpdateSeenChange",
+     "type": "(updateSeen: boolean) => void",
+     "optional": true,
+     "description": "The guide was opened while the Updated dot showed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "read",
+    "updateSeen",
+    "children"
+   ],
+   "events": {
+    "tc-guide-open": "onGuideOpen",
+    "tc-read-change": null,
+    "tc-update-seen-change": null
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-help-guide",
+   "className": "TcHelpGuide",
+   "module": "@adamstavely/trenchcoat/help-guide",
+   "data": [
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "href",
+     "attribute": "href"
+    },
+    {
+     "name": "minutes",
+     "attribute": "minutes"
+    },
+    {
+     "name": "sameTab",
+     "attribute": "same-tab"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "size",
+     "attribute": "size"
+    },
+    {
+     "name": "read",
+     "attribute": "read"
+    },
+    {
+     "name": "updatedOn",
+     "attribute": "updated-on"
+    },
+    {
+     "name": "newDays",
+     "attribute": "new-days"
+    },
+    {
+     "name": "updateSeen",
+     "attribute": "update-seen"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-guide-open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-read-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-update-seen-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "read",
+     "event": "tc-read-change"
+    },
+    {
+     "property": "updateSeen",
+     "event": "tc-update-seen-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 17909,
+  "gzip": 6232
+ }
+}
