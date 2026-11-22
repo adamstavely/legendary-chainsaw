@@ -15,7 +15,7 @@
 
 import { useCallback, useRef, useState, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
 import { BoxesIcon, CompassIcon, GitPullRequestArrowIcon, ImageIcon, LayersIcon, MessageCircleIcon, PaletteIcon, RocketIcon, TagIcon } from "lucide-react";
-import { NothingFound, PreviewCard, SoupCans } from "@adamstavely/trenchcoat/react";
+import { PageState, PreviewCard, SoupCans } from "@adamstavely/trenchcoat/react";
 import { AppShell, SearchField, SectionHead, Tabs, ViewToggle, useToast, type AppShellProps, type ShellGroup, type ShellNavItem, type ViewMode } from "@/components/ui/app-shell";
 import colors from "@adamstavely/trenchcoat/illustrations/spot/foundations/colors.svg";
 import typography from "@adamstavely/trenchcoat/illustrations/spot/foundations/typography.svg";
@@ -196,7 +196,7 @@ export function DesignSystemIllustrationsScreen({
         ) : (
           <div className="ui-dsi-empty ui-as-rise">
             <div className="ui-dsi-empty__art">
-              <NothingFound />
+              <PageState status="nothing-found" />
             </div>
             <p>Nothing matches “{query.trim()}”. Try other words, or another folder.</p>
           </div>

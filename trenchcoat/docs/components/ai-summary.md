@@ -9,7 +9,7 @@
 The gist of a thread, meeting or set of documents – a TL;DR, a summary that streams in, key points citing their sources as numbered chips, open questions, a note when the sources have moved on, and feedback, Sources, Copy and Regenerate
 
 - **Element:** `<tc-ai-summary>`
-- **Size:** 15.1 KB gzip · 53.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 15.3 KB gzip · 53.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -538,15 +538,16 @@ its placeholder.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 43.5 KB | 12.1 KB |
+| **This component alone** | 41.6 KB | 11.7 KB |
 | Lit · the library every element is built on, the parts it uses | 21.2 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
+| `internal/summary-shell` · Shared Trenchcoat code | 2.4 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 1.6 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
@@ -554,8 +555,8 @@ its placeholder.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **53.0 KB** | **15.1 KB** |
-| With Lit – the first component on a page | 75.4 KB | 22.4 KB |
+| **Added to a page that already has Lit** | **53.4 KB** | **15.4 KB** |
+| With Lit – the first component on a page | 75.7 KB | 22.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -563,11 +564,11 @@ its placeholder.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.4 ms** | the gallery demo's data, 114 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of sources replaced |
-| First on the page | 14 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.0 ms | sources: first render, 114 nodes; update 0.4 ms |
-| 1,000 items | 3.3 ms | sources: first render, 114 nodes; update 0.5 ms |
+| First render | **3.2 ms** | the gallery demo's data, 114 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of sources replaced |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.9 ms | sources: first render, 114 nodes; update 0.4 ms |
+| 1,000 items | 3.0 ms | sources: first render, 114 nodes; update 0.6 ms |
 
 What it renders doesn't grow with sources (tested to 1,000 items).
 
@@ -577,7 +578,7 @@ What it renders doesn't grow with sources (tested to 1,000 items).
 
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - No animation-frame loop.
-- Timers: `setInterval, cleared`, `setTimeout`.
+- Timers: `setInterval, cleared`, `setTimeout` (internal/summary-shell – CopiedFlash).
 - 2 infinite CSS animations.
 - Stops or pauses off screen and under reduced motion.
 - Observers: `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OffScreenController).

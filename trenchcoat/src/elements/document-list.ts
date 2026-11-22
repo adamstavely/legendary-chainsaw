@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { arrowIcon, eyeIcon, eyeOffIcon, lucideIcon as lucide, requestReveal, RowButtonGrid } from "./internal/masked-rows";
 import { formatDate, pick } from "./internal/util";
 
 /*
@@ -59,8 +60,6 @@ export const defaultDocumentStatuses: Record<string, { label: string; tone: Docu
 let uidCount = 0;
 
 /* Status marks, eye, eye-off and arrow: Lucide (ISC, lucide.dev) */
-const lucide = (size: number, body: ReturnType<typeof svg>) =>
-  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const MARK: Record<DocumentTone, () => ReturnType<typeof lucide>> = {
   success: () => lucide(11, svg`<path d="M20 6 9 17l-5-5"></path>`),
   info: () => lucide(11, svg`<circle cx="12" cy="12" r="4" fill="currentColor"></circle>`),
@@ -68,10 +67,6 @@ const MARK: Record<DocumentTone, () => ReturnType<typeof lucide>> = {
   danger: () => lucide(11, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`),
   neutral: () => lucide(11, svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>`),
 };
-const eyeIcon = () => lucide(15, svg`<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"></path><circle cx="12" cy="12" r="3"></circle>`);
-const eyeOffIcon = () =>
-  lucide(15, svg`<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><path d="M14.08 14.16a3 3 0 0 1-4.16-4.16"></path><path d="m2 2 20 20"></path>`);
-const arrowIcon = () => lucide(14, svg`<path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>`);
 const cardIcon = () => lucide(16, svg`<rect width="18" height="14" x="3" y="5" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="M6 16c.6-1.2 1.7-2 3-2s2.4.8 3 2"></path><path d="M15 10h3"></path><path d="M15 13h3"></path>`);
 
 /** "19FR4471K" → "•••• 471K" */
@@ -117,8 +112,8 @@ export class TcDocumentList extends TcElement {
   }
 
   private setRevealed(d: DocumentRecord, shown: boolean) {
-    const next = shown ? [...this.revealed.filter((x) => x !== d.id), d.id] : this.revealed.filter((x) => x !== d.id);
-    if (!this.emit<DocumentRevealedChange>("tc-revealed-change", { revealed: next, id: d.id, shown }, { cancelable: true })) return;
+    const next = requestReveal((name, detail, o) => this.emit(name, detail, o), this.revealed, d.id, shown);
+    if (!next) return;
     this.revealed = next;
     this.announce = `${d.type} number ${shown ? "shown" : "hidden"}`;
   }
@@ -129,43 +124,21 @@ export class TcDocumentList extends TcElement {
     const d = this.documents[r];
     return d && this.canReveal(d) ? [0, 1] : [1];
   }
-  private focusAt(r: number, c: number) {
-    if (!this.documents.length) return;
-    r = Math.max(0, Math.min(this.documents.length - 1, r));
-    const cols = this.cols(r);
-    if (!cols.includes(c)) c = cols[cols.length - 1];
-    this.active = { r, c };
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-at="${r}:${c}"]`)?.focus());
-  }
-  private onKey = (e: KeyboardEvent) => {
-    const btn = (e.target as HTMLElement).closest<HTMLElement>("[data-at]");
-    if (!btn || e.isComposing || e.altKey || e.metaKey || e.ctrlKey) return;
-    const [r, c] = btn.dataset.at!.split(":").map(Number);
-    const cols = this.cols(r);
-    const i = cols.indexOf(c);
-    const moves: Record<string, [number, number]> = {
-      ArrowUp: [r - 1, c],
-      ArrowDown: [r + 1, c],
-      ArrowLeft: [r, cols[Math.max(0, i - 1)]],
-      ArrowRight: [r, cols[Math.min(cols.length - 1, i + 1)]],
-      Home: [0, c],
-      End: [this.documents.length - 1, c],
-    };
-    const move = moves[e.key];
-    if (!move) return;
-    e.preventDefault();
-    this.focusAt(move[0], move[1]);
-  };
+  private grid = new RowButtonGrid<number>(this, {
+    count: () => this.documents.length,
+    keys: (r) => this.cols(r),
+    get: () => ({ r: this.active.r, k: this.active.c }),
+    set: (stop) => (this.active = { r: stop.r, c: stop.k }),
+    fallback: "last",
+  });
+  private onKey = this.grid.onKey;
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     // The tab stop stays on a row and a button that exist
-    const n = this.documents.length;
-    if (n && (this.active.r >= n || !this.cols(this.active.r).includes(this.active.c))) {
-      const r = Math.min(this.active.r, n - 1);
-      this.active = { r, c: this.cols(r).includes(this.active.c) ? this.active.c : 1 };
-    }
+    this.grid.keepInRange();
   }
+
 
   /* ---------- Rendering ---------- */
 

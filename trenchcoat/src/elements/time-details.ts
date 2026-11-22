@@ -1,8 +1,7 @@
 import { html, nothing, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
-import { firstOfOverlaps, isWordChar } from "./internal/inline-details";
-import { PopoverController } from "./internal/popover";
+import { InlineCard, firstOfOverlaps, isWordChar } from "./internal/inline-details";
 import { marks } from "./internal/selection";
 
 /*
@@ -287,21 +286,17 @@ export class TcTimeDetails extends TcElement {
   private found: TimeMatch[] = [];
   private foundFor: string | null = null;
 
-  private readonly pop = new PopoverController(this, {
-    popover: () => this.querySelector<HTMLElement>(".ui-tmd__pop"),
-    anchor: () => {
-      const m = this.markAt(this.openAt);
-      if (!m?.isConnected) return null;
-      return m.getClientRects()[0] ?? m.getBoundingClientRect();
-    },
-    side: "top",
-    align: "center",
+  private readonly card = new InlineCard(this, {
+    prefix: "tmd",
     kind: "tooltip",
-    trigger: () => this.markAt(this.openAt),
-    hover: { delay: () => this.hoverDelay },
-    closeOnFocusOut: true,
-    onClose: () => this.closed(),
+    count: () => this.times.length,
+    hoverDelay: () => this.hoverDelay,
+    opened: (i) => this.emit<TimeOpenChange>("tc-open-change", { open: this.times[i] }),
+    closed: () => this.emit<TimeOpenChange>("tc-open-change", { open: null }),
   });
+  private get pop() {
+    return this.card.pop;
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -322,42 +317,20 @@ export class TcTimeDetails extends TcElement {
 
   /** Opens the tooltip for the time at `index` in `times`, pinned open */
   openCard(index = 0) {
-    this.open(index, true);
+    this.card.open(index, { pin: true });
   }
 
   /** Closes the open tooltip, if any */
   closeCard() {
-    if (this.pop.open) this.pop.close();
-    else this.closed();
+    this.card.close();
   }
 
   /* ---------- Opening and closing ---------- */
 
-  private markAt(i: number) {
-    return i < 0 ? null : this.querySelector<HTMLElement>(`.ui-tmd__mark[data-i="${i}"]`);
-  }
-
-  private open(i: number, pin = false) {
-    const m = this.times[i];
-    if (!m) return;
-    if (this.openAt !== i) {
-      if (this.openAt >= 0) this.pop.pinned = false;
-      this.openAt = i;
-      this.emit<TimeOpenChange>("tc-open-change", { open: m });
-    }
-    this.pop.show({ pin });
-  }
-
-  private closed() {
-    if (this.openAt < 0) return;
-    this.openAt = -1;
-    this.emit<TimeOpenChange>("tc-open-change", { open: null });
-  }
-
   private onMarkClick(i: number) {
     // A click or tap pins it open, or closes a pinned one
     if (this.openAt === i && this.pop.open && this.pop.pinned) this.closeCard();
-    else this.open(i, true);
+    else this.card.open(i, { pin: true });
   }
 
   /* ---------- What the tooltip says ---------- */
@@ -401,7 +374,7 @@ export class TcTimeDetails extends TcElement {
       const now = this.times[this.openAt];
       if (!was || !now || was.start !== now.start || was.text !== now.text) {
         if (this.pop.open) this.pop.close("anchor-gone");
-        this.closed();
+        this.card.closed();
       }
     }
   }
@@ -431,10 +404,10 @@ export class TcTimeDetails extends TcElement {
         data-i=${i}
         aria-describedby=${`${this.uid}-d${i}`}
         ?data-open=${open}
-        @pointerenter=${(e: PointerEvent) => this.pop.hoverEnter(e, () => this.open(i))}
+        @pointerenter=${(e: PointerEvent) => this.pop.hoverEnter(e, () => this.card.open(i))}
         @pointerleave=${this.pop.hoverLeave}
         @click=${() => this.onMarkClick(i)}
-        @focus=${() => (this.openAt !== i || !this.pop.open) && this.open(i)}
+        @focus=${() => (this.openAt !== i || !this.pop.open) && this.card.open(i)}
       >${seg.text}</time>`;
     });
     return html`<div class="ui-tmd__text">${body}</div>

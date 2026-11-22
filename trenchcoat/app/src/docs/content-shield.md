@@ -1,7 +1,7 @@
 ---
 pattern: button
 status: new
-related: content-hidden, malware-blocked, no-access, dialog
+related: content-hidden, doc-status, page-state, dialog
 ---
 
 ## Overview
@@ -17,8 +17,8 @@ content to people your server allows.
 
 ## When not to use
 
-- A file that isn't safe to open – use `malware-blocked`.
-- Someone without permission – use `no-access`.
+- A file that isn't safe to open – use `doc-status` with `status="malware-blocked"`.
+- Someone without permission – use `page-state` with `status="no-access"`.
 - A picture on its own, on an overlay you build – use `content-hidden`.
 
 ## Anatomy

@@ -466,4 +466,4 @@ Write `reason` as what the text is: "Phone number". Only one span can be reveale
 - [Conversation annotation](conversation-annotation.md) – Label and redact spans in a conversation, rate turns, correct answers as a diff, and send the reviewed example to a dataset
 - [Share Panel](share-panel.md) – Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
 - [Approval Chain](approval-chain.md) – Several people signing off in order – who's next and who's overdue in words, with Approve, Decline with a note, and Delegate for the person it's waiting on
-- [Content Hidden](../illustrations/content-hidden.md) – A photo pixelated to a person's outline with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
+- [Content Hidden](../illustrations/content-hidden.md) – A picture pixelated into an obscured grid with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content

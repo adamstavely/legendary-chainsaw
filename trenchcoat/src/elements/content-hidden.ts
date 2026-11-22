@@ -4,7 +4,7 @@ import { TcElement } from "./internal/base";
 import { OnScreenController } from "./internal/controllers";
 
 /*
- * <tc-content-hidden> – a photo pixelated down to a person's outline, with a warning sign on it, for sensitive content
+ * <tc-content-hidden> – a picture pixelated into an obscured grid, with a warning sign on it, for sensitive content
  * (obscene, sexual or graphic material) that's been covered. It's made to sit on an overlay, and the sign settles a few
  * times and rests. Drawn like the other state illustrations (something-wrong, no-access, malware-blocked):
  * a soft tile, one pastel mark with a darker edge and ink, and a soft glow beneath. The mosaic is only a pattern of
@@ -66,24 +66,25 @@ const css = /* css */ `
 
 let nextId = 0;
 
-/** The photo's squares, [x, y, tone]: darker inside a head-and-shoulders outline, so it reads as a person and shows nothing */
+/**
+ * The picture's squares, [x, y, tone]: an obscured grid with no shape in it – soft patches of three tones from a few
+ * overlapping waves, so it reads as a picture pixelated beyond recognition and shows nothing. Fixed, so it's the same
+ * every time
+ */
 const MOSAIC: [number, number, 1 | 2 | 3][] = (() => {
   const out: [number, number, 1 | 2 | 3][] = [];
-  // 16-px squares centred on the figure's middle (x 160), so the outline is symmetrical
   for (let y = 14; y < 158; y += 16)
     for (let x = 64; x < 256; x += 16) {
-      const cx = x + 8;
-      const cy = y + 8;
-      const head = Math.hypot((cx - 160) / 24, (cy - 66) / 28);
-      const body = Math.hypot((cx - 160) / 64, (cy - 160) / 50);
-      const d = Math.min(head, body);
-      out.push([x + 0.5, y + 0.5, d < 1 ? 3 : d < 1.4 ? 2 : 1]);
+      const i = (x - 64) / 16;
+      const j = (y - 14) / 16;
+      const v = Math.sin(i * 0.9 + 0.4) + Math.cos(j * 1.1 - 0.7) + Math.sin((i + j) * 0.55 + 1.3) * 0.8;
+      out.push([x + 0.5, y + 0.5, v > 0.9 ? 3 : v > -0.4 ? 2 : 1]);
     }
   return out;
 })();
 
 /**
- * A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.
+ * A picture pixelated into an obscured grid, with a warning sign on it, for sensitive content that's been covered.
  * @tag tc-content-hidden
  */
 export class TcContentHidden extends TcElement {

@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: new
-related: accessibility-principles, first-use
+related: accessibility-principles, page-state
 ---
 
 ## Overview
@@ -24,7 +24,7 @@ The same parts carry from stage to stage, so a talk, a design-system guide or on
 ## When not to use
 
 - Showing a real component: put the component itself on the page.
-- An empty or error state – use a state illustration such as `first-use` or `something-wrong`.
+- An empty or error state – use a state illustration such as `page-state`.
 
 ## Anatomy
 

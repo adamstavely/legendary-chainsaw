@@ -3,7 +3,7 @@
   {
    "tag": "tc-thinking-loader",
    "className": "TcThinkingLoader",
-   "description": "A \"the model is working\" pill: a spinner and a label that walks through phases, then a check and a done label.",
+   "description": "A \"the model is working\" pill: a mark (rays or a pixel grid) and a label that walks through phases, then a check and a done label – or a cross on error.",
    "properties": [
     {
      "name": "phases",
@@ -11,6 +11,14 @@
      "type": "string[]",
      "default": "[\"Thinking\", \"Searching the web\", \"Reading sources\", \"Writing response\"]",
      "description": "Labels to walk through, one after another",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One fixed label instead of `phases` – it stays when the work ends, and the status says how it ended",
      "readonly": false
     },
     {
@@ -42,7 +50,23 @@
      "attribute": "startedAt",
      "type": "number | undefined",
      "default": "undefined",
-     "description": "When the work started, in epoch ms – the done label counts from here. Defaults to when the loader connected (or work restarted)",
+     "description": "When the work started, in epoch ms – the done label and the time count from here. Defaults to when the loader connected (or work restarted)",
+     "readonly": false
+    },
+    {
+     "name": "started",
+     "attribute": "started",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The same as `startedAt`, kept from Pixel Loader",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The current time, in epoch ms – given, the loader keeps no clock of its own and counts up to it",
      "readonly": false
     },
     {
@@ -54,11 +78,19 @@
      "readonly": false
     },
     {
+     "name": "state",
+     "attribute": "state",
+     "type": "ThinkingLoaderState",
+     "default": "\"working\"",
+     "description": "How the work stands: \"working\" animates and counts; \"done\" turns the mark into a check; \"error\" into a cross",
+     "readonly": false
+    },
+    {
      "name": "done",
      "attribute": "done",
      "type": "boolean",
      "default": "false",
-     "description": "Finished: the spinner turns into a check and the label into doneLabel",
+     "description": "Finished – the same as state=\"done\", kept for existing pages",
      "readonly": false
     },
     {
@@ -66,7 +98,39 @@
      "attribute": null,
      "type": "string | ((seconds: number) => string)",
      "default": null,
-     "description": "Label once done – a string, or a function that gets the seconds since the loader started",
+     "description": "Label once done (with `phases`) – a string, or a function that gets the seconds since the loader started",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ThinkingLoaderLabels>",
+     "default": "{}",
+     "description": "Rename the words for how it ended, over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "mark",
+     "attribute": "mark",
+     "type": "ThinkingLoaderMark",
+     "default": "\"rays\"",
+     "description": "The mark: \"rays\" (the default) or \"pixels\", a 5 × 5 grid lit in `pattern`",
+     "readonly": false
+    },
+    {
+     "name": "pattern",
+     "attribute": "pattern",
+     "type": "ThinkingLoaderPattern",
+     "default": "\"wave\"",
+     "description": "How the pixels move: a diagonal \"wave\", a lit dot that \"drive\"s a snake path, a seeded \"dots\" twinkle, or an \"orbit\" round the edge",
+     "readonly": false
+    },
+    {
+     "name": "hideTime",
+     "attribute": "hide-time",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the time since the work started (shown with mark=\"pixels\")",
      "readonly": false
     },
     {
@@ -82,8 +146,16 @@
      "attribute": "variant",
      "type": "\"pill\" | \"plain\"",
      "default": "\"pill\"",
-     "description": "\"pill\" = bordered capsule, \"plain\" = just the spinner and the label, e.g. inside a chat bubble",
+     "description": "\"pill\" = bordered capsule, \"plain\" = just the mark and the label, e.g. inside a chat bubble",
      "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": null,
+     "type": "ThinkingLoaderState",
+     "default": null,
+     "description": "How the work stands, from `state` or the older `done`",
+     "readonly": true
     },
     {
      "name": "look",
@@ -145,6 +217,30 @@
       "standard",
       "clean"
      ]
+    },
+    {
+     "name": "--tc-thinking-loader-pixel-ink",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-thinking-loader-pixel-dot",
+     "value": "2px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-thinking-loader-pixel-gap",
+     "value": "1.5px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
     }
    ],
    "tokens": [
@@ -173,12 +269,14 @@
     "--tc-radius-sm",
     "--tc-shadow-control",
     "--tc-shadow-raised",
+    "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
     "--tc-space-4",
+    "--tc-status-danger-solid",
     "--tc-surface-raised",
     "--tc-text-muted",
     "--tc-text-primary",
@@ -229,9 +327,14 @@
    "module": "@adamstavely/trenchcoat/thinking-loader",
    "data": [
     "phases",
-    "doneLabel"
+    "doneLabel",
+    "labels"
    ],
    "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
     {
      "name": "interval",
      "attribute": "interval"
@@ -249,12 +352,36 @@
      "attribute": "startedAt"
     },
     {
+     "name": "started",
+     "attribute": "started"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
      "name": "loop",
      "attribute": "loop"
     },
     {
+     "name": "state",
+     "attribute": "state"
+    },
+    {
      "name": "done",
      "attribute": "done"
+    },
+    {
+     "name": "mark",
+     "attribute": "mark"
+    },
+    {
+     "name": "pattern",
+     "attribute": "pattern"
+    },
+    {
+     "name": "hideTime",
+     "attribute": "hide-time"
     },
     {
      "name": "size",
@@ -474,6 +601,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "internal/pixel-mark",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -486,7 +614,7 @@
    "setInterval, cleared"
   ],
   "frames": [],
-  "animations": 2,
+  "animations": 3,
   "observers": [
    "ResizeObserver",
    "MutationObserver (internal/base › TcElement)",
@@ -505,13 +633,14 @@
    "hidden": [],
    "reducedMotion": [
     "CSS",
+    "CSS (internal/pixel-mark)",
     "CSS (internal/kit › kitCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 22863,
-  "gzip": 7267
+  "min": 30632,
+  "gzip": 9482
  }
 }

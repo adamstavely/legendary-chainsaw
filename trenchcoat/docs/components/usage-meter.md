@@ -9,7 +9,7 @@
 Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 
 - **Element:** `<tc-usage-meter>`
-- **Size:** 14.6 KB gzip · 54.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.8 KB gzip · 55.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -462,24 +462,25 @@ the limit” or “at the limit”; an unlimited one is an image named like “P
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 47.4 KB | 12.4 KB |
+| **This component alone** | 47.1 KB | 12.5 KB |
 | Lit · the library every element is built on, the parts it uses | 21.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
+| `internal/meter` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **54.9 KB** | **14.6 KB** |
-| With Lit – the first component on a page | 77.6 KB | 22.2 KB |
+| **Added to a page that already has Lit** | **55.3 KB** | **14.8 KB** |
+| With Lit – the first component on a page | 77.9 KB | 22.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,13 +488,13 @@ the limit” or “at the limit”; an unlimited one is an image named like “P
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.5 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of daily replaced |
-| First on the page | 24 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.1 ms | daily: first render, 289 nodes; update 0.8 ms |
-| 1,000 items | 37 ms | daily: first render, 2,089 nodes; update 3.2 ms |
+| First render | **1.8 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
+| Typical update | **0.2 ms** | one item of daily replaced |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.5 ms | daily: first render, 289 nodes; update 0.2 ms |
+| 1,000 items | 15 ms | daily: first render, 2,089 nodes; update 1.7 ms |
 
-1,000 items of daily: 37 ms, 2,089 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of daily: 15 ms, 2,089 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 7 React commits (clean), 7 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

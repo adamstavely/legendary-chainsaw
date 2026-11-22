@@ -1,12 +1,12 @@
 ---
 pattern: none
 status: new
-related: nothing-found, no-access, malware-blocked, dialog
+related: page-state, doc-status, dialog
 ---
 
 ## Overview
 
-A photo pixelated down to a person's outline, with a warning sign on it and the words Sensitive content. It's made to sit on an overlay that covers obscene, sexual or graphic content, so people choose whether to see it and aren't shown it by surprise. It's drawn like the other state illustrations – a soft tile, one pastel mark – and the mosaic is only squares: it depicts nothing.
+A picture pixelated into an obscured grid of squares – no shape in it at all – with a warning sign on it and the words Sensitive content. It's made to sit on an overlay that covers obscene, sexual or graphic content, so people choose whether to see it and aren't shown it by surprise. It's drawn like the other state illustrations – a soft tile, one pastel mark – and the mosaic is only squares: it depicts nothing.
 
 ## When to use
 
@@ -15,13 +15,13 @@ A photo pixelated down to a person's outline, with a warning sign on it and the 
 
 ## When not to use
 
-- A file that isn't safe to open – use `malware-blocked`.
-- Someone without permission – use `no-access`.
+- A file that isn't safe to open – use `doc-status` with `status="malware-blocked"`.
+- Someone without permission – use `page-state` with `status="no-access"`.
 - Content that must not be shown at all: remove it, and say so in words.
 
 ## Anatomy
 
-1. **Picture** `.ui-chd-card` – a stand-in, pixelated to an outline, never the real content
+1. **Picture** `.ui-chd-card` – a stand-in, pixelated into an obscured grid, never the real content
 2. **Mark** `.ui-chd-mark` – the warning sign
 3. **Words** `.ui-chd-caption` – what's happened; the default is Sensitive content
 

@@ -2,7 +2,7 @@ import { html, nothing, svg, type PropertyValues, type TemplateResult } from "li
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
-import { PopoverController } from "./internal/popover";
+import { InlineCard, InlineLookups, sayAgain, type LookupEntry } from "./internal/inline-details";
 import { marks } from "./internal/selection";
 import { copyText } from "./internal/util";
 import { safeMediaUrl } from "./internal/safe-media";
@@ -275,9 +275,10 @@ const webUrl = (url: string) => {
   return safe && /^https?:\/\//i.test(safe) ? safe : undefined;
 };
 
-type Entry = { status: "loading" } | { status: "done"; place: CoordinatePlace | null } | { status: "error"; message: string };
+type Entry = LookupEntry<CoordinatePlace>;
+/** A place worth showing: one with a name */
+const isPlace = (p: unknown): p is CoordinatePlace => !!p && typeof p === "object" && typeof (p as CoordinatePlace).name === "string" && (p as CoordinatePlace).name.trim() !== "";
 
-const NO_ANSWER = Symbol("no answer");
 const keyOf = (c: Coordinate) => `${c.latitude.toFixed(6)},${c.longitude.toFixed(6)}`;
 let instances = 0;
 
@@ -329,28 +330,30 @@ export class TcCoordinateDetails extends TcElement {
   private readonly uid = `tc-crd${++instances}`;
   private found: CoordinateMatch[] = [];
   private foundFor: string | null = null;
-  private readonly cache = new Map<string, Entry>();
-  private readonly aborts = new Set<AbortController>();
+  private readonly lookups = new InlineLookups<CoordinatePlace>(() => this.version++, isPlace);
   private copiedTimer = 0;
 
-  private readonly pop = new PopoverController(this, {
-    popover: () => this.querySelector<HTMLElement>(".ui-crd__pop"),
-    anchor: () => {
-      const m = this.markAt(this.openAt);
-      if (!m?.isConnected) return null;
-      // The mark's first line, when it wraps
-      return m.getClientRects()[0] ?? m.getBoundingClientRect();
+  private readonly card = new InlineCard(this, {
+    prefix: "crd",
+    count: () => this.coordinates.length,
+    hoverDelay: () => this.hoverDelay,
+    menu: () => this.onMenu,
+    opened: (i) => {
+      const m = this.coordinates[i];
+      this.copied = "";
+      this.mapShown = false;
+      this.emit<CoordinateOpenChange>("tc-open-change", { latitude: m.latitude, longitude: m.longitude });
+      void this.lookup(m);
     },
-    side: "bottom",
-    align: "start",
-    kind: "dialog",
-    trigger: () => this.markAt(this.openAt),
-    returnFocus: () => this.markAt(this.openAt),
-    hover: { delay: () => this.hoverDelay },
-    tabBridge: true,
-    closeOnFocusOut: true,
-    onClose: () => this.closed(),
+    closed: () => {
+      this.copied = "";
+      this.mapShown = false;
+      this.emit<CoordinateOpenChange>("tc-open-change", { latitude: null, longitude: null });
+    },
   });
+  private get pop() {
+    return this.card.pop;
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -361,10 +364,8 @@ export class TcCoordinateDetails extends TcElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    for (const a of this.aborts) a.abort();
-    this.aborts.clear();
-    // Lookups in flight were aborted: forget them, so the card asks again if the element comes back
-    for (const [k, e] of this.cache) if (e.status === "loading") this.cache.delete(k);
+    // Lookups in flight are aborted and forgotten, so the card asks again if the element comes back
+    this.lookups.abortAll();
     clearTimeout(this.copiedTimer);
   }
 
@@ -379,26 +380,20 @@ export class TcCoordinateDetails extends TcElement {
 
   /** Forgets cached places – one position's, or all of them – so the next card asks again */
   clearCache(position?: Coordinate) {
-    if (position) this.cache.delete(keyOf(position));
-    else this.cache.clear();
-    this.version++;
+    this.lookups.forget(position ? keyOf(position) : undefined);
   }
 
   /** Opens the card for the coordinates at `index` in `coordinates`, pinned open; focus stays where it is */
   openCard(index = 0) {
-    this.open(index, { pin: true });
+    this.card.open(index, { pin: true });
   }
 
   /** Closes the open card, if any */
   closeCard() {
-    this.close();
+    this.card.close();
   }
 
   /* ---------- Opening and closing ---------- */
-
-  private markAt(i: number) {
-    return i < 0 ? null : this.querySelector<HTMLElement>(`.ui-crd__mark[data-i="${i}"]`);
-  }
 
   private get onHover() {
     return this.trigger !== "contextmenu";
@@ -408,100 +403,30 @@ export class TcCoordinateDetails extends TcElement {
     return this.trigger !== "hover";
   }
 
-  private open(i: number, how: { pin?: boolean; focus?: boolean } = {}) {
-    const m = this.coordinates[i];
-    if (!m) return;
-    if (this.openAt !== i) {
-      if (this.openAt >= 0) this.pop.pinned = false;
-      this.openAt = i;
-      this.copied = "";
-      this.mapShown = false;
-      this.emit<CoordinateOpenChange>("tc-open-change", { latitude: m.latitude, longitude: m.longitude });
-      void this.lookup(m);
-    }
-    this.pop.show({ focus: !!how.focus, pin: !!how.pin });
-  }
-
-  private close() {
-    if (this.pop.open) this.pop.close();
-    else this.closed();
-  }
-
-  /** After the controller closed it (Escape, outside, focus gone, anchor gone) or close() */
-  private closed() {
-    if (this.openAt < 0) return;
-    this.openAt = -1;
-    this.copied = "";
-    this.mapShown = false;
-    this.emit<CoordinateOpenChange>("tc-open-change", { latitude: null, longitude: null });
-  }
-
-  private onMarkClick(e: MouseEvent, i: number) {
-    // Enter or Space (detail 0): into the card. A click: pin it open, or close a pinned one
-    if (e.detail === 0) this.open(i, { pin: true, focus: true });
-    else if (this.openAt === i && this.pop.pinned) this.close();
-    else this.open(i, { pin: true });
-  }
-
-  private onMarkMenu(e: MouseEvent, i: number) {
-    if (!this.onMenu) return;
-    // The card takes the place of the browser's menu, on the marks only
-    e.preventDefault();
-    if (this.openAt !== i || !this.pop.open || !this.pop.pinned) this.open(i, { pin: true });
-  }
-
-  private onMarkKey(e: KeyboardEvent, i: number) {
-    if (!this.onMenu) return;
-    if (e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) {
-      e.preventDefault();
-      this.open(i, { pin: true, focus: true });
-    }
-  }
-
   /* ---------- Looking up ---------- */
 
   private async lookup(m: CoordinateMatch) {
     const key = keyOf(m);
-    if (this.cache.has(key)) return;
-    this.cache.set(key, { status: "loading" });
-    this.version++;
-    const abort = new AbortController();
-    this.aborts.add(abort);
-    let answer: unknown = NO_ANSWER;
-    const detail: CoordinateLookupDetail = { latitude: m.latitude, longitude: m.longitude, signal: abort.signal, respondWith: (place) => (answer = place) };
-    const go = this.emit<CoordinateLookupDetail>("tc-coordinate-lookup", detail, { cancelable: true });
-    const current = () => {
-      const o = this.coordinates[this.openAt];
-      return !!o && keyOf(o) === key;
-    };
-    try {
-      let result: unknown = null;
-      if (answer !== NO_ANSWER) result = answer;
-      else if (go && this.resolve) result = this.resolve(m.latitude, m.longitude, abort.signal);
-      const place = (await result) as CoordinatePlace | null | undefined;
-      if (abort.signal.aborted) return;
-      const ok = !!place && typeof place === "object" && typeof place.name === "string" && place.name.trim() !== "";
-      this.cache.set(key, { status: "done", place: ok ? place : null });
-      if (current()) this.say(ok ? `${place.name}${place.kind ? `, ${place.kind}` : ""}` : this.notFoundText);
-    } catch (err) {
-      if (abort.signal.aborted) return;
-      this.cache.set(key, { status: "error", message: err instanceof Error ? err.message : String(err ?? "") });
-      if (current()) this.say(this.errorText);
-    } finally {
-      this.aborts.delete(abort);
-      this.version++;
-    }
+    const entry = await this.lookups.run(
+      key,
+      (hooks) => this.emit<CoordinateLookupDetail>("tc-coordinate-lookup", { latitude: m.latitude, longitude: m.longitude, ...hooks }, { cancelable: true }),
+      (signal) => this.resolve?.(m.latitude, m.longitude, signal) ?? null,
+    );
+    const now = this.coordinates[this.openAt];
+    if (!entry || !now || keyOf(now) !== key) return;
+    if (entry.status === "error") this.say(this.errorText);
+    else if (entry.status === "done") this.say(entry.data ? `${entry.data.name}${entry.data.kind ? `, ${entry.data.kind}` : ""}` : this.notFoundText);
   }
 
   private retry(m: CoordinateMatch) {
-    this.cache.delete(keyOf(m));
+    this.lookups.forget(keyOf(m));
     this.say("Trying again…");
     void this.lookup(m);
   }
 
   /** A trailing space makes a repeated message count as new for screen readers */
   private say(text: string) {
-    this.said = this.said === text ? `${text} ` : text;
+    this.said = sayAgain(this.said, text);
   }
 
   private decimal(c: Coordinate) {
@@ -539,7 +464,7 @@ export class TcCoordinateDetails extends TcElement {
       if (!was || !now || keyOf(was) !== keyOf(now)) {
         // closed() resets the card and fires tc-open-change(null) – through the controller when it's showing
         if (this.pop.open) this.pop.close("anchor-gone");
-        this.closed();
+        this.card.closed();
       }
     }
   }
@@ -564,9 +489,9 @@ export class TcCoordinateDetails extends TcElement {
   private renderCard() {
     const m = this.coordinates[this.openAt];
     if (!this.pop.open || !m) return nothing;
-    const entry = this.cache.get(keyOf(m)) ?? { status: "loading" };
+    const entry = this.lookups.get(keyOf(m)) ?? { status: "loading" };
     const titleId = `${this.uid}-title`;
-    const place = entry.status === "done" ? entry.place : null;
+    const place = entry.status === "done" ? entry.data : null;
     const label = place ? undefined : `Place details for ${this.decimal(m)}`;
     const point = { id: "p", latitude: m.latitude, longitude: m.longitude, label: place?.name };
     return html`<div
@@ -679,12 +604,12 @@ export class TcCoordinateDetails extends TcElement {
         aria-expanded=${open ? "true" : "false"}
         aria-describedby=${hint}
         ?data-open=${open}
-        @pointerenter=${(e: PointerEvent) => this.onHover && this.pop.hoverEnter(e, () => this.open(i))}
+        @pointerenter=${(e: PointerEvent) => this.onHover && this.pop.hoverEnter(e, () => this.card.open(i))}
         @pointerleave=${this.pop.hoverLeave}
-        @click=${(e: MouseEvent) => this.onMarkClick(e, i)}
-        @contextmenu=${(e: MouseEvent) => this.onMarkMenu(e, i)}
-        @keydown=${(e: KeyboardEvent) => this.onMarkKey(e, i)}
-        @focus=${() => this.onHover && (this.openAt !== i || !this.pop.open) && this.open(i)}
+        @click=${(e: MouseEvent) => this.card.onMarkClick(e, i)}
+        @contextmenu=${(e: MouseEvent) => this.card.onMarkMenu(e, i)}
+        @keydown=${(e: KeyboardEvent) => this.card.onMarkKey(e, i)}
+        @focus=${() => this.onHover && (this.openAt !== i || !this.pop.open) && this.card.open(i)}
       >${seg.text}</button>`;
     });
     const hintText = this.trigger === "contextmenu" ? "Place details. Enter or the Menu key opens them" : "Place details. Tab moves into them";

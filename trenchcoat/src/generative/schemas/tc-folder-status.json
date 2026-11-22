@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-folder-status.json",
+  "title": "tc-folder-status",
+  "description": "A folder scene that says where a folder stands – empty, shared, archived or locked.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "archived",
+        "empty",
+        "locked",
+        "restricted",
+        "shared",
+        "syncing"
+      ],
+      "description": "Where the folder stands: \"empty\", \"shared\", \"syncing\", \"archived\", \"locked\" or \"restricted\""
+    },
+    "caption": {
+      "type": "string",
+      "description": "The words under the drawing; unset, the status's own words; \"\" leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description, when it should say more than the words"
+    }
+  },
+  "additionalProperties": false
+}

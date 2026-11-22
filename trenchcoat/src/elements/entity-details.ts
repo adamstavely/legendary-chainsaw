@@ -2,8 +2,7 @@ import { html, nothing, svg, type PropertyValues, type TemplateResult } from "li
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
-import { InlineLookups, firstOfOverlaps, isWordChar, trimTrailing, type LookupEntry, type LookupHooks } from "./internal/inline-details";
-import { PopoverController } from "./internal/popover";
+import { InlineCard, InlineLookups, sayAgain, firstOfOverlaps, isWordChar, trimTrailing, type LookupEntry, type LookupHooks } from "./internal/inline-details";
 import { marks } from "./internal/selection";
 import { copyText } from "./internal/util";
 import { safeMediaUrl } from "./internal/safe-media";
@@ -358,23 +357,25 @@ export class TcEntityDetails extends TcElement {
   private readonly lookups = new InlineLookups<EntityInfo>(() => this.version++, isInfo);
   private copiedTimer = 0;
 
-  private readonly pop = new PopoverController(this, {
-    popover: () => this.querySelector<HTMLElement>(".ui-ent__pop"),
-    anchor: () => {
-      const m = this.markAt(this.openAt);
-      if (!m?.isConnected) return null;
-      return m.getClientRects()[0] ?? m.getBoundingClientRect();
+  private readonly card = new InlineCard(this, {
+    prefix: "ent",
+    count: () => this.entities.length,
+    hoverDelay: () => this.hoverDelay,
+    menu: () => this.trigger !== "hover",
+    opened: (i) => {
+      const m = this.entities[i];
+      this.copied = false;
+      this.emit<EntityOpenChange>("tc-open-change", { open: m });
+      void this.lookup(m);
     },
-    side: "bottom",
-    align: "start",
-    kind: "dialog",
-    trigger: () => this.markAt(this.openAt),
-    returnFocus: () => this.markAt(this.openAt),
-    hover: { delay: () => this.hoverDelay },
-    tabBridge: true,
-    closeOnFocusOut: true,
-    onClose: () => this.closed(),
+    closed: () => {
+      this.copied = false;
+      this.emit<EntityOpenChange>("tc-open-change", { open: null });
+    },
   });
+  private get pop() {
+    return this.card.pop;
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -406,65 +407,18 @@ export class TcEntityDetails extends TcElement {
 
   /** Opens the card for the entity at `index` in `entities`, pinned open; focus stays where it is */
   openCard(index = 0) {
-    this.open(index, { pin: true });
+    this.card.open(index, { pin: true });
   }
 
   /** Closes the open card, if any */
   closeCard() {
-    if (this.pop.open) this.pop.close();
-    else this.closed();
+    this.card.close();
   }
 
   /* ---------- Opening and closing ---------- */
 
-  private markAt(i: number) {
-    return i < 0 ? null : this.querySelector<HTMLElement>(`.ui-ent__mark[data-i="${i}"]`);
-  }
-
   private label(kind: EntityKind) {
     return this.kindLabels[kind] ?? defaultEntityKindLabels[kind];
-  }
-
-  private open(i: number, how: { pin?: boolean; focus?: boolean } = {}) {
-    const m = this.entities[i];
-    if (!m) return;
-    if (this.openAt !== i) {
-      if (this.openAt >= 0) this.pop.pinned = false;
-      this.openAt = i;
-      this.copied = false;
-      this.emit<EntityOpenChange>("tc-open-change", { open: m });
-      void this.lookup(m);
-    }
-    this.pop.show({ focus: !!how.focus, pin: !!how.pin });
-  }
-
-  /** After the controller closed it (Escape, outside, focus gone, anchor gone) or closeCard() */
-  private closed() {
-    if (this.openAt < 0) return;
-    this.openAt = -1;
-    this.copied = false;
-    this.emit<EntityOpenChange>("tc-open-change", { open: null });
-  }
-
-  private onMarkClick(e: MouseEvent, i: number) {
-    // Enter or Space (detail 0): into the card. A click: pin it open, or close a pinned one
-    if (e.detail === 0) this.open(i, { pin: true, focus: true });
-    else if (this.openAt === i && this.pop.pinned) this.closeCard();
-    else this.open(i, { pin: true });
-  }
-
-  private onMarkMenu(e: MouseEvent, i: number) {
-    if (this.trigger === "hover") return;
-    e.preventDefault();
-    if (this.openAt !== i || !this.pop.open || !this.pop.pinned) this.open(i, { pin: true });
-  }
-
-  private onMarkKey(e: KeyboardEvent, i: number) {
-    if (this.trigger === "hover") return;
-    if (e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) {
-      e.preventDefault();
-      this.open(i, { pin: true, focus: true });
-    }
   }
 
   /* ---------- Looking up ---------- */
@@ -490,7 +444,7 @@ export class TcEntityDetails extends TcElement {
 
   /** A trailing space makes a repeated message count as new for screen readers */
   private say(text: string) {
-    this.said = this.said === text ? `${text} ` : text;
+    this.said = sayAgain(this.said, text);
   }
 
   private async copy(m: EntityMatch) {
@@ -518,7 +472,7 @@ export class TcEntityDetails extends TcElement {
       const now = this.entities[this.openAt];
       if (!was || !now || keyOf(was) !== keyOf(now)) {
         if (this.pop.open) this.pop.close("anchor-gone");
-        this.closed();
+        this.card.closed();
       }
     }
   }
@@ -629,12 +583,12 @@ export class TcEntityDetails extends TcElement {
         aria-expanded=${open ? "true" : "false"}
         aria-describedby=${`${this.uid}-hint-${m.kind}`}
         ?data-open=${open}
-        @pointerenter=${(e: PointerEvent) => this.trigger !== "contextmenu" && this.pop.hoverEnter(e, () => this.open(i))}
+        @pointerenter=${(e: PointerEvent) => this.trigger !== "contextmenu" && this.pop.hoverEnter(e, () => this.card.open(i))}
         @pointerleave=${this.pop.hoverLeave}
-        @click=${(e: MouseEvent) => this.onMarkClick(e, i)}
-        @contextmenu=${(e: MouseEvent) => this.onMarkMenu(e, i)}
-        @keydown=${(e: KeyboardEvent) => this.onMarkKey(e, i)}
-        @focus=${() => this.trigger !== "contextmenu" && (this.openAt !== i || !this.pop.open) && this.open(i)}
+        @click=${(e: MouseEvent) => this.card.onMarkClick(e, i)}
+        @contextmenu=${(e: MouseEvent) => this.card.onMarkMenu(e, i)}
+        @keydown=${(e: KeyboardEvent) => this.card.onMarkKey(e, i)}
+        @focus=${() => this.trigger !== "contextmenu" && (this.openAt !== i || !this.pop.open) && this.card.open(i)}
       >${seg.text}</button>`;
     });
     const how = this.trigger === "contextmenu" ? "Enter or the Menu key opens them" : "Tab moves into them";

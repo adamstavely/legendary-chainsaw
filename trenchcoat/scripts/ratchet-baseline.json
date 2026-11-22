@@ -398,9 +398,6 @@
   "src/elements/person-hovercard.ts": {
     "clock/environment read": 1
   },
-  "src/elements/pixel-loader.ts": {
-    "clock/environment read": 1
-  },
   "src/elements/plan-vs-actual.ts": {
     "clock/environment read": 1,
     "literal spacing": 21
@@ -495,7 +492,7 @@
     "literal spacing": 1
   },
   "src/elements/thinking-loader.ts": {
-    "clock/environment read": 3
+    "clock/environment read": 1
   },
   "src/elements/thinking-state.ts": {
     "clock/environment read": 3,

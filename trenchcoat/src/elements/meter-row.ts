@@ -1,8 +1,8 @@
 import { html, nothing, svg } from "lit";
 import { property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { meterBar, meterTone, type MeterTone } from "./internal/meter";
 
 /*
  * <tc-meter-row> – how full something is, on one line: a label, a percentage and a tiny bar. Past warnAt and dangerAt the
@@ -64,10 +64,8 @@ export class TcMeterRow extends TcElement {
     return { max, value, fraction: value / max };
   }
 
-  private get tone(): "normal" | "warning" | "danger" {
-    const { fraction } = this.limits;
-    if (fraction >= this.dangerAt) return "danger";
-    return fraction >= this.warnAt ? "warning" : "normal";
+  private get tone(): MeterTone {
+    return meterTone(this.limits.fraction, this.warnAt, this.dangerAt);
   }
 
   protected override render() {
@@ -89,15 +87,16 @@ export class TcMeterRow extends TcElement {
           >`;
     return html`<div class="ui-mrw__row" data-tone=${tone}>
       ${this.interactive ? html`<button type="button" class="ui-mrw__open" @click=${() => this.emit("tc-open", null)}>${name}</button>` : name}
-      <div
-        class="ui-mrw__meter"
-        .role=${"meter"}
-        aria-labelledby=${ifDefined(this.label ? labelId : undefined)}
-        aria-label=${ifDefined(this.label ? undefined : words.unnamed)}
-        aria-valuemin="0" aria-valuemax=${max} aria-valuenow=${value} aria-valuetext=${word ? `${shown}, ${word}` : shown}>
-        ${mark}<span class="ui-mrw__value">${shown}</span>${word ? html`<span class="tc-sr-only">${word}</span>` : nothing}
-        <span class="ui-mrw__bar" aria-hidden="true"><span class="ui-mrw__fill" style=${styleMap({ "--tc-mrw-fill": String(fraction) })}></span></span>
-      </div>
+      ${meterBar({
+        cls: "ui-mrw__meter",
+        labelledBy: this.label ? labelId : undefined,
+        label: words.unnamed,
+        max,
+        now: value,
+        valueText: word ? `${shown}, ${word}` : shown,
+        content: html`${mark}<span class="ui-mrw__value">${shown}</span>${word ? html`<span class="tc-sr-only">${word}</span>` : nothing}
+          <span class="ui-mrw__bar" aria-hidden="true"><span class="ui-mrw__fill" style=${styleMap({ "--tc-mrw-fill": String(fraction) })}></span></span>`,
+      })}
     </div>`;
   }
 
