@@ -187,16 +187,6 @@ describe("tc-thinking-loader", () => {
     });
   });
 
-  test(`tc-pixel-loader is this element with mark="pixels" and its own look`, async () => {
-    await import("../../src/elements/pixel-loader");
-    const { TcThinkingLoader: Base } = await import("../../src/elements/thinking-loader");
-    const el = await fixture<TcThinkingLoader>(html`<tc-pixel-loader mark="rays"></tc-pixel-loader>`);
-    expect(el).toBeInstanceOf(Base);
-    expect(el.dataset.ui).toBe("pxl");
-    // Always the grid, whatever mark says
-    expect(el.querySelectorAll(".ui-pxl__dot")).toHaveLength(25);
-    expect(el.querySelector(".ui-pxl__label")!.textContent).toBe("Working");
-  });
 
   test("axe: no violations in either look", async () => {
     vi.useRealTimers();

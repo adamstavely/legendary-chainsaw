@@ -82,7 +82,7 @@ export function pixelGrid(parts: PixelParts, pattern: PixelPattern, ending: Pixe
 /**
  * The grid's CSS for the element whose root is [data-ui="<ui>"]: the dots, how each pattern moves them, the end shapes
  * and reduced motion. The host carries `pattern` and `data-status` (working, done or error); the look sets
- * --tc-pixel-loader-ink, and the size --tc-pixel-loader-dot and --tc-pixel-loader-gap.
+ * --tc-thinking-loader-pixel-ink, and the size --tc-thinking-loader-pixel-dot and --tc-thinking-loader-pixel-gap.
  */
 export function pixelMarkCss(ui: string, parts: PixelParts) {
   const host = `[data-ui="${ui}"]`;
@@ -90,26 +90,26 @@ export function pixelMarkCss(ui: string, parts: PixelParts) {
   const dot = `.${parts.dot}`;
   const k = `ui-${ui}`;
   return /* css */ `
-${host} { --tc-pixel-loader-cycle: 1400ms; }
-${host}[pattern="drive"] { --tc-pixel-loader-cycle: 2200ms; }
-${host}[pattern="orbit"] { --tc-pixel-loader-cycle: 1600ms; }
-${host}[pattern="dots"] { --tc-pixel-loader-cycle: 1800ms; }
+${host} { --tc-thinking-loader-pixel-cycle: 1400ms; }
+${host}[pattern="drive"] { --tc-thinking-loader-pixel-cycle: 2200ms; }
+${host}[pattern="orbit"] { --tc-thinking-loader-pixel-cycle: 1600ms; }
+${host}[pattern="dots"] { --tc-thinking-loader-pixel-cycle: 1800ms; }
 ${grid} {
   display: grid;
   flex: none;
-  grid-template-columns: repeat(5, var(--tc-pixel-loader-dot));
-  grid-auto-rows: var(--tc-pixel-loader-dot);
-  gap: var(--tc-pixel-loader-gap);
+  grid-template-columns: repeat(5, var(--tc-thinking-loader-pixel-dot));
+  grid-auto-rows: var(--tc-thinking-loader-pixel-dot);
+  gap: var(--tc-thinking-loader-pixel-gap);
 }
 ${dot} {
   border-radius: var(--tc-radius-xs);
-  background: var(--tc-pixel-loader-ink);
+  background: var(--tc-thinking-loader-pixel-ink);
   opacity: 0.16;
   transition: opacity var(--tc-duration-moderate) var(--tc-ease-standard), background-color var(--tc-duration-moderate) var(--tc-ease-standard);
 }
 ${host}[data-status="working"] ${dot}:not([data-rest]) {
-  animation: ${k}-glow var(--tc-pixel-loader-cycle) linear infinite;
-  animation-delay: calc(var(--tc-pxl-phase) * var(--tc-pixel-loader-cycle) * -1);
+  animation: ${k}-glow var(--tc-thinking-loader-pixel-cycle) linear infinite;
+  animation-delay: calc(var(--tc-pxl-phase) * var(--tc-thinking-loader-pixel-cycle) * -1);
 }
 ${host}[data-status="working"][pattern="drive"] ${dot},
 ${host}[data-status="working"][pattern="orbit"] ${dot}:not([data-rest]) { animation-name: ${k}-blip; }

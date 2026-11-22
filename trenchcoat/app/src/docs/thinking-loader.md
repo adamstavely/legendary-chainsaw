@@ -20,7 +20,7 @@ log"): it stays when the work ends, and the status says how it ended – "Done: 
 `state` says how the work stands – "working", "done" or "error", which turns the mark into a cross in the danger
 colour. It's the preferred way; the older `done` boolean still works and means `state="done"`. `startedAt` sets where
 the count starts (`started` is the same), and `now` lets the page drive the clock. This is what Pixel Loader did:
-`<tc-pixel-loader>` is now this element with `mark="pixels"` and its own look.
+It replaces Pixel Loader, which was removed: use `<tc-thinking-loader mark="pixels">`.
 
 ## When to use
 

@@ -333,7 +333,6 @@ export * from "./react/permission-request";
 export * from "./react/person-hovercard";
 export * from "./react/person-links";
 export * from "./react/pie-chart";
-export * from "./react/pixel-loader";
 export * from "./react/place-list";
 export * from "./react/plan-vs-actual";
 export * from "./react/playbook-canvas";

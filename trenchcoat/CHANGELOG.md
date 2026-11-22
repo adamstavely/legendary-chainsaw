@@ -2,7 +2,14 @@
 
 ## Unreleased – Fewer copies: one loader, shared internals
 
-- **[Thinking Loader](#/thinking-loader):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **[Pixel Loader](#/pixel-loader)** is now Thinking Loader with `mark="pixels"`; its tag, properties, events and look keep working, and new pages should use Thinking Loader.
+- **[Thinking Loader](#/thinking-loader):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **Pixel Loader is removed** – use Thinking Loader with `mark="pixels"`:
+
+  | Before | Now |
+  |---|---|
+  | `<tc-pixel-loader pattern="drive" label="Matching vendor IDs">` | `<tc-thinking-loader mark="pixels" pattern="drive" label="Matching vendor IDs">` |
+  | `<PixelLoader … />` (React) | `<ThinkingLoader mark="pixels" … />` |
+  | `--tc-pixel-loader-ink`, `-dot`, `-gap` | `--tc-thinking-loader-pixel-ink`, `-dot`, `-gap` |
+  | `formatElapsed` from `pixel-loader` | `formatElapsed` from `thinking-loader` |
 - **Shared code, no change to any element's API or look:**
   - [Running Now](#/running-now) and [Background Tasks](#/background-tasks) share one controller for "notify me when it's done" – the bell, its channels and the events.
   - The five hover cards for things found in text – [Coordinate Details](#/coordinate-details), [Entity Details](#/entity-details), [Identifier Details](#/identifier-details), [Time Details](#/time-details) and [ISBN Details](#/isbn-details) – share their card's open, pin, keyboard and announcement behaviour, and all use the shared lookup cache.

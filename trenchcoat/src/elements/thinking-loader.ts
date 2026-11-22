@@ -6,6 +6,9 @@ import { TcElement } from "./internal/base";
 import { OffScreenController } from "./internal/controllers";
 import { formatElapsed, pixelGrid, pixelMarkCss, type PixelPattern } from "./internal/pixel-mark";
 
+/** "0.2s", "12s", "1m 4s": how long the work has taken, as the pixel mark writes it */
+export { formatElapsed } from "./internal/pixel-mark";
+
 /*
  * <tc-thinking-loader> – the Lit port of src/components/thinking-loader.tsx: a small "the model is working" pill.
  * A mark and a label with a light sweeping over it. The label walks through phases (Thinking → Searching the web →
@@ -26,7 +29,7 @@ import { formatElapsed, pixelGrid, pixelMarkCss, type PixelPattern } from "./int
  *
  * The host is the status (role="status", aria-live="polite"): it announces the first phase, then how it ended – not
  * every phase on its way, nor the ticking time (WCAG 4.1.3). Clean is one white chip with hairline shadows and a thin
- * accent mark. <tc-pixel-loader> is this element with mark="pixels" and Pixel Loader's own look.
+ * accent mark.
  */
 
 export type ThinkingLoaderPhaseChange = { phase: number };
@@ -368,9 +371,9 @@ export class TcThinkingLoader extends TcElement {
   --tc-thinking-loader-font: var(--tc-font-size-lg);
   --tc-thinking-loader-lh: var(--tc-line-height-snug);
   --tc-thinking-loader-icon: 15px;
-  --tc-pixel-loader-ink: var(--tc-text-primary);
-  --tc-pixel-loader-dot: 2px;
-  --tc-pixel-loader-gap: 1.25px;
+  --tc-thinking-loader-pixel-ink: var(--tc-text-primary);
+  --tc-thinking-loader-pixel-dot: 2px;
+  --tc-thinking-loader-pixel-gap: 1.25px;
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-2);
@@ -409,9 +412,9 @@ export class TcThinkingLoader extends TcElement {
   --tc-thinking-loader-font: var(--tc-font-size-md);
   --tc-thinking-loader-lh: var(--tc-line-height-normal);
   --tc-thinking-loader-icon: 16px;
-  --tc-pixel-loader-ink: var(--tc-accent);
-  --tc-pixel-loader-dot: 2px;
-  --tc-pixel-loader-gap: 1.5px;
+  --tc-thinking-loader-pixel-ink: var(--tc-accent);
+  --tc-thinking-loader-pixel-dot: 2px;
+  --tc-thinking-loader-pixel-gap: 1.5px;
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1-5);
