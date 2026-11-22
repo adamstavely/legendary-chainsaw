@@ -156,13 +156,6 @@
      "looks": [
       "both"
      ]
-    },
-    {
-     "name": "--tc-svw-menu-x",
-     "value": "0px",
-     "looks": [
-      "both"
-     ]
     }
    ],
    "tokens": [
@@ -179,7 +172,6 @@
     "--tc-card-shadow",
     "--tc-control-h-sm",
     "--tc-duration-fast",
-    "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-field-bg",
     "--tc-field-radius",
@@ -195,16 +187,12 @@
     "--tc-font-weight-medium",
     "--tc-icon-muted",
     "--tc-line-height-snug",
-    "--tc-menu-bg",
     "--tc-menu-item-font-size",
     "--tc-menu-item-h",
     "--tc-menu-item-hover",
     "--tc-menu-item-px",
     "--tc-menu-item-radius",
     "--tc-menu-item-selected-fg",
-    "--tc-menu-padding",
-    "--tc-menu-radius",
-    "--tc-menu-shadow",
     "--tc-radius-full",
     "--tc-radius-md",
     "--tc-radius-sm",
@@ -214,6 +202,7 @@
     "--tc-space-16",
     "--tc-space-2",
     "--tc-space-3",
+    "--tc-space-4",
     "--tc-space-5",
     "--tc-status-danger-fg",
     "--tc-status-warning-fg",
@@ -223,8 +212,7 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-tray-radius",
-    "--tc-z-dropdown"
+    "--tc-tray-radius"
    ]
   }
  ],
@@ -472,6 +460,23 @@
     ]
    },
    {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
     "id": "focus-visible",
     "name": ":focus-visible",
     "bcd": "css.selectors.focus-visible",
@@ -506,6 +511,22 @@
     ]
    },
    {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -537,7 +558,8 @@
     },
     "progressive": false,
     "via": [
-     "itself"
+     "itself",
+     "internal/popover"
     ]
    },
    {
@@ -555,6 +577,23 @@
     "without": "Scrollbars keep the browser's default width.",
     "via": [
      "itself"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
     ]
    },
    {
@@ -591,36 +630,41 @@
      "itself",
      "internal/card-head",
      "internal/kit",
+     "internal/popover",
      "tokens.css"
     ]
    }
   ]
  },
  "runtime": {
-  "timers": [],
-  "frames": [],
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
   "animations": 0,
   "observers": [
    "ResizeObserver",
    "MutationObserver (internal/base › TcElement)",
-   "MutationObserver (internal/controllers › AriaForwardController)"
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [],
-  "listeners": [
-   "document pointerdown"
-  ],
+  "listeners": [],
   "pauses": {
    "offscreen": [],
    "hidden": [],
    "reducedMotion": [
     "CSS",
-    "CSS (internal/kit › kitCss)"
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 36118,
-  "gzip": 10309
+  "min": 45451,
+  "gzip": 13440
  }
 }

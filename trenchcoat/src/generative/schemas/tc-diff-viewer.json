@@ -45,10 +45,10 @@
         "empty": {
           "type": "string"
         },
-        "deleted": {
+        "added": {
           "type": "string"
         },
-        "added": {
+        "deleted": {
           "type": "string"
         },
         "modified": {

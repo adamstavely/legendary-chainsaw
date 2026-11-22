@@ -110,7 +110,6 @@
     "--tc-border-strong",
     "--tc-control-h-sm",
     "--tc-duration-fast",
-    "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-field-shadow",
     "--tc-field-shadow-hover",
@@ -127,14 +126,11 @@
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-snug",
-    "--tc-menu-bg",
     "--tc-menu-item-h",
     "--tc-menu-item-hover",
     "--tc-menu-item-px",
     "--tc-menu-item-radius",
     "--tc-menu-padding",
-    "--tc-menu-radius",
-    "--tc-menu-shadow",
     "--tc-radius-full",
     "--tc-radius-sm",
     "--tc-space-1",
@@ -145,15 +141,13 @@
     "--tc-space-3",
     "--tc-space-4",
     "--tc-space-5",
-    "--tc-space-8",
     "--tc-status-success-fg",
     "--tc-status-warning-fg",
     "--tc-surface-raised",
     "--tc-surface-tray",
     "--tc-text-muted",
     "--tc-text-primary",
-    "--tc-text-secondary",
-    "--tc-z-dropdown"
+    "--tc-text-secondary"
    ]
   }
  ],
@@ -305,6 +299,23 @@
     ]
    },
    {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
     "id": "focus-visible",
     "name": ":focus-visible",
     "bcd": "css.selectors.focus-visible",
@@ -335,7 +346,8 @@
     },
     "progressive": false,
     "via": [
-     "itself"
+     "itself",
+     "internal/popover"
     ]
    },
    {
@@ -355,6 +367,39 @@
      "itself",
      "internal/base",
      "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
     ]
    },
    {
@@ -391,6 +436,7 @@
      "itself",
      "internal/card-head",
      "internal/kit",
+     "internal/popover",
      "tokens.css"
     ]
    },
@@ -414,29 +460,33 @@
   ]
  },
  "runtime": {
-  "timers": [],
-  "frames": [],
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
   "animations": 0,
   "observers": [
    "MutationObserver (internal/base › TcElement)",
-   "MutationObserver (internal/controllers › AriaForwardController)"
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [],
-  "listeners": [
-   "document pointerdown"
-  ],
+  "listeners": [],
   "pauses": {
    "offscreen": [],
    "hidden": [],
    "reducedMotion": [
     "CSS",
-    "CSS (internal/kit › kitCss)"
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 25604,
-  "gzip": 8354
+  "min": 34817,
+  "gzip": 11424
  }
 }

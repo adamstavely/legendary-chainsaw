@@ -150,6 +150,15 @@
         "output": {
           "type": "string"
         },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
         "run": {
           "type": "string"
         },
@@ -162,16 +171,7 @@
         "when": {
           "type": "string"
         },
-        "copy": {
-          "type": "string"
-        },
-        "copied": {
-          "type": "string"
-        },
         "download": {
-          "type": "string"
-        },
-        "copyFailed": {
           "type": "string"
         },
         "costliest": {

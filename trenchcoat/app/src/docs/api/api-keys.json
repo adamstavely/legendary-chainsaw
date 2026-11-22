@@ -102,6 +102,22 @@
      "readonly": false
     },
     {
+     "name": "loadSecret",
+     "attribute": null,
+     "type": "((id: string) => Promise<string> | string) | undefined",
+     "default": "undefined",
+     "description": "Fetches a key's full secret, for a service that can show keys again (publishable or test keys, or behind a\npassword check). Given, each active key gets Show / Hide and Copy, and the secret is fetched only when asked for.\nUnset, keys stay masked – the secret shows once, when it's made",
+     "readonly": false
+    },
+    {
+     "name": "hideAfter",
+     "attribute": "hide-after",
+     "type": "number",
+     "default": "30",
+     "description": "Seconds a shown secret stays before it's masked again; 0 keeps it until Hide (default 30)",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -132,7 +148,7 @@
     {
      "name": "tc-copy",
      "detail": "",
-     "description": "Copy was pressed on the new key's secret ({ id }: ApiKeyCopy); cancelable – prevented, nothing is written to the clipboard",
+     "description": "Copy was pressed on a key's secret – the new key's, or a key's own with `loadSecret` ({ id }: ApiKeyCopy); cancelable – prevented, nothing is written to the clipboard",
      "cancelable": true
     }
    ],
@@ -145,15 +161,20 @@
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
     "--tc-action-primary-shadow",
+    "--tc-border-default",
     "--tc-border-subtle",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-h-sm",
     "--tc-control-radius-md",
     "--tc-control-radius-sm",
+    "--tc-duration-base",
     "--tc-duration-fast",
+    "--tc-duration-slower",
+    "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-field-bg",
+    "--tc-field-bg-sunken",
     "--tc-field-h-sm",
     "--tc-field-px",
     "--tc-field-radius",
@@ -173,11 +194,13 @@
     "--tc-hairline",
     "--tc-line-height-normal",
     "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
     "--tc-radius-full",
     "--tc-radius-sm",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
+    "--tc-space-16",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
@@ -194,8 +217,15 @@
     "--tc-surface-tray",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
     "--tc-tray-inset",
-    "--tc-tray-radius"
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
    ]
   }
  ],
@@ -291,7 +321,8 @@
     "expiryOptions",
     "defaultExpiry",
     "revealed",
-    "labels"
+    "labels",
+    "loadSecret"
    ],
    "attributes": [
     {
@@ -317,6 +348,10 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "hideAfter",
+     "attribute": "hide-after"
     }
    ],
    "events": [
@@ -538,7 +573,9 @@
   ]
  },
  "runtime": {
-  "timers": [],
+  "timers": [
+   "setTimeout"
+  ],
   "frames": [],
   "animations": 0,
   "observers": [
@@ -560,7 +597,7 @@
   "windowed": false
  },
  "size": {
-  "min": 32442,
-  "gzip": 9735
+  "min": 39098,
+  "gzip": 11418
  }
 }

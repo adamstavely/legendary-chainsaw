@@ -93,6 +93,9 @@
         "agent": {
           "type": "string"
         },
+        "team": {
+          "type": "string"
+        },
         "grounded": {
           "type": "string"
         },
@@ -115,9 +118,6 @@
           "type": "string"
         },
         "session": {
-          "type": "string"
-        },
-        "team": {
           "type": "string"
         }
       },
@@ -139,6 +139,12 @@
             "$ref": "#/definitions/VerificationVerdict"
           }
         },
+        "team": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VerificationVerdict"
+          }
+        },
         "grounded": {
           "type": "array",
           "items": {
@@ -182,12 +188,6 @@
           }
         },
         "session": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/VerificationVerdict"
-          }
-        },
-        "team": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/VerificationVerdict"

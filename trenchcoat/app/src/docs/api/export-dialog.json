@@ -230,7 +230,7 @@
     {
      "name": "tc-export-cancel",
      "detail": "",
-     "description": "Cancel was pressed while preparing; the page stops the export",
+     "description": "Cancel was pressed while preparing (detail: null); the page stops the export",
      "cancelable": false
     }
    ],
@@ -773,7 +773,7 @@
   "windowed": false
  },
  "size": {
-  "min": 31581,
-  "gzip": 9368
+  "min": 31583,
+  "gzip": 9369
  }
 }

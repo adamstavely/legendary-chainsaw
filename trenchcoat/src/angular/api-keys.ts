@@ -63,6 +63,18 @@ export class ApiKeys {
   @Input() set labels(v: TcApiKeys["labels"]) {
     this.#el.labels = v;
   }
+  /**
+   * Fetches a key's full secret, for a service that can show keys again (publishable or test keys, or behind a
+   * password check). Given, each active key gets Show / Hide and Copy, and the secret is fetched only when asked for.
+   * Unset, keys stay masked – the secret shows once, when it's made
+   */
+  @Input() set loadSecret(v: TcApiKeys["loadSecret"]) {
+    this.#el.loadSecret = v;
+  }
+  /** Seconds a shown secret stays before it's masked again; 0 keeps it until Hide (default 30) */
+  @Input() set hideAfter(v: TcApiKeys["hideAfter"] | `${number}`) {
+    this.#el.hideAfter = typeof v === "string" ? Number(v) : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcApiKeys["look"]) {
     this.#el.look = v;
@@ -83,7 +95,7 @@ export class ApiKeys {
    */
   @Output("tc-reveal-dismiss") readonly tcRevealDismiss = new EventEmitter<CustomEvent<ApiKeyRevealDismiss>>();
   /**
-   * Copy was pressed on the new key's secret ({ id }: ApiKeyCopy); cancelable – prevented, nothing is written to the clipboard
+   * Copy was pressed on a key's secret – the new key's, or a key's own with `loadSecret` ({ id }: ApiKeyCopy); cancelable – prevented, nothing is written to the clipboard
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-copy") readonly tcCopy = new EventEmitter<CustomEvent<ApiKeyCopy>>();
