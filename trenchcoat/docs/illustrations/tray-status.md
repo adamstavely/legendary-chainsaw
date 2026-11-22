@@ -6,10 +6,10 @@
 
 **Illustrations** · New
 
-A tray scene for where things stand – all done, nothing here yet, drop files to upload, new items (with a count), import complete, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 
 - **Element:** `<tc-tray-status>`
-- **Size:** 7.3 KB gzip · 25.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 7.6 KB gzip · 28.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -41,6 +41,9 @@ A tray scene that says where something stands, in the soft style of the state il
 | `new-items` | A tray with `count` on its badge ("99+" past 99) | Blue | The badge settles a few times | 3 new (follows `count`) |
 | `paused` | A tray with a pause mark | Slate | The badge settles twice | Paused |
 | `sync-complete` | A tray with circular arrows and a check | Green | The arrows turn once and the check draws itself | Sync complete |
+| `importing` | Pages falling into the tray one after another, a progress ring on the badge | Blue | The pages fall in and the ring turns, a few times | Importing |
+| `import-errors` | Pages in the tray with a "!" | Amber | The pages drop in once | Imported with errors |
+| `no-matches` | An empty tray with a funnel on the badge | Slate | The badge settles a few times | No matches |
 
 The words follow the status – and for `new-items` the `count` – unless `caption` sets its own. It replaces `<tc-all-done>` and `<tc-upload-failed>`: `status="all-done"` and `status="upload-failed"` draw their scenes exactly as they were.
 
@@ -56,6 +59,9 @@ The words follow the status – and for `new-items` the `count` – unless `capt
 - New items waiting since the person last looked (`new-items`), with `count` saying how many – the words follow it ("12 new").
 - A queue, intake or sync that's been paused on purpose (`paused`), with who paused it and Resume.
 - A sync with another system that finished (`sync-complete`), with when it last ran.
+- An import that's running (`importing`) – the in-progress partner of `import-complete` – with how far it's got.
+- An import that finished but left rows to fix (`import-errors`), leading into `import-review`.
+- Filters that hide everything (`no-matches`), with a way to clear them – unlike `empty`, where nothing exists yet.
 
 ### When not to use
 
@@ -67,7 +73,7 @@ The words follow the status – and for `new-items` the `count` – unless `capt
 
 *Turn on “Show anatomy” on the example to see each part numbered on the live component.*
 
-2. **Mark** `.ui-trs-badge` – the round badge, with a check, a cross, a download or up arrow, a "!", a count (`.ui-trs-count`), a pause mark or turning arrows in ink (`empty` has none)
+2. **Mark** `.ui-trs-badge` – the round badge, with a check, a cross, a download or up arrow, a "!", a count (`.ui-trs-count`), a pause mark, turning arrows, a progress ring or a funnel in ink (`empty` has none)
 3. **Words** `.ui-trs-caption` – what's happened; the default follows the status
 
 ## Looks
@@ -153,7 +159,7 @@ export class TrayStatusExample {
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `status` | `status` | `TrayStatusKind` | `"all-done"` | The scene: "all-done", "empty", "drop-to-upload", "new-items", "import-complete", "export-ready", "sync-complete", "paused", "upload-failed" or "storage-full" |
+| `status` | `status` | `TrayStatusKind` | `"all-done"` | The scene: "all-done", "empty", "drop-to-upload", "new-items", "import-complete", "export-ready", "sync-complete", "paused", "importing", "import-errors", "no-matches", "upload-failed" or "storage-full" |
 | `count` | `count` | `number` | `3` | How many new items "new-items" shows, in its badge and its words (default 3) |
 | `caption` | `caption` | `string \| undefined` | `undefined` | The words under the drawing; unset, the status's own words; "" leaves them out |
 | `label` | `label` | `string` | `""` | Accessible description, when it should say more than the words |
@@ -275,7 +281,7 @@ The host is `role="img"`, named by `label` or else by its words, so what's happe
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 18.2 KB | 5.0 KB |
+| **This piece alone** | 21.7 KB | 5.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -283,8 +289,8 @@ The host is `role="img"`, named by `label` or else by its words, so what's happe
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **25.5 KB** | **7.3 KB** |
-| With Lit – the first component on a page | 45.0 KB | 13.7 KB |
+| **Added to a page that already has Lit** | **28.9 KB** | **7.6 KB** |
+| With Lit – the first component on a page | 48.5 KB | 14.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -292,9 +298,9 @@ The host is `role="img"`, named by `label` or else by its words, so what's happe
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.5 ms** | the gallery demo's data, 8 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| First render | **0.4 ms** | the gallery demo's data, 8 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 8.1 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -329,4 +335,4 @@ Say what happened and what to do next beside it: "Scan_0412.tiff is 48 MB; the l
 ## Related
 
 - [File Import](../components/file-import.md) – Drop a spreadsheet and see what was read – the rows and columns found, the delimiter and encoding, a "First row is headers" switch, the first rows with each column's type in words, problems in words (rows of the wrong length, empty columns, a header named twice), and Continue; CSV and TSV read in the browser, Excel through the page
-- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon and not available in your region – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own

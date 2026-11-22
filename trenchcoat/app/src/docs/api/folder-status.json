@@ -10,7 +10,7 @@
      "attribute": "status",
      "type": "FolderStatusKind",
      "default": "\"empty\"",
-     "description": "Where the folder stands: \"empty\", \"shared\", \"archived\" or \"locked\"",
+     "description": "Where the folder stands: \"empty\", \"shared\", \"syncing\", \"archived\", \"locked\" or \"restricted\"",
      "readonly": false
     },
     {
@@ -310,7 +310,7 @@
   "windowed": false
  },
  "size": {
-  "min": 16872,
-  "gzip": 6186
+  "min": 18383,
+  "gzip": 6448
  }
 }

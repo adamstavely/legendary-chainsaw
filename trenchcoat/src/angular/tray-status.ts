@@ -15,7 +15,7 @@ export class TrayStatus {
   get element(): TcTrayStatus {
     return this.#el;
   }
-  /** The scene: "all-done", "empty", "drop-to-upload", "new-items", "import-complete", "export-ready", "sync-complete", "paused", "upload-failed" or "storage-full" */
+  /** The scene: "all-done", "empty", "drop-to-upload", "new-items", "import-complete", "export-ready", "sync-complete", "paused", "importing", "import-errors", "no-matches", "upload-failed" or "storage-full" */
   @Input() set status(v: TcTrayStatus["status"]) {
     this.#el.status = v;
   }

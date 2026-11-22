@@ -12,7 +12,7 @@ and live in `app/src/docs/perf.json`; each page says when it was measured.
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 3061.2 KB | 12229.3 KB | 10.7 KB |
+| [generated-ui](../components/generated-ui.md) | 3062.5 KB | 12237.2 KB | 10.7 KB |
 | [ai-side-pane](../blocks/ai-side-pane.md) | 163.3 KB | 688.0 KB | 11.2 KB |
 | [small-multiples](../components/small-multiples.md) | 146.4 KB | 457.5 KB | 6.0 KB |
 | [chart](../components/chart.md) | 143.0 KB | 447.5 KB | 2.4 KB |

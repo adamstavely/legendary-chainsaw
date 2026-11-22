@@ -2,13 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "@adamstavely/trenchcoat/generative/schemas/tc-page-state.json",
   "title": "tc-page-state",
-  "description": "The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon and not available in your region – as one illustration.",
+  "description": "The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon, not available in your region and AI unavailable – as one illustration.",
   "type": "object",
   "properties": {
     "status": {
       "type": "string",
       "enum": [
         "access-requested",
+        "ai-unavailable",
         "coming-soon",
         "first-use",
         "limit-reached",
@@ -22,7 +23,7 @@
         "session-expired",
         "something-wrong"
       ],
-      "description": "Which state: \"nothing-found\", \"offline\", \"something-wrong\", \"link-expired\", \"no-access\", \"limit-reached\", \"first-use\", \"not-found\", \"maintenance\", \"session-expired\", \"access-requested\", \"coming-soon\" or \"region-unavailable\""
+      "description": "Which state: \"nothing-found\", \"offline\", \"something-wrong\", \"link-expired\", \"no-access\", \"limit-reached\", \"first-use\", \"not-found\", \"maintenance\", \"session-expired\", \"access-requested\", \"coming-soon\", \"region-unavailable\" or \"ai-unavailable\""
     },
     "caption": {
       "type": "string",

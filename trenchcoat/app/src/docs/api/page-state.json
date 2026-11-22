@@ -3,14 +3,14 @@
   {
    "tag": "tc-page-state",
    "className": "TcPageState",
-   "description": "The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon and not available in your region – as one illustration.",
+   "description": "The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon, not available in your region and AI unavailable – as one illustration.",
    "properties": [
     {
      "name": "status",
      "attribute": "status",
      "type": "PageStateKind",
      "default": "\"nothing-found\"",
-     "description": "Which state: \"nothing-found\", \"offline\", \"something-wrong\", \"link-expired\", \"no-access\", \"limit-reached\", \"first-use\", \"not-found\", \"maintenance\", \"session-expired\", \"access-requested\", \"coming-soon\" or \"region-unavailable\"",
+     "description": "Which state: \"nothing-found\", \"offline\", \"something-wrong\", \"link-expired\", \"no-access\", \"limit-reached\", \"first-use\", \"not-found\", \"maintenance\", \"session-expired\", \"access-requested\", \"coming-soon\", \"region-unavailable\" or \"ai-unavailable\"",
      "readonly": false
     },
     {
@@ -318,7 +318,7 @@
   "windowed": false
  },
  "size": {
-  "min": 30950,
-  "gzip": 8710
+  "min": 31911,
+  "gzip": 8893
  }
 }

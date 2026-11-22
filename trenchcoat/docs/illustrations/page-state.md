@@ -6,10 +6,10 @@
 
 **Illustrations** · New
 
-The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon and not available in your region – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
 
 - **Element:** `<tc-page-state>`
-- **Size:** 8.5 KB gzip · 30.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.7 KB gzip · 31.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -44,6 +44,7 @@ The full-page and empty states as one illustration: a small scene in the soft st
 | `maintenance` | A wrench on a tile | Amber | Down for maintenance | Planned downtime, with when it'll be back |
 | `coming-soon` | A wrapped box | Blue | Coming soon | A feature that isn't released yet |
 | `region-unavailable` | A globe with a slash through it | Slate | Not available in your region | A service that isn't offered where someone is |
+| `ai-unavailable` | The assistant's mark – a chat bubble with a sparkle – with a pause badge | Purple | AI is unavailable | The model or an AI feature is down or turned off; say what still works beside it |
 
 Words follow the status unless `caption` sets its own. `nothing-found`, `something-wrong` and `no-access` fill the frame and have no words of their own, so they're decorative unless given `caption` or `label` – put the message beside them. Each scene moves a little a few times and rests.
 
@@ -151,7 +152,7 @@ export class PageStateExample {
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `status` | `status` | `PageStateKind` | `"nothing-found"` | Which state: "nothing-found", "offline", "something-wrong", "link-expired", "no-access", "limit-reached", "first-use", "not-found", "maintenance", "session-expired", "access-requested", "coming-soon" or "region-unavailable" |
+| `status` | `status` | `PageStateKind` | `"nothing-found"` | Which state: "nothing-found", "offline", "something-wrong", "link-expired", "no-access", "limit-reached", "first-use", "not-found", "maintenance", "session-expired", "access-requested", "coming-soon", "region-unavailable" or "ai-unavailable" |
 | `caption` | `caption` | `string \| undefined` | `undefined` | The words under the drawing; unset, the status's own; "" leaves them out |
 | `label` | `label` | `string` | `""` | Accessible description, when it should say more than the words |
 | `words` | – | `string` | – | The words shown and used as the name: `caption`, or the status's own |
@@ -271,7 +272,7 @@ The host is `role="img"`, named by `label` or else by its words, so the state is
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 23.0 KB | 6.2 KB |
+| **This piece alone** | 23.9 KB | 6.4 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -279,8 +280,8 @@ The host is `role="img"`, named by `label` or else by its words, so the state is
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **30.2 KB** | **8.6 KB** |
-| With Lit – the first component on a page | 49.8 KB | 15.0 KB |
+| **Added to a page that already has Lit** | **31.2 KB** | **8.8 KB** |
+| With Lit – the first component on a page | 50.7 KB | 15.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -290,7 +291,7 @@ The host is `role="img"`, named by `label` or else by its words, so the state is
 | --- | --- | --- |
 | First render | **0.4 ms** | the gallery demo's data, 17 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 2.5 ms | default properties; includes adding its CSS to the document |
+| First on the page | 2.2 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -324,7 +325,7 @@ Say what happened and what to do next beside it: "Your changes are saved on this
 
 ## Related
 
-- [Doc Status](doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
-- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, drop files to upload, new items (with a count), import complete, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+- [Doc Status](doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
+- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 - [Agent Scene](agent-scene.md) – The assistant in a small scene – happy above an empty tray, thinking beside a stack of pages, or asleep beside a sign
 - [Content Hidden](content-hidden.md) – A picture pixelated into an obscured grid with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content

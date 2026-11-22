@@ -348,7 +348,7 @@ the room between the logo and the search form. `defaultAtomicDesignLabels` has t
 ## Related
 
 - [Accessibility Principles](accessibility-principles.md) – Visual, hearing, motor and cognitive needs on pastel tiles, with arrows up from the four principles that serve them – perceivable, operable, understandable and robust – for an accessibility statement or design guide
-- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon and not available in your region – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
 
 ## Changelog
 

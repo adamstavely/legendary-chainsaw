@@ -13,13 +13,16 @@
         "empty",
         "export-ready",
         "import-complete",
+        "import-errors",
+        "importing",
         "new-items",
+        "no-matches",
         "paused",
         "storage-full",
         "sync-complete",
         "upload-failed"
       ],
-      "description": "The scene: \"all-done\", \"empty\", \"drop-to-upload\", \"new-items\", \"import-complete\", \"export-ready\", \"sync-complete\", \"paused\", \"upload-failed\" or \"storage-full\""
+      "description": "The scene: \"all-done\", \"empty\", \"drop-to-upload\", \"new-items\", \"import-complete\", \"export-ready\", \"sync-complete\", \"paused\", \"importing\", \"import-errors\", \"no-matches\", \"upload-failed\" or \"storage-full\""
     },
     "count": {
       "type": "number",

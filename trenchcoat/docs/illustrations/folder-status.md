@@ -6,10 +6,10 @@
 
 **Illustrations** · New
 
-A folder scene for where a folder stands – empty, shared, archived or locked – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+A folder scene for where a folder stands – empty, shared, syncing, archived, locked or restricted – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 
 - **Element:** `<tc-folder-status>`
-- **Size:** 6.0 KB gzip · 16.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 6.3 KB gzip · 18.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -35,6 +35,8 @@ A folder scene that says where a folder stands, in the soft style of the state i
 | `shared` | Two small people on the badge | Blue | The badge settles a few times | Shared folder |
 | `archived` | A box with an arrow going into it on the badge | Slate | The arrow drops a few times | Archived |
 | `locked` | A small padlock badge on the folder's corner | Amber | The lock settles a few times | Locked folder |
+| `syncing` | Circular arrows on the badge | Blue | The arrows turn a few times | Syncing |
+| `restricted` | A shield on the badge | Red | The badge settles a few times | Restricted folder |
 
 The words follow the status unless `caption` sets its own.
 
@@ -44,6 +46,8 @@ The words follow the status unless `caption` sets its own.
 - A folder others can see or edit (`shared`), with who it's shared with.
 - A folder kept for the record but out of the way (`archived`), with how long it's kept and how to restore it.
 - A folder people can't open right now (`locked`) – a legal hold, a permission – with who to ask.
+- A folder that's copying to or from another system (`syncing`), with how far it's got.
+- A folder whose contents carry a classification (`restricted`) – who may see it, not whether it's shut – beside the classification in words (see `sensitivity-label-picker`).
 
 ### When not to use
 
@@ -55,7 +59,7 @@ The words follow the status unless `caption` sets its own.
 
 *Turn on “Show anatomy” on the example to see each part numbered on the live component.*
 
-2. **Mark** `.ui-fds-badge` – the round badge, with people, a box or a padlock in ink (`empty` has none)
+2. **Mark** `.ui-fds-badge` – the round badge, with people, a box, a padlock, turning arrows or a shield in ink (`empty` has none)
 3. **Words** `.ui-fds-caption` – where the folder stands; the default follows the status
 
 ## Looks
@@ -141,7 +145,7 @@ export class FolderStatusExample {
 
 | Property | Attribute | Type | Default | Description |
 | --- | --- | --- | --- | --- |
-| `status` | `status` | `FolderStatusKind` | `"empty"` | Where the folder stands: "empty", "shared", "archived" or "locked" |
+| `status` | `status` | `FolderStatusKind` | `"empty"` | Where the folder stands: "empty", "shared", "syncing", "archived", "locked" or "restricted" |
 | `caption` | `caption` | `string \| undefined` | `undefined` | The words under the drawing; unset, the status's own words; "" leaves them out |
 | `label` | `label` | `string` | `""` | Accessible description, when it should say more than the words |
 
@@ -261,7 +265,7 @@ The host is `role="img"`, named by `label` or else by its words, so where the fo
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 9.2 KB | 3.8 KB |
+| **This piece alone** | 10.7 KB | 4.0 KB |
 | Lit · the library every element is built on, the parts it uses | 18.4 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -269,8 +273,8 @@ The host is `role="img"`, named by `label` or else by its words, so where the fo
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **16.5 KB** | **6.1 KB** |
-| With Lit – the first component on a page | 36.0 KB | 12.5 KB |
+| **Added to a page that already has Lit** | **18.0 KB** | **6.3 KB** |
+| With Lit – the first component on a page | 37.5 KB | 12.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -278,9 +282,9 @@ The host is `role="img"`, named by `label` or else by its words, so where the fo
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.7 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
+| First render | **0.5 ms** | the gallery demo's data, 6 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| First on the page | 121 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -310,11 +314,12 @@ Say what it means and what to do beside it: "Held for legal review. Ask Noor Had
 ### Don't
 
 - Don't rely on it to keep a folder shut – a locked folder is your server's decision; this is a picture and words.
-- Don't use it as the only sign that a folder is shared or locked.
+- Don't use it as the only sign that a folder is shared, locked or restricted.
+- Don't use `restricted` for a lock, or `locked` for a classification – they mean different things.
 
 ## Related
 
-- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, drop files to upload, new items (with a count), import complete, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 - [File Tree](../components/file-tree.md) – A project's files – folders that fold, a filter, an icon per kind of file and a Git status, with search inside files left to the page
 - [Share Panel](../components/share-panel.md) – Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
 - [Legal Hold Manager](../components/legal-hold-manager.md) – Which items are on legal hold, who placed each hold, why and until when – overdue reviews marked, items added, and Release only with a written reason

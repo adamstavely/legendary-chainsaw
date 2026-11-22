@@ -337,8 +337,8 @@ the text beside it already says the same, and it's left out of the accessibility
 
 ## Related
 
-- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon and not available in your region – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
-- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, drop files to upload, new items (with a count), import complete, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 
 ## Changelog
 

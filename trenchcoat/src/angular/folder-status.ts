@@ -15,7 +15,7 @@ export class FolderStatus {
   get element(): TcFolderStatus {
     return this.#el;
   }
-  /** Where the folder stands: "empty", "shared", "archived" or "locked" */
+  /** Where the folder stands: "empty", "shared", "syncing", "archived", "locked" or "restricted" */
   @Input() set status(v: TcFolderStatus["status"]) {
     this.#el.status = v;
   }

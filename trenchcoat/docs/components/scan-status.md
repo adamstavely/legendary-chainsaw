@@ -9,7 +9,7 @@
 Where a file stands in malware scanning – queued, scanning, clean, suspicious, quarantined or failed, inline or as a card, with Rescan and Request review
 
 - **Element:** `<tc-scan-status>`
-- **Size:** 14.2 KB gzip · 48.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 14.5 KB gzip · 50.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -304,9 +304,9 @@ file, and progress is a `progressbar`.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.2 KB | – |
-| [doc-status](../illustrations/doc-status.md) · Element it renders | 25.6 KB | – |
-| **Added to a page that already has Lit** | **48.9 KB** | **14.3 KB** |
-| With Lit – the first component on a page | 68.4 KB | 20.7 KB |
+| [doc-status](../illustrations/doc-status.md) · Element it renders | 27.3 KB | – |
+| **Added to a page that already has Lit** | **50.6 KB** | **14.6 KB** |
+| With Lit – the first component on a page | 70.1 KB | 21.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -314,9 +314,9 @@ file, and progress is a `progressbar`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.6 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
+| First render | **0.3 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 7.3 ms | default properties; includes adding its CSS to the document |
+| First on the page | 8.0 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -350,7 +350,7 @@ Say what was found in `detail`, in plain words. Say suspicious or potential unle
 
 ## Related
 
-- [Doc Status](../illustrations/doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
+- [Doc Status](../illustrations/doc-status.md) – Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
 - [File Details](../blocks/file-details.md) – One file in one place – what it is, the team's flag on it, what's in it, its versions, and who it's shared with after their entitlements are checked (uses `team-flag-picker`, `file-summary`, `version-history`, `share-panel`)
 - [Background Tasks](background-tasks.md) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 - [Content Shield](content-shield.md) – Keeps content unloaded until someone chooses to see it – a picture, the reason and Show, with the content cloned in only on reveal and removed again on Hide

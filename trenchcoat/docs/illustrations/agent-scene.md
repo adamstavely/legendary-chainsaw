@@ -322,7 +322,7 @@ Pair it with a short heading ("You're all caught up"). Use `name` to rename the 
 ## Related
 
 - [Agent Face](../components/agent-face.md) – Donovan's animated face, which shows what the agent is doing – nine states that blend on springs, blinks and glances, a nod or a hop, sharp from 16 to 256 px and resting when it isn't busy
-- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon and not available in your region – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
 
 ## Changelog
 

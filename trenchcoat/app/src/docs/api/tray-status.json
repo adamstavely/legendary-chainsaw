@@ -10,7 +10,7 @@
      "attribute": "status",
      "type": "TrayStatusKind",
      "default": "\"all-done\"",
-     "description": "The scene: \"all-done\", \"empty\", \"drop-to-upload\", \"new-items\", \"import-complete\", \"export-ready\", \"sync-complete\", \"paused\", \"upload-failed\" or \"storage-full\"",
+     "description": "The scene: \"all-done\", \"empty\", \"drop-to-upload\", \"new-items\", \"import-complete\", \"export-ready\", \"sync-complete\", \"paused\", \"importing\", \"import-errors\", \"no-matches\", \"upload-failed\" or \"storage-full\"",
      "readonly": false
     },
     {
@@ -329,7 +329,7 @@
   "windowed": false
  },
  "size": {
-  "min": 26066,
-  "gzip": 7452
+  "min": 29620,
+  "gzip": 7765
  }
 }

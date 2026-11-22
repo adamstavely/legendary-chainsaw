@@ -6,10 +6,10 @@
 
 **Illustrations** · New
 
-Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
+Where a document stands, as one illustration whose `status` picks the badge's drawing, colours, motion and words – draft, awaiting review, approved, changes requested, in translation, in quality control, in coordination, pending release, scheduled, released, queued, processing, in progress, success, partly processed, failed, uploading, downloading, malware scan or blocked, preview unavailable, locked, restricted, on legal hold, redacted, password protected, encrypted, shared, awaiting signature, signed, comments waiting, update available, converting to text, archived, in trash, expired, duplicate, metadata cleansing (required, in progress, failed, done), added to Readbook, working offline and sync conflict
 
 - **Element:** `<tc-doc-status>`
-- **Size:** 11.2 KB gzip · 39.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 11.5 KB gzip · 41.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -36,6 +36,8 @@ It replaces the eleven illustrations that were each one of these – `released`,
 | `status` | Colour | On the badge | Use it for |
 |---|---|---|---|
 | `awaiting-review` | Purple | An hourglass that turns | Waiting for someone to approve it |
+| `approved` | Green | A stamp with a check | Reviewed and accepted |
+| `changes-requested` | Amber | An arrow turning back | Reviewed and sent back for changes – say what to change |
 | `in-translation` | Teal | Two speech bubbles | Being translated |
 | `in-quality-control` | Blue | A magnifier with a check | Being checked before release |
 | `in-coordination` | Amber | Three linked nodes | Several people or teams agreeing it |
@@ -45,6 +47,7 @@ It replaces the eleven illustrations that were each one of these – `released`,
 | `processing` | Teal | A progress ring that turns | A long job with measurable progress |
 | `in-progress` | Blue | Three dots that pulse | Work under way, no number to show |
 | `success` | Green | A check, a ring that pops out | Finished without a problem |
+| `partially-processed` | Amber | A half-filled ring, an amber "!" on the corner | Finished with some errors – say which parts failed and offer Retry |
 | `failed` | Red | A cross, one small shake | Didn't work – say why beside it |
 | `uploading` | Lime | An arrow rising out of a tray | On its way up |
 | `downloading` | Sky blue | An arrow dropping into a tray | On its way to the person |
@@ -66,6 +69,7 @@ It replaces the eleven illustrations that were each one of these – `released`,
 | `duplicate` | Amber | Two pages with "=" | The same as another document – link to it |
 | `sync-conflict` | Amber | Two pages, an amber "!" on the corner | This copy and another changed apart – pairs with working offline |
 | `restricted` | Red | A classification shield | Only some people may open it |
+| `legal-hold` | Purple | A gavel | Kept unchanged for a legal matter – it can't be edited or deleted until the hold is released |
 | `redacted` | Slate | Black bars over the page's text, an eye with a line through it | Parts are hidden before it's shared |
 | `awaiting-signature` | Purple | A pen nib | Waiting for someone to sign |
 | `signed` | Green | A pen nib, a check on the corner | Signed by everyone it needed |
@@ -293,7 +297,7 @@ The host is `role="img"`, named by `label` or else by its words, so where the do
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 27.8 KB | 7.4 KB |
+| **This piece alone** | 29.5 KB | 7.7 KB |
 | Lit · the library every element is built on, the parts it uses | 18.5 KB | – |
 | `internal/doc-stage` · Shared Trenchcoat code | 4.7 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
@@ -302,8 +306,8 @@ The host is `role="img"`, named by `label` or else by its words, so where the do
 | `internal/controllers` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **39.8 KB** | **11.3 KB** |
-| With Lit – the first component on a page | 59.4 KB | 17.7 KB |
+| **Added to a page that already has Lit** | **41.5 KB** | **11.6 KB** |
+| With Lit – the first component on a page | 61.0 KB | 18.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -311,9 +315,9 @@ The host is `role="img"`, named by `label` or else by its words, so where the do
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 13 DOM nodes – to layout, median of 7 |
+| First render | **0.5 ms** | the gallery demo's data, 13 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 8.5 ms | default properties; includes adding its CSS to the document |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -347,7 +351,7 @@ Put what happened and what to do next beside it: "The import stopped at row 412 
 
 ## Related
 
-- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, drop files to upload, new items (with a count), import complete, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
-- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon and not available in your region – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
-- [Folder Status](folder-status.md) – A folder scene for where a folder stands – empty, shared, archived or locked – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+- [Tray Status](tray-status.md) – A tray scene for where things stand – all done, nothing here yet, no matches, drop files to upload, new items (with a count), importing, import complete, imported with errors, export ready, sync complete, paused, upload failed or storage full – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
+- [Page State](page-state.md) – The full-page and empty states as one illustration – nothing found, first use, offline, something wrong, page not found, link expired, no access, access requested, session expired, limit reached, maintenance, coming soon, not available in your region and AI unavailable – each its own small scene with a colour, finite motion and words that follow the status unless `caption` sets its own
+- [Folder Status](folder-status.md) – A folder scene for where a folder stands – empty, shared, syncing, archived, locked or restricted – each with its own badge, colour, finite motion and words, which follow the status unless `caption` sets its own
 - [Scan Status](../components/scan-status.md) – Where a file stands in malware scanning – queued, scanning, clean, suspicious, quarantined or failed, inline or as a card, with Rescan and Request review

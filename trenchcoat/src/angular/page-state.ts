@@ -4,7 +4,7 @@ import type { TcPageState } from "@adamstavely/trenchcoat/page-state";
 import "@adamstavely/trenchcoat/page-state";
 
 /**
- * <tc-page-state> for Angular: The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon and not available in your region – as one illustration.
+ * <tc-page-state> for Angular: The full-page and empty states – nothing found, offline, something wrong, link expired, no access, limit reached, first use, page not found, maintenance, session expired, access requested, coming soon, not available in your region and AI unavailable – as one illustration.
  * 
  * imports: [PageState] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */
@@ -15,7 +15,7 @@ export class PageState {
   get element(): TcPageState {
     return this.#el;
   }
-  /** Which state: "nothing-found", "offline", "something-wrong", "link-expired", "no-access", "limit-reached", "first-use", "not-found", "maintenance", "session-expired", "access-requested", "coming-soon" or "region-unavailable" */
+  /** Which state: "nothing-found", "offline", "something-wrong", "link-expired", "no-access", "limit-reached", "first-use", "not-found", "maintenance", "session-expired", "access-requested", "coming-soon", "region-unavailable" or "ai-unavailable" */
   @Input() set status(v: TcPageState["status"]) {
     this.#el.status = v;
   }
