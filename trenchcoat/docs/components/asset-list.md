@@ -9,7 +9,7 @@
 The assets on record for a person, an account or a company, in groups – each with its kind, name, an identifier masked to its last four characters until shown, a detail line, what it's linked to and a status in words, with Open per row
 
 - **Element:** `<tc-asset-list>`
-- **Size:** 8.3 KB gzip · 25.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 8.5 KB gzip · 26.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -432,23 +432,24 @@ plate shown”.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 18.3 KB | 6.2 KB |
+| **This component alone** | 17.1 KB | 5.7 KB |
 | Lit · the library every element is built on, the parts it uses | 20.6 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
+| `internal/masked-rows` · Shared Trenchcoat code | 1.9 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/util` · Shared Trenchcoat code | 0.1 KB | – |
-| **Added to a page that already has Lit** | **25.8 KB** | **8.3 KB** |
-| With Lit – the first component on a page | 47.6 KB | 15.5 KB |
+| **Added to a page that already has Lit** | **26.3 KB** | **8.6 KB** |
+| With Lit – the first component on a page | 48.1 KB | 15.8 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -458,11 +459,11 @@ plate shown”.
 | --- | --- | --- |
 | First render | **3.4 ms** | the gallery demo's data, 217 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of groups replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 50 ms | groups: first render, 10,066 nodes; update 8.0 ms |
-| 1,000 items | 336 ms | groups: first render, 100,516 nodes; update 28 ms |
+| First on the page | 17 ms | default properties; includes adding its CSS to the document |
+| 100 items | 54 ms | groups: first render, 10,066 nodes; update 5.0 ms |
+| 1,000 items | 331 ms | groups: first render, 100,516 nodes; update 32 ms |
 
-1,000 items of groups: 336 ms. It renders every item, so a first render passes 50 ms (a long task) at about 150 items – page or filter longer lists.
+1,000 items of groups: 331 ms. It renders every item, so a first render passes 50 ms (a long task) at about 150 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

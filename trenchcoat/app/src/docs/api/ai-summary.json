@@ -879,7 +879,7 @@
  "runtime": {
   "timers": [
    "setInterval, cleared",
-   "setTimeout"
+   "setTimeout (internal/summary-shell › CopiedFlash)"
   ],
   "frames": [],
   "animations": 2,
@@ -907,7 +907,7 @@
   "windowed": false
  },
  "size": {
-  "min": 54291,
-  "gzip": 15424
+  "min": 54699,
+  "gzip": 15684
  }
 }

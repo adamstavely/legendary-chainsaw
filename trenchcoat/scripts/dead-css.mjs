@@ -3,7 +3,8 @@
 //   node scripts/dead-css.mjs --fix      deletes those rules (a rule with several selectors loses only the dead ones)
 // A class counts as rendered when it appears in the file outside its CSS string – in a template, a classMap or a
 // string the code builds – or in the element's React wrapper (which renders some structure around children).
-// Classes built from pieces (`ui-x__${part}`, `ui-x--${n}`) are matched by their prefix. Rules for states a demo doesn't reach
+// Classes built from pieces (`ui-x__${part}`, `ui-x--${n}`) are matched by their prefix, and a shared internal/ template
+// that builds `ui-${prefix}__name` counts for each element that imports it. Rules for states a demo doesn't reach
 // still count as live: this only finds classes nothing can produce.
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -22,6 +23,15 @@ for (const name of readdirSync(DIR).filter((f) => f.endsWith(".ts") && f !== "in
   for (const m of cssBlocks) code = code.replace(m[0], "");
   const wrapper = join(DIR, "react", name);
   if (existsSync(wrapper)) code += readFileSync(wrapper, "utf8");
+  // A shared template in internal/ that builds classes from the element's own prefix (`ui-${p}__idle`, as
+  // internal/summary-shell does) renders them for every element that imports it: count them under this element's prefix
+  const ui = source.match(/static (?:override )?ui = "([a-z0-9-]+)"/)?.[1];
+  if (ui)
+    for (const m of source.matchAll(/from "\.\/internal\/([a-z0-9-]+)"/g)) {
+      const helper = join(DIR, "internal", `${m[1]}.ts`);
+      if (!existsSync(helper)) continue;
+      for (const c of readFileSync(helper, "utf8").matchAll(/ui-\$\{[a-zA-Z]+\}(__[a-z0-9-]+)?/g)) code += ` ui-${ui}${c[1] ?? ""}`;
+    }
   const used = new Set(code.match(/\bui-[a-z0-9-]+(?:__[a-z0-9-]+)?/g) ?? []);
   // Pieces like `ui-x__${…}` or "ui-x__" + … make every class with that prefix possible
   const prefixes = [...code.matchAll(/\b(ui-[a-z0-9_-]+)\$\{|\b(ui-[a-z0-9_-]+)["'`]\s*\+/g)].map((m) => m[1] ?? m[2]);

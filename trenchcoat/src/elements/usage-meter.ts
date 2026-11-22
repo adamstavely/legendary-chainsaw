@@ -8,6 +8,7 @@ import { easeOutQuart } from "../internal/ease";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { meterBar, meterTone } from "./internal/meter";
 
 /*
  * <tc-usage-meter> – the Lit port of src/components/usage-meter.tsx: the "Usage" card of a SaaS or AI product.
@@ -25,6 +26,9 @@ import { cardHead } from "./internal/card-head";
  * `daily` back in. The button fires `tc-upgrade` ({ state }).
  */
 
+
+/** Usage Meter's names for the three meter tones */
+const STATE = { normal: "ok", warning: "warn", danger: "limit" } as const;
 export type UsageItem = {
   label: string;
   value: number;
@@ -275,8 +279,7 @@ export class TcUsageMeter extends TcElement {
   }
   /** @internal */
   private get meterState(): UsageState {
-    const share = this.share;
-    return share >= 1 ? "limit" : share >= this.warnAt ? "warn" : "ok";
+    return STATE[meterTone(this.share, this.warnAt, 1)];
   }
   /** @internal The rows of the legend and the bar */
   private get rows(): Row[] {
@@ -560,19 +563,18 @@ export class TcUsageMeter extends TcElement {
         @keydown=${this.onBarKey}
         @blur=${this.onBlurClear}
       >
-        <div
-          class="ui-um__track"
-          .role=${"meter"}
-          aria-label=${`${unit[0]?.toUpperCase() ?? ""}${unit.slice(1)} used`}
-          aria-valuemin="0"
-          aria-valuemax=${total}
-          aria-valuenow=${Math.min(sum, total)}
-          aria-valuetext=${`${fmt(sum)} of ${fmt(total)} ${unit}`}
-        >${repeat(
-          segments,
-          (s) => s.label,
-          (s) => html`<span class="ui-um__seg" ?data-active=${s.label === active} style=${styleMap({ width: `${s.width}%`, background: s.color })}></span>`,
-        )}</div>
+        ${meterBar({
+          cls: "ui-um__track",
+          label: `${unit[0]?.toUpperCase() ?? ""}${unit.slice(1)} used`,
+          max: total,
+          now: Math.min(sum, total),
+          valueText: `${fmt(sum)} of ${fmt(total)} ${unit}`,
+          content: repeat(
+            segments,
+            (s) => s.label,
+            (s) => html`<span class="ui-um__seg" ?data-active=${s.label === active} style=${styleMap({ width: `${s.width}%`, background: s.color })}></span>`,
+          ),
+        })}
         <div class="ui-um__tip" ?data-open=${!!activeRow} style=${styleMap({ left: `${tipCenter}%`, "--tc-usage-meter-tip-x": `${-tipCenter}%` })} aria-hidden="true">${tipRow
           ? html`<span class="ui-um__tip-label"><span class="ui-um__swatch" style=${styleMap({ background: tipRow.color })}></span>${tipRow.label}</span><span class="ui-um__tip-value">${withUnit(fmt(tipRow.value), unit)}<span class="ui-um__muted"> · ${fmt(sum ? (tipRow.value / sum) * 100 : 0)}%</span></span>`
           : nothing}</div>
@@ -657,7 +659,7 @@ export class TcUsageMeter extends TcElement {
           const unlimited = l.total == null || !isFinite(l.total);
           const digits = l.decimals ?? (Number.isInteger(l.used) && (unlimited || Number.isInteger(l.total)) ? 0 : 1);
           const ratio = unlimited ? 0 : l.used / Math.max(l.total!, 1e-9);
-          const lstate: UsageState = unlimited ? "ok" : ratio >= 1 ? "limit" : ratio >= warnAt ? "warn" : "ok";
+          const lstate: UsageState = unlimited ? "ok" : STATE[meterTone(ratio, warnAt, 1)];
           const totalText = unlimited ? "∞" : fmt(l.total!, Number.isInteger(l.total) ? 0 : digits);
           const width = `${Math.min(100, (get(`l:${l.label}`) / Math.max(l.total ?? 0, 1e-9)) * 100)}%`;
           return html`<li class="ui-um__limit" data-state=${lstate}>
@@ -667,15 +669,15 @@ export class TcUsageMeter extends TcElement {
             <span class="ui-um__limit-value">${fmt(get(`l:${l.label}`), digits)}<span class="ui-um__muted"> of ${withUnit(totalText, unlimited ? undefined : l.unit)}</span></span>
             ${unlimited
               ? html`<span class="ui-um__thin" data-unlimited="" aria-label=${`${l.label}: ${fmt(l.used, digits)}, unlimited`} role="img"></span>`
-              : html`<span
-                  class="ui-um__thin"
-                  .role=${"meter"}
-                  aria-label=${l.label}
-                  aria-valuemin="0"
-                  aria-valuemax=${l.total!}
-                  aria-valuenow=${Math.min(l.used, l.total!)}
-                  aria-valuetext=${`${fmt(l.used, digits)} of ${withUnit(totalText, l.unit)}`}
-                ><span style=${styleMap({ width })}></span></span>`}
+              : meterBar({
+                  cls: "ui-um__thin",
+                  tag: "span",
+                  label: l.label,
+                  max: l.total!,
+                  now: Math.min(l.used, l.total!),
+                  valueText: `${fmt(l.used, digits)} of ${withUnit(totalText, l.unit)}`,
+                  content: html`<span style=${styleMap({ width })}></span>`,
+                })}
           </li>`;
         },
       )}

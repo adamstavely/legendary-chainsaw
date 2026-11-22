@@ -9,7 +9,7 @@
 Work with a team of agents while they work – their conversation with a composer in the middle, the team's plan ticking off beside it, the shared context under it; picking an agent points at its steps and its messages (uses `collaboration-stream`, `meter-row`, `segmented-control`)
 
 - **Element:** `<tc-live-session>`
-- **Size:** 34.9 KB gzip · 135.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 35.1 KB gzip · 135.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -472,7 +472,7 @@ words. Marks are hidden. The stream announces its own messages.
 
 ## Performance
 
-*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -485,6 +485,7 @@ words. Marks are hidden. The stream announces its own messages.
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/util` · Shared Trenchcoat code | 1.1 KB | – |
+| `internal/meter` · Shared Trenchcoat code | 0.7 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.4 KB | – |
@@ -493,9 +494,9 @@ words. Marks are hidden. The stream announces its own messages.
 | [mention-picker](../components/mention-picker.md) · Element it renders | 39.8 KB | – |
 | [collaboration-stream](../components/collaboration-stream.md) · Element it renders | 34.1 KB | – |
 | [segmented-control](../components/segmented-control.md) · Element it renders | 29.8 KB | – |
-| [meter-row](../components/meter-row.md) · Element it renders | 6.3 KB | – |
-| **Added to a page that already has Lit** | **135.0 KB** | **34.9 KB** |
-| With Lit – the first component on a page | 156.9 KB | 42.1 KB |
+| [meter-row](../components/meter-row.md) · Element it renders | 6.1 KB | – |
+| **Added to a page that already has Lit** | **135.5 KB** | **35.2 KB** |
+| With Lit – the first component on a page | 157.4 KB | 42.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -503,9 +504,9 @@ words. Marks are hidden. The stream announces its own messages.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | default properties, 67 DOM nodes – to layout, median of 7 |
+| First render | **1.5 ms** | default properties, 67 DOM nodes – to layout, median of 7 |
 | Typical update | **0.1 ms** | re-render with the same data |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| First on the page | 28 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

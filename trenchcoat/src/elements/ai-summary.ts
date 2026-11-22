@@ -5,9 +5,10 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
-import { copyText, formatDate } from "./internal/util";
+import { formatDate } from "./internal/util";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { safeUrl } from "./internal/safe-url";
+import { alertIcon, CopiedFlash, lucide, refreshIcon, summaryActions, summaryCaret, summaryError, summaryIdle, summaryLengthKey, summaryParas, summarySkeleton } from "./internal/summary-shell";
 
 /*
  * <tc-ai-summary> – an AI summary of a set of sources: a thread, a meeting, some documents, a ticket's history. (For
@@ -76,9 +77,7 @@ let uidCount = 0;
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 
-/* Sparkles, message, file, video, ticket, globe, copy, check, refresh, thumbs, list, chevron, alert: Lucide (ISC, lucide.dev) */
-const lucide = (body: TemplateResult, size = 16) =>
-  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+/* Sparkles, message, file, video, ticket, globe, thumbs, list, chevron: Lucide (ISC, lucide.dev); copy, check, refresh and alert are in internal/summary-shell */
 const sparkles = svg`<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path>`;
 const page = svg`<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path>`;
 const KIND_ICON: Record<AiSummarySourceKind, TemplateResult> = {
@@ -99,14 +98,10 @@ const KIND_NOUN: Record<AiSummarySourceKind, [string, string]> = {
   other: ["source", "sources"],
 };
 const KINDS = Object.keys(KIND_NOUN) as AiSummarySourceKind[];
-const copyIcon = () => lucide(svg`<rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>`, 14);
-const checkIcon = () => lucide(svg`<path d="M20 6 9 17l-5-5"></path>`, 14);
-const refreshIcon = () => lucide(svg`<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path>`, 14);
 const upIcon = () => lucide(svg`<path d="M7 10v12"></path><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"></path>`, 14);
 const downIcon = () => lucide(svg`<path d="M17 14V2"></path><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"></path>`, 14);
 const chevronIcon = () => lucide(svg`<path d="m6 9 6 6 6-6"></path>`, 14);
 const sendIcon = () => lucide(svg`<path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path>`, 16);
-const alertIcon = () => lucide(svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path>`, 16);
 
 /** "just now", "5 min ago", "3 h ago", else the date */
 export function aiSummaryAgo(ms: number, now: number, locale?: string) {
@@ -180,7 +175,6 @@ export class TcAiSummary extends TcElement {
   @property() accessor disclaimer = "";
 
   @state() private accessor clock = 0;
-  @state() private accessor copied = false;
   @state() private accessor announce = "";
   /** The citation chip whose source is previewed: "point:source" */
   @state() private accessor tip = "";
@@ -188,7 +182,7 @@ export class TcAiSummary extends TcElement {
   @state() private accessor draft = "";
 
   private uid = `tc-aism-${++uidCount}`;
-  private copiedTimer = 0;
+  private flash = new CopiedFlash(this);
   private timer = 0;
   /** The header's copy of `icon`, and each answer's small one, made once per icon */
   private iconOf: Element | undefined;
@@ -223,7 +217,6 @@ export class TcAiSummary extends TcElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     window.clearInterval(this.timer);
-    clearTimeout(this.copiedTimer);
   }
   /** The clock read: only when the page doesn't give `now` */
   private tick = () => {
@@ -311,11 +304,8 @@ export class TcAiSummary extends TcElement {
 
   private async copy() {
     const text = this.plainText;
-    if (!(await copyText(text))) return;
-    this.copied = true;
+    if (!(await this.flash.copy(text))) return;
     this.announce = "Summary copied";
-    clearTimeout(this.copiedTimer);
-    this.copiedTimer = window.setTimeout(() => (this.copied = false), 1800);
     this.emit("tc-copy", { text });
   }
 
@@ -326,12 +316,10 @@ export class TcAiSummary extends TcElement {
   }
 
   private onLengthKey(e: KeyboardEvent) {
-    const order = ["short", "detailed"] as const;
-    const at = order.indexOf(this.length);
-    const to = ["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key) ? (at + 1) % 2 : e.key === "Home" ? 0 : e.key === "End" ? 1 : -1;
-    if (to < 0) return;
+    const to = summaryLengthKey(e, this.length);
+    if (!to) return;
     e.preventDefault();
-    this.setLength(order[to]);
+    this.setLength(to);
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-aism__len [data-len="${this.length}"]`)?.focus());
   }
 
@@ -381,7 +369,7 @@ export class TcAiSummary extends TcElement {
       else if (this.status === "error") this.announce = `Couldn't summarise ${what}${this.error ? `: ${this.error}` : ""}`;
       else this.announce = "";
     }
-    if (changed.has("status") && this.status !== "done") this.copied = false;
+    if (changed.has("status") && this.status !== "done") this.flash.reset();
     if (changed.has("icon")) this.syncIcon();
     if (changed.has("messages") || this.seen === null) this.noteMessages();
   }
@@ -469,15 +457,14 @@ export class TcAiSummary extends TcElement {
 
   private renderSummary() {
     const streaming = this.status === "summarising";
-    const paras = this.summary.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+    const paras = summaryParas(this.summary);
     const tldr = this.tldr.trim();
-    if (!paras.length && !tldr && streaming)
-      return html`<div class="ui-aism__skeleton" aria-hidden="true"><span></span><span></span><span></span></div>`;
+    if (!paras.length && !tldr && streaming) return summarySkeleton("aism");
     return html`<div class="ui-aism__summary" aria-busy=${streaming ? "true" : "false"}>
       ${tldr
-        ? html`<p class="ui-aism__tldr"><span class="ui-aism__tldr-tag">TL;DR</span> <span class="ui-aism__tldr-text">${tldr}${streaming && !paras.length ? html`<span class="ui-aism__caret" aria-hidden="true"></span>` : nothing}</span></p>`
+        ? html`<p class="ui-aism__tldr"><span class="ui-aism__tldr-tag">TL;DR</span> <span class="ui-aism__tldr-text">${tldr}${streaming && !paras.length ? summaryCaret("aism") : nothing}</span></p>`
         : nothing}
-      ${paras.map((p, i) => html`<p class="ui-aism__p">${p}${streaming && i === paras.length - 1 ? html`<span class="ui-aism__caret" aria-hidden="true"></span>` : nothing}</p>`)}
+      ${paras.map((p, i) => html`<p class="ui-aism__p">${p}${streaming && i === paras.length - 1 ? summaryCaret("aism") : nothing}</p>`)}
     </div>`;
   }
 
@@ -561,7 +548,7 @@ export class TcAiSummary extends TcElement {
 
   /** Paragraphs split on blank lines */
   private paras(text: string) {
-    return text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+    return summaryParas(text);
   }
 
   private renderMessage(m: AiSummaryMessage) {
@@ -631,19 +618,16 @@ export class TcAiSummary extends TcElement {
   private renderBody() {
     const s = this.status;
     if (s === "idle")
-      return html`<div class="ui-aism__idle">
-        <p class="ui-aism__idle-text">Get the gist${this.sources.length ? ` of ${this.counts}` : ""}, the key points with their sources, and what's still open.</p>
-        <button type="button" class="ui-aism__primary" @click=${() => this.emit("tc-summarise", null)}>${lucide(sparkles, 14)}Summarise</button>
-      </div>`;
+      return summaryIdle(
+        "aism",
+        `Get the gist${this.sources.length ? ` of ${this.counts}` : ""}, the key points with their sources, and what's still open.`,
+        lucide(sparkles, 14),
+        () => this.emit("tc-summarise", null),
+      );
     if (s === "error")
-      return html`<div class="ui-aism__error" role="alert">
-        <span class="ui-aism__error-icon">${alertIcon()}</span>
-        <div class="ui-aism__error-text">
-          <p class="ui-aism__error-title">Couldn't summarise${this.subject ? ` ${this.subject}` : " these sources"}</p>
-          ${this.error ? html`<p class="ui-aism__error-detail">${this.error}</p>` : nothing}
-        </div>
-        <button type="button" class="tc-btn-sm ui-aism__retry" @click=${() => this.emit<AiSummaryRetry>("tc-retry", { reason: "error" })}>${refreshIcon()}Retry</button>
-      </div>`;
+      return summaryError("aism", `Couldn't summarise${this.subject ? ` ${this.subject}` : " these sources"}`, this.error, () =>
+        this.emit<AiSummaryRetry>("tc-retry", { reason: "error" }),
+      );
     return html`${this.renderStale()}
       <div class="ui-aism__body">${this.renderSummary()} ${this.renderPoints()} ${this.renderQuestions()} ${this.renderChat()}</div>
       ${this.renderAsk()}`;
@@ -689,10 +673,7 @@ export class TcAiSummary extends TcElement {
                 @click=${() => (this.sourcesOpen = !this.sourcesOpen)}
               ><span>Sources</span><span class="ui-aism__src-count">${this.sources.length}</span>${chevronIcon()}</button>`
             : nothing}
-          <button type="button" class="tc-btn-sm ui-aism__copy" ?disabled=${!done} ?data-copied=${this.copied} @click=${() => void this.copy()}>
-            ${this.copied ? checkIcon() : copyIcon()}<span>${this.copied ? "Copied" : "Copy"}</span>
-          </button>
-          <button type="button" class="tc-btn-sm ui-aism__regen" ?disabled=${!done} @click=${() => this.emit<AiSummaryRetry>("tc-retry", { reason: "regenerate" })}>${refreshIcon()}<span>Regenerate</span></button>
+          ${summaryActions("aism", { done, copied: this.flash.copied, copy: () => void this.copy(), regenerate: () => this.emit<AiSummaryRetry>("tc-retry", { reason: "regenerate" }) })}
         </span>
       </div>
       ${this.renderSources()}`;

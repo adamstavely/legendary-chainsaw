@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased – Fewer copies: one loader, shared internals
+
+- **[Thinking Loader](#/thinking-loader):** takes `mark="pixels"` – the 5 × 5 grid with its `pattern` (wave, drive, dots, orbit), the ticking time (`hide-time`), an error state and `labels` – so one element covers both working pills. `state` (working, done, error) is the preferred way to say how the work stands; `done` still works, and `started` is an alias for `started-at`. **Pixel Loader is removed** – use Thinking Loader with `mark="pixels"`:
+
+  | Before | Now |
+  |---|---|
+  | `<tc-pixel-loader pattern="drive" label="Matching vendor IDs">` | `<tc-thinking-loader mark="pixels" pattern="drive" label="Matching vendor IDs">` |
+  | `<PixelLoader … />` (React) | `<ThinkingLoader mark="pixels" … />` |
+  | `--tc-pixel-loader-ink`, `-dot`, `-gap` | `--tc-thinking-loader-pixel-ink`, `-dot`, `-gap` |
+  | `formatElapsed` from `pixel-loader` | `formatElapsed` from `thinking-loader` |
+- **Shared code, no change to any element's API or look:**
+  - [Running Now](#/running-now) and [Background Tasks](#/background-tasks) share one controller for "notify me when it's done" – the bell, its channels and the events.
+  - The five hover cards for things found in text – [Coordinate Details](#/coordinate-details), [Entity Details](#/entity-details), [Identifier Details](#/identifier-details), [Time Details](#/time-details) and [ISBN Details](#/isbn-details) – share their card's open, pin, keyboard and announcement behaviour, and all use the shared lookup cache.
+  - [Account List](#/account-list), [Asset List](#/asset-list), [Contact Channels](#/contact-channels) and [Document List](#/document-list) share revealing one value at a time and their row-and-button keyboard.
+  - [AI Summary](#/ai-summary) and [File Summary](#/file-summary) share their status states, shimmer and caret, Copy and Regenerate, and Short / Detailed.
+  - [Meter Row](#/meter-row), [Usage Meter](#/usage-meter) and [Rate Limit Status](#/rate-limit-status) share one meter bar and its warning thresholds.
+  - [Gauge](#/gauge) draws its arcs with the same geometry as the charts and [Score Ring](#/score-ring).
+
 ## Unreleased – Audit, views, export, assignment and developer settings
 
 - **[Audit Trail](#/blocks/audit-trail):** a row that opens shows what changed – a Field / Before / After table from `changes`, with "added" and "removed" in words – and search matches the fields and values. Person, Type and Date filters (Today, Last 7 days, Last 30 days) join search and outcome, each controllable (`actor`, `action`, `range`, with cancelable `tc-actor-change`, `tc-action-change`, `tc-range-change`, and `tc-outcome-change` for the outcome), with Clear filters and "n of total events". Export takes the filtered events and adds a `changes` column.

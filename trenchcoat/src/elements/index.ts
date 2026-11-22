@@ -325,7 +325,6 @@ export * from "./permission-request";
 export * from "./person-hovercard";
 export * from "./person-links";
 export * from "./pie-chart";
-export * from "./pixel-loader";
 export * from "./place-list";
 export * from "./plan-vs-actual";
 export * from "./playbook-canvas";

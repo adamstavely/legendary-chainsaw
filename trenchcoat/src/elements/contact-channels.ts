@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { eyeIcon, eyeOffIcon, lucideIcon as lucide, requestReveal, RowButtonGrid } from "./internal/masked-rows";
 import { formatDate, pick } from "./internal/util";
 
 /*
@@ -66,8 +67,6 @@ const KINDS: ContactKind[] = ["email", "phone", "messaging", "address"];
 let uidCount = 0;
 
 /* Kinds, state marks, eye, eye-off and copy: Lucide (ISC, lucide.dev) */
-const lucide = (size: number, body: ReturnType<typeof svg>) =>
-  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const KIND: Record<ContactKind, () => ReturnType<typeof lucide>> = {
   email: () => lucide(16, svg`<rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>`),
   phone: () => lucide(16, svg`<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>`),
@@ -81,9 +80,6 @@ const MARK: Record<ContactTone, () => ReturnType<typeof lucide>> = {
   danger: () => lucide(11, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`),
   neutral: () => lucide(11, svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 16v.01"></path><path d="M12 8v4"></path>`),
 };
-const eyeIcon = () => lucide(15, svg`<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"></path><circle cx="12" cy="12" r="3"></circle>`);
-const eyeOffIcon = () =>
-  lucide(15, svg`<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><path d="M14.08 14.16a3 3 0 0 1-4.16-4.16"></path><path d="m2 2 20 20"></path>`);
 const copyIcon = () => lucide(15, svg`<rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>`);
 const checkIcon = () => lucide(15, svg`<path d="M20 6 9 17l-5-5"></path>`);
 
@@ -177,8 +173,8 @@ export class TcContactChannels extends TcElement {
   }
 
   private setRevealed(c: ContactChannel, shown: boolean) {
-    const next = shown ? [...this.revealed.filter((x) => x !== c.id), c.id] : this.revealed.filter((x) => x !== c.id);
-    if (!this.emit<ContactRevealedChange>("tc-revealed-change", { revealed: next, id: c.id, shown }, { cancelable: true })) return;
+    const next = requestReveal((name, detail, o) => this.emit(name, detail, o), this.revealed, c.id, shown);
+    if (!next) return;
     this.revealed = next;
     this.announce = `${this.kindLabel(c.kind)}${c.role ? ` (${c.role})` : ""} ${shown ? "shown" : "hidden"}`;
   }
@@ -198,47 +194,21 @@ export class TcContactChannels extends TcElement {
 
   /* ---------- Keyboard: one tab stop for the rows' buttons ---------- */
 
-  private focusAt(r: number, k: string) {
-    const rows = this.rows;
-    if (!rows.length) return;
-    r = Math.max(0, Math.min(rows.length - 1, r));
-    const keys = this.keys(rows[r]);
-    if (!keys.length) return;
-    if (!keys.includes(k)) k = keys[0];
-    this.active = { r, k };
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-at="${r}:${CSS.escape(k)}"]`)?.focus());
-  }
-  private onKey = (e: KeyboardEvent) => {
-    const btn = (e.target as HTMLElement).closest<HTMLElement>("[data-at]");
-    if (!btn || e.isComposing || e.altKey || e.metaKey || e.ctrlKey) return;
-    const at = btn.dataset.at!;
-    const r = Number(at.slice(0, at.indexOf(":")));
-    const k = at.slice(at.indexOf(":") + 1);
-    const keys = this.keys(this.rows[r]);
-    const i = keys.indexOf(k);
-    const moves: Record<string, [number, string]> = {
-      ArrowUp: [r - 1, k],
-      ArrowDown: [r + 1, k],
-      ArrowLeft: [r, keys[Math.max(0, i - 1)]],
-      ArrowRight: [r, keys[Math.min(keys.length - 1, i + 1)]],
-      Home: [0, k],
-      End: [this.rows.length - 1, k],
-    };
-    const move = moves[e.key];
-    if (!move) return;
-    e.preventDefault();
-    this.focusAt(move[0], move[1]);
-  };
+  private grid = new RowButtonGrid<string>(this, {
+    count: () => this.rows.length,
+    keys: (r) => this.keys(this.rows[r]),
+    get: () => this.active,
+    set: (stop) => (this.active = stop),
+    fallback: "first",
+  });
+  private onKey = this.grid.onKey;
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     // The tab stop stays on a row and a button that exist
-    const rows = this.rows;
-    if (!rows.length) return;
-    const r = Math.min(this.active.r, rows.length - 1);
-    const keys = this.keys(rows[r]);
-    if (r !== this.active.r || !keys.includes(this.active.k)) this.active = { r, k: keys.includes(this.active.k) ? this.active.k : (keys[0] ?? "") };
+    this.grid.keepInRange();
   }
+
 
   /* ---------- Rendering ---------- */
 

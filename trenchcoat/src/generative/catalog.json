@@ -2806,12 +2806,6 @@
     ]
   },
   {
-    "tag": "tc-pixel-loader",
-    "name": "PixelLoader",
-    "description": "A pixel-grid working indicator: dots lit in a pattern, a shimmering label and the time since the work started; a check or a cross when it ends.",
-    "events": []
-  },
-  {
     "tag": "tc-place-list",
     "name": "PlaceList",
     "description": "Places on record – type with an icon, whether each is confirmed, the address, coordinates and when it applies –",

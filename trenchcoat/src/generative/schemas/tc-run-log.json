@@ -179,10 +179,10 @@
         "trigger": {
           "type": "string"
         },
-        "started": {
+        "statusCol": {
           "type": "string"
         },
-        "statusCol": {
+        "started": {
           "type": "string"
         },
         "statusFilter": {

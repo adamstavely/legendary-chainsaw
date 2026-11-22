@@ -1,7 +1,7 @@
 ---
 pattern: grid
 status: new
-related: inline-diff, data-table, diff-viewer, extraction-review, pixel-loader
+related: inline-diff, data-table, diff-viewer, extraction-review, thinking-loader
 ---
 
 ## Overview

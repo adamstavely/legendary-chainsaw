@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { TaskNotify } from "./internal/task-notify";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
 
@@ -201,7 +202,14 @@ export class TcRunningNow extends TcElement {
   private doneTimer = 0;
   private tickTimer = 0;
   private flip = false;
-  private finishedWatched: RunningNowNotify[] = [];
+  /** Notify when done: the bell, the channel list and telling the page */
+  private readonly notifier = new TaskNotify<RunningTask>(this, {
+    watchable: (t) => t.status === "running" || t.status === "needs-you",
+    name: (t) => t.title,
+    say: (text) => this.say(text),
+    emit: (type, detail, options) => this.emit(type, detail, options),
+    prefix: "ui-rnw",
+  });
 
   private readonly pop = new PopoverController(this, {
     popover: () => this.querySelector<HTMLElement>(".ui-rnw__pop"),
@@ -287,10 +295,7 @@ export class TcRunningNow extends TcElement {
           else if (t.status === "running" && was === "paused") this.pending.push(`${t.title} resumed`);
           else if (t.status === "done") this.pending.push(`${t.title} done`);
           else if (t.status === "failed") this.pending.push(`${t.title} failed`);
-          if ((t.status === "done" || t.status === "failed") && this.notifiable && this.notify.includes(t.id)) {
-            const channels = this.notifyChannels.length ? (this.notifyVia[t.id] ?? []) : undefined;
-            this.finishedWatched.push({ id: t.id, status: t.status, task: t, channels });
-          }
+          if (t.status === "done" || t.status === "failed") this.notifier.finished(t, t.status);
         }
         const wasActive = [...before.values()].some((s) => s === "running" || s === "paused" || s === "needs-you");
         if (wasActive && !c.running && !c.paused && !c.needsYou && this.tasks.length) {
@@ -312,16 +317,14 @@ export class TcRunningNow extends TcElement {
     if (wantOpen && !this.pop.open) this.pop.show({ focus: true });
     else if (!wantOpen && this.pop.open) this.pop.close("api");
     if (!this.tasks.some((t) => t.id === this.activeId)) this.activeId = this.ordered[0]?.id ?? "";
-    if (this.channelsFor && !this.tasks.some((t) => t.id === this.channelsFor && this.canNotify(t))) this.channelsFor = "";
+    this.notifier.prune(this.tasks);
     this.syncClock();
   }
 
   protected override updated(changed: PropertyValues<this>) {
     super.updated(changed);
     // A watched task finished: tell the page, after the update that shows it
-    const done = this.finishedWatched;
-    this.finishedWatched = [];
-    for (const d of done) this.emit<RunningNowNotify>("tc-notify", d);
+    this.notifier.flush();
   }
 
   /** The own clock ticks once a second, only while the panel is open, `now` isn't given and something has a start */
@@ -360,50 +363,6 @@ export class TcRunningNow extends TcElement {
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-rnw__row[data-id="${CSS.escape(task.id)}"] ${action === "pause" ? ".ui-rnw__act" : ".ui-rnw__pause"}`)?.focus());
   }
 
-  /** Tasks still going can be watched */
-  private canNotify(t: RunningTask) {
-    return this.notifiable && (t.status === "running" || t.status === "needs-you");
-  }
-
-  /** Switches watching a task, or one of its channels */
-  private setNotify(task: RunningTask, on: boolean, channels?: string[]) {
-    const notify = on ? [...this.notify.filter((id) => id !== task.id), task.id] : this.notify.filter((id) => id !== task.id);
-    const notifyVia = { ...this.notifyVia };
-    if (channels && channels.length) notifyVia[task.id] = channels;
-    else delete notifyVia[task.id];
-    const detail: RunningNowNotifyChange = { notify, id: task.id, on, notifyVia, ...(channels ? { channels } : {}) };
-    if (!this.emit<RunningNowNotifyChange>("tc-notify-change", detail, { cancelable: true })) {
-      this.requestUpdate();
-      return;
-    }
-    this.notify = notify;
-    this.notifyVia = notifyVia;
-    this.say(on ? `${channels?.length ? `You'll be told by ${channels.join(", ")}` : "You'll be told"} when ${task.title} finishes` : `No longer watching ${task.title}`);
-  }
-
-  private onBell(task: RunningTask) {
-    if (this.notifyChannels.length) {
-      this.channelsFor = this.channelsFor === task.id ? "" : task.id;
-      if (this.channelsFor) this.updateComplete.then(() => this.querySelector<HTMLInputElement>(`.ui-rnw__channels[data-id="${CSS.escape(task.id)}"] input`)?.focus());
-      return;
-    }
-    this.setNotify(task, !this.notify.includes(task.id));
-  }
-
-  private onChannel(task: RunningTask, channel: string, checked: boolean) {
-    const now = this.notifyVia[task.id] ?? [];
-    const channels = this.notifyChannels.filter((c) => (c === channel ? checked : now.includes(c)));
-    this.setNotify(task, channels.length > 0, channels);
-  }
-
-  private onChannelsKey(e: KeyboardEvent, task: RunningTask) {
-    if (e.key !== "Escape") return;
-    // The channel list closes first; the panel stays open
-    e.preventDefault();
-    e.stopPropagation();
-    this.channelsFor = "";
-    this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-rnw__bell[data-id="${CSS.escape(task.id)}"]`)?.focus());
-  }
 
   /* ---------- Keyboard ---------- */
 
@@ -506,7 +465,7 @@ export class TcRunningNow extends TcElement {
         : t.status === "failed"
           ? html`<span class="ui-rnw__ring ui-rnw__ring--failed">${glyph(CROSS)}</span>`
           : ring(t.status === "running" ? (t.progress == null ? null : t.progress) : t.status === "paused" ? clamp01(t.progress ?? 0) : clamp01(t.progress ?? 1), "ui-rnw__ring");
-    const watchable = this.canNotify(t);
+    const watchable = this.notifier.can(t);
     const watched = watchable && this.notify.includes(t.id);
     const menu = watchable && this.notifyChannels.length > 0;
     const open = menu && this.channelsFor === t.id;
@@ -523,7 +482,7 @@ export class TcRunningNow extends TcElement {
           aria-pressed=${ifDefined(menu ? undefined : watched ? "true" : "false")}
           aria-expanded=${ifDefined(menu ? (open ? "true" : "false") : undefined)}
           aria-controls=${ifDefined(open ? `${rid}-ch` : undefined)}
-          @click=${() => this.onBell(t)}
+          @click=${() => this.notifier.bell(t)}
         >
           ${bell(watched)}<span class="ui-rnw__sr">${bellName}${menu && watched && via.length ? `: ${via.join(", ")}` : ""}</span>
         </button>`
@@ -539,11 +498,11 @@ export class TcRunningNow extends TcElement {
         ${actionText}<span class="ui-rnw__sr"> ${t.title}</span>
       </button></span>
       ${open
-        ? html`<fieldset class="ui-rnw__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.onChannelsKey(e, t)}>
+        ? html`<fieldset class="ui-rnw__channels" id=${`${rid}-ch`} data-id=${t.id} @keydown=${(e: KeyboardEvent) => this.notifier.channelsKey(e, t)}>
             <legend class="ui-rnw__channels-title">${w.notifyBy.replace("{task}", t.title)}</legend>
             ${this.notifyChannels.map(
               (c) => html`<label class="ui-rnw__channel"
-                ><input type="checkbox" tabindex=${tab} .checked=${live(via.includes(c))} @change=${(e: Event) => this.onChannel(t, c, (e.target as HTMLInputElement).checked)} />${c}</label
+                ><input type="checkbox" tabindex=${tab} .checked=${live(via.includes(c))} @change=${(e: Event) => this.notifier.channel(t, c, (e.target as HTMLInputElement).checked)} />${c}</label
               >`,
             )}
           </fieldset>`
