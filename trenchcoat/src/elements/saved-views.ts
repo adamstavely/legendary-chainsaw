@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { PopoverController } from "./internal/popover";
 
 /*
  * <tc-saved-views> – the tabs above a list or table, each a saved set of filters, sort and columns: "My open cases",
@@ -14,6 +15,8 @@ import { TcElement } from "./internal/base";
  *     offers Save changes, Save as new view (a name, in place) and Reset
  *   · "+ New view" asks for a name in place
  *   · when the tabs don't fit they scroll sideways, the open one kept in view, and "More views" lists the ones out of view
+ *   · the menus float in the top layer under their tab or button (flipped above when there's no room), so a scrolling
+ *     card never clips them; Escape or a press outside closes them and focus goes back to the button
  * The page owns the views: every action is a request (tc-view-save, tc-view-create, tc-view-reset, tc-view-rename,
  * tc-view-duplicate, tc-view-share, tc-view-default, tc-view-delete) and the page changes `views`. `active` is the
  * element's own unless a tc-active-change listener calls preventDefault().
@@ -158,8 +161,6 @@ export class TcSavedViews extends TcElement {
   @state() private accessor fade = { start: false, end: false };
   /** The open menu: the options of a view, its delete confirmation, or More views */
   @state() private accessor menu: { kind: "options" | "confirm"; id: string } | { kind: "more" } | null = null;
-  /** Where the options menu sits, under its tab – measured when it opens, never in render */
-  @state() private accessor menuX = 0;
   /** The view being renamed in place */
   @state() private accessor renaming = "";
   /** A name being given to a new view: from the filters on screen (the bar) or blank (+ New view) */
@@ -167,6 +168,39 @@ export class TcSavedViews extends TcElement {
 
   private uid = `tc-svw-${++uidCount}`;
   private ro?: ResizeObserver;
+  /** The buttons that open the menus: a press on them toggles a menu rather than counting as outside it */
+  private menuButtons = () => [...this.querySelectorAll(".ui-svw__options, .ui-svw__more, .ui-svw__chevron")];
+  /** View options and its delete confirmation, under the view's tab */
+  private readonly optionsPop = new PopoverController(this, {
+    popover: () => this.querySelector<HTMLElement>(".ui-svw__menu[data-for='options']"),
+    anchor: () => {
+      const m = this.menu;
+      return m && m.kind !== "more" ? this.querySelector<HTMLElement>(`[data-view="${CSS.escape(m.id)}"]`) : null;
+    },
+    side: "bottom",
+    align: "start",
+    gap: 4,
+    kind: "dialog",
+    inside: this.menuButtons,
+    returnFocus: () => this.querySelector<HTMLElement>(".ui-svw__options"),
+    onClose: () => {
+      if (this.menu?.kind !== "more") this.menu = null;
+    },
+  });
+  /** More views, under its button */
+  private readonly morePop = new PopoverController(this, {
+    popover: () => this.querySelector<HTMLElement>(".ui-svw__menu[data-for='more']"),
+    anchor: () => this.querySelector<HTMLElement>(".ui-svw__more"),
+    side: "bottom",
+    align: "end",
+    gap: 4,
+    kind: "dialog",
+    inside: this.menuButtons,
+    returnFocus: () => this.querySelector<HTMLElement>(".ui-svw__more"),
+    onClose: () => {
+      if (this.menu?.kind === "more") this.menu = null;
+    },
+  });
 
   override connectedCallback() {
     super.connectedCallback();
@@ -178,7 +212,6 @@ export class TcSavedViews extends TcElement {
     super.disconnectedCallback();
     this.ro?.disconnect();
     this.ro = undefined;
-    document.removeEventListener("pointerdown", this.onOutside, true);
   }
 
   protected override willUpdate(changed: PropertyValues) {
@@ -188,7 +221,7 @@ export class TcSavedViews extends TcElement {
     if (changed.has("active") && this.active && views.some((v) => v.id === this.active) && !this.matches(":focus-within")) this.focusId = this.active;
     // A view that went away takes its menu and its rename with it
     const menu = this.menu;
-    if (menu && menu.kind !== "more" && !views.some((v) => v.id === menu.id)) this.menu = null;
+    if (menu && menu.kind !== "more" && !views.some((v) => v.id === menu.id)) this.closeMenu(false);
     if (this.renaming && !views.some((v) => v.id === this.renaming)) this.renaming = "";
     if (changed.has("dirty") && !this.dirty && this.naming === "current") this.naming = null;
   }
@@ -273,14 +306,14 @@ export class TcSavedViews extends TcElement {
   /* ---------- Menus ---------- */
 
   private openMenu(menu: NonNullable<TcSavedViews["menu"]>) {
-    if (menu.kind !== "more") {
-      const tab = this.querySelector<HTMLElement>(`[data-view="${CSS.escape(menu.id)}"]`);
-      const bar = this.querySelector<HTMLElement>(".ui-svw__bar");
-      this.menuX = tab && bar ? Math.max(0, tab.getBoundingClientRect().left - bar.getBoundingClientRect().left) : 0;
-    }
+    const pop = menu.kind === "more" ? this.morePop : this.optionsPop;
+    const other = menu.kind === "more" ? this.optionsPop : this.morePop;
+    if (other.open) other.close("api");
     this.menu = menu;
-    document.addEventListener("pointerdown", this.onOutside, true);
+    // Shown – or, from the options to the delete confirmation, placed again for its new size
+    pop.show();
     void this.updateComplete.then(() => {
+      pop.reposition();
       const first = menu.kind === "confirm" ? this.querySelector<HTMLElement>(".ui-svw__confirm-cancel") : this.querySelector<HTMLElement>(".ui-svw__menu [role='menuitem']");
       first?.focus();
     });
@@ -288,7 +321,8 @@ export class TcSavedViews extends TcElement {
   private closeMenu(refocus: boolean) {
     const menu = this.menu;
     this.menu = null;
-    document.removeEventListener("pointerdown", this.onOutside, true);
+    if (this.optionsPop.open) this.optionsPop.close("api");
+    if (this.morePop.open) this.morePop.close("api");
     if (!refocus || !menu) return;
     void this.updateComplete.then(() => {
       const to = menu.kind === "more" ? ".ui-svw__more" : ".ui-svw__options";
@@ -299,11 +333,6 @@ export class TcSavedViews extends TcElement {
     if (this.menu && this.menu.kind !== "more" && this.menu.id === id) this.closeMenu(true);
     else this.openMenu({ kind: "options", id });
   }
-  private onOutside = (e: Event) => {
-    const t = e.target as Node;
-    const inside = [".ui-svw__menu", ".ui-svw__options", ".ui-svw__more", ".ui-svw__chevron"].some((s) => [...this.querySelectorAll(s)].some((el) => el.contains(t)));
-    if (!inside) this.closeMenu(false);
-  };
   private onMenuKey = (e: KeyboardEvent) => {
     const items = [...this.querySelectorAll<HTMLElement>(".ui-svw__menu [role='menuitem'], .ui-svw__menu .ui-svw__confirm button")];
     const at = items.indexOf(document.activeElement as HTMLElement);
@@ -455,7 +484,8 @@ export class TcSavedViews extends TcElement {
     const menuId = `${this.uid}-menu`;
     if (menu.kind === "more") {
       const hidden = this.views.filter((v) => this.outOfView.includes(v.id));
-      return html`<div class="ui-svw__menu" data-at="end" id=${menuId} role="menu" aria-label=${this.word("more")} @keydown=${this.onMenuKey}>
+      if (!this.morePop.open) return nothing;
+      return html`<div class="tc-pop ui-svw__menu" data-for="more" id=${menuId} role="menu" aria-label=${this.word("more")} @keydown=${this.onMenuKey}>
         ${hidden.map(
           (v) => html`<button
             type="button"
@@ -475,11 +505,9 @@ export class TcSavedViews extends TcElement {
       </div>`;
     }
     const view = this.view(menu.id);
-    if (!view) return nothing;
-    // Under its tab, kept inside the bar
-    const left = this.menuX;
+    if (!view || !this.optionsPop.open) return nothing;
     if (menu.kind === "confirm")
-      return html`<div class="ui-svw__menu" id=${menuId} role="dialog" aria-labelledby=${`${this.uid}-confirm`} style=${`--tc-svw-menu-x: ${left}px`} @keydown=${this.onMenuKey}>
+      return html`<div class="tc-pop ui-svw__menu" data-for="options" id=${menuId} role="dialog" aria-labelledby=${`${this.uid}-confirm`} @keydown=${this.onMenuKey}>
         <div class="ui-svw__confirm">
           <p class="ui-svw__confirm-title" id=${`${this.uid}-confirm`}>${fill(this.word("confirmDelete"), { name: view.name })}</p>
           ${view.shared ? html`<p class="ui-svw__confirm-note">${this.word("confirmNote")}</p>` : nothing}
@@ -491,7 +519,7 @@ export class TcSavedViews extends TcElement {
       </div>`;
     const item = (action: Parameters<TcSavedViews["pick"]>[0], text: string, danger = false) =>
       html`<button type="button" role="menuitem" tabindex="-1" class="ui-svw__item" ?data-danger=${danger} @click=${() => this.pick(action, view)}>${text}</button>`;
-    return html`<div class="ui-svw__menu" id=${menuId} role="menu" aria-label=${fill(this.word("optionsFor"), { name: view.name })} style=${`--tc-svw-menu-x: ${left}px`} @keydown=${this.onMenuKey}>
+    return html`<div class="tc-pop ui-svw__menu" data-for="options" id=${menuId} role="menu" aria-label=${fill(this.word("optionsFor"), { name: view.name })} @keydown=${this.onMenuKey}>
       ${item("rename", this.word("rename"))} ${item("duplicate", this.word("duplicate"))} ${item("share", view.shared ? this.word("unshare") : this.word("share"))}
       ${view.isDefault ? nothing : item("default", this.word("makeDefault"))}
       <div class="ui-svw__sep" role="separator"></div>
@@ -623,7 +651,7 @@ export class TcSavedViews extends TcElement {
   color: var(--tc-text-secondary);
   -webkit-font-smoothing: antialiased;
 }
-[data-ui="svw"] { --tc-svw-min: 88px; --tc-svw-max: 240px; --tc-svw-fade: 24px; --tc-svw-dot: 6px; --tc-svw-menu-w: 220px; --tc-svw-menu-x: 0px; container-type: inline-size; }
+[data-ui="svw"] { --tc-svw-min: 88px; --tc-svw-max: 240px; --tc-svw-fade: 24px; --tc-svw-dot: 6px; --tc-svw-menu-w: 220px; container-type: inline-size; }
 [data-ui="svw"] *, [data-ui="svw"] *::before, [data-ui="svw"] *::after { box-sizing: border-box; }
 :where([data-ui="svw"] button:not(.tc-btn-sm)) { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="svw"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: calc(var(--tc-focus-ring-width) * -1); }
@@ -657,8 +685,8 @@ export class TcSavedViews extends TcElement {
 .ui-svw__tool:hover, .ui-svw__tool[aria-expanded="true"] { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
 .ui-svw__tool[hidden] { display: none; }
 .ui-svw__more-count { font-size: var(--tc-font-size-xs); font-variant-numeric: tabular-nums; }
-.ui-svw__menu { position: absolute; top: calc(100% + var(--tc-space-1)); left: min(var(--tc-svw-menu-x), calc(100% - var(--tc-svw-menu-w))); z-index: var(--tc-z-dropdown); display: grid; gap: var(--tc-space-0-5); width: var(--tc-svw-menu-w); max-width: 100%; max-height: calc(var(--tc-space-16) * 5); overflow-y: auto; padding: var(--tc-menu-padding); border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); animation: ui-svw-drop var(--tc-duration-fast) var(--tc-ease-move) both; }
-.ui-svw__menu[data-at="end"] { left: auto; right: 0; }
+/* The menus: the shared popover surface (.tc-pop) in the top layer */
+[data-ui="svw"] .ui-svw__menu { display: grid; gap: var(--tc-space-0-5); width: var(--tc-svw-menu-w); max-height: min(calc(var(--tc-space-16) * 5), calc(100vh - var(--tc-space-4))); overflow-y: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 .ui-svw__item { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); width: 100%; min-height: var(--tc-menu-item-h); padding: 0 var(--tc-menu-item-px) !important; border-radius: var(--tc-menu-item-radius); font-size: var(--tc-menu-item-font-size); color: var(--tc-text-primary); text-align: left; }
 .ui-svw__item:hover, .ui-svw__item:focus-visible { background: var(--tc-menu-item-hover); }
 [data-ui="svw"] .ui-svw__item:focus-visible { outline: none; }
@@ -686,10 +714,8 @@ export class TcSavedViews extends TcElement {
 @container (max-width: 480px) {
   .ui-svw__new-text { display: none; }
 }
-@keyframes ui-svw-drop { from { opacity: 0; transform: translateY(-4px); } }
 @media (hover: none) { .ui-svw__chevron { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
-  .ui-svw__menu { animation: none; }
   .ui-svw__tab, .ui-svw__chevron { transition: none; }
 }
 @media (forced-colors: active) {

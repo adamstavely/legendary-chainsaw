@@ -136,7 +136,7 @@ let instances = 0;
  * @fires tc-selected-columns-change - The columns changed ({ selectedColumns }: ExportSelectedColumnsChange); cancelable – prevented, `selectedColumns` stays as it was
  * @fires tc-email-me-change - "Email me" was ticked or unticked ({ emailMe }: ExportEmailMeChange); cancelable – prevented, `emailMe` stays as it was
  * @fires tc-export - Export or Retry was pressed ({ format, rows, columns, emailMe }: ExportRequest); the page starts the export and sets `status`
- * @fires tc-export-cancel - Cancel was pressed while preparing; the page stops the export
+ * @fires tc-export-cancel - Cancel was pressed while preparing (detail: null); the page stops the export
  */
 export class TcExportDialog extends TcElement {
   static override ui = "exd";
@@ -336,7 +336,7 @@ export class TcExportDialog extends TcElement {
           ><span class="ui-exd__fill"></span></div>
           ${pct !== undefined ? html`<p class="ui-exd__hint" aria-hidden="true">${w.percent.replace("{n}", String(pct))}</p>` : nothing}
         </div>
-        <div class="ui-exd__footer"><button type="button" class="tc-btn-sm ui-exd__main" @click=${() => this.emit("tc-export-cancel", {})}>${w.cancel}</button></div>`;
+        <div class="ui-exd__footer"><button type="button" class="tc-btn-sm ui-exd__main" @click=${() => this.emit("tc-export-cancel", null)}>${w.cancel}</button></div>`;
     }
     if (s === "ready")
       return html`<div class="ui-exd__body ui-exd__state">

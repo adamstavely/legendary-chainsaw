@@ -40,7 +40,7 @@ const RawExportDialog = createComponent({
     onTcSelectedColumnsChange: "tc-selected-columns-change" as EventName<CustomEvent<ExportSelectedColumnsChange>>,
     onTcEmailMeChange: "tc-email-me-change" as EventName<CustomEvent<ExportEmailMeChange>>,
     onTcExport: "tc-export" as EventName<CustomEvent<ExportRequest>>,
-    onTcExportCancel: "tc-export-cancel" as EventName<CustomEvent<Record<string, never>>>,
+    onTcExportCancel: "tc-export-cancel" as EventName<CustomEvent<null>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawExportDialog>;

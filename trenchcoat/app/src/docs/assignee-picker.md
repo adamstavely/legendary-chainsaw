@@ -32,7 +32,7 @@ Assign to me comes first when the page gives `me`. People follow, each with thei
 
 ## Looks
 
-The chip is a pill: on the gray tray in Standard, white with a hairline in Clean. The list opens on the menu surface in both. `--tc-asg-pop-w` sets the list's width and `--tc-asg-load-w` the load bar's.
+The chip is a pill: on the gray tray in Standard, white with a hairline in Clean. The list opens on the menu surface in both, in the top layer under the chip – flipped above it when there's no room below – so a table cell or a scrolling card never clips it. `--tc-asg-pop-w` sets the list's width and `--tc-asg-load-w` the load bar's.
 
 ## Keyboard
 

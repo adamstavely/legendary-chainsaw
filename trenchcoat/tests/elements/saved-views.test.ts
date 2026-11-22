@@ -252,6 +252,45 @@ describe("tc-saved-views", () => {
     expect(el.active).toBe(changes[0].active);
   });
 
+  test("the menus float above a parent that clips: overflow: hidden doesn't cut them off", async () => {
+    const wrap = await fixture<HTMLElement>(
+      html`<div style="overflow: hidden; width: 360px"><tc-saved-views active="mine" .views=${VIEWS}></tc-saved-views></div>`,
+    );
+    const el = wrap.querySelector<TcSavedViews>("tc-saved-views")!;
+    await settle();
+    const check = async (selector: string) => {
+      const menu = el.querySelector<HTMLElement>(selector)!;
+      await expect.poll(() => menu.hasAttribute("data-placed")).toBe(true);
+      const box = wrap.getBoundingClientRect();
+      const r = menu.getBoundingClientRect();
+      expect(r.bottom).toBeGreaterThan(box.bottom + 40);
+      const hit = document.elementFromPoint(r.left + 16, Math.min(r.bottom - 6, box.bottom + 20));
+      expect(hit && menu.contains(hit)).toBe(true);
+    };
+    // View options, under the open view's tab
+    await openOptions(el);
+    await check(".ui-svw__menu[data-for='options']");
+    // Lined up with the tab's left edge, kept at least 8 px inside the viewport
+    const tabLeft = el.querySelector("[data-view='mine']")!.getBoundingClientRect().left;
+    const menuLeft = el.querySelector(".ui-svw__menu")!.getBoundingClientRect().left;
+    expect(menuLeft).toBeGreaterThanOrEqual(tabLeft - 1);
+    expect(menuLeft).toBeLessThan(tabLeft + 12);
+    // A press outside closes it
+    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    await settle();
+    expect(el.querySelector(".ui-svw__menu")).toBeNull();
+    // More views, under its button
+    await expect.poll(() => el.querySelector(".ui-svw__more") !== null).toBe(true);
+    el.querySelector<HTMLButtonElement>(".ui-svw__more")!.click();
+    await settle();
+    await check(".ui-svw__menu[data-for='more']");
+    // Escape closes it and focus goes back to the button
+    key(el.querySelector('.ui-svw__menu [role="menuitem"]')!, "Escape");
+    await settle();
+    expect(el.querySelector(".ui-svw__menu")).toBeNull();
+    await expect.poll(() => document.activeElement === el.querySelector(".ui-svw__more")).toBe(true);
+  });
+
   test("a view that goes away takes its menu with it; renamed words show", async () => {
     const el = await make();
     el.labels = { views: "Case views", options: "More" };

@@ -53,7 +53,11 @@ describe("tc-api-keys", () => {
 
   test("each key: masked value, permissions, who made it, last use and status in words", async () => {
     const el = await keys();
-    expect(text(row(el, "a").querySelector(".ui-akm__masked"))).toBe("Key starting tc_live_…a91f");
+    // A box of dots, which says which key it is in words
+    expect(text(row(el, "a").querySelector(".ui-akm__keybox .ui-akm__masked"))).toBe(`${"•".repeat(24)}Key hidden, ends in a91f`);
+    expect(row(el, "a").querySelector(".ui-akm__masked [aria-hidden]")).not.toBeNull();
+    // Without loadSecret there's nothing to show or copy
+    expect(row(el, "a").querySelector(".ui-akm__show, .ui-akm__copy-key")).toBeNull();
     expect([...row(el, "b").querySelectorAll(".ui-akm__chip")].map(text)).toEqual(["cases:read", "cases:write"]);
     expect(text(row(el, "c").querySelector(".ui-akm__chip"))).toBe("No permissions");
     expect(text(row(el, "a").querySelector(".ui-akm__facts"))).toMatch(/^Made by Noor, .+ Last used 2 hours ago Expires .+$/);
@@ -75,12 +79,55 @@ describe("tc-api-keys", () => {
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     const list = document.getElementById(toggle.getAttribute("aria-controls")!)!;
     expect(list.hidden).toBe(true);
+    // Folded means not drawn, not just marked hidden
+    expect(list.getClientRects()).toHaveLength(0);
     toggle.click();
     await settle();
     expect(list.hidden).toBe(false);
+    expect(list.getClientRects().length).toBeGreaterThan(0);
     expect(status(el, "d")).toBe("Expired");
     expect(status(el, "e")).toBe("Revoked");
     expect(row(el, "d").querySelector(".ui-akm__revoke")).toBeNull();
+  });
+
+  test("with loadSecret, each active key shows and hides its secret and copies it, through icon buttons", async () => {
+    const asked: string[] = [];
+    const el = await fixture<TcApiKeys>(
+      html`<tc-api-keys .keys=${KEYS} .scopes=${SCOPES} .now=${NOW} locale="en-GB" hide-after="0.3" .loadSecret=${async (id: string) => {
+        asked.push(id);
+        return id === "a" ? "tc_live_secret_a91f" : "";
+      }}></tc-api-keys>`,
+    );
+    const a = row(el, "a");
+    const show = button(a, ".ui-akm__show");
+    const copy = button(a, ".ui-akm__copy-key");
+    // Icon buttons, named in words with the key's name, and the same words as a tooltip
+    expect(show.getAttribute("aria-label")).toBe("Show key, Reporting export");
+    expect(copy.getAttribute("aria-label")).toBe("Copy key, Reporting export");
+    expect(show.querySelector("svg")).not.toBeNull();
+    expect(text(show.querySelector(".ui-akm__tip"))).toBe("Show key");
+    // Inside the key's box
+    expect(show.closest(".ui-akm__keybox")).not.toBeNull();
+    // Inactive keys get neither
+    expect(row(el, "d").querySelector(".ui-akm__show")).toBeNull();
+    show.click();
+    await expect.poll(() => text(a.querySelector(".ui-akm__plain"))).toBe("tc_live_secret_a91f");
+    expect(asked).toEqual(["a"]);
+    expect(button(a, ".ui-akm__show").getAttribute("aria-label")).toBe("Hide key, Reporting export");
+    // Masked again on its own after hide-after
+    await expect.poll(() => a.querySelector(".ui-akm__plain"), { timeout: 3000 }).toBeNull();
+    // Copy fetches it (once more) and says so; prevented, nothing is written
+    const copies: string[] = [];
+    el.addEventListener("tc-copy", (e) => {
+      copies.push((e as CustomEvent<{ id: string }>).detail.id);
+      e.preventDefault();
+    });
+    button(a, ".ui-akm__copy-key").click();
+    await expect.poll(() => copies).toEqual(["a"]);
+    // A secret that can't be loaded says so
+    button(row(el, "b"), ".ui-akm__show").click();
+    await expect.poll(() => text(el.querySelector('[role="status"]'))).toMatch(/Couldn't load the key/);
+    expect(row(el, "b").querySelector(".ui-akm__plain")).toBeNull();
   });
 
   test("Create key: a name is required; the form sends the name, permissions and expiry", async () => {

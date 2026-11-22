@@ -572,6 +572,7 @@ export class TcWebhooks extends TcElement {
 .ui-whe__confirm { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2); padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-control-radius-md); background: var(--tc-fill-hover); }
 .ui-whe__confirm > span { flex: 1 1 14em; }
 .ui-whe__deliveries { display: grid; border-radius: var(--tc-control-radius-md); background: var(--tc-field-bg-sunken); }
+.ui-whe__deliveries[hidden] { display: none; }
 .ui-whe__delivery { display: grid; grid-template-columns: minmax(4.5em, auto) minmax(0, 1fr) auto minmax(0, auto) auto; align-items: center; gap: var(--tc-space-1) var(--tc-space-3); min-height: var(--tc-control-h-md); padding: var(--tc-space-1) var(--tc-space-3); font-size: var(--tc-font-size-xs); }
 .ui-whe__delivery:not(:first-child) { box-shadow: inset 0 var(--tc-hairline) var(--tc-border-subtle); }
 .ui-whe__d-time { color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }

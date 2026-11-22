@@ -12,7 +12,7 @@ View options – the ⋯ button beside the tabs, or the chevron on a tab – ren
 
 The page owns the views. Every action is a request – `tc-view-save`, `tc-view-create`, `tc-view-reset`, `tc-view-rename`, `tc-view-duplicate`, `tc-view-share`, `tc-view-default`, `tc-view-delete` – and the page changes `views` in answer. Which view is open is the element's own (`active`), unless a `tc-active-change` listener prevents it.
 
-When the tabs don't fit, they scroll sideways with soft edges, the open one kept in view, and More views lists the ones out of sight.
+When the tabs don't fit, they scroll sideways with soft edges, the open one kept in view, and More views lists the ones out of sight. The menus open in the top layer under their tab or button, flipped above when there's no room, so a scrolling card never clips them.
 
 ## When to use
 

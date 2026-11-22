@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
+import { PopoverController } from "./internal/popover";
 
 /*
  * <tc-assignee-picker> – who owns a case or a task: a person, a team, or the next person in a team's round-robin. A
@@ -12,6 +13,8 @@ import { TcElement } from "./internal/base";
  *   · people over capacity sort after the rest and say so
  *   · the search field keeps focus: ↑ / ↓ move through the options, Enter picks, Escape closes, typing filters
  * `value` is the element's own unless a tc-value-change listener calls preventDefault() – the page saves the change.
+ * The list floats in the top layer under the chip (flipped above when there's no room), so a scrolling card or a table
+ * cell never clips it; Escape or a press outside closes it and focus goes back to the chip.
  * The chip is the same in Standard and Clean; the list opens on the menu surface in both.
  *
  *   <tc-assignee-picker me="noor" .people=${[{ id: "noor", name: "Noor Haddad", team: "Fraud review", open: 7, capacity: 12 }]}></tc-assignee-picker>
@@ -138,11 +141,19 @@ export class TcAssigneePicker extends TcElement {
   @state() private accessor announce = "";
 
   private uid = `tc-asg-${++uidCount}`;
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    document.removeEventListener("pointerdown", this.onOutside, true);
-  }
+  private readonly pop = new PopoverController(this, {
+    popover: () => this.querySelector<HTMLElement>(".ui-asg__pop"),
+    anchor: () => this.querySelector<HTMLElement>(".ui-asg__trigger"),
+    side: "bottom",
+    align: "start",
+    gap: 4,
+    kind: "dialog",
+    returnFocus: () => this.querySelector<HTMLElement>(".ui-asg__trigger"),
+    initialFocus: () => this.querySelector<HTMLElement>(".ui-asg__search-input"),
+    onClose: () => {
+      this.open = false;
+    },
+  });
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
@@ -216,17 +227,15 @@ export class TcAssigneePicker extends TcElement {
     this.query = "";
     this.activeKey = "";
     this.open = true;
-    document.addEventListener("pointerdown", this.onOutside, true);
-    void this.updateComplete.then(() => this.querySelector<HTMLInputElement>(".ui-asg__search-input")?.focus());
+    this.pop.show();
+    void this.updateComplete.then(() => this.pop.focusFirst());
   }
+  /** Closes the list; focus inside it goes back to the chip, and `refocus` sends it there anyway */
   private close(refocus: boolean) {
     this.open = false;
-    document.removeEventListener("pointerdown", this.onOutside, true);
+    this.pop.close("api");
     if (refocus) void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-asg__trigger")?.focus());
   }
-  private onOutside = (e: Event) => {
-    if (!this.contains(e.target as Node)) this.close(false);
-  };
 
   private pick(o: Option) {
     const value = o.value;
@@ -328,7 +337,7 @@ export class TcAssigneePicker extends TcElement {
       </div>`;
     };
     const active = opts.find((o) => o.key === this.activeKey);
-    return html`<div class="ui-asg__pop" role="dialog" aria-label=${this.word("label")} @keydown=${this.onKey}>
+    return html`<div class="tc-pop ui-asg__pop" role="dialog" aria-label=${this.word("label")} @keydown=${this.onKey}>
       <div class="ui-asg__search">
         ${lucide(14, searchIcon)}
         <input
@@ -369,7 +378,7 @@ export class TcAssigneePicker extends TcElement {
         <span class="tc-sr-only">${this.word("label")}: </span><span class="ui-asg__current">${name}</span>
         ${this.disabled ? nothing : html`<span class="ui-asg__chevron" aria-hidden="true">${lucide(12, chevronIcon)}</span>`}
       </button>
-      ${this.open ? this.renderList() : nothing}
+      ${this.open && this.pop.open ? this.renderList() : nothing}
       <span class="tc-sr-only" role="status">${this.announce}</span>`;
   }
 
@@ -395,7 +404,8 @@ export class TcAssigneePicker extends TcElement {
 .ui-asg__avatar { display: inline-grid; place-items: center; flex: none; width: var(--tc-asg-avatar); height: var(--tc-asg-avatar); border-radius: var(--tc-radius-full); background: var(--tc-fill-selected); color: var(--tc-text-primary); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-semibold); letter-spacing: normal; }
 .ui-asg__avatar[data-team] { border-radius: var(--tc-radius-sm); background: var(--tc-fill-hover); color: var(--tc-text-secondary); }
 .ui-asg__avatar[data-empty] { background: transparent; box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-strong); color: var(--tc-icon-muted); }
-.ui-asg__pop { position: absolute; top: calc(100% + var(--tc-space-1)); left: 0; z-index: var(--tc-z-dropdown); display: grid; grid-template-rows: auto minmax(0, 1fr); width: min(var(--tc-asg-pop-w), calc(100vw - var(--tc-space-8))); max-height: calc(var(--tc-space-16) * 6); border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); animation: ui-asg-drop var(--tc-duration-fast) var(--tc-ease-move) both; }
+/* The list: the shared popover surface (.tc-pop) in the top layer, with the search on top and the options scrolling */
+[data-ui="asg"] .ui-asg__pop { display: grid; grid-template-rows: auto minmax(0, 1fr); width: min(var(--tc-asg-pop-w), calc(100vw - var(--tc-space-4))); max-height: min(calc(var(--tc-space-16) * 6), calc(100vh - var(--tc-space-4))); padding: 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 .ui-asg__search { display: flex; align-items: center; gap: var(--tc-space-1-5); padding: var(--tc-space-1-5) var(--tc-space-2); border-bottom: var(--tc-hairline) solid var(--tc-border-default); color: var(--tc-icon-muted); }
 .ui-asg__search-input { flex: 1 1 auto; min-width: 0; height: var(--tc-control-h-sm); padding: 0; border: 0; background: transparent; font: inherit; color: var(--tc-text-primary); }
 .ui-asg__search-input:focus { outline: none; }
@@ -418,9 +428,7 @@ export class TcAssigneePicker extends TcElement {
 .ui-asg__flag[data-over] { color: var(--tc-status-warning-fg); }
 .ui-asg__check { color: var(--tc-accent-text); }
 .ui-asg__empty { padding: var(--tc-space-3); color: var(--tc-text-secondary); text-align: center; }
-@keyframes ui-asg-drop { from { opacity: 0; transform: translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) {
-  .ui-asg__pop { animation: none; }
   .ui-asg__trigger { transition: none; }
 }
 @media (forced-colors: active) {

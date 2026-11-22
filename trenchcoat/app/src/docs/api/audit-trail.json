@@ -3,7 +3,7 @@
   {
    "tag": "tc-audit-trail",
    "className": "TcAuditTrail",
-   "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
+   "description": "Who did what and when, for the record – with what changed, before and after – with search, filters by outcome, person, type and date, and export.",
    "properties": [
     {
      "name": "heading",
@@ -42,7 +42,39 @@
      "attribute": "outcome",
      "type": "AuditOutcomeFilter",
      "default": "\"all\"",
-     "description": "Which outcomes show",
+     "description": "Which outcomes show. Changed by the filter unless a tc-outcome-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "actor",
+     "attribute": "actor",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Only this person's events; \"\" for anyone. Changed by the Person filter unless a tc-actor-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "action",
+     "attribute": "action",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Only this action; \"\" for any. Changed by the Type filter unless a tc-action-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "AuditRange",
+     "default": "\"all\"",
+     "description": "Only events from \"today\", the last \"7d\" or \"30d\", or \"all\". Changed by the Date filter unless a tc-range-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time ranges are measured from, epoch ms; unset, the clock's when the range is picked",
      "readonly": false
     },
     {
@@ -94,6 +126,30 @@
      "cancelable": false
     },
     {
+     "name": "tc-actor-change",
+     "detail": "",
+     "description": "The Person filter changed ({ actor }: AuditActorChange; \"\" is anyone); cancelable – prevented, `actor` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action-change",
+     "detail": "",
+     "description": "The Type filter changed ({ action }: AuditActionChange; \"\" is any action); cancelable – prevented, `action` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-range-change",
+     "detail": "",
+     "description": "The Date filter changed ({ range }: AuditRangeChange); cancelable – prevented, `range` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-outcome-change",
+     "detail": "",
+     "description": "The outcome filter changed ({ outcome }: AuditOutcomeChange); cancelable – prevented, `outcome` stays as it was",
+     "cancelable": true
+    },
+    {
      "name": "tc-export",
      "detail": "",
      "description": "Export was pressed ({ events, csv }: AuditExport); cancelable – without a listener preventing it, the file downloads",
@@ -105,6 +161,7 @@
    "ui": "aud",
    "cssProperties": [],
    "tokens": [
+    "--tc-border-strong",
     "--tc-border-subtle",
     "--tc-card-radius",
     "--tc-card-shadow",
@@ -121,8 +178,10 @@
     "--tc-font-size-sm",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-line-height-normal",
+    "--tc-radius-xs",
     "--tc-space-1",
     "--tc-space-1-5",
     "--tc-space-2",
@@ -144,6 +203,11 @@
  ],
  "functions": [
   {
+   "name": "auditChanges",
+   "signature": "auditChanges(e: AuditEvent): AuditChange[]",
+   "description": "The fields an event really changed: a field with the same value before and after is left out"
+  },
+  {
    "name": "auditCsvCell",
    "signature": "auditCsvCell(value: string): void",
    "description": "One CSV cell. A leading = + - @ (or tab, return) is a formula to a spreadsheet, so it's kept as text"
@@ -151,7 +215,7 @@
   {
    "name": "auditCsv",
    "signature": "auditCsv(events: AuditEvent[]): void",
-   "description": "The events as CSV, with times in ISO 8601"
+   "description": "The events as CSV, with times in ISO 8601; a changes column (\"field: before → after; …\") when any event has changes"
   }
  ],
  "react": [
@@ -164,15 +228,95 @@
      "type": "string",
      "optional": true,
      "description": "The heading; by default \"Audit trail\""
+    },
+    {
+     "name": "actor",
+     "type": "string",
+     "optional": true,
+     "description": "Only this person's events (\"\" for anyone) – controlled when given"
+    },
+    {
+     "name": "defaultActor",
+     "type": "string",
+     "optional": true,
+     "description": "The Person filter on mount when `actor` isn't controlled"
+    },
+    {
+     "name": "onActorChange",
+     "type": "(actor: string) => void",
+     "optional": true,
+     "description": "The Person filter changed"
+    },
+    {
+     "name": "action",
+     "type": "string",
+     "optional": true,
+     "description": "Only this action (\"\" for any) – controlled when given"
+    },
+    {
+     "name": "defaultAction",
+     "type": "string",
+     "optional": true,
+     "description": "The Type filter on mount when `action` isn't controlled"
+    },
+    {
+     "name": "onActionChange",
+     "type": "(action: string) => void",
+     "optional": true,
+     "description": "The Type filter changed"
+    },
+    {
+     "name": "range",
+     "type": "AuditRange",
+     "optional": true,
+     "description": "The date range – controlled when given"
+    },
+    {
+     "name": "defaultRange",
+     "type": "AuditRange",
+     "optional": true,
+     "description": "The Date filter on mount when `range` isn't controlled"
+    },
+    {
+     "name": "onRangeChange",
+     "type": "(range: AuditRange) => void",
+     "optional": true,
+     "description": "The Date filter changed"
+    },
+    {
+     "name": "outcome",
+     "type": "AuditOutcomeFilter",
+     "optional": true,
+     "description": "Which outcomes show – controlled when given"
+    },
+    {
+     "name": "defaultOutcome",
+     "type": "AuditOutcomeFilter",
+     "optional": true,
+     "description": "The outcome filter on mount when `outcome` isn't controlled"
+    },
+    {
+     "name": "onOutcomeChange",
+     "type": "(outcome: AuditOutcomeFilter) => void",
+     "optional": true,
+     "description": "The outcome filter changed"
     }
    ],
    "hides": [
     "heading",
+    "actor",
+    "action",
+    "range",
+    "outcome",
     "children"
    ],
    "events": {
     "tc-query-change": "onTcQueryChange",
-    "tc-export": "onTcExport"
+    "tc-export": "onTcExport",
+    "tc-actor-change": null,
+    "tc-action-change": null,
+    "tc-range-change": null,
+    "tc-outcome-change": null
    }
   }
  ],
@@ -206,6 +350,22 @@
      "attribute": "outcome"
     },
     {
+     "name": "actor",
+     "attribute": "actor"
+    },
+    {
+     "name": "action",
+     "attribute": "action"
+    },
+    {
+     "name": "range",
+     "attribute": "range"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
      "name": "exportable",
      "attribute": "exportable"
     },
@@ -224,11 +384,44 @@
      "cancelable": false
     },
     {
+     "name": "tc-actor-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-range-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-outcome-change",
+     "cancelable": true
+    },
+    {
      "name": "tc-export",
      "cancelable": true
     }
    ],
-   "controlled": [],
+   "controlled": [
+    {
+     "property": "outcome",
+     "event": "tc-outcome-change"
+    },
+    {
+     "property": "actor",
+     "event": "tc-actor-change"
+    },
+    {
+     "property": "action",
+     "event": "tc-action-change"
+    },
+    {
+     "property": "range",
+     "event": "tc-range-change"
+    }
+   ],
    "form": null,
    "slots": []
   }
@@ -393,7 +586,9 @@
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
-  "clock": [],
+  "clock": [
+   "Date.now()"
+  ],
   "listeners": [],
   "pauses": {
    "offscreen": [],
@@ -406,7 +601,7 @@
   "windowed": false
  },
  "size": {
-  "min": 21094,
-  "gzip": 7223
+  "min": 27581,
+  "gzip": 8795
  }
 }

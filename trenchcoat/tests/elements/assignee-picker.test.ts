@@ -180,6 +180,31 @@ describe("tc-assignee-picker", () => {
     expect(el.querySelector(".ui-asg__pop")).toBeNull();
   });
 
+  test("the open list floats above a parent that clips: overflow: hidden doesn't cut it off", async () => {
+    const wrap = await fixture<HTMLElement>(
+      html`<div style="overflow: hidden; height: 48px; width: 220px; padding: 8px; box-sizing: border-box">
+        <tc-assignee-picker me="noor" .people=${PEOPLE} .teams=${TEAMS} .value=${{ type: "person", id: "tomas" }}></tc-assignee-picker>
+      </div>`,
+    );
+    const el = wrap.querySelector<TcAssigneePicker>("tc-assignee-picker")!;
+    await open(el);
+    const pop = el.querySelector<HTMLElement>(".ui-asg__pop")!;
+    await expect.poll(() => pop.hasAttribute("data-placed")).toBe(true);
+    const box = wrap.getBoundingClientRect();
+    const r = pop.getBoundingClientRect();
+    // Below the chip and well past the clipping parent's bottom
+    expect(r.top).toBeGreaterThanOrEqual(chip(el).getBoundingClientRect().bottom);
+    expect(r.bottom).toBeGreaterThan(box.bottom + 100);
+    // What's on screen there is the list, not whatever is behind the clipped parent
+    const hit = document.elementFromPoint(r.left + 24, Math.min(r.bottom - 8, box.bottom + 60));
+    expect(hit && pop.contains(hit)).toBe(true);
+    // Escape closes it and focus goes back to the chip
+    key(input(el), "Escape");
+    await settle();
+    expect(el.querySelector(".ui-asg__pop")).toBeNull();
+    await expect.poll(() => document.activeElement === chip(el)).toBe(true);
+  });
+
   test("disabled: the chip can't open", async () => {
     const el = await make();
     el.disabled = true;

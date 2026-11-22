@@ -106,10 +106,13 @@ describe("tc-webhooks", () => {
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     const list = document.getElementById(toggle.getAttribute("aria-controls")!)!;
     expect(list.hidden).toBe(true);
+    // Folded means not drawn, not just marked hidden
+    expect(list.getClientRects()).toHaveLength(0);
     toggle.click();
     await settle();
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(list.hidden).toBe(false);
+    expect(list.getClientRects().length).toBeGreaterThan(0);
     const rows = [...list.querySelectorAll<HTMLElement>(".ui-whe__delivery")];
     expect(rows).toHaveLength(4);
     expect(text(rows[0]!.querySelector(".ui-whe__d-result"))).toBe(`Retrying at ${hhmm(NOW + 3 * MIN)}`);

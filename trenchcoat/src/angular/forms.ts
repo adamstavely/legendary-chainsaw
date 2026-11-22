@@ -7,6 +7,7 @@ import { Directive, ElementRef, forwardRef, inject, isDevMode } from "@angular/c
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from "@angular/forms";
 import type { TcAiColumnCreate } from "@adamstavely/trenchcoat/ai-column-create";
 import type { TcAnswerArena } from "@adamstavely/trenchcoat/answer-arena";
+import type { TcAssigneePicker } from "@adamstavely/trenchcoat/assignee-picker";
 import type { TcCellInspector } from "@adamstavely/trenchcoat/cell-inspector";
 import type { TcChannelSetup } from "@adamstavely/trenchcoat/channel-setup";
 import type { TcChatComposer } from "@adamstavely/trenchcoat/chat-composer";
@@ -113,6 +114,14 @@ export class AiColumnCreateValueAccessor extends ValueAccessor<TcAiColumnCreate>
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AnswerArenaValueAccessor), multi: true }],
 })
 export class AnswerArenaValueAccessor extends ValueAccessor<TcAnswerArena> {}
+
+/** ngModel, formControl and formControlName on <tc-assignee-picker> */
+@Directive({
+  selector: "tc-assignee-picker[ngModel], tc-assignee-picker[formControl], tc-assignee-picker[formControlName]",
+  standalone: true,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AssigneePickerValueAccessor), multi: true }],
+})
+export class AssigneePickerValueAccessor extends ValueAccessor<TcAssigneePicker> {}
 
 /** ngModel, formControl and formControlName on <tc-cell-inspector> */
 @Directive({
@@ -579,4 +588,4 @@ export class TreeSelectValueAccessor extends ValueAccessor<TcTreeSelect> {}
 export class TriggerBuilderValueAccessor extends ValueAccessor<TcTriggerBuilder> {}
 
 /** Every value accessor, for a standalone component's imports */
-export const TRENCHCOAT_FORMS = [AiColumnCreateValueAccessor, AnswerArenaValueAccessor, CellInspectorValueAccessor, ChannelSetupValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ColorPickerValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataControlsValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DecisionCardValueAccessor, DropzoneValueAccessor, EmbedConfiguratorValueAccessor, EvaluationDatasetEditorValueAccessor, FacetSidebarValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, GaugeValueAccessor, GhostCompletionValueAccessor, InstructionEditorValueAccessor, JudgeSamplingValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SelectValueAccessor, SensitivityLabelPickerValueAccessor, SignaturePadValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TagInputValueAccessor, TeamFlagPickerValueAccessor, TerminalValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TreeSelectValueAccessor, TriggerBuilderValueAccessor] as const;
+export const TRENCHCOAT_FORMS = [AiColumnCreateValueAccessor, AnswerArenaValueAccessor, AssigneePickerValueAccessor, CellInspectorValueAccessor, ChannelSetupValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ColorPickerValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataControlsValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DecisionCardValueAccessor, DropzoneValueAccessor, EmbedConfiguratorValueAccessor, EvaluationDatasetEditorValueAccessor, FacetSidebarValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, GaugeValueAccessor, GhostCompletionValueAccessor, InstructionEditorValueAccessor, JudgeSamplingValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SelectValueAccessor, SensitivityLabelPickerValueAccessor, SignaturePadValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TagInputValueAccessor, TeamFlagPickerValueAccessor, TerminalValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TreeSelectValueAccessor, TriggerBuilderValueAccessor] as const;

@@ -1,10 +1,11 @@
-import { html, nothing, svg, type PropertyValues } from "lit";
+import { html, nothing, svg, type PropertyValues, type SVGTemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { copyText, formatDate } from "./internal/util";
+import { hushTip, unhushTip } from "./internal/trigger-tip";
 
 /*
  * <tc-api-keys> – the API keys of a workspace or an account: each key's name, its masked value ("tc_live_…a91f"), what
@@ -22,6 +23,12 @@ import { copyText, formatDate } from "./internal/util";
  *   <tc-api-keys .keys=${keys} .scopes=${scopes}></tc-api-keys>
  */
 
+
+/* Lucide (ISC, lucide.dev): eye, eye-off, copy, check */
+const EYE = svg`<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"></path><circle cx="12" cy="12" r="3"></circle>`;
+const EYE_OFF = svg`<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c4.7 0 8.7 3 9.94 6.65a1 1 0 0 1 0 .7 10.75 10.75 0 0 1-1.44 2.49"></path><path d="M14.08 14.16a3 3 0 0 1-4.24-4.24"></path><path d="M17.48 17.5A10.75 10.75 0 0 1 2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 4.45-5.14"></path><path d="m2 2 20 20"></path>`;
+const COPY = svg`<rect width="14" height="14" x="8" y="8" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>`;
+const CHECK = svg`<path d="M20 6 9 17l-5-5"></path>`;
 export type ApiKey = {
   id: string;
   name: string;
@@ -93,6 +100,13 @@ export type ApiKeysLabels = {
   copy: string;
   copied: string;
   copyFailed: string;
+  show: string;
+  hide: string;
+  copyKey: string;
+  /** {last4} */
+  maskedKey: string;
+  loading: string;
+  loadFailed: string;
   done: string;
   empty: string;
   emptyHint: string;
@@ -133,6 +147,12 @@ export const defaultApiKeysLabels: ApiKeysLabels = {
   copy: "Copy",
   copied: "Copied",
   copyFailed: "Couldn't copy the key. Select it and copy it yourself.",
+  show: "Show key",
+  hide: "Hide key",
+  copyKey: "Copy key",
+  maskedKey: "Key hidden, ends in {last4}",
+  loading: "Loading…",
+  loadFailed: "Couldn't load the key. Try again.",
   done: "Done",
   empty: "No API keys yet.",
   emptyHint: "Create one to connect another app.",
@@ -181,7 +201,7 @@ export function apiKeyRelative(ms: number, now: number, locale?: string) {
  * @fires tc-key-create - Create key was submitted ({ name, scopes, expiresIn }: ApiKeyCreate); cancelable – prevented, the form stays open. The page makes the key and sets `revealed`
  * @fires tc-key-revoke - Revoke was confirmed ({ id, keys }: ApiKeyRevoke) with the keys as they'd be; cancelable – prevented, `keys` stays as it was
  * @fires tc-reveal-dismiss - Done was pressed on the new key's secret ({ id }: ApiKeyRevealDismiss); cancelable – prevented, the secret stays showing
- * @fires tc-copy - Copy was pressed on the new key's secret ({ id }: ApiKeyCopy); cancelable – prevented, nothing is written to the clipboard
+ * @fires tc-copy - Copy was pressed on a key's secret – the new key's, or a key's own with `loadSecret` ({ id }: ApiKeyCopy); cancelable – prevented, nothing is written to the clipboard
  */
 export class TcApiKeys extends TcElement {
   static override ui = "akm";
@@ -210,6 +230,14 @@ export class TcApiKeys extends TcElement {
   @property() accessor locale: string | undefined = undefined;
   /** Rename any of the words */
   @property({ attribute: false }) accessor labels: Partial<ApiKeysLabels> = {};
+  /**
+   * Fetches a key's full secret, for a service that can show keys again (publishable or test keys, or behind a
+   * password check). Given, each active key gets Show / Hide and Copy, and the secret is fetched only when asked for.
+   * Unset, keys stay masked – the secret shows once, when it's made
+   */
+  @property({ attribute: false }) accessor loadSecret: ((id: string) => Promise<string> | string) | undefined = undefined;
+  /** Seconds a shown secret stays before it's masked again; 0 keeps it until Hide (default 30) */
+  @property({ type: Number, attribute: "hide-after" }) accessor hideAfter = 30;
 
   @state() private accessor creating = false;
   @state() private accessor draftName = "";
@@ -219,6 +247,11 @@ export class TcApiKeys extends TcElement {
   @state() private accessor confirming: string | null = null;
   @state() private accessor showInactive = false;
   @state() private accessor copied = false;
+  /** Secrets fetched with loadSecret, by key id – kept only while shown, or for one Copy */
+  @state() private accessor shown = new Map<string, string>();
+  @state() private accessor loadingId: string | null = null;
+  @state() private accessor copiedId: string | null = null;
+  private hideTimers = new Map<string, ReturnType<typeof setTimeout>>();
   @state() private accessor announce = "";
   private clock = 0;
   private readonly uid = `tc-akm-${++instances}`;
@@ -289,6 +322,74 @@ export class TcApiKeys extends TcElement {
       this.copied = true;
       this.announce = w.announceCopied;
     } else this.announce = w.copyFailed;
+  }
+
+  /** A key's secret through loadSecret; null when it couldn't be loaded */
+  private async fetchSecret(id: string): Promise<string | null> {
+    const have = this.shown.get(id);
+    if (have !== undefined) return have;
+    if (!this.loadSecret) return null;
+    this.loadingId = id;
+    try {
+      const secret = await this.loadSecret(id);
+      return typeof secret === "string" && secret ? secret : null;
+    } catch {
+      return null;
+    } finally {
+      if (this.loadingId === id) this.loadingId = null;
+    }
+  }
+
+  private hideSecret(id: string) {
+    clearTimeout(this.hideTimers.get(id));
+    this.hideTimers.delete(id);
+    if (!this.shown.has(id)) return;
+    const next = new Map(this.shown);
+    next.delete(id);
+    this.shown = next;
+  }
+
+  private async toggleSecret(key: ApiKey) {
+    if (this.shown.has(key.id)) {
+      this.hideSecret(key.id);
+      return;
+    }
+    const secret = await this.fetchSecret(key.id);
+    if (secret === null) {
+      this.announce = this.words.loadFailed;
+      return;
+    }
+    this.shown = new Map(this.shown).set(key.id, secret);
+    if (this.hideAfter > 0) this.hideTimers.set(key.id, setTimeout(() => this.hideSecret(key.id), this.hideAfter * 1000));
+  }
+
+  private async copyKey(key: ApiKey) {
+    const w = this.words;
+    const secret = await this.fetchSecret(key.id);
+    if (secret === null) {
+      this.announce = w.loadFailed;
+      return;
+    }
+    if (!this.emit<ApiKeyCopy>("tc-copy", { id: key.id }, { cancelable: true })) return;
+    if (await copyText(secret)) {
+      this.copiedId = key.id;
+      this.announce = w.announceCopied;
+    } else this.announce = w.copyFailed;
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    for (const t of this.hideTimers.values()) clearTimeout(t);
+    this.hideTimers.clear();
+    this.shown = new Map();
+  }
+
+  /** An icon-only button named by its words and the key's name, with those words as a small tooltip */
+  private iconButton(cls: string, words: string, name: string, icon: SVGTemplateResult, click: () => void, busy = false, done = false) {
+    return html`<button type="button" class=${`ui-akm__key-btn ${cls}`} aria-label=${`${words}, ${name}`} aria-busy=${busy ? "true" : "false"} ?disabled=${busy} ?data-done=${done}
+      @click=${click} @keydown=${hushTip} @pointerenter=${unhushTip} @focus=${unhushTip}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icon}</svg><span class="ui-akm__tip" aria-hidden="true">${words}</span>
+    </button>`;
   }
 
   private dismiss() {
@@ -390,7 +491,17 @@ export class TcApiKeys extends TcElement {
       <div class="ui-akm__top">
         <div class="ui-akm__who">
           <span class="ui-akm__name">${key.name}</span>
-          <code class="ui-akm__masked"><span class="tc-sr-only">Key starting </span>${key.prefix}…${key.last4 ?? ""}</code>
+          <div class="ui-akm__keybox" ?data-shown=${this.shown.has(key.id)}>
+            ${this.shown.has(key.id)
+              ? html`<code class="ui-akm__plain">${this.shown.get(key.id)}</code>`
+              : html`<code class="ui-akm__masked"><span aria-hidden="true">${"•".repeat(24)}</span><span class="tc-sr-only">${w.maskedKey.replace("{last4}", key.last4 ?? "")}</span></code>`}
+          ${this.loadSecret && live_
+            ? html`<span class="ui-akm__key-actions">
+                ${this.iconButton("ui-akm__show", this.loadingId === key.id ? w.loading : this.shown.has(key.id) ? w.hide : w.show, key.name, this.shown.has(key.id) ? EYE_OFF : EYE, () => this.toggleSecret(key), this.loadingId === key.id)}
+                ${this.iconButton("ui-akm__copy-key", this.copiedId === key.id ? w.copied : w.copyKey, key.name, this.copiedId === key.id ? CHECK : COPY, () => this.copyKey(key), false, this.copiedId === key.id)}
+              </span>`
+            : nothing}
+          </div>
         </div>
         <span class="ui-akm__status" data-status=${s.status}><span class="ui-akm__dot" aria-hidden="true"></span>${s.text}</span>
       </div>
@@ -481,11 +592,29 @@ export class TcApiKeys extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="akm"] .ui-akm__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); overflow: hidden; }
 .ui-akm__count { color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-variant-numeric: tabular-nums; }
 .ui-akm__list { display: grid; }
+.ui-akm__list[hidden] { display: none; }
 .ui-akm__row { display: grid; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-4); }
 .ui-akm__list > .ui-akm__row:not(:first-child), .ui-akm__form + .ui-akm__list > .ui-akm__row:first-child, .ui-akm__reveal + .ui-akm__list > .ui-akm__row:first-child { box-shadow: inset 0 var(--tc-hairline) var(--tc-border-subtle); }
 .ui-akm__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--tc-space-3); }
 .ui-akm__who { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
 .ui-akm__name { font-weight: var(--tc-font-weight-medium); overflow-wrap: anywhere; }
+.ui-akm__plain { color: var(--tc-text-primary); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); overflow-wrap: anywhere; }
+.ui-akm__key-actions { display: inline-flex; flex: none; gap: var(--tc-space-0-5); }
+/* The key in a box, like a password field: dots while hidden, the secret when shown, its buttons inside on the right */
+.ui-akm__keybox { display: flex; align-items: center; gap: var(--tc-space-2); max-width: calc(var(--tc-space-16) * 6); min-height: var(--tc-control-h-sm); padding: 0 var(--tc-space-0-5) 0 var(--tc-space-2-5); border: var(--tc-hairline) solid var(--tc-border-default); border-radius: var(--tc-control-radius-sm); background: var(--tc-field-bg-sunken); }
+.ui-akm__keybox > code { flex: 1 1 auto; min-width: 0; padding: var(--tc-space-1) 0; }
+.ui-akm__keybox .ui-akm__masked span[aria-hidden] { letter-spacing: var(--tc-space-0-5); color: var(--tc-text-secondary); white-space: nowrap; overflow: hidden; display: block; }
+.ui-akm__key-btn { position: relative; display: inline-grid; place-items: center; width: var(--tc-space-6); height: var(--tc-space-6); margin: 0; padding: 0; border: 0; border-radius: var(--tc-control-radius-sm); background: transparent; color: var(--tc-text-secondary); cursor: pointer; }
+.ui-akm__key-btn svg { width: var(--tc-space-3-5); height: var(--tc-space-3-5); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ui-akm__key-btn:hover { background: var(--tc-surface-tray); color: var(--tc-text-primary); }
+.ui-akm__key-btn[data-done] { color: var(--tc-status-success-fg); }
+.ui-akm__tip { position: absolute; top: calc(100% + var(--tc-space-1)); left: 50%; z-index: var(--tc-z-dropdown); width: max-content; padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; pointer-events: none; visibility: hidden; opacity: 0; transform: translate(-50%, -2px); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-move), visibility 0s linear var(--tc-duration-base); }
+.ui-akm__key-btn:focus-visible:not([data-hush]) .ui-akm__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: 0ms; }
+@media (hover: hover) {
+  .ui-akm__key-btn:hover:not([data-hush]) .ui-akm__tip { visibility: visible; opacity: 1; transform: translateX(-50%); transition-delay: var(--tc-duration-slower); }
+}
+.ui-akm__key-btn:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-akm__key-btn:disabled { color: var(--tc-text-secondary); cursor: progress; }
 .ui-akm__masked { color: var(--tc-text-secondary); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); overflow-wrap: anywhere; }
 .ui-akm__status { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); }
 .ui-akm__dot { width: var(--tc-space-1-5); height: var(--tc-space-1-5); border-radius: var(--tc-radius-full); background: currentColor; }
