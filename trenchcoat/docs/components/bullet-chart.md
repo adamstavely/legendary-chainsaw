@@ -9,7 +9,7 @@
 Each measure against its target and poor–fair–good ranges, one row each – the one furthest behind in the accent, its own scale or one shared, quiet or status-tinted bands, values at the right
 
 - **Element:** `<tc-bullet-chart>`
-- **Size:** 16.8 KB gzip · 47.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.0 KB gzip · 48.5 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -195,6 +195,7 @@ export class BulletChartExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -257,7 +258,7 @@ export class BulletChartExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-bullet-chart :format="…">` | `<tc-bullet-chart [format]="…">` | `<tc-bullet-chart {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-bullet-chart :labels="…">` | `<tc-bullet-chart [labels]="…">` | `<tc-bullet-chart {labels}>` |
 
-*Also attributes: `independent`, `range-tone`, `heading`, `description`, `unit`, `locale`, `height`, `still` and 6 more – see the API table.*
+*Also attributes: `independent`, `range-tone`, `heading`, `description`, `unit`, `locale`, `height`, `still` and 7 more – see the API table.*
 
 ### Events
 
@@ -461,7 +462,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -469,7 +470,7 @@ No slots: everything it shows comes from its properties.
 | --- | --- | --- |
 | **This component alone** | 8.8 KB | 3.9 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.1 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
@@ -487,8 +488,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **47.8 KB** | **16.8 KB** |
-| With Lit – the first component on a page | 67.2 KB | 22.9 KB |
+| **Added to a page that already has Lit** | **48.5 KB** | **17.1 KB** |
+| With Lit – the first component on a page | 67.9 KB | 23.3 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -496,13 +497,13 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
-| Typical update | **0.6 ms** | one item of data replaced |
+| First render | **2.0 ms** | the gallery demo's data, 34 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of data replaced |
 | First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 5.8 ms | data: first render, 204 nodes; update 1.1 ms |
-| 1,000 items | 5.8 ms | data: first render, 204 nodes; update 2.1 ms |
+| 100 items | 6.1 ms | data: first render, 204 nodes; update 1.2 ms |
+| 1,000 items | 13 ms | data: first render, 204 nodes; update 4.3 ms |
 
-1,000 items of data: 5.8 ms, 204 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of data: 13 ms, 204 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

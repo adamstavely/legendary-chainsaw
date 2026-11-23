@@ -57,6 +57,22 @@
       "maxItems": 2,
       "description": "A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for \"percent\""
     },
+    "compare": {
+      "type": "string",
+      "description": "Last period's value for each category – one series – drawn dashed above or across its bar, with the change in the tooltip"
+    },
+    "compareLabel": {
+      "type": "string",
+      "description": "What last period is called (default \"Last period\")"
+    },
+    "live": {
+      "type": "boolean",
+      "description": "The last category is still counting – today: its bar breathes and its value reads \"so far\""
+    },
+    "liveLabel": {
+      "type": "string",
+      "description": "The words after a live value (default \"so far\")"
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"
@@ -223,6 +239,10 @@
       },
       "additionalProperties": false,
       "description": "The words it shows and says, merged over defaultChartLabels"
+    },
+    "sync": {
+      "type": "string",
+      "description": "A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x)"
     }
   },
   "additionalProperties": false,

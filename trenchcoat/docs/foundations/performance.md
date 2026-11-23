@@ -12,10 +12,10 @@ and live in `app/src/docs/perf.json`; each page says when it was measured.
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 3093.3 KB | 12373.7 KB | 10.7 KB |
+| [generated-ui](../components/generated-ui.md) | 3098.0 KB | 12388.6 KB | 10.7 KB |
 | [ai-side-pane](../blocks/ai-side-pane.md) | 163.3 KB | 688.0 KB | 11.2 KB |
-| [small-multiples](../components/small-multiples.md) | 147.1 KB | 457.5 KB | 6.0 KB |
-| [chart](../components/chart.md) | 143.7 KB | 447.5 KB | 2.4 KB |
+| [small-multiples](../components/small-multiples.md) | 149.1 KB | 463.6 KB | 6.0 KB |
+| [chart](../components/chart.md) | 145.6 KB | 453.6 KB | 2.4 KB |
 | [ai-workspace](../blocks/ai-workspace.md) | 102.2 KB | 435.0 KB | 13.6 KB |
 | [chat-composer](../components/chat-composer.md) | 87.0 KB | 373.2 KB | 32.1 KB |
 | [embed-configurator](../components/embed-configurator.md) | 51.0 KB | 200.1 KB | 7.5 KB |
@@ -31,7 +31,7 @@ and live in `app/src/docs/perf.json`; each page says when it was measured.
 | [multi-calendar](../components/multi-calendar.md) | 9 ms | 1.5 ms | 1368 |
 | [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 8.1 ms | 2.4 ms | 1049 |
 | [active-days](../components/active-days.md) | 7.9 ms | 5.2 ms | 718 |
-| [network-graph](../components/network-graph.md) | 7.2 ms | 4 ms | 157 |
+| [network-graph](../components/network-graph.md) | 6.8 ms | 3.5 ms | 157 |
 | [fan-out-grid](../components/fan-out-grid.md) | 6.6 ms | 0.7 ms | 176 |
 
 ## Bundle

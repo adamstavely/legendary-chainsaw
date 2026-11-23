@@ -10,7 +10,8 @@ import { safeUrl } from "./internal/safe-url";
 /*
  * <tc-thinking-state> – the Lit port of src/components/thinking-state.tsx: the "working…" panel of an AI chat. A
  * header with a live timer, then searches with their sources and the thinking steps appear one after another; at
- * the end a check, and the header turns into "Worked for …". Clean is one white card with hairline shadows: a 3×3
+ * the end a check, and the header turns into "Worked for …", followed by how many sources it searched ("· 12 sources")
+ * unless `hide-tally`. Clean is one white card with hairline shadows: a 3×3
  * pixel mark that twinkles while it thinks, and only the steps fold away.
  *
  *   <tc-thinking-state .steps=${[{ kind: "step", label: "Reading the brief" }]} done-label="Ready"></tc-thinking-state>
@@ -85,6 +86,8 @@ export class TcThinkingState extends TcElement {
   @property({ type: Boolean }) accessor loop = false;
   /** Whether the steps are unfolded */
   @property({ type: Boolean }) accessor open = true;
+  /** Leaves the number of sources searched ("· 12 sources") off the finished header */
+  @property({ type: Boolean, attribute: "hide-tally" }) accessor hideTally = false;
   /** When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started */
   @property({ type: Number, attribute: "started-at" }) accessor startedAt: number | undefined = undefined;
 
@@ -337,9 +340,16 @@ export class TcThinkingState extends TcElement {
     </ol>`;
   }
 
+  /** "12 sources": every source the searches turned up, the folded ones too; empty without searches */
+  get tally(): string {
+    const n = this.steps.reduce((sum, st) => sum + (st.kind === "search" ? st.sources.length + (st.moreSources?.length ?? 0) : 0), 0);
+    return n ? `${n} ${n === 1 ? "source" : "sources"}` : "";
+  }
+
   protected override render() {
     const clean = this.clean;
     const done = this.isDone;
+    const tally = this.hideTally ? "" : this.tally;
     const open = this.open;
     const bodyId = `${this.uid}-steps`;
     const list = this.renderList();
@@ -347,7 +357,7 @@ export class TcThinkingState extends TcElement {
     return keyed(
       this.run,
       html`
-        <span class="ui-think__sr" role="status">${done ? `${this.doneLabel}. Worked for ${format(this.seconds)}` : ""}</span>
+        <span class="ui-think__sr" role="status">${done ? `${this.doneLabel}. Worked for ${format(this.seconds)}${tally ? `, searched ${tally}` : ""}` : ""}</span>
         <button type="button" class="ui-think__head" aria-expanded=${open ? "true" : "false"} aria-controls=${bodyId} @click=${() => this.setOpen(!this.open)}>
           ${clean
             ? html`<span class="ui-think__mark" aria-hidden="true">${PIXEL_DELAYS.map((d) => html`<i style=${styleMap({ animationDelay: `${d}ms` })}></i>`)}</span>`
@@ -355,7 +365,7 @@ export class TcThinkingState extends TcElement {
           ${keyed(
             done ? "done" : "busy",
             html`<span class="ui-think__title">${done
-              ? `Worked for ${format(this.seconds)}`
+              ? html`Worked for ${format(this.seconds)}${tally ? html`<span class="ui-think__tally"> · ${tally}</span>` : nothing}`
               : html`<span class="ui-think__shimmer" data-text="Thinking">Thinking</span><span class="ui-think__time" aria-hidden="true">${format(this.seconds)}</span>`}</span>`,
           )}
           ${clean ? html`<span class="ui-think__chevron" aria-hidden="true">${chevronClean}</span>` : nothing}
@@ -452,6 +462,8 @@ export class TcThinkingState extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-think__time {
   font-variant-numeric: tabular-nums;
 }
+/* After "Worked for …": how many sources it searched, a shade quieter */
+.ui-think__tally { color: var(--tc-text-secondary); font-weight: var(--tc-font-weight-regular); white-space: nowrap; }
 /* Body collapses smoothly */
 :where([data-look="standard"], [data-look="standard"] *).ui-think__body {
   display: grid;

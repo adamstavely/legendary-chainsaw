@@ -9,7 +9,7 @@
 Parts of a whole as squarified tiles sized by value, nested under group headers with their shares – the largest emphasised, names and shares on card-coloured chips in tiles big enough, tiles that grow in and glide on change
 
 - **Element:** `<tc-treemap>`
-- **Size:** 16.9 KB gzip · 47.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.0 KB gzip · 48.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -197,6 +197,7 @@ export class TreemapExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -245,7 +246,7 @@ export class TreemapExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-treemap :format="…">` | `<tc-treemap [format]="…">` | `<tc-treemap {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-treemap :labels="…">` | `<tc-treemap [labels]="…">` | `<tc-treemap {labels}>` |
 
-*Also attributes: `children-field`, `label-mode`, `sort`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
+*Also attributes: `children-field`, `label-mode`, `sort`, `heading`, `description`, `unit`, `locale`, `height` and 8 more – see the API table.*
 
 ### Events
 
@@ -452,15 +453,15 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 7.6 KB | 3.6 KB |
+| **This component alone** | 7.6 KB | 3.7 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.1 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
@@ -478,8 +479,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **47.5 KB** | **16.9 KB** |
-| With Lit – the first component on a page | 66.9 KB | 23.0 KB |
+| **Added to a page that already has Lit** | **48.2 KB** | **17.1 KB** |
+| With Lit – the first component on a page | 67.6 KB | 23.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -487,11 +488,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.8 ms** | the gallery demo's data, 47 DOM nodes – to layout, median of 7 |
+| First render | **1.4 ms** | the gallery demo's data, 47 DOM nodes – to layout, median of 7 |
 | Typical update | **0.6 ms** | one item of data replaced |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.9 ms | data: first render, 47 nodes; update 0.2 ms |
-| 1,000 items | 2.9 ms | data: first render, 47 nodes; update 0.5 ms |
+| First on the page | 20 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.7 ms | data: first render, 47 nodes; update 0.3 ms |
+| 1,000 items | 1.8 ms | data: first render, 47 nodes; update 0.5 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 

@@ -9,7 +9,7 @@
 Any nodes and links laid out by force, so clusters and bridges show for themselves, with groups in their own inks, the most-linked named, a node's neighbourhood lit on hover or focus, and nodes that can be dragged into place.
 
 - **Element:** `<tc-network-graph>`
-- **Size:** 20.7 KB gzip · 57.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 20.9 KB gzip · 58.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -222,6 +222,7 @@ export class NetworkGraphExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -281,7 +282,7 @@ export class NetworkGraphExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-network-graph :format="…">` | `<tc-network-graph [format]="…">` | `<tc-network-graph {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-network-graph :labels="…">` | `<tc-network-graph [labels]="…">` | `<tc-network-graph {labels}>` |
 
-*Also attributes: `max-labels`, `drag-nodes`, `canvas-threshold`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
+*Also attributes: `max-labels`, `drag-nodes`, `canvas-threshold`, `heading`, `description`, `unit`, `locale`, `height` and 8 more – see the API table.*
 
 ### Events
 
@@ -490,7 +491,7 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -498,7 +499,7 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 | --- | --- | --- |
 | **This component alone** | 15.3 KB | 6.7 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.2 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/chart/force` · Shared Trenchcoat code | 4.2 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
@@ -517,8 +518,8 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **57.5 KB** | **20.7 KB** |
-| With Lit – the first component on a page | 76.9 KB | 26.9 KB |
+| **Added to a page that already has Lit** | **58.1 KB** | **21.0 KB** |
+| With Lit – the first component on a page | 77.5 KB | 27.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -526,11 +527,11 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **7.2 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
-| Typical update | **4.0 ms** | one item of links replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 7.2 ms | links: first render, 157 nodes; update 3.5 ms |
-| 1,000 items | 6.8 ms | links: first render, 157 nodes; update 4.2 ms |
+| First render | **6.8 ms** | the gallery demo's data, 157 DOM nodes – to layout, median of 7 |
+| Typical update | **3.5 ms** | one item of links replaced |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.4 ms | links: first render, 157 nodes; update 3.5 ms |
+| 1,000 items | 6.9 ms | links: first render, 157 nodes; update 3.7 ms |
 
 What it renders doesn't grow with links (tested to 1,000 items).
 

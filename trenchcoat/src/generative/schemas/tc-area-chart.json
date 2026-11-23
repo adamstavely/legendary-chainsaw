@@ -102,6 +102,18 @@
       "type": "string",
       "description": "A band's high edge, with `lower`"
     },
+    "compare": {
+      "type": "string",
+      "description": "Last period's value at each x – the emphasised series' – drawn as a quiet dashed line behind it, with the change in the tooltip. Not for stacked areas"
+    },
+    "compareLabel": {
+      "type": "string",
+      "description": "What the compared line is called (default \"Last period\")"
+    },
+    "currentLabel": {
+      "type": "string",
+      "description": "What the emphasised line is called beside it, when it has no series name (default \"This period\")"
+    },
     "brush": {
       "type": "string",
       "enum": [
@@ -277,6 +289,10 @@
       },
       "additionalProperties": false,
       "description": "The words it shows and says, merged over defaultChartLabels"
+    },
+    "sync": {
+      "type": "string",
+      "description": "A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x)"
     }
   },
   "additionalProperties": false,

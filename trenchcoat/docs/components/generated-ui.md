@@ -9,7 +9,7 @@
 A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
 
 - **Element:** `<tc-generated-ui>`
-- **Size:** 3060.1 KB gzip · 12373.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 3064.5 KB gzip · 12388.2 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -339,9 +339,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | --- | --- | --- |
 | **This component alone** | 33.3 KB | 10.7 KB |
 | Lit · the library every element is built on, the parts it uses | 26.4 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.7 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.4 KB | – |
+| `internal/chart/xy` · Shared Trenchcoat code | 18.5 KB | – |
 | `internal/chart/spec` · Shared Trenchcoat code | 16.7 KB | – |
-| `internal/chart/xy` · Shared Trenchcoat code | 15.5 KB | – |
 | `internal/settings` · Shared Trenchcoat code | 14.4 KB | – |
 | `internal/selection` · Shared Trenchcoat code | 10.4 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
@@ -484,10 +484,10 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [metrics-dashboard](../blocks/metrics-dashboard.md) · Element it renders | 33.1 KB | – |
 | [code-block](code-block.md) · Element it renders | 33.0 KB | – |
 | [handoff](handoff.md) · Element it renders | 32.9 KB | – |
+| [thinking-state](thinking-state.md) · Element it renders | 32.7 KB | – |
 | [sandbox-log](sandbox-log.md) · Element it renders | 32.4 KB | – |
 | [structured-output](structured-output.md) · Element it renders | 32.4 KB | – |
 | [kpi-board](../blocks/kpi-board.md) · Element it renders | 32.1 KB | – |
-| [thinking-state](thinking-state.md) · Element it renders | 32.1 KB | – |
 | [policy-simulator](policy-simulator.md) · Element it renders | 31.7 KB | – |
 | [filter-menu](filter-menu.md) · Element it renders | 31.4 KB | – |
 | [verification-queue](verification-queue.md) · Element it renders | 31.2 KB | – |
@@ -783,6 +783,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [citation-sections](citation-sections.md) · Element it renders | 10.4 KB | – |
 | [preview-card](preview-card.md) · Element it renders | 10.4 KB | – |
 | [ghost-completion](ghost-completion.md) · Element it renders | 10.3 KB | – |
+| [bar-chart](bar-chart.md) · Element it renders | 10.3 KB | – |
 | [oversight-home](../blocks/oversight-home.md) · Element it renders | 10.2 KB | – |
 | [menu-morph](../motion/menu-morph.md) · Element it renders | 10.1 KB | – |
 | [venn-diagram](venn-diagram.md) · Element it renders | 9.6 KB | – |
@@ -804,7 +805,6 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | [enrichment-orbit](../illustrations/enrichment-orbit.md) · Element it renders | 8.0 KB | – |
 | [histogram](histogram.md) · Element it renders | 7.8 KB | – |
 | [parallel-chart](parallel-chart.md) · Element it renders | 7.8 KB | – |
-| [bar-chart](bar-chart.md) · Element it renders | 7.8 KB | – |
 | [empty-calendar](../illustrations/empty-calendar.md) · Element it renders | 7.5 KB | – |
 | [box-plot](box-plot.md) · Element it renders | 7.4 KB | – |
 | [tab-overload](../illustrations/tab-overload.md) · Element it renders | 7.3 KB | – |
@@ -877,105 +877,105 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-ai-side-pane.json` · Dependency | 14.2 KB | – |
 | `src/generative/schemas/tc-verification-queue.json` · Dependency | 9.2 KB | – |
 | `src/generative/schemas/tc-claim-answer.json` · Dependency | 8.8 KB | – |
+| `src/generative/schemas/tc-line-chart.json` · Dependency | 6.3 KB | – |
 | `src/generative/schemas/tc-configuration-release-control.json` · Dependency | 6.3 KB | – |
-| `src/generative/schemas/tc-bubble-chart.json` · Dependency | 5.9 KB | – |
+| `src/generative/schemas/tc-area-chart.json` · Dependency | 6.3 KB | – |
+| `src/generative/schemas/tc-bubble-chart.json` · Dependency | 6.1 KB | – |
 | `src/generative/schemas/tc-session-panel.json` · Dependency | 5.9 KB | – |
 | `src/generative/schemas/tc-approval-card.json` · Dependency | 5.9 KB | – |
 | `src/generative/schemas/tc-multi-calendar.json` · Dependency | 5.8 KB | – |
-| `src/generative/schemas/tc-line-chart.json` · Dependency | 5.7 KB | – |
 | `src/generative/schemas/tc-priority-list.json` · Dependency | 5.7 KB | – |
-| `src/generative/schemas/tc-area-chart.json` · Dependency | 5.7 KB | – |
+| `src/generative/schemas/tc-hexbin-chart.json` · Dependency | 5.7 KB | – |
 | `src/generative/schemas/tc-playbook-canvas.json` · Dependency | 5.6 KB | – |
 | `src/generative/schemas/tc-reliance-gauge.json` · Dependency | 5.6 KB | – |
 | `src/generative/validate.ts` · Dependency | 5.6 KB | – |
-| `src/generative/schemas/tc-hexbin-chart.json` · Dependency | 5.5 KB | – |
+| `src/generative/schemas/tc-combo-chart.json` · Dependency | 5.5 KB | – |
 | `src/generative/schemas/tc-case-review.json` · Dependency | 5.5 KB | – |
-| `src/generative/schemas/tc-combo-chart.json` · Dependency | 5.3 KB | – |
 | `src/generative/schemas/tc-file-details.json` · Dependency | 5.3 KB | – |
-| `src/generative/schemas/tc-network-graph.json` · Dependency | 5.1 KB | – |
+| `src/generative/schemas/tc-network-graph.json` · Dependency | 5.3 KB | – |
 | `src/generative/schemas/tc-org-unit-card.json` · Dependency | 5.0 KB | – |
+| `src/generative/schemas/tc-candlestick-chart.json` · Dependency | 5.0 KB | – |
 | `src/generative/schemas/tc-mission-timeline.json` · Dependency | 5.0 KB | – |
+| `src/generative/schemas/tc-bar-chart.json` · Dependency | 5.0 KB | – |
 | `src/generative/schemas/tc-evaluation-dataset-editor.json` · Dependency | 5.0 KB | – |
 | `src/generative/schemas/tc-validity-badge.json` · Dependency | 5.0 KB | – |
 | `src/vendor/agent-face/element/agent-face.ts` · Dependency | 5.0 KB | – |
 | `src/generative/schemas/tc-schema-fields.json` · Dependency | 4.9 KB | – |
+| `src/generative/schemas/tc-parallel-chart.json` · Dependency | 4.9 KB | – |
 | `src/generative/schemas/tc-review-center.json` · Dependency | 4.8 KB | – |
-| `src/generative/schemas/tc-candlestick-chart.json` · Dependency | 4.8 KB | – |
 | `src/generative/schemas/tc-mission-control.json` · Dependency | 4.7 KB | – |
-| `src/generative/schemas/tc-parallel-chart.json` · Dependency | 4.7 KB | – |
 | `src/vendor/agent-face/engine/engine.ts` · Dependency | 4.7 KB | – |
+| `src/generative/schemas/tc-donut-chart.json` · Dependency | 4.7 KB | – |
 | `src/generative/schemas/tc-data-handling-policy.json` · Dependency | 4.6 KB | – |
 | `src/generative/schemas/tc-trigger-builder.json` · Dependency | 4.6 KB | – |
 | `src/generative/schemas/tc-live-session.json` · Dependency | 4.6 KB | – |
+| `src/generative/schemas/tc-histogram.json` · Dependency | 4.6 KB | – |
+| `src/generative/schemas/tc-stream-graph.json` · Dependency | 4.5 KB | – |
 | `src/generative/schemas/tc-ai-summary.json` · Dependency | 4.5 KB | – |
-| `src/generative/schemas/tc-flow-builder.json` · Dependency | 4.5 KB | – |
 | `src/generative/schemas/tc-retrieval-inspector.json` · Dependency | 4.5 KB | – |
-| `src/generative/schemas/tc-donut-chart.json` · Dependency | 4.5 KB | – |
+| `src/generative/schemas/tc-flow-builder.json` · Dependency | 4.5 KB | – |
 | `src/generative/schemas/tc-pull-request.json` · Dependency | 4.4 KB | – |
 | `src/generative/schemas/tc-publication-impact.json` · Dependency | 4.4 KB | – |
 | `src/generative/schemas/tc-red-team-finding.json` · Dependency | 4.4 KB | – |
 | `src/generative/schemas/tc-selection-toolbar.json` · Dependency | 4.4 KB | – |
-| `src/generative/schemas/tc-step-inspector.json` · Dependency | 4.4 KB | – |
-| `src/generative/schemas/tc-histogram.json` · Dependency | 4.4 KB | – |
 | `src/generative/schemas/tc-handoff-brief.json` · Dependency | 4.4 KB | – |
-| `src/generative/schemas/tc-stream-graph.json` · Dependency | 4.3 KB | – |
-| `src/generative/schemas/tc-bar-chart.json` · Dependency | 4.3 KB | – |
+| `src/generative/schemas/tc-waterfall-chart.json` · Dependency | 4.4 KB | – |
+| `src/generative/schemas/tc-step-inspector.json` · Dependency | 4.4 KB | – |
 | `src/generative/schemas/tc-channel-setup.json` · Dependency | 4.3 KB | – |
 | `src/generative/schemas/tc-mcp-connection-manager.json` · Dependency | 4.3 KB | – |
+| `src/generative/schemas/tc-treemap.json` · Dependency | 4.3 KB | – |
 | `src/generative/schemas/tc-transcript-review.json` · Dependency | 4.2 KB | – |
 | `src/generative/schemas/tc-eval-scorecard.json` · Dependency | 4.2 KB | – |
 | `src/generative/schemas/tc-skill-detail.json` · Dependency | 4.2 KB | – |
-| `src/generative/schemas/tc-step-picker.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-slope-chart.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-box-plot.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-radial-bar-chart.json` · Dependency | 4.2 KB | – |
 | `src/generative/schemas/tc-data-region.json` · Dependency | 4.2 KB | – |
-| `src/generative/schemas/tc-waterfall-chart.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-step-picker.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-dumbbell-chart.json` · Dependency | 4.2 KB | – |
 | `src/generative/schemas/tc-policy-simulator.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-pareto-chart.json` · Dependency | 4.2 KB | – |
+| `src/generative/schemas/tc-waffle-chart.json` · Dependency | 4.1 KB | – |
+| `src/generative/schemas/tc-sunburst-chart.json` · Dependency | 4.1 KB | – |
+| `src/generative/schemas/tc-rose-chart.json` · Dependency | 4.1 KB | – |
+| `src/generative/schemas/tc-ridgeline-chart.json` · Dependency | 4.1 KB | – |
 | `src/generative/schemas/tc-approval-gates.json` · Dependency | 4.1 KB | – |
 | `src/generative/schemas/tc-reflection-gate.json` · Dependency | 4.1 KB | – |
 | `src/generative/schemas/tc-api-keys.json` · Dependency | 4.1 KB | – |
 | `src/generative/schemas/tc-agent-queue.json` · Dependency | 4.1 KB | – |
-| `src/generative/schemas/tc-treemap.json` · Dependency | 4.1 KB | – |
+| `src/generative/schemas/tc-bullet-chart.json` · Dependency | 4.1 KB | – |
+| `src/generative/schemas/tc-segmented-bar.json` · Dependency | 4.1 KB | – |
+| `src/generative/schemas/tc-pie-chart.json` · Dependency | 4.0 KB | – |
 | `src/generative/schemas/tc-collaboration-stream.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-slope-chart.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-box-plot.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-radial-bar-chart.json` · Dependency | 4.0 KB | – |
+| `src/generative/schemas/tc-beeswarm-chart.json` · Dependency | 4.0 KB | – |
 | `src/generative/schemas/tc-run-checkpoints.json` · Dependency | 4.0 KB | – |
 | `src/generative/schemas/tc-conversation-annotation.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-workflow-canvas.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-dumbbell-chart.json` · Dependency | 4.0 KB | – |
 | `src/generative/schemas/tc-request-log.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-pareto-chart.json` · Dependency | 4.0 KB | – |
-| `src/generative/schemas/tc-waffle-chart.json` · Dependency | 3.9 KB | – |
-| `src/generative/schemas/tc-sunburst-chart.json` · Dependency | 3.9 KB | – |
-| `src/generative/schemas/tc-rose-chart.json` · Dependency | 3.9 KB | – |
-| `src/generative/schemas/tc-ridgeline-chart.json` · Dependency | 3.9 KB | – |
+| `src/generative/schemas/tc-workflow-canvas.json` · Dependency | 4.0 KB | – |
+| `src/generative/schemas/tc-calendar-heatmap.json` · Dependency | 4.0 KB | – |
+| `src/generative/schemas/tc-venn-diagram.json` · Dependency | 3.9 KB | – |
 | `src/generative/schemas/tc-tool-access-map.json` · Dependency | 3.9 KB | – |
-| `src/generative/schemas/tc-bullet-chart.json` · Dependency | 3.9 KB | – |
-| `src/generative/schemas/tc-segmented-bar.json` · Dependency | 3.9 KB | – |
-| `src/generative/schemas/tc-pie-chart.json` · Dependency | 3.8 KB | – |
+| `src/generative/schemas/tc-funnel-chart.json` · Dependency | 3.9 KB | – |
+| `src/generative/schemas/tc-chord-chart.json` · Dependency | 3.9 KB | – |
+| `src/generative/schemas/tc-sankey-chart.json` · Dependency | 3.9 KB | – |
 | `src/generative/schemas/tc-help-video.json` · Dependency | 3.8 KB | – |
-| `src/generative/schemas/tc-beeswarm-chart.json` · Dependency | 3.8 KB | – |
+| `src/generative/schemas/tc-lollipop-chart.json` · Dependency | 3.8 KB | – |
+| `src/generative/schemas/tc-bump-chart.json` · Dependency | 3.8 KB | – |
 | `src/generative/schemas/tc-export-dialog.json` · Dependency | 3.8 KB | – |
 | `src/generative/schemas/tc-trust-center.json` · Dependency | 3.8 KB | – |
 | `src/generative/schemas/tc-scheduled-runs.json` · Dependency | 3.8 KB | – |
 | `src/generative/schemas/tc-provider-connection.json` · Dependency | 3.8 KB | – |
-| `src/generative/schemas/tc-calendar-heatmap.json` · Dependency | 3.8 KB | – |
-| `src/generative/schemas/tc-venn-diagram.json` · Dependency | 3.8 KB | – |
 | `src/generative/schemas/tc-fine-tune-card.json` · Dependency | 3.7 KB | – |
-| `src/generative/schemas/tc-funnel-chart.json` · Dependency | 3.7 KB | – |
+| `src/generative/schemas/tc-marimekko-chart.json` · Dependency | 3.7 KB | – |
 | `src/generative/schemas/tc-agent-handoff.json` · Dependency | 3.7 KB | – |
 | `src/generative/schemas/tc-model-settings.json` · Dependency | 3.7 KB | – |
 | `src/generative/schemas/tc-routine-form.json` · Dependency | 3.7 KB | – |
-| `src/generative/schemas/tc-chord-chart.json` · Dependency | 3.7 KB | – |
-| `src/generative/schemas/tc-sankey-chart.json` · Dependency | 3.7 KB | – |
 | `src/generative/schemas/tc-retrieval-settings.json` · Dependency | 3.7 KB | – |
-| `src/generative/schemas/tc-lollipop-chart.json` · Dependency | 3.7 KB | – |
 | `src/generative/schemas/tc-profile-header.json` · Dependency | 3.6 KB | – |
 | `src/generative/schemas/tc-kpi-board.json` · Dependency | 3.6 KB | – |
-| `src/generative/schemas/tc-bump-chart.json` · Dependency | 3.6 KB | – |
 | `src/generative/schemas/tc-run-receipt.json` · Dependency | 3.6 KB | – |
 | `src/generative/schemas/tc-access-request.json` · Dependency | 3.6 KB | – |
 | `src/generative/schemas/tc-audit-trail.json` · Dependency | 3.5 KB | – |
-| `src/generative/schemas/tc-marimekko-chart.json` · Dependency | 3.5 KB | – |
 | `src/generative/schemas/tc-oversight-home.json` · Dependency | 3.5 KB | – |
 | `src/generative/schemas/tc-run-log.json` · Dependency | 3.5 KB | – |
 | `src/generative/schemas/tc-search-results.json` · Dependency | 3.5 KB | – |
@@ -1148,6 +1148,7 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-project-card.json` · Dependency | 2.3 KB | – |
 | `src/generative/schemas/tc-handoff.json` · Dependency | 2.3 KB | – |
 | `src/generative/schemas/tc-schedule-card.json` · Dependency | 2.3 KB | – |
+| `src/generative/schemas/tc-thinking-state.json` · Dependency | 2.3 KB | – |
 | `src/generative/schemas/tc-point-and-ask.json` · Dependency | 2.3 KB | – |
 | `src/generative/schemas/tc-test-run-result.json` · Dependency | 2.3 KB | – |
 | `src/generative/schemas/tc-root-cause-tree.json` · Dependency | 2.2 KB | – |
@@ -1169,7 +1170,6 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/generative/schemas/tc-radar-chart.json` · Dependency | 2.2 KB | – |
 | `src/generative/schemas/tc-thread-header.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-saved-views.json` · Dependency | 2.1 KB | – |
-| `src/generative/schemas/tc-thinking-state.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-redaction-review.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-diff-viewer.json` · Dependency | 2.1 KB | – |
 | `src/generative/schemas/tc-budget-burn.json` · Dependency | 2.1 KB | – |
@@ -1359,8 +1359,8 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 | `src/vendor/agent-face/element/no-dom.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
 | `src/vendor/agent-face/engine/index.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **12373.7 KB** | **3093.3 KB** |
-| With Lit – the first component on a page | 12289.0 KB | 3062.4 KB |
+| **Added to a page that already has Lit** | **12388.6 KB** | **3098.0 KB** |
+| With Lit – the first component on a page | 12303.9 KB | 3067.2 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -1368,9 +1368,9 @@ changes are said in words as well as colour (“Good change: Up 38%”), and a c
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.8 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
-| Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 6.9 ms | default properties; includes adding its CSS to the document |
+| First render | **1.5 ms** | the gallery demo's data, 9 DOM nodes – to layout, median of 7 |
+| Typical update | **0.1 ms** | re-render with the same data |
+| First on the page | 5.4 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

@@ -43,6 +43,22 @@ export class BarChart {
   @Input() set yDomain(v: TcBarChart["yDomain"]) {
     this.#el.yDomain = v;
   }
+  /** Last period's value for each category – one series – drawn dashed above or across its bar, with the change in the tooltip */
+  @Input() set compare(v: TcBarChart["compare"]) {
+    this.#el.compare = v;
+  }
+  /** What last period is called (default "Last period") */
+  @Input() set compareLabel(v: TcBarChart["compareLabel"]) {
+    this.#el.compareLabel = v;
+  }
+  /** The last category is still counting – today: its bar breathes and its value reads "so far" */
+  @Input() set live(v: TcBarChart["live"] | "" | "true" | "false") {
+    this.#el.live = typeof v === "string" ? v !== "false" : v;
+  }
+  /** The words after a live value (default "so far") */
+  @Input() set liveLabel(v: TcBarChart["liveLabel"]) {
+    this.#el.liveLabel = v;
+  }
   /** The heading, and the chart's name */
   @Input() set heading(v: TcBarChart["heading"]) {
     this.#el.heading = v;
@@ -106,6 +122,10 @@ export class BarChart {
   /** The words it shows and says, merged over defaultChartLabels */
   @Input() set labels(v: TcBarChart["labels"]) {
     this.#el.labels = v;
+  }
+  /** A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) */
+  @Input() set sync(v: TcBarChart["sync"]) {
+    this.#el.sync = v;
   }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcBarChart["look"]) {
