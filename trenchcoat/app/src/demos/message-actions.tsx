@@ -9,11 +9,24 @@ const pool = [
   "Profile first – but in most cases the culprit is recomputing the filtered list on every render. useMemo plus a short debounce on the search box usually fixes it.",
 ];
 
+/* What each Refine rewrite returns, so the demo can show one without a model */
+const rewrites: Record<string, string> = {
+  shorter: "Memoize the filtered list with useMemo and debounce the search box.",
+  longer:
+    "The table re-sorts all 5,000 rows on every keystroke because the filter runs in render. Wrap it in useMemo, keyed on the query and the items, so it only reruns when one of them changes. Then debounce the input by about 150 ms so a burst of typing triggers one filter instead of ten. If the list keeps growing, render it with a virtualized list so only the visible rows are mounted.",
+  simpler: "Your table redoes all its work every time you type. Save the result with useMemo and wait a moment before filtering.",
+  formal: "The latency is caused by recomputing the filtered list on every render. Memoizing it with useMemo, together with a short debounce on the input, should resolve the issue.",
+  casual: "Yeah, it's re-filtering everything on each keystroke. Throw it in useMemo and debounce the input – done.",
+  detail:
+    "Wrap the filter in useMemo with [query, items] as dependencies, and debounce the input by ~150 ms (a small useDebouncedValue hook works). In the React profiler, the table's render should drop from ~40 ms to under 5 ms per keystroke.",
+};
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { MessageActions, MessageText } = ui;
   const [versions, setVersions] = useState<string[]>([pool[0], pool[1]]);
   const [version, setVersion] = useState(1);
   const [regenerating, setRegenerating] = useState(false);
+  const [refining, setRefining] = useState(false);
   const [status, setStatus] = useState("Hover the message to use its actions");
   const timer = useRef<number | undefined>(undefined);
 
@@ -32,6 +45,21 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       setRegenerating(false);
       setStatus("New version added");
     }, 1600);
+  };
+
+  const refine = (id: string) => {
+    if (refining) return;
+    setRefining(true);
+    setStatus("Rewriting…");
+    timer.current = window.setTimeout(() => {
+      setVersions((v) => {
+        const next = [...v, rewrites[id] ?? v[v.length - 1]];
+        setVersion(next.length - 1);
+        return next;
+      });
+      setRefining(false);
+      setStatus("Rewrite added as a new version");
+    }, 1400);
   };
 
   return (
@@ -59,6 +87,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           onVersionChange={setVersion}
           onRegenerate={regenerate}
           regenerating={regenerating}
+          actions={["copy", "regenerate", "refine", "feedback", "speak"]}
+          onRefine={refine}
+          refining={refining}
           onCopy={() => setStatus("Copied to clipboard")}
           onFeedback={(kind, reason) =>
             setStatus(kind === null ? "Feedback removed" : reason ? `Thanks – “${reason}” sent` : kind === "up" ? "Marked helpful" : "Tell us what went wrong")

@@ -1,10 +1,10 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcMessageActions, TcMessageText, type MessageReportDetail, type MessageVersionChange } from "../message-actions";
+import { TcMessageActions, TcMessageText, type MessageRefineDetail, type MessageReportDetail, type MessageVersionChange } from "../message-actions";
 import { h, useStaged } from "./internal";
 
-export type { FeedbackKind, MessageActionKey, MessageReportDetail, ReportReason } from "../message-actions";
-export { defaultReportLabels } from "../message-actions";
+export type { FeedbackKind, MessageActionKey, MessageRefinement, MessageReportDetail, ReportReason } from "../message-actions";
+export { defaultRefinements, defaultReportLabels } from "../message-actions";
 
 const RawMessageActions = createComponent({
   tagName: "tc-message-actions",
@@ -16,10 +16,11 @@ const RawMessageActions = createComponent({
     onTcSpeak: "tc-speak" as EventName<CustomEvent<{ playing: boolean }>>,
     onTcReport: "tc-report" as EventName<CustomEvent<MessageReportDetail>>,
     onTcReportUndo: "tc-report-undo" as EventName<CustomEvent<MessageReportDetail>>,
+    onTcRefine: "tc-refine" as EventName<CustomEvent<MessageRefineDetail>>,
   },
 });
 type RawMessageActionsProps = React.ComponentProps<typeof RawMessageActions>;
-export type MessageActionsProps = Omit<RawMessageActionsProps, "onTcVersionChange" | "onTcCopy" | "onTcSpeak" | "onTcFeedback" | "ownSpeech" | "onTcReport" | "onTcReportUndo"> & {
+export type MessageActionsProps = Omit<RawMessageActionsProps, "onTcVersionChange" | "onTcCopy" | "onTcSpeak" | "onTcFeedback" | "ownSpeech" | "onTcReport" | "onTcReportUndo" | "onTcRefine"> & {
   /** Called with the version index picked in the switcher */
   onVersionChange?: (index: number) => void;
   /** Called once `text` is on the clipboard (or right away when there's no `text`). "Copied" shows only after a successful write */
@@ -33,8 +34,10 @@ export type MessageActionsProps = Omit<RawMessageActionsProps, "onTcVersionChang
   onReport?: (report: MessageReportDetail) => void | boolean;
   /** Called when Undo withdraws a report */
   onReportUndo?: (report: MessageReportDetail) => void;
+  /** Called with the rewrite's id when one is picked in Refine, before `onRefine`. Return false to cancel the pick */
+  onRefinePick?: (refinement: string) => void | boolean;
 };
-export function MessageActions({ version, onVersionChange, onCopy, onSpeak, onReport, onReportUndo, ...props }: MessageActionsProps) {
+export function MessageActions({ version, onVersionChange, onCopy, onSpeak, onReport, onReportUndo, onRefinePick, ...props }: MessageActionsProps) {
   return h(RawMessageActions, {
     ...props,
     version,
@@ -50,6 +53,9 @@ export function MessageActions({ version, onVersionChange, onCopy, onSpeak, onRe
       if (onReport?.(e.detail) === false) e.preventDefault();
     },
     onTcReportUndo: (e: CustomEvent<MessageReportDetail>) => onReportUndo?.(e.detail),
+    onTcRefine: (e: CustomEvent<MessageRefineDetail>) => {
+      if (onRefinePick?.(e.detail.refinement) === false) e.preventDefault();
+    },
   });
 }
 

@@ -16,12 +16,18 @@ With `reportable`, a flag at the end of the bar lets people report a harmful rep
 add details if they like and send it. A line then says “Reported – a reviewer will look at this”, with Undo for a few
 seconds.
 
+With `"refine"` in `actions`, a wand unfolds a row of rewrites – Shorter, Longer, Simpler, More formal, More casual,
+Add detail (`refinements`). Picking one fires a cancelable `tc-refine` and calls `onRefine`; the wand pulses while the
+rewrite is written (`refining`, or a promise from `onRefine`), and the rewrite arrives as a new version in the
+switcher, so people can step back to the original.
+
 ## When to use
 
 - Under every assistant message in a chat, or under the latest one.
 - When people should be able to retry an answer and move between its versions.
 - Collecting quick feedback on answers, with a reason when they're bad.
 - Letting people flag a reply that's harmful, unsafe or shares private data, so a person reviews it (`reportable`).
+- Letting people reshape a reply – shorter, simpler, more formal – without typing the request again (`"refine"`).
 
 ## When not to use
 
@@ -36,8 +42,11 @@ seconds.
 3. **Version switcher** `.ui-ma__versions` – “‹ 2 / 3 ›”, next to Regenerate from the second version on
 4. **Bad response** `.ui-ma__btn--down` – thumbs down, beside thumbs up; opens the “What went wrong?” row below
 5. **Read aloud** `.ui-ma__btn--speak` – becomes a small equalizer while it plays
-6. **Report** `.ui-ma__btn--report` – with `reportable`: a flag at the end of the bar, “Reported” once sent
-7. **Report form** `.ui-ma__report` – the reasons (`.ui-ma__reasons`), optional details (`.ui-ma__details`) and Send
+6. **Refine** `.ui-ma__btn--refine` – with `"refine"` in `actions`: a wand that opens the rewrites; it pulses while one
+   is written
+7. **Rewrites** `.ui-ma__refine` – “Rewrite this reply”, the rewrites as chips (`.ui-ma__chip[data-refinement]`)
+8. **Report** `.ui-ma__btn--report` – with `reportable`: a flag at the end of the bar, “Reported” once sent
+9. **Report form** `.ui-ma__report` – the reasons (`.ui-ma__reasons`), optional details (`.ui-ma__details`) and Send
    report; after sending, the confirmation (`.ui-ma__reported`) with Undo (`.ui-ma__undo`)
 
 ## Looks
@@ -54,7 +63,7 @@ Clean.
 |---|---|
 | Tab | Moves through the actions, the version switcher and the feedback row |
 | Enter / Space | Presses the focused action, reason or Send |
-| Escape | In the feedback row: closes it and returns focus to Bad response; elsewhere in the bar: hides the tooltip |
+| Escape | In the feedback row: closes it and returns focus to Bad response; in the rewrites: closes them and returns focus to Refine; elsewhere in the bar: hides the tooltip |
 | Enter (in the “Other” field) | Sends the feedback |
 | ↑ / ↓ (in the report reasons) | Moves between the reasons and picks one (native radio buttons) |
 | Escape | In the report form: closes it and returns focus to Report; after sending: ends the Undo window |
@@ -70,6 +79,11 @@ feedback”. A polite live region says what happened: “Copied”, “Regenerat
 response. Tell us what went wrong below”, “Thanks for the feedback”, “Reading aloud”, “Finished reading” – and the
 failures, such as “Couldn't copy” or “Couldn't regenerate”.
 
+Refine is a button named “Refine” with `aria-expanded` for its row and `aria-busy` while a rewrite is written.
+Opening it moves focus to the first rewrite; the row is a group named “Rewrite this reply” with a button per rewrite
+and “Close rewrites”. Picking one returns focus to Refine and announces “Rewriting: Shorter”; a failure announces
+“Couldn't rewrite”.
+
 Report is a button named “Report reply” with `aria-expanded` for its form, and “Reported” once sent. The form is
 named “Report this reply”; its reasons are a radio group in a fieldset, “Why are you reporting it?”, and the details
 field is labelled “Details (optional)”. Sending moves focus to Undo and announces “Reported – a reviewer will look at
@@ -81,6 +95,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 - Keep “Other” last – it opens a field for people's own words.
 - Name the bar for its message when there are several on screen: `label="Actions for answer 3"`.
 - Rename the report reasons with `reportLabels` to match your policy's words; keep them about the reply.
+- Keep `refinements` to five or six, each a short instruction about the reply: “Shorter”, “Add an example”.
 
 ## Do
 
@@ -88,6 +103,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 - Return a promise from `onRegenerate` and `onFeedback` so the bar can show progress, success and failure.
 - Pair the bar with `tc-message-text` so the message crossfades when people switch versions.
 - Send reports to a queue a person reads, and honour `tc-report-undo` (React: `onReportUndo`).
+- Add each rewrite as a new version, so the original is one step back in the switcher.
 
 ## Don't
 
@@ -96,6 +112,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
   read `text`; set `demo` only in galleries and prototypes.
 - Don't ask for a reason after every thumbs up – the bar only asks after thumbs down.
 - Don't use Report for “this answer was wrong” – that's thumbs down; Report is for replies that could do harm.
+- Don't replace the reply in place when a rewrite arrives – people lose the original.
 
 ## Example
 
@@ -117,6 +134,11 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
   actions.versions = versions;
   actions.onFeedback = (kind, reason) => fetch("/api/feedback", { method: "POST", body: JSON.stringify({ kind, reason }) });
   actions.reportable = true;
+  actions.actions = ["copy", "regenerate", "refine", "feedback", "speak"];
+  actions.onRefine = (refinement) =>
+    fetch("/api/rewrite", { method: "POST", body: JSON.stringify({ refinement, text: actions.text }) })
+      .then((r) => r.text())
+      .then((text) => (actions.versions = [...actions.versions, text]));
   actions.addEventListener("tc-report", (e) => fetch("/api/reports", { method: "POST", body: JSON.stringify(e.detail) }));
   actions.addEventListener("tc-version-change", (e) => {
     answer.version = e.detail.version;
@@ -130,7 +152,7 @@ import { useState } from "react";
 import { MessageActions, MessageText } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
-export function Answer({ versions, onRegenerate }: { versions: string[]; onRegenerate: () => Promise<void> }) {
+export function Answer({ versions, onRegenerate, rewrite }: { versions: string[]; onRegenerate: () => Promise<void>; rewrite: (refinement: string) => Promise<void> }) {
   const [version, setVersion] = useState(versions.length - 1);
   return (
     <div data-ui-message="">
@@ -143,6 +165,8 @@ export function Answer({ versions, onRegenerate }: { versions: string[]; onRegen
         version={version}
         onVersionChange={setVersion}
         onRegenerate={onRegenerate}
+        actions={["copy", "regenerate", "refine", "feedback", "speak"]}
+        onRefine={(refinement) => rewrite(refinement)}
         reportable
         onReport={(report) => void fetch("/api/reports", { method: "POST", body: JSON.stringify(report) })}
       />

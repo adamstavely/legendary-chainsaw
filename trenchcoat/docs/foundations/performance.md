@@ -6,18 +6,18 @@ Each component page has a **Performance** section: what the component costs to d
 and update, how far it scales, and what it does when nobody's using it. The numbers come from `npm run measure:perf`
 and live in `app/src/docs/perf.json`; each page says when it was measured.
 
-*511 components measured, between 2026-10-27 and 2026-11-22, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
+*515 components measured, between 2026-10-27 and 2026-11-23, in headless Chromium 156.0.8078.4 on Apple M4 Pro.*
 
 ### Largest, on a page that has Lit
 
 | Component | Gzip | Minified | Own code (gzip) |
 | --- | --- | --- | --- |
-| [generated-ui](../components/generated-ui.md) | 3098.0 KB | 12388.6 KB | 10.7 KB |
-| [ai-side-pane](../blocks/ai-side-pane.md) | 163.3 KB | 688.0 KB | 11.2 KB |
+| [generated-ui](../components/generated-ui.md) | 3124.5 KB | 12503.2 KB | 10.7 KB |
+| [ai-side-pane](../blocks/ai-side-pane.md) | 167.4 KB | 702.8 KB | 11.3 KB |
 | [small-multiples](../components/small-multiples.md) | 149.1 KB | 463.6 KB | 6.0 KB |
 | [chart](../components/chart.md) | 145.6 KB | 453.6 KB | 2.4 KB |
-| [ai-workspace](../blocks/ai-workspace.md) | 102.2 KB | 435.0 KB | 13.6 KB |
-| [chat-composer](../components/chat-composer.md) | 87.0 KB | 373.2 KB | 32.1 KB |
+| [ai-workspace](../blocks/ai-workspace.md) | 104.7 KB | 445.9 KB | 13.7 KB |
+| [chat-composer](../components/chat-composer.md) | 89.4 KB | 384.1 KB | 34.3 KB |
 | [embed-configurator](../components/embed-configurator.md) | 51.0 KB | 200.1 KB | 7.5 KB |
 | [trigger-builder](../components/trigger-builder.md) | 42.4 KB | 179.7 KB | 12.3 KB |
 
@@ -32,7 +32,7 @@ and live in `app/src/docs/perf.json`; each page says when it was measured.
 | [evaluation-dataset-editor](../components/evaluation-dataset-editor.md) | 8.1 ms | 2.4 ms | 1049 |
 | [active-days](../components/active-days.md) | 7.9 ms | 5.2 ms | 718 |
 | [network-graph](../components/network-graph.md) | 6.8 ms | 3.5 ms | 157 |
-| [fan-out-grid](../components/fan-out-grid.md) | 6.6 ms | 0.7 ms | 176 |
+| [chat-composer](../components/chat-composer.md) | 6.7 ms | 0.6 ms | 304 |
 
 ## Bundle
 

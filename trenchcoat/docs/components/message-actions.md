@@ -9,7 +9,7 @@
 The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
 
 - **Element:** `<tc-message-actions>`, `<tc-message-text>`
-- **Size:** 16.0 KB gzip · 62.9 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.0 KB gzip · 66.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -37,12 +37,18 @@ With `reportable`, a flag at the end of the bar lets people report a harmful rep
 add details if they like and send it. A line then says “Reported – a reviewer will look at this”, with Undo for a few
 seconds.
 
+With `"refine"` in `actions`, a wand unfolds a row of rewrites – Shorter, Longer, Simpler, More formal, More casual,
+Add detail (`refinements`). Picking one fires a cancelable `tc-refine` and calls `onRefine`; the wand pulses while the
+rewrite is written (`refining`, or a promise from `onRefine`), and the rewrite arrives as a new version in the
+switcher, so people can step back to the original.
+
 ### When to use
 
 - Under every assistant message in a chat, or under the latest one.
 - When people should be able to retry an answer and move between its versions.
 - Collecting quick feedback on answers, with a reason when they're bad.
 - Letting people flag a reply that's harmful, unsafe or shares private data, so a person reviews it (`reportable`).
+- Letting people reshape a reply – shorter, simpler, more formal – without typing the request again (`"refine"`).
 
 ### When not to use
 
@@ -59,8 +65,10 @@ seconds.
 3. **Version switcher** `.ui-ma__versions` – “‹ 2 / 3 ›”, next to Regenerate from the second version on
 4. **Bad response** `.ui-ma__btn--down` – thumbs down, beside thumbs up; opens the “What went wrong?” row below
 5. **Read aloud** `.ui-ma__btn--speak` – becomes a small equalizer while it plays
-6. **Report** `.ui-ma__btn--report` – with `reportable`: a flag at the end of the bar, “Reported” once sent
-7. **Report form** `.ui-ma__report` – the reasons (`.ui-ma__reasons`), optional details (`.ui-ma__details`) and Send
+6. **Refine** `.ui-ma__btn--refine` – with `"refine"` in `actions`: a wand that opens the rewrites; it pulses while one
+7. **Rewrites** `.ui-ma__refine` – “Rewrite this reply”, the rewrites as chips (`.ui-ma__chip[data-refinement]`)
+8. **Report** `.ui-ma__btn--report` – with `reportable`: a flag at the end of the bar, “Reported” once sent
+9. **Report form** `.ui-ma__report` – the reasons (`.ui-ma__reasons`), optional details (`.ui-ma__details`) and Send
 
 ## Looks
 
@@ -92,6 +100,11 @@ Clean.
   actions.versions = versions;
   actions.onFeedback = (kind, reason) => fetch("/api/feedback", { method: "POST", body: JSON.stringify({ kind, reason }) });
   actions.reportable = true;
+  actions.actions = ["copy", "regenerate", "refine", "feedback", "speak"];
+  actions.onRefine = (refinement) =>
+    fetch("/api/rewrite", { method: "POST", body: JSON.stringify({ refinement, text: actions.text }) })
+      .then((r) => r.text())
+      .then((text) => (actions.versions = [...actions.versions, text]));
   actions.addEventListener("tc-report", (e) => fetch("/api/reports", { method: "POST", body: JSON.stringify(e.detail) }));
   actions.addEventListener("tc-version-change", (e) => {
     answer.version = e.detail.version;
@@ -107,7 +120,7 @@ import { useState } from "react";
 import { MessageActions, MessageText } from "@adamstavely/trenchcoat/react";
 import "@adamstavely/trenchcoat/tokens.css";
 
-export function Answer({ versions, onRegenerate }: { versions: string[]; onRegenerate: () => Promise<void> }) {
+export function Answer({ versions, onRegenerate, rewrite }: { versions: string[]; onRegenerate: () => Promise<void>; rewrite: (refinement: string) => Promise<void> }) {
   const [version, setVersion] = useState(versions.length - 1);
   return (
     <div data-ui-message="">
@@ -120,6 +133,8 @@ export function Answer({ versions, onRegenerate }: { versions: string[]; onRegen
         version={version}
         onVersionChange={setVersion}
         onRegenerate={onRegenerate}
+        actions={["copy", "regenerate", "refine", "feedback", "speak"]}
+        onRefine={(refinement) => rewrite(refinement)}
         reportable
         onReport={(report) => void fetch("/api/reports", { method: "POST", body: JSON.stringify(report) })}
       />
@@ -211,6 +226,9 @@ read aloud.*
 | `defaultVersion` | `default-version` | `number \| undefined` | `undefined` | Starting version while `version` is unset – defaults to the newest |
 | `onRegenerate` | – | `((options: { signal: AbortSignal }) => void \| Promise<unknown>) \| undefined` | `undefined` | Called when Regenerate is pressed – add a version and the switcher jumps to it. Return a promise to keep the arrow spinning until it settles; a rejection says "Couldn't regenerate". `signal` aborts when the element is removed |
 | `regenerating` | `regenerating` | `boolean` | `false` | Keeps the regenerate arrow spinning while a new version is written |
+| `refinements` | – | `MessageRefinement[]` | `[ { id: "shorter", label: "Shorter" }, { id: "longer", label: "Longer" }, { id: "simpler", label: "Simpler" }, { id: "formal", label: "More formal" }, { id: "casual", label: "More casual" }, { id: "detail", label: "Add detail" }, ]` | The rewrites Refine offers, in order (with "refine" in `actions`) |
+| `onRefine` | – | `((refinement: string, options: { signal: AbortSignal }) => void \| Promise<unknown>) \| undefined` | `undefined` | Called with the rewrite's id when one is picked in Refine – add the rewrite as a new version and the switcher jumps to it. Return a promise to keep the wand busy until it settles; a rejection says "Couldn't rewrite". `signal` aborts when the element is removed |
+| `refining` | `refining` | `boolean` | `false` | Keeps the Refine wand busy while a rewrite is written |
 | `onFeedback` | – | `((kind: FeedbackKind \| null, reason?: string) => void \| Promise<unknown>) \| undefined` | `undefined` | Called with "up" or "down" when a thumb is pressed, null when it is taken back, and "down" with a reason when the feedback row is sent. Sending may return a promise: "Thanks!" shows once it resolves, a rejection lets you send again |
 | `feedback` | – | `FeedbackKind \| null \| undefined` | `undefined` | The vote: "up", "down" or null for none. Unset, the bar keeps it, starting at `defaultFeedback` |
 | `defaultFeedback` | – | `FeedbackKind \| null` | `null` | The vote to start with while `feedback` is unset |
@@ -235,6 +253,7 @@ read aloud.*
 | `tc-speak` | – | No | Read aloud started or stopped; detail `{ playing: boolean }` |
 | `tc-report` | – | Yes | The report form was sent (`reportable`); detail `{ reason, details }` (MessageReportDetail). Cancelable – prevented, the form stays open and nothing is confirmed |
 | `tc-report-undo` | – | No | Undo was pressed after a report; detail `{ reason, details }` (MessageReportDetail) |
+| `tc-refine` | – | Yes | A rewrite was picked in Refine; detail `{ refinement }` (MessageRefineDetail). Cancelable – prevented, `onRefine` isn't called and nothing runs |
 
 #### Component tokens
 
@@ -279,6 +298,7 @@ in, and the block eases to its new height.*
 
 | Function | Description |
 | --- | --- |
+| `defaultRefinements: MessageRefinement[]` | Refine's rewrites, in order – `refinements` replaces them |
 | `defaultReportLabels: Record<ReportReason, string>` | The report form's reasons, in order – `reportLabels` renames them |
 
 ## Frameworks
@@ -302,13 +322,15 @@ in, and the block eases to its new height.*
 | `actions` | `el.actions = …;` | `<… actions={…} />` | `<tc-message-actions :actions="…">` | `<tc-message-actions [actions]="…">` | `<tc-message-actions {actions}>` |
 | `versions` | `el.versions = …;` | `<… versions={…} />` | `<tc-message-actions :versions="…">` | `<tc-message-actions [versions]="…">` | `<tc-message-actions {versions}>` |
 | `onRegenerate` | `el.onRegenerate = …;` | `<… onRegenerate={…} />` | `<tc-message-actions :onRegenerate="…">` | `<tc-message-actions [onRegenerate]="…">` | `<tc-message-actions {onRegenerate}>` |
+| `refinements` | `el.refinements = …;` | `<… refinements={…} />` | `<tc-message-actions :refinements="…">` | `<tc-message-actions [refinements]="…">` | `<tc-message-actions {refinements}>` |
+| `onRefine` | `el.onRefine = …;` | `<… onRefine={…} />` | `<tc-message-actions :onRefine="…">` | `<tc-message-actions [onRefine]="…">` | `<tc-message-actions {onRefine}>` |
 | `onFeedback` | `el.onFeedback = …;` | `<… onFeedback={…} />` | `<tc-message-actions :onFeedback="…">` | `<tc-message-actions [onFeedback]="…">` | `<tc-message-actions {onFeedback}>` |
 | `feedback` | `el.feedback = …;` | `<… feedback={…} />` | `<tc-message-actions :feedback="…">` | `<tc-message-actions [feedback]="…">` | `<tc-message-actions {feedback}>` |
 | `defaultFeedback` | `el.defaultFeedback = …;` | `<… defaultFeedback={…} />` | `<tc-message-actions :defaultFeedback="…">` | `<tc-message-actions [defaultFeedback]="…">` | `<tc-message-actions {defaultFeedback}>` |
 | `reasons` | `el.reasons = …;` | `<… reasons={…} />` | `<tc-message-actions :reasons="…">` | `<tc-message-actions [reasons]="…">` | `<tc-message-actions {reasons}>` |
 | `reportLabels` | `el.reportLabels = …;` | `<… reportLabels={…} />` | `<tc-message-actions :reportLabels="…">` | `<tc-message-actions [reportLabels]="…">` | `<tc-message-actions {reportLabels}>` |
 
-*Also attributes: `text`, `version`, `default-version`, `regenerating`, `own-speech`, `speaking`, `speak-duration`, `demo` and 3 more – see the API table.*
+*Also attributes: `text`, `version`, `default-version`, `regenerating`, `refining`, `own-speech`, `speaking`, `speak-duration` and 4 more – see the API table.*
 
 ### Events
 
@@ -320,6 +342,7 @@ in, and the block eases to its new height.*
 | `tc-speak` | No | `el.addEventListener("tc-speak", (e) => …)` | `onSpeak={…}` | `@tc-speak="…"` | `(tc-speak)="…($event)"` | `el.addEventListener("tc-speak", …)` |
 | `tc-report` | Yes | `el.addEventListener("tc-report", (e) => …)` | `onReport={…}` | `@tc-report="…"` | `(tc-report)="…($event)"` | `el.addEventListener("tc-report", …)` |
 | `tc-report-undo` | No | `el.addEventListener("tc-report-undo", (e) => …)` | `onReportUndo={…}` | `@tc-report-undo="…"` | `(tc-report-undo)="…($event)"` | `el.addEventListener("tc-report-undo", …)` |
+| `tc-refine` | Yes | `el.addEventListener("tc-refine", (e) => …)` | `onRefinePick={…}` | `@tc-refine="…"` | `(tc-refine)="…($event)"` | `el.addEventListener("tc-refine", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
@@ -451,6 +474,7 @@ No slots: everything it shows comes from its properties.
 | `onSpeak` | `(playing: boolean) => void` | Called with true when Read aloud starts and false when it stops – play your audio here. Without it (and without `speaking`) the browser's speech synthesis reads `text` |
 | `onReport` | `(report: MessageReportDetail) => void \| boolean` | Called when a report is sent (with `reportable`). Return false to keep the form open – nothing is confirmed |
 | `onReportUndo` | `(report: MessageReportDetail) => void` | Called when Undo withdraws a report |
+| `onRefinePick` | `(refinement: string) => void \| boolean` | Called with the rewrite's id when one is picked in Refine, before `onRefine`. Return false to cancel the pick |
 
 *Renamed or hidden on the wrapper: `ownSpeech`*
 
@@ -473,7 +497,7 @@ Follows the WAI-ARIA [Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/b
 |---|---|
 | Tab | Moves through the actions, the version switcher and the feedback row |
 | Enter / Space | Presses the focused action, reason or Send |
-| Escape | In the feedback row: closes it and returns focus to Bad response; elsewhere in the bar: hides the tooltip |
+| Escape | In the feedback row: closes it and returns focus to Bad response; in the rewrites: closes them and returns focus to Refine; elsewhere in the bar: hides the tooltip |
 | Enter (in the “Other” field) | Sends the feedback |
 | ↑ / ↓ (in the report reasons) | Moves between the reasons and picks one (native radio buttons) |
 | Escape | In the report form: closes it and returns focus to Report; after sending: ends the Undo window |
@@ -488,6 +512,11 @@ version”. The feedback row is a group named “What went wrong?”, with toggl
 feedback”. A polite live region says what happened: “Copied”, “Regenerating”, “Version 3 of 3”, “Marked as bad
 response. Tell us what went wrong below”, “Thanks for the feedback”, “Reading aloud”, “Finished reading” – and the
 failures, such as “Couldn't copy” or “Couldn't regenerate”.
+
+Refine is a button named “Refine” with `aria-expanded` for its row and `aria-busy` while a rewrite is written.
+Opening it moves focus to the first rewrite; the row is a group named “Rewrite this reply” with a button per rewrite
+and “Close rewrites”. Picking one returns focus to Refine and announces “Rewriting: Shorter”; a failure announces
+“Couldn't rewrite”.
 
 Report is a button named “Report reply” with `aria-expanded` for its form, and “Reported” once sent. The form is
 named “Report this reply”; its reasons are a radio group in a fieldset, “Why are you reporting it?”, and the details
@@ -536,13 +565,13 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-23 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 55.1 KB | 13.7 KB |
+| **This component alone** | 59.0 KB | 14.6 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -551,8 +580,8 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **62.9 KB** | **16.0 KB** |
-| With Lit – the first component on a page | 84.9 KB | 23.2 KB |
+| **Added to a page that already has Lit** | **66.8 KB** | **17.1 KB** |
+| With Lit – the first component on a page | 88.8 KB | 24.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -560,13 +589,13 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.3 ms** | the gallery demo's data, 126 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of actions replaced |
-| First on the page | 18 ms | default properties; includes adding its CSS to the document |
-| 100 items | 15 ms | actions: first render, 1,710 nodes; update 1.6 ms |
-| 1,000 items | 112 ms | actions: first render, 16,560 nodes; update 7.7 ms |
+| First render | **4.5 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of refinements replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.9 ms | refinements: first render, 243 nodes; update 0.5 ms |
+| 1,000 items | 15 ms | refinements: first render, 1,143 nodes; update 1.5 ms |
 
-1,000 items of actions: 112 ms. It renders every item, so a first render passes 50 ms (a long task) at about 450 items – page or filter longer lists.
+1,000 items of refinements: 15 ms, 1,143 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -575,7 +604,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - No animation-frame loop.
 - Timers: `setTimeout`.
-- 2 infinite CSS animations.
+- 3 infinite CSS animations.
 - Stops or pauses under reduced motion.
 - Observers: `ResizeObserver`, `MutationObserver`, `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController).
 - Doesn't read the clock.
@@ -588,6 +617,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 - Keep “Other” last – it opens a field for people's own words.
 - Name the bar for its message when there are several on screen: `label="Actions for answer 3"`.
 - Rename the report reasons with `reportLabels` to match your policy's words; keep them about the reply.
+- Keep `refinements` to five or six, each a short instruction about the reply: “Shorter”, “Add an example”.
 
 ## Do and don't
 
@@ -597,6 +627,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 - Return a promise from `onRegenerate` and `onFeedback` so the bar can show progress, success and failure.
 - Pair the bar with `tc-message-text` so the message crossfades when people switch versions.
 - Send reports to a queue a person reads, and honour `tc-report-undo` (React: `onReportUndo`).
+- Add each rewrite as a new version, so the original is one step back in the switcher.
 
 ### Don't
 
@@ -605,6 +636,7 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
   read `text`; set `demo` only in galleries and prototypes.
 - Don't ask for a reason after every thumbs up – the bar only asks after thumbs down.
 - Don't use Report for “this answer was wrong” – that's thumbs down; Report is for replies that could do harm.
+- Don't replace the reply in place when a rewrite arrives – people lose the original.
 
 ## Related
 

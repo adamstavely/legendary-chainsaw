@@ -85,6 +85,9 @@
     "literal font-family": 1,
     "literal spacing": 2
   },
+  "src/elements/access-grants.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/access-request.ts": {
     "clock/environment read": 1
   },

@@ -27,9 +27,26 @@ import { adoptStyles } from "./internal/styles";
  * Report (opt-in with `reportable`): a flag at the end of the bar opens a short form – why (harmful, unsafe advice,
  * private data, hateful, other) and optional details – whose Send fires a cancelable `tc-report`. Then a line says
  * "Reported – a reviewer will look at this" with Undo (`tc-report-undo`) for a few seconds; the flag stays "Reported".
+ *
+ * Refine (opt-in: put "refine" in `actions`): a wand that unfolds a row of rewrites – Shorter, Longer, Simpler, More
+ * formal, More casual, Add detail (`refinements`). A pick fires a cancelable `tc-refine` and calls `onRefine`; the wand
+ * pulses while it runs (`refining`, or a promise), and the rewrite arrives as a new version in the switcher.
  */
 
-export type MessageActionKey = "copy" | "regenerate" | "feedback" | "speak";
+export type MessageActionKey = "copy" | "regenerate" | "refine" | "feedback" | "speak";
+/** One way to rewrite a reply, offered by Refine */
+export type MessageRefinement = { id: string; label: string };
+/** tc-refine: the rewrite picked */
+export type MessageRefineDetail = { refinement: string };
+/** Refine's rewrites, in order – `refinements` replaces them */
+export const defaultRefinements: MessageRefinement[] = [
+  { id: "shorter", label: "Shorter" },
+  { id: "longer", label: "Longer" },
+  { id: "simpler", label: "Simpler" },
+  { id: "formal", label: "More formal" },
+  { id: "casual", label: "More casual" },
+  { id: "detail", label: "Add detail" },
+];
 export type FeedbackKind = "up" | "down";
 
 /** Details of the events */
@@ -81,6 +98,8 @@ const paths = {
   close: "m7.5 7.5 9 9m0-9-9 9",
   /* After Lucide's flag (ISC) */
   flag: "M5 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM5 22v-7",
+  /* A wand with two sparkles */
+  wand: "M4.5 19.5 15 9M13.5 7.5l3 3M18 3.5v3M16.5 5h3M19.5 11.5v2M18.5 12.5h2M9 3.5v2M8 4.5h2",
 };
 
 /* Clean: 16px glyphs, thin or solid */
@@ -98,9 +117,10 @@ const cleanPaths = {
   close: "m4.5 4.5 7 7m0-7-7 7",
   /* After Lucide's flag (ISC), on the 16px grid */
   flag: "M3.3 10s.7-.7 2.7-.7 3.3 1.4 5.3 1.4 2.7-.7 2.7-.7V2s-.7.7-2.7.7S8 1.3 6 1.3 3.3 2 3.3 2zM3.3 14.7V10",
+  wand: "M2.5 13.5 10 6M9 5l2 2M12 1.5v2.5M10.75 2.75h2.5M13.5 8v1.5M12.75 8.75h1.5M6 1.5V3M5.25 2.25h1.5",
 };
 
-type IconName = "copy" | "copied" | "redo" | "prev" | "next" | "thumb" | "speaker" | "close" | "sent" | "flag";
+type IconName = "copy" | "copied" | "redo" | "prev" | "next" | "thumb" | "speaker" | "close" | "sent" | "flag" | "wand";
 /** Each look's icons; Clean's previous arrow is the next one, mirrored by its CSS */
 const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
   standard: {
@@ -114,6 +134,7 @@ const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
     close: glyph(paths.close),
     sent: glyph(paths.check),
     flag: glyph(paths.flag),
+    wand: glyph(paths.wand),
   },
   clean: {
     copy: cleanGlyph(cleanPaths.copy, true),
@@ -126,6 +147,7 @@ const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
     close: cleanGlyph(cleanPaths.close),
     sent: cleanGlyph(cleanPaths.tick),
     flag: cleanGlyph(cleanPaths.flag),
+    wand: cleanGlyph(cleanPaths.wand),
   },
 };
 
@@ -188,6 +210,7 @@ let uid = 0;
  * @fires tc-speak - Read aloud started or stopped; detail `{ playing: boolean }`
  * @fires tc-report - The report form was sent (`reportable`); detail `{ reason, details }` (MessageReportDetail). Cancelable – prevented, the form stays open and nothing is confirmed
  * @fires tc-report-undo - Undo was pressed after a report; detail `{ reason, details }` (MessageReportDetail)
+ * @fires tc-refine - A rewrite was picked in Refine; detail `{ refinement }` (MessageRefineDetail). Cancelable – prevented, `onRefine` isn't called and nothing runs
  */
 export class TcMessageActions extends TcElement {
   static override ui = "ma";
@@ -209,6 +232,16 @@ export class TcMessageActions extends TcElement {
   @property({ attribute: false }) accessor onRegenerate: ((options: { signal: AbortSignal }) => void | Promise<unknown>) | undefined = undefined;
   /** Keeps the regenerate arrow spinning while a new version is written */
   @property({ type: Boolean }) accessor regenerating = false;
+  /** The rewrites Refine offers, in order (with "refine" in `actions`) */
+  @property({ attribute: false }) accessor refinements: MessageRefinement[] = defaultRefinements;
+  /**
+   * Called with the rewrite's id when one is picked in Refine – add the rewrite as a new version and the switcher jumps
+   * to it. Return a promise to keep the wand busy until it settles; a rejection says "Couldn't rewrite". `signal` aborts
+   * when the element is removed
+   */
+  @property({ attribute: false }) accessor onRefine: ((refinement: string, options: { signal: AbortSignal }) => void | Promise<unknown>) | undefined = undefined;
+  /** Keeps the Refine wand busy while a rewrite is written */
+  @property({ type: Boolean }) accessor refining = false;
   /**
    * Called with "up" or "down" when a thumb is pressed, null when it is taken back, and "down" with a reason when the
    * feedback row is sent. Sending may return a promise: "Thanks!" shows once it resolves, a rejection lets you send again
@@ -254,6 +287,10 @@ export class TcMessageActions extends TcElement {
   /** @internal */ @state() accessor spin = 0;
   /** @internal */ @state() accessor regenPending = false;
   /** @internal */ @state() accessor regenFailed = 0;
+  /** @internal The Refine row is open */
+  @state() accessor refineOpen = false;
+  /** @internal */ @state() accessor refinePending = false;
+  /** @internal */ @state() accessor refineFailed = 0;
   /** @internal */ @state() accessor innerSpeaking = false;
   /** @internal */ @state() accessor hush = false;
   /** @internal Report: closed, the form open, or sent (Undo showing, then done) */
@@ -267,6 +304,7 @@ export class TcMessageActions extends TcElement {
   private alive = false;
   private voice: SpeechSynthesisUtterance | null = null;
   private regenAbort: AbortController | null = null;
+  private refineAbort: AbortController | null = null;
   private timers = new Map<string, number>();
 
   constructor() {
@@ -291,6 +329,12 @@ export class TcMessageActions extends TcElement {
   }
   private get reportEl() {
     return this.querySelector<HTMLElement>(`#${this.uid}-report`);
+  }
+  private get refineButton() {
+    return this.querySelector<HTMLElement>(".ui-ma__btn--refine");
+  }
+  private get refineEl() {
+    return this.querySelector<HTMLElement>(`#${this.uid}-refine`);
   }
   private get reportButton() {
     return this.querySelector<HTMLElement>(".ui-ma__btn--report");
@@ -324,6 +368,7 @@ export class TcMessageActions extends TcElement {
     // Clipboard writes, regenerations and speech that finish after removal are ignored
     this.alive = false;
     this.regenAbort?.abort();
+    this.refineAbort?.abort();
     if (this.voice) {
       this.voice = null;
       synthesis()?.cancel();
@@ -364,10 +409,12 @@ export class TcMessageActions extends TcElement {
       this.innerVersion = count - 1;
       if (this.feedback === undefined) this.innerVote = null;
       this.panel = false;
+      this.refineOpen = false;
     }
     this.seenCount = count;
     if (changed.has("copyResult") && this.copyResult) this.later("copy", 1600, () => (this.copyResult = null));
     if (changed.has("regenFailed") && this.regenFailed) this.later("regen", 1600, () => (this.regenFailed = 0));
+    if (changed.has("refineFailed") && this.refineFailed) this.later("refine", 1600, () => (this.refineFailed = 0));
     // An uncontrolled read aloud that isn't the browser speaking ends after its duration
     if (changed.has("innerSpeaking") || changed.has("speaking")) {
       if (this.speaking === undefined && this.innerSpeaking && !this.voice) {
@@ -394,7 +441,7 @@ export class TcMessageActions extends TcElement {
     super.updated(changed);
     const copied = this.copyResult?.ok === true;
     this.toggleAttribute("data-quiet", this.quiet);
-    this.toggleAttribute("data-active", copied || this.panel || this.playing || this.regenerating || this.regenPending);
+    this.toggleAttribute("data-active", copied || this.panel || this.playing || this.regenerating || this.regenPending || this.refineOpen || this.refining || this.refinePending);
     this.toggleAttribute("data-hush", this.hush);
   }
 
@@ -457,6 +504,80 @@ export class TcMessageActions extends TcElement {
     );
   }
 
+  /* ----- Refine: a row of rewrites; a pick runs onRefine and the result arrives as a new version ----- */
+  private toggleRefine() {
+    if (this.refineOpen) {
+      this.closeRefine();
+      return;
+    }
+    this.refineOpen = true;
+    this.panel = false;
+    if (this.reportState === "open") this.reportState = "idle";
+    this.updateComplete.then(() => this.refineEl?.querySelector<HTMLElement>(".ui-ma__chip")?.focus());
+  }
+  private closeRefine() {
+    rescueFocus(this.refineEl, [this.refineButton]);
+    this.refineOpen = false;
+  }
+  private refine(r: MessageRefinement) {
+    if (this.refining || this.refinePending) return;
+    if (!this.emit<MessageRefineDetail>("tc-refine", { refinement: r.id }, { cancelable: true })) return;
+    this.closeRefine();
+    this.refineFailed = 0;
+    this.announce(`Rewriting: ${r.label}`);
+    const controller = new AbortController();
+    this.refineAbort = controller;
+    const result = this.onRefine?.(r.id, { signal: controller.signal });
+    if (!isPromise(result)) return;
+    this.refinePending = true;
+    result.then(
+      () => {
+        if (!this.alive) return;
+        this.refinePending = false;
+      },
+      () => {
+        if (!this.alive || controller.signal.aborted) return;
+        this.refinePending = false;
+        this.refineFailed++;
+        this.announce("Couldn't rewrite");
+      },
+    );
+  }
+
+  /** "Rewrite it" – the rewrites as chips */
+  private refinePanel(icon: Record<IconName, TemplateResult>) {
+    const id = `${this.uid}-refine`;
+    const open = this.refineOpen;
+    return html`<div
+      id=${id}
+      class="ui-ma__fold ui-ma__refine"
+      data-open=${ifDefined(open ? "" : undefined)}
+      .inert=${!open}
+      @keydown=${(e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          this.closeRefine();
+        }
+      }}
+    >
+      <div class="ui-ma__clip">
+        <div class="ui-ma__panel" role="group" aria-labelledby="${id}-ask">
+          <div class="ui-ma__panel-head">
+            <span id="${id}-ask" class="ui-ma__ask">Rewrite this reply</span>
+            <button type="button" class="ui-ma__close" aria-label="Close rewrites" @click=${() => this.closeRefine()}>${icon.close}</button>
+          </div>
+          <div class="ui-ma__chips">
+            ${repeat(
+              this.refinements,
+              (r) => r.id,
+              (r) => html`<button type="button" class="ui-ma__chip" data-refinement=${r.id} @click=${() => this.refine(r)}>${r.label}</button>`,
+            )}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
   /* ----- Feedback ----- */
   private setVote(v: FeedbackKind | null) {
     if (this.feedback === undefined) this.innerVote = v;
@@ -485,6 +606,7 @@ export class TcMessageActions extends TcElement {
     }
     this.setVote("down");
     this.panel = true;
+    this.refineOpen = false;
     if (this.reportState === "open") this.reportState = "idle";
     this.sent = false;
     this.reason = null;
@@ -539,6 +661,7 @@ export class TcMessageActions extends TcElement {
     this.reportReason = null;
     this.reportDetails = "";
     this.panel = false;
+    this.refineOpen = false;
     this.updateComplete.then(() => this.reportEl?.querySelector<HTMLInputElement>('input[type="radio"]')?.focus());
   }
   private closeReport() {
@@ -830,6 +953,19 @@ export class TcMessageActions extends TcElement {
           })}
           ${this.versionSwitcher(icon)}
         </span>`;
+      if (key === "refine") {
+        const refineBusy = this.refining || this.refinePending;
+        return this.button({
+          name: "refine",
+          tip: refineBusy ? "Rewriting…" : this.refineFailed ? "Couldn't rewrite" : "Refine",
+          labelText: "Refine",
+          onClick: () => this.toggleRefine(),
+          busy: refineBusy,
+          expanded: this.refineOpen,
+          controls: `${this.uid}-refine`,
+          content: html`<span class="ui-ma__icon ui-ma__wand">${icon.wand}</span>`,
+        });
+      }
       if (key === "feedback")
         return html`${this.button({
           name: "up",
@@ -887,6 +1023,7 @@ export class TcMessageActions extends TcElement {
             content: html`<span class="ui-ma__icon">${icon.flag}</span>`,
           })
         : nothing}</div>
+      ${this.actions.includes("refine") ? this.refinePanel(icon) : nothing}
       ${this.actions.includes("feedback") ? this.feedbackPanel(icon) : nothing}
       ${this.reportable ? this.reportPanel(icon) : nothing}
       <span class="ui-ma__sr" aria-live="polite">${this.status}</span>
@@ -967,6 +1104,9 @@ export class TcMessageActions extends TcElement {
 .ui-ma__spin[data-spin] { animation: ui-ma-spin var(--tc-duration-reveal) var(--tc-ease-move); }
 .ui-ma__btn[data-busy] { color: var(--tc-text-primary); }
 .ui-ma__btn[data-busy] .ui-ma__spin { animation: ui-ma-spin var(--tc-duration-reveal-slow) linear infinite; }
+/* Refine: the wand pulses while a rewrite is written */
+.ui-ma__btn[data-busy] .ui-ma__wand { animation: ui-ma-pulse var(--tc-duration-reveal-slow) var(--tc-ease-in-out) infinite; }
+.ui-ma__btn--refine[aria-expanded="true"] { color: var(--tc-text-primary); }
 /* Thumbs: down is the same glyph turned around; a vote fills it with a little pop */
 :where([data-look="standard"], [data-look="standard"] *).ui-ma__btn--down .ui-ma__glyph { transform: rotate(180deg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ma__thumb .ui-ma__glyph { transition: fill var(--tc-duration-base) var(--tc-ease-standard); }
@@ -1070,6 +1210,7 @@ export class TcMessageActions extends TcElement {
 @keyframes ui-ma-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes ui-ma-pop { 0% { transform: scale(1); } 40% { transform: scale(1.28) rotate(-8deg); } 100% { transform: scale(1); } }
 @keyframes ui-ma-pop-clean { 0% { transform: scale(1); } 40% { transform: scale(1.22) rotate(-8deg); } 100% { transform: scale(1); } }
+@keyframes ui-ma-pulse { 0%, 100% { opacity: 1; transform: none; } 50% { opacity: 0.45; transform: rotate(-12deg) scale(0.92); } }
 @keyframes ui-ma-eq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
 /* ----- Report form and its confirmation ----- */
 .ui-ma__reasons { display: flex; flex-direction: column; gap: var(--tc-space-0-5); min-width: 0; margin: var(--tc-space-1-5) 0 0; padding: 0; border: 0; }

@@ -1,0 +1,694 @@
+{
+ "elements": [
+  {
+   "tag": "tc-ai-disclosure",
+   "className": "TcAiDisclosure",
+   "description": "Marks AI-made content – an inline badge that opens what made it, its limits and whether a person reviewed it – or\na quiet notice at the top of an assistant panel that it can be wrong and how to reach a person.",
+   "properties": [
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "AiDisclosureVariant",
+     "default": "\"mark\"",
+     "description": "\"mark\" – an inline badge with a card, or \"notice\" – a paragraph for the top of an assistant panel",
+     "readonly": false
+    },
+    {
+     "name": "kind",
+     "attribute": "kind",
+     "type": "AiDisclosureKind",
+     "default": "\"generated\"",
+     "description": "How much the AI did: generated it, assisted a person, or drafted what a person then edited",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The badge's words; by default \"AI-generated\", \"AI-assisted\" or \"Edited by you\"",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What made it, by the name people know it by – \"Review assistant\"",
+     "readonly": false
+    },
+    {
+     "name": "madeAt",
+     "attribute": "made-at",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When it was made, epoch ms",
+     "readonly": false
+    },
+    {
+     "name": "limits",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "What it's good and weak at, a short sentence each",
+     "readonly": false
+    },
+    {
+     "name": "reviewedBy",
+     "attribute": "reviewed-by",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Who reviewed it, if a person did",
+     "readonly": false
+    },
+    {
+     "name": "reportable",
+     "attribute": "reportable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offers Report a problem (a button that fires tc-report); on by default when `reportHref` is set",
+     "readonly": false
+    },
+    {
+     "name": "reportHref",
+     "attribute": "report-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where Report a problem goes; makes it a link",
+     "readonly": false
+    },
+    {
+     "name": "reported",
+     "attribute": "reported",
+     "type": "boolean",
+     "default": "false",
+     "description": "A problem has been reported: the button says so and is off",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The notice's heading",
+     "readonly": false
+    },
+    {
+     "name": "body",
+     "attribute": "body",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The notice's paragraph – what the assistant is, that it can be wrong, where to check",
+     "readonly": false
+    },
+    {
+     "name": "contactHref",
+     "attribute": "contact-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where to reach a person – a link under the notice",
+     "readonly": false
+    },
+    {
+     "name": "contactLabel",
+     "attribute": "contact-label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The contact link's words",
+     "readonly": false
+    },
+    {
+     "name": "learnHref",
+     "attribute": "learn-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where to read how the assistant works – a link under the notice",
+     "readonly": false
+    },
+    {
+     "name": "dismissible",
+     "attribute": "dismissible",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a close button on the notice",
+     "readonly": false
+    },
+    {
+     "name": "dismissed",
+     "attribute": "dismissed",
+     "type": "boolean",
+     "default": "false",
+     "description": "The notice was dismissed and is hidden",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<AiDisclosureLabels>",
+     "default": "{}",
+     "description": "The words it uses, merged over defaultAiDisclosureLabels",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Whether the mark's card is open",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The mark's card opened or closed ({ open }: AiDisclosureOpenChange)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-report",
+     "detail": "",
+     "description": "Report a problem was pressed, when there's no `reportHref` ({ kind, model }: AiDisclosureReport); cancelable – unless prevented, it then says \"Reported\"",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dismiss",
+     "detail": "",
+     "description": "The notice's close button was pressed (detail: null); cancelable – unless prevented, the notice hides itself (`dismissed`)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "show",
+     "params": "",
+     "returns": "void",
+     "description": "Opens the mark's card"
+    },
+    {
+     "name": "hide",
+     "params": "",
+     "returns": "void",
+     "description": "Closes the mark's card"
+    }
+   ],
+   "ui": "aid",
+   "cssProperties": [
+    {
+     "name": "--tc-aid-mark-h",
+     "value": "20px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-aid-card-w",
+     "value": "280px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-xl",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-info-bg",
+    "--tc-status-info-border",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-caps"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AiDisclosure",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The notice's heading"
+    },
+    {
+     "name": "dismissible",
+     "type": "boolean",
+     "optional": true,
+     "description": "Shows the notice's close button; on when `onDismiss` is given"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The mark's card opened or closed"
+    },
+    {
+     "name": "onReport",
+     "type": "(detail: AiDisclosureReport) => boolean | void",
+     "optional": true,
+     "description": "Report a problem was pressed (no `reportHref`); return false to keep the button as it is"
+    },
+    {
+     "name": "onDismiss",
+     "type": "() => boolean | void",
+     "optional": true,
+     "description": "The notice's close button was pressed; return false to keep it showing"
+    }
+   ],
+   "hides": [
+    "heading",
+    "dismissible",
+    "children"
+   ],
+   "events": {
+    "tc-open-change": "onOpenChange",
+    "tc-report": "onReport",
+    "tc-dismiss": "onDismiss"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-ai-disclosure",
+   "className": "TcAiDisclosure",
+   "module": "@adamstavely/trenchcoat/ai-disclosure",
+   "data": [
+    "limits",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "variant",
+     "attribute": "variant"
+    },
+    {
+     "name": "kind",
+     "attribute": "kind"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "model",
+     "attribute": "model"
+    },
+    {
+     "name": "madeAt",
+     "attribute": "made-at"
+    },
+    {
+     "name": "reviewedBy",
+     "attribute": "reviewed-by"
+    },
+    {
+     "name": "reportable",
+     "attribute": "reportable"
+    },
+    {
+     "name": "reportHref",
+     "attribute": "report-href"
+    },
+    {
+     "name": "reported",
+     "attribute": "reported"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "body",
+     "attribute": "body"
+    },
+    {
+     "name": "contactHref",
+     "attribute": "contact-href"
+    },
+    {
+     "name": "contactLabel",
+     "attribute": "contact-label"
+    },
+    {
+     "name": "learnHref",
+     "attribute": "learn-href"
+    },
+    {
+     "name": "dismissible",
+     "attribute": "dismissible"
+    },
+    {
+     "name": "dismissed",
+     "attribute": "dismissed"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": false
+    },
+    {
+     "name": "tc-report",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dismiss",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 35855,
+  "gzip": 11471
+ }
+}

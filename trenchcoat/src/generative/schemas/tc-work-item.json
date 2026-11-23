@@ -23,6 +23,9 @@
     "statusLabels": {
       "type": "object",
       "properties": {
+        "review": {
+          "type": "string"
+        },
         "paused": {
           "type": "string"
         },
@@ -30,9 +33,6 @@
           "type": "string"
         },
         "active": {
-          "type": "string"
-        },
-        "review": {
           "type": "string"
         },
         "blocked": {

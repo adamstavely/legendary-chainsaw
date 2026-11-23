@@ -42,6 +42,29 @@
     "actionLabel": {
       "type": "string",
       "description": "A button on the tray that fires tc-action – Undo takes its place for a moment"
+    },
+    "tone": {
+      "type": "string",
+      "description": "The assistant's tone – the id of one of `tones`"
+    },
+    "tones": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AssistantTone"
+      },
+      "description": "The tones to pick from, in order"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "What else the assistant should know about how to answer, in the person's own words"
+    },
+    "instructionsMax": {
+      "type": "number",
+      "description": "The most characters `instructions` may have"
+    },
+    "hidePersonality": {
+      "type": "boolean",
+      "description": "Leaves out the Personality section"
     }
   },
   "additionalProperties": false,
@@ -83,6 +106,34 @@
         "category"
       ],
       "additionalProperties": false
+    },
+    "AssistantTone": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Its name, e.g. \"Direct\""
+        },
+        "description": {
+          "type": "string",
+          "description": "What it means, in a few words, e.g. \"Short answers, no preamble\""
+        },
+        "sample": {
+          "type": "string",
+          "description": "One reply in that tone, so people hear the difference"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "description",
+        "sample"
+      ],
+      "additionalProperties": false,
+      "description": "A way the assistant can talk – one choice in Personality"
     }
   }
 }

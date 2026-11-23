@@ -118,6 +118,46 @@
      "readonly": false
     },
     {
+     "name": "tone",
+     "attribute": "tone",
+     "type": "string",
+     "default": "\"default\"",
+     "description": "The assistant's tone – the id of one of `tones`",
+     "readonly": false
+    },
+    {
+     "name": "tones",
+     "attribute": null,
+     "type": "AssistantTone[]",
+     "default": "[ { id: \"default\", label: \"Default\", description: \"Balanced – how it answers everyone\", sample: \"Here's a summary of the report, with the three points worth checking first.\" }, { id: \"professional\", label: \"Professional\", description: \"Precise and formal\", sample: \"Please find a summary of the report below, followed by three items that merit review.\" }, { id: \"friendly\", label: \"Friendly\", description: \"Warm and conversational\", sample: \"Here's the gist! Three things jumped out that are worth a look first.\" }, { id: \"direct\", label: \"Direct\", description: \"Short answers, no preamble\", sample: \"Summary below. Check points 1–3 first.\" }, { id: \"thorough\", label: \"Thorough\", description: \"Explains its reasoning and caveats\", sample: \"Below is a summary of the report, why each point matters and what would confirm it – starting with the three that matter most.\" }, ]",
+     "description": "The tones to pick from, in order",
+     "readonly": false
+    },
+    {
+     "name": "instructions",
+     "attribute": "instructions",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What else the assistant should know about how to answer, in the person's own words",
+     "readonly": false
+    },
+    {
+     "name": "instructionsMax",
+     "attribute": "instructions-max",
+     "type": "number",
+     "default": "500",
+     "description": "The most characters `instructions` may have",
+     "readonly": false
+    },
+    {
+     "name": "hidePersonality",
+     "attribute": "hide-personality",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leaves out the Personality section",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -150,6 +190,18 @@
      "detail": "",
      "description": "The action button (`actionLabel`) was pressed; detail: null",
      "cancelable": false
+    },
+    {
+     "name": "tc-tone-change",
+     "detail": "",
+     "description": "A tone was picked in Personality; detail `{ tone: string }`. Cancelable: preventDefault() keeps the current one",
+     "cancelable": true
+    },
+    {
+     "name": "tc-instructions-change",
+     "detail": "",
+     "description": "The instructions were typed in; detail `{ instructions: string }`. Cancelable: preventDefault() keeps them as they were",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -177,6 +229,8 @@
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
     "--tc-caption-color",
     "--tc-caption-font-size",
     "--tc-caption-font-weight",
@@ -204,12 +258,18 @@
     "--tc-ease-decelerate",
     "--tc-ease-move",
     "--tc-ease-standard",
+    "--tc-field-bg",
     "--tc-field-bg-sunken",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
     "--tc-field-radius",
     "--tc-field-shadow",
     "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
     "--tc-fill-default",
     "--tc-fill-hover",
+    "--tc-fill-selected",
     "--tc-fill-strong",
     "--tc-fill-subtle",
     "--tc-focus-outline",
@@ -227,6 +287,7 @@
     "--tc-line-height-tight",
     "--tc-memory-panel-max",
     "--tc-radius-badge",
+    "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-md",
     "--tc-radius-sm",
@@ -268,7 +329,13 @@
    ]
   }
  ],
- "functions": [],
+ "functions": [
+  {
+   "name": "defaultTones",
+   "signature": "defaultTones: AssistantTone[]",
+   "description": "Personality's tones, in order – `tones` replaces them"
+  }
+ ],
  "react": [
   {
    "component": "MemoryPanel",
@@ -321,6 +388,42 @@
      "type": "{ label: string; onClick: () => void }",
      "optional": true,
      "description": "A button on the tray, e.g. { label: \"Manage\", onClick } – Undo takes its place for a moment"
+    },
+    {
+     "name": "tone",
+     "type": "string",
+     "optional": true,
+     "description": "The assistant's tone, an id from `tones` – controlled when defined"
+    },
+    {
+     "name": "defaultTone",
+     "type": "string",
+     "optional": true,
+     "description": "The tone to start with when uncontrolled"
+    },
+    {
+     "name": "onToneChange",
+     "type": "(tone: string) => void",
+     "optional": true,
+     "description": "Called with the tone picked in Personality – in both modes"
+    },
+    {
+     "name": "instructions",
+     "type": "string",
+     "optional": true,
+     "description": "How the person wants to be answered, in their own words – controlled when defined"
+    },
+    {
+     "name": "defaultInstructions",
+     "type": "string",
+     "optional": true,
+     "description": "The instructions to start with when uncontrolled"
+    },
+    {
+     "name": "onInstructionsChange",
+     "type": "(instructions: string) => void",
+     "optional": true,
+     "description": "Called as the instructions are typed – in both modes"
     }
    ],
    "hides": [
@@ -328,13 +431,17 @@
     "enabled",
     "heading",
     "actionLabel",
-    "onChange"
+    "onChange",
+    "tone",
+    "instructions"
    ],
    "events": {
     "tc-memories-change": "onChange",
     "tc-enabled-change": "onEnabledChange",
     "tc-action": "onClick",
-    "tc-consent": "onTcConsent"
+    "tc-consent": "onTcConsent",
+    "tc-tone-change": "onToneChange",
+    "tc-instructions-change": "onInstructionsChange"
    }
   }
  ],
@@ -352,7 +459,8 @@
     "onPause",
     "onForget",
     "onRestore",
-    "onConsent"
+    "onConsent",
+    "tones"
    ],
    "attributes": [
     {
@@ -378,6 +486,22 @@
     {
      "name": "actionLabel",
      "attribute": "action-label"
+    },
+    {
+     "name": "tone",
+     "attribute": "tone"
+    },
+    {
+     "name": "instructions",
+     "attribute": "instructions"
+    },
+    {
+     "name": "instructionsMax",
+     "attribute": "instructions-max"
+    },
+    {
+     "name": "hidePersonality",
+     "attribute": "hide-personality"
     }
    ],
    "events": [
@@ -396,6 +520,14 @@
     {
      "name": "tc-action",
      "cancelable": false
+    },
+    {
+     "name": "tc-tone-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-instructions-change",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -406,6 +538,14 @@
     {
      "property": "enabled",
      "event": "tc-enabled-change"
+    },
+    {
+     "property": "tone",
+     "event": "tc-tone-change"
+    },
+    {
+     "property": "instructions",
+     "event": "tc-instructions-change"
     }
    ],
    "form": null,
@@ -544,6 +684,22 @@
     ]
    },
    {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -660,6 +816,7 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
@@ -716,7 +873,7 @@
   "windowed": false
  },
  "size": {
-  "min": 78670,
-  "gzip": 17986
+  "min": 86843,
+  "gzip": 19865
  }
 }

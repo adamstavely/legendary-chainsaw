@@ -9,7 +9,7 @@
 Edit a past message and the conversation forks – a 2 / 3 switcher on the edited message, and each branch's replies below it
 
 - **Element:** `<tc-conversation-branches>`
-- **Size:** 21.5 KB gzip · 87.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 22.6 KB gzip · 91.0 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -443,7 +443,7 @@ ready” and “Couldn't write a reply”.
 
 ## Performance
 
-*Measured 2026-11-13 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-23 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -457,10 +457,10 @@ ready” and “Couldn't write a reply”.
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| [message-actions](message-actions.md) · Element it renders | 52.6 KB | – |
+| [message-actions](message-actions.md) · Element it renders | 56.5 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **87.2 KB** | **21.5 KB** |
-| With Lit – the first component on a page | 108.9 KB | 28.7 KB |
+| **Added to a page that already has Lit** | **91.0 KB** | **22.8 KB** |
+| With Lit – the first component on a page | 112.7 KB | 30.0 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -468,13 +468,13 @@ ready” and “Couldn't write a reply”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.5 ms** | the gallery demo's data, 140 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of messages replaced |
-| First on the page | 19 ms | default properties; includes adding its CSS to the document |
-| 100 items | 0.7 ms | messages: first render, 24 nodes; update 0.0 ms |
-| 1,000 items | 0.4 ms | messages: first render, 24 nodes; update 0.2 ms |
+| First render | **5.9 ms** | the gallery demo's data, 140 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of messages replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.6 ms | messages: first render, 24 nodes; update 0.3 ms |
+| 1,000 items | 2.3 ms | messages: first render, 24 nodes; update 0.3 ms |
 
-1,000 items of messages: 0.4 ms, 24 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of messages: 2.3 ms, 24 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -483,7 +483,7 @@ ready” and “Couldn't write a reply”.
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - No animation-frame loop.
 - Timers: `setTimeout` (message-actions).
-- 3 infinite CSS animations.
+- 4 infinite CSS animations.
 - Stops or pauses off screen and under reduced motion.
 - Observers: `ResizeObserver` (message-actions), `MutationObserver` (message-actions), `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OffScreenController).
 - Doesn't read the clock.

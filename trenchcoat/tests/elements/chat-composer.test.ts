@@ -202,8 +202,8 @@ for (const look of ["standard", "clean"] as const) {
       expect(onSend).not.toHaveBeenCalled();
       key(message(el), "Enter");
       await settle();
-      expect(onSend).toHaveBeenCalledWith("Hi", { model: "auto", skill: null, args: "Hi" });
-      expect(sent).toEqual([{ message: "Hi", model: "auto", skill: null, args: "Hi" }]);
+      expect(onSend).toHaveBeenCalledWith("Hi", { model: "auto", skill: null, args: "Hi", activeTools: [], temporary: false });
+      expect(sent).toEqual([{ message: "Hi", model: "auto", skill: null, args: "Hi", activeTools: [], temporary: false }]);
       expect(message(el).value).toBe("");
       expect(el.querySelector('[aria-live="polite"]')!.textContent).toBe("Message sent.");
     });
@@ -214,7 +214,7 @@ for (const look of ["standard", "clean"] as const) {
       const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo value="Ship it" .onSend=${onSend}></tc-chat-composer>`);
       button(el, "Send message")!.click();
       await settle();
-      expect(onSend).toHaveBeenCalledWith("Ship it", { model: "auto", skill: null, args: "Ship it" });
+      expect(onSend).toHaveBeenCalledWith("Ship it", { model: "auto", skill: null, args: "Ship it", activeTools: [], temporary: false });
       expect(message(el).value).toBe("Ship it");
       expect(button(el, "Send message")!.disabled).toBe(true);
       settleSend.reject(new Error("offline"));
@@ -1043,8 +1043,8 @@ describe("tc-chat-composer: skills (Part 7.2)", () => {
         await typeIn(el, "French  ");
         key(message(el), "Enter");
         await settle();
-        expect(sent).toEqual([{ message: "/translate French", model: "auto", skill: { id: "translate", name: "translate" }, args: "French" }]);
-        expect(onSend).toHaveBeenCalledWith("/translate French", { model: "auto", skill: { id: "translate", name: "translate" }, args: "French" });
+        expect(sent).toEqual([{ message: "/translate French", model: "auto", skill: { id: "translate", name: "translate" }, args: "French", activeTools: [], temporary: false }]);
+        expect(onSend).toHaveBeenCalledWith("/translate French", { model: "auto", skill: { id: "translate", name: "translate" }, args: "French", activeTools: [], temporary: false });
         expect(el.value).toBe("");
         expect(el.skill).toBe("");
         expect(seen.map((c) => c.reason)).toEqual(["pick", "send"]);
@@ -1273,7 +1273,7 @@ describe("tc-chat-composer: skills (Part 7.2)", () => {
     await act(async () => typeIn(el, "this week"));
     await act(async () => void key(message(el), "Enter"));
     await settle();
-    expect(onSend).toHaveBeenCalledWith("/digest this week", { model: "auto", skill: { id: "digest", name: "digest" }, args: "this week" });
+    expect(onSend).toHaveBeenCalledWith("/digest this week", { model: "auto", skill: { id: "digest", name: "digest" }, args: "this week", activeTools: [], temporary: false });
     expect(calls).toEqual(["pick:digest", "send:none"]);
     expect(el.skill).toBe("");
     expect(el.value).toBe("");

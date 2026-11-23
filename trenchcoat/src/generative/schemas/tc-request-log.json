@@ -76,10 +76,10 @@
         "rate-limited": {
           "type": "string"
         },
-        "status": {
+        "empty": {
           "type": "string"
         },
-        "empty": {
+        "status": {
           "type": "string"
         },
         "model": {

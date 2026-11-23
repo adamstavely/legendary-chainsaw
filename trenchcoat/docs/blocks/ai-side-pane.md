@@ -9,7 +9,7 @@
 An assistant docked beside a page with a chat about what's on it – resizable, collapses to a rail, opens with ⌘. and becomes a sheet on narrow screens; model, settings, prompts and page context in the composer (uses `chat-composer`, `ai-answer`, `claim-answer`, `message-actions`, `prompt-starters`, `chat-history`, `reflection-gate`, `button`)
 
 - **Element:** `<tc-ai-side-pane>`
-- **Size:** 163.3 KB gzip · 688.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 166.4 KB gzip · 702.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -568,13 +568,13 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 
 ## Performance
 
-*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-23 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This piece alone** | 36.2 KB | 11.2 KB |
+| **This piece alone** | 36.2 KB | 11.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.3 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 6.5 KB | – |
@@ -586,11 +586,12 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
+| `internal/trigger-tip` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
-| [chat-composer](../components/chat-composer.md) · Element it renders | 137.4 KB | – |
+| [chat-composer](../components/chat-composer.md) · Element it renders | 148.2 KB | – |
 | [ai-answer](../components/ai-answer.md) · Element it renders | 63.1 KB | – |
-| [message-actions](../components/message-actions.md) · Element it renders | 52.6 KB | – |
+| [message-actions](../components/message-actions.md) · Element it renders | 56.5 KB | – |
 | [prompt-library](../components/prompt-library.md) · Element it renders | 47.7 KB | – |
 | [chat-history](../components/chat-history.md) · Element it renders | 45.1 KB | – |
 | [mention-picker](../components/mention-picker.md) · Element it renders | 39.8 KB | – |
@@ -605,8 +606,8 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 | [button](../components/button.md) · Element it renders | 12.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **688.0 KB** | **163.3 KB** |
-| With Lit – the first component on a page | 706.7 KB | 169.4 KB |
+| **Added to a page that already has Lit** | **702.8 KB** | **167.4 KB** |
+| With Lit – the first component on a page | 721.5 KB | 173.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -614,9 +615,9 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.8 ms** | default properties, 198 DOM nodes – to layout, median of 7 |
+| First render | **4.0 ms** | default properties, 198 DOM nodes – to layout, median of 7 |
 | Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 36 ms | default properties; includes adding its CSS to the document |
+| First on the page | 45 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -625,7 +626,7 @@ The launcher and Close name the shortcut through `aria-keyshortcuts`.
 - At rest with the demo's data: **nothing** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame`, `requestAnimationFrame, cancelled` (ai-answer), `requestAnimationFrame, cancelled` (chat-composer), `requestAnimationFrame, cancelled` (internal/controllers – RollingController), `requestAnimationFrame, cancelled` (mention-picker), `requestAnimationFrame` (model-picker), `requestAnimationFrame, cancelled` (segmented-control), `requestAnimationFrame, cancelled` (prompt-library), `requestAnimationFrame, cancelled` (internal/popover – PopoverController), `requestAnimationFrame, cancelled` (internal/controllers – RowWindowController), `requestAnimationFrame, cancelled` (validity-badge).
 - Timers: `setInterval, cleared` (ai-answer), `setTimeout` (ai-answer), `setInterval, cleared` (chat-composer), `setTimeout` (chat-composer), `setTimeout` (context-tray), `setTimeout` (model-picker), `setTimeout` (segmented-control), `setTimeout` (prompt-library), `setTimeout` (internal/popover – PopoverController), `setTimeout` (chat-history), `setTimeout` (message-actions), `setTimeout` (prompt-starters).
-- 15 infinite CSS animations.
+- 16 infinite CSS animations.
 - Stops or pauses off screen, in a hidden tab and under reduced motion.
 - Observers: `ResizeObserver`, `ResizeObserver` (ai-answer), `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController), `MutationObserver` (internal/controllers – FocusRescueController), `IntersectionObserver` (internal/controllers – OnScreenController), `ResizeObserver` (button), `MutationObserver` (button), `IntersectionObserver` (internal/controllers – OffScreenController), `ResizeObserver` (chat-composer), `ResizeObserver` (mention-picker), `ResizeObserver` (segmented-control), `ResizeObserver` (prompt-library), `ResizeObserver` (internal/popover – PopoverController), `ResizeObserver` (validity-badge), `MutationObserver` (validity-badge), `ResizeObserver` (message-actions), `MutationObserver` (message-actions).
 - Listens on the page: `window keydown`, `document keydown` (ai-answer), `document visibilitychange` (internal/controllers – OnScreenController), `document pointerdown` (chat-composer), `document pointerdown` (model-picker), `window resize` (model-picker), `document pointerdown` (chat-history), `window resize` (chat-history), `window scroll` (internal/controllers – RowWindowController), `window resize` (internal/controllers – RowWindowController).

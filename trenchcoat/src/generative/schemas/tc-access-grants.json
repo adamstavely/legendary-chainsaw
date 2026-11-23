@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-access-grants.json",
+  "title": "tc-access-grants",
+  "description": "The standing access an assistant or agent has – by source, with scope, level, who granted it, last use and expiry –\nwith a \"changed since you agreed\" notice, Review, Renew and Revoke.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading – whose access this is"
+    },
+    "grants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccessGrant"
+      },
+      "description": "The grants. Revoking one, or refusing a change, removes it unless the event is prevented"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "all",
+        "changed",
+        "expiring"
+      ],
+      "description": "Which grants show: all, changed since agreed, or expiring soon (and expired)"
+    },
+    "expiringDays": {
+      "type": "number",
+      "description": "How many days ahead counts as expiring soon"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time to measure against, epoch ms; by default the element's own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string"
+        },
+        "expiring": {
+          "type": "string"
+        },
+        "levelRead": {
+          "type": "string"
+        },
+        "levelWrite": {
+          "type": "string"
+        },
+        "levelAct": {
+          "type": "string"
+        },
+        "grants": {
+          "type": "string"
+        },
+        "grant": {
+          "type": "string"
+        },
+        "changedCount": {
+          "type": "string"
+        },
+        "expiringCount": {
+          "type": "string"
+        },
+        "expiredCount": {
+          "type": "string"
+        },
+        "grantedBy": {
+          "type": "string"
+        },
+        "granted": {
+          "type": "string"
+        },
+        "lastUsed": {
+          "type": "string"
+        },
+        "neverUsed": {
+          "type": "string"
+        },
+        "untilRevoked": {
+          "type": "string"
+        },
+        "expiresToday": {
+          "type": "string"
+        },
+        "expiresIn": {
+          "type": "string"
+        },
+        "expiresInOne": {
+          "type": "string"
+        },
+        "expiresOn": {
+          "type": "string"
+        },
+        "expired": {
+          "type": "string"
+        },
+        "driftTitle": {
+          "type": "string"
+        },
+        "review": {
+          "type": "string"
+        },
+        "accept": {
+          "type": "string"
+        },
+        "revoke": {
+          "type": "string"
+        },
+        "renew": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "revokeConfirm": {
+          "type": "string"
+        },
+        "revokeBody": {
+          "type": "string"
+        },
+        "revokeButton": {
+          "type": "string"
+        },
+        "revoked": {
+          "type": "string"
+        },
+        "accepted": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "emptyChanged": {
+          "type": "string"
+        },
+        "emptyExpiring": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it uses, merged over defaultAccessGrantsLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AccessGrant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the access reaches – an app, a data source or a tool, by the name people know"
+        },
+        "icon": {
+          "type": "string",
+          "description": "The source's own icon or logo (a URL); without it, the source's first letter"
+        },
+        "scope": {
+          "type": "string",
+          "description": "What it may do there, in words: \"Read cases in Team North\""
+        },
+        "level": {
+          "$ref": "#/definitions/AccessGrantLevel",
+          "description": "read, write (\"Can edit\") or act (\"Can act\" – send, run, buy)"
+        },
+        "grantedBy": {
+          "type": "string",
+          "description": "Who agreed to it"
+        },
+        "grantedAt": {
+          "type": "number",
+          "description": "When, epoch ms"
+        },
+        "expiresAt": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "When it runs out, epoch ms; leave it out (or null) for \"Until revoked\""
+        },
+        "lastUsedAt": {
+          "type": "number",
+          "description": "When the agent last used it, epoch ms"
+        },
+        "changed": {
+          "type": "object",
+          "properties": {
+            "since": {
+              "type": "number"
+            },
+            "what": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "since",
+            "what"
+          ],
+          "additionalProperties": false,
+          "description": "What changed since someone agreed to it, and when – the drift notice"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "scope",
+        "level"
+      ],
+      "additionalProperties": false,
+      "description": "One standing grant"
+    },
+    "AccessGrantLevel": {
+      "type": "string",
+      "enum": [
+        "act",
+        "read",
+        "write"
+      ]
+    }
+  }
+}

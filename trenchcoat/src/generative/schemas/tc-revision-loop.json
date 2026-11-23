@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-revision-loop.json",
+  "title": "tc-revision-loop",
+  "description": "An agent improving its own work against a stated bar, round by round, with a visible end.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading – what's being revised"
+    },
+    "bar": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "target": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "max": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "label",
+        "target"
+      ],
+      "additionalProperties": false,
+      "description": "The bar the work must meet"
+    },
+    "cap": {
+      "type": "number",
+      "description": "The most rounds it may run"
+    },
+    "rounds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RevisionLoopRound"
+      },
+      "description": "The rounds so far, in order; append one as it starts and update it as it ends"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "capped",
+        "met",
+        "running",
+        "stopped"
+      ],
+      "description": "How the loop stands: \"running\", \"met\", \"capped\" or \"stopped\". Set to \"stopped\" by Stop and \"running\" by Run another round, unless their listener calls preventDefault()"
+    },
+    "expanded": {
+      "type": "number",
+      "description": "The open round's number, or null. Changed by the user unless a tc-expanded-change listener calls preventDefault()"
+    },
+    "accepted": {
+      "type": "boolean",
+      "description": "Whether the result has been accepted; set by Accept unless a tc-accept listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "roundOf": {
+          "type": "string"
+        },
+        "bar": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "met": {
+          "type": "string"
+        },
+        "capped": {
+          "type": "string"
+        },
+        "stopped": {
+          "type": "string"
+        },
+        "issues": {
+          "type": "string"
+        },
+        "issuesOne": {
+          "type": "string"
+        },
+        "noIssues": {
+          "type": "string"
+        },
+        "remaining": {
+          "type": "string"
+        },
+        "working": {
+          "type": "string"
+        },
+        "rounds": {
+          "type": "string"
+        },
+        "round": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string"
+        },
+        "critique": {
+          "type": "string"
+        },
+        "revising": {
+          "type": "string"
+        },
+        "halted": {
+          "type": "string"
+        },
+        "stop": {
+          "type": "string"
+        },
+        "accept": {
+          "type": "string"
+        },
+        "extend": {
+          "type": "string"
+        },
+        "accepted": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "noScores": {
+          "type": "string"
+        },
+        "scored": {
+          "type": "string"
+        },
+        "delta": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RevisionLoopRound": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "number",
+          "description": "The round's number, from 1"
+        },
+        "score": {
+          "type": "number",
+          "description": "Its score, once it's done"
+        },
+        "critique": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The critic's remaining issues after this round"
+        },
+        "changed": {
+          "type": "string",
+          "description": "What this round changed, in a line"
+        },
+        "status": {
+          "$ref": "#/definitions/RevisionLoopRoundStatus"
+        }
+      },
+      "required": [
+        "n",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "RevisionLoopRoundStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "running"
+      ]
+    }
+  }
+}

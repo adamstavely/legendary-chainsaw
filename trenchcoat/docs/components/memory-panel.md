@@ -9,7 +9,7 @@
 What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 
 - **Element:** `<tc-memory-panel>`
-- **Size:** 17.6 KB gzip · 76.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 19.4 KB gzip · 84.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -37,12 +37,19 @@ yet: it sits at the top under “Waiting for your OK”, outside its category an
 Either fires a cancelable `tc-consent` ({ memory, keep }); unless prevented, Keep moves it into its category and Don't
 keep drops it – through `tc-memories-change` like every other change, and `onConsent` when it's given.
 
+Below the memories, “How it talks to you” sets the assistant's personality for this person across chats: a tone picked
+from `tones` (Default, Professional, Friendly, Direct and Thorough unless you pass your own), with a sample reply in the
+picked tone so people hear the difference, and `instructions` in their own words with a character count
+(`instructions-max`). Picking a tone fires a cancelable `tc-tone-change`; typing fires a cancelable
+`tc-instructions-change`. `hide-personality` leaves the section out.
+
 ### When to use
 
 - A settings page or side panel where people review and correct what the assistant has learned about them.
 - Giving people control over personal data the product keeps – pause, forget and an off switch in one place.
 - Up to a few dozen short facts; the list scrolls past `maxHeight`.
 - Asking before the assistant keeps something it noticed on its own, with `pending` memories.
+- Letting people choose how the assistant talks to them – its tone, and anything else about how to answer.
 
 ### When not to use
 
@@ -60,7 +67,8 @@ keep drops it – through `tc-memories-change` like every other change, and `onC
 4. **Actions** `.ui-mp__acts` – Edit, Pause or Resume, and Forget
 5. **Waiting for your OK** `.ui-mp__waiting` – memories the assistant picked up itself, each with Keep and Don't keep
 6. **New memory** `.ui-mp__add` – unfolds into an editor with a category picker
-7. **Tray** `.ui-mp__foot` – the counts (and how many wait) or what you point at, then Undo after a forget
+7. **Personality** `.ui-mp__persona` – “How it talks to you”: the tones (`.ui-mp__tone`), the picked one's sample
+8. **Tray** `.ui-mp__foot` – the counts (and how many wait) or what you point at, then Undo after a forget
 
 ## Looks
 
@@ -91,6 +99,8 @@ the switch keeps only its track.
   panel.onForget = (id) => fetch(`/api/memories/${id}`, { method: "DELETE" });
   panel.addEventListener("tc-consent", (e) => console.log(e.detail.keep ? "kept" : "not kept", e.detail.memory.text));
   panel.addEventListener("tc-memories-change", (e) => console.log(e.detail.memories));
+  panel.tone = "direct";
+  panel.addEventListener("tc-tone-change", (e) => fetch("/api/assistant/tone", { method: "PUT", body: e.detail.tone }));
 </script>
 ```
 
@@ -104,6 +114,8 @@ import "@adamstavely/trenchcoat/tokens.css";
 export function Memories({ initial }: { initial: Memory[] }) {
   const [memories, setMemories] = useState(initial);
   const [enabled, setEnabled] = useState(true);
+  const [tone, setTone] = useState("default");
+  const [instructions, setInstructions] = useState("");
   return (
     <MemoryPanel
       memories={memories}
@@ -112,6 +124,10 @@ export function Memories({ initial }: { initial: Memory[] }) {
       onEnabledChange={setEnabled}
       categories={["Work", "Preferences", "Projects"]}
       addedSource="Added by you"
+      tone={tone}
+      onToneChange={setTone}
+      instructions={instructions}
+      onInstructionsChange={setInstructions}
     />
   );
 }
@@ -202,6 +218,11 @@ export class MemoryPanelExample {
 | `onForget` | – | `((id: string) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a memory was forgotten |
 | `onRestore` | – | `((memory: Memory) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a forgotten memory is brought back with Undo |
 | `onConsent` | – | `((id: string, keep: boolean) => MemoryCallbackResult) \| undefined` | `undefined` | Called when a memory waiting for the person's OK is kept (true) or not (false) |
+| `tone` | `tone` | `string` | `"default"` | The assistant's tone – the id of one of `tones` |
+| `tones` | – | `AssistantTone[]` | `[ { id: "default", label: "Default", description: "Balanced – how it answers everyone", sample: "Here's a summary of the report, with the three points worth checking first." }, { id: "professional", label: "Professional", description: "Precise and formal", sample: "Please find a summary of the report below, followed by three items that merit review." }, { id: "friendly", label: "Friendly", description: "Warm and conversational", sample: "Here's the gist! Three things jumped out that are worth a look first." }, { id: "direct", label: "Direct", description: "Short answers, no preamble", sample: "Summary below. Check points 1–3 first." }, { id: "thorough", label: "Thorough", description: "Explains its reasoning and caveats", sample: "Below is a summary of the report, why each point matters and what would confirm it – starting with the three that matter most." }, ]` | The tones to pick from, in order |
+| `instructions` | `instructions` | `string` | `""` | What else the assistant should know about how to answer, in the person's own words |
+| `instructionsMax` | `instructions-max` | `number` | `500` | The most characters `instructions` may have |
+| `hidePersonality` | `hide-personality` | `boolean` | `false` | Leaves out the Personality section |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -212,6 +233,8 @@ export class MemoryPanelExample {
 | `tc-enabled-change` | – | Yes | The master switch was flipped; detail `{ enabled: boolean }`. Cancelable. |
 | `tc-consent` | – | Yes | Keep or Don't keep on a memory waiting for the person's OK ({ memory, keep }: MemoryConsent); cancelable – prevented, it keeps waiting |
 | `tc-action` | – | No | The action button (`actionLabel`) was pressed; detail: null |
+| `tc-tone-change` | – | Yes | A tone was picked in Personality; detail `{ tone: string }`. Cancelable: preventDefault() keeps the current one |
+| `tc-instructions-change` | – | Yes | The instructions were typed in; detail `{ instructions: string }`. Cancelable: preventDefault() keeps them as they were |
 
 #### Component tokens
 
@@ -221,9 +244,17 @@ export class MemoryPanelExample {
 | --- | --- | --- |
 | `--tc-memory-panel-well` | `light-dark(#f4f4f5, #222225)` | standard |
 
-#### Design tokens it reads (100)
+#### Design tokens it reads (109)
 
-`--tc-accent`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-decelerate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg-sunken`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-memory-panel-max`, `--tc-radius-badge`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-4-5`, `--tc-space-5`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-switch-h`, `--tc-switch-knob`, `--tc-switch-knob-bg`, `--tc-switch-off`, `--tc-switch-on`, `--tc-switch-radius`, `--tc-switch-w`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+`--tc-accent`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-selected`, `--tc-border-strong`, `--tc-caption-color`, `--tc-caption-font-size`, `--tc-caption-font-weight`, `--tc-caption-line-height`, `--tc-caption-tracking`, `--tc-caption-transform`, `--tc-card-radius`, `--tc-card-shadow`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-md`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-ease-decelerate`, `--tc-ease-move`, `--tc-ease-standard`, `--tc-field-bg`, `--tc-field-bg-sunken`, `--tc-field-font-size`, `--tc-field-h`, `--tc-field-px`, `--tc-field-radius`, `--tc-field-shadow`, `--tc-field-shadow-focus`, `--tc-field-shadow-hover`, `--tc-fill-default`, `--tc-fill-hover`, `--tc-fill-selected`, `--tc-fill-strong`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring-offset`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-snug`, `--tc-line-height-tight`, `--tc-memory-panel-max`, `--tc-radius-badge`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-4-5`, `--tc-space-5`, `--tc-status-danger-bg`, `--tc-status-danger-fg`, `--tc-status-warning-bg`, `--tc-status-warning-fg`, `--tc-surface-on-tray`, `--tc-surface-raised`, `--tc-surface-tray`, `--tc-switch-h`, `--tc-switch-knob`, `--tc-switch-knob-bg`, `--tc-switch-off`, `--tc-switch-on`, `--tc-switch-radius`, `--tc-switch-w`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-inset`, `--tc-tray-radius`
+
+#### Functions
+
+*Exported from the module next to the element.*
+
+| Function | Description |
+| --- | --- |
+| `defaultTones: AssistantTone[]` | Personality's tones, in order – `tones` replaces them |
 
 ## Frameworks
 
@@ -251,8 +282,9 @@ export class MemoryPanelExample {
 | `onForget` | `el.onForget = …;` | `<… onForget={…} />` | `<tc-memory-panel :onForget="…">` | `<tc-memory-panel [onForget]="…">` | `<tc-memory-panel {onForget}>` |
 | `onRestore` | `el.onRestore = …;` | `<… onRestore={…} />` | `<tc-memory-panel :onRestore="…">` | `<tc-memory-panel [onRestore]="…">` | `<tc-memory-panel {onRestore}>` |
 | `onConsent` | `el.onConsent = …;` | `<… onConsent={…} />` | `<tc-memory-panel :onConsent="…">` | `<tc-memory-panel [onConsent]="…">` | `<tc-memory-panel {onConsent}>` |
+| `tones` | `el.tones = …;` | `<… tones={…} />` | `<tc-memory-panel :tones="…">` | `<tc-memory-panel [tones]="…">` | `<tc-memory-panel {tones}>` |
 
-*Also attributes: `enabled`, `heading`, `max-height`, `undo-for`, `added-source`, `action-label` – see the API table.*
+*Also attributes: `enabled`, `heading`, `max-height`, `undo-for`, `added-source`, `action-label`, `tone`, `instructions` and 2 more – see the API table.*
 
 ### Events
 
@@ -262,10 +294,12 @@ export class MemoryPanelExample {
 | `tc-enabled-change` | Yes | `el.addEventListener("tc-enabled-change", (e) => …)` | `onEnabledChange={…}` | `@tc-enabled-change="…"` | `(tc-enabled-change)="…($event)"` | `el.addEventListener("tc-enabled-change", …)` |
 | `tc-consent` | Yes | `el.addEventListener("tc-consent", (e) => …)` | `onTcConsent={…}` | `@tc-consent="…"` | `(tc-consent)="…($event)"` | `el.addEventListener("tc-consent", …)` |
 | `tc-action` | No | `el.addEventListener("tc-action", (e) => …)` | `onClick={…}` | `@tc-action="…"` | `(tc-action)="…($event)"` | `el.addEventListener("tc-action", …)` |
+| `tc-tone-change` | Yes | `el.addEventListener("tc-tone-change", (e) => …)` | `onToneChange={…}` | `@tc-tone-change="…"` | `(tc-tone-change)="…($event)"` | `el.addEventListener("tc-tone-change", …)` |
+| `tc-instructions-change` | Yes | `el.addEventListener("tc-instructions-change", (e) => …)` | `onInstructionsChange={…}` | `@tc-instructions-change="…"` | `(tc-instructions-change)="…($event)"` | `el.addEventListener("tc-instructions-change", …)` |
 
 ### Controlled
 
-The element changes `memories` and `enabled` itself unless a listener calls `preventDefault()` on `tc-memories-change` or `tc-enabled-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `memories`, `enabled`, `tone` and `instructions` itself unless a listener calls `preventDefault()` on `tc-memories-change`, `tc-enabled-change`, `tc-tone-change` or `tc-instructions-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -404,8 +438,14 @@ No slots: everything it shows comes from its properties.
 | `onEnabledChange` | `(enabled: boolean) => void` | Called when the master switch is flipped – in both modes |
 | `title` | `string` | The heading, and the group's name |
 | `action` | `{ label: string; onClick: () => void }` | A button on the tray, e.g. { label: "Manage", onClick } – Undo takes its place for a moment |
+| `tone` | `string` | The assistant's tone, an id from `tones` – controlled when defined |
+| `defaultTone` | `string` | The tone to start with when uncontrolled |
+| `onToneChange` | `(tone: string) => void` | Called with the tone picked in Personality – in both modes |
+| `instructions` | `string` | How the person wants to be answered, in their own words – controlled when defined |
+| `defaultInstructions` | `string` | The instructions to start with when uncontrolled |
+| `onInstructionsChange` | `(instructions: string) => void` | Called as the instructions are typed – in both modes |
 
-*Renamed or hidden on the wrapper: `memories`, `enabled`, `heading`, `actionLabel`, `onChange`*
+*Renamed or hidden on the wrapper: `memories`, `enabled`, `heading`, `actionLabel`, `onChange`, `tone`, `instructions`*
 
 ## Accessibility
 
@@ -417,7 +457,8 @@ Follows the WAI-ARIA [Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/s
 |---|---|
 | Tab | Moves through the switch, the chosen category chip, Search, each memory's actions, New memory and the tray |
 | ← / → / ↑ / ↓ | In the category chips or the new memory's categories: picks the previous or next one, wrapping round |
-| Home / End | In the category chips: picks All or the last category |
+| Home / End | In the category chips: picks All or the last category; in the tones: picks the first or last tone |
+| ← / → / ↑ / ↓ (in the tones) | Picks the previous or next tone, wrapping round |
 | Enter | In an editor: saves the memory (Shift+Enter is a new line) |
 | Escape | In an editor: cancels and returns focus to Edit or New memory; in search: clears and closes it |
 | Space / Enter | On a button: flips the switch, edits, pauses, forgets, undoes |
@@ -433,6 +474,10 @@ named “Search memories”, and the button has `aria-expanded`. Each category i
 named with the memory's text – “Edit “Writes in British English””, “Pause …”, “Resume …”, “Forget …” – and a row whose
 callback is still running is `aria-busy`. A status region says “Forgot “…”. Undo is on the tray.” after a forget, and
 a failure such as “Couldn't pause it. Try again.” The rolling counts are not read out.
+
+“How it talks to you” is a section named by its heading. The tones are a radiogroup with the same name; each tone is
+a radio named by its label and described by its description – and, when picked, by its sample reply. The instructions
+field is labelled by its question and described by its character count (“120 / 500 characters”).
 
 “Waiting for your OK” is a section named by its heading and count. Keep and Don't keep are named with the memory –
 “Keep “Likes tables””. After either, the status region says “Kept: “…”” or “Not kept: “…”” and focus moves to the next
@@ -466,6 +511,7 @@ waiting memory's Keep, or to New memory.
 | inert | 102 | 112 | 15.5 | 15.5 | itself, internal/controllers | Closed and leaving parts are out of the tab order and hidden from screen readers. |
 | :focus-visible | 86 | 85 | 15.4 | 15.4 | itself, internal/kit | Focus rings for keyboard users. |
 | :has() | 105 | 121 | 15.4 | 15.4 | itself | Layout and state that depend on what's inside a part (an icon present, a focused field). |
+| inset | 87 | 66 | 14.1 | 14.1 | itself | – |
 | :is() and :where() | 88 | 78 | 14 | 14 | itself, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
 | ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | itself | – |
 | CSS masks (with the -webkit- prefix) | Any (Edge 79) | 53 | 4 | 3.2 | itself | – |
@@ -479,18 +525,18 @@ waiting memory's Keep, or to New memory.
 | scrollbar-color | 121 | 64 | 26.2 | 26.2 | itself | Scrollbars keep the browser's default colours. |
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | itself | Scrollbars keep the browser's default width. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 | overscroll-behavior: contain | 63 (Edge 18) | 59 | 16 | 16 | itself | Scrolling past the end of a list carries on scrolling the page. |
 
 ## Performance
 
-*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-23 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 68.3 KB | 14.9 KB |
+| **This component alone** | 76.3 KB | 16.8 KB |
 | Lit · the library every element is built on, the parts it uses | 20.8 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -498,8 +544,8 @@ waiting memory's Keep, or to New memory.
 | `internal/controllers` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
-| **Added to a page that already has Lit** | **76.8 KB** | **17.6 KB** |
-| With Lit – the first component on a page | 98.7 KB | 24.8 KB |
+| **Added to a page that already has Lit** | **84.8 KB** | **19.5 KB** |
+| With Lit – the first component on a page | 106.7 KB | 26.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -507,13 +553,13 @@ waiting memory's Keep, or to New memory.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **6.1 ms** | the gallery demo's data, 274 DOM nodes – to layout, median of 7 |
+| First render | **5.2 ms** | the gallery demo's data, 309 DOM nodes – to layout, median of 7 |
 | Typical update | **1.0 ms** | one item of memories replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 10 ms | memories: first render, 1,840 nodes; update 1.2 ms |
-| 1,000 items | 126 ms | memories: first render, 17,500 nodes; update 10 ms |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 20 ms | memories: first render, 1,875 nodes; update 2.0 ms |
+| 1,000 items | 97 ms | memories: first render, 17,535 nodes; update 9.7 ms |
 
-1,000 items of memories: 126 ms. It renders every item, so a first render passes 50 ms (a long task) at about 400 items – page or filter longer lists.
+1,000 items of memories: 97 ms. It renders every item, so a first render passes 50 ms (a long task) at about 520 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 
@@ -536,6 +582,8 @@ waiting memory's Keep, or to New memory.
   in the order people expect.
 - Set `addedSource` to how a hand-added memory should read, e.g. “Added by you”.
 - For a waiting memory, say where it was picked up in `source` – “Picked up from a chat” – so people can judge it.
+- Give each tone a two-to-four-word description and a one-sentence `sample` on the same subject, so the tones differ
+  only in how they say it.
 
 ## Do and don't
 
@@ -546,12 +594,14 @@ waiting memory's Keep, or to New memory.
 - Keep Undo long enough to read: raise `undoFor`, or set it to `Infinity`, for people who need more time.
 - Treat the switch as a real setting: when it's off, stop using and saving memories, as its note promises.
 - Don't use a waiting memory in answers until it's kept; return a promise from `onConsent` to save the answer.
+- Apply the tone and instructions to every new chat, and say in your product where they're used.
 
 ### Don't
 
 - Don't delete memories when the switch is turned off – the note says nothing is deleted.
 - Don't put long notes or documents in a memory; they wrap and are hard to scan.
 - Don't hide the source: people need to know where a memory came from to trust or correct it.
+- Don't offer tones the assistant can't keep to – each one should change the answers people get.
 
 ## Related
 

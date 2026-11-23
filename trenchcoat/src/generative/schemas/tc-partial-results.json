@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-partial-results.json",
+  "title": "tc-partial-results",
+  "description": "A bulk run that partly finished: what finished, what didn't and why, and a way to retry the rest.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading – what the run was"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PartialResultItem"
+      },
+      "description": "The items: every one, or only the unfinished ones with `done` and `total`"
+    },
+    "total": {
+      "type": "number",
+      "description": "How many there were in all; by default the items' count"
+    },
+    "done": {
+      "type": "number",
+      "description": "How many finished; by default the items marked done"
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "card",
+        "notice"
+      ],
+      "description": "\"card\", the whole picture, or \"notice\", one line and a Retry"
+    },
+    "collapsed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The reasons whose groups are closed. Changed by the user unless a tc-collapsed-change listener calls preventDefault()"
+    },
+    "retrying": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids being retried; set by Retry unless its listener calls preventDefault(), and cleared for an item when the page replaces it"
+    },
+    "hideContinue": {
+      "type": "boolean",
+      "description": "Hide Continue, for a run with nothing to continue to"
+    },
+    "hideDownload": {
+      "type": "boolean",
+      "description": "Hide Download the list"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "finished": {
+          "type": "string"
+        },
+        "didnt": {
+          "type": "string"
+        },
+        "allDone": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "part": {
+          "type": "string"
+        },
+        "noReason": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "retryOne": {
+          "type": "string"
+        },
+        "retryFailed": {
+          "type": "string"
+        },
+        "retrying": {
+          "type": "string"
+        },
+        "continueWith": {
+          "type": "string"
+        },
+        "download": {
+          "type": "string"
+        },
+        "unfinished": {
+          "type": "string"
+        },
+        "retryingOne": {
+          "type": "string"
+        },
+        "retryingMany": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PartialResultItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is, e.g. a file or a case name"
+        },
+        "status": {
+          "$ref": "#/definitions/PartialResultStatus"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why it didn't finish, in words – items are grouped by it"
+        },
+        "detail": {
+          "type": "string",
+          "description": "More about it, such as the error"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "PartialResultStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "skipped"
+      ]
+    }
+  }
+}

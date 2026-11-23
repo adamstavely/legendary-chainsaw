@@ -9,7 +9,7 @@
 Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 
 - **Element:** `<tc-chat-composer>`
-- **Size:** 87.0 KB gzip · 373.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 89.0 KB gzip · 384.1 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 121+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -38,6 +38,12 @@ menu, to fit a 320 px side pane. With `skills` set, people start a message with 
 pressing the / button) lists them, recent ones first, then by source; a pick puts “/translate” at the start of the
 message with what to type next greyed after it, and the skill and its arguments ride on the send.
 
+With `tools` set, a “Tools” button in the toolbar row opens switches for what the model may use on this message –
+web search, deep research, thinking longer, creating an image. The tools that are on follow the button as chips, each
+removed with a press, and their ids ride on the send. With `show-temporary`, a toggle at the end of the row makes the
+chat temporary: a quiet line above the box says “Temporary chat · Not saved to history or memory”, the box's edge
+turns dashed, and `temporary` rides on the send – keeping it out of history and memory is the app's part.
+
 With `limit` set, sending is held back but nothing is lost: the field stays editable so the draft is kept, Send is
 `aria-disabled` with the reason as its description, and a notice above the composer says why. A message limit reads
 “You've reached your message limit · resets at 14:00 (in 2 h 10 min)” – the countdown kept fresh – with an optional
@@ -52,6 +58,10 @@ action such as Upgrade; a trial that's over says so, with Upgrade as its primary
   toolbar, and leave out what the pane doesn't offer with `hide-connect-apps`, `hide-project` and `hide-approval`.
 - An agent with skills or slash commands – set `skills` (and `searchSkills` when the catalogue lives on a server), so
   people can find one by name or by what it does, without knowing the list by heart.
+- When the model can do more on request – search the web, research, think longer, make an image – and people should
+  choose per message: set `tools` (`exclusive-tools` when only one mode can run at a time).
+- When people should be able to ask something without it being kept – set `show-temporary` and honour `temporary`
+  on the send.
 - A plan with a message limit, or a free trial – set `limit` when people can't send right now, so they keep their
   draft and know when they can.
 
@@ -62,6 +72,8 @@ action such as Upgrade; a trial that's over says so, with Upgrade as its primary
 - Asking for permission at the moment an agent acts – use [Permission Request](permission-request.md).
 - Editing generation settings as a page of their own, not from the composer – use [Model Settings](model-settings.md).
 - Commands that act on the app rather than on the message (open a file, switch a page) – use [Command Menu](command-menu.md).
+- Deciding which tools an agent may use across a workspace, with allow / ask / deny – use [Tool Permissions](tool-permissions.md).
+- Showing or editing what the assistant already remembers – use [Memory Panel](memory-panel.md).
 
 ## Anatomy
 
@@ -75,6 +87,8 @@ action such as Upgrade; a trial that's over says so, with Upgrade as its primary
 6. **Settings and prompts** `.ui-chat-composer__tool` – open model-settings and prompt-library in popovers
 7. **Page context** `.ui-chat-composer__page` – connects or disconnects what's on the page; the button beside it shows what's attached
 8. **Limit** `.ui-chat-composer__limit` – with `limit` set, the notice above the composer: why sending is held back,
+9. **Tools** `.ui-chat-composer__tool[data-tool="tools"]` – with `tools` set, opens the menu of tool switches
+10. **Temporary chat** `.ui-chat-composer__temp-btn` – with `show-temporary`, the toggle at the end of the row; while
 
 ## Looks
 
@@ -83,7 +97,9 @@ width, and the message shows one line and grows to two. Clean is one white card 
 sizes: the message on top, growing up to four lines, the tools in a row below it, and a quiet last row that connects
 apps and then lets you pick a project; its icons are 16 px glyphs with thin lines and solid shapes. In the toolbar
 row, Standard tints the connected page context chip in the accent; Clean raises it as a white chip with an accent
-eye, and draws the tool icons in a quieter gray with thinner lines. The skills list is mention-picker's, in the same
+eye, and draws the tool icons in a quieter gray with thinner lines. Tool chips follow the page chip: an accent tint
+in Standard, a raised white chip with an accent icon in Clean. A temporary chat dashes the card's border in Standard
+and draws a dashed hairline around the card in Clean. The skills list is mention-picker's, in the same
 look: Standard sets it on a gray tray, Clean is one white popover. The token is the same accent tint in both.
 
 ## Usage
@@ -124,6 +140,16 @@ look: Standard sets it on a gray tray, Clean is one white popover. The token is 
   // Out of messages until 14:00: the draft stays, Send waits, the notice says when
   composer.limit = { kind: "limit", resetsAt: new Date().setHours(14, 0, 0, 0), action: "Upgrade" };
   composer.addEventListener("tc-limit-action", () => (location.href = "/plans"));
+
+  // Tools and a temporary chat: both ride on tc-send
+  composer.tools = [
+    { id: "web", label: "Web search", description: "Look things up on the web" },
+    { id: "think", label: "Think longer", description: "Plan before answering" },
+  ];
+  composer.activeTools = ["web"];
+  composer.showTemporary = true;
+  composer.addEventListener("tc-active-tools-change", (e) => console.log("tools", e.detail.activeTools));
+  composer.addEventListener("tc-temporary-change", (e) => console.log("temporary", e.detail.temporary));
 </script>
 ```
 
@@ -145,7 +171,7 @@ export function Composer({
   trialOver,
   openCheckout,
 }: {
-  send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>;
+  send: (text: string, model: string, withPage: boolean, skill?: string, tools?: string[], temporary?: boolean) => Promise<void>;
   pickFiles: () => void;
   trialOver: boolean;
   openCheckout: () => void;
@@ -155,6 +181,8 @@ export function Composer({
   const [model, setModel] = useState("claude");
   const [settings, setSettings] = useState<Record<string, number | string>>({ temperature: 0.7 });
   const [page, setPage] = useState<ChatPageContext>({ title: "Q3 report", connected: true, count: 4 });
+  const [tools, setTools] = useState<string[]>([]);
+  const [temporary, setTemporary] = useState(false);
   return (
     <ChatComposer
       placeholder="Ask anything…"
@@ -174,7 +202,16 @@ export function Composer({
       skills={skills}
       recentSkills={recent}
       onSkillChange={(skill, reason) => skill && reason === "pick" && setRecent((r) => [skill.id, ...r.filter((id) => id !== skill.id)])}
-      onSend={(text, { model, skill, args }) => send(skill ? args : text, model, page.connected, skill?.id)}
+      tools={[
+        { id: "web", label: "Web search", description: "Look things up on the web" },
+        { id: "think", label: "Think longer", description: "Plan before answering" },
+      ]}
+      activeTools={tools}
+      onActiveToolsChange={setTools}
+      showTemporary
+      temporary={temporary}
+      onTemporaryChange={setTemporary}
+      onSend={(text, { model, skill, args, activeTools, temporary }) => send(skill ? args : text, model, page.connected, skill?.id, activeTools, temporary)}
       onAttach={pickFiles}
       onConnectApps={() => fetch("/api/connect", { method: "POST" })}
       onRequestApproval={() => fetch("/api/approve", { method: "POST" })}
@@ -289,6 +326,11 @@ export class ChatComposerExample {
 | `limit` | – | `ChatLimit \| null` | `null` | Holds sending back – a message limit with when it resets, or a trial that's over; the draft stays editable (null: send freely) |
 | `now` | `now` | `number \| undefined` | `undefined` | The time for the limit's "in 2 h 10 min", epoch ms – the composer keeps its own clock when unset |
 | `locale` | `locale` | `string \| undefined` | `undefined` | The locale for the limit's reset time – the browser's when unset |
+| `tools` | – | `ChatTool[] \| undefined` | `undefined` | Opt-in: the tools a message can use – a "Tools" button in the toolbar row opens their switches (unset: no button) |
+| `activeTools` | – | `string[]` | `[]` | The ids of the tools that are on, shown as chips; the composer updates it unless tc-active-tools-change is prevented |
+| `exclusiveTools` | `exclusive-tools` | `boolean` | `false` | One tool at a time: switching one on switches the others off |
+| `temporary` | `temporary` | `boolean` | `false` | A temporary chat – not saved to history or memory: a line above the composer says so and its edge turns dashed |
+| `showTemporary` | `show-temporary` | `boolean` | `false` | Show the temporary-chat toggle at the end of the toolbar row |
 | `pickedSkill` | – | `ChatSkill \| null` | – | The message's skill, from its id – a skill the composer hasn't seen is named by its id |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
@@ -298,7 +340,7 @@ export class ChatComposerExample {
 | --- | --- | --- | --- |
 | `tc-value-change` | – | Yes | The message changed (`{ value: string }`) – typing, dictation, clearing after a send; cancelable – prevent it to keep `value` (controlled use) |
 | `tc-model-change` | – | Yes | A model was picked in the menu (`{ model: string; choice: ChatModel }`); cancelable |
-| `tc-send` | – | No | A message was sent (`ChatSend`: `{ message, model, skill, args }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token); `onSend` may return a promise to keep it until it settles |
+| `tc-send` | – | No | A message was sent (`ChatSend`: `{ message, model, skill, args, activeTools, temporary }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token, `activeTools` the tools that were on); `onSend` may return a promise to keep it until it settles |
 | `tc-skill-change` | – | Yes | The message's skill changed (`ChatSkillChange`: `{ skill, previous, reason }`); cancelable when it was picked, replaced or removed – prevent it to keep the message as it is |
 | `tc-attach` | – | No | The plus button was pressed – open your own file or folder picker here; detail: null |
 | `tc-connect-apps` | – | No | "Connect apps" was pressed; `onConnectApps` may return a promise it waits for; detail: null |
@@ -309,6 +351,8 @@ export class ChatComposerExample {
 | `tc-page-context-change` | – | Yes | The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext` |
 | `tc-limit-action` | – | No | The limit notice's action was pressed – upgrade, learn more (`ChatLimitAction`: `{ limit }`) |
 | `tc-trial-action` | – | No | The trial-ended notice's action was pressed (`ChatLimitAction`: `{ limit }`) |
+| `tc-active-tools-change` | – | Yes | A tool was switched on or off in the Tools menu or by its chip (`ChatActiveToolsChange`: `{ activeTools, tool, active }`); cancelable – prevent it to control `activeTools` |
+| `tc-temporary-change` | – | Yes | The temporary-chat toggle was pressed (`ChatTemporaryChange`: `{ temporary }`); cancelable – prevent it to control `temporary` |
 
 #### Component tokens
 
@@ -326,9 +370,9 @@ export class ChatComposerExample {
 | `--tc-chat-composer-grow` | `0` | not set – this fallback applies |
 | `--tc-chat-composer-lines` | `1` | not set – this fallback applies |
 
-#### Design tokens it reads (100)
+#### Design tokens it reads (108)
 
-`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-chat-composer-card-h`, `--tc-chat-composer-frame`, `--tc-chat-composer-inset`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-duration-slowest`, `--tc-ease-decelerate`, `--tc-ease-emphasized`, `--tc-ease-in`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-spring`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-menu-bg`, `--tc-menu-item-font-size`, `--tc-menu-item-h`, `--tc-menu-item-hover`, `--tc-menu-item-px`, `--tc-menu-item-radius`, `--tc-menu-item-selected-fg`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-12`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-8`, `--tc-status-danger-bg`, `--tc-status-danger-border`, `--tc-status-danger-fg`, `--tc-status-info-border`, `--tc-surface-control`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tray-radius`, `--tc-z-dropdown`
+`--tc-accent`, `--tc-accent-subtle`, `--tc-accent-text`, `--tc-action-ghost-bg-hover`, `--tc-action-ghost-fg`, `--tc-action-primary-bg`, `--tc-action-primary-bg-hover`, `--tc-action-primary-fg`, `--tc-action-primary-shadow`, `--tc-action-secondary-bg`, `--tc-action-secondary-fg`, `--tc-action-secondary-shadow`, `--tc-action-secondary-shadow-hover`, `--tc-border-control-hover`, `--tc-border-default`, `--tc-border-strong`, `--tc-card-radius`, `--tc-chat-composer-card-h`, `--tc-chat-composer-frame`, `--tc-chat-composer-inset`, `--tc-control-font-size`, `--tc-control-font-weight`, `--tc-control-h-md`, `--tc-control-h-sm`, `--tc-control-px-sm`, `--tc-control-radius-md`, `--tc-control-radius-sm`, `--tc-divider`, `--tc-duration-base`, `--tc-duration-fast`, `--tc-duration-instant`, `--tc-duration-moderate`, `--tc-duration-quick`, `--tc-duration-slow`, `--tc-duration-slower`, `--tc-duration-slowest`, `--tc-ease-decelerate`, `--tc-ease-emphasized`, `--tc-ease-in`, `--tc-ease-in-out`, `--tc-ease-move`, `--tc-ease-spring`, `--tc-ease-standard`, `--tc-fill-default`, `--tc-fill-selected`, `--tc-fill-subtle`, `--tc-focus-outline`, `--tc-focus-ring`, `--tc-focus-ring-offset`, `--tc-focus-ring-width`, `--tc-font-sans`, `--tc-font-size-md`, `--tc-font-size-sm`, `--tc-font-size-xs`, `--tc-font-weight-medium`, `--tc-font-weight-regular`, `--tc-hairline`, `--tc-icon-muted`, `--tc-line-height-normal`, `--tc-line-height-tight`, `--tc-menu-bg`, `--tc-menu-item-font-size`, `--tc-menu-item-h`, `--tc-menu-item-hover`, `--tc-menu-item-px`, `--tc-menu-item-radius`, `--tc-menu-item-selected-fg`, `--tc-menu-padding`, `--tc-menu-radius`, `--tc-menu-shadow`, `--tc-radius-full`, `--tc-radius-lg`, `--tc-radius-md`, `--tc-radius-sm`, `--tc-radius-xs`, `--tc-shadow-control`, `--tc-shadow-raised`, `--tc-space-0-5`, `--tc-space-1`, `--tc-space-1-5`, `--tc-space-12`, `--tc-space-2`, `--tc-space-2-5`, `--tc-space-3`, `--tc-space-3-5`, `--tc-space-4`, `--tc-space-8`, `--tc-status-danger-bg`, `--tc-status-danger-border`, `--tc-status-danger-fg`, `--tc-status-info-border`, `--tc-surface-control`, `--tc-surface-raised`, `--tc-surface-sunken`, `--tc-text-disabled`, `--tc-text-muted`, `--tc-text-placeholder`, `--tc-text-primary`, `--tc-text-secondary`, `--tc-text-strong`, `--tc-tooltip-bg`, `--tc-tooltip-fg`, `--tc-tooltip-font-size`, `--tc-tooltip-px`, `--tc-tooltip-py`, `--tc-tooltip-radius`, `--tc-tray-radius`, `--tc-z-dropdown`
 
 #### Functions
 
@@ -371,8 +415,10 @@ export class ChatComposerExample {
 | `prompts` | `el.prompts = …;` | `<… prompts={…} />` | `<tc-chat-composer :prompts="…">` | `<tc-chat-composer [prompts]="…">` | `<tc-chat-composer {prompts}>` |
 | `pageContext` | `el.pageContext = …;` | `<… pageContext={…} />` | `<tc-chat-composer :pageContext="…">` | `<tc-chat-composer [pageContext]="…">` | `<tc-chat-composer {pageContext}>` |
 | `limit` | `el.limit = …;` | `<… limit={…} />` | `<tc-chat-composer :limit="…">` | `<tc-chat-composer [limit]="…">` | `<tc-chat-composer {limit}>` |
+| `tools` | `el.tools = …;` | `<… tools={…} />` | `<tc-chat-composer :tools="…">` | `<tc-chat-composer [tools]="…">` | `<tc-chat-composer {tools}>` |
+| `activeTools` | `el.activeTools = …;` | `<… activeTools={…} />` | `<tc-chat-composer :activeTools="…">` | `<tc-chat-composer [activeTools]="…">` | `<tc-chat-composer {activeTools}>` |
 
-*Also attributes: `hide-connect-apps`, `hide-project`, `hide-approval`, `placeholder`, `value`, `model`, `load-ms`, `dictation` and 9 more – see the API table.*
+*Also attributes: `hide-connect-apps`, `hide-project`, `hide-approval`, `placeholder`, `value`, `model`, `load-ms`, `dictation` and 12 more – see the API table.*
 
 ### Events
 
@@ -391,12 +437,14 @@ export class ChatComposerExample {
 | `tc-page-context-change` | Yes | `el.addEventListener("tc-page-context-change", (e) => …)` | `ref.current.addEventListener("tc-page-context-change", …)` | `@tc-page-context-change="…"` | `(tc-page-context-change)="…($event)"` | `el.addEventListener("tc-page-context-change", …)` |
 | `tc-limit-action` | No | `el.addEventListener("tc-limit-action", (e) => …)` | `onLimitAction={…}` | `@tc-limit-action="…"` | `(tc-limit-action)="…($event)"` | `el.addEventListener("tc-limit-action", …)` |
 | `tc-trial-action` | No | `el.addEventListener("tc-trial-action", (e) => …)` | `onTrialAction={…}` | `@tc-trial-action="…"` | `(tc-trial-action)="…($event)"` | `el.addEventListener("tc-trial-action", …)` |
+| `tc-active-tools-change` | Yes | `el.addEventListener("tc-active-tools-change", (e) => …)` | `ref.current.addEventListener("tc-active-tools-change", …)` | `@tc-active-tools-change="…"` | `(tc-active-tools-change)="…($event)"` | `el.addEventListener("tc-active-tools-change", …)` |
+| `tc-temporary-change` | Yes | `el.addEventListener("tc-temporary-change", (e) => …)` | `ref.current.addEventListener("tc-temporary-change", …)` | `@tc-temporary-change="…"` | `(tc-temporary-change)="…($event)"` | `el.addEventListener("tc-temporary-change", …)` |
 
 *React: events without a prop are listened to on the element through a ref.*
 
 ### Controlled
 
-The element changes `value`, `model`, `skill`, `settings` and `pageContext` itself unless a listener calls `preventDefault()` on `tc-value-change`, `tc-model-change`, `tc-skill-change`, `tc-settings-change` or `tc-page-context-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
+The element changes `value`, `model`, `skill`, `settings`, `pageContext`, `activeTools` and `temporary` itself unless a listener calls `preventDefault()` on `tc-value-change`, `tc-model-change`, `tc-skill-change`, `tc-settings-change`, `tc-page-context-change`, `tc-active-tools-change` or `tc-temporary-change` – then the app decides and sets it. In React, the wrapper does that for you when you pass the value.
 
 #### HTML
 
@@ -604,8 +652,15 @@ No slots: everything it shows comes from its properties.
 | `onSkillChange` | `(skill: ChatSkill \| null, reason: ChatSkillChangeReason) => void` | The message's skill changed: the skill now (null: none) and why – picked, replaced, removed, edited away or sent |
 | `onLimitAction` | `(limit: ChatLimitAction["limit"]) => void` | The limit notice's action was pressed – upgrade or learn more |
 | `onTrialAction` | `(limit: ChatLimitAction["limit"]) => void` | The trial-ended notice's action was pressed |
+| `tools` | `ChatTool[]` | Opt-in: the tools a message can use – a "Tools" button in the toolbar row opens their switches |
+| `activeTools` | `string[]` | The ids of the tools that are on (controlled). Leave undefined to let the composer keep them, starting at `defaultActiveTools` |
+| `defaultActiveTools` | `string[]` | The tools that are on at first when uncontrolled |
+| `onActiveToolsChange` | `(activeTools: string[], change: { tool: string; active: boolean }) => void` | A tool was switched on or off: the tools on now, and which one changed |
+| `temporary` | `boolean` | Whether the chat is temporary – not saved to history or memory (controlled). Leave undefined to let the composer keep it |
+| `defaultTemporary` | `boolean` | Whether the chat starts temporary when uncontrolled |
+| `onTemporaryChange` | `(temporary: boolean) => void` | The temporary-chat toggle was pressed |
 
-*Renamed or hidden on the wrapper: `value`, `models`, `model`, `context`, `settings`, `pageContext`, `skills`, `searchSkills`, `skill`, `onSend`*
+*Renamed or hidden on the wrapper: `value`, `models`, `model`, `context`, `settings`, `pageContext`, `skills`, `searchSkills`, `skill`, `onSend`, `tools`, `activeTools`, `temporary`*
 
 ## Accessibility
 
@@ -623,7 +678,9 @@ No slots: everything it shows comes from its properties.
 | ← / → | In the toolbar row: the previous or next tool, wrapping at the ends |
 | Home / End | In the toolbar row: the first or last tool |
 | Enter / Space | On a toolbar button: opens its popover (focus moves into it), or toggles the page context |
-| ↓ / ↑ | In the “More” menu: the next or previous entry. Home / End: the first or last |
+| ↓ / ↑ | In the “More” or Tools menu: the next or previous entry. Home / End: the first or last |
+| Enter / Space | On a tool in the Tools menu: switches it on or off – the menu stays open. On a tool chip: switches it off, focus back on Tools |
+| Enter / Space | On the temporary-chat toggle: turns the temporary chat on or off. Escape hides its tooltip |
 | / | With `skills` set, at the start of a line: opens the skills list. Before a skill's token: a / takes its place and the list offers to replace it; Escape puts the token back |
 | ↓ / ↑, Enter / Tab, Escape | In the skills list: move, pick, close – the message keeps focus (`mention-picker`) |
 | Backspace | Right after a skill's token (or the space after it): removes the token whole |
@@ -656,7 +713,13 @@ Q3 report, 4 items” or “Page context: Q3 report, off” – and is described
 this page. Press to disconnect it.”); turning it on or off is announced: “Page context on: Q3 report.”, “Page
 context off.” The button beside it is “Show what's attached from the page (4)” and opens a dialog named “Attached from
 Q3 report”. When the row is folded, the icon buttons keep these names; “More” has `aria-haspopup="menu"` and opens a
-`menu` of `menuitem`s. A used prompt is announced (“Summarise added to your message.”). The disclaimer describes the
+`menu` of `menuitem`s. “Tools” has `aria-haspopup="menu"` and opens a `menu` named “Tools” of
+`menuitemcheckbox`es (`menuitemradio`s with `exclusive-tools`) with `aria-checked`, each named by its tool and
+described by its description; while tools are on, the button is described by them (“On: Web search, Think longer”). A chip is named
+“Web search, remove”. Switching is said: “Web search on.”, “Web search off.” The temporary-chat toggle is “Temporary
+chat” with `aria-pressed`, described by “Not saved to history or memory”; its tooltip is hidden from screen readers.
+Turning it on or off is said, whoever does it: “Temporary chat on. This chat won't be saved to history or memory.”,
+“Temporary chat off.” A used prompt is announced (“Summarise added to your message.”). The disclaimer describes the
 message field (`aria-describedby`), so it's read with it.
 
 With skills, the text area stays focused and is the combobox: mention-picker gives it `aria-autocomplete="list"`,
@@ -720,13 +783,13 @@ the token's tint is hidden from screen readers.
 
 ## Performance
 
-*Measured 2026-11-16 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-23 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 140.1 KB | 32.1 KB |
+| **This component alone** | 150.9 KB | 34.3 KB |
 | Lit · the library every element is built on, the parts it uses | 22.2 KB | – |
 | `internal/popover` · Shared Trenchcoat code | 9.1 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 3.8 KB | – |
@@ -737,6 +800,7 @@ the token's tint is hidden from screen readers.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
+| `internal/trigger-tip` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/safe-media` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/format` · Shared Trenchcoat code | 0.1 KB | – |
 | [prompt-library](prompt-library.md) · Element it renders | 47.7 KB | – |
@@ -747,8 +811,8 @@ the token's tint is hidden from screen readers.
 | [context-tray](context-tray.md) · Element it renders | 25.2 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
 | `src/internal/ease.ts` · Dependency | 0.0 KB | – |
-| **Added to a page that already has Lit** | **373.2 KB** | **87.0 KB** |
-| With Lit – the first component on a page | 394.6 KB | 93.9 KB |
+| **Added to a page that already has Lit** | **384.1 KB** | **89.4 KB** |
+| With Lit – the first component on a page | 405.5 KB | 96.6 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -756,11 +820,11 @@ the token's tint is hidden from screen readers.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **5.4 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
-| Typical update | **0.5 ms** | one item of skills replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 3.3 ms | skills: first render, 304 nodes; update 0.1 ms |
-| 1,000 items | 4.3 ms | skills: first render, 304 nodes; update 0.6 ms |
+| First render | **6.7 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
+| Typical update | **0.6 ms** | one item of skills replaced |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.5 ms | skills: first render, 304 nodes; update 0.4 ms |
+| 1,000 items | 6.6 ms | skills: first render, 304 nodes; update 0.5 ms |
 
 What it renders doesn't grow with skills (tested to 1,000 items).
 
@@ -794,6 +858,9 @@ What it renders doesn't grow with skills (tested to 1,000 items).
   plugin's name.
 - Write `argumentHint` as the thing to type in angle brackets: “<language>”, “<pr number>”. Leave it out when the
   skill takes nothing.
+- Name tools for what they do, in two or three words – “Web search”, “Deep research”, “Think longer” – with a
+  one-line `description` of the difference it makes. Keep it to a handful; tools the model always uses don't need a
+  switch.
 - Leave the limit's sentence to the composer, or say what's specific in `message`: “You've used your 40 messages for
   today”. Name the action for what it does – “Upgrade”, “See plans”, “Learn more”.
 
@@ -812,6 +879,8 @@ What it renders doesn't grow with skills (tested to 1,000 items).
   on the page.
 - Read `skill` and `args` from `onSend`'s details (or tc-send) to run the skill; `message` still has the whole text.
 - Give `limit.resetsAt` whenever the limit resets on its own, and clear `limit` the moment people can send again.
+- Read `activeTools` and `temporary` from `onSend`'s details, and keep a temporary chat out of history, memory and
+  training on your side – the composer only says it.
 
 ### Don't
 
@@ -825,6 +894,8 @@ What it renders doesn't grow with skills (tested to 1,000 items).
 - Don't put a / trigger in `mentions` next to `skills` – skills take the / key.
 - Don't hide the / button unless your product teaches the shortcut somewhere else.
 - Don't clear or disable the message field when a limit is reached – the draft is people's work; `limit` keeps it.
+- Don't offer the temporary toggle unless your app really keeps those chats out of history and memory.
+- Don't switch tools on behind people's backs – set `activeTools` from what they chose, or from a mode they picked.
 
 ## Related
 
@@ -832,6 +903,7 @@ What it renders doesn't grow with skills (tested to 1,000 items).
 - [Mention Picker](mention-picker.md) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 - [Prompt Library](prompt-library.md) – Saved prompt templates with variables – type straight into the sentence, watch the finished prompt assemble below, and use it once every variable is filled
 - [Context Tray](context-tray.md) – What the model can see, as chips – files, @-mentions and sources, each with its token weight; pin or remove them and watch the total against the window
+- [Memory Panel](memory-panel.md) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 
 ## Changelog
 

@@ -8,10 +8,11 @@
 
 Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.
 
-423 items · 423 files
+427 items · 427 files
 
-## Agents (67)
+## Agents (70)
 
+- [Access Grants](access-grants.md) – The standing access an assistant or agent has, by source – scope in words, Can read / edit / act, who granted it, last use and expiry – with a "changed since you agreed" notice to review, Renew for what's running out, and Revoke behind an inline confirm
 - [Agent Create](agent-create.md) – Describe an agent and get a working draft – a request with example chips, Generate, then the draft streamed in to edit: name, instructions, tools as switches, model, triggers, and the model's open questions to answer before Create
 - [Agent Crew](agent-crew.md) – A lead agent and its sub-agents as one live tree of cards, every agent on screen – what each does now, its context in words and a bar, its tools and the last thing it was handed; handoffs run as a light along the connectors and light up the card they reach, a click opens the agent to steer, pause or resume it, and tabs switch between projects
 - [Agent Cursors](agent-cursors.md) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
@@ -57,11 +58,13 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Live View](live-view.md) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 - [Memory Graph](memory-graph.md) – What an agent remembers and the tools it can reach, around it – each memory a card with the file, chat or email it came from, each tool with what it may do where, joined by rounded connectors; a light runs out to the tool in use and in from what it recalls or learns, and you can switch any card off, forget a memory with Undo, or add a file or connect a tool from the agent
 - [Parallel Attempts](parallel-attempts.md) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
+- [Partial Results](partial-results.md) – A bulk run that partly finished – "34 of 40 finished · 6 didn't" over a bar split into finished, failed and skipped, the unfinished grouped by reason with Retry, Retry failed, Continue with what finished and Download the list, or a one-line notice
 - [Permission Request](permission-request.md) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - [Plan vs Actual](plan-vs-actual.md) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 - [Request Log](request-log.md) – Every request an app made to a model provider, one line each – time, provider and model, endpoint, status with errors in words ("429 Rate limited"), latency with a bar, tokens in and out, cost and cache hit; status-class and model chips, and a request that opens to its bodies and headers with secrets masked and Copy as cURL
 - [Review Center](review-center.md) – A focused workspace for what your agents want to do – the queue sorted by risk, one item at a time with the shaky spans marked, Approve, Edit, Reject and Skip on single keys, a stamp as each one leaves and the next one rising in
 - [Review Queue](review-queue.md) – Grade real outputs one at a time from the keyboard – the input, output and reference, pass or fail and 1–5 grades per criterion, a note and a suggested verdict, P / F / 1–5 / Enter / J / K / S / U shortcuts with a list on ?, progress with skipped ones counted, and Undo
+- [Revision Loop](revision-loop.md) – An agent improving its own work against a stated bar – "Round 3 of 5", each round's score against the bar up to the cap, the critic's remaining issues, what each round changed, and an end in words ("Met the bar in round 3", "Stopped at the cap – 2 issues remain") with Stop, Accept as is and Run another round
 - [Root Cause Tree](root-cause-tree.md) – How an agent finds out why something failed, as a fault tree – hypotheses with their evidence ruled out one by one, OR and AND branches, and the way from the confirmed cause up to the failure lit
 - [Run Checkpoints](run-checkpoints.md) – A run's restore points on a timeline – what each one captured, what going back discards, and “go back to step 4 and try again”, with earlier attempts kept as branches
 - [Run Compare](run-compare.md) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
@@ -418,10 +421,11 @@ Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs an
 - [Waterfall Chart](waterfall-chart.md) – How a starting figure becomes an ending one – steps up and down bridged by dashed connectors, totals on the baseline, rises and falls in the status inks with a legend, signed changes beside each bar and a table view
 - [Week Bars](week-bars.md) – A week of daily totals as rounded bars against a dashed goal line – days that reach it in the accent, the week's total counting up with the average per day, a week switcher the bars glide between, today marked, and a table view
 
-## Trust & calibration (40)
+## Trust & calibration (41)
 
 - [Access Request](access-request.md) – Ask for access to one piece of data – the resource with its owner and classification in words, the level, how long, a required justification and the fields needed – then where it stands: pending with who decides, approved with the time left, denied with the reason, or expired
 - [Agreement Tracker](agreement-tracker.md) – How often the AI agreed with you versus pushed back this session – it turns amber on a run of agreement and points to the counter-argument
+- [AI Disclosure](ai-disclosure.md) – Marks AI-made content – an inline "AI-generated" / "AI-assisted" / "Edited by you" badge that opens what made it, its limits and whether a person reviewed it, with Report a problem – or a quiet notice at the top of an assistant panel saying it can be wrong and how to reach a person
 - [Approval Chain](approval-chain.md) – Several people signing off in order – who's next and who's overdue in words, with Approve, Decline with a note, and Delegate for the person it's waiting on
 - [Attestation Check](attestation-check.md) – Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
 - [Capability Notice](capability-notice.md) – When a request falls where the AI is only partly proven or not proven – a capped confidence, who was notified, and how far the request is from the usual

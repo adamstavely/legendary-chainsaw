@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-ai-disclosure.json",
+  "title": "tc-ai-disclosure",
+  "description": "Marks AI-made content – an inline badge that opens what made it, its limits and whether a person reviewed it – or\na quiet notice at the top of an assistant panel that it can be wrong and how to reach a person.",
+  "type": "object",
+  "properties": {
+    "variant": {
+      "type": "string",
+      "enum": [
+        "mark",
+        "notice"
+      ],
+      "description": "\"mark\" – an inline badge with a card, or \"notice\" – a paragraph for the top of an assistant panel"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "assisted",
+        "edited",
+        "generated"
+      ],
+      "description": "How much the AI did: generated it, assisted a person, or drafted what a person then edited"
+    },
+    "label": {
+      "type": "string",
+      "description": "The badge's words; by default \"AI-generated\", \"AI-assisted\" or \"Edited by you\""
+    },
+    "model": {
+      "type": "string",
+      "description": "What made it, by the name people know it by – \"Review assistant\""
+    },
+    "madeAt": {
+      "type": "number",
+      "description": "When it was made, epoch ms"
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What it's good and weak at, a short sentence each"
+    },
+    "reviewedBy": {
+      "type": "string",
+      "description": "Who reviewed it, if a person did"
+    },
+    "reportable": {
+      "type": "boolean",
+      "description": "Offers Report a problem (a button that fires tc-report); on by default when `reportHref` is set"
+    },
+    "reportHref": {
+      "type": "string",
+      "description": "Where Report a problem goes; makes it a link"
+    },
+    "reported": {
+      "type": "boolean",
+      "description": "A problem has been reported: the button says so and is off"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The notice's heading"
+    },
+    "body": {
+      "type": "string",
+      "description": "The notice's paragraph – what the assistant is, that it can be wrong, where to check"
+    },
+    "contactHref": {
+      "type": "string",
+      "description": "Where to reach a person – a link under the notice"
+    },
+    "contactLabel": {
+      "type": "string",
+      "description": "The contact link's words"
+    },
+    "learnHref": {
+      "type": "string",
+      "description": "Where to read how the assistant works – a link under the notice"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "description": "Shows a close button on the notice"
+    },
+    "dismissed": {
+      "type": "boolean",
+      "description": "The notice was dismissed and is hidden"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "generated": {
+          "type": "string"
+        },
+        "assisted": {
+          "type": "string"
+        },
+        "edited": {
+          "type": "string"
+        },
+        "madeBy": {
+          "type": "string"
+        },
+        "madeByAt": {
+          "type": "string"
+        },
+        "reviewedBy": {
+          "type": "string"
+        },
+        "notReviewed": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "string"
+        },
+        "report": {
+          "type": "string"
+        },
+        "reported": {
+          "type": "string"
+        },
+        "noticeHeading": {
+          "type": "string"
+        },
+        "noticeBody": {
+          "type": "string"
+        },
+        "contact": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "learn": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "dismiss": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it uses, merged over defaultAiDisclosureLabels"
+    }
+  },
+  "additionalProperties": false
+}
