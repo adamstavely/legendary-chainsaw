@@ -166,6 +166,14 @@
      "readonly": false
     },
     {
+     "name": "sync",
+     "attribute": "sync",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x)",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -351,6 +359,10 @@
     {
      "name": "view",
      "attribute": "view"
+    },
+    {
+     "name": "sync",
+     "attribute": "sync"
     }
    ],
    "events": [
@@ -629,7 +641,7 @@
   "windowed": false
  },
  "size": {
-  "min": 48973,
-  "gzip": 17415
+  "min": 49679,
+  "gzip": 17610
  }
 }

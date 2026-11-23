@@ -820,11 +820,11 @@ the token's tint is hidden from screen readers.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **6.6 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
+| First render | **6.7 ms** | the gallery demo's data, 304 DOM nodes – to layout, median of 7 |
 | Typical update | **0.6 ms** | one item of skills replaced |
-| First on the page | 24 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.7 ms | skills: first render, 304 nodes; update 0.3 ms |
-| 1,000 items | 6.2 ms | skills: first render, 304 nodes; update 0.3 ms |
+| First on the page | 26 ms | default properties; includes adding its CSS to the document |
+| 100 items | 7.5 ms | skills: first render, 304 nodes; update 0.4 ms |
+| 1,000 items | 6.6 ms | skills: first render, 304 nodes; update 0.5 ms |
 
 What it renders doesn't grow with skills (tested to 1,000 items).
 

@@ -36,6 +36,10 @@
       "type": "boolean",
       "description": "Whether the steps are unfolded"
     },
+    "hideTally": {
+      "type": "boolean",
+      "description": "Leaves the number of sources searched (\"· 12 sources\") off the finished header"
+    },
     "startedAt": {
       "type": "number",
       "description": "When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started"

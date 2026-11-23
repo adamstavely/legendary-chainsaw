@@ -468,10 +468,10 @@ ready” and “Couldn't write a reply”.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **5.6 ms** | the gallery demo's data, 140 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | one item of messages replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.7 ms | messages: first render, 24 nodes; update 0.2 ms |
+| First render | **5.9 ms** | the gallery demo's data, 140 DOM nodes – to layout, median of 7 |
+| Typical update | **0.4 ms** | one item of messages replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.6 ms | messages: first render, 24 nodes; update 0.3 ms |
 | 1,000 items | 2.3 ms | messages: first render, 24 nodes; update 0.3 ms |
 
 1,000 items of messages: 2.3 ms, 24 nodes. It renders every item – past a few thousand, page through them or use a windowed list.

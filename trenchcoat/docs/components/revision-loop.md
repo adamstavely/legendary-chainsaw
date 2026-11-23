@@ -451,13 +451,13 @@ The chart is an image named with every score and the bar ("Score by round: 5.2/1
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **3.1 ms** | the gallery demo's data, 86 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | one item of rounds replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 17 ms | rounds: first render, 1,213 nodes; update 3.9 ms |
-| 1,000 items | 96 ms | rounds: first render, 11,788 nodes; update 47 ms |
+| First render | **1.6 ms** | the gallery demo's data, 86 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of rounds replaced |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
+| 100 items | 11 ms | rounds: first render, 1,213 nodes; update 2.7 ms |
+| 1,000 items | 91 ms | rounds: first render, 11,788 nodes; update 48 ms |
 
-1,000 items of rounds: 96 ms. It renders every item, so a first render passes 50 ms (a long task) at about 520 items – page or filter longer lists.
+1,000 items of rounds: 91 ms. It renders every item, so a first render passes 50 ms (a long task) at about 550 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

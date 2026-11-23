@@ -9,7 +9,7 @@
 Any of the library's charts from a JSON spec – checked first, then drawn with the chart the spec names; what's wrong shown instead of a chart; the same specs draw as SVG on a server
 
 - **Element:** `<tc-chart>`
-- **Size:** 143.0 KB gzip · 447.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 144.8 KB gzip · 453.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -300,13 +300,13 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 | --- | --- | --- |
 | **This component alone** | 4.8 KB | 2.4 KB |
 | Lit · the library every element is built on, the parts it uses | 20.0 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.7 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.4 KB | – |
+| `internal/chart/xy` · Shared Trenchcoat code | 18.2 KB | – |
 | `internal/chart/spec` · Shared Trenchcoat code | 16.7 KB | – |
-| `internal/chart/xy` · Shared Trenchcoat code | 15.3 KB | – |
 | `internal/chart/pie` · Shared Trenchcoat code | 6.3 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/chart/brush` · Shared Trenchcoat code | 4.3 KB | – |
-| `internal/chart/force` · Shared Trenchcoat code | 4.2 KB | – |
+| `internal/chart/force` · Shared Trenchcoat code | 4.3 KB | – |
 | `internal/chart/stats` · Shared Trenchcoat code | 3.5 KB | – |
 | `internal/chart/parse` · Shared Trenchcoat code | 3.3 KB | – |
 | `internal/chart/geometry` · Shared Trenchcoat code | 3.2 KB | – |
@@ -338,20 +338,20 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 | [heatmap](heatmap.md) · Element it renders | 30.1 KB | – |
 | [gauge](gauge.md) · Element it renders | 19.9 KB | – |
 | [bubble-chart](bubble-chart.md) · Element it renders | 16.8 KB | – |
-| [candlestick-chart](candlestick-chart.md) · Element it renders | 15.5 KB | – |
+| [candlestick-chart](candlestick-chart.md) · Element it renders | 15.4 KB | – |
 | [sparkline](sparkline.md) · Element it renders | 14.4 KB | – |
 | [radar-chart](radar-chart.md) · Element it renders | 14.4 KB | – |
 | [network-graph](network-graph.md) · Element it renders | 12.8 KB | – |
 | [radial-bar-chart](radial-bar-chart.md) · Element it renders | 10.9 KB | – |
 | [calendar-heatmap](calendar-heatmap.md) · Element it renders | 10.6 KB | – |
 | [combo-chart](combo-chart.md) · Element it renders | 10.5 KB | – |
+| [bar-chart](bar-chart.md) · Element it renders | 10.0 KB | – |
 | [venn-diagram](venn-diagram.md) · Element it renders | 9.3 KB | – |
 | [hexbin-chart](hexbin-chart.md) · Element it renders | 8.2 KB | – |
 | [parallel-chart](parallel-chart.md) · Element it renders | 7.7 KB | – |
 | [histogram](histogram.md) · Element it renders | 7.6 KB | – |
-| [bar-chart](bar-chart.md) · Element it renders | 7.6 KB | – |
-| [box-plot](box-plot.md) · Element it renders | 7.2 KB | – |
 | [waffle-chart](waffle-chart.md) · Element it renders | 7.2 KB | – |
+| [box-plot](box-plot.md) · Element it renders | 7.2 KB | – |
 | [beeswarm-chart](beeswarm-chart.md) · Element it renders | 7.1 KB | – |
 | [waterfall-chart](waterfall-chart.md) · Element it renders | 6.7 KB | – |
 | [sunburst-chart](sunburst-chart.md) · Element it renders | 6.6 KB | – |
@@ -375,8 +375,8 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 | [line-chart](line-chart.md) · Element it renders | 0.8 KB | – |
 | [pie-chart](pie-chart.md) · Element it renders | 0.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **447.5 KB** | **143.7 KB** |
-| With Lit – the first component on a page | 464.5 KB | 148.9 KB |
+| **Added to a page that already has Lit** | **453.6 KB** | **145.6 KB** |
+| With Lit – the first component on a page | 470.6 KB | 150.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -384,9 +384,9 @@ The chart inside has its own keyboard model: Tab reaches its plot, arrows move t
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.3 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | re-render with the same data |
-| First on the page | 2.2 ms | default properties; includes adding its CSS to the document |
+| First render | **0.4 ms** | the gallery demo's data, 0 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | re-render with the same data |
+| First on the page | 2.3 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

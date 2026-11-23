@@ -435,11 +435,11 @@ The bar is an image named with every count in words ("34 finished, 5 failed, 1 s
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
+| First render | **1.3 ms** | the gallery demo's data, 7 DOM nodes – to layout, median of 7 |
 | Typical update | **0.5 ms** | one item of items replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.3 ms | items: first render, 7 nodes; update 0.4 ms |
-| 1,000 items | 1.9 ms | items: first render, 7 nodes; update 0.6 ms |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.3 ms | items: first render, 7 nodes; update 0.5 ms |
+| 1,000 items | 2.2 ms | items: first render, 7 nodes; update 0.9 ms |
 
 What it renders doesn't grow with items (tested to 1,000 items).
 

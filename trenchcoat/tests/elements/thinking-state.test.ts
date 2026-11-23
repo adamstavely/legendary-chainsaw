@@ -86,6 +86,23 @@ for (const look of ["standard", "clean"] as const) {
       expect(el.querySelector(".ui-think__title")!.textContent).toBe("Worked for 3s");
     });
 
+    test("finished, the header counts the sources its searches turned up; hide-tally leaves it off", async () => {
+      const MORE: ThinkingStep = { kind: "search", label: "Searched the docs", sources: [{ label: "Guide" }, { label: "API" }], moreSources: [{ label: "FAQ" }] };
+      const el = await fixture<TcThinkingState>(html`<tc-thinking-state look=${look} .steps=${[A, SEARCH, MORE]} .done=${true}></tc-thinking-state>`);
+      await el.updateComplete;
+      expect(el.tally).toBe("4 sources");
+      expect(el.querySelector(".ui-think__title")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Worked for \d+s · 4 sources$/);
+      expect(el.querySelector('[role="status"]')!.textContent).toMatch(/Worked for \d+s, searched 4 sources$/);
+      el.hideTally = true;
+      await el.updateComplete;
+      expect(el.querySelector(".ui-think__tally")).toBeNull();
+      el.steps = [A, B];
+      el.hideTally = false;
+      await el.updateComplete;
+      expect(el.tally).toBe("");
+      expect(el.querySelector(".ui-think__tally")).toBeNull();
+    });
+
     test("the timeline reports each step it reveals", async () => {
       const onProgress = vi.fn();
       const el = await fixture<TcThinkingState>(html`<tc-thinking-state look=${look} .steps=${[A, B]} step-ms="400" @tc-progress-change=${(e: CustomEvent) => onProgress(e.detail.progress)}></tc-thinking-state>`);

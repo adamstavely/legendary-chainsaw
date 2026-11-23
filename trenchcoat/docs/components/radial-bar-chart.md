@@ -9,7 +9,7 @@
 A few ratios as rings round a centre, each filled towards its target – the largest emphasised, each named with its value where its ring starts, or activity rings with a lap past each target and a tile per ring – rings that sweep round in turn
 
 - **Element:** `<tc-radial-bar-chart>`
-- **Size:** 17.1 KB gzip · 51.0 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.3 KB gzip · 51.7 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -229,6 +229,7 @@ export class RadialBarChartExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -289,7 +290,7 @@ export class RadialBarChartExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-radial-bar-chart :format="…">` | `<tc-radial-bar-chart [format]="…">` | `<tc-radial-bar-chart {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-radial-bar-chart :labels="…">` | `<tc-radial-bar-chart [labels]="…">` | `<tc-radial-bar-chart {labels}>` |
 
-*Also attributes: `max`, `sweep`, `variant`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
+*Also attributes: `max`, `sweep`, `variant`, `heading`, `description`, `unit`, `locale`, `height` and 8 more – see the API table.*
 
 ### Events
 
@@ -504,7 +505,7 @@ With `variant="rings"`, the tiles are a second tab stop:
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -512,7 +513,7 @@ With `variant="rings"`, the tiles are a second tab stop:
 | --- | --- | --- |
 | **This component alone** | 13.3 KB | 5.3 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.2 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
@@ -529,8 +530,8 @@ With `variant="rings"`, the tiles are a second tab stop:
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **51.0 KB** | **17.1 KB** |
-| With Lit – the first component on a page | 70.5 KB | 23.3 KB |
+| **Added to a page that already has Lit** | **51.7 KB** | **17.4 KB** |
+| With Lit – the first component on a page | 71.2 KB | 23.7 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -538,13 +539,13 @@ With `variant="rings"`, the tiles are a second tab stop:
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
+| First render | **2.0 ms** | the gallery demo's data, 37 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of data replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 4.9 ms | data: first render, 204 nodes; update 0.9 ms |
-| 1,000 items | 8.2 ms | data: first render, 204 nodes; update 3.1 ms |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 6.1 ms | data: first render, 204 nodes; update 1.0 ms |
+| 1,000 items | 8.7 ms | data: first render, 204 nodes; update 2.2 ms |
 
-1,000 items of data: 8.2 ms, 204 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of data: 8.7 ms, 204 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

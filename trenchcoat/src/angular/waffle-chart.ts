@@ -111,6 +111,10 @@ export class WaffleChart {
   @Input() set labels(v: TcWaffleChart["labels"]) {
     this.#el.labels = v;
   }
+  /** A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) */
+  @Input() set sync(v: TcWaffleChart["sync"]) {
+    this.#el.sync = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcWaffleChart["look"]) {
     this.#el.look = v;

@@ -46,6 +46,10 @@ export class ThinkingState {
   @Input() set open(v: TcThinkingState["open"] | "" | "true" | "false") {
     this.#el.open = typeof v === "string" ? v !== "false" : v;
   }
+  /** Leaves the number of sources searched ("· 12 sources") off the finished header */
+  @Input() set hideTally(v: TcThinkingState["hideTally"] | "" | "true" | "false") {
+    this.#el.hideTally = typeof v === "string" ? v !== "false" : v;
+  }
   /** When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started */
   @Input() set startedAt(v: TcThinkingState["startedAt"] | `${number}`) {
     this.#el.startedAt = typeof v === "string" ? Number(v) : v;

@@ -8,7 +8,8 @@ related: thinking-loader, ai-answer, cited-answer, agent-plan
 
 The panel an AI chat shows while it works on an answer. A header says “Thinking” with a live timer, and below it
 the steps appear one after another – what it's doing, and the searches it ran with their sources as small chips
-people can open. When it's done, a check ends the list and the header turns into “Worked for 9s”; the header also
+people can open. When it's done, a check ends the list and the header turns into “Worked for 9s · 12 sources” – how long it took and
+how many sources its searches turned up, folded ones too (`hide-tally` leaves the count off); the header also
 folds the steps away. It shows people that something is happening and what it's based on, so a long wait reads
 as work rather than a stall.
 
@@ -51,9 +52,9 @@ line joins the steps.
 ## Screen readers
 
 The header is a button with `aria-expanded` that controls the steps; its name is “Thinking” while it works (the
-timer is hidden) and “Worked for 9s” after. The steps are an ordered list – folded, they're `inert` and skipped.
+timer is hidden) and “Worked for 9s · 12 sources” after. The steps are an ordered list – folded, they're `inert` and skipped.
 New steps aren't announced one by one; when it finishes, a status message says the done label and the time:
-“Ready to answer. Worked for 9s”. Source chips with an `href` are links; their tooltips are hidden from screen
+“Ready to answer. Worked for 9s, searched 12 sources”. Source chips with an `href` are links; their tooltips are hidden from screen
 readers. “+N more” is a button with `aria-expanded`.
 
 ## Content

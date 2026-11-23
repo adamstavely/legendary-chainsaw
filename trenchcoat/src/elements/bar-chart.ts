@@ -1,6 +1,8 @@
 import { html, nothing, svg } from "lit";
 import { property } from "lit/decorators.js";
 import { axisXBand, gridX, gridY, thinLabels, txt, yAxisWidth } from "./internal/chart/axis";
+import { numGetter } from "./internal/chart/accessor";
+import { changeRatio, signedPercent } from "./internal/chart/brush";
 import { AXIS_FONT, categoricalInk, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./internal/chart/element";
 import { makeTickFormatter } from "./internal/chart/format";
 import { roundRectPath } from "./internal/chart/geometry";
@@ -17,6 +19,11 @@ import type { Accessor, Row, TooltipData } from "./internal/chart/types";
  * takes the accent and the rest stay quiet (`highlight` picks others); several series take the chart inks in order,
  * named in a legend. Values sit at the bars' ends, thinned when they'd overlap. Bars grow in from the baseline when the
  * chart comes on screen and glide when the data changes.
+ *   · `compare` (one series): last period's value – a dashed open box above the bar where it was higher, a dashed line
+ *     across the bar where it was lower – and the change in the tooltip
+ *   · `live`: the last bar is still filling – today's usage – so it breathes, its value reads "so far", and as the page
+ *     raises it the bar grows into its new height
+ *   · `sync` (on every chart): charts with the same name follow each other's pointer, matched by category
  *   · one tab stop: arrows move bar to bar, each read with its category, series and value
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
@@ -29,7 +36,7 @@ const barIcon = svg`<path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="M18 17V9"
 export type BarLayout = "grouped" | "stacked" | "percent";
 export type BarOrientation = "vertical" | "horizontal";
 
-type Seg = { key: string; k: number; s: number; cat: string; series: string; value: number; v0: number; v1: number; ink: string; hi: boolean };
+type Seg = { key: string; k: number; s: number; cat: string; series: string; value: number; v0: number; v1: number; ink: string; hi: boolean; prev?: number; live?: boolean };
 
 /**
  * Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – with the highest one
@@ -56,12 +63,20 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
   @property({ type: Boolean }) accessor sort = false;
   /** A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for "percent" */
   @property({ attribute: false }) accessor yDomain: [number, number] | undefined = undefined;
+  /** Last period's value for each category – one series – drawn dashed above or across its bar, with the change in the tooltip */
+  @property({ attribute: false }) accessor compare: Accessor<T, number> | undefined = undefined;
+  /** What last period is called (default "Last period") */
+  @property({ attribute: "compare-label" }) accessor compareLabel = "Last period";
+  /** The last category is still counting – today: its bar breathes and its value reads "so far" */
+  @property({ type: Boolean }) accessor live = false;
+  /** The words after a live value (default "so far") */
+  @property({ attribute: "live-label" }) accessor liveLabel = "so far";
 
   protected override readonly kind = "Bar chart";
   protected override readonly icon = barIcon;
   protected override defaultDuration = 750;
   protected override stagger = 60;
-  protected override modelKeys = ["x", "y", "series", "layout", "orientation", "sort", "yDomain"];
+  protected override modelKeys = ["x", "y", "series", "layout", "orientation", "sort", "yDomain", "compare", "compareLabel", "live", "liveLabel"];
 
   private sm: SeriesModel<T> = { type: "band", keys: [], xnum: [], labels: [], series: [], values: [], rows: [] };
   private segs: Seg[] = [];
@@ -116,6 +131,8 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
         : null;
     this.hiSet = hi ?? new Set();
     const segs: Seg[] = [];
+    const gc = single && this.compare !== undefined ? numGetter(this.compare, "compare") : null;
+    const lastK = model.keys.length - 1;
     const st = layout === "grouped" ? null : stack(model.values, layout === "percent" ? "expand" : "zero");
     model.keys.forEach((cat, k) => {
       model.series.forEach((s, si) => {
@@ -123,12 +140,14 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
         if (!Number.isFinite(v)) return;
         const isHi = single ? !!hi?.has(k) : !!hi?.has(si);
         const ink = single || hi ? emphasisInk(isHi) : categoricalInk(si);
-        segs.push({ key: `${cat}|${s}`, k, s: si, cat: model.labels[k], series: s, value: v, v0: st ? st.y0[si][k] : 0, v1: st ? st.y1[si][k] : v, ink, hi: isHi });
+        const row = model.rows[si]?.[k];
+        const prev = gc && row ? gc(row, k) : NaN;
+        segs.push({ key: `${cat}|${s}`, k, s: si, cat: model.labels[k], series: s, value: v, v0: st ? st.y0[si][k] : 0, v1: st ? st.y1[si][k] : v, ink, hi: isHi, prev: Number.isFinite(prev) ? prev : undefined, live: this.live && k === lastK && !this.sort });
       });
     });
     this.segs = segs;
 
-    const vals = segs.flatMap((s) => [s.v0, s.v1]);
+    const vals = segs.flatMap((s) => (s.prev !== undefined ? [s.v0, s.v1, s.prev] : [s.v0, s.v1]));
     const [mn, mx] = extent(vals.length ? vals : [0, 1]);
     const dom: [number, number] = layout === "percent" ? [0, 100] : this.yDomain ?? fitDomain(mn, mx, horizontal ? Math.max(2, Math.round(W / 120)) : Math.max(2, Math.round(H / 70)));
     const tickFmt = layout === "percent" ? (v: number) => `${v}%` : makeTickFormatter(this.format, f.locale, Math.max(Math.abs(dom[0]), Math.abs(dom[1])));
@@ -173,10 +192,22 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
       label: sg.cat,
       series: nS > 1 ? sg.series : undefined,
       value: sg.value,
-      formatted: `${f.fv(sg.value)}${layout === "percent" ? ` (${f.pct(sg.v1 - sg.v0)})` : ""}`,
+      formatted: `${f.fv(sg.value)}${sg.live ? ` ${this.liveLabel}` : ""}${layout === "percent" ? ` (${f.pct(sg.v1 - sg.v0)})` : ""}${sg.prev !== undefined ? `, ${this.compareLabel.toLowerCase()} ${f.fv(sg.prev)}${this.change(sg, f, ", ")}` : ""}`,
     }));
-    const summary = single ? model.labels.map((l, k) => `${l} ${f.fv(model.values[0][k])}`).join(", ") : `${model.keys.length} categories, ${nS} series: ${model.series.join(", ")}`;
+    const summary = single ? model.labels.map((l, k) => `${l} ${f.fv(model.values[0][k])}${this.live && k === lastK && !this.sort ? ` ${this.liveLabel}` : ""}`).join(", ") : `${model.keys.length} categories, ${nS} series: ${model.series.join(", ")}`;
     return { marks, events, summary };
+  }
+
+  /** " · +15.1%": how a bar changed since last period */
+  private change(sg: Seg, f: ChartFrame, sep = " · ") {
+    const r = sg.prev === undefined ? null : changeRatio(sg.prev, sg.value);
+    return r === null ? "" : `${sep}${signedPercent(r, f.locale)}`;
+  }
+
+  /** Bars follow other charts by category, whichever series is pointed at */
+  protected override syncPoint(i: number) {
+    const sg = this.segs[i];
+    return sg ? { key: this.sm.keys[sg.k] ?? sg.cat, label: sg.cat } : null;
   }
 
   private geom(sg: Seg) {
@@ -196,7 +227,10 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
             const ink = this.segs.find((o) => o.k === sg.k && o.s === si)?.ink;
             return { label: s, value: Number.isFinite(val) ? f.fv(val) : "–", color: ink, strong: si === sg.s };
           })
-        : [{ label: this.words.value, value: f.fv(sg.value), color: sg.ink }];
+        : [
+            { label: this.words.value, value: `${f.fv(sg.value)}${sg.live ? ` ${this.liveLabel}` : ""}${this.change(sg, f)}`, color: sg.ink },
+            ...(sg.prev !== undefined ? [{ label: this.compareLabel, value: f.fv(sg.prev), color: "var(--tc-plot-line-rest)" }] : []),
+          ];
     return this.horizontal ? { x: Math.max(g.a, g.b), y: g.pos, title: sg.cat, rows } : { x: g.pos + g.th / 2, y: Math.min(g.a, g.b), title: sg.cat, rows };
   }
 
@@ -231,12 +265,33 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
         const corners = horizontal ? (topOfStack ? (neg ? { tl: r, bl: r } : { tr: r, br: r }) : {}) : topOfStack ? (neg ? { bl: r, br: r } : { tl: r, tr: r }) : {};
         const d = horizontal ? roundRectPath(Math.min(a, b), pos, Math.abs(b - a), th, corners) : roundRectPath(pos, Math.min(a, b), th, Math.abs(b - a), corners);
         const lo = m.fade(sg.k * this.stagger + 320, 260);
+        // Last period: where it was higher, a dashed open box above the bar up to its value; where it was lower, a
+        // dashed line across the bar at its value
+        let ghost: unknown = nothing;
+        let over: unknown = nothing;
+        let reach = b;
+        if (sg.prev !== undefined) {
+          const pb = v(sg.prev);
+          const end = b;
+          const beyond = horizontal ? pb > end + 0.5 : pb < end - 0.5;
+          if (beyond) {
+            reach = pb;
+            const d0 = horizontal
+              ? `M${end},${pos} H${pb - r} Q${pb},${pos} ${pb},${pos + r} V${pos + th - r} Q${pb},${pos + th} ${pb - r},${pos + th} H${end}`
+              : `M${pos},${end} V${pb + r} Q${pos},${pb} ${pos + r},${pb} H${pos + th - r} Q${pos + th},${pb} ${pos + th},${pb + r} V${end}`;
+            ghost = svg`<path class="ui-brc__prev" d=${d0} opacity=${lo}></path>`;
+          } else {
+            over = horizontal
+              ? svg`<line class="ui-brc__prev" data-inside x1=${pb} x2=${pb} y1=${pos + 1} y2=${pos + th - 1} opacity=${lo}></line>`
+              : svg`<line class="ui-brc__prev" data-inside x1=${pos + 1} x2=${pos + th - 1} y1=${pb} y2=${pb} opacity=${lo}></line>`;
+          }
+        }
         let label: unknown = nothing;
         if (showValues && (layout === "grouped" || nS === 1)) {
           const text = this.valueText(sg, f);
           const tw = textWidth(text, AXIS_FONT, 700);
-          if (horizontal) label = txt(Math.max(a, b) + 6, pos + th / 2, text, { cls: "value", strong: sg.hi, opacity: lo });
-          else if (nS === 1 ? !shown || shown.has(i) : th >= tw * 0.8) label = txt(pos + th / 2, neg ? Math.max(a, b) + 8 : Math.min(a, b) - 8, text, { cls: "value", anchor: "middle", strong: sg.hi, opacity: lo });
+          if (horizontal) label = txt(Math.max(a, b, reach) + 6, pos + th / 2, text, { cls: "value", strong: sg.hi, opacity: lo });
+          else if (nS === 1 ? !shown || shown.has(i) : th >= tw * 0.8) label = txt(pos + th / 2, neg ? Math.max(a, b) + 8 : Math.min(a, b, reach) - 8, text, { cls: "value", anchor: "middle", strong: sg.hi, opacity: lo });
         }
         const focus = this.active === i && this.via === "keyboard";
         const h = this.hover(i);
@@ -246,7 +301,9 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
               ? svg`<rect class="tc-chart__hit" x=${x0} y=${pos} width=${Math.max(0, x1 - x0)} height=${th}></rect>`
               : svg`<rect class="tc-chart__hit" x=${pos} y=${top} width=${th} height=${Math.max(0, H - bottom - top)}></rect>`
             : nothing}
-          <path class="ui-brc__bar" d=${d} style=${`fill: ${sg.ink}`} ?data-stacked=${layout !== "grouped" && nS > 1}></path>
+          ${ghost}
+          <path class="ui-brc__bar" d=${d} style=${`fill: ${sg.ink}`} ?data-stacked=${layout !== "grouped" && nS > 1} ?data-live=${!!sg.live}></path>
+          ${over}
           ${focus ? svg`<path class="tc-chart__focus" d=${horizontal ? roundRectPath(Math.min(a, b) - 2, pos - 2, Math.abs(b - a) + 4, th + 4, 4) : roundRectPath(pos - 2, Math.min(a, b) - 2, th + 4, Math.abs(b - a) + 4, 4)}></path>` : nothing}
           ${label}
         </g>`;
@@ -262,6 +319,15 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
   static override css = /* css */ `
 /* Stacked segments are parted by a line of the card's colour */
 .ui-brc__bar[data-stacked] { stroke: var(--tc-plot-bg); stroke-width: 1; }
+/* Last period: dashed, above the bar where it was higher, across it where it was lower */
+.ui-brc__prev { fill: none; stroke: var(--tc-plot-line-rest); stroke-width: 1.4; stroke-dasharray: 3 3; }
+.ui-brc__prev[data-inside] { stroke: var(--tc-plot-bg); stroke-width: 1.6; }
+/* Today's bar is still filling: it breathes */
+.ui-brc__bar[data-live] { animation: tc-brc-live var(--tc-duration-shimmer) var(--tc-ease-standard) infinite; }
+@keyframes tc-brc-live { 50% { opacity: 0.62; } }
+@media (prefers-reduced-motion: reduce) {
+  .ui-brc__bar[data-live] { animation: none; opacity: 0.8; }
+}
 @media (forced-colors: active) {
   .ui-brc__bar { forced-color-adjust: none; }
 }

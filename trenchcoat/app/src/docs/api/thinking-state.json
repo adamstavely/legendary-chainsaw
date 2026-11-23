@@ -62,12 +62,28 @@
      "readonly": false
     },
     {
+     "name": "hideTally",
+     "attribute": "hide-tally",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leaves the number of sources searched (\"· 12 sources\") off the finished header",
+     "readonly": false
+    },
+    {
      "name": "startedAt",
      "attribute": "started-at",
      "type": "number | undefined",
      "default": "undefined",
      "description": "When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started",
      "readonly": false
+    },
+    {
+     "name": "tally",
+     "attribute": null,
+     "type": "string",
+     "default": null,
+     "description": "\"12 sources\": every source the searches turned up, the folded ones too; empty without searches",
+     "readonly": true
     },
     {
      "name": "look",
@@ -254,6 +270,10 @@
     {
      "name": "open",
      "attribute": "open"
+    },
+    {
+     "name": "hideTally",
+     "attribute": "hide-tally"
     },
     {
      "name": "startedAt",
@@ -522,7 +542,7 @@
   "windowed": false
  },
  "size": {
-  "min": 42710,
-  "gzip": 10971
+  "min": 43315,
+  "gzip": 11168
  }
 }

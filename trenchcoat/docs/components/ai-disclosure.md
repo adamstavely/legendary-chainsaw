@@ -390,9 +390,9 @@ title. Reporting a problem is confirmed in a polite status message. The sparkle 
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 15 DOM nodes – to layout, median of 7 |
+| First render | **1.3 ms** | the gallery demo's data, 15 DOM nodes – to layout, median of 7 |
 | Typical update | **0.2 ms** | re-render with the same data |
-| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| First on the page | 15 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

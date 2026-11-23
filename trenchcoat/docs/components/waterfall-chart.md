@@ -9,7 +9,7 @@
 How a starting figure becomes an ending one – steps up and down bridged by dashed connectors, totals on the baseline, rises and falls in the status inks with a legend, signed changes beside each bar and a table view
 
 - **Element:** `<tc-waterfall-chart>`
-- **Size:** 17.4 KB gzip · 49.1 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 17.6 KB gzip · 49.8 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -195,6 +195,7 @@ export class WaterfallChartExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -253,7 +254,7 @@ export class WaterfallChartExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-waterfall-chart :format="…">` | `<tc-waterfall-chart [format]="…">` | `<tc-waterfall-chart {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-waterfall-chart :labels="…">` | `<tc-waterfall-chart [labels]="…">` | `<tc-waterfall-chart {labels}>` |
 
-*Also attributes: `delta-start`, `end-total`, `hide-connectors`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
+*Also attributes: `delta-start`, `end-total`, `hide-connectors`, `heading`, `description`, `unit`, `locale`, `height` and 8 more – see the API table.*
 
 ### Events
 
@@ -457,7 +458,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -465,7 +466,7 @@ No slots: everything it shows comes from its properties.
 | --- | --- | --- |
 | **This component alone** | 9.2 KB | 4.2 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.1 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/motion-controller` · Shared Trenchcoat code | 1.9 KB | – |
@@ -483,8 +484,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **49.1 KB** | **17.4 KB** |
-| With Lit – the first component on a page | 68.5 KB | 23.6 KB |
+| **Added to a page that already has Lit** | **49.8 KB** | **17.7 KB** |
+| With Lit – the first component on a page | 69.2 KB | 23.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -492,13 +493,13 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.2 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of data replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.7 ms | data: first render, 212 nodes; update 0.4 ms |
-| 1,000 items | 4.9 ms | data: first render, 212 nodes; update 1.3 ms |
+| First render | **2.1 ms** | the gallery demo's data, 51 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of data replaced |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 4.6 ms | data: first render, 212 nodes; update 0.8 ms |
+| 1,000 items | 8.4 ms | data: first render, 212 nodes; update 2.1 ms |
 
-1,000 items of data: 4.9 ms, 212 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of data: 8.4 ms, 212 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

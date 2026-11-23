@@ -9,7 +9,7 @@
 One chart repeated in a grid, a panel per value of a field – any chart a spec can draw – on a shared scale, with one legend, linked pointing and columns that fit the width.
 
 - **Element:** `<tc-small-multiples>`
-- **Size:** 146.4 KB gzip · 457.5 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 148.3 KB gzip · 463.6 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -352,13 +352,13 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 | --- | --- | --- |
 | **This component alone** | 14.9 KB | 6.0 KB |
 | Lit · the library every element is built on, the parts it uses | 21.8 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.7 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.4 KB | – |
+| `internal/chart/xy` · Shared Trenchcoat code | 18.2 KB | – |
 | `internal/chart/spec` · Shared Trenchcoat code | 16.7 KB | – |
-| `internal/chart/xy` · Shared Trenchcoat code | 15.3 KB | – |
 | `internal/chart/pie` · Shared Trenchcoat code | 6.3 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/chart/brush` · Shared Trenchcoat code | 4.3 KB | – |
-| `internal/chart/force` · Shared Trenchcoat code | 4.2 KB | – |
+| `internal/chart/force` · Shared Trenchcoat code | 4.3 KB | – |
 | `internal/chart/stats` · Shared Trenchcoat code | 3.5 KB | – |
 | `internal/chart/parse` · Shared Trenchcoat code | 3.3 KB | – |
 | `internal/chart/geometry` · Shared Trenchcoat code | 3.2 KB | – |
@@ -390,20 +390,20 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 | [heatmap](heatmap.md) · Element it renders | 30.1 KB | – |
 | [gauge](gauge.md) · Element it renders | 19.9 KB | – |
 | [bubble-chart](bubble-chart.md) · Element it renders | 16.8 KB | – |
-| [candlestick-chart](candlestick-chart.md) · Element it renders | 15.5 KB | – |
+| [candlestick-chart](candlestick-chart.md) · Element it renders | 15.4 KB | – |
 | [sparkline](sparkline.md) · Element it renders | 14.4 KB | – |
 | [radar-chart](radar-chart.md) · Element it renders | 14.4 KB | – |
 | [network-graph](network-graph.md) · Element it renders | 12.8 KB | – |
 | [radial-bar-chart](radial-bar-chart.md) · Element it renders | 10.9 KB | – |
 | [calendar-heatmap](calendar-heatmap.md) · Element it renders | 10.6 KB | – |
 | [combo-chart](combo-chart.md) · Element it renders | 10.5 KB | – |
+| [bar-chart](bar-chart.md) · Element it renders | 10.0 KB | – |
 | [venn-diagram](venn-diagram.md) · Element it renders | 9.3 KB | – |
 | [hexbin-chart](hexbin-chart.md) · Element it renders | 8.2 KB | – |
 | [parallel-chart](parallel-chart.md) · Element it renders | 7.7 KB | – |
 | [histogram](histogram.md) · Element it renders | 7.6 KB | – |
-| [bar-chart](bar-chart.md) · Element it renders | 7.6 KB | – |
-| [box-plot](box-plot.md) · Element it renders | 7.2 KB | – |
 | [waffle-chart](waffle-chart.md) · Element it renders | 7.2 KB | – |
+| [box-plot](box-plot.md) · Element it renders | 7.2 KB | – |
 | [beeswarm-chart](beeswarm-chart.md) · Element it renders | 7.1 KB | – |
 | [waterfall-chart](waterfall-chart.md) · Element it renders | 6.7 KB | – |
 | [sunburst-chart](sunburst-chart.md) · Element it renders | 6.6 KB | – |
@@ -427,8 +427,8 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 | [line-chart](line-chart.md) · Element it renders | 0.8 KB | – |
 | [pie-chart](pie-chart.md) · Element it renders | 0.7 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **457.5 KB** | **147.1 KB** |
-| With Lit – the first component on a page | 476.2 KB | 153.1 KB |
+| **Added to a page that already has Lit** | **463.6 KB** | **149.1 KB** |
+| With Lit – the first component on a page | 482.3 KB | 154.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -436,9 +436,9 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **0.4 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
-| Typical update | **0.7 ms** | re-render with the same data |
-| First on the page | 9.2 ms | default properties; includes adding its CSS to the document |
+| First render | **0.8 ms** | the gallery demo's data, 16 DOM nodes – to layout, median of 7 |
+| Typical update | **1.9 ms** | re-render with the same data |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

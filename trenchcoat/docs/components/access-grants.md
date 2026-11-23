@@ -479,13 +479,13 @@ change is confirmed in a polite status message. The level and the expiry are sai
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.6 ms** | the gallery demo's data, 158 DOM nodes – to layout, median of 7 |
+| First render | **2.3 ms** | the gallery demo's data, 158 DOM nodes – to layout, median of 7 |
 | Typical update | **0.8 ms** | one item of grants replaced |
-| First on the page | 23 ms | default properties; includes adding its CSS to the document |
-| 100 items | 21 ms | grants: first render, 1,739 nodes; update 7.0 ms |
-| 1,000 items | 105 ms | grants: first render, 16,889 nodes; update 42 ms |
+| First on the page | 24 ms | default properties; includes adding its CSS to the document |
+| 100 items | 20 ms | grants: first render, 1,739 nodes; update 6.6 ms |
+| 1,000 items | 104 ms | grants: first render, 16,889 nodes; update 42 ms |
 
-1,000 items of grants: 105 ms. It renders every item, so a first render passes 50 ms (a long task) at about 480 items – page or filter longer lists.
+1,000 items of grants: 104 ms. It renders every item, so a first render passes 50 ms (a long task) at about 480 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): none recorded – the default of 300 applies. It counts re-renders, so it catches a component that renders on every frame.*
 

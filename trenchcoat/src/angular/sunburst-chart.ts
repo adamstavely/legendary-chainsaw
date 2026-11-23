@@ -107,6 +107,10 @@ export class SunburstChart {
   @Input() set labels(v: TcSunburstChart["labels"]) {
     this.#el.labels = v;
   }
+  /** A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) */
+  @Input() set sync(v: TcSunburstChart["sync"]) {
+    this.#el.sync = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcSunburstChart["look"]) {
     this.#el.look = v;

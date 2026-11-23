@@ -514,8 +514,8 @@ typing isn't read word by word; a failed answer is an alert. The dialog is modal
 | Measure | Time | Details |
 | --- | --- | --- |
 | First render | **4.9 ms** | default properties, 265 DOM nodes – to layout, median of 7 |
-| Typical update | **0.3 ms** | re-render with the same data |
-| First on the page | 35 ms | default properties; includes adding its CSS to the document |
+| Typical update | **0.4 ms** | re-render with the same data |
+| First on the page | 39 ms | default properties; includes adding its CSS to the document |
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

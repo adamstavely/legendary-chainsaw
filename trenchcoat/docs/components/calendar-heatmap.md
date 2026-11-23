@@ -9,7 +9,7 @@
 An amount per day on a grid of weeks, each day shaded from light to the full accent, the busiest outlined, a year per row over several years, a scale legend, weeks that fade in, a canvas for long ranges, and a table view
 
 - **Element:** `<tc-calendar-heatmap>`
-- **Size:** 18.4 KB gzip · 52.2 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 18.6 KB gzip · 52.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -202,6 +202,7 @@ export class CalendarHeatmapExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -258,7 +259,7 @@ export class CalendarHeatmapExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-calendar-heatmap :format="…">` | `<tc-calendar-heatmap [format]="…">` | `<tc-calendar-heatmap {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-calendar-heatmap :labels="…">` | `<tc-calendar-heatmap [labels]="…">` | `<tc-calendar-heatmap {labels}>` |
 
-*Also attributes: `week-start`, `gap`, `canvas-threshold`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
+*Also attributes: `week-start`, `gap`, `canvas-threshold`, `heading`, `description`, `unit`, `locale`, `height` and 8 more – see the API table.*
 
 ### Events
 
@@ -464,15 +465,15 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 13.2 KB | 5.9 KB |
+| **This component alone** | 13.2 KB | 6.0 KB |
 | Lit · the library every element is built on, the parts it uses | 19.0 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.4 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.1 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/format` · Shared Trenchcoat code | 2.3 KB | – |
@@ -492,8 +493,8 @@ No slots: everything it shows comes from its properties.
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `internal/chart/i18n` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **52.2 KB** | **18.4 KB** |
-| With Lit – the first component on a page | 72.3 KB | 24.8 KB |
+| **Added to a page that already has Lit** | **52.9 KB** | **18.7 KB** |
+| With Lit – the first component on a page | 73.0 KB | 25.1 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -501,11 +502,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **2.2 ms** | the gallery demo's data, 221 DOM nodes – to layout, median of 7 |
+| First render | **2.5 ms** | the gallery demo's data, 221 DOM nodes – to layout, median of 7 |
 | Typical update | **2.0 ms** | one item of data replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.1 ms | data: first render, 221 nodes; update 0.5 ms |
-| 1,000 items | 2.4 ms | data: first render, 221 nodes; update 1.1 ms |
+| First on the page | 18 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.0 ms | data: first render, 221 nodes; update 0.3 ms |
+| 1,000 items | 2.2 ms | data: first render, 221 nodes; update 1.0 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 

@@ -589,13 +589,13 @@ this”; Undo announces “Report withdrawn”. Undo stays while focus is on it,
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **4.2 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
-| Typical update | **0.9 ms** | one item of refinements replaced |
-| First on the page | 20 ms | default properties; includes adding its CSS to the document |
-| 100 items | 6.1 ms | refinements: first render, 243 nodes; update 0.5 ms |
-| 1,000 items | 13 ms | refinements: first render, 1,143 nodes; update 1.0 ms |
+| First render | **4.5 ms** | the gallery demo's data, 149 DOM nodes – to layout, median of 7 |
+| Typical update | **0.8 ms** | one item of refinements replaced |
+| First on the page | 16 ms | default properties; includes adding its CSS to the document |
+| 100 items | 5.9 ms | refinements: first render, 243 nodes; update 0.5 ms |
+| 1,000 items | 15 ms | refinements: first render, 1,143 nodes; update 1.5 ms |
 
-1,000 items of refinements: 13 ms, 1,143 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
+1,000 items of refinements: 15 ms, 1,143 nodes. It renders every item – past a few thousand, page through them or use a windowed list.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 1 React commits (clean), 1 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

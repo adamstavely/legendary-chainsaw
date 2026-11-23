@@ -553,13 +553,13 @@ waiting memory's Keep, or to New memory.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **5.0 ms** | the gallery demo's data, 309 DOM nodes – to layout, median of 7 |
-| Typical update | **0.9 ms** | one item of memories replaced |
-| First on the page | 26 ms | default properties; includes adding its CSS to the document |
-| 100 items | 21 ms | memories: first render, 1,875 nodes; update 2.0 ms |
-| 1,000 items | 95 ms | memories: first render, 17,535 nodes; update 9.8 ms |
+| First render | **5.2 ms** | the gallery demo's data, 309 DOM nodes – to layout, median of 7 |
+| Typical update | **1.0 ms** | one item of memories replaced |
+| First on the page | 25 ms | default properties; includes adding its CSS to the document |
+| 100 items | 20 ms | memories: first render, 1,875 nodes; update 2.0 ms |
+| 1,000 items | 97 ms | memories: first render, 17,535 nodes; update 9.7 ms |
 
-1,000 items of memories: 95 ms. It renders every item, so a first render passes 50 ms (a long task) at about 530 items – page or filter longer lists.
+1,000 items of memories: 97 ms. It renders every item, so a first render passes 50 ms (a long task) at about 520 items – page or filter longer lists.
 
 *Render budget (smoke test, the gallery demo over 5 simulated seconds): 2 React commits (clean), 2 React commits (standard), with 30 % headroom. It counts re-renders, so it catches a component that renders on every frame.*
 

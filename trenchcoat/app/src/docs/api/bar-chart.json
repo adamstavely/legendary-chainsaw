@@ -62,6 +62,38 @@
      "readonly": false
     },
     {
+     "name": "compare",
+     "attribute": null,
+     "type": "Accessor<T, number> | undefined",
+     "default": "undefined",
+     "description": "Last period's value for each category – one series – drawn dashed above or across its bar, with the change in the tooltip",
+     "readonly": false
+    },
+    {
+     "name": "compareLabel",
+     "attribute": "compare-label",
+     "type": "string",
+     "default": "\"Last period\"",
+     "description": "What last period is called (default \"Last period\")",
+     "readonly": false
+    },
+    {
+     "name": "live",
+     "attribute": "live",
+     "type": "boolean",
+     "default": "false",
+     "description": "The last category is still counting – today: its bar breathes and its value reads \"so far\"",
+     "readonly": false
+    },
+    {
+     "name": "liveLabel",
+     "attribute": "live-label",
+     "type": "string",
+     "default": "\"so far\"",
+     "description": "The words after a live value (default \"so far\")",
+     "readonly": false
+    },
+    {
      "name": "heading",
      "attribute": "heading",
      "type": "string",
@@ -190,6 +222,14 @@
      "readonly": false
     },
     {
+     "name": "sync",
+     "attribute": "sync",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x)",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -236,7 +276,10 @@
    "ui": "brc",
    "cssProperties": [],
    "tokens": [
-    "--tc-plot-bg"
+    "--tc-duration-shimmer",
+    "--tc-ease-standard",
+    "--tc-plot-bg",
+    "--tc-plot-line-rest"
    ]
   }
  ],
@@ -308,6 +351,7 @@
     "y",
     "series",
     "yDomain",
+    "compare",
     "data",
     "highlight",
     "format",
@@ -325,6 +369,18 @@
     {
      "name": "sort",
      "attribute": "sort"
+    },
+    {
+     "name": "compareLabel",
+     "attribute": "compare-label"
+    },
+    {
+     "name": "live",
+     "attribute": "live"
+    },
+    {
+     "name": "liveLabel",
+     "attribute": "live-label"
     },
     {
      "name": "heading",
@@ -373,6 +429,10 @@
     {
      "name": "view",
      "attribute": "view"
+    },
+    {
+     "name": "sync",
+     "attribute": "sync"
     }
    ],
    "events": [
@@ -491,8 +551,8 @@
     "progressive": false,
     "why": "Focus rings for keyboard users.",
     "via": [
-     "internal/kit",
-     "internal/chart/element"
+     "internal/chart/element",
+     "internal/kit"
     ]
    },
    {
@@ -525,8 +585,8 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
-     "internal/base",
      "internal/chart/element",
+     "internal/base",
      "tokens.css"
     ]
    },
@@ -611,9 +671,10 @@
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
      "itself",
+     "internal/chart/element",
+     "internal/chart/brush",
      "internal/card-head",
      "internal/kit",
-     "internal/chart/element",
      "tokens.css"
     ]
    }
@@ -625,7 +686,7 @@
    "requestAnimationFrame (internal/chart/motion › subscribeTick)",
    "requestAnimationFrame (internal/chart/motion › loop)"
   ],
-  "animations": 0,
+  "animations": 1,
   "observers": [
    "ResizeObserver (internal/chart/element › TcChartElement)",
    "IntersectionObserver (internal/chart/element › TcChartElement)",
@@ -644,14 +705,15 @@
    ],
    "hidden": [],
    "reducedMotion": [
-    "CSS (internal/kit › kitCss)",
-    "CSS (internal/chart/element › chartCss)"
+    "CSS",
+    "CSS (internal/chart/element › chartCss)",
+    "CSS (internal/kit › kitCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 55935,
-  "gzip": 20238
+  "min": 60300,
+  "gzip": 21556
  }
 }

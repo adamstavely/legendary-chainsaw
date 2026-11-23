@@ -75,6 +75,18 @@ export class AreaChart {
   @Input() set upper(v: TcAreaChart["upper"]) {
     this.#el.upper = v;
   }
+  /** Last period's value at each x – the emphasised series' – drawn as a quiet dashed line behind it, with the change in the tooltip. Not for stacked areas */
+  @Input() set compare(v: TcAreaChart["compare"]) {
+    this.#el.compare = v;
+  }
+  /** What the compared line is called (default "Last period") */
+  @Input() set compareLabel(v: TcAreaChart["compareLabel"]) {
+    this.#el.compareLabel = v;
+  }
+  /** What the emphasised line is called beside it, when it has no series name (default "This period") */
+  @Input() set currentLabel(v: TcAreaChart["currentLabel"]) {
+    this.#el.currentLabel = v;
+  }
   /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
   @Input() set brush(v: TcAreaChart["brush"]) {
     this.#el.brush = v;
@@ -142,6 +154,10 @@ export class AreaChart {
   /** The words it shows and says, merged over defaultChartLabels */
   @Input() set labels(v: TcAreaChart["labels"]) {
     this.#el.labels = v;
+  }
+  /** A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) */
+  @Input() set sync(v: TcAreaChart["sync"]) {
+    this.#el.sync = v;
   }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcAreaChart["look"]) {

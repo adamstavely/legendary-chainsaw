@@ -9,7 +9,7 @@
 Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – the highest one emphasised, values at the bars' ends, bars that grow in and glide when the data changes, and a table view
 
 - **Element:** `<tc-bar-chart>`
-- **Size:** 19.8 KB gzip · 54.6 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 21.1 KB gzip · 58.9 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -35,6 +35,18 @@ the value axis's range, so several charts side by side share one scale (Small Mu
 
 Values sit at the bars' ends, thinned when they'd overlap. The bars grow from the baseline when the chart scrolls into
 view and glide to new values when the data changes. Ported from ztd-charts (MIT).
+
+`compare` names last period's value on each row (one series). Where last period was higher, a dashed open box sits
+above the bar up to it, and the value is written above the box; where it was lower, a dashed line crosses the bar at
+its height. The tooltip reads the value with its change – "320 · +6.7%" – above last period's (`compare-label` renames
+it).
+
+`live` is for usage that's still counting: the last bar – today – breathes, and its value is read "so far"
+(`live-label`). Raise its value as the numbers come in and it grows into its new height. Use it on metering and
+billing pages; leave it off for a finished period.
+
+`sync` gives several charts one pointer: charts with the same name show the same category at once, each with its own
+tooltip, so a bar chart of requests and a line chart of spend can be read together.
 
 ### When to use
 
@@ -178,6 +190,10 @@ export class BarChartExample {
 | `orientation` | `orientation` | `BarOrientation` | `"vertical"` | Upright bars ("vertical") or lying down ("horizontal") |
 | `sort` | `sort` | `boolean` | `false` | Orders one series' bars from the largest |
 | `yDomain` | – | `[number, number] \| undefined` | `undefined` | A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for "percent" |
+| `compare` | – | `Accessor<T, number> \| undefined` | `undefined` | Last period's value for each category – one series – drawn dashed above or across its bar, with the change in the tooltip |
+| `compareLabel` | `compare-label` | `string` | `"Last period"` | What last period is called (default "Last period") |
+| `live` | `live` | `boolean` | `false` | The last category is still counting – today: its bar breathes and its value reads "so far" |
+| `liveLabel` | `live-label` | `string` | `"so far"` | The words after a live value (default "so far") |
 | `heading` | `heading` | `string` | `""` | The heading, and the chart's name |
 | `description` | `description` | `string \| undefined` | `undefined` | One line under the heading |
 | `data` | – | `readonly T[]` | `[]` | The rows to draw |
@@ -194,6 +210,7 @@ export class BarChartExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -211,9 +228,9 @@ export class BarChartExample {
 | `replay()` | `void` | Plays the entrance again |
 | `linkActive(key: string \| null)` | `void` | Shows the mark with this event key (or none) as active, as an echo of another chart – drawn, but with no tooltip, announcement or event – for charts that move together (tc-small-multiples). A mark the chart's own pointer or keyboard is on wins |
 
-#### Design tokens it reads (1)
+#### Design tokens it reads (4)
 
-`--tc-plot-bg`
+`--tc-duration-shimmer`, `--tc-ease-standard`, `--tc-plot-bg`, `--tc-plot-line-rest`
 
 ## Frameworks
 
@@ -237,12 +254,13 @@ export class BarChartExample {
 | `y` | `el.y = …;` | `<… y={…} />` | `<tc-bar-chart :y="…">` | `<tc-bar-chart [y]="…">` | `<tc-bar-chart {y}>` |
 | `series` | `el.series = …;` | `<… series={…} />` | `<tc-bar-chart :series="…">` | `<tc-bar-chart [series]="…">` | `<tc-bar-chart {series}>` |
 | `yDomain` | `el.yDomain = …;` | `<… yDomain={…} />` | `<tc-bar-chart :yDomain="…">` | `<tc-bar-chart [yDomain]="…">` | `<tc-bar-chart {yDomain}>` |
+| `compare` | `el.compare = …;` | `<… compare={…} />` | `<tc-bar-chart :compare="…">` | `<tc-bar-chart [compare]="…">` | `<tc-bar-chart {compare}>` |
 | `data` | `el.data = …;` | `<… data={…} />` | `<tc-bar-chart :data="…">` | `<tc-bar-chart [data]="…">` | `<tc-bar-chart {data}>` |
 | `highlight` | `el.highlight = …;` | `<… highlight={…} />` | `<tc-bar-chart :highlight="…">` | `<tc-bar-chart [highlight]="…">` | `<tc-bar-chart {highlight}>` |
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-bar-chart :format="…">` | `<tc-bar-chart [format]="…">` | `<tc-bar-chart {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-bar-chart :labels="…">` | `<tc-bar-chart [labels]="…">` | `<tc-bar-chart {labels}>` |
 
-*Also attributes: `layout`, `orientation`, `sort`, `heading`, `description`, `unit`, `locale`, `height` and 7 more – see the API table.*
+*Also attributes: `layout`, `orientation`, `sort`, `compare-label`, `live`, `live-label`, `heading`, `description` and 11 more – see the API table.*
 
 ### Events
 
@@ -428,9 +446,9 @@ No slots: everything it shows comes from its properties.
 | light-dark() | 123 | 120 | 17.5 | 17.5 | tokens.css | Every colour token is a light / dark pair; without it no colour token resolves. |
 | color-mix() | 111 | 113 | 16.2 | 16.2 | internal/chart/element, tokens.css | Tints and washes mixed from the tokens. |
 | Container size queries | 105 | 110 | 16 | 16 | internal/chart/element | Components adapt to the width they're given, not the window's. |
-| :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/kit, internal/chart/element | Focus rings for keyboard users. |
+| :focus-visible | 86 | 85 | 15.4 | 15.4 | internal/chart/element, internal/kit | Focus rings for keyboard users. |
 | Object.hasOwn() | 93 | 92 | 15.4 | 15.4 | internal/chart/accessor | – |
-| :is() and :where() | 88 | 78 | 14 | 14 | internal/base, internal/chart/element, tokens.css | Every rule is keyed on :where() so the page can override it. |
+| :is() and :where() | 88 | 78 | 14 | 14 | internal/chart/element, internal/base, tokens.css | Every rule is keyed on :where() so the page can override it. |
 | ResizeObserver | 64 (Edge 79) | 69 | 13.1 | 13.4 | internal/chart/element | – |
 | IntersectionObserver | 51 (Edge 15) | 55 | 12.1 | 12.2 | internal/chart/element | – |
 
@@ -442,19 +460,19 @@ No slots: everything it shows comes from its properties.
 | --- | --- | --- | --- | --- | --- | --- |
 | scrollbar-width | 121 | 64 | 18.2 | 18.2 | internal/chart/element | Scrollbars keep the browser's default width. |
 | adoptedStyleSheets | 73 (Edge 79) | 101 | 16.4 | 16.4 | internal/styles | Each element type's CSS goes into one &lt;style> element in &lt;head> instead – it looks and works the same. |
-| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/card-head, internal/kit, internal/chart/element, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
+| forced-colors media query | 89 (Edge 79) | 89 | 16 | 16 | itself, internal/chart/element, internal/chart/brush, internal/card-head, internal/kit, tokens.css | In a forced-colours mode the browser's own adjustments apply, without the components' fixes. |
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 10.2 KB | 4.8 KB |
+| **This component alone** | 12.8 KB | 5.7 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.2 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
 | `internal/chart/format` · Shared Trenchcoat code | 2.1 KB | – |
@@ -465,8 +483,9 @@ No slots: everything it shows comes from its properties.
 | `internal/kit` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/chart/scale` · Shared Trenchcoat code | 1.3 KB | – |
 | `internal/chart/text` · Shared Trenchcoat code | 1.1 KB | – |
+| `internal/chart/brush` · Shared Trenchcoat code | 1.0 KB | – |
 | `internal/chart/stack` · Shared Trenchcoat code | 1.0 KB | – |
-| `internal/chart/accessor` · Shared Trenchcoat code | 0.8 KB | – |
+| `internal/chart/accessor` · Shared Trenchcoat code | 0.9 KB | – |
 | `internal/chart/geometry` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/chart/highlight` · Shared Trenchcoat code | 0.6 KB | – |
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
@@ -475,8 +494,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/parse` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **54.6 KB** | **19.8 KB** |
-| With Lit – the first component on a page | 74.1 KB | 26.0 KB |
+| **Added to a page that already has Lit** | **58.9 KB** | **21.2 KB** |
+| With Lit – the first component on a page | 78.3 KB | 27.4 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -484,11 +503,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.7 ms** | the gallery demo's data, 41 DOM nodes – to layout, median of 7 |
-| Typical update | **0.4 ms** | one item of data replaced |
-| First on the page | 22 ms | default properties; includes adding its CSS to the document |
-| 100 items | 2.1 ms | data: first render, 41 nodes; update 0.3 ms |
-| 1,000 items | 2.6 ms | data: first render, 41 nodes; update 0.9 ms |
+| First render | **1.8 ms** | the gallery demo's data, 41 DOM nodes – to layout, median of 7 |
+| Typical update | **0.5 ms** | one item of data replaced |
+| First on the page | 14 ms | default properties; includes adding its CSS to the document |
+| 100 items | 3.4 ms | data: first render, 41 nodes; update 0.5 ms |
+| 1,000 items | 1.9 ms | data: first render, 41 nodes; update 0.7 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 
@@ -496,9 +515,10 @@ What it renders doesn't grow with data (tested to 1,000 items).
 
 ### Runtime
 
-- At rest with the demo's data: **59 frames/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
+- At rest with the demo's data: **60 frames/s** on screen, **nothing** scrolled away, **nothing** under reduced motion (measured).
 - Animation frames: `requestAnimationFrame` (internal/chart/motion – subscribeTick), `requestAnimationFrame` (internal/chart/motion – loop).
 - No timers.
+- 1 infinite CSS animation.
 - Stops or pauses off screen and under reduced motion.
 - Observers: `ResizeObserver` (internal/chart/element – TcChartElement), `IntersectionObserver` (internal/chart/element – TcChartElement), `MutationObserver` (internal/base – TcElement), `MutationObserver` (internal/controllers – AriaForwardController).
 - Listens on the page: `document pointerdown` (internal/chart/element – TcChartElement).

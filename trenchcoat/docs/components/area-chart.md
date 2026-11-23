@@ -9,7 +9,7 @@
 Totals and their make-up over time as filled areas – stacked, stacked to 100% or overlapping – with names at their ends, the nearest month read across every series, and a table view
 
 - **Element:** `<tc-area-chart>`
-- **Size:** 25.4 KB gzip · 70.8 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 26.5 KB gzip · 74.4 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -41,6 +41,15 @@ layers have none, since a range on one layer would move every layer above it.
 With `brush="select"`, dragging across the plot (or Shift+arrows and Enter) picks a range and shows its change
 with its highest and lowest points, firing `tc-brush`; `brush="zoom"` narrows the chart to the range, with a Show
 all button to undo it.
+
+`compare` names last period's value on each row (`.compare=${"prev"}`): the emphasised series' last period is drawn as
+a quiet dashed line behind it, a small legend names This period and Last period (`current-label`, `compare-label`),
+and the tooltip reads this period's value with its change – "410 · +17.1%" – above last period's. Use it for "this
+week against last week" on a dashboard card.
+
+`sync` gives several charts one pointer: charts with the same name – a Line Chart of spend, a Bar Chart of requests –
+show the same day at once, each with its own tooltip, matched by x. A chart a person is moving through with the
+keyboard keeps its own place. It works on every chart.
 
 ### When to use
 
@@ -194,6 +203,7 @@ export class AreaChartExample {
 | `bare` | `bare` | `boolean` | `false` | No card: just the plot, for a chart inside another component |
 | `view` | `view` | `ChartView` | `"chart"` | The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault() |
 | `labels` | – | `Partial<ChartLabels>` | `{}` | The words it shows and says, merged over defaultChartLabels |
+| `sync` | `sync` | `string \| undefined` | `undefined` | A group name: charts with the same one follow each other's pointer – pointing at a day in one shows that day, with its tooltip, in the others (matched by x) |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -235,7 +245,7 @@ export class AreaChartExample {
 | `format` | `el.format = …;` | `<… format={…} />` | `<tc-area-chart :format="…">` | `<tc-area-chart [format]="…">` | `<tc-area-chart {format}>` |
 | `labels` | `el.labels = …;` | `<… labels={…} />` | `<tc-area-chart :labels="…">` | `<tc-area-chart [labels]="…">` | `<tc-area-chart {labels}>` |
 
-*Also attributes: `stack`, `heading`, `description`, `unit`, `locale`, `height`, `still`, `easing` and 5 more – see the API table.*
+*Also attributes: `stack`, `heading`, `description`, `unit`, `locale`, `height`, `still`, `easing` and 6 more – see the API table.*
 
 ### Events
 
@@ -442,7 +452,7 @@ No slots: everything it shows comes from its properties.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
@@ -450,8 +460,8 @@ No slots: everything it shows comes from its properties.
 | --- | --- | --- |
 | **This component alone** | 2.8 KB | 1.6 KB |
 | Lit · the library every element is built on, the parts it uses | 18.6 KB | – |
-| `internal/chart/element` · Shared Trenchcoat code | 18.5 KB | – |
-| `internal/chart/xy` · Shared Trenchcoat code | 15.1 KB | – |
+| `internal/chart/element` · Shared Trenchcoat code | 19.2 KB | – |
+| `internal/chart/xy` · Shared Trenchcoat code | 18.0 KB | – |
 | `internal/chart/motion` · Shared Trenchcoat code | 5.1 KB | – |
 | `internal/chart/brush` · Shared Trenchcoat code | 4.3 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 3.0 KB | – |
@@ -473,8 +483,8 @@ No slots: everything it shows comes from its properties.
 | `internal/chart/lazy` · Shared Trenchcoat code | 0.3 KB | – |
 | `internal/controllers` · Shared Trenchcoat code | 0.1 KB | – |
 | `src/internal/reduced-motion.ts` · Dependency | 0.1 KB | – |
-| **Added to a page that already has Lit** | **70.8 KB** | **25.4 KB** |
-| With Lit – the first component on a page | 90.1 KB | 31.5 KB |
+| **Added to a page that already has Lit** | **74.4 KB** | **26.7 KB** |
+| With Lit – the first component on a page | 93.7 KB | 32.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -482,11 +492,11 @@ No slots: everything it shows comes from its properties.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.4 ms** | the gallery demo's data, 24 DOM nodes – to layout, median of 7 |
+| First render | **1.8 ms** | the gallery demo's data, 24 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of data replaced |
-| First on the page | 13 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.9 ms | data: first render, 24 nodes; update 0.4 ms |
-| 1,000 items | 1.8 ms | data: first render, 24 nodes; update 0.6 ms |
+| First on the page | 22 ms | default properties; includes adding its CSS to the document |
+| 100 items | 2.2 ms | data: first render, 24 nodes; update 0.4 ms |
+| 1,000 items | 2.5 ms | data: first render, 24 nodes; update 0.9 ms |
 
 What it renders doesn't grow with data (tested to 1,000 items).
 

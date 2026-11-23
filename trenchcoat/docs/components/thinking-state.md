@@ -9,7 +9,7 @@
 AI working panel with a live timer, searched sources and thinking steps that appear one by one
 
 - **Element:** `<tc-thinking-state>`
-- **Size:** 10.7 KB gzip · 41.7 KB min, on a page that has Lit · [Performance](#performance)
+- **Size:** 10.9 KB gzip · 42.3 KB min, on a page that has Lit · [Performance](#performance)
 - **Works in:** Chrome / Edge 123+, Firefox 120+, Safari 17.5+ · [Browser support](#browser-support)
 
 |  | Install and import |
@@ -29,7 +29,8 @@ The live example is in the gallery at `#/thinking-state`, at 320 px, 480 px or f
 
 The panel an AI chat shows while it works on an answer. A header says “Thinking” with a live timer, and below it
 the steps appear one after another – what it's doing, and the searches it ran with their sources as small chips
-people can open. When it's done, a check ends the list and the header turns into “Worked for 9s”; the header also
+people can open. When it's done, a check ends the list and the header turns into “Worked for 9s · 12 sources” – how long it took and
+how many sources its searches turned up, folded ones too (`hide-tally` leaves the count off); the header also
 folds the steps away. It shows people that something is happening and what it's based on, so a long wait reads
 as work rather than a stall.
 
@@ -189,7 +190,9 @@ export class ThinkingStateExample {
 | `done` | – | `boolean \| undefined` | `undefined` | Finished; unset, the timeline decides (when `progress` is unset too) |
 | `loop` | `loop` | `boolean` | `false` | Start over after a pause once finished – only while the timeline runs everything. Stops after a few runs, and as soon as the pointer or focus is inside (WCAG 2.2.2) |
 | `open` | `open` | `boolean` | `true` | Whether the steps are unfolded |
+| `hideTally` | `hide-tally` | `boolean` | `false` | Leaves the number of sources searched ("· 12 sources") off the finished header |
 | `startedAt` | `started-at` | `number \| undefined` | `undefined` | When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started |
+| `tally` | – | `string` | – | "12 sources": every source the searches turned up, the folded ones too; empty without searches |
 | `look` | `look` | `Look \| undefined` | `undefined` | Visual style: "standard" or "clean"; unset follows &lt;tc-look-provider>, else "standard" |
 
 #### Events
@@ -233,7 +236,7 @@ export class ThinkingStateExample {
 | `steps` | `el.steps = …;` | `<… steps={…} />` | `<tc-thinking-state :steps="…">` | `<tc-thinking-state [steps]="…">` | `<tc-thinking-state {steps}>` |
 | `done` | `el.done = …;` | `<… done={…} />` | `<tc-thinking-state :done="…">` | `<tc-thinking-state [done]="…">` | `<tc-thinking-state {done}>` |
 
-*Also attributes: `done-label`, `step-ms`, `progress`, `loop`, `open`, `started-at` – see the API table.*
+*Also attributes: `done-label`, `step-ms`, `progress`, `loop`, `open`, `hide-tally`, `started-at` – see the API table.*
 
 ### Events
 
@@ -401,9 +404,9 @@ Follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patter
 ### Screen readers
 
 The header is a button with `aria-expanded` that controls the steps; its name is “Thinking” while it works (the
-timer is hidden) and “Worked for 9s” after. The steps are an ordered list – folded, they're `inert` and skipped.
+timer is hidden) and “Worked for 9s · 12 sources” after. The steps are an ordered list – folded, they're `inert` and skipped.
 New steps aren't announced one by one; when it finishes, a status message says the done label and the time:
-“Ready to answer. Worked for 9s”. Source chips with an `href` are links; their tooltips are hidden from screen
+“Ready to answer. Worked for 9s, searched 12 sources”. Source chips with an `href` are links; their tooltips are hidden from screen
 readers. “+N more” is a button with `aria-expanded`.
 
 ### Every component
@@ -448,13 +451,13 @@ readers. “+N more” is a button with `aria-expanded`.
 
 ## Performance
 
-*Measured 2026-11-11 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
+*Measured 2026-11-22 in headless Chromium 156.0.8078.4 on Apple M4 Pro by `npm run measure:perf`. [What the numbers mean](../foundations/performance.md)*
 
 ### Bundle
 
 | Part | Minified | Gzip |
 | --- | --- | --- |
-| **This component alone** | 34.2 KB | 8.5 KB |
+| **This component alone** | 34.8 KB | 8.7 KB |
 | Lit · the library every element is built on, the parts it uses | 19.9 KB | – |
 | `internal/card-head` · Shared Trenchcoat code | 2.3 KB | – |
 | `internal/base` · Shared Trenchcoat code | 1.8 KB | – |
@@ -463,8 +466,8 @@ readers. “+N more” is a button with `aria-expanded`.
 | `internal/look` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/styles` · Shared Trenchcoat code | 0.4 KB | – |
 | `internal/safe-url` · Shared Trenchcoat code | 0.3 KB | – |
-| **Added to a page that already has Lit** | **41.7 KB** | **10.7 KB** |
-| With Lit – the first component on a page | 62.8 KB | 17.6 KB |
+| **Added to a page that already has Lit** | **42.3 KB** | **11.0 KB** |
+| With Lit – the first component on a page | 63.4 KB | 17.9 KB |
 
 *Shared code counts once per page: a second component that uses the same `internal/*` modules or renders the same elements adds only its own code. Shared rows show their share of the minified bundle; gzip only exists for whole files.*
 
@@ -472,11 +475,11 @@ readers. “+N more” is a button with `aria-expanded`.
 
 | Measure | Time | Details |
 | --- | --- | --- |
-| First render | **1.0 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
+| First render | **1.6 ms** | the gallery demo's data, 10 DOM nodes – to layout, median of 7 |
 | Typical update | **0.4 ms** | one item of steps replaced |
-| First on the page | 17 ms | default properties; includes adding its CSS to the document |
-| 100 items | 1.1 ms | steps: first render, 10 nodes; update 0.1 ms |
-| 1,000 items | 1.9 ms | steps: first render, 10 nodes; update 0.2 ms |
+| First on the page | 21 ms | default properties; includes adding its CSS to the document |
+| 100 items | 1.2 ms | steps: first render, 10 nodes; update 0.2 ms |
+| 1,000 items | 2.3 ms | steps: first render, 10 nodes; update 0.3 ms |
 
 What it renders doesn't grow with steps (tested to 1,000 items).
 
