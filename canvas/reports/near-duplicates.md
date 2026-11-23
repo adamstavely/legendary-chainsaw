@@ -17,6 +17,7 @@ Written by `npm run similarity`; don't edit by hand.
 | Case Review (Blocks)              | Red-team Finding (Blocks)           | 0.927      |
 | Artifact Panel (Components)       | Response Examples (Components)      | 0.925      |
 | Mission Control (Blocks)          | Mission Timeline (Blocks)           | 0.924      |
+| Access Grants (Components)        | Correction Propagation (Components) | 0.923      |
 | Code Block (Components)           | Response Examples (Components)      | 0.923      |
 | Collaboration Stream (Components) | Correction Propagation (Components) | 0.923      |
 | Eval Criteria Editor (Components) | Review Queue (Components)           | 0.923      |
