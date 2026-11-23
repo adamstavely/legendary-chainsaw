@@ -64,13 +64,13 @@
         "debug": {
           "type": "string"
         },
-        "levels": {
-          "type": "string"
-        },
         "filter": {
           "type": "string"
         },
         "empty": {
+          "type": "string"
+        },
+        "levels": {
           "type": "string"
         },
         "clear": {

@@ -63,13 +63,13 @@
         "font": {
           "type": "string"
         },
-        "status": {
-          "type": "string"
-        },
         "all": {
           "type": "string"
         },
         "empty": {
+          "type": "string"
+        },
+        "status": {
           "type": "string"
         },
         "name": {

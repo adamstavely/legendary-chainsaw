@@ -19,6 +19,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const { MemoryPanel } = ui;
   const [memories, setMemories] = useState(initial);
   const [enabled, setEnabled] = useState(true);
+  const [tone, setTone] = useState("direct");
+  const [instructions, setInstructions] = useState("Lead with the decision, then the evidence. Say when a match is only partial.");
   return (
     <div style={{ width: "100%", maxWidth: 380, display: "grid", justifyItems: "center" }}>
       <MemoryPanel
@@ -31,6 +33,10 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         maxHeight={320}
         addedSource="Added by you"
         action={{ label: "Manage", onClick: () => setMemories(initial) }}
+        tone={tone}
+        onToneChange={setTone}
+        instructions={instructions}
+        onInstructionsChange={setInstructions}
       />
     </div>
   );

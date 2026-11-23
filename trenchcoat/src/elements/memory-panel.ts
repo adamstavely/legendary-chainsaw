@@ -28,6 +28,10 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  * switch fires a cancelable `tc-enabled-change`. The granular callbacks (onAdd, onEdit, onPause, onForget, onRestore)
  * are function properties: each may return a promise – the row waits while it runs and a rejection rolls the change
  * back and says so on the tray. The host is the group, named by the heading.
+ *
+ * Personality (leave it out with `hide-personality`): how the assistant talks to this person, across chats – a tone
+ * picked from `tones` (a radio group; the picked one shows a sample reply), and `instructions` in their own words with
+ * a character count. They fire cancelable `tc-tone-change` and `tc-instructions-change`.
  */
 
 export type Memory = {
@@ -48,6 +52,26 @@ export type Memory = {
 
 /** tc-consent: Keep or Don't keep on a memory that waits for the person's OK */
 export type MemoryConsent = { memory: Memory; keep: boolean };
+
+/** A way the assistant can talk – one choice in Personality */
+export type AssistantTone = {
+  id: string;
+  /** Its name, e.g. "Direct" */
+  label: string;
+  /** What it means, in a few words, e.g. "Short answers, no preamble" */
+  description: string;
+  /** One reply in that tone, so people hear the difference */
+  sample: string;
+};
+
+/** Personality's tones, in order – `tones` replaces them */
+export const defaultTones: AssistantTone[] = [
+  { id: "default", label: "Default", description: "Balanced – how it answers everyone", sample: "Here's a summary of the report, with the three points worth checking first." },
+  { id: "professional", label: "Professional", description: "Precise and formal", sample: "Please find a summary of the report below, followed by three items that merit review." },
+  { id: "friendly", label: "Friendly", description: "Warm and conversational", sample: "Here's the gist! Three things jumped out that are worth a look first." },
+  { id: "direct", label: "Direct", description: "Short answers, no preamble", sample: "Summary below. Check points 1–3 first." },
+  { id: "thorough", label: "Thorough", description: "Explains its reasoning and caveats", sample: "Below is a summary of the report, why each point matters and what would confirm it – starting with the three that matter most." },
+];
 
 /** A granular callback's result: a promise makes the row wait, and its rejection rolls the change back */
 export type MemoryCallbackResult = void | Promise<unknown>;
@@ -142,6 +166,8 @@ let uidCount = 0;
  * @fires tc-consent - Keep or Don't keep on a memory waiting for the person's OK ({ memory, keep }: MemoryConsent);
  *   cancelable – prevented, it keeps waiting
  * @fires tc-action - The action button (`actionLabel`) was pressed; detail: null
+ * @fires tc-tone-change - A tone was picked in Personality; detail `{ tone: string }`. Cancelable: preventDefault() keeps the current one
+ * @fires tc-instructions-change - The instructions were typed in; detail `{ instructions: string }`. Cancelable: preventDefault() keeps them as they were
  */
 export class TcMemoryPanel extends TcElement {
   static override ui = "mp";
@@ -177,6 +203,16 @@ export class TcMemoryPanel extends TcElement {
   @property({ attribute: false }) accessor onRestore: ((memory: Memory) => MemoryCallbackResult) | undefined = undefined;
   /** Called when a memory waiting for the person's OK is kept (true) or not (false) */
   @property({ attribute: false }) accessor onConsent: ((id: string, keep: boolean) => MemoryCallbackResult) | undefined = undefined;
+  /** The assistant's tone – the id of one of `tones` */
+  @property() accessor tone = "default";
+  /** The tones to pick from, in order */
+  @property({ attribute: false }) accessor tones: AssistantTone[] = defaultTones;
+  /** What else the assistant should know about how to answer, in the person's own words */
+  @property() accessor instructions = "";
+  /** The most characters `instructions` may have */
+  @property({ type: Number, attribute: "instructions-max" }) accessor instructionsMax = 500;
+  /** Leaves out the Personality section */
+  @property({ type: Boolean, attribute: "hide-personality" }) accessor hidePersonality = false;
 
   /** @internal Rows whose call is still running, with how many */
   @state() accessor saving: Record<string, number> = {};
@@ -424,6 +460,83 @@ export class TcMemoryPanel extends TcElement {
 
   private setEnabled(next: boolean) {
     if (this.emit("tc-enabled-change", { enabled: next }, { cancelable: true })) this.enabled = next;
+  }
+
+  private setTone(next: string) {
+    if (next === this.tone) return;
+    if (this.emit("tc-tone-change", { tone: next }, { cancelable: true })) this.tone = next;
+  }
+
+  private setInstructions(field: HTMLTextAreaElement) {
+    const next = field.value.slice(0, this.instructionsMax);
+    if (this.emit("tc-instructions-change", { instructions: next }, { cancelable: true })) {
+      this.instructions = next;
+      return;
+    }
+    // Prevented: a controlling page passes the text back; if it doesn't by the next frame, the field goes back to what
+    // it was (not at once, which would move the caret on every keystroke)
+    requestAnimationFrame(() => {
+      if (field.value !== this.instructions) field.value = this.instructions;
+    });
+  }
+
+  /** Personality: the tone as a radio group, the picked one's sample, and instructions in the person's own words */
+  private personality() {
+    const tones = this.tones;
+    if (this.hidePersonality || !tones.length) return nothing;
+    const id = `${this.uid}-persona`;
+    const at = Math.max(0, tones.findIndex((t) => t.id === this.tone));
+    const picked = tones[at];
+    const used = this.instructions.length;
+    return html`<section class="ui-mp__persona" aria-labelledby="${id}-title">
+      <h3 id="${id}-title" class="ui-mp__group ui-mp__persona-title">How it talks to you</h3>
+      <div
+        class="ui-mp__tones"
+        role="radiogroup"
+        aria-labelledby="${id}-title"
+        @keydown=${(e: KeyboardEvent) => {
+          const next = radioStep(e, at, tones.length, true);
+          if (next < 0) return;
+          e.preventDefault();
+          this.setTone(tones[next].id);
+          this.updateComplete.then(() => this.querySelectorAll<HTMLElement>(".ui-mp__tone")[tones.findIndex((t) => t.id === this.tone)]?.focus());
+        }}
+      >
+        ${repeat(
+          tones,
+          (t) => t.id,
+          (t, i) => html`<button
+            type="button"
+            role="radio"
+            class="ui-mp__tone"
+            data-tone=${t.id}
+            aria-checked=${i === at ? "true" : "false"}
+            aria-describedby=${i === at ? `${id}-desc-${i} ${id}-sample` : `${id}-desc-${i}`}
+            tabindex=${i === at ? 0 : -1}
+            @click=${() => this.setTone(t.id)}
+          >
+            <span class="ui-mp__tone-dot" aria-hidden="true"></span>
+            <span class="ui-mp__tone-text"><span class="ui-mp__tone-label">${t.label}</span><span id="${id}-desc-${i}" class="ui-mp__tone-desc">${t.description}</span></span>
+          </button>`,
+        )}
+      </div>
+      <p class="ui-mp__sample">
+        <span class="ui-mp__sample-label">Sounds like</span>
+        ${keyed(picked.id, html`<span id="${id}-sample" class="ui-mp__sample-text">“${picked.sample}”</span>`)}
+      </p>
+      <label class="ui-mp__instr-label" for="${id}-instr">Anything else it should know about how to answer you?</label>
+      <textarea
+        id="${id}-instr"
+        class="ui-mp__instr"
+        rows="2"
+        maxlength=${this.instructionsMax}
+        placeholder="For example: use plain words, and say when you're unsure."
+        aria-describedby="${id}-count"
+        .value=${this.instructions}
+        @input=${(e: Event) => this.setInstructions(e.target as HTMLTextAreaElement)}
+      ></textarea>
+      <span id="${id}-count" class="ui-mp__instr-count" ?data-full=${used >= this.instructionsMax}>${used} / ${this.instructionsMax}<span class="ui-mp__sr"> characters</span></span>
+    </section>`;
   }
 
   private async forget(m: Memory) {
@@ -925,6 +1038,7 @@ export class TcMemoryPanel extends TcElement {
           </div>
         </div>
         ${this.newMemory(icons, groups.length ? groups : ["General"], this.addCategory)}
+        ${this.personality()}
         ${clean ? foot : nothing}
       </div>
       ${!clean ? foot : nothing}
@@ -1148,6 +1262,36 @@ export class TcMemoryPanel extends TcElement {
 /* Undo: the white button with the hairline shadow */
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__action--undo { gap: var(--tc-space-1-5); padding: 0 var(--tc-space-2-5) 0 var(--tc-space-2); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
 .ui-mp__action--undo:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
+/* ----- Personality: the tone as a list of radio rows, the picked one's sample, and instructions ----- */
+.ui-mp__persona { display: grid; gap: var(--tc-space-1); padding: var(--tc-space-0-5) var(--tc-space-1-5) var(--tc-space-2-5); border-top: var(--tc-hairline) solid var(--tc-border-default); }
+[data-ui="mp"] .ui-mp__persona-title { padding-bottom: var(--tc-space-1); }
+.ui-mp__tones { display: grid; gap: var(--tc-space-0-5); }
+.ui-mp__tone { display: flex; align-items: flex-start; gap: var(--tc-space-2-5); width: 100%; padding: var(--tc-space-1-5) var(--tc-space-2); border-radius: var(--tc-radius-md); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-mp__tone:hover { background: var(--tc-fill-subtle); }
+.ui-mp__tone[aria-checked="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); }
+.ui-mp__tone-dot { position: relative; flex: none; width: var(--tc-space-3-5); height: var(--tc-space-3-5); margin-top: var(--tc-space-0-5); border-radius: var(--tc-radius-full); box-shadow: inset 0 0 0 1.5px var(--tc-border-strong); transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-mp__tone-dot::after { content: ""; position: absolute; inset: 3.5px; border-radius: var(--tc-radius-full); background: var(--tc-accent); transform: scale(0); transition: transform var(--tc-duration-moderate) var(--tc-ease-move); }
+.ui-mp__tone[aria-checked="true"] .ui-mp__tone-dot { box-shadow: inset 0 0 0 1.5px var(--tc-accent); }
+.ui-mp__tone[aria-checked="true"] .ui-mp__tone-dot::after { transform: scale(1); }
+.ui-mp__tone-text { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--tc-space-2); min-width: 0; }
+.ui-mp__tone-label { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
+.ui-mp__tone-desc { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+.ui-mp__tone[aria-checked="true"] .ui-mp__tone-desc { color: var(--tc-text-secondary); }
+.ui-mp__sample { display: grid; gap: var(--tc-space-0-5); margin: var(--tc-space-1) var(--tc-space-2) 0 !important; padding: var(--tc-space-2) var(--tc-space-2-5) !important; border-left: 2px solid var(--tc-border-selected); font-size: var(--tc-font-size-sm) !important; line-height: var(--tc-line-height-snug) !important; color: var(--tc-text-secondary); }
+.ui-mp__sample-label { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-mp__sample-text { color: var(--tc-text-primary); animation: ui-mp-swap-in var(--tc-duration-slow) var(--tc-ease-standard) both; }
+.ui-mp__instr-label { display: block; margin: var(--tc-space-2-5) var(--tc-space-2) 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-mp__instr { display: block; width: calc(100% - 2 * var(--tc-space-2)); min-height: calc(2 * var(--tc-field-h)); margin: var(--tc-space-1) var(--tc-space-2) 0; padding: var(--tc-space-1-5) var(--tc-field-px); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); font: inherit; font-size: var(--tc-field-font-size); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); resize: vertical; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-mp__instr:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-mp__instr:focus { box-shadow: var(--tc-field-shadow-focus); }
+.ui-mp__instr::placeholder { color: var(--tc-text-placeholder); }
+.ui-mp__instr-count { justify-self: end; margin-right: var(--tc-space-2); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-mp__instr-count[data-full] { color: var(--tc-status-warning-fg); }
+@media (forced-colors: active) {
+  .ui-mp__tone[aria-checked="true"] { outline: 2px solid Highlight; }
+  .ui-mp__tone-dot { border: 1px solid CanvasText; }
+  .ui-mp__tone-dot::after { background: Highlight; }
+}
 @keyframes ui-mp-in { from { opacity: 0; transform: scale(0.9); } }
 @keyframes ui-mp-swap-in { from { opacity: 0; filter: blur(2px); } }
 @keyframes ui-mp-swap-out { from { opacity: 1; } to { opacity: 0; filter: blur(2px); } }

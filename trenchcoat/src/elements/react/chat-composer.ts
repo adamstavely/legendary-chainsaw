@@ -7,6 +7,9 @@ import {
   chatModelLogo,
   defaultChatModels,
   type ChatModel as ElementModel,
+  type ChatActiveToolsChange,
+  type ChatTemporaryChange,
+  type ChatTool as ElementTool,
   type ChatLimitAction,
   type ChatPageContext,
   type ChatPageContextChange,
@@ -20,7 +23,10 @@ import type { ContextTrayChange, ContextTrayItem } from "../context-tray";
 import type { MentionPickerPick } from "../mention-picker";
 import type { ModelSettingsValue } from "../model-settings";
 import { h, isNode, useControlled, useStaged } from "./internal";
-export type { ChatLimit, ChatLimitAction, ChatPageContext, ChatPageContextChange, ChatPromptPick, ChatSend, ChatSendDetails, ChatSettingsChange, ChatSkillRef } from "../chat-composer";
+export type { ChatActiveToolsChange, ChatLimit, ChatLimitAction, ChatPageContext, ChatPageContextChange, ChatPromptPick, ChatSend, ChatSendDetails, ChatSettingsChange, ChatSkillRef, ChatTemporaryChange } from "../chat-composer";
+
+/** A tool the message can use – a switch in the Tools menu, a chip while it's on; `icon` may be a React node */
+export type ChatTool = Omit<ElementTool, "icon"> & { icon?: React.ReactNode | Element };
 
 /** A skill (slash command) in the composer; `icon` may be a React node */
 export type ChatSkill = Omit<ElementSkill, "icon"> & { icon?: React.ReactNode | Element };
@@ -79,6 +85,8 @@ const RawChatComposer = createComponent({
     onTcSkillChange: "tc-skill-change" as EventName<CustomEvent<ElementSkillChange>>,
     onTcLimitAction: "tc-limit-action" as EventName<CustomEvent<ChatLimitAction>>,
     onTcTrialAction: "tc-trial-action" as EventName<CustomEvent<ChatLimitAction>>,
+    onTcActiveToolsChange: "tc-active-tools-change" as EventName<CustomEvent<ChatActiveToolsChange>>,
+    onTcTemporaryChange: "tc-temporary-change" as EventName<CustomEvent<ChatTemporaryChange>>,
   },
 });
 type RawChatComposerProps = React.ComponentProps<typeof RawChatComposer>;
@@ -104,7 +112,12 @@ type Own =
   | "onTcPromptPick"
   | "onTcPageContextChange"
   | "onTcLimitAction"
-  | "onTcTrialAction";
+  | "onTcTrialAction"
+  | "tools"
+  | "activeTools"
+  | "temporary"
+  | "onTcActiveToolsChange"
+  | "onTcTemporaryChange";
 export type ChatComposerProps = Omit<RawChatComposerProps, Own> & {
   /** The message (controlled). Leave undefined to let the composer keep it, starting at `defaultValue` */
   value?: string;
@@ -168,6 +181,20 @@ export type ChatComposerProps = Omit<RawChatComposerProps, Own> & {
   onLimitAction?: (limit: ChatLimitAction["limit"]) => void;
   /** The trial-ended notice's action was pressed */
   onTrialAction?: (limit: ChatLimitAction["limit"]) => void;
+  /** Opt-in: the tools a message can use – a "Tools" button in the toolbar row opens their switches */
+  tools?: ChatTool[];
+  /** The ids of the tools that are on (controlled). Leave undefined to let the composer keep them, starting at `defaultActiveTools` */
+  activeTools?: string[];
+  /** The tools that are on at first when uncontrolled */
+  defaultActiveTools?: string[];
+  /** A tool was switched on or off: the tools on now, and which one changed */
+  onActiveToolsChange?: (activeTools: string[], change: { tool: string; active: boolean }) => void;
+  /** Whether the chat is temporary – not saved to history or memory (controlled). Leave undefined to let the composer keep it */
+  temporary?: boolean;
+  /** Whether the chat starts temporary when uncontrolled */
+  defaultTemporary?: boolean;
+  /** The temporary-chat toggle was pressed */
+  onTemporaryChange?: (temporary: boolean) => void;
 };
 
 export function ChatComposer({
@@ -199,6 +226,13 @@ export function ChatComposer({
   onSkillChange,
   onLimitAction,
   onTrialAction,
+  tools,
+  activeTools,
+  defaultActiveTools = [],
+  onActiveToolsChange,
+  temporary,
+  defaultTemporary = false,
+  onTemporaryChange,
   ...props
 }: ChatComposerProps) {
   // Logos given as React components render in the staging box; the element gets their DOM nodes
@@ -233,12 +267,26 @@ export function ChatComposer({
     const found = searchSkills(query, options);
     return found instanceof Promise ? found.then((list) => list.map(toElement)) : found.map(toElement);
   } : undefined), [searchSkills, toElement]);
+  // Tools: icons given as React nodes render in a third staging box
+  const toolIcons = useStaged((tools ?? []).filter((t) => isNode(t.icon)).map((t) => [t.id, t.icon as React.ReactNode] as [string, React.ReactNode]));
+  const toolList = React.useMemo(() => tools?.map((t): ElementTool => ({ ...t, icon: isNode(t.icon) ? toolIcons.els[t.id] : (t.icon as Element | undefined) })), [tools, toolIcons.els]);
+  const lastTool = React.useRef({ tool: "", active: false });
+  const at = useControlled<string[]>(activeTools, defaultActiveTools, (next) => onActiveToolsChange?.(next, lastTool.current));
+  const tmp = useControlled<boolean>(temporary, defaultTemporary, onTemporaryChange);
   const lastReason = React.useRef<ChatSkillChangeReason>("pick");
   const lastSkill = React.useRef<ChatSkill | null>(null);
   const sk = useControlled<string>(skill, defaultSkill, () => onSkillChange?.(lastSkill.current, lastReason.current));
-  return h(React.Fragment, null, stage, icons.stage, h(RawChatComposer, {
+  return h(React.Fragment, null, stage, icons.stage, toolIcons.stage, h(RawChatComposer, {
     ...props,
     onSend,
+    tools: toolList,
+    activeTools: at.value,
+    onTcActiveToolsChange: (e: CustomEvent<ChatActiveToolsChange>) => {
+      lastTool.current = { tool: e.detail.tool, active: e.detail.active };
+      at.handler(e.detail.activeTools, e);
+    },
+    temporary: tmp.value,
+    onTcTemporaryChange: (e: CustomEvent<ChatTemporaryChange>) => tmp.handler(e.detail.temporary, e),
     skills: skillList,
     searchSkills: search,
     skill: sk.value,

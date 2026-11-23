@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { ChatLimit, ChatModel, ChatPageContext, ChatSendDetails, ChatSkill, PromptTemplate } from "../../../src/elements/react";
+import type { ChatLimit, ChatModel, ChatPageContext, ChatSendDetails, ChatSkill, ChatTool, PromptTemplate } from "../../../src/elements/react";
 import { bubble, caption, surface, textButton } from "../demo-kit";
 
 type Sent = { text: string; model: string; page: string; skill: string };
@@ -33,6 +33,14 @@ const SKILLS: ChatSkill[] = [
   { id: "issue", name: "create-issue", description: "File a Linear issue from what we found", source: "Linear", icon: glyphs.ticket, argumentHint: "<title>" },
   { id: "link", name: "link-issue", description: "Link this thread to an existing issue", source: "Linear", icon: glyphs.ticket, keywords: "attach" },
 ];
+/* Tools: switches in the toolbar row's Tools menu – the ones that are on ride along as chips and with the message */
+const TOOLS: ChatTool[] = [
+  { id: "web", label: "Web search", description: "Look things up on the web", icon: <Glyph d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9z" /> },
+  { id: "research", label: "Deep research", description: "Read widely and write a cited report", icon: <Glyph d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5" /> },
+  { id: "think", label: "Think longer", description: "Plan before answering – slower, more careful", icon: <Glyph d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z" /> },
+  { id: "image", label: "Create image", description: "Draw a picture from the message", icon: <Glyph d="M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5M15 9h.01" /> },
+];
+
 /** @ for people and the report's sections – the same list as `skills`, on another key */
 const MENTIONS = [
   {
@@ -115,6 +123,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [recent, setRecent] = useState<string[]>(["chart", "exec"]);
   const [limit, setLimit] = useState<ChatLimit | null>(null);
   const [limitNote, setLimitNote] = useState("");
+  const [toolsOn, setToolsOn] = useState<string[]>(["web"]);
+  const [temporary, setTemporary] = useState(false);
+  const [lastTool, setLastTool] = useState("");
   const remember = (skill: ChatSkill | null, reason: string) => {
     if (skill && (reason === "pick" || reason === "replace")) setRecent((r) => [skill.id, ...r.filter((id) => id !== skill.id)].slice(0, 4));
   };
@@ -200,6 +211,29 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           {/* The catalogue is searched on the app's side; `skills` still names the ones it knows, for their icons */}
           <ChatComposer placeholder="Ask anything…" skills={SKILLS} searchSkills={searchSkills} {...shared} />
         </div>
+      </div>
+      <div style={{ flex: "1 1 100%", minWidth: 0, maxWidth: 560, display: "grid", gap: 12 }}>
+        <p style={label}>Tools and a temporary chat</p>
+        <ChatComposer
+          placeholder="Plan a weekend in Lisbon…"
+          tools={TOOLS}
+          activeTools={toolsOn}
+          onActiveToolsChange={(next, change) => {
+            setToolsOn(next);
+            setLastTool(`${TOOLS.find((t) => t.id === change.tool)?.label ?? change.tool} ${change.active ? "on" : "off"}`);
+          }}
+          showTemporary
+          temporary={temporary}
+          onTemporaryChange={setTemporary}
+          disclaimer="AI can make mistakes. Check important info."
+          demo
+          onSend={(text: string, d: ChatSendDetails) =>
+            setLastTool(`Sent “${text}” with ${d.activeTools.length ? d.activeTools.map((id) => TOOLS.find((t) => t.id === id)?.label ?? id).join(", ") : "no tools"}${d.temporary ? " · not saved" : ""}`)
+          }
+        />
+        <p style={{ ...caption, margin: 0 }} aria-live="polite">
+          {lastTool || "Open Tools to switch web search, research, thinking or images on; the dashed bubble at the end makes the chat temporary."}
+        </p>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: react-twin
-related: model-picker, mention-picker, prompt-library, context-tray
+related: model-picker, mention-picker, prompt-library, context-tray, memory-panel
 ---
 
 ## Overview
@@ -17,6 +17,12 @@ menu, to fit a 320 px side pane. With `skills` set, people start a message with 
 pressing the / button) lists them, recent ones first, then by source; a pick puts “/translate” at the start of the
 message with what to type next greyed after it, and the skill and its arguments ride on the send.
 
+With `tools` set, a “Tools” button in the toolbar row opens switches for what the model may use on this message –
+web search, deep research, thinking longer, creating an image. The tools that are on follow the button as chips, each
+removed with a press, and their ids ride on the send. With `show-temporary`, a toggle at the end of the row makes the
+chat temporary: a quiet line above the box says “Temporary chat · Not saved to history or memory”, the box's edge
+turns dashed, and `temporary` rides on the send – keeping it out of history and memory is the app's part.
+
 With `limit` set, sending is held back but nothing is lost: the field stays editable so the draft is kept, Send is
 `aria-disabled` with the reason as its description, and a notice above the composer says why. A message limit reads
 “You've reached your message limit · resets at 14:00 (in 2 h 10 min)” – the countdown kept fresh – with an optional
@@ -31,6 +37,10 @@ action such as Upgrade; a trial that's over says so, with Upgrade as its primary
   toolbar, and leave out what the pane doesn't offer with `hide-connect-apps`, `hide-project` and `hide-approval`.
 - An agent with skills or slash commands – set `skills` (and `searchSkills` when the catalogue lives on a server), so
   people can find one by name or by what it does, without knowing the list by heart.
+- When the model can do more on request – search the web, research, think longer, make an image – and people should
+  choose per message: set `tools` (`exclusive-tools` when only one mode can run at a time).
+- When people should be able to ask something without it being kept – set `show-temporary` and honour `temporary`
+  on the send.
 - A plan with a message limit, or a free trial – set `limit` when people can't send right now, so they keep their
   draft and know when they can.
 
@@ -41,6 +51,8 @@ action such as Upgrade; a trial that's over says so, with Upgrade as its primary
 - Asking for permission at the moment an agent acts – use `permission-request`.
 - Editing generation settings as a page of their own, not from the composer – use `model-settings`.
 - Commands that act on the app rather than on the message (open a file, switch a page) – use `command-menu`.
+- Deciding which tools an agent may use across a workspace, with allow / ask / deny – use `tool-permissions`.
+- Showing or editing what the assistant already remembers – use `memory-panel`.
 
 ## Anatomy
 
@@ -53,6 +65,10 @@ action such as Upgrade; a trial that's over says so, with Upgrade as its primary
 7. **Page context** `.ui-chat-composer__page` – connects or disconnects what's on the page; the button beside it shows what's attached
 8. **Limit** `.ui-chat-composer__limit` – with `limit` set, the notice above the composer: why sending is held back,
    when it resets, and the action `.ui-chat-composer__limit-action` (Upgrade, Learn more)
+9. **Tools** `.ui-chat-composer__tool[data-tool="tools"]` – with `tools` set, opens the menu of tool switches
+   `.ui-chat-composer__tool-item`; the tools that are on follow it as chips `.ui-chat-composer__chip`
+10. **Temporary chat** `.ui-chat-composer__temp-btn` – with `show-temporary`, the toggle at the end of the row; while
+    it's on, the line `.ui-chat-composer__temp` above the composer and a dashed edge on the box
 
 Under the row, `disclaimer` adds one quiet line. Once a skill is picked, its token `.ui-chat-composer__token` – a
 tint behind “/name” at the start of the message – and its argument hint `.ui-chat-composer__arg` show in the text
@@ -69,7 +85,9 @@ width, and the message shows one line and grows to two. Clean is one white card 
 sizes: the message on top, growing up to four lines, the tools in a row below it, and a quiet last row that connects
 apps and then lets you pick a project; its icons are 16 px glyphs with thin lines and solid shapes. In the toolbar
 row, Standard tints the connected page context chip in the accent; Clean raises it as a white chip with an accent
-eye, and draws the tool icons in a quieter gray with thinner lines. The skills list is mention-picker's, in the same
+eye, and draws the tool icons in a quieter gray with thinner lines. Tool chips follow the page chip: an accent tint
+in Standard, a raised white chip with an accent icon in Clean. A temporary chat dashes the card's border in Standard
+and draws a dashed hairline around the card in Clean. The skills list is mention-picker's, in the same
 look: Standard sets it on a gray tray, Clean is one white popover. The token is the same accent tint in both.
 
 ## Keyboard
@@ -86,7 +104,9 @@ look: Standard sets it on a gray tray, Clean is one white popover. The token is 
 | ← / → | In the toolbar row: the previous or next tool, wrapping at the ends |
 | Home / End | In the toolbar row: the first or last tool |
 | Enter / Space | On a toolbar button: opens its popover (focus moves into it), or toggles the page context |
-| ↓ / ↑ | In the “More” menu: the next or previous entry. Home / End: the first or last |
+| ↓ / ↑ | In the “More” or Tools menu: the next or previous entry. Home / End: the first or last |
+| Enter / Space | On a tool in the Tools menu: switches it on or off – the menu stays open. On a tool chip: switches it off, focus back on Tools |
+| Enter / Space | On the temporary-chat toggle: turns the temporary chat on or off. Escape hides its tooltip |
 | / | With `skills` set, at the start of a line: opens the skills list. Before a skill's token: a / takes its place and the list offers to replace it; Escape puts the token back |
 | ↓ / ↑, Enter / Tab, Escape | In the skills list: move, pick, close – the message keeps focus (`mention-picker`) |
 | Backspace | Right after a skill's token (or the space after it): removes the token whole |
@@ -119,7 +139,13 @@ Q3 report, 4 items” or “Page context: Q3 report, off” – and is described
 this page. Press to disconnect it.”); turning it on or off is announced: “Page context on: Q3 report.”, “Page
 context off.” The button beside it is “Show what's attached from the page (4)” and opens a dialog named “Attached from
 Q3 report”. When the row is folded, the icon buttons keep these names; “More” has `aria-haspopup="menu"` and opens a
-`menu` of `menuitem`s. A used prompt is announced (“Summarise added to your message.”). The disclaimer describes the
+`menu` of `menuitem`s. “Tools” has `aria-haspopup="menu"` and opens a `menu` named “Tools” of
+`menuitemcheckbox`es (`menuitemradio`s with `exclusive-tools`) with `aria-checked`, each named by its tool and
+described by its description; while tools are on, the button is described by them (“On: Web search, Think longer”). A chip is named
+“Web search, remove”. Switching is said: “Web search on.”, “Web search off.” The temporary-chat toggle is “Temporary
+chat” with `aria-pressed`, described by “Not saved to history or memory”; its tooltip is hidden from screen readers.
+Turning it on or off is said, whoever does it: “Temporary chat on. This chat won't be saved to history or memory.”,
+“Temporary chat off.” A used prompt is announced (“Summarise added to your message.”). The disclaimer describes the
 message field (`aria-describedby`), so it's read with it.
 
 With skills, the text area stays focused and is the combobox: mention-picker gives it `aria-autocomplete="list"`,
@@ -146,6 +172,9 @@ the token's tint is hidden from screen readers.
   plugin's name.
 - Write `argumentHint` as the thing to type in angle brackets: “<language>”, “<pr number>”. Leave it out when the
   skill takes nothing.
+- Name tools for what they do, in two or three words – “Web search”, “Deep research”, “Think longer” – with a
+  one-line `description` of the difference it makes. Keep it to a handful; tools the model always uses don't need a
+  switch.
 - Leave the limit's sentence to the composer, or say what's specific in `message`: “You've used your 40 messages for
   today”. Name the action for what it does – “Upgrade”, “See plans”, “Learn more”.
 
@@ -162,6 +191,8 @@ the token's tint is hidden from screen readers.
   on the page.
 - Read `skill` and `args` from `onSend`'s details (or tc-send) to run the skill; `message` still has the whole text.
 - Give `limit.resetsAt` whenever the limit resets on its own, and clear `limit` the moment people can send again.
+- Read `activeTools` and `temporary` from `onSend`'s details, and keep a temporary chat out of history, memory and
+  training on your side – the composer only says it.
 
 ## Don't
 
@@ -175,6 +206,8 @@ the token's tint is hidden from screen readers.
 - Don't put a / trigger in `mentions` next to `skills` – skills take the / key.
 - Don't hide the / button unless your product teaches the shortcut somewhere else.
 - Don't clear or disable the message field when a limit is reached – the draft is people's work; `limit` keeps it.
+- Don't offer the temporary toggle unless your app really keeps those chats out of history and memory.
+- Don't switch tools on behind people's backs – set `activeTools` from what they chose, or from a mode they picked.
 
 ## Example
 
@@ -212,6 +245,16 @@ the token's tint is hidden from screen readers.
   // Out of messages until 14:00: the draft stays, Send waits, the notice says when
   composer.limit = { kind: "limit", resetsAt: new Date().setHours(14, 0, 0, 0), action: "Upgrade" };
   composer.addEventListener("tc-limit-action", () => (location.href = "/plans"));
+
+  // Tools and a temporary chat: both ride on tc-send
+  composer.tools = [
+    { id: "web", label: "Web search", description: "Look things up on the web" },
+    { id: "think", label: "Think longer", description: "Plan before answering" },
+  ];
+  composer.activeTools = ["web"];
+  composer.showTemporary = true;
+  composer.addEventListener("tc-active-tools-change", (e) => console.log("tools", e.detail.activeTools));
+  composer.addEventListener("tc-temporary-change", (e) => console.log("temporary", e.detail.temporary));
 </script>
 ```
 
@@ -231,7 +274,7 @@ export function Composer({
   trialOver,
   openCheckout,
 }: {
-  send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>;
+  send: (text: string, model: string, withPage: boolean, skill?: string, tools?: string[], temporary?: boolean) => Promise<void>;
   pickFiles: () => void;
   trialOver: boolean;
   openCheckout: () => void;
@@ -241,6 +284,8 @@ export function Composer({
   const [model, setModel] = useState("claude");
   const [settings, setSettings] = useState<Record<string, number | string>>({ temperature: 0.7 });
   const [page, setPage] = useState<ChatPageContext>({ title: "Q3 report", connected: true, count: 4 });
+  const [tools, setTools] = useState<string[]>([]);
+  const [temporary, setTemporary] = useState(false);
   return (
     <ChatComposer
       placeholder="Ask anything…"
@@ -260,7 +305,16 @@ export function Composer({
       skills={skills}
       recentSkills={recent}
       onSkillChange={(skill, reason) => skill && reason === "pick" && setRecent((r) => [skill.id, ...r.filter((id) => id !== skill.id)])}
-      onSend={(text, { model, skill, args }) => send(skill ? args : text, model, page.connected, skill?.id)}
+      tools={[
+        { id: "web", label: "Web search", description: "Look things up on the web" },
+        { id: "think", label: "Think longer", description: "Plan before answering" },
+      ]}
+      activeTools={tools}
+      onActiveToolsChange={setTools}
+      showTemporary
+      temporary={temporary}
+      onTemporaryChange={setTemporary}
+      onSend={(text, { model, skill, args, activeTools, temporary }) => send(skill ? args : text, model, page.connected, skill?.id, activeTools, temporary)}
       onAttach={pickFiles}
       onConnectApps={() => fetch("/api/connect", { method: "POST" })}
       onRequestApproval={() => fetch("/api/approve", { method: "POST" })}

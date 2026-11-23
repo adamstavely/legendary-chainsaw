@@ -533,7 +533,7 @@
    "setTimeout (message-actions)"
   ],
   "frames": [],
-  "animations": 3,
+  "animations": 4,
   "observers": [
    "ResizeObserver (message-actions)",
    "MutationObserver (message-actions)",
@@ -559,7 +559,7 @@
   "windowed": false
  },
  "size": {
-  "min": 89247,
-  "gzip": 22037
+  "min": 93207,
+  "gzip": 23162
  }
 }

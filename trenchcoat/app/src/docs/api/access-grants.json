@@ -1,0 +1,550 @@
+{
+ "elements": [
+  {
+   "tag": "tc-access-grants",
+   "className": "TcAccessGrants",
+   "description": "The standing access an assistant or agent has – by source, with scope, level, who granted it, last use and expiry –\nwith a \"changed since you agreed\" notice, Review, Renew and Revoke.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Access\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "One line under the heading – whose access this is",
+     "readonly": false
+    },
+    {
+     "name": "grants",
+     "attribute": null,
+     "type": "AccessGrant[]",
+     "default": "[]",
+     "description": "The grants. Revoking one, or refusing a change, removes it unless the event is prevented",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "AccessGrantsFilter",
+     "default": "\"all\"",
+     "description": "Which grants show: all, changed since agreed, or expiring soon (and expired)",
+     "readonly": false
+    },
+    {
+     "name": "expiringDays",
+     "attribute": "expiring-days",
+     "type": "number",
+     "default": "7",
+     "description": "How many days ahead counts as expiring soon",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time to measure against, epoch ms; by default the element's own clock",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<AccessGrantsLabels>",
+     "default": "{}",
+     "description": "The words it uses, merged over defaultAccessGrantsLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "A tab was chosen ({ filter }: AccessGrantsFilterChange); cancelable – prevented, the tab stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-revoke",
+     "detail": "",
+     "description": "Revoke was confirmed ({ grant }: AccessGrantRevoke); cancelable – unless prevented, the grant leaves `grants`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-renew",
+     "detail": "",
+     "description": "Renew was pressed on a grant that expires soon or has expired ({ grant }: AccessGrantRenew); set its new `expiresAt` in answer",
+     "cancelable": false
+    },
+    {
+     "name": "tc-drift-review",
+     "detail": "",
+     "description": "A changed grant was reviewed ({ grant, accepted }: AccessGrantDriftReview); cancelable – unless prevented, accepting clears `changed` and refusing removes the grant",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "acg",
+   "cssProperties": [
+    {
+     "name": "--tc-acg-logo",
+     "value": "20px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-acg-indicator",
+     "value": "2px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AccessGrants",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "grants",
+     "type": "AccessGrant[]",
+     "optional": true,
+     "description": "The grants. A revoke or a refused change takes the grant out of the list shown, until `grants` changes"
+    },
+    {
+     "name": "filter",
+     "type": "AccessGrantsFilter",
+     "optional": true,
+     "description": "Which grants show – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "AccessGrantsFilter",
+     "optional": true,
+     "description": "The tab on mount, when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: AccessGrantsFilter) => void",
+     "optional": true,
+     "description": "A tab was chosen"
+    },
+    {
+     "name": "onRevoke",
+     "type": "(grant: AccessGrant) => boolean | void",
+     "optional": true,
+     "description": "Revoke was confirmed; return false to keep the grant in the list"
+    },
+    {
+     "name": "onRenew",
+     "type": "(grant: AccessGrant) => void",
+     "optional": true,
+     "description": "Renew was pressed – give the grant a new `expiresAt`"
+    },
+    {
+     "name": "onDriftReview",
+     "type": "(grant: AccessGrant, accepted: boolean) => boolean | void",
+     "optional": true,
+     "description": "A changed grant was reviewed: accepted, or refused (which revokes it); return false to leave it as it is"
+    }
+   ],
+   "hides": [
+    "heading",
+    "grants",
+    "filter",
+    "children"
+   ],
+   "events": {
+    "tc-filter-change": null,
+    "tc-revoke": "onRevoke",
+    "tc-renew": "onRenew",
+    "tc-drift-review": "onDriftReview"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-access-grants",
+   "className": "TcAccessGrants",
+   "module": "@adamstavely/trenchcoat/access-grants",
+   "data": [
+    "grants",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "expiringDays",
+     "attribute": "expiring-days"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-revoke",
+     "cancelable": true
+    },
+    {
+     "name": "tc-renew",
+     "cancelable": false
+    },
+    {
+     "name": "tc-drift-review",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 34843,
+  "gzip": 11120
+ }
+}

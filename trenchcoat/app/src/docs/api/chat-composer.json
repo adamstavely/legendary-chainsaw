@@ -262,6 +262,46 @@
      "readonly": false
     },
     {
+     "name": "tools",
+     "attribute": null,
+     "type": "ChatTool[] | undefined",
+     "default": "undefined",
+     "description": "Opt-in: the tools a message can use – a \"Tools\" button in the toolbar row opens their switches (unset: no button)",
+     "readonly": false
+    },
+    {
+     "name": "activeTools",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids of the tools that are on, shown as chips; the composer updates it unless tc-active-tools-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "exclusiveTools",
+     "attribute": "exclusive-tools",
+     "type": "boolean",
+     "default": "false",
+     "description": "One tool at a time: switching one on switches the others off",
+     "readonly": false
+    },
+    {
+     "name": "temporary",
+     "attribute": "temporary",
+     "type": "boolean",
+     "default": "false",
+     "description": "A temporary chat – not saved to history or memory: a line above the composer says so and its edge turns dashed",
+     "readonly": false
+    },
+    {
+     "name": "showTemporary",
+     "attribute": "show-temporary",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show the temporary-chat toggle at the end of the toolbar row",
+     "readonly": false
+    },
+    {
      "name": "pickedSkill",
      "attribute": null,
      "type": "ChatSkill | null",
@@ -294,7 +334,7 @@
     {
      "name": "tc-send",
      "detail": "",
-     "description": "A message was sent (`ChatSend`: `{ message, model, skill, args }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token); `onSend` may return a promise to keep it until it settles",
+     "description": "A message was sent (`ChatSend`: `{ message, model, skill, args, activeTools, temporary }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token, `activeTools` the tools that were on); `onSend` may return a promise to keep it until it settles",
      "cancelable": false
     },
     {
@@ -356,6 +396,18 @@
      "detail": "",
      "description": "The trial-ended notice's action was pressed (`ChatLimitAction`: `{ limit }`)",
      "cancelable": false
+    },
+    {
+     "name": "tc-active-tools-change",
+     "detail": "",
+     "description": "A tool was switched on or off in the Tools menu or by its chip (`ChatActiveToolsChange`: `{ activeTools, tool, active }`); cancelable – prevent it to control `activeTools`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-temporary-change",
+     "detail": "",
+     "description": "The temporary-chat toggle was pressed (`ChatTemporaryChange`: `{ temporary }`); cancelable – prevent it to control `temporary`",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -445,6 +497,7 @@
     "--tc-action-secondary-fg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
+    "--tc-border-control-hover",
     "--tc-border-default",
     "--tc-border-strong",
     "--tc-card-radius",
@@ -475,6 +528,7 @@
     "--tc-ease-spring",
     "--tc-ease-standard",
     "--tc-fill-default",
+    "--tc-fill-selected",
     "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring",
@@ -530,6 +584,12 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
     "--tc-tray-radius",
     "--tc-z-dropdown"
    ]
@@ -714,6 +774,48 @@
      "type": "(limit: ChatLimitAction[\"limit\"]) => void",
      "optional": true,
      "description": "The trial-ended notice's action was pressed"
+    },
+    {
+     "name": "tools",
+     "type": "ChatTool[]",
+     "optional": true,
+     "description": "Opt-in: the tools a message can use – a \"Tools\" button in the toolbar row opens their switches"
+    },
+    {
+     "name": "activeTools",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ids of the tools that are on (controlled). Leave undefined to let the composer keep them, starting at `defaultActiveTools`"
+    },
+    {
+     "name": "defaultActiveTools",
+     "type": "string[]",
+     "optional": true,
+     "description": "The tools that are on at first when uncontrolled"
+    },
+    {
+     "name": "onActiveToolsChange",
+     "type": "(activeTools: string[], change: { tool: string; active: boolean }) => void",
+     "optional": true,
+     "description": "A tool was switched on or off: the tools on now, and which one changed"
+    },
+    {
+     "name": "temporary",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the chat is temporary – not saved to history or memory (controlled). Leave undefined to let the composer keep it"
+    },
+    {
+     "name": "defaultTemporary",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the chat starts temporary when uncontrolled"
+    },
+    {
+     "name": "onTemporaryChange",
+     "type": "(temporary: boolean) => void",
+     "optional": true,
+     "description": "The temporary-chat toggle was pressed"
     }
    ],
    "hides": [
@@ -726,7 +828,10 @@
     "skills",
     "searchSkills",
     "skill",
-    "onSend"
+    "onSend",
+    "tools",
+    "activeTools",
+    "temporary"
    ],
    "events": {
     "tc-value-change": "onValueChange",
@@ -740,7 +845,9 @@
     "tc-page-context-change": null,
     "tc-skill-change": null,
     "tc-limit-action": "onLimitAction",
-    "tc-trial-action": "onTrialAction"
+    "tc-trial-action": "onTrialAction",
+    "tc-active-tools-change": null,
+    "tc-temporary-change": null
    }
   }
  ],
@@ -769,7 +876,9 @@
     "settingsModel",
     "prompts",
     "pageContext",
-    "limit"
+    "limit",
+    "tools",
+    "activeTools"
    ],
    "attributes": [
     {
@@ -839,6 +948,18 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "exclusiveTools",
+     "attribute": "exclusive-tools"
+    },
+    {
+     "name": "temporary",
+     "attribute": "temporary"
+    },
+    {
+     "name": "showTemporary",
+     "attribute": "show-temporary"
     }
    ],
    "events": [
@@ -893,6 +1014,14 @@
     {
      "name": "tc-trial-action",
      "cancelable": false
+    },
+    {
+     "name": "tc-active-tools-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-temporary-change",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -915,6 +1044,14 @@
     {
      "property": "pageContext",
      "event": "tc-page-context-change"
+    },
+    {
+     "property": "activeTools",
+     "event": "tc-active-tools-change"
+    },
+    {
+     "property": "temporary",
+     "event": "tc-temporary-change"
     }
    ],
    "form": {
@@ -1395,7 +1532,7 @@
   "windowed": false
  },
  "size": {
-  "min": 382179,
-  "gzip": 89065
+  "min": 393363,
+  "gzip": 91173
  }
 }

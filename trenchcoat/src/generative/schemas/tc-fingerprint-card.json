@@ -31,6 +31,7 @@
     "selected": {
       "type": "number",
       "enum": [
+        7,
         1,
         5,
         9,
@@ -39,8 +40,7 @@
         3,
         6,
         10,
-        4,
-        7
+        4
       ],
       "description": "The finger whose detail is open. Changed by the user unless a tc-selected-change listener calls preventDefault()"
     },

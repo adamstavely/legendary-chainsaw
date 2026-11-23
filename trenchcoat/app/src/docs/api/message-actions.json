@@ -62,6 +62,30 @@
      "readonly": false
     },
     {
+     "name": "refinements",
+     "attribute": null,
+     "type": "MessageRefinement[]",
+     "default": "[ { id: \"shorter\", label: \"Shorter\" }, { id: \"longer\", label: \"Longer\" }, { id: \"simpler\", label: \"Simpler\" }, { id: \"formal\", label: \"More formal\" }, { id: \"casual\", label: \"More casual\" }, { id: \"detail\", label: \"Add detail\" }, ]",
+     "description": "The rewrites Refine offers, in order (with \"refine\" in `actions`)",
+     "readonly": false
+    },
+    {
+     "name": "onRefine",
+     "attribute": null,
+     "type": "((refinement: string, options: { signal: AbortSignal }) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called with the rewrite's id when one is picked in Refine – add the rewrite as a new version and the switcher jumps\nto it. Return a promise to keep the wand busy until it settles; a rejection says \"Couldn't rewrite\". `signal` aborts\nwhen the element is removed",
+     "readonly": false
+    },
+    {
+     "name": "refining",
+     "attribute": "refining",
+     "type": "boolean",
+     "default": "false",
+     "description": "Keeps the Refine wand busy while a rewrite is written",
+     "readonly": false
+    },
+    {
      "name": "onFeedback",
      "attribute": null,
      "type": "((kind: FeedbackKind | null, reason?: string) => void | Promise<unknown>) | undefined",
@@ -202,6 +226,12 @@
      "detail": "",
      "description": "Undo was pressed after a report; detail `{ reason, details }` (MessageReportDetail)",
      "cancelable": false
+    },
+    {
+     "name": "tc-refine",
+     "detail": "",
+     "description": "A rewrite was picked in Refine; detail `{ refinement }` (MessageRefineDetail). Cancelable – prevented, `onRefine` isn't called and nothing runs",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -432,6 +462,11 @@
  ],
  "functions": [
   {
+   "name": "defaultRefinements",
+   "signature": "defaultRefinements: MessageRefinement[]",
+   "description": "Refine's rewrites, in order – `refinements` replaces them"
+  },
+  {
    "name": "defaultReportLabels",
    "signature": "defaultReportLabels: Record<ReportReason, string>",
    "description": "The report form's reasons, in order – `reportLabels` renames them"
@@ -471,6 +506,12 @@
      "type": "(report: MessageReportDetail) => void",
      "optional": true,
      "description": "Called when Undo withdraws a report"
+    },
+    {
+     "name": "onRefinePick",
+     "type": "(refinement: string) => void | boolean",
+     "optional": true,
+     "description": "Called with the rewrite's id when one is picked in Refine, before `onRefine`. Return false to cancel the pick"
     }
    ],
    "hides": [
@@ -481,7 +522,8 @@
     "tc-copy": "onCopy",
     "tc-speak": "onSpeak",
     "tc-report": "onReport",
-    "tc-report-undo": "onReportUndo"
+    "tc-report-undo": "onReportUndo",
+    "tc-refine": "onRefinePick"
    }
   },
   {
@@ -511,7 +553,8 @@
     "tc-copy": "onTcCopy",
     "tc-speak": "onTcSpeak",
     "tc-report": "onTcReport",
-    "tc-report-undo": "onTcReportUndo"
+    "tc-report-undo": "onTcReportUndo",
+    "tc-refine": "onTcRefine"
    }
   }
  ],
@@ -527,6 +570,8 @@
     "actions",
     "versions",
     "onRegenerate",
+    "refinements",
+    "onRefine",
     "onFeedback",
     "feedback",
     "defaultFeedback",
@@ -549,6 +594,10 @@
     {
      "name": "regenerating",
      "attribute": "regenerating"
+    },
+    {
+     "name": "refining",
+     "attribute": "refining"
     },
     {
      "name": "ownSpeech",
@@ -603,6 +652,10 @@
     {
      "name": "tc-report-undo",
      "cancelable": false
+    },
+    {
+     "name": "tc-refine",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -842,7 +895,7 @@
    "setTimeout"
   ],
   "frames": [],
-  "animations": 2,
+  "animations": 3,
   "observers": [
    "ResizeObserver",
    "MutationObserver",
@@ -863,7 +916,7 @@
   "windowed": false
  },
  "size": {
-  "min": 64460,
-  "gzip": 16352
+  "min": 68446,
+  "gzip": 17428
  }
 }

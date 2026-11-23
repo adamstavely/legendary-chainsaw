@@ -117,13 +117,13 @@
         "cancelled": {
           "type": "string"
         },
+        "empty": {
+          "type": "string"
+        },
         "duration": {
           "type": "string"
         },
         "status": {
-          "type": "string"
-        },
-        "empty": {
           "type": "string"
         },
         "models": {

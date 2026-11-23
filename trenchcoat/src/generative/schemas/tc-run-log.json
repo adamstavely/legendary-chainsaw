@@ -125,10 +125,10 @@
         "24h": {
           "type": "string"
         },
-        "duration": {
+        "empty": {
           "type": "string"
         },
-        "empty": {
+        "duration": {
           "type": "string"
         },
         "error": {

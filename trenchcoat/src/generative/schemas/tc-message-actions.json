@@ -42,6 +42,17 @@
       "type": "boolean",
       "description": "Keeps the regenerate arrow spinning while a new version is written"
     },
+    "refinements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MessageRefinement"
+      },
+      "description": "The rewrites Refine offers, in order (with \"refine\" in `actions`)"
+    },
+    "refining": {
+      "type": "boolean",
+      "description": "Keeps the Refine wand busy while a rewrite is written"
+    },
     "feedback": {
       "type": "string",
       "enum": [
@@ -123,9 +134,27 @@
       "enum": [
         "copy",
         "feedback",
+        "refine",
         "regenerate",
         "speak"
       ]
+    },
+    "MessageRefinement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One way to rewrite a reply, offered by Refine"
     }
   }
 }

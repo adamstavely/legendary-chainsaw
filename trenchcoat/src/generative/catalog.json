@@ -1,5 +1,16 @@
 [
   {
+    "tag": "tc-access-grants",
+    "name": "AccessGrants",
+    "description": "The standing access an assistant or agent has – by source, with scope, level, who granted it, last use and expiry –",
+    "events": [
+      "tc-filter-change",
+      "tc-revoke",
+      "tc-renew",
+      "tc-drift-review"
+    ]
+  },
+  {
     "tag": "tc-access-request",
     "name": "AccessRequest",
     "description": "A request for access to one piece of data – the resource and its classification, the level, how long, a",
@@ -308,6 +319,16 @@
       "tc-value-change",
       "tc-preview",
       "tc-create"
+    ]
+  },
+  {
+    "tag": "tc-ai-disclosure",
+    "name": "AiDisclosure",
+    "description": "Marks AI-made content – an inline badge that opens what made it, its limits and whether a person reviewed it – or",
+    "events": [
+      "tc-open-change",
+      "tc-report",
+      "tc-dismiss"
     ]
   },
   {
@@ -2388,7 +2409,9 @@
       "tc-memories-change",
       "tc-enabled-change",
       "tc-consent",
-      "tc-action"
+      "tc-action",
+      "tc-tone-change",
+      "tc-instructions-change"
     ]
   },
   {
@@ -2409,7 +2432,8 @@
       "tc-feedback",
       "tc-speak",
       "tc-report",
-      "tc-report-undo"
+      "tc-report-undo",
+      "tc-refine"
     ]
   },
   {
@@ -2706,6 +2730,17 @@
       "tc-view-change",
       "tc-mark-hover",
       "tc-mark-click"
+    ]
+  },
+  {
+    "tag": "tc-partial-results",
+    "name": "PartialResults",
+    "description": "A bulk run that partly finished: what finished, what didn't and why, and a way to retry the rest.",
+    "events": [
+      "tc-collapsed-change",
+      "tc-retry",
+      "tc-continue",
+      "tc-export"
     ]
   },
   {
@@ -3281,6 +3316,17 @@
       "tc-undo",
       "tc-index-change",
       "tc-results-change"
+    ]
+  },
+  {
+    "tag": "tc-revision-loop",
+    "name": "RevisionLoop",
+    "description": "An agent improving its own work against a stated bar, round by round, with a visible end.",
+    "events": [
+      "tc-expanded-change",
+      "tc-stop",
+      "tc-accept",
+      "tc-extend"
     ]
   },
   {

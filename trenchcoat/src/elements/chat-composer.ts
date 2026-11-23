@@ -19,6 +19,7 @@ import { FocusRescueController, ToolbarController, rescueFocus } from "./interna
 import { compact } from "./internal/format";
 import type { Look } from "./internal/look";
 import { PopoverController } from "./internal/popover";
+import { hushTip, unhushTip } from "./internal/trigger-tip";
 
 /*
  * <tc-chat-composer> – the Lit port of src/components/chat-composer.tsx: the message box of an AI chat, with a model
@@ -66,6 +67,17 @@ import { PopoverController } from "./internal/popover";
  * notice above the composer says why – "You've reached your message limit · resets at 14:00 (in 2 h 10 min)", the
  * time kept fresh (or following `now`) – with an optional action (tc-limit-action). A trial that's over says so, with
  * its primary action (tc-trial-action). The notice is said once when it appears.
+ *
+ * Tools – `tools` (ChatTool[]) puts a "Tools" button in the toolbar row: a menu of switches (web search, deep
+ * research, think longer, create image…) – menuitemcheckbox, or menuitemradio with `exclusive-tools` (one at a time,
+ * and pressing the chosen one turns it off). The chosen tools follow the button as chips; a chip's press removes it.
+ * `activeTools` holds the chosen ids in the order of `tools`; every change is a cancelable tc-active-tools-change, and
+ * tc-send and onSend carry `activeTools`.
+ *
+ * Temporary chat – `show-temporary` puts a toggle at the end of the toolbar row (aria-pressed, with a tooltip). While
+ * `temporary` is on, a quiet line above the composer says the chat isn't saved to history or memory and the composer's
+ * edge turns dashed. Toggling it is a cancelable tc-temporary-change; tc-send and onSend carry `temporary`. Turning it
+ * on or off is said, whoever does it.
  */
 
 type Step = "idle" | "loading" | "done";
@@ -106,7 +118,7 @@ export type ChatPromptPick = { prompt: string; template: PromptTemplate; values:
 /** tc-settings-change: the next settings and the parameter ids that changed */
 export type ChatSettingsChange = ModelSettingsChange;
 
-type Panel = "" | "settings" | "prompts" | "page" | "more";
+type Panel = "" | "settings" | "prompts" | "page" | "more" | "tools";
 
 /** An agent skill – a slash command a message can start with */
 export type ChatSkill = {
@@ -143,8 +155,31 @@ export type ChatLimit = {
 export type ChatLimitAction = { limit: ChatLimit };
 /** Finds skills for what's typed after the slash, on the app's side. The signal aborts when the query changes or the list closes */
 export type ChatSkillSearch = (query: string, options: { signal: AbortSignal }) => ChatSkill[] | Promise<ChatSkill[]>;
+/** A tool the message can use – a switch in the Tools menu, a chip while it's on */
+export type ChatTool = {
+  id: string;
+  /** Its name, e.g. "Web search" – on the switch and on the chip */
+  label: string;
+  /** An icon element, cloned for the menu and the chip */
+  icon?: Element;
+  /** One line under its name in the menu, e.g. "Look things up on the web" */
+  description?: string;
+};
+/** tc-active-tools-change: the chosen tools now (in the order of `tools`), and the one that was switched */
+export type ChatActiveToolsChange = { activeTools: string[]; tool: string; active: boolean };
+/** tc-temporary-change: whether the chat is temporary now */
+export type ChatTemporaryChange = { temporary: boolean };
 /** tc-send's detail, and onSend's details plus the message: `message` is the whole text, the token included */
-export type ChatSend = { message: string; model: string; skill: ChatSkillRef | null; args: string };
+export type ChatSend = {
+  message: string;
+  model: string;
+  skill: ChatSkillRef | null;
+  args: string;
+  /** The ids of the tools that were on, in the order of `tools` */
+  activeTools: string[];
+  /** Whether the chat is temporary – not to be saved to history or memory */
+  temporary: boolean;
+};
 /** What onSend gets after the message */
 export type ChatSendDetails = Omit<ChatSend, "message">;
 
@@ -246,7 +281,8 @@ const iconsFor = (clean: boolean) => ({
   cancel: clean ? cleanCancelIcon : stdCancelIcon,
 });
 
-/* Toolbar icons (Lucide, ISC): sliders, book-open, eye, eye-off, ellipsis, chevron-up – Clean draws thinner lines */
+/* Toolbar icons (Lucide, ISC): sliders, book-open, eye, eye-off, ellipsis, chevron-up, wrench, message-circle-dashed,
+   x, check – Clean draws thinner lines */
 const TOOL_PATHS = {
   settings: svg`<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"></path>`,
   prompts: svg`<path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>`,
@@ -254,6 +290,10 @@ const TOOL_PATHS = {
   off: svg`<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path><path d="m2 2 20 20"></path>`,
   more: svg`<circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle>`,
   items: svg`<path d="m18 15-6-6-6 6"></path>`,
+  tools: svg`<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>`,
+  temporary: svg`<path d="M13.5 3.1c-.5 0-1-.1-1.5-.1s-1 .1-1.5.1"></path><path d="M19.3 6.8a10.45 10.45 0 0 0-2.1-2.1"></path><path d="M20.9 13.5c.1-.5.1-1 .1-1.5s-.1-1-.1-1.5"></path><path d="M17.2 19.3a10.45 10.45 0 0 0 2.1-2.1"></path><path d="M10.5 20.9c.5.1 1 .1 1.5.1s1-.1 1.5-.1"></path><path d="M3.5 17.5 2 22l4.5-1.5"></path><path d="M3.1 10.5c0 .5-.1 1-.1 1.5s.1 1 .1 1.5"></path><path d="M6.8 4.7a10.45 10.45 0 0 0-2.1 2.1"></path>`,
+  remove: svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`,
+  check: svg`<path d="M20 6 9 17l-5-5"></path>`,
 };
 const toolIcon = (name: keyof typeof TOOL_PATHS, clean: boolean) =>
   html`<svg class="ui-chat-composer__tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${clean ? 1.5 : 1.75} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TOOL_PATHS[name]}</svg>`;
@@ -315,7 +355,7 @@ let uid = 0;
  * @tag tc-chat-composer
  * @fires tc-value-change - The message changed (`{ value: string }`) – typing, dictation, clearing after a send; cancelable – prevent it to keep `value` (controlled use)
  * @fires tc-model-change - A model was picked in the menu (`{ model: string; choice: ChatModel }`); cancelable
- * @fires tc-send - A message was sent (`ChatSend`: `{ message, model, skill, args }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token); `onSend` may return a promise to keep it until it settles
+ * @fires tc-send - A message was sent (`ChatSend`: `{ message, model, skill, args, activeTools, temporary }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token, `activeTools` the tools that were on); `onSend` may return a promise to keep it until it settles
  * @fires tc-skill-change - The message's skill changed (`ChatSkillChange`: `{ skill, previous, reason }`); cancelable when it was picked, replaced or removed – prevent it to keep the message as it is
  * @fires tc-attach - The plus button was pressed – open your own file or folder picker here; detail: null
  * @fires tc-connect-apps - "Connect apps" was pressed; `onConnectApps` may return a promise it waits for; detail: null
@@ -326,6 +366,8 @@ let uid = 0;
  * @fires tc-page-context-change - The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext`
  * @fires tc-limit-action - The limit notice's action was pressed – upgrade, learn more (`ChatLimitAction`: `{ limit }`)
  * @fires tc-trial-action - The trial-ended notice's action was pressed (`ChatLimitAction`: `{ limit }`)
+ * @fires tc-active-tools-change - A tool was switched on or off in the Tools menu or by its chip (`ChatActiveToolsChange`: `{ activeTools, tool, active }`); cancelable – prevent it to control `activeTools`
+ * @fires tc-temporary-change - The temporary-chat toggle was pressed (`ChatTemporaryChange`: `{ temporary }`); cancelable – prevent it to control `temporary`
  */
 export class TcChatComposer extends TcElement {
   static override ui = "chat-composer";
@@ -406,6 +448,16 @@ export class TcChatComposer extends TcElement {
   @property({ type: Number }) accessor now: number | undefined = undefined;
   /** The locale for the limit's reset time – the browser's when unset */
   @property() accessor locale: string | undefined = undefined;
+  /** Opt-in: the tools a message can use – a "Tools" button in the toolbar row opens their switches (unset: no button) */
+  @property({ attribute: false }) accessor tools: ChatTool[] | undefined = undefined;
+  /** The ids of the tools that are on, shown as chips; the composer updates it unless tc-active-tools-change is prevented */
+  @property({ attribute: false }) accessor activeTools: string[] = [];
+  /** One tool at a time: switching one on switches the others off */
+  @property({ type: Boolean, attribute: "exclusive-tools" }) accessor exclusiveTools = false;
+  /** A temporary chat – not saved to history or memory: a line above the composer says so and its edge turns dashed */
+  @property({ type: Boolean }) accessor temporary = false;
+  /** Show the temporary-chat toggle at the end of the toolbar row */
+  @property({ type: Boolean, attribute: "show-temporary" }) accessor showTemporary = false;
 
   /** @internal The open toolbar popover */
   @state() accessor sheet: Panel = "";
@@ -460,7 +512,7 @@ export class TcChatComposer extends TcElement {
   };
 
   /** The toolbar row: one Tab stop, ← → Home End (the model picker's trigger is one of its items) */
-  private tools = new ToolbarController(this, {
+  private roving = new ToolbarController(this, {
     items: () => [...this.querySelectorAll<HTMLElement>(".ui-chat-composer__bar .ui-mdp__trigger, .ui-chat-composer__bar > .ui-chat-composer__tool")],
   });
   /** The settings, prompts, page items and More popovers – one at a time, anchored to the button that opened it */
@@ -471,7 +523,7 @@ export class TcChatComposer extends TcElement {
     side: "top",
     align: "start",
     // A panel (not the More menu): Shift + Tab from its first control back to its button, Tab from its last on past the toolbar
-    tabBridge: () => this.sheet !== "more",
+    tabBridge: () => this.sheet !== "more" && this.sheet !== "tools",
     onClose: () => {
       this.sheet = "";
     },
@@ -755,7 +807,13 @@ export class TcChatComposer extends TcElement {
     const message = text.trim();
     const picked = this.pickedSkill;
     const skill = picked && hasToken(text, picked) ? picked : null;
-    const details: ChatSendDetails = { model: this.current.id, skill: skill ? { id: skill.id, name: skill.name } : null, args: skill ? text.slice(tokenOf(skill).length).trim() : message };
+    const details: ChatSendDetails = {
+      model: this.current.id,
+      skill: skill ? { id: skill.id, name: skill.name } : null,
+      args: skill ? text.slice(tokenOf(skill).length).trim() : message,
+      activeTools: [...this.activeTools],
+      temporary: this.temporary,
+    };
     this.emit<ChatSend>("tc-send", { message, ...details });
     const result = this.onSend?.(message, details);
     this.textarea?.focus();
@@ -1069,7 +1127,7 @@ export class TcChatComposer extends TcElement {
   /* ---------- The toolbar row ---------- */
 
   private get hasToolbar() {
-    return this.modelSwitcher === "toolbar" || this.settings !== undefined || this.prompts !== undefined || this.pageContext !== undefined;
+    return this.modelSwitcher === "toolbar" || this.settings !== undefined || this.prompts !== undefined || this.pageContext !== undefined || this.tools !== undefined || this.showTemporary;
   }
   private get bar() {
     return this.querySelector<HTMLElement>(".ui-chat-composer__bar");
@@ -1169,6 +1227,42 @@ export class TcChatComposer extends TcElement {
     else e.preventDefault();
   };
 
+  /* ---------- Tools and the temporary chat ---------- */
+
+  /** The tools that are on, in the order of `tools` */
+  private get chosenTools(): ChatTool[] {
+    const on = new Set(this.activeTools);
+    return (this.tools ?? []).filter((t) => on.has(t.id));
+  }
+
+  /** Switches one tool on or off – from its menu switch or its chip */
+  private toggleTool(id: string) {
+    const tool = this.tools?.find((t) => t.id === id);
+    if (!tool) return;
+    const active = !this.activeTools.includes(id);
+    const set = new Set(active ? (this.exclusiveTools ? [id] : [...this.activeTools, id]) : this.activeTools.filter((t) => t !== id));
+    const known = (this.tools ?? []).map((t) => t.id);
+    // In the order of `tools`, with any ids the composer doesn't know kept at the end
+    const next = [...known.filter((t) => set.has(t)), ...[...set].filter((t) => !known.includes(t))];
+    if (!this.emit<ChatActiveToolsChange>("tc-active-tools-change", { activeTools: next, tool: id, active }, { cancelable: true })) return;
+    this.activeTools = next;
+    this.status = `${tool.label} ${active ? "on" : "off"}.`;
+  }
+
+  /** A chip's press: the tool goes off, and focus goes back to the Tools button once its chip is gone */
+  private removeTool(id: string) {
+    this.toggleTool(id);
+    void this.updateComplete.then(() => {
+      if (this.activeTools.includes(id)) return;
+      this.querySelector<HTMLElement>('.ui-chat-composer__bar [data-tool="tools"]')?.focus({ preventScroll: true });
+    });
+  }
+
+  private toggleTemporary = () => {
+    const temporary = !this.temporary;
+    if (this.emit<ChatTemporaryChange>("tc-temporary-change", { temporary }, { cancelable: true })) this.temporary = temporary;
+  };
+
   /**
    * Folds the toolbar until it fits – first to icons only, then settings and prompts into "More" – and unfolds a step
    * once there's room for it again. Each fold re-renders and is measured again (updated() → watchBar)
@@ -1188,7 +1282,7 @@ export class TcChatComposer extends TcElement {
   };
 
   private onMoreKey = (e: KeyboardEvent) => {
-    const items = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="menuitem"]')];
+    const items = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role^="menuitem"]')];
     const at = items.indexOf(e.target as HTMLElement);
     const last = items.length - 1;
     const to = e.key === "ArrowDown" ? (at + 1) % items.length : e.key === "ArrowUp" ? (at <= 0 ? last : at - 1) : e.key === "Home" ? 0 : e.key === "End" ? last : -1;
@@ -1216,6 +1310,9 @@ export class TcChatComposer extends TcElement {
     const before = changed.get("pageContext");
     const pc = this.pageContext;
     if (changed.has("pageContext") && before && pc && before.connected !== pc.connected) this.status = pc.connected ? `Page context on: ${pc.title}.` : "Page context off.";
+    // Turning the temporary chat on or off is said, whoever does it (the toggle, or the page through `temporary`)
+    if (changed.has("temporary") && this.hasUpdated)
+      this.status = this.temporary ? "Temporary chat on. This chat won't be saved to history or memory." : "Temporary chat off.";
   }
 
   protected override firstUpdated() {
@@ -1347,7 +1444,7 @@ export class TcChatComposer extends TcElement {
         this.barRo.observe(bar);
       }
     }
-    if (bar && (["pageContext", "settings", "prompts", "modelSwitcher", "model", "models", "look", "contextLook", "fold"] as const).some((k) => changed.has(k))) this.measureBar();
+    if (bar && (["pageContext", "settings", "prompts", "modelSwitcher", "model", "models", "look", "contextLook", "fold", "tools", "activeTools", "showTemporary"] as const).some((k) => changed.has(k))) this.measureBar();
   }
 
   /* ---------- Rendering ---------- */
@@ -1695,12 +1792,53 @@ export class TcChatComposer extends TcElement {
         : nothing}`;
   }
 
-  /** The row under the composer: model, settings, prompts (or More), and the page context chip at the end */
+  /** "Tools": opens the menu of tool switches */
+  private toolsButton(clean: boolean) {
+    const on = this.chosenTools.length;
+    return html`<button
+      type="button"
+      class="ui-chat-composer__tool"
+      data-tool="tools"
+      aria-haspopup="menu"
+      aria-expanded=${this.expanded("tools")}
+      aria-describedby=${ifDefined(on ? `${this.uid}-tools-on` : undefined)}
+      @click=${(e: Event) => this.openPanel("tools", e.currentTarget as HTMLElement)}
+    >
+      ${toolIcon("tools", clean)}<span class="ui-chat-composer__tool-label">Tools</span>
+    </button>`;
+  }
+
+  /** A chosen tool: its icon and name, and a press switches it off */
+  private toolChip(t: ChatTool, clean: boolean) {
+    return html`<button type="button" class="ui-chat-composer__tool ui-chat-composer__chip" data-tool-chip=${t.id} aria-label=${`${t.label}, remove`} @click=${() => this.removeTool(t.id)}>
+      ${t.icon ? html`<span class="ui-chat-composer__chip-icon" aria-hidden="true">${t.icon.cloneNode(true)}</span>` : nothing}<span class="ui-chat-composer__chip-label">${t.label}</span>${toolIcon("remove", clean)}
+    </button>`;
+  }
+
+  /** The temporary-chat toggle, at the end of the row, with its tooltip */
+  private temporaryButton(clean: boolean) {
+    return html`<button
+      type="button"
+      class="ui-chat-composer__tool ui-chat-composer__temp-btn"
+      data-tool="temporary"
+      aria-label="Temporary chat"
+      aria-pressed=${this.temporary ? "true" : "false"}
+      aria-describedby=${`${this.uid}-temp-hint`}
+      @keydown=${hushTip}
+      @pointerenter=${unhushTip}
+      @focus=${unhushTip}
+      @click=${this.toggleTemporary}
+    >
+      ${toolIcon("temporary", clean)}<span class="ui-chat-composer__tip" aria-hidden="true">Temporary chat – not saved to history or memory</span>
+    </button>`;
+  }
+
+  /** The row under the composer: model, tools and their chips, settings, prompts (or More), the page context chip and the temporary toggle at the end */
   private toolbar(clean: boolean) {
     const pc = this.pageContext;
     const more = this.fold === 2 && (this.settings !== undefined || this.prompts !== undefined);
     return html`<div class="ui-chat-composer__extras" data-fold=${this.fold}>
-      <div class="ui-chat-composer__bar" role="toolbar" aria-label="Message options" @keydown=${this.tools.onKeyDown} @focusin=${this.tools.onFocusIn}>
+      <div class="ui-chat-composer__bar" role="toolbar" aria-label="Message options" @keydown=${this.roving.onKeyDown} @focusin=${this.roving.onFocusIn}>
         ${this.modelSwitcher === "toolbar"
           ? html`<tc-model-picker
               class="ui-chat-composer__picker"
@@ -1716,8 +1854,12 @@ export class TcChatComposer extends TcElement {
               ${toolIcon("more", clean)}
             </button>`
           : html`${this.settings !== undefined ? this.toolButton("settings", clean) : nothing}${this.prompts !== undefined ? this.toolButton("prompts", clean) : nothing}`}
+        ${this.tools !== undefined ? html`${this.toolsButton(clean)}${this.chosenTools.map((t) => this.toolChip(t, clean))}` : nothing}
         ${pc ? this.pageChip(pc, clean) : nothing}
+        ${this.showTemporary ? this.temporaryButton(clean) : nothing}
       </div>
+      ${this.tools !== undefined && this.chosenTools.length ? html`<span id=${`${this.uid}-tools-on`} hidden>${`On: ${this.chosenTools.map((t) => t.label).join(", ")}`}</span>` : nothing}
+      ${this.showTemporary ? html`<span id=${`${this.uid}-temp-hint`} hidden>Not saved to history or memory</span>` : nothing}
       ${pc ? html`<span id=${`${this.uid}-page-hint`} hidden>${pc.connected ? "The model can see this page. Press to disconnect it." : "The model can't see this page. Press to connect it."}</span>` : nothing}
       ${this.panelTemplate(clean)}
     </div>`;
@@ -1737,6 +1879,29 @@ export class TcChatComposer extends TcElement {
           ? html`<button type="button" role="menuitem" class="ui-chat-composer__more-item" @click=${() => this.openPanel("prompts", this.panelFrom)}>${toolIcon("prompts", clean)}Prompts</button>`
           : nothing}
       </div>`;
+    if (panel === "tools") {
+      const role = this.exclusiveTools ? "menuitemradio" : "menuitemcheckbox";
+      return html`<div class="tc-pop ui-chat-composer__pop" data-panel="tools" role="menu" aria-label="Tools" @keydown=${this.onMoreKey}>
+        ${(this.tools ?? []).map((t, n) => {
+          const on = this.activeTools.includes(t.id);
+          const id = `${this.uid}-tool-${n}`;
+          return html`<button
+            type="button"
+            role=${role}
+            aria-checked=${on ? "true" : "false"}
+            aria-labelledby=${id}
+            aria-describedby=${ifDefined(t.description ? `${id}-desc` : undefined)}
+            class="ui-chat-composer__more-item ui-chat-composer__tool-item"
+            data-tool-id=${t.id}
+            @click=${() => this.toggleTool(t.id)}
+          >
+            <span class="ui-chat-composer__tool-item-icon" aria-hidden="true">${t.icon ? t.icon.cloneNode(true) : toolIcon("tools", clean)}</span>
+            <span class="ui-chat-composer__tool-item-text"><span class="ui-chat-composer__tool-item-name" id=${id}>${t.label}</span>${t.description ? html`<span class="ui-chat-composer__tool-item-desc" id=${`${id}-desc`}>${t.description}</span>` : nothing}</span>
+            <span class="ui-chat-composer__tool-item-check" aria-hidden="true">${toolIcon("check", clean)}</span>
+          </button>`;
+        })}
+      </div>`;
+    }
     const pc = this.pageContext;
     const label = panel === "settings" ? "Model settings" : panel === "prompts" ? "Prompts" : `Attached from ${pc?.title ?? "the page"}`;
     return html`<div class="tc-pop ui-chat-composer__pop" data-panel=${panel} role="dialog" aria-label=${label}>
@@ -1762,6 +1927,9 @@ export class TcChatComposer extends TcElement {
     const heard = this.heard;
     return html`
       ${this.limitNotice()}
+      ${this.temporary
+        ? html`<p class="ui-chat-composer__temp" id=${`${this.uid}-temp`}>${toolIcon("temporary", clean)}<span><span class="ui-chat-composer__temp-name">Temporary chat</span> · Not saved to history or memory</span></p>`
+        : nothing}
       ${this.context
         ? html`<tc-context-tray
             class="ui-chat-composer__context"
@@ -1778,6 +1946,7 @@ export class TcChatComposer extends TcElement {
         data-approval=${this.approval}
         data-recording=${this.recording ? "true" : "false"}
         data-sending=${ifDefined(this.sending ? "true" : undefined)}
+        data-temporary=${ifDefined(this.temporary ? "true" : undefined)}
         style=${styleMap(clean ? { "--tc-chat-composer-lines": String(this.lines) } : { "--tc-chat-composer-grow": String((this.lines - 1) * 106.424) })}
         aria-label="Message composer"
         @keydown=${this.onBodyKey}
@@ -2970,7 +3139,7 @@ export class TcChatComposer extends TcElement {
 
 /* ---------- Toolbar row under the composer (opt-in): model, settings, prompts, page context ---------- */
 .ui-chat-composer__extras { container-type: inline-size; margin-top: var(--tc-space-2); font-family: var(--tc-font-sans); }
-.ui-chat-composer__bar { display: flex; align-items: center; gap: var(--tc-space-1); min-width: 0; }
+.ui-chat-composer__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); min-width: 0; }
 .ui-chat-composer__picker { flex: none; }
 /* The model picker's trigger takes the row's height */
 .ui-chat-composer__picker .ui-mdp__trigger { height: var(--tc-control-h-sm); font-size: var(--tc-control-font-size); }
@@ -3084,17 +3253,57 @@ export class TcChatComposer extends TcElement {
    readers – and the model switch only its glyph; the page context chip keeps its title, which says what's attached.
    Up to 400px wide it starts folded; wider, the script folds it when the row doesn't fit */
 .ui-chat-composer__extras:not([data-fold="0"]) :is(.ui-chat-composer__tool-label, .ui-chat-composer__picker ${PICKER_NAME}, .ui-chat-composer__page[data-on="true"] .ui-chat-composer__page-meta) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.ui-chat-composer__extras:not([data-fold="0"]) .ui-chat-composer__tool:not(.ui-chat-composer__page) { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
+.ui-chat-composer__extras:not([data-fold="0"]) .ui-chat-composer__tool:not(.ui-chat-composer__page, .ui-chat-composer__chip) { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
 @container (max-width: 400px) {
   :is(.ui-chat-composer__tool-label, .ui-chat-composer__picker ${PICKER_NAME}, .ui-chat-composer__page[data-on="true"] .ui-chat-composer__page-meta) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .ui-chat-composer__tool:not(.ui-chat-composer__page) { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
+  .ui-chat-composer__tool:not(.ui-chat-composer__page, .ui-chat-composer__chip) { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-chat-composer__tool { transition: none; }
 }
 @media (forced-colors: active) {
   .ui-chat-composer__page[data-on="true"] { outline: var(--tc-hairline) solid CanvasText; }
+  .ui-chat-composer__chip, .ui-chat-composer__temp-btn[aria-pressed="true"] { outline: var(--tc-hairline) solid CanvasText; }
+  .ui-chat-composer__tool-item[aria-checked="true"] .ui-chat-composer__tool-item-check { color: CanvasText; }
 }
+
+/* ---------- Tools: the menu's switches and the chosen tools' chips ---------- */
+.ui-chat-composer__chip { min-width: 0; max-width: 100%; border-radius: var(--tc-radius-full); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+.ui-chat-composer__chip .ui-chat-composer__tool-icon { width: 14px; height: 14px; }
+.ui-chat-composer__chip-icon { display: inline-flex; flex: none; }
+.ui-chat-composer__chip-icon > * { width: 16px; height: 16px; }
+.ui-chat-composer__chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--tc-text-primary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__chip { background: var(--tc-accent-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-status-info-border); }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__chip .ui-chat-composer__chip-icon { color: var(--tc-accent-text); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__chip { background: var(--tc-surface-control); box-shadow: var(--tc-shadow-raised); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__chip .ui-chat-composer__chip-icon { color: var(--tc-accent); }
+.ui-chat-composer__tool-item { height: auto; min-height: var(--tc-menu-item-h); padding-block: var(--tc-space-1-5); }
+.ui-chat-composer__pop[data-panel="tools"] { min-width: 240px; max-width: min(320px, calc(100vw - var(--tc-space-4))); }
+.ui-chat-composer__tool-item-icon { display: inline-flex; flex: none; color: var(--tc-icon-muted); }
+.ui-chat-composer__tool-item-icon > * { width: 16px; height: 16px; }
+.ui-chat-composer__tool-item-text { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-chat-composer__tool-item-name { color: var(--tc-text-primary); }
+.ui-chat-composer__tool-item-desc { font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-normal); color: var(--tc-text-muted); }
+.ui-chat-composer__tool-item-check { display: inline-flex; flex: none; color: var(--tc-accent); visibility: hidden; }
+.ui-chat-composer__tool-item[aria-checked="true"] .ui-chat-composer__tool-item-check { visibility: visible; }
+
+/* ---------- Temporary chat: the toggle with its tooltip, the line above the composer and the dashed edge ---------- */
+.ui-chat-composer__temp-btn { position: relative; margin-left: auto; }
+.ui-chat-composer__page ~ .ui-chat-composer__temp-btn { margin-left: 0; }
+.ui-chat-composer__extras .ui-chat-composer__temp-btn { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
+.ui-chat-composer__temp-btn[aria-pressed="true"] { background: var(--tc-fill-selected); color: var(--tc-text-primary); }
+.ui-chat-composer__temp-btn[aria-pressed="true"] .ui-chat-composer__tool-icon { color: var(--tc-text-primary); }
+.ui-chat-composer__tip { position: absolute; right: 0; bottom: calc(100% + var(--tc-space-1)); z-index: var(--tc-z-dropdown); width: max-content; max-width: min(280px, 80vw); padding: var(--tc-tooltip-py) var(--tc-tooltip-px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); color: var(--tc-tooltip-fg); font-family: var(--tc-font-sans); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: normal; text-align: left; pointer-events: none; visibility: hidden; opacity: 0; transform: translateY(2px); transition: opacity var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-base) var(--tc-ease-move), visibility 0s linear var(--tc-duration-base); }
+.ui-chat-composer__temp-btn:focus-visible:not([data-hush]) .ui-chat-composer__tip { visibility: visible; opacity: 1; transform: none; transition-delay: 0ms; }
+@media (hover: hover) {
+  .ui-chat-composer__temp-btn:hover:not([data-hush]) .ui-chat-composer__tip { visibility: visible; opacity: 1; transform: none; transition-delay: var(--tc-duration-slower); }
+}
+.ui-chat-composer__temp { display: flex; align-items: center; gap: var(--tc-space-1-5); margin: 0 0 var(--tc-space-2); font-family: var(--tc-font-sans); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); }
+.ui-chat-composer__temp .ui-chat-composer__tool-icon { color: var(--tc-icon-muted); }
+.ui-chat-composer__temp-name { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__body[data-temporary] .ui-chat-composer__card { border-style: dashed; border-width: max(1px, var(--tc-hairline)); border-color: var(--tc-border-control-hover); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-temporary] { outline: max(1px, var(--tc-hairline)) dashed var(--tc-border-control-hover); outline-offset: -1px; }
+@media (prefers-reduced-motion: reduce) { .ui-chat-composer__tip { transition: none; } }
 `;
 }
 

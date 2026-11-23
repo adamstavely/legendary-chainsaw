@@ -15,9 +15,9 @@
     "columns": {
       "type": "number",
       "enum": [
+        7,
         5,
-        9,
-        7
+        9
       ],
       "description": "Tiles in the middle row – 9 by default; the rows above and below get two fewer. Use 7 or 5 for a tighter grid"
     },

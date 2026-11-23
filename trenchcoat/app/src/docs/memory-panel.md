@@ -16,12 +16,19 @@ yet: it sits at the top under “Waiting for your OK”, outside its category an
 Either fires a cancelable `tc-consent` ({ memory, keep }); unless prevented, Keep moves it into its category and Don't
 keep drops it – through `tc-memories-change` like every other change, and `onConsent` when it's given.
 
+Below the memories, “How it talks to you” sets the assistant's personality for this person across chats: a tone picked
+from `tones` (Default, Professional, Friendly, Direct and Thorough unless you pass your own), with a sample reply in the
+picked tone so people hear the difference, and `instructions` in their own words with a character count
+(`instructions-max`). Picking a tone fires a cancelable `tc-tone-change`; typing fires a cancelable
+`tc-instructions-change`. `hide-personality` leaves the section out.
+
 ## When to use
 
 - A settings page or side panel where people review and correct what the assistant has learned about them.
 - Giving people control over personal data the product keeps – pause, forget and an off switch in one place.
 - Up to a few dozen short facts; the list scrolls past `maxHeight`.
 - Asking before the assistant keeps something it noticed on its own, with `pending` memories.
+- Letting people choose how the assistant talks to them – its tone, and anything else about how to answer.
 
 ## When not to use
 
@@ -37,7 +44,9 @@ keep drops it – through `tc-memories-change` like every other change, and `onC
 4. **Actions** `.ui-mp__acts` – Edit, Pause or Resume, and Forget
 5. **Waiting for your OK** `.ui-mp__waiting` – memories the assistant picked up itself, each with Keep and Don't keep
 6. **New memory** `.ui-mp__add` – unfolds into an editor with a category picker
-7. **Tray** `.ui-mp__foot` – the counts (and how many wait) or what you point at, then Undo after a forget
+7. **Personality** `.ui-mp__persona` – “How it talks to you”: the tones (`.ui-mp__tone`), the picked one's sample
+   reply (`.ui-mp__sample`), and instructions (`.ui-mp__instr`) with a character count (`.ui-mp__instr-count`)
+8. **Tray** `.ui-mp__foot` – the counts (and how many wait) or what you point at, then Undo after a forget
 
 ## Looks
 
@@ -53,7 +62,8 @@ the switch keeps only its track.
 |---|---|
 | Tab | Moves through the switch, the chosen category chip, Search, each memory's actions, New memory and the tray |
 | ← / → / ↑ / ↓ | In the category chips or the new memory's categories: picks the previous or next one, wrapping round |
-| Home / End | In the category chips: picks All or the last category |
+| Home / End | In the category chips: picks All or the last category; in the tones: picks the first or last tone |
+| ← / → / ↑ / ↓ (in the tones) | Picks the previous or next tone, wrapping round |
 | Enter | In an editor: saves the memory (Shift+Enter is a new line) |
 | Escape | In an editor: cancels and returns focus to Edit or New memory; in search: clears and closes it |
 | Space / Enter | On a button: flips the switch, edits, pauses, forgets, undoes |
@@ -70,6 +80,10 @@ named with the memory's text – “Edit “Writes in British English””, “
 callback is still running is `aria-busy`. A status region says “Forgot “…”. Undo is on the tray.” after a forget, and
 a failure such as “Couldn't pause it. Try again.” The rolling counts are not read out.
 
+“How it talks to you” is a section named by its heading. The tones are a radiogroup with the same name; each tone is
+a radio named by its label and described by its description – and, when picked, by its sample reply. The instructions
+field is labelled by its question and described by its character count (“120 / 500 characters”).
+
 “Waiting for your OK” is a section named by its heading and count. Keep and Don't keep are named with the memory –
 “Keep “Likes tables””. After either, the status region says “Kept: “…”” or “Not kept: “…”” and focus moves to the next
 waiting memory's Keep, or to New memory.
@@ -82,6 +96,8 @@ waiting memory's Keep, or to New memory.
   in the order people expect.
 - Set `addedSource` to how a hand-added memory should read, e.g. “Added by you”.
 - For a waiting memory, say where it was picked up in `source` – “Picked up from a chat” – so people can judge it.
+- Give each tone a two-to-four-word description and a one-sentence `sample` on the same subject, so the tones differ
+  only in how they say it.
 
 ## Do
 
@@ -90,12 +106,14 @@ waiting memory's Keep, or to New memory.
 - Keep Undo long enough to read: raise `undoFor`, or set it to `Infinity`, for people who need more time.
 - Treat the switch as a real setting: when it's off, stop using and saving memories, as its note promises.
 - Don't use a waiting memory in answers until it's kept; return a promise from `onConsent` to save the answer.
+- Apply the tone and instructions to every new chat, and say in your product where they're used.
 
 ## Don't
 
 - Don't delete memories when the switch is turned off – the note says nothing is deleted.
 - Don't put long notes or documents in a memory; they wrap and are hard to scan.
 - Don't hide the source: people need to know where a memory came from to trust or correct it.
+- Don't offer tones the assistant can't keep to – each one should change the answers people get.
 
 ## Example
 
@@ -116,6 +134,8 @@ waiting memory's Keep, or to New memory.
   panel.onForget = (id) => fetch(`/api/memories/${id}`, { method: "DELETE" });
   panel.addEventListener("tc-consent", (e) => console.log(e.detail.keep ? "kept" : "not kept", e.detail.memory.text));
   panel.addEventListener("tc-memories-change", (e) => console.log(e.detail.memories));
+  panel.tone = "direct";
+  panel.addEventListener("tc-tone-change", (e) => fetch("/api/assistant/tone", { method: "PUT", body: e.detail.tone }));
 </script>
 ```
 
@@ -127,6 +147,8 @@ import "@adamstavely/trenchcoat/tokens.css";
 export function Memories({ initial }: { initial: Memory[] }) {
   const [memories, setMemories] = useState(initial);
   const [enabled, setEnabled] = useState(true);
+  const [tone, setTone] = useState("default");
+  const [instructions, setInstructions] = useState("");
   return (
     <MemoryPanel
       memories={memories}
@@ -135,6 +157,10 @@ export function Memories({ initial }: { initial: Memory[] }) {
       onEnabledChange={setEnabled}
       categories={["Work", "Preferences", "Projects"]}
       addedSource="Added by you"
+      tone={tone}
+      onToneChange={setTone}
+      instructions={instructions}
+      onInstructionsChange={setInstructions}
     />
   );
 }

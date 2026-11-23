@@ -1531,7 +1531,7 @@
    "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)",
    "requestAnimationFrame, cancelled (validity-badge)"
   ],
-  "animations": 15,
+  "animations": 16,
   "observers": [
    "ResizeObserver",
    "ResizeObserver (ai-answer)",
@@ -1608,7 +1608,7 @@
   "windowed": false
  },
  "size": {
-  "min": 704477,
-  "gzip": 167269
+  "min": 719639,
+  "gzip": 170376
  }
 }

@@ -74,6 +74,26 @@ export class MemoryPanel {
   @Input() set onConsent(v: TcMemoryPanel["onConsent"]) {
     this.#el.onConsent = v;
   }
+  /** The assistant's tone – the id of one of `tones` */
+  @Input() set tone(v: TcMemoryPanel["tone"]) {
+    this.#el.tone = v;
+  }
+  /** The tones to pick from, in order */
+  @Input() set tones(v: TcMemoryPanel["tones"]) {
+    this.#el.tones = v;
+  }
+  /** What else the assistant should know about how to answer, in the person's own words */
+  @Input() set instructions(v: TcMemoryPanel["instructions"]) {
+    this.#el.instructions = v;
+  }
+  /** The most characters `instructions` may have */
+  @Input() set instructionsMax(v: TcMemoryPanel["instructionsMax"] | `${number}`) {
+    this.#el.instructionsMax = typeof v === "string" ? Number(v) : v;
+  }
+  /** Leaves out the Personality section */
+  @Input() set hidePersonality(v: TcMemoryPanel["hidePersonality"] | "" | "true" | "false") {
+    this.#el.hidePersonality = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcMemoryPanel["look"]) {
     this.#el.look = v;
@@ -98,4 +118,14 @@ export class MemoryPanel {
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<null>>();
+  /**
+   * A tone was picked in Personality; detail `{ tone: string }`. Cancelable: preventDefault() keeps the current one
+   * Types $event; the element dispatches the event itself.
+   */
+  @Output("tc-tone-change") readonly tcToneChange = new EventEmitter<CustomEvent<{ tone: string }>>();
+  /**
+   * The instructions were typed in; detail `{ instructions: string }`. Cancelable: preventDefault() keeps them as they were
+   * Types $event; the element dispatches the event itself.
+   */
+  @Output("tc-instructions-change") readonly tcInstructionsChange = new EventEmitter<CustomEvent<{ instructions: string }>>();
 }

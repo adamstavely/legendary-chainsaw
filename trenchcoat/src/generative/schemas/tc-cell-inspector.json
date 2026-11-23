@@ -92,19 +92,19 @@
     "statusLabels": {
       "type": "object",
       "properties": {
+        "accepted": {
+          "type": "string"
+        },
         "flagged": {
           "type": "string"
         },
         "running": {
           "type": "string"
         },
-        "new": {
-          "type": "string"
-        },
-        "accepted": {
-          "type": "string"
-        },
         "edited": {
+          "type": "string"
+        },
+        "new": {
           "type": "string"
         }
       },
