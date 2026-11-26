@@ -96,6 +96,9 @@ export abstract class TcSettingsElement<T> extends TcElement {
   }
   formDisabledCallback(disabled: boolean) {
     this.formDisabled = disabled;
+    // Reflecting its own disabled attribute calls this mid-update, after the template was drawn, when Lit drops the
+    // change: draw again once the update is done, or a control enabled again stays disabled.
+    if (this.isUpdatePending) void this.updateComplete.then(() => this.requestUpdate());
   }
   formResetCallback() {
     if (this.initial !== undefined) {
