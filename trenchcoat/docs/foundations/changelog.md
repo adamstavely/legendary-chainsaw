@@ -2,7 +2,9 @@
 
 # Changelog
 
-## Unreleased – Trust and control for AI features
+## 0.37.0 – Trust and control for AI features, dashboard charts and Help Guide
+
+### Trust and control for AI features
 
 - **[Access Grants](../components/access-grants.md):** the standing access an assistant or agent has, by source – scope in words, Can read / edit / act, who granted it, when it was last used and when it expires. A grant whose access changed since it was agreed asks for a review (`tc-drift-review`); Renew sits on what's running out (`tc-renew`) and Revoke behind an inline confirm (`tc-revoke`), with All / Changed / Expiring filters.
 - **[AI Disclosure](../components/ai-disclosure.md):** marks AI-made content. `variant="mark"` is an inline "AI-generated", "AI-assisted" or "Edited by you" badge that opens what made it, its limits and whether a person reviewed it, with Report a problem (`tc-report`); `variant="notice"` is a quiet note for the top of an assistant panel – it can be wrong, where to check, how to reach a person – that can be dismissed.
@@ -12,7 +14,7 @@
 - **[Memory Panel](../components/memory-panel.md):** how it talks to you – a tone from `tones` (Default, Professional, Friendly, Direct, Thorough) with a sample reply in the picked tone, and `instructions` in the person's own words with a character count (`instructions-max`). It fires cancelable `tc-tone-change` and `tc-instructions-change`; `hide-personality` leaves it out.
 - **[Chat Composer](../components/chat-composer.md):** `tools` puts a Tools button in the toolbar row – a menu of switches such as web search, deep research, think longer or create image (`exclusive-tools` for one at a time). Tools that are on follow it as removable chips and ride on the send as `activeTools` (`tc-active-tools-change`). `show-temporary` adds a temporary-chat toggle: while it's on, a quiet line says "Temporary chat · Not saved to history or memory", the box's edge turns dashed, and `temporary` rides on the send (`tc-temporary-change`).
 
-## Unreleased – Dashboard charts, finished thinking and Help Guide
+### Dashboard charts, finished thinking and Help Guide
 
 - **[Help Guide](../components/help-guide.md):** point-in-time help from the help center – [Help Video](../components/help-video.md)'s sibling for features explained in a written guide. A small guide icon (a page with its corner folded and lines of text cut through it) to put beside a heading, a field label or a toolbar, sized to the text around it, that links to one tutorial (`href`, in a new tab unless `same-tab`). A tooltip names the guide and its reading time (`minutes`), `label` puts words beside it, a check shows once it's been read (`tc-read-change`), and `updated-on` puts a small dot on its corner for `new-days` days after the guide changes, until it's opened (`tc-update-seen-change`). Opening fires a cancelable `tc-guide-open`, so an app can show the guide in its own panel instead of following the link.
 - **[Line Chart](../components/line-chart.md) and [Area Chart](../components/area-chart.md):** `compare` draws the emphasised series' last period as a quiet dashed line behind it, named in a small legend (`current-label`, `compare-label`), with this period's value and its change against last period in the tooltip ("410 · +17.1%") and in what the keyboard reads.
